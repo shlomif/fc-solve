@@ -9,7 +9,7 @@
  */
 // summarizing_solver.c - solves several indices of deals and prints a summary
 // of the solutions of each one.
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 #include "try_param.h"
@@ -29,7 +29,7 @@ static void __attribute__((noreturn)) print_help(void)
 static long *mydeals = NULL;
 static size_t num_deals = 0, max_num_deals = 0;
 
-static inline void append(long idx)
+static inline void append(const long idx)
 {
     if (num_deals == max_num_deals)
     {
@@ -52,56 +52,41 @@ int main(int argc, char *argv[])
     {
         if (!strcmp(argv[arg], "seq"))
         {
-            arg++;
-            if (arg < argc)
-            {
-                const long start = atol(argv[arg++]);
-                if (arg < argc)
-                {
-                    const long end = atol(argv[arg++]);
-                    for (long deal = start; deal <= end; deal++)
-                    {
-                        append(deal);
-                    }
-                }
-                else
-                {
-                    fc_solve_err("seq without args!\n");
-                }
-            }
-            else
+            if (++arg >= argc)
             {
                 fc_solve_err("seq without args!\n");
             }
-        }
-        if (!strcmp(argv[arg], "slurp"))
-        {
-            arg++;
-            if (arg < argc)
+            const long start = atol(argv[arg]);
+            if (++arg >= argc)
             {
-                const_AUTO(fn, argv[arg++]);
-                FILE *f = fopen(fn, "rt");
-                if (f)
-                {
-                    while (!feof(f))
-                    {
-                        long deal;
-                        if (fscanf(f, "%ld", &deal) == 1)
-                        {
-                            append(deal);
-                        }
-                    }
-                    fclose(f);
-                }
-                else
-                {
-                    fc_solve_err("Cannot slurp file!\n");
-                }
+                fc_solve_err("seq without args!\n");
             }
-            else
+            const long end = atol(argv[arg++]);
+            for (long deal = start; deal <= end; ++deal)
+            {
+                append(deal);
+            }
+        }
+        else if (!strcmp(argv[arg], "slurp"))
+        {
+            if (++arg >= argc)
             {
                 fc_solve_err("slurp without arg!\n");
             }
+            FILE *const f = fopen(argv[arg++], "rt");
+            if (!f)
+            {
+                fc_solve_err("Cannot slurp file!\n");
+            }
+            while (!feof(f))
+            {
+                long deal;
+                if (fscanf(f, "%ld", &deal) == 1)
+                {
+                    append(deal);
+                }
+            }
+            fclose(f);
         }
         else
         {
@@ -114,9 +99,7 @@ int main(int argc, char *argv[])
         fc_solve_err("No double dash (\"--\") after deals indexes!\n");
     }
 
-    arg++;
-
-    for (; arg < argc; arg++)
+    for (++arg; arg < argc; ++arg)
     {
         const char *param;
         if ((param = TRY_P("--variant")))
@@ -135,13 +118,10 @@ int main(int argc, char *argv[])
 
     void *const instance = simple_alloc_and_parse(argc, argv, arg);
 
-    const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
-#if 0
-    freecell_solver_user_apply_preset(instance, variant);
-#endif
+    const bool variant_is_freecell = (!strcmp(variant, "freecell"));
     char buffer[2000];
 
-    for (size_t deal_idx = 0; deal_idx < num_deals; deal_idx++)
+    for (size_t deal_idx = 0; deal_idx < num_deals; ++deal_idx)
     {
         const_AUTO(board_num, mydeals[deal_idx]);
         if (variant_is_freecell)

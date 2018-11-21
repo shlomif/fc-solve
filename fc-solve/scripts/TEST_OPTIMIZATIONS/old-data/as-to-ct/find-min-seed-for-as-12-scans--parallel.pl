@@ -43,7 +43,7 @@ my $old = <<'EOF';
   1941	20200
 EOF
 
-my @deals = (<<'EOF' =~ /^ *([0-9]+)/gms);
+my @deals = ( <<'EOF' =~ /^ *([0-9]+)/gms );
  30359	7065
   4808	7083
   1734	7234
@@ -78,8 +78,7 @@ my @deals = (<<'EOF' =~ /^ *([0-9]+)/gms);
   1941	20374
 EOF
 
-my @scans =
-(
+my @scans = (
     q#--method random-dfs -to "01[2345789]"#,
     q#--method random-dfs -to "01[234579]"#,
     q#--method random-dfs -to "01[234589]"#,
@@ -92,13 +91,13 @@ my @scans =
     q#--method random-dfs -to "[01][23457]" -dto2 "5,[0123][4567]"#,
     q#--method random-dfs -to "[01][23457]" -dto2 "10,[0123][4567]"#,
     q#--method random-dfs -to "[01][23457]" -dto2 "8,[0123][4567]"#,
-    q#--method random-dfs -to "01[234567]" -dto2 "5,01[2345789]" -dto2 "10,[0123][4567]"#,
+q#--method random-dfs -to "01[234567]" -dto2 "5,01[2345789]" -dto2 "10,[0123][4567]"#,
 );
 
 FindSeed->parallel_find(
     {
-        scan => \@scans,
-        deals => \@deals,
+        scan      => \@scans,
+        deals     => \@deals,
         threshold => 10,
     },
 );

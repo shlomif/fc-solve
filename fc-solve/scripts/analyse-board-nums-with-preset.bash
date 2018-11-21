@@ -10,4 +10,3 @@ for BOARD_NUM in 5376 16039 17880 22894 31465 31975 ; do
          ' "$BOARD_NUM"
 
 done
-

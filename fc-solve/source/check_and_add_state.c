@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * check_and_add_state.c - the various possible implementations of the function
- * fc_solve_check_and_add_state().
- */
+// check_and_add_state.c - the various possible implementations of the function
+// fc_solve_check_and_add_state().
 
 #include "move_stack_compact_alloc.h"
 
@@ -20,7 +18,7 @@
     This function "rehashes" a hash. I.e: it increases the size of its
     hash table, allowing for smaller chains, and faster lookup.
   */
-static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
+static inline void fc_solve_hash_rehash(hash_table *const hash)
 {
     const int old_size = hash->size;
 
@@ -35,14 +33,14 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
 
     const int new_size_bitmask = new_size - 1;
 
-    var_AUTO(entries, hash->entries);
-    fc_solve_hash_symlink_t *const new_entries =
+    const_SLOT(entries, hash);
+    hash_table_entry *const new_entries =
         calloc(new_size, sizeof(new_entries[0]));
 
     /* Copy the items to the new hash while not allocating them again */
     for (int i = 0; i < old_size; i++)
     {
-        fcs_hash_item_t *item = entries[i].first_item;
+        hash_item *item = entries[i].first_item;
         /* traverse the chain item by item */
         while (item != NULL)
         {
@@ -51,7 +49,7 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
 
             /* Store the next item in the linked list in a safe place,
                so we can retrieve it after the assignment */
-            fcs_hash_item_t *const next_item = item->next;
+            hash_item *const next_item = item->next;
             /* It is placed in front of the first element in the chain,
                so it should link to it */
             item->next = new_entries[place].first_item;
@@ -79,14 +77,14 @@ static inline void fc_solve_hash_rehash(fc_solve_hash_t *const hash)
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
 static inline void *fc_solve_hash_insert(
-    fc_solve_hash_t *const hash, void *const key,
+    hash_table *const hash, void *const key,
 #ifdef FCS_RCS_STATES
     void *const key_id,
 #endif
-    const fc_solve_hash_value_t hash_value
+    const fcs_hash_value hash_value
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     ,
-    const fc_solve_hash_value_t secondary_hash_value
+    const fcs_hash_value secondary_hash_value
 #endif
 )
 {
@@ -95,7 +93,7 @@ static inline void *fc_solve_hash_insert(
 #endif
     typeof(hash->entries[0]) *const list =
         (hash->entries + (hash_value & (hash->size_bitmask)));
-    fcs_hash_item_t **item_placeholder;
+    hash_item **item_placeholder;
     /* If first_item is non-existent */
     if (list->first_item == NULL)
     {
@@ -105,8 +103,8 @@ static inline void *fc_solve_hash_insert(
     else
     {
         /* Initialize item to the chain's first_item */
-        fcs_hash_item_t *item = list->first_item;
-        fcs_hash_item_t *last_item = NULL;
+        hash_item *item = list->first_item;
+        hash_item *last_item = NULL;
 
 // MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
 // states order. We need to negate it for the desired condition of equality.
@@ -169,9 +167,9 @@ static inline void *fc_solve_hash_insert(
 
 #define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
 #ifdef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fcs_hash_item_t *const item = ITEM_ALLOC();
+    hash_item *const item = ITEM_ALLOC();
 #else
-    fcs_hash_item_t *item;
+    hash_item *item;
 
     if ((item = hash->list_of_vacant_items))
     {
@@ -202,24 +200,12 @@ static inline void *fc_solve_hash_insert(
 
 #endif
 
-typedef unsigned long ul;
-typedef unsigned char ub1;
+#if ((defined(INDIRECT_STACK_STATES) &&                                        \
+         (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)) ||            \
+     (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH))
 
-static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
-    register const ul len /* the length of the key */
-)
-{
-    register ul hash_value_int = 0;
-    register const ub1 *const s_end = s_ptr + len;
-
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
+#include "wrap_xxhash.h"
+#endif
 
 #ifdef INDIRECT_STACK_STATES
 
@@ -234,19 +220,19 @@ static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
  * replaced_with_cached macro above.
  * */
 static inline void fc_solve_cache_stacks(
-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state)
+    fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
     STACKS__SET_PARAMS();
-    register fcs_state_t *const new_state_key = new_state->key;
-    register fcs_state_extra_info_t *const new_state_info = new_state->val;
-    fcs_compact_allocator_t *const stacks_allocator =
+    register fcs_state *const new_state_key = new_state->key;
+    register fcs_state_extra_info *const new_state_info = new_state->val;
+    compact_allocator *const stacks_allocator =
         &(HT_FIELD(hard_thread, allocator));
-    fcs_cards_column_t *current_stack = new_state_key->columns;
+    fcs_cards_column *current_stack = new_state_key->columns;
 
     for (int i = 0; i < LOCAL_STACKS_NUM; ++i, ++current_stack)
     {
@@ -262,8 +248,8 @@ static inline void fc_solve_cache_stacks(
         var_AUTO(column, fcs_state_get_col(*(new_state_key), i));
         const int col_len = (fcs_col_len(column) + 1);
 
-        char *const new_ptr =
-            (char *)fcs_compact_alloc_ptr(stacks_allocator, col_len);
+        fcs_cards_column new_ptr =
+            (fcs_cards_column)fcs_compact_alloc_ptr(stacks_allocator, col_len);
         memcpy(new_ptr, column, col_len);
         *(current_stack) = new_ptr;
         column = fcs_state_get_col(*new_state_key, i);
@@ -274,31 +260,22 @@ static inline void fc_solve_cache_stacks(
         /* Calculate the hash value for the stack */
         /* This hash function was ripped from the Perl source code.
          * (It is not derived work however). */
-        fc_solve_hash_value_t hash_value_int = 0;
+        fcs_hash_value hash_value_int = 0;
         {
-            const char *s_ptr = (char *)(*(current_stack));
-            const char *s_end = s_ptr + fcs_col_len(s_ptr) + 1;
+            const int8_t *s_ptr = (int8_t *)(*(current_stack));
+            const int8_t *s_end = s_ptr + fcs_col_len(s_ptr) + 1;
             while (s_ptr < s_end)
             {
                 hash_value_int += (hash_value_int << 5) + *(s_ptr++);
             }
             hash_value_int += (hash_value_int >> 5);
         }
-
-        if (hash_value_int < 0)
-        {
-            /*
-             * This is a bit mask that nullifies the sign bit of the
-             * number so it will always be positive
-             * */
-            hash_value_int &= (~(1 << ((sizeof(hash_value_int) << 3) - 1)));
-        }
 #endif
 
-        cached_stack = fc_solve_hash_insert(&(instance->stacks_hash), column,
-            perl_hash_function((ub1 *)*(current_stack), col_len)
+        cached_stack = fc_solve_hash_insert(
+            &(instance->stacks_hash), column, DO_XXH(*(current_stack), col_len)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-                ,
+                                                  ,
             hash_value_int
 #endif
         );
@@ -367,8 +344,8 @@ static inline void fc_solve_cache_stacks(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 guint fc_solve_hash_function(gconstpointer key)
 {
-    const char *s_ptr = (char *)key;
-    const char *const s_end = s_ptr + sizeof(fcs_state_t);
+    const int8_t *s_ptr = (const int8_t *)key;
+    const int8_t *const s_end = s_ptr + sizeof(fcs_state);
     guint hash_value = 0;
     while (s_ptr < s_end)
     {
@@ -400,11 +377,11 @@ guint fc_solve_hash_function(gconstpointer key)
  *        5b. Add the new state and return TRUE.
  * */
 
-static inline void upon_new_state(fc_solve_instance_t *const instance,
-    fc_solve_hard_thread_t *const hard_thread,
-    fcs_state_extra_info_t *const new_state_info)
+static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
+    fcs_hard_thread *const hard_thread GCC_UNUSED,
+    fcs_state_extra_info *const new_state_info)
 {
-    fcs_collectible_state_t *const parent_state = new_state_info->parent;
+    fcs_collectible_state *const parent_state = new_state_info->parent;
     /* The new state was not found in the cache, and it was already inserted */
     if (likely(parent_state))
     {
@@ -424,11 +401,9 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
 #endif
 }
 
-#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
-static inline fcs_bool_t handle_existing_void(
-    fc_solve_instance_t *const instance,
-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
-    fcs_kv_state_t *const existing_state_raw, void *const existing_void)
+static inline bool handle_existing_void(fcs_instance *const instance,
+    fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state,
+    fcs_kv_state *const existing_state_raw, void *const existing_void)
 {
     if (existing_void)
     {
@@ -437,7 +412,18 @@ static inline fcs_bool_t handle_existing_void(
     }
     else
     {
-        ON_STATE_NEW();
+        upon_new_state(instance, hard_thread, new_state->val);
+#ifdef DEBUG
+        if (getenv("FCS_DEBUG2"))
+        {
+            printf("%s", "\n\nAdded state: ");
+            for (size_t i = 0; i < sizeof(new_state->key[0]); ++i)
+            {
+                printf("\\x%02x", (int)((uint8_t *)(new_state->key))[i]);
+            }
+            printf("\n\n");
+        }
+#endif
         return TRUE;
     }
 }
@@ -445,9 +431,8 @@ static inline fcs_bool_t handle_existing_void(
     handle_existing_void(                                                      \
         instance, hard_thread, new_state, existing_state_raw, (existing_void))
 
-fcs_bool_t fc_solve_check_and_add_state(
-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
-    fcs_kv_state_t *const existing_state_raw)
+bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
+    fcs_kv_state *const new_state, fcs_kv_state *const existing_state_raw)
 {
 /*
  * TODO : these accessor macros are probably out-of-date and won't work with
@@ -459,7 +444,7 @@ fcs_bool_t fc_solve_check_and_add_state(
 #ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
 #else
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
     fc_solve_cache_stacks(hard_thread, new_state);
     fc_solve_canonize_state(new_state_key PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
@@ -475,23 +460,15 @@ fcs_bool_t fc_solve_check_and_add_state(
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    fc_solve_hash_value_t hash_value_int = 0;
+    fcs_hash_value hash_value_int = 0;
     {
-        const char *s_ptr = (char *)new_state_key;
-        const char *s_end = s_ptr + sizeof(*new_state_key);
+        const int8_t *s_ptr = (int8_t *)new_state_key;
+        const int8_t *s_end = s_ptr + sizeof(*new_state_key);
         while (s_ptr < s_end)
         {
             hash_value_int += (hash_value_int << 5) + *(s_ptr++);
         }
         hash_value_int += (hash_value_int >> 5);
-    }
-    if (hash_value_int < 0)
-    {
-        /*
-         * This is a bit mask that nullifies the sign bit of the
-         * number so it will always be positive
-         * */
-        hash_value_int &= (~(1 << ((sizeof(hash_value_int) << 3) - 1)));
     }
 #endif
 #ifdef FCS_RCS_STATES
@@ -504,9 +481,8 @@ fcs_bool_t fc_solve_check_and_add_state(
 #else
 #define B
 #endif
-    return HANDLE_existing_void(fc_solve_hash_insert(&(instance->hash), A,
-        perl_hash_function((ub1 *)(new_state_key), sizeof(*(new_state_key)))
-            B));
+    return HANDLE_existing_void(fc_solve_hash_insert(
+        &(instance->hash), A, DO_XXH(new_state_key, sizeof(*new_state_key)) B));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     void *existing_void;
     if (!fc_solve_states_google_hash_insert(instance->hash,
@@ -540,30 +516,27 @@ fcs_bool_t fc_solve_check_and_add_state(
     return HANDLE_existing_void(fcs_libavl2_states_tree_insert(
         instance->tree, FCS_STATE_kv_to_collectible(new_state)));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    existing_state_val = g_tree_lookup(instance->tree, (gpointer)new_state_key);
-    if ((is_state_new = (existing_state_val == NULL)))
+    const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
+    const_AUTO(
+        existing_void, g_tree_lookup(instance->tree, (gpointer)new_state_void));
+    if (!existing_void)
     {
-        /* The new state was not found. Let's insert it.
-         * The value must be the same as the key, so g_tree_lookup()
-         * will return it. */
         g_tree_insert(
-            instance->tree, (gpointer)new_state_key, (gpointer)new_state_val);
+            instance->tree, (gpointer)new_state_void, (gpointer)new_state_void);
     }
-
+    return HANDLE_existing_void(
+        existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    existing_state_val =
-        g_hash_table_lookup(instance->hash, (gpointer)new_state_key);
-    if ((is_state_new = (existing_state_val == NULL)))
+    const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
+    const_AUTO(existing_void,
+        g_hash_table_lookup(instance->hash, (gpointer)new_state_void));
+    if (!existing_void)
     {
-        /* The new state was not found. Let's insert it.
-         * The value must be the same as the key, so g_tree_lookup()
-         * will return it. */
         g_hash_table_insert(
-            instance->hash, (gpointer)new_state_key, (gpointer)new_state_val
-
-        );
+            instance->hash, (gpointer)new_state_void, (gpointer)new_state_void);
     }
-
+    return HANDLE_existing_void(
+        existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
     DBT key, value;
     key.data = new_state;
@@ -585,20 +558,13 @@ fcs_bool_t fc_solve_check_and_add_state(
     JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
 
     /* later_todo : Handle out-of-memory. */
-    if (*PValue == 0)
+    const_AUTO(val, *PValue);
+    if (val == 0)
     {
         /* A new state. */
         *PValue = (PWord_t)(FCS_STATE_kv_to_collectible(new_state));
-        ON_STATE_NEW();
-        return TRUE;
     }
-    else
-    {
-        /* Already exists. */
-        FCS_STATE_collectible_to_kv(
-            existing_state_raw, (fcs_collectible_state_t *)(*PValue));
-        return FALSE;
-    }
+    return HANDLE_existing_void(val);
 #else
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
 #endif

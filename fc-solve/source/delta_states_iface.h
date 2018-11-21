@@ -19,7 +19,7 @@ extern "C" {
 #include "dbm_common.h"
 
 extern char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
-    fcs_dbm_variant_type_t, const char *, const char *);
+    fcs_dbm_variant_type, const char *, const char *);
 
 #ifdef __cplusplus
 }

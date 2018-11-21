@@ -39,7 +39,7 @@ static inline int max0(const int e) { return max(e, 0); }
                       ? (((num_freecells) + 1) << (num_empty_cols))            \
                       : ((num_freecells) + 1)))
 
-static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
+static inline size_t calc_max_simple_simon_seq_move(const int num_empty_cols)
 {
     return ((num_empty_cols < 0) ? 0 : (1 << num_empty_cols));
 }
@@ -56,14 +56,20 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
     fc_solve_sfs_check_state_begin(hard_thread, &pass_new_state,               \
         raw_state_raw SFS__PASS_MOVE_STACK(moves))
 
+#ifdef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+#define sfs_check_state_end__arg
+#else
+#define sfs_check_state_end__arg raw_state_raw,
+#endif
+
 #define sfs_check_state_end()                                                  \
     fc_solve_derived_states_list_add_state(derived_states_list,                \
-        fc_solve_sfs_check_state_end(soft_thread, raw_state_raw,               \
-            &pass_new_state FCS__pass_moves(moves)),                           \
+        fc_solve_sfs_check_state_end(soft_thread,                              \
+            sfs_check_state_end__arg &pass_new_state FCS__pass_moves(moves)),  \
         state_context_value)
 
 static inline void fc_solve_move_sequence_function(
-    fcs_state_t *const s FCS__pass_moves(fcs_move_stack_t *const moves),
+    fcs_state *const s FCS__pass_moves(fcs_move_stack *const moves),
     const size_t dest_col_i, const size_t src_col_i, const size_t cards_num)
 {
     fcs_col_transfer_cards(fcs_state_get_col(*s, dest_col_i),
@@ -79,7 +85,7 @@ static inline void fc_solve_move_sequence_function(
 #ifdef FCS_RCS_STATES
 
 #define tests_define_accessors_rcs_states()                                    \
-    fcs_state_t my_new_out_state_key;                                          \
+    fcs_state my_new_out_state_key;                                            \
     pass_new_state.key = &my_new_out_state_key
 
 #else
@@ -102,10 +108,10 @@ static inline void fc_solve_move_sequence_function(
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define tests_define_accessors_freecell_only()                                 \
-    fc_solve_instance_t *const instance = hard_thread;
+    fcs_instance *const instance = hard_thread;
 #else
 #define tests_define_accessors_freecell_only()                                 \
-    fc_solve_instance_t *const instance = hard_thread->instance;
+    fcs_instance *const instance = hard_thread->instance;
 #endif
 
 #define tests__is_filled_by_any_card()                                         \
@@ -120,8 +126,7 @@ static inline void fc_solve_move_sequence_function(
 
 #ifdef FCS_WITH_MOVES
 #define tests_define_accessors_move_stack()                                    \
-    fcs_move_stack_t *const moves =                                            \
-        &(HT_FIELD(hard_thread, reusable_move_stack))
+    fcs_move_stack *const moves = &(HT_FIELD(hard_thread, reusable_move_stack))
 #else
 #define tests_define_accessors_move_stack()
 #endif
@@ -131,15 +136,15 @@ static inline void fc_solve_move_sequence_function(
  * This macro defines these accessors to have some value.
  * */
 #define tests_define_accessors_no_stacks(MORE)                                 \
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;      \
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;             \
     tests_define_accessors_move_stack();                                       \
-    MORE fcs_kv_state_t pass_new_state;                                        \
+    MORE fcs_kv_state pass_new_state;                                          \
     tests_define_accessors_freecell_only();                                    \
     tests_define_accessors_rcs_states()
 
 #ifdef INDIRECT_STACK_STATES
 #define tests_define_indirect_stack_states_accessors()                         \
-    char *indirect_stacks_buffer =                                             \
+    fcs_card *indirect_stacks_buffer =                                         \
         HT_FIELD(hard_thread, indirect_stacks_buffer);
 #else
 #define tests_define_indirect_stack_states_accessors()
@@ -161,7 +166,8 @@ static inline void fc_solve_move_sequence_function(
 /*
  * This macro assists in implementing this prune:
  *
- * http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1121 :
+ * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1121
+ * :
  *
  * There is no point in moving the last card in a
  * column to a parent on a different column, because then the column won't

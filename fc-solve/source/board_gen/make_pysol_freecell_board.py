@@ -1,159 +1,50 @@
 #!/usr/bin/env python3
 #
-# make_pysol_freecell_board.py - Program to generate the boards of
-# PySol for input into Freecell Solver.
+# make_pysol_freecell_board.py - generate PySol's solitaire deals.
 #
-# Usage: make_pysol_freecell_board.py [board number] | fc-solve
+# Copyright by Shlomi Fish, 2018
 #
-# Or on non-UNIXes:
+# Licensed under the MIT/Expat License.
 #
-# python make_pysol_freecell_board.py [board number] | fc-solve
-#
-# This program is platform independent and will generate the same results
-# on all architectures and operating systems.
-#
-# Based on the code by Markus Franz Xaver Johannes Oberhumer.
-# Modified by Shlomi Fish, 2000
-#
-# Since much of the code here is ripped from the actual PySol code, this
-# program is distributed under the GNU General Public License.
-
-# Original PySol blurb:
-#
-# ---------------------------------------------------------------------------
-#
-# PySol -- a Python Solitaire game
-#
-# Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
-# Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
-# Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
-#
-# This program is free software; you can redistribute it and/or modify
-# it under the terms of the GNU General Public License as published by
-# the Free Software Foundation; either version 2 of the License, or
-# (at your option) any later version.
-#
-# This program is distributed in the hope that it will be useful,
-# but WITHOUT ANY WARRANTY; without even the implied warranty of
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-# GNU General Public License for more details.
-#
-# You should have received a copy of the GNU General Public License
-# along with this program; see the file COPYING.
-# If not, write to the Free Software Foundation, Inc.,
-# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-#
-# Markus F.X.J. Oberhumer
-# <markus.oberhumer@jk.uni-linz.ac.at>
-# http://wildsau.idv.uni-linz.ac.at/mfx/pysol.html
-#
-# ---------------------------------------------------------------------------
-
-
-# imports
-import sys
-import time
+# This code is inspired by PySol by Markus F.X.J. Oberhumer and others.
+# See: http://pysolfc.sourceforge.net/ .
 import random2
-
-# /***********************************************************************
-# // Abstract PySol Random number generator.
-# //
-# // We use a seed of type long in the range [0, MAX_SEED].
-# ************************************************************************/
+import sys
+from fc_solve_find_index_s2ints import createCards, Card, CardRenderer, \
+        find_index__board_string_to_ints, ms_rearrange
 
 
-class PysolRandom:
-    MAX_SEED = 0
+def empty_card():
+    ret = Card(0, 0, 0)
+    ret.empty = True
+    return ret
 
-    ORIGIN_UNKNOWN = 0
-    ORIGIN_RANDOM = 1
-    ORIGIN_PREVIEW = 2         # random from preview
-    ORIGIN_SELECTED = 3         # manually entered
-    ORIGIN_NEXT_GAME = 4        # "Next game number"
 
+class RandomBase:
     DEALS_PYSOL = 0
     DEALS_PYSOLFC = 1
     DEALS_MS = 2
 
-    def __init__(self, seed=None):
-        if seed is None:
-            seed = self._getRandomSeed()
-        self.initial_seed = self.setSeed(seed)
-        self.origin = self.ORIGIN_UNKNOWN
+    def shuffle(self, seq):
+        for n in range(len(seq)-1, 0, -1):
+            j = self.randint(0, n)
+            seq[n], seq[j] = seq[j], seq[n]
+        return seq
 
-    def __str__(self):
-        return self.str(self.initial_seed)
-
-    def reset(self):
-        self.seed = self.initial_seed
-
-    def getSeed(self):
-        return self.seed
-
-    def setSeed(self, seed):
-        seed = self._convertSeed(seed)
-        if type(seed) is not int:
-            raise TypeError("seeds must be longs")
-        if not (0 <= seed <= self.MAX_SEED):
-            raise ValueError("seed out of range")
-        self.seed = seed
-        return seed
-
-    def copy(self):
-        random = PysolRandom(0)
-        random.__class__ = self.__class__
-        random.__dict__.update(self.__dict__)
-        return random
-
-    #
-    # implementation
-    #
-
-    def choice(self, seq):
-        return seq[int(self.random() * len(seq))]
-
-    # Get a random integer in the range [a, b] including both end points.
     def randint(self, a, b):
         return a + int(self.random() * (b+1-a))
 
-    #
-    # subclass responsibility
-    #
 
-    # Get the next random number in the range [0.0, 1.0).
-    def random(self):
-        raise ValueError("Subclass responsibility")
-
-    #
-    # subclass overrideable
-    #
+class PysolRandom(RandomBase):
+    def setSeed(self, seed):
+        seed = self._convertSeed(seed)
+        if not 0 <= seed <= self.MAX_SEED:
+            raise ValueError("seed is out of range")
+        self.seed = seed
+        return seed
 
     def _convertSeed(self, seed):
         return int(seed)
-
-    def increaseSeed(self, seed):
-        if seed < self.MAX_SEED:
-            return seed + 1
-        return 0
-
-    def _getRandomSeed(self):
-        t = int(time.time() * 256.0)
-        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
-        return t
-
-    #
-    # shuffle
-    #   see: Knuth, Vol. 2, Chapter 3.4.2, Algorithm P
-    #   see: FAQ of sci.crypt: "How do I shuffle cards ?"
-    #
-
-    def shuffle(self, seq):
-        n = len(seq) - 1
-        while n > 0:
-            j = self.randint(0, n)
-            seq[n], seq[j] = seq[j], seq[n]
-            n = n - 1
-
 
 # /***********************************************************************
 # // Linear Congruential random generator
@@ -163,174 +54,60 @@ class PysolRandom:
 # // p. 106 (line 26) & p. 108
 # ************************************************************************/
 
+
 class LCRandom64(PysolRandom):
     MAX_SEED = 0xffffffffffffffff  # 64 bits
-
-    def str(self, seed):
-        s = repr(int(seed))[:-1]
-        s = "0"*(20-len(s)) + s
-        return s
 
     def random(self):
         self.seed = (self.seed*6364136223846793005 + 1) & self.MAX_SEED
         return ((self.seed >> 21) & 0x7fffffff) / 2147483648.0
 
 
-# /***********************************************************************
-# // Linear Congruential random generator
-# // In PySol this is only used for 0 <= seed <= 32000.
-# ************************************************************************/
-
-class LCRandom31(PysolRandom):
+class LCRandom31(RandomBase):
     MAX_SEED = ((1 << (32+2))-1)         # 34 bits
 
-    def str(self, seed):
-        return "%05d" % int(seed)
+    def setSeed(self, seed):
+        self.seed = seed
+        self.seedx = seed if (seed < 0x100000000) else (seed - 0x100000000)
 
-    def _convertSeed(self, seed):
-        seed = int(seed)
-        self.seedx = (seed if (seed < 0x100000000) else (seed - 0x100000000))
-        return seed
-
-    def _rando(self):
-        self.seedx = (self.seedx*214013 + 2531011) & self.MAX_SEED
-        return ((self.seedx >> 16) & 0x7fff)
+    def random(self):
+        if (self.seed < 0x100000000):
+            ret = self._rand()
+            return (ret if (self.seed < 0x80000000) else (ret | 0x8000))
+        else:
+            return self._randp() + 1
 
     def _randp(self):
-        self.seedx = (self.seedx*214013 + 2531011) & self.MAX_SEED
-        return ((self.seedx >> 16) & 0xffff)
+        self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
+        return (self.seedx >> 16) & 0xffff
+
+    def _rand(self):
+        self.seedx = ((self.seedx) * 214013 + 2531011) & self.MAX_SEED
+        return (self.seedx >> 16) & 0x7fff
 
     def randint(self, a, b):
-        if self.seed < 0x100000000:
-            ret = self._rando()
-            ret = (ret if (self.seed < 0x80000000) else (ret | 0x8000))
-        else:
-            ret = self._randp() + 1
+        return a + self.random() % (b+1-a)
 
-        return a + (ret % (b+1-a))
 
-# ************************************************************************
 # * Mersenne Twister random number generator
-# * uses standard python module `random'
-# ************************************************************************
-
-
-class BasicRandom:
+class MTRandom(RandomBase, random2.Random):
     MAX_SEED = 100000000000000000000  # 20 digits
-
-    ORIGIN_UNKNOWN = 0
-    ORIGIN_RANDOM = 1
-    ORIGIN_PREVIEW = 2         # random from preview
-    ORIGIN_SELECTED = 3         # manually entered
-    ORIGIN_NEXT_GAME = 4        # "Next game number"
-
-    def __str__(self):
-        return self.str(self.initial_seed)
-
-    def str(self, seed):
-        return '%020d' % seed
-
-    def reset(self):
-        raise ValueError("Subclass responsibility")
-
-    def copy(self):
-        random = self.__class__(0)
-        random.__dict__.update(self.__dict__)
-        return random
-
-    def increaseSeed(self, seed):
-        if seed < self.MAX_SEED:
-            return seed + 1
-        return 0
-
-    def _getRandomSeed(self):
-        t = int(time.time() * 256.0)
-        t = (t ^ (t >> 24)) % (self.MAX_SEED + 1)
-        return t
-
-
-class MTRandom(BasicRandom, random2.Random):
 
     def setSeed(self, seed):
         random2.Random.__init__(self, seed)
-        self.initial_seed = seed
         self.initial_state = self.getstate()
-        self.origin = self.ORIGIN_UNKNOWN
-
-    def reset(self):
-        self.setstate(self.initial_state)
-
-
-class Card:
-
-    ACE = 1
-    KING = 13
-
-    def __init__(self, id, rank, suit, print_ts):
-        self.id = id
-        self.rank = rank
-        self.suit = suit
-        self.flipped = False
-        self.print_ts = print_ts
-        self.empty = False
-
-    def is_king(self):
-        return self.rank == self.KING
-
-    def is_ace(self):
-        return self.rank == self.ACE
-
-    def rank_s(self):
-        s = "0A23456789TJQK"[self.rank]
-        if (not self.print_ts) and s == "T":
-            s = "10"
-        return s
-
-    def suit_s(self):
-        return "CSHD"[self.suit]
-
-    def to_s(self):
-        if self.empty:
-            return "-"
-        ret = ""
-        ret = ret + self.rank_s()
-        ret = ret + self.suit_s()
-        if self.flipped:
-            ret = "<" + ret + ">"
-
-        return ret
-
-    def found_s(self):
-        return self.suit_s() + "-" + self.rank_s()
-
-    def flip(self, flipped=True):
-        new_card = Card(self.id, self.rank, self.suit, self.print_ts)
-        new_card.flipped = flipped
-        return new_card
-
-    def is_empty(self):
-        return self.empty
 
 
 class Columns:
-
     def __init__(self, num):
         self.num = num
-        cols = []
-        for i in range(num):
-            cols.append([])
-
-        self.cols = cols
+        self.cols = [[] for _ in range(num)]
 
     def add(self, idx, card):
         self.cols[idx].append(card)
 
     def rev(self):
         self.cols.reverse()
-
-    def output(self):
-        for column in self.cols:
-            print(column_to_string(column))
 
 
 class Board:
@@ -339,43 +116,24 @@ class Board:
         self.with_freecells = with_freecells
         self.with_talon = with_talon
         self.with_foundations = with_foundations
+        self.raw_foundations_line = None
         self.columns = Columns(num_columns)
-        if (self.with_freecells):
+        if self.with_freecells:
             self.freecells = []
-        if (self.with_talon):
+        if self.with_talon:
             self.talon = []
-        if (self.with_foundations):
+        if self.with_foundations:
             self.foundations = [empty_card() for s in range(4)]
+        self._lines = []
+
+    def add_line(self, string):
+        self._lines.append(string)
 
     def reverse_cols(self):
-        return self.columns.rev()
+        self.columns.rev()
 
     def add(self, idx, card):
-        return self.columns.add(idx, card)
-
-    def print_freecells(self):
-        print("Freecells: " + column_to_string(self.freecells))
-
-    def print_talon(self):
-        print("Talon: " + column_to_string(self.talon))
-
-    def print_foundations(self):
-        cells = []
-        for f in [2, 0, 3, 1]:
-            if not self.foundations[f].is_empty():
-                cells.append(self.foundations[f].found_s())
-
-        if len(cells):
-            print("Foundations:" + ("".join([" "+s for s in cells])))
-
-    def output(self):
-        if (self.with_talon):
-            self.print_talon()
-        if (self.with_foundations):
-            self.print_foundations()
-        if (self.with_freecells):
-            self.print_freecells()
-        self.columns.output()
+        self.columns.add(idx, card)
 
     def add_freecell(self, card):
         if not self.with_freecells:
@@ -385,153 +143,123 @@ class Board:
     def add_talon(self, card):
         if not self.with_talon:
             raise AttributeError("Layout does not have a talon!")
-
         self.talon.append(card)
 
     def put_into_founds(self, card):
         if not self.with_foundations:
             raise AttributeError("Layout does not have foundations!")
-
-        if ((self.foundations[card.suit].rank+1) == card.rank):
+        res = self.foundations[card.suit].rank+1 == card.rank
+        if res:
             self.foundations[card.suit] = card
-            return True
-        else:
-            return False
-        self.talon.append(card)
+        return res
+
+    def print_foundations(self, renderer):
+        cells = []
+        for f in [2, 0, 3, 1]:
+            if not self.foundations[f].empty:
+                cells.append(renderer.found_s(self.foundations[f]))
+
+        if len(cells):
+            self.add_line("Foundations:" + ("".join([" "+s for s in cells])))
+
+    def gen_lines(self, renderer):
+        self._lines = []
+        if self.with_talon:
+            self.add_line("Talon: " + renderer.l_concat(self.talon))
+        if self.with_foundations:
+            self.print_foundations(renderer)
+        if self.raw_foundations_line:
+            self.add_line(self.raw_foundations_line)
+        if self.with_freecells:
+            self.add_line("Freecells: " + renderer.l_concat(self.freecells))
+
+        self._lines += [renderer.l_concat(c) for c in self.columns.cols]
+
+    def calc_string(self, renderer):
+        self.gen_lines(renderer)
+        return "".join(l + "\n" for l in self._lines)
 
 
-def empty_card():
-    ret = Card(0, 0, 0, 1)
-    ret.empty = True
-    return ret
-
-
-def createCards(num_decks, print_ts):
-    cards = []
-    for deck in range(num_decks):
-        id = 0
-        for suit in range(4):
-            for rank in range(13):
-                cards.append(Card(id, rank+1, suit, print_ts))
-                id = id + 1
-    return cards
-
-
-def column_to_list_of_strings(col):
-    return [c.to_s() for c in col]
-
-
-def column_to_string(col):
-    return " ".join(column_to_list_of_strings(col))
-
-
-def flip_card(card_str, flip):
-    if flip:
-        return "<" + card_str + ">"
-    else:
-        return card_str
-
-
-def shuffle(orig_cards, game_num, which_deals):
-    if ((game_num <= 32000) or which_deals == PysolRandom.DEALS_MS):
-        r = LCRandom31()
-        r.setSeed(game_num)
-        fcards = []
-        if (len(orig_cards) == 52):
-            for i in range(13):
-                for j in (0, 39, 26, 13):
-                    fcards.append(orig_cards[i + j])
-            orig_cards = fcards
-        r.shuffle(orig_cards)
-    else:
-        r = 0
-        if (which_deals == PysolRandom.DEALS_PYSOLFC):
-            r = MTRandom()
-        else:
-            r = LCRandom64()
-        r.setSeed(game_num)
-        r.shuffle(orig_cards)
-
-    return orig_cards
+def shuffle(cards, game_num, which_deals):
+    ms = ((game_num <= 32000) or (which_deals == RandomBase.DEALS_MS))
+    r = LCRandom31() if ms else MTRandom() if which_deals == \
+        RandomBase.DEALS_PYSOLFC else LCRandom64()
+    r.setSeed(game_num)
+    return r.shuffle(ms_rearrange(cards) if ms else cards)
 
 
 class Game:
     REVERSE_MAP = \
         {
                 "freecell":
-                ["freecell", "forecell", "bakers_game",
+                ["forecell", "bakers_game",
                  "ko_bakers_game", "kings_only_bakers_game",
                  "relaxed_freecell", "eight_off"],
                 "der_katz":
-                ["der_katz", "der_katzenschwantz", "die_schlange"],
+                ["der_katzenschwantz", "die_schlange"],
                 "seahaven":
-                ["seahaven_towers", "seahaven", "relaxed_seahaven",
+                ["seahaven_towers", "relaxed_seahaven",
                  "relaxed_seahaven_towers"],
                 "bakers_dozen": None,
                 "gypsy": None,
                 "klondike":
-                ["klondike", "klondike_by_threes",
+                ["klondike_by_threes",
                  "casino_klondike", "small_harp", "thumb_and_pouch",
                  "vegas_klondike", "whitehead"],
                 "simple_simon": None,
                 "yukon": None,
                 "beleaguered_castle":
-                ["beleaguered_castle", "streets_and_alleys", "citadel"],
+                ["streets_and_alleys", "citadel"],
                 "fan": None,
                 "black_hole": None,
                 "all_in_a_row": None,
         }
 
-    def __init__(self, game_id, game_num, which_deals, print_ts):
+    def __init__(self, game_id, game_num, which_deals, max_rank=13):
         mymap = {}
-        for k in list(self.REVERSE_MAP.keys()):
-            if self.REVERSE_MAP[k] is None:
-                mymap[k] = k
-            else:
-                for alias in self.REVERSE_MAP[k]:
-                    mymap[alias] = k
+        for k, v in self.REVERSE_MAP.items():
+            for name in [k] + (v if v else []):
+                mymap[name] = k
         self.games_map = mymap
         self.game_id = game_id
         self.game_num = game_num
-        self.print_ts = print_ts
         self.which_deals = which_deals
-
-    def print_layout(self):
-        game_class = self.lookup()
-
-        if not game_class:
+        self.max_rank = max_rank
+        self.game_class = self.games_map[self.game_id]
+        if not self.game_class:
             raise ValueError("Unknown game type " + self.game_id + "\n")
-
-        self.deal()
-
-        getattr(self, game_class)()
-
-        self.board.output()
-
-    def lookup(self):
-        return self.games_map[self.game_id]
 
     def is_two_decks(self):
         return self.game_id in ("der_katz", "der_katzenschwantz",
                                 "die_schlange", "gypsy")
 
     def get_num_decks(self):
-        if self.is_two_decks():
-            return 2
-        else:
-            return 1
+        return 2 if self.is_two_decks() else 1
 
-    def deal(self):
-        orig_cards = createCards(self.get_num_decks(), self.print_ts)
+    def calc_deal_string(self, game_num, renderer):
+        self.game_num = game_num
+        self.deal()
+        getattr(self, self.game_class)()
+        return self.board.calc_string(renderer)
 
-        orig_cards = shuffle(orig_cards, self.game_num, self.which_deals)
+    def calc_layout_string(self, renderer):
+        self.deal()
+        getattr(self, self.game_class)()
+        return self.board.calc_string(renderer)
 
-        cards = orig_cards
-        cards.reverse()
+    def print_layout(self, renderer):
+        print(self.calc_layout_string(renderer), sep='', end='')
 
+    def new_cards(self, cards):
         self.cards = cards
         self.card_idx = 0
-        return True
+
+    def deal(self):
+        cards = shuffle(createCards(self.get_num_decks(),
+                                    self.max_rank),
+                        self.game_num, self.which_deals)
+        cards.reverse()
+        self.new_cards(cards)
 
     def __iter__(self):
         return self
@@ -543,254 +271,253 @@ class Game:
         if self.no_more_cards():
             raise StopIteration
         c = self.cards[self.card_idx]
-        self.card_idx = self.card_idx + 1
+        self.card_idx += 1
         return c
 
-    def new_cards(self, cards):
-        self.cards = cards
-        self.card_idx = 0
-
     def add(self, idx, card):
-        return self.board.add(idx, card)
+        self.board.add(idx, card)
 
     def add_freecell(self, card):
-        return self.board.add_freecell(card)
+        self.board.add_freecell(card)
 
-    def cyclical_deal(game, num_cards, num_cols, flipped=False):
+    def cyclical_deal(self, num_cards, num_cols, flipped=False):
         for i in range(num_cards):
-            game.add(i % num_cols, next(game).flip(flipped=flipped))
-        return i
+            self.add(i % num_cols, next(self).flip(flipped=flipped))
 
-    def add_all_to_talon(game):
-        for card in game:
-            game.board.add_talon(card)
+    def add_all_to_talon(self):
+        for c in self:
+            self.board.add_talon(c)
 
-    # These are the games variants:
-    # Each one is a callback.
-    def der_katz(game):
-        if (game.game_id == "die_schlange"):
-            print("Foundations: H-A S-A D-A C-A H-A S-A D-A C-A")
+    def add_empty_fc(self):
+        self.add_freecell(empty_card())
 
-        game.board = Board(9)
-        col_idx = 0
+    def _shuffleHookMoveSorter(self, cards, cb, ncards):
+        extracted, i, new = [], len(cards), []
+        for c in cards:
+            select, ord_ = cb(c)
+            if select:
+                extracted.append((ord_, i, c))
+                if len(extracted) >= ncards:
+                    new += cards[(len(cards)-i+1):]
+                    break
+            else:
+                new.append(c)
+            i -= 1
+        return new, [x[2] for x in reversed(sorted(extracted))]
 
-        for card in game:
-            if card.is_king():
-                col_idx = col_idx + 1
-            if not ((game.game_id == "die_schlange") and (card.rank == 1)):
-                game.add(col_idx, card)
+    def _shuffleHookMoveToBottom(self, inp, cb, ncards=999999):
+        cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
+        return scards + cards
 
-    def freecell(game):
-        is_fc = (game.game_id in ('forecell', 'eight_off'))
+    def _shuffleHookMoveToTop(self, inp, cb, ncards=999999):
+        cards, scards = self._shuffleHookMoveSorter(inp, cb, ncards)
+        return cards + scards
 
-        game.board = Board(8, with_freecells=is_fc)
-
-        if is_fc:
-            game.cyclical_deal(48, 8)
-            for card in game:
-                game.add_freecell(card)
-                if game.game_id == "eight_off":
-                    game.add_freecell(empty_card())
-        else:
-            game.cyclical_deal(52, 8)
-
-    def seahaven(game):
-        game.board = Board(10, with_freecells=True)
-
-        game.add_freecell(empty_card())
-
-        game.cyclical_deal(50, 10)
-
-        for card in game:
-            game.add_freecell(card)
+    def all_in_a_row(game):
+        game.board = Board(13)
+        game.cards = game._shuffleHookMoveToTop(
+            game.cards,
+            lambda c: (c.id == 13, c.suit),
+            1)
+        game.cyclical_deal(52, 13)
+        game.board.raw_foundations_line = 'Foundations: -'
 
     def bakers_dozen(game):
-        i, n = 0, 13
-        kings = []
-        cards = game.cards
-        cards.reverse()
-        for c in cards:
-            if c.is_king():
-                kings.append(i)
-            i = i + 1
-        for i in kings:
+        n = 13
+        cards = list(reversed(game.cards))
+        for i in [i for i, c in enumerate(cards) if c.is_king()]:
             j = i % n
             while j < i:
                 if not cards[j].is_king():
                     cards[i], cards[j] = cards[j], cards[i]
                     break
-                j = j + n
-
+                j += n
         game.new_cards(cards)
-
         game.board = Board(13)
-
         game.cyclical_deal(52, 13)
 
-    def gypsy(game):
-        num_cols = 8
-        game.board = Board(num_cols, with_talon=True)
-
-        game.cyclical_deal(num_cols*2, num_cols, flipped=True)
-        game.cyclical_deal(num_cols, num_cols, flipped=False)
-
-        game.add_all_to_talon()
-
-    def klondike(game):
-        num_cols = 7
-        game.board = Board(num_cols, with_talon=True)
-
-        for r in range(1, num_cols):
-            for s in range(num_cols-r):
-                game.add(s, next(game).flip())
-
-        game.cyclical_deal(num_cols, num_cols)
-
-        game.add_all_to_talon()
-
-        if not (game.game_id == "small_harp"):
-            game.board.reverse_cols()
-
-    def simple_simon(game):
-        game.board = Board(10)
-
-        num_cards = 9
-
-        while num_cards >= 3:
-            for s in range(num_cards):
-                game.add(s, next(game))
-            num_cards = num_cards - 1
-
-        for s in range(10):
-            game.add(s, next(game))
-
-    def fan(game):
-        game.board = Board(18)
-
-        game.cyclical_deal(52-1, 17)
-
-        game.add(17, next(game))
-
-    def _shuffleHookMoveSorter(self, cards, func, ncards):
-        # note that we reverse the cards, so that smaller sort_orders
-        # will be nearer to the top of the Talon
-        sitems, i = [], len(cards)
-        for c in cards[:]:
-            select, sort_order = func(c)
-            if select:
-                cards.remove(c)
-                sitems.append((sort_order, i, c))
-                if len(sitems) >= ncards:
-                    break
-            i = i - 1
-        sitems.sort()
-        sitems.reverse()
-        scards = [item[2] for item in sitems]
-        return cards, scards
-
-    def _shuffleHookMoveToBottom(self, cards, func, ncards=999999):
-        # move cards to bottom of the Talon (i.e. last cards to be dealt)
-        cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
-        ret = scards + cards
-        return ret
-
-    def _shuffleHookMoveToTop(self, cards, func, ncards=999999):
-        # move cards to top of the Talon (i.e. last cards to be dealt)
-        cards, scards = self._shuffleHookMoveSorter(cards, func, ncards)
-        return cards + scards
+    def beleaguered_castle(game):
+        game.board = Board(8, with_foundations=True)
+        if game.game_id in ('beleaguered_castle', 'citadel'):
+            new = []
+            for c in game:
+                if c.is_ace():
+                    game.board.put_into_founds(c)
+                else:
+                    new.append(c)
+            game.new_cards(new)
+        for _ in range(6):
+            for s in range(8):
+                c = next(game)
+                if not ((game.game_id == 'citadel') and
+                        game.board.put_into_founds(c)):
+                    game.add(s, c)
+            if game.no_more_cards():
+                break
+        if game.game_id == 'streets_and_alleys':
+            game.cyclical_deal(4, 4)
 
     def black_hole(game):
         game.board = Board(17)
-
-        # move Ace to bottom of the Talon (i.e. last cards to be dealt)
         game.cards = game._shuffleHookMoveToBottom(
             game.cards,
             lambda c: (c.id == 13, c.suit),
             1)
         next(game)
         game.cyclical_deal(52-1, 17)
+        game.board.raw_foundations_line = 'Foundations: AS'
 
-        print("Foundations: AS")
+    def der_katz(game):
+        is_ds = game.game_id == 'die_schlange'
+        if is_ds:
+            print('Foundations: H-A S-A D-A C-A H-A S-A D-A C-A')
+        game.board = Board(9)
+        i = 0
+        for c in game:
+            if c.is_king():
+                i += 1
+            if not (is_ds and c.is_ace()):
+                game.add(i, c)
 
-    def all_in_a_row(game):
-        game.board = Board(13)
+    def fan(game):
+        game.board = Board(18)
+        game.cyclical_deal(52-1, 17)
+        game.add(17, next(game))
 
-        # move Ace to bottom of the Talon (i.e. last cards to be dealt)
-        game.cards = game._shuffleHookMoveToTop(
-            game.cards,
-            lambda c: (c.id == 13, c.suit),
-            1)
-        game.cyclical_deal(52, 13)
-        print("Foundations: -")
+    def freecell(game):
+        is_fc = (game.game_id in ("forecell", "eight_off"))
+        game.board = Board(8, with_freecells=is_fc)
+        game.cyclical_deal(4 *
+                           (game.max_rank-1 if is_fc else game.max_rank), 8)
 
-    def beleaguered_castle(game):
-        aces_up = game.game_id in ("beleaguered_castle", "citadel")
-
-        game.board = Board(8, with_foundations=True)
-
-        if aces_up:
-            new_cards = []
-
+        if is_fc:
             for c in game:
-                if c.is_ace():
-                    game.board.put_into_founds(c)
-                else:
-                    new_cards.append(c)
+                game.add_freecell(c)
+                if game.game_id == "eight_off":
+                    game.add_empty_fc()
 
-            game.new_cards(new_cards)
+    def gypsy(game):
+        num_cols = 8
+        game.board = Board(num_cols, with_talon=True)
+        game.cyclical_deal(num_cols*2, num_cols, flipped=True)
+        game.cyclical_deal(num_cols, num_cols)
+        game.add_all_to_talon()
 
-        for i in range(6):
-            for s in range(8):
-                c = next(game)
-                if not ((game.game_id == "citadel") and
-                        game.board.put_into_founds(c)):
-                    game.add(s, c)
-            if game.no_more_cards():
-                break
+    def klondike(game):
+        num_cols = 7
+        game.board = Board(num_cols, with_talon=True)
+        for r in range(num_cols-1, 0, -1):
+            game.cyclical_deal(r, r, flipped=True)
+        game.cyclical_deal(num_cols, num_cols)
+        game.add_all_to_talon()
+        if not (game.game_id == 'small_harp'):
+            game.board.reverse_cols()
 
-        if (game.game_id == "streets_and_alleys"):
-            game.cyclical_deal(4, 4)
+    def seahaven(game):
+        game.board = Board(10, with_freecells=True)
+        game.cyclical_deal(50, 10)
+        game.add_empty_fc()
+        for c in game:
+            game.add_freecell(c)
+
+    def simple_simon(game):
+        game.board = Board(10)
+        for num_cards in range(9, 2, -1):
+            game.cyclical_deal(num_cards, num_cards)
+        game.cyclical_deal(10, 10)
 
     def yukon(game):
         num_cols = 7
         game.board = Board(num_cols)
-
         for i in range(1, num_cols):
             for j in range(i, num_cols):
                 game.add(j, next(game).flip())
-
         for i in range(4):
             for j in range(1, num_cols):
                 game.add(j, next(game))
-
         game.cyclical_deal(num_cols, num_cols)
 
 
-def shlomif_main(args):
-    print_ts = 0
-    which_deals = PysolRandom.DEALS_PYSOL
+def make_pysol_board__main(args):
+    print_ts = False
+    which_deals = RandomBase.DEALS_PYSOL
+    max_rank = 13
     while args[1][0] == '-':
-        if (args[1] == "-t"):
-            print_ts = 1
-            args.pop(0)
-        elif ((args[1] == "--pysolfc") or (args[1] == "-F")):
-            which_deals = PysolRandom.DEALS_PYSOLFC
-            args.pop(0)
-        elif ((args[1] == "--ms") or (args[1] == "-M")):
-            which_deals = PysolRandom.DEALS_MS
-            args.pop(0)
+        a = args[1]
+        if a == "-t":
+            print_ts = True
+            args.pop(1)
+        elif (a == "--max-rank"):
+            args.pop(1)
+            max_rank = int(args.pop(1))
+        elif (a == "--pysolfc") or (a == "-F"):
+            which_deals = RandomBase.DEALS_PYSOLFC
+            args.pop(1)
+        elif (a == "--ms") or (a == "-M"):
+            which_deals = RandomBase.DEALS_MS
+            args.pop(1)
+        else:
+            raise ValueError("Unknown flag " + a + "!")
+
+    game_num = int(args[1])
+    which_game = args[2] if len(args) >= 3 else "freecell"
+    Game(which_game, game_num, which_deals, max_rank).print_layout(
+        CardRenderer(print_ts))
+
+
+def find_index_main(args, find_ret):
+    output_to_stdout = True
+    output_fn = None
+    is_ms = False
+    while len(args) >= 2 and args[1][0] == '-':
+        if args[1] == "-o":
+            args.pop(1)
+            if not len(args):
+                raise ValueError("-o must accept an argument.")
+            output_to_stdout = False
+            output_fn = args.pop(1)
+        elif args[1] == '--ms':
+            args.pop(1)
+            is_ms = True
+        elif args[1] == '-':
+            break
         else:
             raise ValueError("Unknown flag " + args[1] + "!")
 
-    game_num = int(args[1])
-    if (len(args) >= 3):
-        which_game = args[2]
-    else:
-        which_game = "freecell"
+    if not is_ms:
+        raise ValueError("only --ms is supported for now!")
+    input_from_stdin = True
+    input_fn = None
+    if len(args) >= 2:
+        if args[1] != "-":
+            input_fn = args.pop(1)
+            input_from_stdin = False
 
-    game = Game(which_game, game_num, which_deals, print_ts)
-    game.print_layout()
+    content = []
+    if input_from_stdin:
+        content = sys.stdin.readlines()
+    else:
+        with open(input_fn) as f:
+            content = f.readlines()
+
+    content = ''.join(content)
+    ints = find_index__board_string_to_ints(content)
+    ret = find_ret(ints)
+
+    ret_code = 0
+    if ret >= 0:
+        s = "Found deal = %d" % ret
+        if output_to_stdout:
+            print(s)
+        else:
+            with open(output_fn, 'w') as f:
+                f.write("%s\n" % s)
+        ret_code = 0
+    else:
+        print("Not found!")
+        ret_code = -1
+    return ret_code
 
 
 if __name__ == "__main__":
-    sys.exit(shlomif_main(sys.argv))
+    sys.exit(make_pysol_board__main(sys.argv))

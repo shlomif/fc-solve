@@ -5,5 +5,3 @@ fc_solve_string_to_test_num_compare_func(
     return MAP(a) - MAP(b);
 }
 #undef MAP
-
-

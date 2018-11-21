@@ -25,77 +25,45 @@
 #define kv_calc_depth(ptr_state)                                               \
     calc_depth(FCS_STATE_kv_to_collectible(ptr_state))
 
-#define SOFT_DFS_DEPTH_GROW_BY 16
-void fc_solve_increase_dfs_max_depth(fc_solve_soft_thread_t *const soft_thread)
-{
-    const_AUTO(new_dfs_max_depth,
-        DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
-    DFS_VAR(soft_thread, soft_dfs_info) =
-        SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
-    var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info) +
-                                DFS_VAR(soft_thread, dfs_max_depth));
-    const_AUTO(end_soft_dfs_info, soft_dfs_info + SOFT_DFS_DEPTH_GROW_BY);
-
-    for (; soft_dfs_info < end_soft_dfs_info; soft_dfs_info++)
-    {
-        *soft_dfs_info = (fcs_soft_dfs_stack_item_t){
-            .state = NULL,
-            .move_func_list_idx = 0,
-            .move_func_idx = 0,
-            .current_state_index = 0,
-            .derived_states_list =
-                {
-                    .num_states = 0,
-                    .states = NULL,
-                },
-            .derived_states_random_indexes = NULL,
-            .derived_states_random_indexes_max_size = 0,
-        };
-    }
-
-    DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
-}
-
 #ifdef FCS_RCS_STATES
 /* TODO : Unit-test this function as it had had a bug beforehand
- * because fcs_lru_side_t had been an unsigned long.
+ * because lru_side had been an unsigned long.
  * */
-typedef const char *fcs_lru_side_t;
+typedef const char *lru_side;
 
-extern int fc_solve_compare_lru_cache_keys(const void *const void_a,
+extern int __attribute__((pure))
+fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
-#define GET_PARAM(p)                                                           \
-    ((fcs_lru_side_t)(((const fcs_cache_key_info_t *)(p))->val_ptr))
-    const fcs_lru_side_t a = GET_PARAM(void_a), b = GET_PARAM(void_b);
+#define GET_PARAM(p) ((lru_side)(((const fcs_cache_key_info *)(p))->val_ptr))
+    const lru_side a = GET_PARAM(void_a), b = GET_PARAM(void_b);
 
     return ((a > b) ? 1 : (a < b) ? (-1) : 0);
 #undef GET_PARAM
 }
 
 #define NEXT_CACHE_STATE(s) ((s)->lower_pri)
-fcs_state_t *fc_solve_lookup_state_key_from_val(
-    fc_solve_instance_t *const instance,
-    const fcs_collectible_state_t *const orig_ptr_state_val)
+fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
+    const fcs_collectible_state *const orig_ptr_state_val)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     PWord_t PValue;
 #endif
     FC__STACKS__SET_PARAMS();
-    fcs_lru_cache_t *cache = &(instance->rcs_states_cache);
+    fcs_lru_cache *cache = &(instance->rcs_states_cache);
 
     ssize_t parents_stack_len = 1;
     ssize_t parents_stack_max_len = 16;
 
     struct
     {
-        fcs_cache_key_info_t *new_cache_state;
-        const fcs_collectible_state_t *state_val;
+        fcs_cache_key_info *new_cache_state;
+        const fcs_collectible_state *state_val;
     } *parents_stack = SMALLOC(parents_stack, parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
 
-    fcs_cache_key_info_t *new_cache_state;
+    fcs_cache_key_info *new_cache_state;
     while (1)
     {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
@@ -104,7 +72,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
         if (*PValue)
         {
             parents_stack[parents_stack_len - 1].new_cache_state =
-                new_cache_state = (fcs_cache_key_info_t *)(*PValue);
+                new_cache_state = (fcs_cache_key_info *)(*PValue);
             break;
         }
         else
@@ -137,8 +105,8 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         new_cache_state->val_ptr =
             parents_stack[parents_stack_len - 1].state_val;
-        fcs_cache_key_info_t *const existing_cache_state =
-            (fcs_cache_key_info_t *)fc_solve_kaz_tree_alloc_insert(
+        fcs_cache_key_info *const existing_cache_state =
+            (fcs_cache_key_info *)fc_solve_kaz_tree_alloc_insert(
                 cache->kaz_tree, new_cache_state);
 
         if (existing_cache_state)
@@ -165,7 +133,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
         if (!FCS_S_PARENT(parents_stack[parents_stack_len - 1].state_val))
         {
-            new_cache_state->key = instance->state_copy_ptr->s;
+            new_cache_state->key = instance->state_copy.s;
             break;
         }
         else
@@ -184,14 +152,13 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
     {
         new_cache_state = parents_stack[parents_stack_len - 1].new_cache_state;
 
-        fcs_state_t *const pass_key = &(new_cache_state->key);
+        fcs_state *const pass_key = &(new_cache_state->key);
         *pass_key = parents_stack[parents_stack_len].new_cache_state->key;
 
-        const fcs_move_stack_t *const stack_ptr__moves_to_parent =
+        const fcs_move_stack *const stack_ptr__moves_to_parent =
             parents_stack[parents_stack_len - 1].state_val->moves_to_parent;
-        const fcs_internal_move_t *next_move =
-            stack_ptr__moves_to_parent->moves;
-        const fcs_internal_move_t *const moves_end =
+        const fcs_internal_move *next_move = stack_ptr__moves_to_parent->moves;
+        const fcs_internal_move *const moves_end =
             (next_move + stack_ptr__moves_to_parent->num_moves);
 
         for (; next_move < moves_end; next_move++)
@@ -249,7 +216,7 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 
     while (count > limit)
     {
-        fcs_cache_key_info_t *lowest_pri = cache->lowest_pri;
+        fcs_cache_key_info *lowest_pri = cache->lowest_pri;
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
         int rc_int;
         JLD(rc_int, cache->states_values_to_keys_map,
@@ -289,14 +256,14 @@ fcs_state_t *fc_solve_lookup_state_key_from_val(
 #define my_brfs_recycle_bin (BRFS_VAR(soft_thread, recycle_bin))
 
 #define NEW_BRFS_QUEUE_ITEM()                                                  \
-    ((fcs_states_linked_list_item_t *)fcs_compact_alloc_ptr(                   \
+    ((fcs_states_linked_list_item *)fcs_compact_alloc_ptr(                     \
         &(HT_FIELD(hard_thread, allocator)),                                   \
-        sizeof(fcs_states_linked_list_item_t)));
+        sizeof(fcs_states_linked_list_item)));
 
 static inline void fc_solve_initialize_bfs_queue(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
 
     /* Initialize the BFS queue. We have one dummy element at the beginning
        in order to make operations simpler. */
@@ -306,11 +273,8 @@ static inline void fc_solve_initialize_bfs_queue(
     my_brfs_recycle_bin = NULL;
 }
 
-void fc_solve_soft_thread_init_befs_or_bfs(
-    fc_solve_soft_thread_t *const soft_thread)
+void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
 {
-    fc_solve_soft_thread_update_initial_cards_val(soft_thread);
-
     if (soft_thread->is_befs)
     {
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
@@ -344,7 +308,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(
     }
     BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(
-            fcs_st_instance(soft_thread)->state_copy_ptr);
+            &fcs_st_instance(soft_thread)->state_copy);
 }
 
 /*
@@ -357,34 +321,34 @@ void fc_solve_soft_thread_init_befs_or_bfs(
  *  there are no more states in the queue.
  */
 fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    const fcs_bool_t is_simple_simon = instance->is_simple_simon;
+    const bool is_simple_simon = instance->is_simple_simon;
 #endif
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
-    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+    const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-    const fcs_bool_t scans_synergy =
+    const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
     const_AUTO(soft_thread_id, soft_thread->id);
-    const fcs_bool_t is_a_complete_scan =
+    const bool is_a_complete_scan =
         STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     const_SLOT(effective_max_num_states_in_collection, instance);
 #endif
 
-    fcs_states_linked_list_item_t *queue = NULL;
-    fcs_states_linked_list_item_t *queue_last_item = NULL;
-    pri_queue_t *pqueue = NULL;
+    fcs_states_linked_list_item *queue = NULL;
+    fcs_states_linked_list_item *queue_last_item = NULL;
+    pri_queue *pqueue = NULL;
     fc_solve_solve_process_ret_t error_code;
-    fcs_derived_states_list_t derived = {.num_states = 0, .states = NULL};
+    fcs_derived_states_list derived = {.num_states = 0, .states = NULL};
 
     const fcs_moves_group *const moves_list =
         BEFS_M_VAR(soft_thread, moves_list);
@@ -392,9 +356,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         BEFS_M_VAR(soft_thread, moves_list_end);
 
     DECLARE_STATE();
-    ASSIGN_ptr_state(BEFS_M_VAR(soft_thread, first_state_to_check));
+    PTR_STATE = BEFS_M_VAR(soft_thread, first_state_to_check);
+    FCS_ASSIGN_STATE_KEY();
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-    const fcs_bool_t enable_pruning = soft_thread->enable_pruning;
+    const bool enable_pruning = soft_thread->enable_pruning;
 #endif
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
@@ -443,7 +408,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         TRACE0("Pruning");
         if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
-            fcs_collectible_state_t *const after_pruning_state =
+            fcs_collectible_state *const after_pruning_state =
                 fc_solve_sfs_raymond_prune(soft_thread, pass);
             if (after_pruning_state)
             {
@@ -504,17 +469,13 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         }
 #endif
 
-        const fcs_game_limit_t num_vacant_freecells =
-            count_num_vacant_freecells(
-                LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-        const fcs_game_limit_t num_vacant_stacks =
+        const fcs_game_limit num_vacant_freecells = count_num_vacant_freecells(
+            LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+        const fcs_game_limit num_vacant_stacks =
             count_num_vacant_stacks(LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
         if ((num_vacant_stacks == LOCAL_STACKS_NUM) &&
             (num_vacant_freecells == LOCAL_FREECELLS_NUM))
         {
-#ifdef FCS_WITH_MOVES
-            instance->final_state = PTR_STATE;
-#endif
             BUMP_NUM_CHECKED_STATES();
             error_code = FCS_STATE_WAS_SOLVED;
             goto my_return_label;
@@ -555,8 +516,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         BUMP_NUM_CHECKED_STATES();
         TRACE0("Insert all states");
         /* Insert all the derived states into the PQ or Queue */
-        fcs_derived_states_list_item_t *derived_iter;
-        fcs_derived_states_list_item_t *derived_end;
+        fcs_derived_states_list_item *derived_iter, *derived_end;
         for (derived_end = (derived_iter = derived.states) + derived.num_states;
              derived_iter < derived_end; derived_iter++)
         {
@@ -564,12 +524,12 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             if (is_befs)
             {
 #ifdef FCS_RCS_STATES
-                fcs_kv_state_t new_pass = {
+                fcs_kv_state new_pass = {
                     .key = fc_solve_lookup_state_key_from_val(
                         instance, scans_ptr_new_state),
                     .val = scans_ptr_new_state};
 #else
-                fcs_kv_state_t new_pass =
+                fcs_kv_state new_pass =
                     FCS_STATE_keyval_pair_to_kv(scans_ptr_new_state);
 #endif
                 fc_solve_pq_push(pqueue, scans_ptr_new_state,
@@ -580,7 +540,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             else
             {
                 /* Enqueue the new state. */
-                fcs_states_linked_list_item_t *last_item_next;
+                fcs_states_linked_list_item *last_item_next;
 
                 if (my_brfs_recycle_bin)
                 {
@@ -629,7 +589,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             Extract the next item in the queue/priority queue.
         */
         {
-            fcs_collectible_state_t *new_ptr_state;
+            fcs_collectible_state *new_ptr_state;
             if (is_befs)
             {
                 /* It is an BeFS scan */
@@ -656,6 +616,9 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
     error_code = FCS_STATE_IS_NOT_SOLVEABLE;
 my_return_label:
+#ifdef FCS_WITH_MOVES
+    instance->final_state = PTR_STATE;
+#endif
     /* Free the memory that was allocated by the
      * derived states list */
     if (derived.states != NULL)
@@ -675,13 +638,13 @@ my_return_label:
  * These functions are used by the move functions in freecell.c and
  * simpsim.c.
  * */
-int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
-    fcs_kv_state_t *const out_new_state_out,
-    fcs_kv_state_t raw_state_raw SFS__PASS_MOVE_STACK(
-        fcs_move_stack_t *const moves))
+int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
+    fcs_kv_state *const out_new_state_out,
+    fcs_kv_state raw_state_raw SFS__PASS_MOVE_STACK(
+        fcs_move_stack *const moves))
 {
-    fcs_collectible_state_t *raw_ptr_new_state;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
+    fcs_collectible_state *raw_ptr_new_state;
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
     if ((HT_FIELD(hard_thread, allocated_from_list) =
                 (instance->list_of_vacant_states != NULL)))
@@ -702,7 +665,7 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
 #define INFO_STATE_PTR(kv_ptr) ((kv_ptr)->val)
 #else
 /* TODO : That's very hacky - get rid of it. */
-#define INFO_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair_t *)((kv_ptr)->key))
+#define INFO_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair *)((kv_ptr)->key))
 #endif
     /* Some BeFS and BFS parameters that need to be initialized in
      * the derived state.
@@ -728,26 +691,28 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
     return 0;
 }
 
-extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
-    fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw,
-    fcs_kv_state_t *const raw_ptr_new_state_raw FCS__pass_moves(
-        fcs_move_stack_t *const moves))
+extern fcs_collectible_state *fc_solve_sfs_check_state_end(
+    fcs_soft_thread *const soft_thread,
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+    fcs_kv_state raw_state_raw,
+#endif
+    fcs_kv_state *const raw_ptr_new_state_raw FCS__pass_moves(
+        fcs_move_stack *const moves GCC_UNUSED))
 {
     const_SLOT(hard_thread, soft_thread);
     const_AUTO(instance, HT_INSTANCE(hard_thread));
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
-    const fcs_bool_t calc_real_depth = fcs_get_calc_real_depth(instance);
+    const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #if !defined(FCS_HARD_CODE_REPARENT_STATES_AS_FALSE) &&                        \
     !defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE)
-    const fcs_bool_t scans_synergy =
+    const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
 #endif
-    fcs_kv_state_t existing_state;
+    fcs_kv_state existing_state;
 
 #define ptr_new_state_foo (raw_ptr_new_state_raw->val)
-#define ptr_state (raw_state_raw.val)
 
     if (!fc_solve_check_and_add_state(
             hard_thread, raw_ptr_new_state_raw, &existing_state))
@@ -775,6 +740,7 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
  * already have, then re-assign its parent to this state.
  * */
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+#define ptr_state (raw_state_raw.val)
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
             (kv_calc_depth(&existing_state) >
                 kv_calc_depth(&raw_state_raw) + 1))

@@ -19,7 +19,7 @@ use FC_Solve::CheckResults ();
 my $v = FC_Solve::CheckResults->new(
     {
         data_filename => data_file( ['digests-and-lens-wo-stats-storage.yml'] ),
-        trim_stats => 1,
+        trim_stats    => 1,
     }
 );
 

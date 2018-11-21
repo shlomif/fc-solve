@@ -1,0 +1,25 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use Getopt::Long qw/ GetOptions /;
+use Path::Tiny qw/ path /;
+
+my $output_fn;
+
+GetOptions( '-o=s' => \$output_fn, );
+
+if ( !defined $output_fn )
+{
+    die "Output filename not specified";
+}
+
+my $buf;
+
+foreach my $fn (@ARGV)
+{
+    $buf .= ( path($fn)->slurp_utf8 =~ s/([^\n])\z/$1\n/mrs );
+}
+
+path($output_fn)->spew_utf8($buf);

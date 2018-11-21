@@ -9,55 +9,56 @@ use IPC::System::Simple qw(capturex);
 use Games::Solitaire::Verify::Solution;
 use Games::Solitaire::Verify::App::CmdLine;
 
-if ($ARGV[0] =~ m{\A-h|--help\z})
+if ( $ARGV[0] =~ m{\A-h|--help\z} )
 {
     print <<'EOF';
 summarize-fc-solve [Game Params] -- [Extra fc-solve Args]
 
 Display the solution status, the iterations count and the solution length
 of the Freecell Solver invocation specified by the arguments. Also verifies
-that the solution is true.
+that the solution is valid/correct.
 
 The [Game Params] flags (e.g: -g , --freecells-num, --stacks-num, etc.) are also
 used to determine the variant used by the solution verifier.
 EOF
-    exit (0);
+    exit(0);
 }
 
 my @args = @ARGV;
 
 my $separator = first_index { $_ eq '--' } @args;
-if ($separator < 0)
+if ( $separator < 0 )
 {
-    die "You must specify both [Game Params] and [Extra fc-solve Args]. See --help";
+    die
+"You must specify both [Game Params] and [Extra fc-solve Args]. See --help";
 }
 
-my @game_params = @args[0 .. $separator - 1];
-my @fc_solve_args = (@game_params, @args[$separator+1 .. $#args]);
+my @game_params = @args[ 0 .. $separator - 1 ];
+my @fc_solve_args = ( @game_params, @args[ $separator + 1 .. $#args ] );
 
-my $fc_solve_output = capturex(qw(fc-solve -p -t -sam -sel), @fc_solve_args);
+my $fc_solve_output = capturex( qw(fc-solve -p -t -sam -sel), @fc_solve_args );
 
 sub _line_found
 {
     my ($s) = @_;
 
-    return (($fc_solve_output =~ m{^\Q$s\E}ms) ? 1 : 0);
+    return ( ( $fc_solve_output =~ m{^\Q$s\E}ms ) ? 1 : 0 );
 }
 
 my $is_solvable = _line_found('This game is solveable');
-my $unsolved = _line_found('I could not solve');
+my $unsolved    = _line_found('I could not solve');
 my $intractable = _line_found('Iterations count exceeded');
 
-my @true = (grep { $_ } ($is_solvable, $unsolved, $intractable));
+my @true = ( grep { $_ } ( $is_solvable, $unsolved, $intractable ) );
 
-if (! (@true == 1))
+if ( !( @true == 1 ) )
 {
     die "Game is more than one of solved, unsolvable or intractable!";
 }
 
 if ($is_solvable)
 {
-    open my $input_fh, "<", (\$fc_solve_output)
+    open my $input_fh, "<", ( \$fc_solve_output )
         or die "Cannot open fc_solve_output.";
     my $varianter = Games::Solitaire::Verify::App::CmdLine->new(
         {
@@ -66,8 +67,8 @@ if ($is_solvable)
     );
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $input_fh,
-            variant => "custom",
+            input_fh       => $input_fh,
+            variant        => "custom",
             variant_params => $varianter->_variant_params(),
         },
     );
@@ -82,12 +83,27 @@ if ($is_solvable)
     }
 }
 
-my ($num_iters) = ($fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms);
-my $sol_len = () = ($fc_solve_output =~ m{^Move}msg);
+my ($num_iters) =
+    ( $fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms );
+my $sol_len = () = ( $fc_solve_output =~ m{^Move}msg );
 
-print "Verdict: " .
-    ($is_solvable ? "Solved"
-        : $intractable ? "Intractable"
-        : "Unsolved"
-    )
-    . " ; Iters: $num_iters ; Length: $sol_len\n";
+print "Verdict: "
+    . (
+      $is_solvable ? "Solved"
+    : $intractable ? "Intractable"
+    :                "Unsolved"
+    ) . " ; Iters: $num_iters ; Length: $sol_len\n";
+
+__END__
+
+=head1 COPYRIGHT AND LICENSE
+
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
+Copyright (c) 2010 Shlomi Fish
+
+=cut

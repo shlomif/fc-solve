@@ -17,29 +17,29 @@ my $should_histogram;
 my $should_output_nums;
 
 GetOptions(
-    'f|from=s' => \$from_path,
-    't|to=s' => \$to_path,
-    'iters=i' => \$iters_threshold,
-    'histogram!' => \$should_histogram,
+    'f|from=s'     => \$from_path,
+    't|to=s'       => \$to_path,
+    'iters=i'      => \$iters_threshold,
+    'histogram!'   => \$should_histogram,
     'output-nums!' => \$should_output_nums,
 ) or die "Cannot read get opts.";
 
-if (!defined $from_path)
+if ( !defined $from_path )
 {
     die "--from not specified.";
 }
 
-if (!defined $to_path)
+if ( !defined $to_path )
 {
     die "--to not specified.";
 }
 
-if (!defined $iters_threshold)
+if ( !defined $iters_threshold )
 {
     die "--iters not specified.";
 }
 
-if (! -d $cache_dir)
+if ( !-d $cache_dir )
 {
     io->dir($cache_dir)->mkpath();
 }
@@ -49,50 +49,49 @@ sub l
     my $fn = shift;
 
     my $cache_fn = "$cache_dir/" . basename($fn) . ".rel-info";
-    if (! -f $cache_fn)
+    if ( !-f $cache_fn )
     {
-        io->file($cache_fn)->print(
-            grep { /\A\[\[Num/ } io->file($fn)->getlines()
-        );
+        io->file($cache_fn)
+            ->print( grep { /\A\[\[Num/ } io->file($fn)->getlines() );
     }
 
-    return [io->file($cache_fn)->chomp->getlines];
+    return [ io->file($cache_fn)->chomp->getlines ];
 }
 
 sub get_fcs
 {
-    return [map { m{\A\[\[Num FCS Moves\]\]=(-?\d+)\z} ? ($1) : () }
-        @{shift()}];
+    return [ map { m{\A\[\[Num FCS Moves\]\]=(-?\d+)\z} ? ($1) : () }
+            @{ shift() } ];
 }
 
 sub get_fcpro
 {
-    return [map { m{\A\[\[Num FCPro Moves\]\]=(-?\d+)\z} ? ($1) : () }
-        @{shift()}]
+    return [ map { m{\A\[\[Num FCPro Moves\]\]=(-?\d+)\z} ? ($1) : () }
+            @{ shift() } ];
 }
 
 sub get_iters
 {
-    return [map { m{\A\[\[Num Iters\]\]=(-?\d+)\z} ? ($1) : () }
-        @{shift()}]
+    return [ map { m{\A\[\[Num Iters\]\]=(-?\d+)\z} ? ($1) : () }
+            @{ shift() } ];
 }
 
 # my $mfi = l("./micro-finance-improved.fc-pro-dump.txt");
 # my $mfi = l("./micro-finance-improved--flares-choice-fcpro.fc-pro-dump.txt");
-my $mfi = l($from_path);
-my $mfi_fcs = get_fcs($mfi);
+my $mfi       = l($from_path);
+my $mfi_fcs   = get_fcs($mfi);
 my $mfi_fcpro = get_fcpro($mfi);
 
 # my $new = l("./new_scan.dump.txt");
 # my $new = l("./micro-finance-improved--flares-choice-fcpro.fc-pro-dump.txt");
-my $new = l($to_path);
-my $new_fcs = get_fcs($new);
+my $new       = l($to_path);
+my $new_fcs   = get_fcs($new);
 my $new_fcpro = get_fcpro($new);
 my $new_iters = get_iters($new);
 
-foreach my $aref ($mfi_fcs, $mfi_fcpro, $new_fcs, $new_fcpro, $new_iters)
+foreach my $aref ( $mfi_fcs, $mfi_fcpro, $new_fcs, $new_fcpro, $new_iters )
 {
-    if (@$aref != 32_000)
+    if ( @$aref != 32_000 )
     {
         die "$aref is wrong!";
     }
@@ -100,18 +99,18 @@ foreach my $aref ($mfi_fcs, $mfi_fcpro, $new_fcs, $new_fcpro, $new_iters)
 
 my %histogram;
 
-for my $i (keys @$new_iters)
+for my $i ( keys @$new_iters )
 {
     my $bef = $mfi_fcpro->[$i];
     my $aft = $new_fcpro->[$i];
 
-    if ($new_iters->[$i] >= 0 and $new_iters->[$i] < $iters_threshold)
+    if ( $new_iters->[$i] >= 0 and $new_iters->[$i] < $iters_threshold )
     {
         if ($should_output_nums)
         {
-            print min($aft, $bef), "\n";
+            print min( $aft, $bef ), "\n";
         }
-        elsif ($aft < $bef)
+        elsif ( $aft < $bef )
         {
             my $delta = $bef - $aft;
             if ($should_histogram)
@@ -120,15 +119,17 @@ for my $i (keys @$new_iters)
             }
             else
             {
-                printf("I=%d %d -> %d Delta=%d%s\n", $i+1, $bef, $aft, $delta,
-                    ($aft > $bef ? " (Worse)" : ""),
+                printf(
+                    "I=%d %d -> %d Delta=%d%s\n",
+                    $i + 1, $bef, $aft, $delta,
+                    ( $aft > $bef ? " (Worse)" : "" ),
                 );
             }
         }
     }
     elsif ($should_output_nums)
     {
-        if ($bef >= 0)
+        if ( $bef >= 0 )
         {
             print $bef, "\n";
         }
@@ -137,7 +138,7 @@ for my $i (keys @$new_iters)
 
 if ($should_histogram)
 {
-    foreach my $delta (sort { $a <=> $b } keys %histogram)
+    foreach my $delta ( sort { $a <=> $b } keys %histogram )
     {
         print "$histogram{$delta}\t$delta\n";
     }

@@ -13,13 +13,18 @@
 
 ## Build procedure.
 
-1. `./gen-helpers.pl`
-2. `make`
-3. `make test`
-4. `make PROD=1`
+1. `perl gen-helpers`
+2. `bash bin/install-npm-deps.sh`
+3. `make`
+4. `make test`
+5. `make PROD=1`
+
+To upload, use:
+
+1. `make upload`
+2. `make PROD=1 upload`
 
 ## Assets.
 
 The assets (downloads/tarballs/etc.) for this site are kept in a
 separate repository: http://github.com/shlomif/fc-solve-site-assets
-

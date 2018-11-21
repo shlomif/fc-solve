@@ -7,17 +7,14 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * threaded_range_solver.c - a range solver that solves different boards in
- * several POSIX threads.
- *
- * See also:
- * - fc_pro_range_solver.c
- * - forking_range_solver.c
- * - serial_range_solver.c
- */
+// threaded_range_solver.c - a range solver that solves different boards in
+// several POSIX threads.
+//
+// See also:
+// - fc_pro_range_solver.c
+// - forking_range_solver.c
+// - serial_range_solver.c
 #include <pthread.h>
-
 #include "range_solvers.h"
 #include "try_param.h"
 
@@ -45,9 +42,8 @@ static char **context_argv;
 static int arg = 1, context_argc;
 #endif
 static long long total_num_iters = 0;
-static pthread_mutex_t total_num_iters_lock;
 
-static void *worker_thread(void *GCC_UNUSED void_arg)
+static void *worker_thread(void *const void_arg)
 {
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     void *const instance = simple_alloc_and_parse(0, NULL, 0);
@@ -73,33 +69,17 @@ static void *worker_thread(void *GCC_UNUSED void_arg)
             {
                 goto theme_error;
             }
-            if (total_num_iters_temp >= UPDATE_TOTAL_NUM_ITERS_THRESHOLD)
-            {
-                pthread_mutex_lock(&total_num_iters_lock);
-                total_num_iters += total_num_iters_temp;
-                pthread_mutex_unlock(&total_num_iters_lock);
-                total_num_iters_temp = 0;
-            }
-
             if (unlikely(board_num % stop_at == 0))
             {
-                pthread_mutex_lock(&total_num_iters_lock);
-                long long total_num_iters_copy =
-                    (total_num_iters += total_num_iters_temp);
-                pthread_mutex_unlock(&total_num_iters_lock);
-                total_num_iters_temp = 0;
-                fc_solve_print_reached(board_num, total_num_iters_copy);
+                fc_solve_print_reached_no_iters(board_num);
             }
             freecell_solver_user_recycle(instance);
         }
     } while (board_num < past_end_board);
 
-    pthread_mutex_lock(&total_num_iters_lock);
-    total_num_iters += total_num_iters_temp;
-    pthread_mutex_unlock(&total_num_iters_lock);
-
 theme_error:
     freecell_solver_user_free(instance);
+    *(typeof(total_num_iters) *)void_arg = total_num_iters_temp;
 
     return NULL;
 }
@@ -109,7 +89,6 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     const long long par__stop_at)
 {
     next_board_num_lock = initial_mutex_constant;
-    total_num_iters_lock = initial_mutex_constant;
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     int arg = par__arg;
 #else
@@ -119,13 +98,13 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     past_end_board = 1 + par__end_board;
     stop_at = par__stop_at;
 
-    int num_workers = 3;
+    size_t num_workers = 3;
     for (; arg < argc; ++arg)
     {
         const char *param;
         if ((param = TRY_P("--num-workers")))
         {
-            num_workers = atoi(param);
+            num_workers = (size_t)atol(param);
         }
         else if ((param = TRY_P("--worker-step")))
         {
@@ -143,23 +122,24 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
     context_argv = argv;
 #endif
     pthread_t workers[num_workers];
-
-    for (int idx = 0; idx < num_workers; idx++)
+    typeof(total_num_iters) num_iters[num_workers];
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         const int check =
-            pthread_create(&workers[idx], NULL, worker_thread, NULL);
+            pthread_create(&workers[idx], NULL, worker_thread, &num_iters[idx]);
         if (check)
         {
             fc_solve_err(
-                "Worker Thread No. %d Initialization failed with error %d!\n",
-                idx, check);
+                "Worker Thread No. %lu Initialization failed with error %d!\n",
+                (unsigned long)idx, check);
         }
     }
 
-    /* Wait for all threads to finish. */
-    for (int idx = 0; idx < num_workers; idx++)
+    // Wait for all threads to finish.
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         pthread_join(workers[idx], NULL);
+        total_num_iters += num_iters[idx];
     }
     fc_solve_print_finished(total_num_iters);
 

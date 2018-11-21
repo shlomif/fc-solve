@@ -3,19 +3,16 @@ package AI::Pathfinding::OptimizeMultiple::Base;
 use strict;
 use warnings;
 
-
 use vars qw($VERSION);
 
 $VERSION = '0.0.1';
 
 use Class::XSAccessor;
 
-
-
 sub new
 {
     my $class = shift;
-    my $self = {};
+    my $self  = {};
     bless $self, $class;
 
     # May throw an exception.
@@ -24,18 +21,16 @@ sub new
     return $self;
 }
 
-
 sub mk_accessors
 {
     my $package = shift;
-    return $package->mk_acc_ref([@_]);
+    return $package->mk_acc_ref( [@_] );
 }
-
 
 sub mk_acc_ref
 {
     my $package = shift;
-    my $names = shift;
+    my $names   = shift;
 
     my $mapping = +{ map { $_ => $_ } @$names };
 
@@ -49,8 +44,7 @@ EOF
 
 }
 
-
-1; # End of AI::Pathfinding::OptimizeMultiple::Move
+1;    # End of AI::Pathfinding::OptimizeMultiple::Move
 
 __END__
 

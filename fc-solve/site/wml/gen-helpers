@@ -1,0 +1,145 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+
+use HTML::Latemp::GenMakeHelpers ();
+use File::Find::Object::Rule     ();
+use File::Update qw/ write_on_change /;
+use Path::Tiny qw/ path /;
+use lib './lib';
+
+sub _exec
+{
+    my ( $cmd, $err ) = @_;
+
+    if ( system(@$cmd) )
+    {
+        die $err;
+    }
+    return;
+}
+if ( not -e "lib/jquery/jquery-phoenix/" )
+{
+    _exec(
+        [
+"cd lib/jquery/ && git clone https://github.com/kugaevsky/jquery-phoenix/"
+
+        ],
+        "git clone",
+    );
+}
+_exec(
+    [
+        'cookiecutter', '-f', '--no-input',
+        'gh:shlomif/cookiecutter--shlomif-latemp-sites',
+        'project_slug=.',
+    ],
+    'cookiecutter failed.'
+);
+require HTML::Latemp::DocBook::GenMake;
+HTML::Latemp::DocBook::GenMake->new(
+    { dest_var => '$(D)', post_dest_var => '$(D)' } )->generate;
+_exec( [ "gmake", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
+    "build-deps failed!" );
+_exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );
+require IO::All;
+
+IO::All->import('io');
+
+my $DIR = "lib/make/";
+
+my $generator = HTML::Latemp::GenMakeHelpers->new(
+    'hosts' => [
+        {
+            'id'         => "common",
+            'source_dir' => "common",
+            'dest_dir'   => "\$(TARGET)",
+        },
+        {
+            'id'         => "src",
+            'source_dir' => "src",
+            'dest_dir'   => q/$(D)/,
+        },
+    ],
+    out_dir => $DIR,
+);
+
+eval { $generator->process_all(); };
+
+my $E = $@;
+
+if ($E)
+{
+    print "$E\n";
+}
+
+sub _f
+{
+    return io("$DIR/include.mak");
+}
+my $text = _f()->slurp();
+$text =~
+s!^((?:T2_DOCS|T2_DIRS) = )([^\n]*)!my ($prefix, $files) = ($1,$2); $prefix . ($files =~ s# +ipp\.\S*##gr)!ems;
+_f()->print($text);
+
+write_on_change(
+    path("lib/h_sections.wml"),
+    \(
+        join "\n",
+        map {
+            my $n = $_;
+
+            # my $tag = "wml_toc_h$n";
+            my $tag = "h$n";
+            <<"EOF"
+<define-tag h${n}_section endtag="required" whitespace="delete">
+
+<set-var h_tag="$tag"  />
+<set-var h_class="h$n" />
+<preserve _wml_id_h$n id href title />
+<set-var %attributes />
+
+<:
+
+0 and die qq|
+%attributes
+
+<get-var h_tag />
+
+<get-var id />
+
+ENDU
+|
+:>
+
+<set-var _wml_id_h$n=<get-var id /> />
+<section class="<get-var h_class />">
+
+<header><$tag id="<get-var _wml_id_h$n />">
+<when <get-var href />>
+<a href="<get-var href />"><get-var title /></a>
+</when>
+<when <not <get-var href /> />>
+<get-var title />
+</when>
+</$tag>
+</header>
+
+%body
+
+</section>
+
+<restore _wml_id_h$n id href title />
+
+</define-tag>
+EOF
+        } 2 .. 6
+    )
+);
+io()->file('Makefile')->print("include $DIR/main.mak\n");
+
+foreach my $p ( ['PROD=1'], [] )
+{
+    _exec( [ 'gmake', @$p, 'make-dirs', 'sects_cache' ], "sects_cache" );
+}

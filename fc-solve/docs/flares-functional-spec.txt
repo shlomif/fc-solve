@@ -71,5 +71,3 @@ Step 3: Looping
 If a solution is not found within the first running of +--flares-plan+,
 then it will loop the plan again and so forth until either a solution is
 found or no more iterations are left.
-
-

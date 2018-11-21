@@ -1,0 +1,133 @@
+#include "template5.wml"
+#include "Inc/js_fc_solve.wml"
+
+<latemp_subject "Freecell Deal Finder" />
+
+<define-tag desc>
+<p>
+Find the deal number of a Microsoft
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> deal, a kind of
+card solitaire game. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
+</p>
+</define-tag>
+
+<emscripten_common incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)" subject="Deal Finder" />
+
+<div id="fc_solve_tabs" class="fc_solve_tabs">
+
+<ul>
+<li><a href="#fc_solve_tabs__ms">Find MS Deal</a></li>
+<li><a href="#fc_solve_tabs__numbered_deal">Test find a Numbered Deal</a></li>
+</ul>
+
+
+
+<div id="fc_solve_tabs__ms" class="tab">
+
+<p class="first">
+Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
+</p>
+
+<div class="fcs_common">
+
+<label for="stdin">Input:</label><br />
+<textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
+<button id="run_do_solve">Find!</button>
+
+</div> ;;; end of fcs_common
+
+</div> ;;; end of fc_solve_tabs__any_board
+
+<div id="fc_solve_tabs__numbered_deal" class="tab">
+
+<p class="first">
+<label for="deal_number">Enter an MS Freecell Deal:</label>
+<input type="text" id="deal_number" size="12" class="phoenix" />
+<button id="populate_input" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
+</p>
+
+<div class="fcs_common">
+</div>
+
+</div> ;;; end of fc_solve_tabs__numbered_deal
+
+</div>
+
+<p id="status_wrap">
+
+<strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
+
+</p>
+
+<fc_solve_bookmark__form />
+
+<h2 id="how_to_use">How to Use</h2>
+
+<p>
+Enter a board in <a href="#stdin">the input text area</a> in
+<a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
+Solver’s input format</a> with each line of input representing a column (or
+stack) of cards.
+Press the <a href="#run_do_solve">“Find” button</a> to
+try to find the deal's index, and assuming it was successful, you will be able
+to read and/or copy the output from the status display.
+</p>
+
+<p>
+Enjoy!
+</p>
+
+<h2 id="technology">Technology</h2>
+
+<fc_solve_jsfcs__credits__common />
+<li>
+<p>
+<a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.google.com/webfonts">Google Web Fonts</a> - provides an
+attractive font for the button leading to this page.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://transcrypt.org/">Transcrypt</a> - a Python-to-JavaScript
+compiler.
+</p>
+</li>
+</ul>
+
+<h2 id="credits">Credits</h2>
+<ul>
+
+<li>
+<p>
+<a href="https://github.com/kripken">Alon Zakai</a> - writing
+<a href="https://github.com/kripken/emscripten">emscripten</a>, the
+LLVM-to-JavaScript compiler that was used to prepare this page, based
+on the original C (gnu99) source, and answering some bug reports and questions
+I filed about it.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/doconix/transcrypt_module/">@doconix</a> - helped
+using transcrypt.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/JdeH">@JdeH</a> - helped with the
+<a href="https://github.com/QQuick/Transcrypt/issues/495">Transcrypt issue</a>
+and he is maintaining it.
+</p>
+</li>
+
+</ul>

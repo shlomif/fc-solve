@@ -5,11 +5,11 @@ Programs to generate boards to be used as input to Freecell Solver.
 
 =head1 SYNOPSIS
 
-B<program> I<[-t]> I<board-number>
+B<pi-make-microsoft-freecell-board> I<[-t]> I<board-number>
 
 or for make_pysol_freecell_board.py:
 
-B<program> I<[-t]> I<[-F]> I<[--ms]> I<board-number> [I<game-string>]
+B<make_pysol_freecell_board.py> I<[-t]> I<[-F]> I<[--ms]> I<board-number> [I<game-string>]
 
 =head1 DESCRIPTION
 
@@ -19,7 +19,7 @@ can be in turn be input to B<fc-solve> by means of a pipeline, or placed
 inside a file for safe-keeping.
 
 B<make_pysol_freecell_board.py> also accepts an optional third argument which
-indicates the game type. This type defaults to Freecell, but is useful for
+indicates the game variants. This type defaults to Freecell, but is useful for
 generating the boards of other games. Note that using this flag still requires
 one to use the "--game" flag of B<fc-solve>, if necessary.
 
@@ -30,7 +30,7 @@ Pro deals even for higher seeds.
 
 A common paradigm for using those programs is something like:
 
-    bash:~$ pi-make-microsoft-freecell-board 11982 | fc-solve -l gi
+    bash:~$ pi-make-microsoft-freecell-board -t 11982 | fc-solve -l gi
 
 If the "-t" option is specified, then the 10 cards are printed with "T"'s,
 instead of "10"'s. While B<fc-solve> can accept either as input, it
@@ -94,6 +94,8 @@ streets_and_alleys - Streets and Alleys
 =head1 SEE ALSO
 
 B<fc-solve> (6)
+
+L<gen-multiple-pysol-layouts> (6)
 
 /usr/share/doc/freecell-solver-FCS_VERSION/board_gen/README
 

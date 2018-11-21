@@ -12,8 +12,6 @@ Freecell Solver test suite.
 
 =cut
 
-our $VERSION = 'v0.0.11';
-
 # Load the dependencies so we'll be sure they are installed.
 use Carp;
 use Cwd;
@@ -55,4 +53,4 @@ Shlomi Fish, L<http://www.shlomifish.org/>
 
 =cut
 
-1; # End of Task::FreecellSolver::Testing
+1;    # End of Task::FreecellSolver::Testing

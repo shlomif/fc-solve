@@ -13,38 +13,38 @@ __PACKAGE__->mk_accessors(qw(_bold));
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    $self->_bold($args->{bold});
+    $self->_bold( $args->{bold} );
 
     return;
 }
 
 sub render_text
 {
-    my ($self, $text) = @_;
+    my ( $self, $text ) = @_;
 
-    return ($self->_bold() ? "BOLD: " : "") . $text;
+    return ( $self->_bold() ? "BOLD: " : "" ) . $text;
 }
 
 package main;
 
 {
-    my $obj1 = MyTest::Package->new({});
+    my $obj1 = MyTest::Package->new( {} );
 
     # TEST
-    ok ($obj1, "Testing constructor");
+    ok( $obj1, "Testing constructor" );
 
     # TEST
-    is ($obj1->render_text("Hi"), "Hi", "Testing false bold.");
+    is( $obj1->render_text("Hi"), "Hi", "Testing false bold." );
 }
 
 {
-    my $obj2 = MyTest::Package->new({bold => 1});
-    # TEST
-    ok ($obj2, "Testing constructor with args");
+    my $obj2 = MyTest::Package->new( { bold => 1 } );
 
     # TEST
-    is ($obj2->render_text("Hi"), "BOLD: Hi", "Testing true bold.");
+    ok( $obj2, "Testing constructor with args" );
+
+    # TEST
+    is( $obj2->render_text("Hi"), "BOLD: Hi", "Testing true bold." );
 }
-

@@ -90,8 +90,7 @@ sub _process_cmd_line
                     @{
                     $self->_process_cmd_line(
                         FC_Solve::SplitCmdLine->split_cmd_line_string(
-                            $cmd_found
-                        )
+                            $cmd_found)
                     )
                     };
             }

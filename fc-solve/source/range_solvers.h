@@ -7,18 +7,17 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * range_solvers.h - common routines for the range solvers.
- */
+// range_solvers.h - common routines for the range solvers.
 #pragma once
 #include "rinutils.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "handle_parsing.h"
 
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void);
-static __attribute__((noreturn)) void help_err(const char *const msg, ...)
+static __attribute__((noreturn)) __attribute__((format(printf, 1, 2))) void
+help_err(const char *const msg, ...)
 {
     va_list ap;
     va_start(ap, msg);
@@ -29,10 +28,10 @@ static __attribute__((noreturn)) void help_err(const char *const msg, ...)
 }
 #endif
 
-static inline fcs_bool_t range_solvers__solve(void *const instance,
+static inline bool range_solvers__solve(void *const instance,
     const long long board_num, long long *const total_num_iters_temp)
 {
-    fcs_state_string_t state_string;
+    fcs_state_string state_string;
     get_board(board_num, state_string);
 
     switch (freecell_solver_user_solve_board(instance, state_string))
@@ -48,6 +47,11 @@ static inline fcs_bool_t range_solvers__solve(void *const instance,
     case FCS_STATE_IS_NOT_SOLVEABLE:
         fc_solve_print_unsolved(board_num);
         break;
+#ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
+    case FCS_STATE_WAS_SOLVED:
+        printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
+        break;
+#endif
     }
 
     *total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);

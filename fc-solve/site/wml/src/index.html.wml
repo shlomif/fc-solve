@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template5.wml"
 
 <latemp_subject "Freecell Solver" />
 <latemp_more_keywords "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" />
@@ -9,6 +9,7 @@
 <li><a href="$(ROOT)/links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
+<h2_section id="about" title="About">
 <p>
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
@@ -37,7 +38,9 @@ Solitaire implementations. A more detailed list of features can be found
 in the <a href="features.html"><b>Features List</b></a>.
 </p>
 
-<h2>News</h2>
+</h2_section>
+
+<h2_section id="news" title="News">
 <:{
 
     require FreecellSolver::Site::News;
@@ -48,59 +51,83 @@ in the <a href="features.html"><b>Features List</b></a>.
 }:>
 
 <h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
+</h2_section>
 
-<h2>Links</h2>
+<h2_section id="links" title="Links">
 
 <ul>
+
 <li>
+<p>
 <a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
 to the game.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://www.solitairelaboratory.com/freecell.html">Michael
 Keller’s Freecell site</a> -
 contains the
 <a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
-(Frequently Asked Questions)</a> and other stuff.
+(Frequently Asked Questions)</a> and other resources.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://pysolfc.sourceforge.net/">PySol Fan Club Edition</a> - a
 cross-platform, open-source implementation of many Solitaire games with
-very good embedding of Freecell Solver.
+a good integration of Freecell Solver.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
 An unsolvable instance of Freecell</a> - why not all possible initial Freecell
 boards can be solved.
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://www.heyes-jones.com/astar.html">Justin Heyes-Jones’s A* page</a> - a page about the A* scan.
+</p>
 </li>
-<li>
-<a href="$(ROOT)/download.html#download_other_solvers">patsolve</a> -
-a program by Dr. Tom Holroyd that solves Freecell and
-Seahaven Towers games. There are some fundamental differences between its
-architecture and that of Freecell Solver, so it might be worthwhile to take a
-look. I've done some modifications on it to fix some build bugs.
-</li>
+
 </ul>
 
 <ul>
+
 <li>
+<p>
 <a href="http://freecode.com/projects/freecellsolver/">Freecell Solver’s
 Freecode App-Index Record</a>
+</p>
 </li>
+
 <li>
-<a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
+<p>
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">Freecell Solver's
 Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
+</p>
 </li>
+
 <li>
+<p>
 <a href="http://fc-solve.blogspot.com/">The Freecell Solver Blog</a>
+</p>
 </li>
+
 <li>
+<p>
 <a href="<get-var presentation_url />">A Presentation about Freecell Solver</a>
+</p>
 </li>
+
 </ul>
 
 <h3 class="plain"><a href="links.html">More Links</a></h3>
 
+</h2_section>

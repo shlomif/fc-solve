@@ -7,7 +7,9 @@ use File::Copy qw( copy );
 use Test::More;
 use File::Which qw( which );
 
-if ( !$ENV{FCS_TEST_CLANG_FORMAT} )
+my $SKIP = 0;
+
+if ( $SKIP or !$ENV{FCS_TEST_CLANG_FORMAT} )
 {
     plan skip_all => "Environment variable to check was set.";
 }
@@ -22,7 +24,10 @@ my @filenames =
     grep { !/\Qcmd_line_inc.h\E|\Qrate_state.c\E/ }
     grep { m#\A\Q$SRC_PATH\E/(?i:[a-z])# }
     sort { $a cmp $b }
-    map  { glob "$SRC_PATH/$_ $SRC_PATH/board_gen/$_" } qw/*.c *.h *.cpp *.hpp/;
+    map {
+    glob
+"$SRC_PATH/$_ $SRC_PATH/board_gen/$_ $SRC_PATH/include/freecell-solver/$_ $SRC_PATH/t/$_"
+    } qw/*.c *.h *.cpp *.hpp/;
 foreach my $fn (@filenames)
 {
     copy( $fn, "$fn.orig" );

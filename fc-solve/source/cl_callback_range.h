@@ -9,7 +9,7 @@
  */
 #pragma once
 
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "rinutils.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
@@ -22,8 +22,8 @@ static int cmd_line_callback(void *const instance, const int argc GCC_UNUSED,
     int *const ret GCC_UNUSED, void *const context)
 {
     const char *const arg_str = argv[arg];
-    if (!cmd_line_cb__handle_common(arg_str, instance,
-            (fc_solve_display_information_context_t *)context))
+    if (!cmd_line_cb__handle_common(
+            arg_str, instance, (fc_solve_display_information_context *)context))
     {
         fc_solve_err("Unknown option %s!\n", arg_str);
     }

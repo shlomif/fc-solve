@@ -1,160 +1,228 @@
-#include '../template.wml'
+#include "template5.wml"
 <latemp_subject "Freecell Solver's Features List" />
 
-<h2>Usability Options</h2>
+<h2_section id="usability-opts" title="Usability Options">
 
 <ul>
 <li>
+<p>
 The stacks and freecells retain their position throughout the
 presented solution.
+</p>
 </li>
 
 <li>
+<p>
 Can present either the intermediate states (stepping at one move or sequence
 move) or the moves that are required for the solution, or both.
+</p>
 </li>
 
 <li>
+<p>
 On UNIX-like operating systems: accepts some user signal combinations that
 turn some run-time debugging information on and off.
+</p>
 </li>
 
 <li>
+<p>
 Some configurations are very fast: the solver was able to solve the first
-Microsoft Freecell 32,000 deals in 74 seconds on a Pentium 4-2.4 GHz computer.
-(432 layouts per second) before that computer was decommissioned.
-On a Core i3 computer, these deals are solved in 3.67 seconds (8,719 layouts
-per second).
+Microsoft Freecell 32,000 deals in 74 seconds on a Pentium 4-2.4 GHz computer
+(432 layouts per second), before that computer was decommissioned.
+On a Core i3 computer, these deals are now solved in 3.04 seconds (10,526
+layouts per second).
+</p>
 </li>
 
 <li>
+<p>
 Option to use atomic moves which guarantee an accurate verdict.
 (non-atomic scans may report a false negative)
+</p>
 </li>
 
 <li>
+<p>
 Ability to read command line arguments from a file, or from a preset
 collection. Makes command lines much less verbose.
+</p>
+</li>
+
+<li>
+<p>
+An optional <code>--hint-on-intractable</code> flag which
+presents the moves to the intermediate reached state, if the maximal number
+of iterations was reached without a conclusion (= "intractable").
+</p>
 </li>
 
 </ul>
 
-<h2>Development Features</h2>
+</h2_section>
+
+<h2_section id="dev-features" title="Development Features">
 
 <ul>
 
 <li>
+<p>
 Available as a library for use within third-party applications. It is
 licensed under <a href="http://en.wikipedia.org/wiki/MIT_License">the
 MIT/Expat License</a>, which means it can be used without any restrictions.
+</p>
 </li>
 
 <li>
+<p>
 The core library and program is written in C code supported by modern C
 compilers such as GCC and LLVM/clang.
+</p>
 </li>
 
 <li>
+<p>
 Full compatibility between dynamically-linked third-party applications to the
 version of the library that is used.
+</p>
 </li>
 
 <li>
+<p>
 Compile-time options for hard-coding several game-types parameters, that
 can make the solver faster. There's a combined FCS_FREECELL_ONLY mode.
+</p>
 </li>
 
 <li>
+<p>
 A test suite is included as part of the distribution.
+</p>
 </li>
 
 </ul>
 
-<h2>Scan Options</h2>
+</h2_section>
+
+<h2_section id="scam-opts" title="Scan Options">
 
 <ul>
 
 <li>
+<p>
 Supports the DFS (= Depth-First Search), Randomized DFS and Best-First-Search
 scans. Which one can be specified at run-time.
+</p>
 </li>
 
 <li>
+<p>
 The order of the tests to be conducted on a given state can be specified at
 the beginning of the scan. It is also possible to include only a subset of
 the available tests.
+</p>
 </li>
 
 <li>
+<p>
 With the A* scan, one can specify the weights of the different state
 evaluation parameters.
+</p>
 </li>
 
 <li>
+<p>
 One can limit the scan to a certain number of checked states.
+</p>
 </li>
 
 <li>
+<p>
 It is possible to resume a scan from a pre-empted position.
+</p>
 </li>
 
 <li>
+<p>
 After a solution path was found it can be optimized using a BrFS
 (= Breadth-First Search) scan on the intermediate states.
+</p>
 </li>
 
 <li>
+<p>
 There is an option to reparent states during a scan if their depth in
 the solution tree is higher than the one with which they were reached. This
 also tends to shorten the solution length.
+</p>
 </li>
 
 <li>
+<p>
 The Randomized DFS scan accepts a user-defined seed.
+</p>
 </li>
 
 <li>
+<p>
 Several scans can be played on the same states' collection (while switching
 from scan to scan) giving on average a faster solving time.
+</p>
 </li>
 
 <li>
+<p>
 It is possible to specify a static prelude of quotas to be played before the
 perpetual loop.
+</p>
 </li>
 
 <li>
+<p>
 With the random-DFS scan, it is possible to specify a different moves selection
 for each depth in the DFS stack.
+</p>
 </li>
 
 </ul>
 
-<h2>Game Types</h2>
+</h2_section>
+
+<h2_section id="game-types" title="Game Types">
 
 <ul>
 <li>
+<p>
 Can solve games whose sequences are built by suit, by alternate colour or
 by rank regardless of colour.
+</p>
 </li>
 
 <li>
+<p>
 Can solve games whose sequence move is limited by the number of Freecells
 and empty columns, or unlimited.
+</p>
 </li>
 
 <li>
+<p>
 Can solve games whose vacant columns can be filled by any card, by kings
 only, or by no card whatsoever.
+</p>
 </li>
 
 <li>
+<p>
 Run-time choice of the number of freecells and columns.
 (limited by a compile-time directive)
+</p>
 </li>
 
 <li>
+<p>
 Supports games of one and two decks.
+</p>
 </li>
 
 <li>
@@ -162,7 +230,7 @@ Supports games of one and two decks.
 List of <a href="http://pysolfc.sourceforge.net/">PySol (PySolFC
 version)</a> variants that can be solved:
 </p>
-<ul>
+<ul class="game_variants">
 <li>American Canister</li>
 <li>Baker’s Dozen</li>
 <li>Baker’s Game</li>
@@ -193,7 +261,7 @@ version)</a> variants that can be solved:
 <li>Ocean Towers</li>
 <li>Opus</li>
 <li>Penelope's Web</li>
-<li>Penguin</li>
+<li>Penguin (<b>NOTE!</b> This variant is only supported by PySol FC with some magic wrappers. It is not supported directly by Freecell Solver. Please do not ask us about it.)</li>
 <li>Portuguese Solitaire</li>
 <li>Relaxed Freecell</li>
 <li>Relaxed Seahaven Towers</li>
@@ -218,3 +286,4 @@ command-line options.
 </li>
 </ul>
 
+</h2_section>

@@ -1,0 +1,3 @@
+#include "prelude.wml"
+<set-var latemp_html_standard="xhtml5" />
+#include "driver.wml"

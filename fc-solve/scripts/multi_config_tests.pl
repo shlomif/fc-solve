@@ -10,12 +10,8 @@ use autodie;
 
 package Games::Solitaire::FC_Solve::Test::Trap::Obj;
 
-use strict;
-use warnings;
-
 use Carp         ();
 use Data::Dumper ();
-use IO::Handle;
 
 use Term::ANSIColor qw(colored);
 
@@ -72,18 +68,20 @@ sub all_info
     return Text::Sprintf::Named->new(
         {
             fmt => join( "",
-                map { "$_ ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" } (@fields) )
+                map { "$_ [%(blurb)s] ===\n{{{{{{\n%($_)s\n}}}}}}\n\n" }
+                    (@fields) )
         }
-        )->format(
+    )->format(
         {
             args => {
+                blurb => scalar( $self->blurb ),
                 map {
                     my $name = $_;
                     ( $name => $self->_stringify_value($name) )
                 } @fields
             }
         }
-        );
+    );
 }
 
 sub emit_all
@@ -151,18 +149,13 @@ sub trace_all
 
 package main;
 
-use strict;
-use warnings;
-
-use Cwd qw(getcwd);
-use File::Path qw(rmtree);
-use File::Spec ();
+use Path::Tiny qw/ path /;
 
 use Term::ANSIColor qw(colored);
 
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
-my $test_index     = 1;
+my $TEST_BASE_IDX  = 1;
 my $NUM_PROCESSORS = 4;
 
 my $FALSE = 0;
@@ -178,31 +171,50 @@ sub reg_test
     push @tests, [@_];
 }
 
+sub _calc_build_path
+{
+    my ($idx) = @_;
+
+    return Path::Tiny->cwd->parent->child("build-$idx");
+}
+
+my $CWD = Path::Tiny->cwd;
+
+sub _chdir_run
+{
+    my ( $DIR, $cb ) = @_;
+
+    chdir($DIR);
+    $cb->();
+    chdir($CWD);
+
+    return;
+}
+
 sub run_tests
 {
-    my ( $blurb_base_base, $args ) = @_;
+    my ( $idx, $blurb_base_base, $args ) = @_;
 
-    my $idx = $test_index++;
-    my $blurb_base = sprintf "%s [idx=%d / %d]", $blurb_base_base, $idx,
+    my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
         scalar(@tests);
+    my $run = sub {
+        my ( $DESC, $cmd ) = @_;
+        run_cmd( "$blurb_base : $DESC", { cmd => [@$cmd] } );
+    };
 
     my $tatzer_args       = $args->{'tatzer_args'};
     my $cmake_args        = $args->{'cmake_args'};
     my $prepare_dist_args = $args->{'prepare_dist_args'};
+    my $website_args      = $args->{'website_args'};
 
-    if ( 1 != grep { $_ } ( $tatzer_args, $cmake_args, $prepare_dist_args ) )
+    if ( 1 != grep { $_ }
+        ( $tatzer_args, $cmake_args, $prepare_dist_args, $website_args ) )
     {
         die
 "One and only one of tatzer_args or cmake_args or prepare_dist_args must be specified.";
     }
 
-    my $cwd        = getcwd();
-    my $build_path = File::Spec->rel2abs(
-        File::Spec->catdir(
-            File::Spec->curdir(), File::Spec->updir(), "build-$idx"
-        )
-    );
-
+    my $build_path = _calc_build_path($idx);
     local %ENV = %ENV;
     delete( $ENV{FCS_USE_TEST_RUN} );
     $ENV{TEST_JOBS} = $NUM_PROCESSORS;
@@ -213,48 +225,122 @@ sub run_tests
 
     if ($prepare_dist_args)
     {
-        run_cmd(
-            "$blurb_base : prepare dist",
-            {
-                cmd => [
-                    $^X,
+        $run->(
+            "prepare dist",
+            [
+                $^X,
 "../scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/$prepare_dist_args->{base}",
-                    @{ $prepare_dist_args->{args} }
-                ],
-            },
+                @{ $prepare_dist_args->{args} }
+            ],
         );
-        run_cmd( "$blurb_base : untar",
-            { cmd => [ "tar", "-xvf", "dbm_fcs_for_sub.tar.xz" ], } );
-        chdir('dbm_fcs_for_sub');
-        run_cmd( "$blurb_base : make", { cmd => ['make'], } );
-        chdir($cwd);
-        rmtree( 'dbm_fcs_for_sub', 0, $SAFE );
-        unlink('dbm_fcs_for_sub.tar.xz');
+        my $DIR = path('dbm_fcs_dist');
+        my $ARC = "$DIR.tar.xz";
+        $run->( "untar", [ "tar", "-xvf", $ARC ] );
+        _chdir_run(
+            $DIR,
+            sub {
+                $run->( 'make', ['make'], );
+            }
+        );
+        $DIR->remove_tree( { safe => $SAFE } );
+        unlink($ARC);
+    }
+    elsif ($website_args)
+    {
+        my $DIR = "$CWD/../site/wml";
+        my $PATH_PREFIX =
+            $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+            ? "$CWD/../scripts/dockerized-emscripten/:"
+            : "";
+        local $ENV{PATH} =
+            $PATH_PREFIX . $ENV{PATH} . ":$DIR/node_modules/.bin/";
+        _chdir_run(
+            $DIR,
+            sub {
+                local $ENV{PWD} = $DIR;
+                run_cmd(
+                    "$blurb_base : ./gen-helpers",
+                    { cmd => [ $^X, 'gen-helpers' ] }
+                );
+
+          # (
+          #                 'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
+          #                 qq#cd "$DIR" && make#,
+          #                 )
+          # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
+                if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
+                {
+                    foreach my $component (qw# travis emscripten #)
+                    {
+                        my $P =
+qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../source#;
+                        while ( my $x = $P =~ m#(/)#g )
+                        {
+                            my $path = substr( $P, 0, pos($P) );
+                            print "<$path>\n",
+                                scalar(
+`docker exec -it emscripten bash -c 'echo $path/*'`
+                                ),
+                                "\n";
+                        }
+                    }
+                    exit(-1);
+                }
+                my $run = sub {
+                    my ($args) = @_;
+                    unshift @$args, 'make', 'SKIP_EMCC=1',
+                        ( $ENV{DBTOEPUB} ? "DBTOEPUB=\"$ENV{DBTOEPUB}\"" : () ),
+                        (
+                        $ENV{DOCBOOK5_XSL_STYLESHEETS_PATH}
+                        ? "DOCBOOK5_XSL_STYLESHEETS_PATH=\"$ENV{DOCBOOK5_XSL_STYLESHEETS_PATH}\""
+                        : ()
+                        );
+                    return run_cmd(
+                        "$blurb_base : @$args",
+                        {
+                            cmd => [
+                                $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+                                ? (@$args)
+                                : (
+                                    'bash',
+                                    '-c',
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; @$args 2>&1 | tail -300"
+                                )
+                            ]
+                        }
+                    );
+                };
+                $run->( [] );
+                if ( not $args->{do_not_test} )
+                {
+                    $run->( ['test'] );
+                }
+            }
+        );
     }
     else
     {
         mkdir($build_path);
-        chdir($build_path);
-        if ($tatzer_args)
-        {
-            run_cmd( "$blurb_base : Tatzer",
-                { cmd => [ '../source/Tatzer', @$tatzer_args ] } );
-        }
-        else
-        {
-            run_cmd( "$blurb_base : cmake",
-                { cmd => [ 'cmake', @$cmake_args, '../source' ] } );
-        }
-        run_cmd( "$blurb_base : make",
-            { cmd => [ 'make', "-j$NUM_PROCESSORS" ] } );
-        if ( not $args->{do_not_test} )
-        {
-            run_cmd( "$blurb_base : test",
-                { cmd => [ $^X, "$cwd/run-tests.pl" ] } );
-        }
+        _chdir_run(
+            $build_path,
+            sub {
+                if ($tatzer_args)
+                {
+                    $run->( "Tatzer", [ '../source/Tatzer', @$tatzer_args ] );
+                }
+                else
+                {
+                    $run->( "cmake", [ 'cmake', @$cmake_args, '../source' ] );
+                }
+                $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
+                if ( not $args->{do_not_test} )
+                {
+                    $run->( "test", [ $^X, "$CWD/run-tests.pl" ] );
+                }
 
-        chdir($cwd);
-        rmtree( $build_path, 0, $SAFE );
+            }
+        );
+        $build_path->remove_tree( { safe => $SAFE } );
     }
 
     return;
@@ -274,7 +360,8 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
         run_cmd(
             'wget avl',
             {
-                cmd => [qw(wget ftp://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]
+                cmd =>
+                    [qw(wget https://ftp.gnu.org/pub/gnu/avl/avl-2.0.3.tar.gz)]
             }
         );
         run_cmd( 'untar avl', { cmd => [qw(tar -xvf avl-2.0.3.tar.gz)] } );
@@ -282,7 +369,7 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
 q#find avl-2.0.3 -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'#
         );
     }
-    $ENV{LIBAVL2_SOURCE_DIR} = getcwd() . "/avl-2.0.3";
+    $ENV{LIBAVL2_SOURCE_DIR} = Path::Tiny->cwd->child("avl-2.0.3");
 }
 
 # This is just to test that the reporting is working fine.
@@ -313,6 +400,14 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+reg_tatzer_test( "Default", () );
+
+sub disabling_website_build_for_now
+{
+    reg_test( 'Website #1', { website_args => [] } );
+}
+disabling_website_build_for_now();
+
 reg_test(
     "No int128",
     { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
@@ -325,6 +420,7 @@ reg_prep( "prepare_dist vendu",
     'prepare_vendu_depth_dbm_fc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist pbs",
     'prepare_pbs_dbm_solver_self_contained_package.pl' );
+reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
 reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve', );
 reg_test(
     "build_only: maximum speed preset",
@@ -343,7 +439,6 @@ reg_test(
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test( "Non-Debondt Delta States",
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
-reg_tatzer_test( "Default", () );
 reg_tatzer_test( "--rcs", qw(--rcs) );
 
 reg_lt_test( "libavl2 with COMPACT_STATES",
@@ -368,15 +463,42 @@ reg_lt_test(
     qw(--break-back-compat-1 --fc-only),
 );
 
-foreach my $run (@tests)
 {
-    run_tests(@$run);
+    my @found =
+        grep { -e $_ }
+        map  { _calc_build_path( $TEST_BASE_IDX + $_ ); } keys @tests;
+    if (@found)
+    {
+        die
+"The following build dirs exist and interfere with the build - [ @found ]. Please remove them!";
+    }
 }
 
-print colored( "All tests successful.",
-    ( $ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'} || 'bold green' ) ),
-    "\n";
+_chdir_run(
+    '../../',
+    sub {
+        run_cmd( "root tests",
+            { cmd => [ qw(prove), glob('root-tests/t/*.t') ] } );
+    }
+);
 
+_chdir_run(
+    '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
+    sub {
+        run_cmd( "Games-Solitaire-Verify dzil",
+            { cmd => [qw(dzil test --all)] } );
+    }
+);
+
+while ( my ( $idx, $run ) = each @tests )
+{
+    run_tests( $TEST_BASE_IDX + $idx, @$run );
+}
+
+my $COL  = $ENV{'HARNESS_SUMMARY_COLOR_SUCCESS'};
+my $TEXT = "All tests successful.";
+print $COL ? colored( $TEXT, $COL ) : $TEXT;
+print "\n";
 exit(0);
 
 __END__

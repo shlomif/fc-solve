@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * split_cmd_line.h: split command line arguments from a big string according
- * to a subset of Bourne shell's semantics. Useful for reading command
- * line arguments from files.
- */
+// split_cmd_line.h: split command line arguments from a big string according
+// to a subset of Bourne shell's semantics. Useful for reading command
+// line arguments from files.
 #pragma once
 #include "rinutils.h"
 
@@ -21,7 +19,7 @@ typedef struct
 {
     int argc;
     char **argv;
-} args_man_t;
+} fcs_args_man;
 
-extern void fc_solve_args_man_free(args_man_t *const manager);
-extern args_man_t fc_solve_args_man_chop(const char *const string);
+extern void fc_solve_args_man_free(fcs_args_man *const manager);
+extern fcs_args_man fc_solve_args_man_chop(const char *const string);

@@ -1,0 +1,44 @@
+=encoding utf8
+
+=head1 NAME
+
+gen-multiple-pysol-layouts. - generate multiple PySol / MS initial
+solitaire deals.
+
+=head1 SYNOPSIS
+
+B<gen-multiple-pysol-layouts> I<--dir=[dir]> I<--prefix=[prefix]> I<--suffix=[suf]> B<[idxs...]>
+
+=head1 DESCRIPTION
+
+This program emits some starting PySol / Freecell Pro deals in separate files
+inside the target directory.
+
+Some examples:
+
+    gen-multiple-pysol-layouts --dir foo/ --prefix "" --suffix .board --ms 24 42 100
+
+    gen-multiple-pysol-layouts --dir foo/ --prefix "" --suffix .board --ms seq 1 32000
+
+    gen-multiple-pysol-layouts --dir foo/ --prefix "" --suffix .board --ms read /path/to/indexes-file.txt
+
+Generate L<Black Hole solitaire|https://en.wikipedia.org/wiki/Black_Hole_%28solitaire%29> PySol FC deals:
+
+    gen-multiple-pysol-layouts --game black_hole --dir foo/ --prefix "" --suffix .board seq 100000 200000
+
+=head1 OPTIONS
+
+To be discussed.
+
+=head1 SEE ALSO
+
+B<pi-make-microsoft-freecell-board> (6),
+B<make_pysol_freecell_board.py> (6).
+
+/usr/share/doc/freecell-solver-FCS_VERSION/board_gen/README
+
+=head1 AUTHOR
+
+Shlomi Fish, L<http://www.shlomifish.org/> .
+
+=cut

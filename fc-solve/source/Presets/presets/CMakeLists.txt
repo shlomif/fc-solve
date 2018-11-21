@@ -14,6 +14,7 @@ INSTALL(
         "gooey-unknown-thing.sh"
         "hello-world.sh"
         "john_galt_line-500.sh"
+        "looking-glass.sh"
         "maliciously-obscure.sh"
         "micro-finance.sh"
         "micro-finance-improved.sh"

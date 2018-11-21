@@ -1,40 +1,19 @@
-#include '../template.wml'
+#include "template5.wml"
 #include "xhtml/1.x/std/toc.wml"
 
 <latemp_subject "Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals" />
 
 <page_extra_head_elements>
-<script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
-<script type="text/javascript" src="chart-using-flot.js"></script>
-<style type="text/css">
-.demo-container {
-    box-sizing: border-box;
-    width: 800px;
-    height: 400px;
-    padding: 20px 15px 15px 15px;
-    margin: 15px auto 30px auto;
-    border: 1px solid #ddd;
-    background: #fff;
-    background: linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -o-linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -ms-linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -moz-linear-gradient(#f6f6f6 0, #fff 50px);
-    background: -webkit-linear-gradient(#f6f6f6 0, #fff 50px);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    -o-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    -ms-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    -moz-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-    -webkit-box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-}
-
-.demo-placeholder {
-    width: 100%;
-    height: 100%;
-    font-size: 14px;
-    line-height: 1.2em;
-}
-</style>
+<js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+<js_requirejs />
 </page_extra_head_elements>
+
+<js_script>
+requirejs.config({
+    baseUrl: '$(ROOT)/js',
+    });
+require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.chart_data); }) } );
+</js_script>
 
 <h2* id="toc">Table of contents</h2*>
 

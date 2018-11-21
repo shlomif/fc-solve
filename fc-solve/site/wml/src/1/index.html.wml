@@ -1,0 +1,14 @@
+#include "template5.wml"
+#include "Inc/js_fc_solve.wml"
+
+<latemp_subject "Freecell Deal Finder" />
+
+<define-tag desc>
+<p>
+string to indices test. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
+</p>
+
+</define-tag>
+
+<emscripten_common incs="require([\"s2i-test\"], function (t)" subject="string to indices test" />

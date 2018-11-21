@@ -4,9 +4,7 @@ import re
 import sys
 from os.path import expanduser, isfile
 import json
-
-if sys.version_info > (3,):
-    xrange = range
+from six.moves import range
 
 MAX_SEED = 17602
 
@@ -54,7 +52,7 @@ with open(STATE_FN) as fh:
 print("Seed\tN\tSum\tMax")
 sys.stdout.write(state['output'])
 added_lines = []
-for seed in xrange(state['reached_seed'] + 1, MAX_SEED + 1):
+for seed in range(state['reached_seed'] + 1, MAX_SEED + 1):
     with open(basedir +
               "/fcs-summary-len-seed/lens-theme1--seed=%d.txt" % seed) as fh:
         i = 0

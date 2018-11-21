@@ -26,3 +26,13 @@ use warnings;
 #include "share-this.wml"
 #include "sponsored_ad.wml"
 #include "amazon.wml"
+
+<define-tag js_requirejs>
+<when "$(PRODUCTION)">
+<js_script src="$(ROOT)/js/require.js"></js_script>
+</when>
+<when "<not "$(PRODUCTION)" />">
+<js_script src="$(ROOT)/js/require--debug.js"></js_script>
+</when>
+</define-tag>
+

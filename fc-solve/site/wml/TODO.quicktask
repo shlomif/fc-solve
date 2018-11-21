@@ -1,43 +1,12 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
-    - Fix the formatting of the "Game Type:"+select on firefox.
-      @ Added [Wed 2017-05-17]
-    - Make sure to clear/nullify the existing solution after pressing Solve
-      again.
-      @ Added [Wed 2017-05-17]
-    - Play with using http://twitter.github.com/bootstrap/ for the site.
-        * in a separate git branch
-        * Added [Sat 2013-01-12]
-    - Use localStorage for remembering the state of the form.
-        * Added [Sat 2013-01-12]
-    - Add support for more solitaire games
-        * Added [Sat 2013-01-12]
-        * (bakers_game, bakers_dozen, seahaven, simple simon, etc.)
-
-    - Make the output more compatible with fc-solve -sel -sam -p -t.
-        * Added [Sun 2013-01-13]
-
-    - Investigate .getScript to load libfreecell-solver.min.js by AJAX.
-        * See how they do it on the other emscripten demos.
-        * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
-        * Added [Mon 2013-01-14]
-    - Map the output in the states/moves display using Unicode suits/etc.
-      @ Added [Sun 2015-12-13]
-    - Pick a better colour for the states in js-fc-solve than the light pink.
-      @ Added [Sun 2015-12-13]
-    - Add spell checking support to test for spelling.
-      @ Added [Sun 2016-01-24]
-    - Test that the web-site builds on Travis-CI/etc.
-      @ Added [Sun 2016-01-24]
-    - Add a "Contribute" page (perhaps a nav-tree category)
-      @ Added [Sun 2016-01-24]
-    - Write a better README for documenting the website build/maint process.
-      @ Added [Wed 2016-10-05]
-
 
 LONG TERM:
     - Prepare the solver with the GUI.
+        * Added [Sat 2013-01-12]
+    - Play with using http://twitter.github.com/bootstrap/ for the site.
+        * in a separate git branch
         * Added [Sat 2013-01-12]
 
 COMPLETED TASKS:
@@ -137,6 +106,58 @@ COMPLETED TASKS:
     - Convert the presets in the combo box to their more updated ones.
         @ DONE [Mon 2016-12-19]
       @ Added [Sat 2016-12-17]
+    - Fix the formatting of the "Game Type:"+select on firefox.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Wed 2017-05-17]
+    - Make sure to clear/nullify the existing solution after pressing Solve
+      again.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Wed 2017-05-17]
+    - Add support for more solitaire games
+        * Added [Sat 2013-01-12]
+        * (bakers_game, bakers_dozen, seahaven, simple simon, etc.)
+        @ DONE [Fri 2018-07-27]
+    - Make the output more compatible with fc-solve -sel -sam -p -t.
+        * Added [Sun 2013-01-13]
+        @ DONE [Fri 2018-07-27]
+    - Investigate .getScript to load libfreecell-solver.min.js by AJAX.
+        * See how they do it on the other emscripten demos.
+        * http://www.mkyong.com/jquery/how-to-load-javascript-at-runtime-with-jquery/
+        * Added [Mon 2013-01-14]
+        @ DONE [Fri 2018-07-27]
+    - Map the output in the states/moves display using Unicode suits/etc.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Sun 2015-12-13]
+    - Pick a better colour for the states in js-fc-solve than the light pink.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Sun 2015-12-13]
+    - Add spell checking support to test for spelling.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Sun 2016-01-24]
+    - Test that the web-site builds on Travis-CI/etc.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Sun 2016-01-24]
+    - Write a better README for documenting the website build/maint process.
+        @ DONE [Fri 2018-07-27]
+      @ Added [Wed 2016-10-05]
+    - Get rid of the "Advanced" toggle button and place its contents on page
+        * Apparently, the non-FreeCell variants are popular.
+        @ DONE [Sat 2018-08-11]
+      @ Added [Sat 2018-08-11]
+    - Add a "How to Contribute" page (perhaps a nav-tree category)
+        @ DONE [Sun 2018-08-12]
+      @ Added [Sun 2016-01-24]
+    - Use localStorage for remembering the state of the form.
+        * Add it for find-deal too
+        * Credit jquery-phoenix
+        * Added [Sat 2013-01-12]
+        @ DONE [Wed 2018-08-15]
+    - Build and minimize jquery-phoenix from its .coffee sources
+        @ DONE [Sun 2018-08-19]
+      @ Added [Sun 2018-08-19]
+    - Convert the long strings in lib/babel/js/web-fc-solve-tests.js
+        * To separate files with some JS/JSON code generation.
+        @ DONE [Wed 2018-10-03]
 
 
 

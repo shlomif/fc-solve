@@ -13,56 +13,59 @@ my $MAX_ITERS = 2_000;
 
 # my $THEME = q#--method random-dfs -to '[01][2345]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
 # my $THEME = q#--method random-dfs -to '[01][2345][6789]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
-my $THEME = q#--method random-dfs -to '[01][2345][6789]' -dto2 '13,[0123456]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+my $THEME =
+q#--method random-dfs -to '[01][2345][6789]' -dto2 '13,[0123456]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
 
-my $REFERENCE_FN = "$ENV{HOME}/Backup/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt";
+my $REFERENCE_FN =
+    "$ENV{HOME}/Backup/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt";
 my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-Rarity";
 
 my $BASE = 'theme1';
 
-my @REF = map { /Length: ([0-9\-]+)\z/ ? $1 : (die "Cannot match <$_>") }
+my @REF = map { /Length: ([0-9\-]+)\z/ ? $1 : ( die "Cannot match <$_>" ) }
     io->file($REFERENCE_FN)->chomp->getlines;
 
 io->dir($OUTPUT_PATH)->mkpath;
 
-foreach my $seed (1 .. 1000)
+foreach my $seed ( 1 .. 1000 )
 {
 
     my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
 
-    if (! -e $out_fn)
+    if ( !-e $out_fn )
     {
-        my $max = 0;
-        my $sum = 0;
-        my $count = 0;
-        my $out_fn_deltas = "$out_fn.DELTAS";
+        my $max            = 0;
+        my $sum            = 0;
+        my $count          = 0;
+        my $out_fn_deltas  = "$out_fn.DELTAS";
         my $out_fn_summary = "$out_fn.SUMMARY";
 
-        my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn"#;
+        my $cmd =
+qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn"#;
         print "$cmd\n";
-        open(my $fh, "$cmd |");
+        open( my $fh, '-|', $cmd );
         my $deal = 0;
         open my $d_fh, '>', $out_fn_deltas;
-        while (my $l = <$fh>)
+        while ( my $l = <$fh> )
         {
             my $delta = -1;
-            if ($l =~ /Unsolved/)
+            if ( $l =~ /Unsolved/ )
             {
                 print $l;
             }
-            elsif ($l =~ /Verdict: Solved/)
+            elsif ( $l =~ /Verdict: Solved/ )
             {
-                my ($i) = ($l =~ /Length: ([0-9]+)/)
+                my ($i) = ( $l =~ /Length: ([0-9]+)/ )
                     or die "Wrong line <$l>";
 
                 my $r = $REF[$deal];
 
-                if ($i < $r)
+                if ( $i < $r )
                 {
                     $delta = $r - $i;
                     $sum += $delta;
                     $count++;
-                    if ($delta > $max)
+                    if ( $delta > $max )
                     {
                         $max = $delta;
                     }
@@ -74,8 +77,8 @@ foreach my $seed (1 .. 1000)
         {
             $deal++;
         }
-        close ($fh);
-        close ($d_fh);
+        close($fh);
+        close($d_fh);
         my $MSG = "count = $count ; sum = $sum ; max = $max";
         io->file($out_fn_summary)->print("$MSG\n");
         print "Seed = $seed ; $MSG\n";

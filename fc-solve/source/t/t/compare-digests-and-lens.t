@@ -4,7 +4,6 @@ use strict;
 use warnings;
 
 use Test::More tests => 3;
-use File::Spec ();
 use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
 use FC_Solve::CheckResults ();
 

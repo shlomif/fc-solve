@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * delta_states_any.h - choose between the debondt and non-debondt delta_states
- */
-
+// delta_states_any.h - choose between the debondt and non-debondt delta_states
 #pragma once
 
 #ifdef __cplusplus
@@ -23,41 +20,37 @@ extern "C" {
 #include "delta_states_impl.h"
 #endif
 
-#ifdef FCS_DEBONDT_DELTA_STATES
-#define fc_solve_delta_stater_t fc_solve_debondt_delta_stater_t
-#define fc_solve_delta_stater_decode_into_state(a, b, c, d)                    \
-    fc_solve_debondt_delta_stater_decode_into_state(local_variant, a, b, c, d)
-#define fcs_init_and_encode_state(a, b, c, d)                                  \
-    fcs_debondt_init_and_encode_state(a, b, c, d)
-#ifdef FCS_FREECELL_ONLY
-static inline void fc_solve_delta_stater_init(
-    fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
-    const size_t num_columns, const int num_freecells)
-{
-    fc_solve_debondt_delta_stater_init(delta, FCS_DBM_VARIANT_2FC_FREECELL,
-        init_state, num_columns, num_freecells);
-}
+#ifdef INDIRECT_STACK_STATES
+#define fc_solve_delta_stater_decode_into_state(                               \
+    delta_stater, enc_state, state_ptr, indirect_stacks_buffer)                \
+    fc_solve_delta_stater_decode_into_state_proto(local_variant, delta_stater, \
+        enc_state, state_ptr, indirect_stacks_buffer)
 #else
-static inline void fc_solve_delta_stater_init(
-    fc_solve_debondt_delta_stater_t *const delta, fcs_state_t *const init_state,
-    const size_t num_columns, const int num_freecells,
-    const int sequences_are_built_by)
-{
-    fc_solve_debondt_delta_stater_init(delta, FCS_DBM_VARIANT_2FC_FREECELL,
-        init_state, num_columns, num_freecells, sequences_are_built_by);
-}
-#endif
-#define fc_solve_delta_stater_release(a)                                       \
-    fc_solve_debondt_delta_stater_release(a)
+#define fc_solve_delta_stater_decode_into_state(                               \
+    delta_stater, enc_state, state_ptr, indirect_stacks_buffer)                \
+    fc_solve_delta_stater_decode_into_state_proto(                             \
+        local_variant, delta_stater, enc_state, state_ptr)
 #endif
 
-    /****************************************************/
-    /* compare_enc_states */
+static inline void fcs_init_and_encode_state(
+    fcs_delta_stater *const delta_stater,
+    const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const state,
+    fcs_encoded_state_buffer *const enc_state)
+{
+    fcs_init_encoded_state(enc_state);
+
+    fc_solve_delta_stater_encode_into_buffer(
+        delta_stater, local_variant, state, enc_state->s);
+}
+
+/****************************************************/
+/* compare_enc_states */
 
 #ifdef FCS_DEBONDT_DELTA_STATES
 
 static inline int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
+    const fcs_encoded_state_buffer *a, const fcs_encoded_state_buffer *b)
 {
     return memcmp(a, b, sizeof(*a));
 }
@@ -65,7 +58,7 @@ static inline int compare_enc_states(
 #else
 
 static inline int compare_enc_states(
-    const fcs_encoded_state_buffer_t *a, const fcs_encoded_state_buffer_t *b)
+    const fcs_encoded_state_buffer *a, const fcs_encoded_state_buffer *b)
 {
     if (a->s[0] < b->s[0])
     {

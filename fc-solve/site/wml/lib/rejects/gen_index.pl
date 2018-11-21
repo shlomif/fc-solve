@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use strict;
 use warnings;
@@ -12,12 +12,12 @@ my $dir_name = shift || ".";
 my $filename = shift || "index.html";
 
 opendir my $dh, $dir_name;
-my @files = File::Spec->no_upwards(readdir(D));
+my @files = File::Spec->no_upwards( readdir(D) );
 closedir($dh);
 
-@files = grep { ($_ ne "index.html") && ($_ ne "CVS")} @files;
+@files = grep { ( $_ ne "index.html" ) && ( $_ ne "CVS" ) } @files;
 @files = sort { $a cmp $b } @files;
-@files = map { $_ . ((-d "$dir_name/$_") ? "/" : "") } @files;
+@files = map { $_ . ( ( -d "$dir_name/$_" ) ? "/" : "" ) } @files;
 
 open my $out, '>', $filename;
 print {$out} <<"EOF" ;
@@ -34,7 +34,13 @@ print {$out} <<"EOF" ;
 <ul>
 EOF
 
-print {$out} join("", map { my $escaped = CGI::escapeHTML($_); "<li><a href=\"$escaped\">$escaped</a></li>\n" } @files);
+print {$out} join(
+    "",
+    map {
+        my $escaped = CGI::escapeHTML($_);
+        "<li><a href=\"$escaped\">$escaped</a></li>\n"
+    } @files
+);
 
 print {$out} <<"EOF" ;
 </ul>
@@ -42,7 +48,5 @@ print {$out} <<"EOF" ;
 </body>
 </html>
 EOF
-;
 
 close($out);
-

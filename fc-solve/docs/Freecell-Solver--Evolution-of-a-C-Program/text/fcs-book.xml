@@ -1,7 +1,6 @@
 <?xml version='1.0' encoding='utf-8'?>
 
-<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
-"/usr/share/sgml/docbook/xml-dtd-4.1.2/docbookx.dtd"[
+<!DOCTYPE book [
 
 <!ENTITY fc "Freecell">
 <!ENTITY fcs "&fc; Solver">
@@ -22,14 +21,17 @@
 <!ENTITY O_n2logn "O(n<superscript>2</superscript>*log(n))">
 ]>
 
-<book id="index">
-    <bookinfo>
+<book xmlns="http://docbook.org/ns/docbook" version="5.0" xml:id="index" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en">
+    <info>
         <title>&fcs; - Evolution of a C Program</title>
 
         <authorgroup>
             <author>
-                <firstname>Shlomi</firstname>
-                <surname>Fish</surname>
+                <personname>
+                    <firstname>Shlomi</firstname>
+                    <surname>Fish</surname>
+                </personname>
+                <uri type="homepage">http://www.shlomifish.org/</uri>
                 <affiliation>
                     <!-- <orgname>Shlomi Fish Inc.</orgname> -->
                     <address>
@@ -55,22 +57,25 @@
             <!-- Ci vis pacem -->
             <para>
                 <!-- belum. ;-) -->
-                This book is copyrighted by Shlomi Fish. All rights reserved.
+                This book is copyrighted by Shlomi Fish, under <link xlink:href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="license">the Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA 4.0)</link> (or at your option any later version).
             </para>
         </legalnotice>
-    </bookinfo>
+    </info>
 
-    <chapter id="introduction">
-        <title>Introduction</title>
+    <chapter xml:id="introduction">
+        <info>
+            <title>Introduction</title>
+        </info>
         <para> <!-- para, nidfoq eth kol ha'eder. ;-) -->
-            One day in the spring break between two semesters I went out
-            running<footnote id="running">
+            One day, during the spring break between two university studies'
+            semesters, I went out
+            running<footnote xml:id="running">
                 <para>
                     &fcs; is not the only good idea I got while going out to
-                    run. Another one is "The One with the Fountainhead" which
-                    is a parody of Ayn Rand's book "The Fountainhead"
-                    modelled around an episode of the T.V. show "Friends".
-                    You can also find it on my homepage.
+                    run. Another one is <link xlink:href="https://www.shlomifish.org/humour/TOWTF/">“The One with the Fountainhead”</link> which
+                    is a parody of Ayn Rand's book <emphasis>The Fountainhead</emphasis>
+                    modelled around an episode of the Television show <emphasis>Friends</emphasis>.
+                    You can find it on my site as well.
                 </para>
             </footnote>
             and as I did,
@@ -84,7 +89,7 @@
 
         <para> <!-- normal -->
             I packaged the software, wrote a README, put it on my Technion
-            web-site and placed it on Freshmeat by labeling it simply as &fcs;
+            web-site and placed it on Freshmeat by labelling it simply as &fcs;
             version 0.2.0.
             Since then, &fcs; saw more than twenty releases, each one adding
             more features or improving speed, and has grown ten folds in its
@@ -101,344 +106,366 @@
             programming many other types of programs. This book is also
             about the dynamic of a small Open Source project. As you will
             see, many times, the input that I received from other users
-            and developers affected the development of the program.
+            and developers, has affected the development of the program.
         </para>
     </chapter>
 
-<chapter id="rules">
-        <title>Rules of the Game</title>
-        <section id="basic_rules">
-            <title>
-                Basic Rules of the &fc; Variant
-            </title>
+    <chapter xml:id="rules">
+        <info>
+            <title>Rules of the Game</title>
+        </info>
+        <section xml:id="basic_rules">
+            <info>
+                <title>
+                    Basic Rules of the &fc; Variant
+                </title>
+            </info>
 
-        <para>
-            &fc; is played with a standard 52-card deck. At the beginning
-            of play, all cards are dealt to 8 columns (7 cards each in the first
-            four columns and 6 cards each in the other four) facing up.
-        </para>
-
-        <para>
-            Besides the columns (which will also be referred to as stacks),
-            there are also four places to hold temporary cards (known as
-            freecells) and four foundations, in which it is possible to place
-            cards of the same suit starting from Aces and ending with Kings.
-        </para>
-
-        <para>
-            Sequences of cards on the tableau are built by placing cards on top
-            of cards of a higher rank and of a different colour (black or red).
-        </para>
-
-        <para>
-            An atomic move consists of any of the following:
-            <orderedlist>
-                <listitem>
-                    <para>
-
-                    Moving one card from the top of a column or from a
-                    freecell to the foundation. (which is possible only if
-                    its corresponding foundation's value is lower than it
-                    by one)
-                   </para>
-                </listitem>
-                <listitem>
-                    <para>
-                        Moving a card from the top of a column to a vacant freecell.
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                    Moving a card from the top of a column or from a freecell
-                    to a parent card on top of a column.
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                    Moving a card from the top of a column or a freecell
-                    to an empty column.
-                    </para>
-                </listitem>
-            </orderedlist>
-        </para>
-
-        <para>
-            It is customary and helpful to group the movement of an entire
-            sequence of cards, by moving intermediate cards to freecells or
-            vacant columns. This will be refered to as a
-            <glossterm>sequence move</glossterm>. If a sequence move involves
-            temporarily moving a card to an empty column, it is known
-            as a <glossterm>supermove</glossterm>.
-        </para>
-
-        <para>
-            You should probably play a few games of &fc;, in case you
-            did not already, because knowing the rules alone is not
-            enough to have an intuitive feel of it. There are many available
-            &fc; implementations for various systems, and you should have
-            no problems finding one that you can use. (chances are that it
-            is already installed on your system)
-        </para>
-    </section>
-    <section id="techniques">
-        <title>
-            Techniques of Play
-        </title>
-        <para>
-            There are several strategies that become apparent after a large
-            amount of playing &fc;. One of them, is uncovering top
-            cards so a card can be moved to the foundations. Another one,
-            is doing the same only to move it to a parent card, or for
-            it to serve as the basis of another sequence.
-        </para>
-
-        <para>
-            Another technique, that can be helpful at times is moving
-            a card from the freecells back to the tableau, so it can serve
-            as the base for another sequence.
-        </para>
-
-        <para>
-            FILL IN
-        </para>
-    </section>
-
-    <section id="variations">
-        <title>
-            Variations on &fc;
-        </title>
-        <para>
-            The game &fc; is not the only Solitaire of its kind nor
-            is the first historically. Using &fc; as a basis, several
-            similar Solitaire variants can be constructed by adjusting some
-            of the basic rules:
-            <!-- TODO: Modify emphasis to something more logical styled -->
-            <orderedlist>
-                <listitem>
-                    <para>
-                    <emphasis>Sequence Parenthood</emphasis> - in some variants
-                    cards can be placed on consequent cards of the same suit,
-                    or of the cards of any suit whatsoever. Examples for this
-                    are Baker's Game which is identical to &fc; except that
-                    sequences are built by suit.
-                </para>
-                </listitem>
-                <listitem>
-                    <para>
-                    <emphasis>Policy of Filling Empty Columns</emphasis> - in
-                    &fc; empty columns can be filled by any cards. In other
-                    variants, such as Seahaven Towers or Forecell, only kings
-                    may be placed there. On other variants, they cannot be
-                    filled at all.
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                    <emphasis>Policy of Moving Sequences</emphasis> - in
-                    &fc;, the amount of cards that can be moved as a
-                    sequence is determined by the number of vacant Freecells
-                    and columns present. In other variants such as Relaxed
-                    &fc;, the amount of cards that can be moved as a
-                    sequence is unlimited, regardless of how many vacant
-                    resources exist on the board.
-                    </para>
-                </listitem>
-                <listitem>
-                    <para>
-                    <emphasis>Variations in the number of Freecells, Columns
-                        or Decks</emphasis> - Some &fc; variants are
-                    played with two decks of cards. Many others varry on the
-                    number of columns or freecells. &fc; itself is often
-                    played with less than 4 freecells, in order to make the
-                    game more challenging. (or vice versa)
-                    </para>
-                </listitem>
-            </orderedlist>
-        </para>
-        <para>
-            Below you can find a table that summarized the essential properties
-            of a large number of Solitaire games similar to &fc;. Their
-            names were taken from <ulink url="http://www.oberhumer.com/opensource/pysol/">PySol</ulink>, which is a free Solitaire suite written in Python.
-
-            <footnote id="pysol_variants">
-                <para>
-                Not all of these variants appear in PySol under the
-                "FreeCell Type" category. As I noticed, many games were very
-                similar to &fc; in their spirit, despite the fact that they
-                were classified otherwise.
+            <para>
+                &fc; is played with a standard 52-card deck. At the beginning
+                of play, all cards are dealt to 8 columns (7 cards each in the first
+                four columns and 6 cards each in the other four) facing up.
             </para>
-            </footnote>
-        </para>
 
-        <para>
-            FILL IN the table
-            <table frame="all">
-                <title>&fc; Variants</title>
-                <tgroup cols="7" align="left" colsep="1" rowsep="1">
-                    <colspec colname="name"/>
-                    <colspec colname="num_columns"/>
-                    <colspec colname="num_fc"/>
-                    <colspec colname="num_decks"/>
-                    <colspec colname="sbb"/>
-                    <colspec colname="ec_fill"/>
-                    <colspec colname="seq_move"/>
-                    <thead>
-                        <row>
-                            <entry><emphasis>Name</emphasis></entry>
-                            <entry><emphasis>Columns Number</emphasis></entry>
-                            <entry><emphasis>Freecells Number</emphasis></entry>
-                            <entry><emphasis>Decks Number</emphasis></entry>
-                            <entry><emphasis>Sequence Parenthood</emphasis></entry>
-                            <entry><emphasis>Empty Columns Filled By</emphasis></entry>
-                            <entry><emphasis>Sequence Move</emphasis></entry>
-                        </row>
-                    </thead>
-                    <tbody>
-                        <row>
-                            <entry>Bakers Dozen</entry>
-                            <entry>13</entry>
-                            <entry>0</entry>
-                            <entry>1</entry>
-                            <entry>Rank</entry>
-                            <entry>None</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Bakers Game</entry>
-                            <entry>8</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>Any Card</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Beleaguered Castle</entry>
-                            <entry>8</entry>
-                            <entry>0</entry>
-                            <entry>1</entry>
-                            <entry>Rank</entry>
-                            <entry>Any Card</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Cruel</entry>
-                            <entry>12</entry>
-                            <entry>0</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>None</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Der Katzenschwanz</entry>
-                            <entry>9</entry>
-                            <entry>8</entry>
-                            <entry>2</entry>
-                            <entry>Alternate Colour</entry>
-                            <entry>None</entry>
-                            <entry>Limited</entry>
-                        </row>
-                        <row>
-                            <entry>Die Schlange</entry>
-                            <entry>9</entry>
-                            <entry>8</entry>
-                            <entry>2</entry>
-                            <entry>Alternate Colour</entry>
-                            <entry>None</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Eight Off</entry>
-                            <entry>8</entry>
-                            <entry>8</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>Kings Only</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Fan</entry>
-                            <entry>18</entry>
-                            <entry>0</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>Kings Only</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Forecell</entry>
-                            <entry>8</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Alternate Colour</entry>
-                            <entry>Kings Only</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>&fc;</entry>
-                            <entry>8</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Alternate Colour</entry>
-                            <entry>Any Card</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Good Measure</entry>
-                            <entry>10</entry>
-                            <entry>0</entry>
-                            <entry>1</entry>
-                            <entry>Rank</entry>
-                            <entry>None</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Kings Only Bakers Game</entry>
-                            <entry>8</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>Kings Only</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                        <row>
-                            <entry>Relaxed &fc;</entry>
-                            <entry>8</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Alternate Colour</entry>
-                            <entry>Any Card</entry>
-                            <entry>Limited</entry>
-                        </row>
-                        <row>
-                            <entry>Relaxed Seahaven Towers</entry>
-                            <entry>10</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>Kings Only</entry>
-                            <entry>Limited</entry>
-                        </row>
-                        <row>
-                            <entry>Seahaven Towers</entry>
-                            <entry>10</entry>
-                            <entry>4</entry>
-                            <entry>1</entry>
-                            <entry>Suit</entry>
-                            <entry>Kings Only</entry>
-                            <entry>Unlimited</entry>
-                        </row>
-                    </tbody>
-                </tgroup>
-            </table>
-        </para>
-    </section>
-</chapter>
-    <chapter id="first_arch">
-        <title>The Version 0.2 Architecture</title>
-        <section id="running_conclusions">
-            <title>Conclusions I Reached while Running</title>
+            <para>
+                Besides the columns (which will also be referred to as stacks),
+                there are also four places to hold temporary cards (known as
+                “freecells”) and four foundations, in which it is possible to place
+                cards of the same suit starting from Aces and ending with Kings.
+            </para>
+
+            <para>
+                Sequences of cards on the tableau are built by placing cards on top
+                of cards of a higher rank and of a different colour (black or red).
+            </para>
+
+            <para>
+                An atomic move consists of any of the following:
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            Moving one card from the top of a column or from a
+                            freecell to the foundation. (which is possible only if
+                            its corresponding foundation's value is lower than it
+                            by one)
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Moving a card from the top of a column to a vacant freecell.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Moving a card from the top of a column or from a freecell
+                            to a parent card on top of a column.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            Moving a card from the top of a column or a freecell
+                            to an empty column.
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+
+            <para>
+                It is customary and helpful to group the movement of an entire
+                sequence of cards, by moving intermediate cards to freecells or
+                vacant columns. This will be referred to as a
+                <glossterm>sequence move</glossterm>. If a sequence move involves
+                temporarily moving a card to an empty column, it is known
+                as a <glossterm>supermove</glossterm>.
+            </para>
+
+            <para>
+                You should probably play a few games of &fc;, in case you
+                did not already, because knowing the rules alone is not
+                enough to have an intuitive feel of it. There are many available
+                &fc; implementations for various systems, and you should have
+                no problems finding one that you can use. (Chances are that it
+                is already installed on your system.)
+            </para>
+        </section>
+        <section xml:id="techniques">
+            <info>
+                <title>
+                    Techniques of Play
+                </title>
+            </info>
+
+            <para>
+                There are several strategies that become apparent after a large
+                amount of playing &fc;. One of them, is uncovering top
+                cards so a card can be moved to the foundations. Another one,
+                is doing the same only to move it to a parent card, or for
+                it to serve as the basis of another sequence.
+            </para>
+
+            <para>
+                Another technique, that can be helpful at times is moving
+                a card from the freecells back to the tableau, so it can serve
+                as the base for another sequence.
+            </para>
+
+            <para>
+                FILL IN
+            </para>
+        </section>
+
+        <section xml:id="variations">
+            <info>
+
+                <title>
+                    Variations on &fc;
+                </title>
+            </info>
+
+            <para>
+                The game &fc; is not the only Solitaire of its kind nor
+                is the first historically. Using &fc; as a basis, several
+                similar Solitaire variants can be constructed by adjusting some
+                of the basic rules:
+                <!-- TODO: Modify emphasis to something more logical styled -->
+                <orderedlist>
+                    <listitem>
+                        <para>
+                            <emphasis>Sequence Parenthood</emphasis> - in some variants
+                            cards can be placed on consequent cards of the same suit,
+                            or of the cards of any suit whatsoever. Examples for this
+                            are Baker's Game which is identical to &fc; except that
+                            sequences are built by suit.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <emphasis>Policy of Filling Empty Columns</emphasis> - in
+                            &fc; empty columns can be filled by any cards. In other
+                            variants, such as Seahaven Towers or Forecell, only kings
+                            may be placed there. On other variants, they cannot be
+                            filled at all.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <emphasis>Policy of Moving Sequences</emphasis> - in
+                            &fc;, the amount of cards that can be moved as a
+                            sequence is determined by the number of vacant Freecells
+                            and columns present. In other variants such as Relaxed
+                            &fc;, the amount of cards that can be moved as a
+                            sequence is unlimited, regardless of how many vacant
+                            resources exist on the board.
+                        </para>
+                    </listitem>
+                    <listitem>
+                        <para>
+                            <emphasis>Variations in the number of Freecells, Columns
+                                or Decks</emphasis> - Some &fc; variants are
+                            played with two decks of cards. Many others vary on the
+                            number of columns or freecells. &fc; itself is often
+                            played with less than 4 freecells, in order to make the
+                            game more challenging. (or vice versa)
+                        </para>
+                    </listitem>
+                </orderedlist>
+            </para>
+            <para>
+                Below you can find a table that summarized the essential properties
+                of a large number of Solitaire games similar to &fc;. Their
+                names were taken from <ulink url="http://www.oberhumer.com/opensource/pysol/">PySol</ulink>, which is a free Solitaire suite written in Python.
+
+                <footnote xml:id="pysol_variants">
+                    <para>
+                        Not all of these variants appear in PySol under the
+                        "FreeCell Type" category. As I noticed, many games were very
+                        similar to &fc; in their spirit, despite the fact that they
+                        were classified otherwise.
+                    </para>
+                </footnote>
+            </para>
+
+            <para>
+                FILL IN the table
+                <table frame="all">
+                    <info>
+
+                        <title>&fc; Variants</title>
+                    </info>
+
+                    <tgroup cols="7" align="left" colsep="1" rowsep="1">
+                        <colspec colname="name"/>
+                        <colspec colname="num_columns"/>
+                        <colspec colname="num_fc"/>
+                        <colspec colname="num_decks"/>
+                        <colspec colname="sbb"/>
+                        <colspec colname="ec_fill"/>
+                        <colspec colname="seq_move"/>
+                        <thead>
+                            <row>
+                                <entry><emphasis>Name</emphasis></entry>
+                                <entry><emphasis>Columns Number</emphasis></entry>
+                                <entry><emphasis>Freecells Number</emphasis></entry>
+                                <entry><emphasis>Decks Number</emphasis></entry>
+                                <entry><emphasis>Sequence Parenthood</emphasis></entry>
+                                <entry><emphasis>Empty Columns Filled By</emphasis></entry>
+                                <entry><emphasis>Sequence Move</emphasis></entry>
+                            </row>
+                        </thead>
+                        <tbody>
+                            <row>
+                                <entry>Bakers Dozen</entry>
+                                <entry>13</entry>
+                                <entry>0</entry>
+                                <entry>1</entry>
+                                <entry>Rank</entry>
+                                <entry>None</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Bakers Game</entry>
+                                <entry>8</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>Any Card</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Beleaguered Castle</entry>
+                                <entry>8</entry>
+                                <entry>0</entry>
+                                <entry>1</entry>
+                                <entry>Rank</entry>
+                                <entry>Any Card</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Cruel</entry>
+                                <entry>12</entry>
+                                <entry>0</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>None</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Der Katzenschwanz</entry>
+                                <entry>9</entry>
+                                <entry>8</entry>
+                                <entry>2</entry>
+                                <entry>Alternate Colour</entry>
+                                <entry>None</entry>
+                                <entry>Limited</entry>
+                            </row>
+                            <row>
+                                <entry>Die Schlange</entry>
+                                <entry>9</entry>
+                                <entry>8</entry>
+                                <entry>2</entry>
+                                <entry>Alternate Colour</entry>
+                                <entry>None</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Eight Off</entry>
+                                <entry>8</entry>
+                                <entry>8</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>Kings Only</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Fan</entry>
+                                <entry>18</entry>
+                                <entry>0</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>Kings Only</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Forecell</entry>
+                                <entry>8</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Alternate Colour</entry>
+                                <entry>Kings Only</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>&fc;</entry>
+                                <entry>8</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Alternate Colour</entry>
+                                <entry>Any Card</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Good Measure</entry>
+                                <entry>10</entry>
+                                <entry>0</entry>
+                                <entry>1</entry>
+                                <entry>Rank</entry>
+                                <entry>None</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Kings Only Bakers Game</entry>
+                                <entry>8</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>Kings Only</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                            <row>
+                                <entry>Relaxed &fc;</entry>
+                                <entry>8</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Alternate Colour</entry>
+                                <entry>Any Card</entry>
+                                <entry>Limited</entry>
+                            </row>
+                            <row>
+                                <entry>Relaxed Seahaven Towers</entry>
+                                <entry>10</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>Kings Only</entry>
+                                <entry>Limited</entry>
+                            </row>
+                            <row>
+                                <entry>Seahaven Towers</entry>
+                                <entry>10</entry>
+                                <entry>4</entry>
+                                <entry>1</entry>
+                                <entry>Suit</entry>
+                                <entry>Kings Only</entry>
+                                <entry>Unlimited</entry>
+                            </row>
+                        </tbody>
+                    </tgroup>
+                </table>
+            </para>
+        </section>
+    </chapter>
+    <chapter xml:id="first_arch">
+        <info>
+
+            <title>The Version 0.2 Architecture</title>
+        </info>
+
+        <section xml:id="running_conclusions">
+            <info>
+
+                <title>Conclusions I Reached while Running</title>
+            </info>
+
             <para>
                 As I ran and thought about solving &fc; I reached several
                 conclusions. One of them was that moving card at a time would
@@ -452,7 +479,7 @@
             <para>
                 Then, I speculated whether it would be better to searching
                 "Depth First" or "Breadth First". By depth first, I mean that
-                whenever the solver reachs a new state (a state is a particular
+                whenever the solver reaches a new state (a state is a particular
                 configuration of the cards on the board), it will try to recurse
                 into further states before withdrawing from it. Breadth first
                 means that the states would be scanned according to their
@@ -476,10 +503,14 @@
             </para>
 
         </section>
-        <section id="initial_perl_version">
-            <title>
-                Initial Version in Perl
-            </title>
+        <section xml:id="initial_perl_version">
+            <info>
+
+                <title>
+                    Initial Version in Perl
+                </title>
+            </info>
+
             <para>
                 A short time after I ran, I started coding the solver in Perl 5. I
                 wrote classes to represent a card and an entire &fc; board, and
@@ -488,10 +519,14 @@
 
             <para>
                 Then I started to write the algorithm. There were several
-                guiding prinicipals in the code:
+                guiding principles in the code:
             </para>
-            <section id="perl_state_collection_unordered_list">
-                <title>State Collection as an Unordered List</title>
+            <section xml:id="perl_state_collection_unordered_list">
+                <info>
+
+                    <title>State Collection as an Unordered List</title>
+                </info>
+
                 <para>
                     I implemented the state collection as an unordered list of
                     states. A new element was added at the end of the list, and to
@@ -500,8 +535,12 @@
                 </para>
             </section>
 
-            <section id="perl_state_serialization">
-                <title>State Serialization and De-serialization</title>
+            <section xml:id="perl_state_serialization">
+                <info>
+
+                    <title>State Serialization and De-serialization</title>
+                </info>
+
                 <para>
                     The states were serialized into a binary form, so they can be
                     stored and compared. They were de-serialized into a nested
@@ -510,8 +549,12 @@
                 </para>
             </section>
 
-            <section id="perl_monolithic_search_function">
-                <title>Monolithic Search Function</title>
+            <section xml:id="perl_monolithic_search_function">
+                <info>
+
+                    <title>Monolithic Search Function</title>
+                </info>
+
                 <para>
                     The code had one monolithic function for performing the search
                     and trying the moves on the board. The function was recursive
@@ -521,8 +564,12 @@
                 </para>
             </section>
 
-            <section id="perl_conclusion">
-                <title>Conclusion</title>
+            <section xml:id="perl_conclusion">
+                <info>
+
+                    <title>Conclusion</title>
+                </info>
+
 
                 <para>
                     I advanced well into writing the code, when I realized that it
@@ -542,37 +589,44 @@
                 </para>
             </section>
         </section>
-        <section id="converting_to_c">
-            <title>
-                Converting to C
-            </title>
+        <section xml:id="converting_to_c">
+            <info>
+
+                <title>
+                    Converting to C
+                </title>
+            </info>
+
             <para>
                 The first C version I wrote was not identical to the Perl version
                 algorithmically. As some things were more accessible in C than
                 they were in Perl (or vice versa), I was able to take advantage
-                of them (or not).
+                of them (or was unable to).
             </para>
-            <section id="representing_cards_and_states">
-                <title>
-                    Representing Cards and States
-                </title>
+            <section xml:id="representing_cards_and_states">
+                <info>
+                    <title>
+                        Representing Cards and States
+                    </title>
+                </info>
+
                 <para>
                     A card was represented as a C structure which contained two
                     elements of type <type>short</type>, one representing the rank
                     of the card and the other its suit:
                 </para>
                 <para>
-<programlisting>
-<![CDATA[
-struct struct_card_t
-{
-    short card_num;   /* card_num is the rank */
-    short deck;       /* I erroneously referred to the suit as a deck */
-};
+                    <programlisting>
+                        <![CDATA[
+                        struct struct_card_t
+                        {
+                        short card_num;   /* card_num is the rank */
+                        short deck;       /* I erroneously referred to the suit as a deck */
+                        };
 
-typedef struct struct_card_t card_t;
-]]>
-</programlisting>
+                        typedef struct struct_card_t card_t;
+                        ]]>
+                    </programlisting>
                 </para>
                 <para>
                     A column was represented as a structure containing an array of
@@ -581,17 +635,17 @@ typedef struct struct_card_t card_t;
                     specified the number of cards present:
                 </para>
                 <para>
-<programlisting>
-<![CDATA[
-struct struct_stack_t
-{
-    int num_cards;
-    card_t cards[19];
-};
+                    <programlisting>
+                        <![CDATA[
+                        struct struct_stack_t
+                        {
+                        int num_cards;
+                        card_t cards[19];
+                        };
 
-typedef struct struct_stack_t fc_stack_t;
-]]>
-</programlisting>
+                        typedef struct struct_stack_t fc_stack_t;
+                        ]]>
+                    </programlisting>
                 </para>
                 <para>
                     The structure representing a board layout contained 8 column
@@ -599,18 +653,18 @@ typedef struct struct_stack_t fc_stack_t;
                     representing the rank of the cards in the foundations.
                 </para>
                 <para>
-<programlisting>
-<![CDATA[
-struct struct_state_t
-{
-    fc_stack_t stacks[8];
-    card_t freecells[4];
-    int decks[4];  /* I also called the foundations decks. :-) */
-};
+                    <programlisting>
+                        <![CDATA[
+                        struct struct_state_t
+                        {
+                        fc_stack_t stacks[8];
+                        card_t freecells[4];
+                        int decks[4];  /* I also called the foundations decks. :-) */
+                        };
 
-typedef struct struct_state_t state_t;
-]]>
-</programlisting>
+                        typedef struct struct_state_t state_t;
+                        ]]>
+                    </programlisting>
                 </para>
                 <para>
                     The code also contained several macros that were used to
@@ -624,14 +678,14 @@ typedef struct struct_state_t state_t;
                     follows:
                 </para>
                 <para>
-<programlisting>
-<![CDATA[
-#define pop_stack_card(state, s, into) \
-    into = (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1]; \
-    (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1] = empty_card; \
-    (state).stacks[(s)].num_cards--;
-]]>
-</programlisting>
+                    <programlisting>
+                        <![CDATA[
+                        #define pop_stack_card(state, s, into) \
+                        into = (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1]; \
+                        (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1] = empty_card; \
+                        (state).stacks[(s)].num_cards--;
+                        ]]>
+                    </programlisting>
                 </para>
                 <para>
                     Note that the columns inside a state were kept sorted
@@ -640,38 +694,41 @@ typedef struct struct_state_t state_t;
                     for a different order of their columns.
                 </para>
             </section>
-            <section id="algorithm">
-                <title>The Algorithm of the Scan</title>
+            <section xml:id="algorithm">
+                <info>
+                    <title>The Algorithm of the Scan</title>
+                </info>
+
                 <para>
                     Following is pseudocode for the algorithm used by the scan:
                 </para>
                 <para>
-<programlisting>
-<![CDATA[
-Solve-State(state, prev_states, ret)
-    if (state == empty_state)
-        Push(ret, state)
-        return SOLVED
-    for each move possible on state
-        new_state <- apply(state, move)
-        if (new_state in prev_states)
-            ; Do nothing
-        else
-            add new_state to prev_states
-            if (Solve-State(new_state, prev_states, ret) == SOLVED)
-                Push(ret, state)
-                return SOLVED
-    return UNSOLVED
+                    <programlisting>
+                        <![CDATA[
+                        Solve-State(state, prev_states, ret)
+                        if (state == empty_state)
+                        Push(ret, state)
+                        return SOLVED
+                        for each move possible on state
+                        new_state <- apply(state, move)
+                        if (new_state in prev_states)
+                        ; Do nothing
+                        else
+                        add new_state to prev_states
+                        if (Solve-State(new_state, prev_states, ret) == SOLVED)
+                        Push(ret, state)
+                        return SOLVED
+                        return UNSOLVED
 
-Freecell-Solver(init_state)
-    if (Solve-State(init_state, Null, ret) == SOLVED)
-        print "State was solved"
-        while (state <- Pop(ret))
-            print state
-    else
-        print "I could not solve this board";
-]]>
-</programlisting>
+                        Freecell-Solver(init_state)
+                        if (Solve-State(init_state, Null, ret) == SOLVED)
+                        print "State was solved"
+                        while (state <- Pop(ret))
+                        print state
+                        else
+                        print "I could not solve this board";
+                        ]]>
+                    </programlisting>
                 </para>
                 <para>
                     The algorithm uses recursion to trace the solution
@@ -680,8 +737,11 @@ Freecell-Solver(init_state)
                     pseudocode), so they won't be checked again.
                 </para>
             </section>
-            <section id="first_arch_states_collection">
-                <title>The States' Collection Implementation</title>
+            <section xml:id="first_arch_states_collection">
+                <info>
+                    <title>The States' Collection Implementation</title>
+                </info>
+
                 <para>
                     The states' collection of the C version was implemented as a
                     sorted array of whole state structs
@@ -706,18 +766,21 @@ Freecell-Solver(init_state)
                     one.
                 </para>
             </section>
-            <section id="moves">
-                <title>The Moves</title>
+            <section xml:id="moves">
+                <info>
+                    <title>The Moves</title>
+                </info>
+
                 <para>
                     The solver was built as one monolithic function
-                    (named &solve_for_state;). The function
+                    (named <function>solve_for_state</function>). The function
                     accepted a state and an integer that specified the depth
                     of the recursion, and returned a boolean verdict whether
                     the state was solvable or not. (<varname>prev_states</varname>
                     was implemented as a global variable)
                 </para>
                 <para>
-                    &solve_for_state; tried to do several
+                    <function>solve_for_state</function> tried to do several
                     moves on the board in the following order:
                 </para>
                 <para>
@@ -777,8 +840,11 @@ Freecell-Solver(init_state)
                     </orderedlist>
                 </para>
             </section>
-            <section id="code_org">
-                <title>Code Organization</title>
+            <section xml:id="code_org">
+                <info>
+                    <title>Code Organization</title>
+                </info>
+
                 <para>
                     The code contained three modules and a header file that
                     implemented many macros. The module
@@ -790,27 +856,30 @@ Freecell-Solver(init_state)
                 </para>
                 <para>
                     The header file <filename class="headerfile">state.h</filename>
-                    defined the data structures used to represnt cards, columns
+                    defined the data structures used to represent cards, columns
                     and states, and the macros that were used to query and
                     manipulate them. The module
                     <filename class="libraryfile">state.c</filename> implemented input
                     and output to entire states, as well as functions to compare
                     cards and columns, and a function to "canonize" states.
-                    (when canonizing means sorting the columns to avoid
-                    duplicacies)
+                    (Where "canonizing" means sorting the columns to avoid
+                    duplication.)
                 </para>
                 <para>
                     The file <filename class="libraryfile">freecell.c</filename>
-                    contained the &solve_for_state;
+                    contained the <function>solve_for_state</function>
                     function and the <function>main</function> function.
-                    &solve_for_state; called itself
+                    <function>solve_for_state</function> called itself
                     recursively, and contained a lot of duplicate code that
                     searched for existing states and added them to the
                     collection. (I managed it using copy and paste)
                 </para>
             </section>
-            <section id="conclusion">
-                <title>Conclusion from the C Program</title>
+            <section xml:id="conclusion">
+                <info>
+                    <title>Conclusion from the C Program</title>
+                </info>
+
                 <para>
                     The C Program ran quickly enough for most boards I tried it
                     with. I generated a 1000 random boards, and invoked it upon
@@ -819,27 +888,33 @@ Freecell-Solver(init_state)
                 </para>
                 <para>
                     Being happy from its relative success, I converted the code
-                    to pure ANSI C (it has been C-ish C++ when I started
+                    to pure ANSI C (it has been C-like C++ when I started
                     writing it), wrote a README file and prepared a package.
                     I named the program "&fcs;", placed it on a page of its
-                    own on my web-site, and posted an annoucement for it on
-                    <ulink url="http://freshmeat.net/">Freshmeat</ulink>.
+                    own on my web-site, and posted an announcement for it on
+                    <link xlink:href="http://freshmeat.net/">Freshmeat</link>.
                 </para>
                 <para>
                     That was the humble beginning of &fcs;: humble because
                     since then, it has grown ten-folds in speed, feature-set
                     and code size. But every journey of a thousand miles
-                    begins with one small step...
+                    begins with one small step…
                 </para>
             </section>
         </section>
     </chapter>
-    <chapter id="states_collection">
-        <title>The States Collection</title>
-        <section id="overview">
-            <title>Overview</title>
+    <chapter xml:id="states_collection">
+        <info>
+            <title>The States Collection</title>
+        </info>
+
+        <section xml:id="overview">
+            <info>
+                <title>Overview</title>
+            </info>
+
             <para>
-                Implementing a game AI system requires collectings the
+                Implementing a game AI system requires collecting the
                 positions of the game that were reached so far, in order
                 to mark them and make sure they are not visited times and
                 again.
@@ -861,8 +936,11 @@ Freecell-Solver(init_state)
                 dictionary.
             </para>
         </section>
-        <section id="unordered_list">
-            <title>Initial Perl Version - Unordered List</title>
+        <section xml:id="unordered_list">
+            <info>
+                <title>Initial Perl Version - Unordered List</title>
+            </info>
+
             <para>
                 The initial perl version sported a states collection
                 implemented as an unordered list. I kept an array of states
@@ -888,11 +966,14 @@ Freecell-Solver(init_state)
                 very unacceptable and you should avoid it whenever possible.
             </para>
         </section>
-        <section id="sorted_array">
-            <title>Sorted Array with a Q-Sorted Sort Margin</title>
+        <section xml:id="sorted_array">
+            <info>
+                <title>Sorted Array with a Q-Sorted Sort Margin</title>
+            </info>
+
             <para>
                 The first C version featured a sorted array as a states
-                collection. In order to avoid the costy operation of
+                collection. In order to avoid the costly operation of
                 incrementing all the positions of the higher states by 1,
                 whenever a new state was added, I kept a <glossterm>sort margin
                 </glossterm> that contained several unsorted states at the end.
@@ -905,7 +986,7 @@ Freecell-Solver(init_state)
                 an acceptable running time.
             </para>
             <para>
-                Let's analyze the complexity of everything involved. Lookup can
+                Let's analyse the complexity of everything involved. Lookup can
                 be done using a binary search on the sorted part followed by
                 a linear search on the unsorted part. Since the unsorted part
                 is at most a constant number of items, then going over it
@@ -917,27 +998,31 @@ Freecell-Solver(init_state)
                 k, then adding
                 k elements, would take
                 &O_nlogn; time, since the function <function>qsort()</function>
-                uses Quick-Sort which has this complexity on average.<footnote id="qsort_complexity">
+                uses Quick-Sort which has this complexity on average.<footnote xml:id="qsort_complexity">
                     <para>
-                        Quick-Sort has a worst time complexity of &O_n2;, but
+                        Quick-Sort has a worst time complexity of O(n<superscript>2</superscript>), but
                         it has an average of &O_nlogn;
                     </para>
                 </footnote> &O_nlogn; divided by a constant is still &O_nlogn;
                 so an insertion of an element is &O_nlogn;.
             </para>
             <para>
-                The accumulative time for adding n elements is &O_n2logn; which
+                The accumulative time for adding n elements is O(n<superscript>2</superscript>*log(n)) which
                 is the time for insertion multiplied by n.
             </para>
         </section>
-        <section id="merging_with_a_binsearch_merge">
-            <title>Merging the Sort Margin Using the "Merge" Algorithm</title>
+        <section xml:id="merging_with_a_binsearch_merge">
+            <info>
+                <title>Merging the Sort Margin Using the "Merge" Algorithm</title>
+            </info>
+
             <para>
-                Incidentally, I took a course about data structures and
+                I took a course about data structures and
                 algorithms, the semester after I coded the first version of
                 &fcs;. There I learned about the large complexity involved
                 in quick-sorting, and that there was a better algorithm for
-                merging two arrays: Merge. The Merge algorithm works like this:
+                merging two arrays: <link xlink:href="https://en.wikipedia.org/wiki/Merge_algorithm">Merge</link>.
+                The Merge algorithm works like this:
             </para>
             <para>
                 <orderedlist>
@@ -980,7 +1065,7 @@ Freecell-Solver(init_state)
                 margin could become so much smaller than the main array.
             </para>
             <para>
-                In my variation, the sort margin is scanned linearily, but
+                In my variation, the sort margin is scanned linearly, but
                 the index of the corresponding element in the main array
                 is found using a binary search. Once found, all the elements
                 up to it, are copied as is without comparison. That way, one
@@ -995,7 +1080,7 @@ Freecell-Solver(init_state)
                 Lookup now is still &O_logn;, but this time insertion was
                 reduced to &O_n; time. (the merging operation is &O_n; and it
                 is done every constant number of elements) The accumulative
-                time now is &O_n2; which is &O_n; multiplied by n.
+                time now is O(n<superscript>2</superscript>) which is &O_n; multiplied by n.
             </para>
             <para>
                 This scheme ran much faster than the qsort one - by a factor
@@ -1004,21 +1089,25 @@ Freecell-Solver(init_state)
                 was a much wiser choice, algorithmically.
             </para>
         </section>
-        <section id="array_of_pointers">
-            <title>Array of Pointers instead of Array of Structs</title>
+        <section xml:id="array_of_pointers">
+            <info>
+                <title>Array of Pointers instead of Array of Structs</title>
+            </info>
+
             <para>
                 Freecell Solver 0.2 managed the states collection as an
                 array in which the states' structs appeared one adjacent
-                to the other. I also passed the entire struct as a paremeter
-                to &solve_for_state;. When I tried to run it on NT I realized
-                that sometimes the program ran out of stack, because it
+                to the other. I also passed the entire struct as a parameter
+                to <function>solve_for_state</function>. When I tried to run it on
+                Microsoft Windows NT, I realized
+                that sometimes the program ran out of stack. This was because it
                 descended into a relatively large depth, while passing all
                 the structs in it. To avoid it, I decided to pass pass pointers
                 to the stacks, and to store the states as an array of pointers.
             </para>
             <para>
                 I did not want to individually malloc the structs, because
-                I knew memory was allocated in powers of 2, and so I can have
+                I knew memory was often allocated in powers of 2, and so I can have
                 a lot of it wasted. I first tried to allocate the states by
                 allocating them
                 from the end of one array that was realloced when necessary.
@@ -1031,14 +1120,14 @@ Freecell-Solver(init_state)
                 To avoid this, I devised a better scheme, in which I allocate
                 the states in packs of constant size, and allocate more packs
                 as necessary. Since the packs contain more than one state, and
-                their size can be adjusted to accomodate for the whims of the
+                their size can be adjusted to accommodate for the whims of the
                 underlying memory management, it was a good solution as could
                 be found.
-                <footnote id="indices_instead_of_pointers">
+                <footnote xml:id="indices_instead_of_pointers">
                     <para>
                         What I could have also done was to manage indices to
                         the states inside the allocation block, instead of
-                        pointers. However, I prefered not to use this scheme,
+                        pointers. However, I preferred not to use this scheme,
                         because I did not want the extra cost of looking up
                         the real pointer from the index.
                     </para>
@@ -1055,9 +1144,9 @@ Freecell-Solver(init_state)
                 passing and duplicating entire stacks.
             </para>
             <para>
-                This time the algorithmical order of growth was not reduced,
+                This time the algorithmic order of growth was not reduced,
                 but still there can be a difference of heaven and earth
-                between a large &O_n2; and a small &O_n2;...
+                between a large O(n<superscript>2</superscript>) and a small O(n<superscript>2</superscript>)...
             </para>
         </section>
     </chapter>

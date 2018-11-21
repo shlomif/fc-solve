@@ -23,9 +23,7 @@ __PACKAGE__->mk_acc_ref(
 
 sub _init
 {
-    my $self = shift;
-    my $args = shift;
-
+    my ( $self, $args ) = @_;
     my $num_items_per_page = int( $args->{num_items_per_page} );
 
     if ( not $num_items_per_page >= 1 )
@@ -35,7 +33,6 @@ sub _init
     $self->_num_items_per_page($num_items_per_page);
 
     my $offload_dir_path = $args->{offload_dir_path};
-
     if ( !-d $offload_dir_path )
     {
         die "offload_directory_path does not exist";
@@ -68,7 +65,6 @@ sub _init
             }
         )
     );
-
     $self->_page_to_read_from( $self->_page_to_write_to() );
 
     return;
@@ -250,12 +246,13 @@ sub get_page_index
     return $self->_page_index;
 }
 
+use Path::Tiny qw/ path /;
+
 sub _calc_filename
 {
     my ( $self, $offload_dir_path ) = @_;
 
-    return File::Spec->catfile(
-        $offload_dir_path,
+    return path($offload_dir_path)->child(
         sprintf(
             "fcs_q%Xq_%020X.page",
             $self->_queue_id(), $self->get_page_index()
@@ -285,11 +282,8 @@ sub read_next_from_disk
 
 sub offload
 {
-    my $self             = shift;
-    my $offload_dir_path = shift;
-
+    my ( $self, $offload_dir_path ) = @_;
     my $page_filename = $self->_calc_filename($offload_dir_path);
-
     nstore( $self->_data(), $page_filename );
 
     return;

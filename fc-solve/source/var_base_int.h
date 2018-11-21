@@ -9,12 +9,12 @@
  */
 // var_base_int.h - abstract/wrap either mpz_t or the faster unsigned __int128.
 #pragma once
-#include "config.h"
+#include "fcs_conf.h"
 #include "rinutils.h"
 
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
 
-typedef unsigned __int128 fcs_var_base_int_t;
+typedef unsigned __int128 var_base_int;
 #define FCS_var_base_int__init(i)
 #define FCS_var_base_int__set_ui(i, val) ((i) = (val))
 #define FCS_var_base_int__left_shift(i, shift) ((i) <<= (shift))
@@ -33,7 +33,7 @@ typedef unsigned __int128 fcs_var_base_int_t;
 // Use GMP instead
 #include <gmp.h>
 
-typedef mpz_t fcs_var_base_int_t;
+typedef mpz_t var_base_int;
 #define FCS_var_base_int__init(i) mpz_init(i)
 #define FCS_var_base_int__set_ui(i, val) mpz_set_ui((i), (val))
 #define FCS_var_base_int__left_shift(i, shift) mpz_mul_2exp((i), (i), (shift))

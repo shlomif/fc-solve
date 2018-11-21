@@ -1,5 +1,6 @@
 package FC_Solve::Paths;
 
+use 5.014;
 use strict;
 use warnings;
 use Socket qw(:crlf);
@@ -8,14 +9,14 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol);
 
-use File::Spec ();
+use Path::Tiny qw/ path /;
 
-my $DATA_DIR    = File::Spec->catdir( $ENV{FCS_SRC_PATH}, qw(t data) );
-my $BOARDS_DIR  = File::Spec->catdir( $DATA_DIR,          'sample-boards' );
-my $SOLS_DIR    = File::Spec->catdir( $DATA_DIR,          'sample-solutions' );
-my $PRESETS_DIR = File::Spec->catdir( $DATA_DIR,          'presets' );
+my $DATA_DIR    = path( $ENV{FCS_SRC_PATH} )->child(qw(t data));
+my $BOARDS_DIR  = $DATA_DIR->child('sample-boards');
+my $SOLS_DIR    = $DATA_DIR->child('sample-solutions');
+my $PRESETS_DIR = $DATA_DIR->child('presets');
 our $IS_WIN = ( $^O eq "MSWin32" );
 
 sub _correct_path
@@ -28,12 +29,20 @@ sub _correct_path
     return $p;
 }
 my $EXE_SUF            = ( $IS_WIN ? '.exe' : '' );
-my $FCS_PATH           = $ENV{FCS_PATH};
+my $FCS_PATH           = path( $ENV{FCS_PATH} );
 my $FC_SOLVE__RAW__RAW = "$FCS_PATH/fc-solve";
 our $FC_SOLVE__RAW = _correct_path($FC_SOLVE__RAW__RAW) . $EXE_SUF;
 our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW__RAW) );
 my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
-our $MAKE_PYSOL = "${PY3}../board_gen/make_pysol_freecell_board.py";
+
+sub _board_gen
+{
+    return "${PY3}../board_gen/" . shift;
+
+}
+our $MAKE_PYSOL      = _board_gen('make_pysol_freecell_board.py');
+our $FIND_DEAL_INDEX = _board_gen('find-freecell-deal-index.py');
+our $GEN_MULTI       = _board_gen('gen-multiple-pysol-layouts');
 
 sub _is_tag
 {
@@ -51,7 +60,7 @@ my $NO_DBM      = _is_tag('no_dbm');
 # A file in the output/binaries directory where fc-solve was compiled.
 sub bin_file
 {
-    return File::Spec->catfile( $FCS_PATH, @{ shift @_ } );
+    return $FCS_PATH->child( @{ shift @_ } );
 }
 
 sub dll_file
@@ -68,12 +77,12 @@ sub bin_exe_raw
 # A board file in the binary directory.
 sub bin_board
 {
-    return File::Spec->catfile( $FCS_PATH, shift );
+    return $FCS_PATH->child(shift);
 }
 
 sub data_file
 {
-    return File::Spec->catfile( $DATA_DIR, @{ shift @_ } );
+    return $DATA_DIR->child( @{ shift @_ } );
 }
 
 sub is_break
@@ -109,17 +118,17 @@ sub is_without_valgrind
 # Returns a board from the sample-boards directory.
 sub samp_board
 {
-    return File::Spec->catfile( $BOARDS_DIR, shift );
+    return $BOARDS_DIR->child(shift);
 }
 
 sub samp_sol
 {
-    return File::Spec->catfile( $SOLS_DIR, shift );
+    return $SOLS_DIR->child(shift);
 }
 
 sub samp_preset
 {
-    return File::Spec->catfile( $PRESETS_DIR, shift );
+    return $PRESETS_DIR->child(shift);
 }
 
 sub normalize_lf

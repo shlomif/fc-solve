@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_calc_derived_iface.h - the public interface to dbm_calc_derived.h
- */
+// dbm_calc_derived_iface.h - the public interface to dbm_calc_derived.h
 #pragma once
 
 #ifdef __cplusplus
@@ -20,31 +18,29 @@ extern "C" {
 
 typedef struct
 {
-    unsigned char s[RANK_KING];
-} fcs_which_moves_bitmask_t;
+    uint8_t s[RANK_KING];
+} fcs_which_moves_bitmask;
 
 typedef struct
 {
     char *state_string;
-    unsigned char move;
+    uint8_t move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
-} fcs_derived_state_debug_t;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
+} fcs_derived_state_debug;
 
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
-    fcs_dbm_variant_type_t, const char *, int *, fcs_derived_state_debug_t **,
-    fcs_bool_t);
+    fcs_dbm_variant_type, const char *, int *, fcs_derived_state_debug **,
+    bool);
 
 DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
     const int num_derived_states,
-    fcs_derived_state_debug_t *const derived_states);
+    fcs_derived_state_debug *const derived_states);
 
-/*
- * The char * returned is malloc()ed and should be free()ed.
- */
+// The char * returned is malloc()ed and should be free()ed.
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
-    fcs_dbm_variant_type_t, const char *, char **);
+    fcs_dbm_variant_type, const char *, char **);
 
 DLLEXPORT void fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(
     char *const ret_state_s);

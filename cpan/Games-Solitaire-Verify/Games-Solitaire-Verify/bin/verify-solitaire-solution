@@ -56,6 +56,14 @@ What empty stacks can be filled by.
 
 Whether the sequence move is limited or unlimited.
 
+=head2 --max-rank [n]
+
+Set the maximal rank to a different value than 13. So one can have C<A-Q>
+instead of C<A-K>, if one specifies C<--max-rank 12>. Using this flag is likely
+a bad idea.
+
+(New in version 0.1900 .)
+
 =head1 BUGS
 
 Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution at rt.cpan.org>, or through
@@ -84,10 +92,6 @@ L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Games-Solitaire-Verify>
-
 =back
 
 =head1 AUTHORS
@@ -102,5 +106,3 @@ This program is released under the following license: MIT/Expat
 ( L<http://www.opensource.org/licenses/mit-license.php> ).
 
 =cut
-
-

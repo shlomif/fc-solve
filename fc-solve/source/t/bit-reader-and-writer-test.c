@@ -7,23 +7,19 @@
  *
  * Copyright (c) 2011 Shlomi Fish
  */
-
-/*
- * A test for the bit reader and writer.
- */
-
+// A test for the bit reader and writer.
 #include <string.h>
 #include <stdio.h>
 
 #include <tap.h>
-#include "config.h"
-#include "../bit_rw.h"
+#include "fcs_conf.h"
+#include "bit_rw.h"
 
 static int main_tests(void)
 {
     {
         unsigned char buffer[10];
-        fc_solve_bit_writer_t writer;
+        fc_solve_bit_writer writer;
 
         fc_solve_bit_writer_init(&writer, buffer);
 
@@ -32,37 +28,35 @@ static int main_tests(void)
 
         /* TEST
          * */
-        ok (buffer[0] == (5 | (1 << 4)), "Write works.");
+        ok(buffer[0] == (5 | (1 << 4)), "Write works.");
 
         fc_solve_bit_writer_write(&writer, 4, (2 | (3 << 2)));
 
         /* TEST
          * */
-        ok (buffer[0] == (5 | (1 << 4) | (2 << 6)), "Extra write works.");
+        ok(buffer[0] == (5 | (1 << 4) | (2 << 6)), "Extra write works.");
 
         /* TEST
          * */
-        ok (buffer[1] == 3, "Extra byte write works.");
+        ok(buffer[1] == 3, "Extra byte write works.");
 
         {
-            fc_solve_bit_reader_t reader;
+            fcs_bit_reader reader;
 
             fc_solve_bit_reader_init(&reader, buffer);
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 4) == 5,
-                    "reader 1");
+            ok(fc_solve_bit_reader_read(&reader, 4) == 5, "reader 1");
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 2) == 1,
-                    "reader 2");
+            ok(fc_solve_bit_reader_read(&reader, 2) == 1, "reader 2");
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 4) == (2 | (3 << 2)),
-                    "reader 3");
+            ok(fc_solve_bit_reader_read(&reader, 4) == (2 | (3 << 2)),
+                "reader 3");
         }
     }
 

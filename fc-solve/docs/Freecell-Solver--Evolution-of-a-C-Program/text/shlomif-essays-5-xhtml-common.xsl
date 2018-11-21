@@ -1,0 +1,1 @@
+../../../arch_doc/docbook/shlomif-essays-5-xhtml-common.xsl

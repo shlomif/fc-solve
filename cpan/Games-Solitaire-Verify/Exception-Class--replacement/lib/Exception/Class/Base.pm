@@ -5,9 +5,10 @@ use warnings;
 
 use Class::Data::Inheritable 0.02;
 
-our @ISA = ( qw(Class::Data::Inheritable) );
+our @ISA = (qw(Class::Data::Inheritable));
 
-BEGIN {
+BEGIN
+{
     __PACKAGE__->mk_classdata('Trace');
     __PACKAGE__->mk_classdata('NoRefs');
     __PACKAGE__->NoRefs(1);
@@ -25,14 +26,16 @@ BEGIN {
 }
 
 # use overload
-    # an exception is always true
-    # bool => sub { 1 }, '""' => 'as_string', fallback => 1;
+# an exception is always true
+# bool => sub { 1 }, '""' => 'as_string', fallback => 1;
 
 # Create accessor routines
-BEGIN {
+BEGIN
+{
     my @fields = qw( message pid uid euid gid egid time trace );
 
-    foreach my $f (@fields) {
+    foreach my $f (@fields)
+    {
         my $sub = sub { my $s = shift; return $s->{$f}; };
 
         no strict 'refs';
@@ -46,7 +49,8 @@ BEGIN {
         line    => 'line',
     );
 
-    while ( my ( $f, $m ) = each %trace_fields ) {
+    while ( my ( $f, $m ) = each %trace_fields )
+    {
         my $sub = sub {
             my $s = shift;
             return $s->{$f} if exists $s->{$f};
@@ -62,7 +66,8 @@ BEGIN {
 
 sub Classes { Exception::Class::Classes() }
 
-sub throw {
+sub throw
+{
     my $proto = shift;
 
     $proto->rethrow if ref $proto;
@@ -70,13 +75,15 @@ sub throw {
     die $proto->new(@_);
 }
 
-sub rethrow {
+sub rethrow
+{
     my $self = shift;
 
     die $self;
 }
 
-sub new {
+sub new
+{
     my $proto = shift;
     my $class = ref $proto || $proto;
 
@@ -87,19 +94,22 @@ sub new {
     return $self;
 }
 
-sub _initialize {
+sub _initialize
+{
     my $self = shift;
-    my %p = @_ == 1 ? ( error => $_[0] ) : @_;
+    my %p    = @_ == 1 ? ( error => $_[0] ) : @_;
 
     $self->{message} = $p{message} || $p{error} || '';
 
     $self->{show_trace} = $p{show_trace} if exists $p{show_trace};
 
-    if ( $self->NoContextInfo() ) {
+    if ( $self->NoContextInfo() )
+    {
         $self->{show_trace} = 0;
-        $self->{package} = $self->{file} = $self->{line} = undef;
+        $self->{package}    = $self->{file} = $self->{line} = undef;
     }
-    else {
+    else
+    {
 
 =begin Removed
         # CORE::time is important to fix an error with some versions of
@@ -118,11 +128,13 @@ sub _initialize {
         my @ignore_class   = (__PACKAGE__);
         my @ignore_package = 'Exception::Class';
 
-        if ( my $i = delete $p{ignore_class} ) {
+        if ( my $i = delete $p{ignore_class} )
+        {
             push @ignore_class, ( ref($i) eq 'ARRAY' ? @$i : $i );
         }
 
-        if ( my $i = delete $p{ignore_package} ) {
+        if ( my $i = delete $p{ignore_package} )
+        {
             push @ignore_package, ( ref($i) eq 'ARRAY' ? @$i : $i );
         }
 
@@ -130,13 +142,16 @@ sub _initialize {
     }
 
     my %fields = map { $_ => 1 } $self->Fields;
-    while ( my ( $key, $value ) = each %p ) {
+    while ( my ( $key, $value ) = each %p )
+    {
         next if $key =~ /^(?:error|message|show_trace)$/;
 
-        if ( $fields{$key} ) {
+        if ( $fields{$key} )
+        {
             $self->{$key} = $value;
         }
-        else {
+        else
+        {
             Exception::Class::Base->throw(
                 error => "unknown field $key passed to constructor for class "
                     . ref $self );
@@ -144,7 +159,8 @@ sub _initialize {
     }
 }
 
-sub context_hash {
+sub context_hash
+{
     my $self = shift;
 
     return {
@@ -157,39 +173,46 @@ sub context_hash {
     };
 }
 
-sub field_hash {
+sub field_hash
+{
     my $self = shift;
 
     my $hash = {};
 
-    for my $field ( $self->Fields ) {
+    for my $field ( $self->Fields )
+    {
         $hash->{$field} = $self->$field;
     }
 
     return $hash;
 }
 
-sub description {
+sub description
+{
     return 'Generic exception';
 }
 
-sub show_trace {
+sub show_trace
+{
     my $self = shift;
 
     return 0 unless $self->{trace};
 
-    if (@_) {
+    if (@_)
+    {
         $self->{show_trace} = shift;
     }
 
     return exists $self->{show_trace} ? $self->{show_trace} : $self->Trace;
 }
 
-sub as_string {
+sub as_string
+{
     my $self = shift;
 
     my $str = $self->full_message;
-    unless ( defined $str && length $str ) {
+    unless ( defined $str && length $str )
+    {
         my $desc = $self->description;
         $str = defined $desc
             && length $desc ? "[$desc]" : "[Generic exception]";
@@ -224,7 +247,8 @@ sub isa {
 }
 EOF
 
-sub caught {
+sub caught
+{
     my $class = shift;
 
     my $e = $@;

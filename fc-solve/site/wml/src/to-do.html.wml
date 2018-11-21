@@ -1,9 +1,10 @@
-#include '../template.wml'
+#include "template5.wml"
 
 #include "xhtml/1.x/std/toc.wml"
 
 <latemp_subject "Freecell Solver's Future Directions" />
 
+<h2_section id="about" title="About">
 <p>
 While Freecell Solver is a fairly usable package that satisfies the needs of
 a large part of the users, it is by no means complete. This page hopes to
@@ -18,13 +19,14 @@ Note that it is possible to work on Freecell Solver if
 credit</a>.
 </p>
 
+</h2_section>
+
 <h2*>Table of Contents</h2*>
 <toc />
 
-<h2 id="future-tasks">Tasks to be Considered in the Future</h2>
+<h2_section id="future-tasks" title="Tasks to be Considered in the Future">
 
-<h3 id="patsolve_logic">Derived State Ordering and Incorporating Patsolve's
-Logic</h3>
+<h3_section id="patsolve_logic" title="Derived State Ordering and Incorporating Patsolve's Logic">
 
 <p>
 From any given position Freecell Solver reaches it uses some move
@@ -47,30 +49,9 @@ generic way to order derived positions, implementing all of the random, mine,
 and Tom's back-ends, and an ability to implement more in the future.
 </p>
 
-<h3 id="state_lookups">State Lookups</h3>
+</h3_section>
 
-<p>
-Currently, in order to find a suitable meta-move, Freecell Solver performs
-a large number of nested loops, each searching all the columns or
-freecells for suitable cards or card combinations. However, it is possible
-that one can speed up such queries by "compiling" the state and forming a
-lookup table, that will allow the elimination of some loops.
-</p>
-
-<p>
-A prospective volunteer for implementing this should study the code and
-see where such lookups can be made, implement the state compilation (once for
-each inspected state), and convert the code to using them.
-</p>
-
-<p>
-<b>Note:</b> This was implemented to a very limited extent in only three
-of the "test" functions in <code>freecell.c</code>. (As determined by profiling)
-It should be implemented in other test functions as well, while possibly
-extending the functionality scope.
-</p>
-
-<h3 id="orig_calc_states">States Calculated from the Original</h3>
+<h3_section id="orig_calc_states" title="States Calculated from the Original">
 
 <p>
 In the variants of Solitaire supported by Freecell Solver, during the game,
@@ -123,45 +104,13 @@ This suggested feature was inspired by a similar technique used by
 <a href="don_woods.html">the Don Woods solver</a>.
 </p>
 
-<h3 id="multi_threading">Multi-Threading</h3>
-
 <p>
-Freecell Solver can run several scans on the same states collection. However,
-it can only run a certain scan for a given number of iterations, suspend it
-with purely high-level mechanisms, and then run a different scan instead. Later
-on, the original scan can be resumed. However, it is still not possible to
-run two scans on the same state collection in two different threads
-simultaneously without risking the integrity of the data and the program
-as a whole.
+<b>Note:</b> this was <a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/docs/debondt-compact-freecell-positions--document.asciidoc">implemented</a> in dbm_fc_solver, and depth_dbm_fc_solver, but not in libfreecell-solver yet.
 </p>
 
-<p>
-The code-base foundation for thread-enabling is already in the code, based on
-the distinction between soft-threads that encompass a single scan, and
-hard-threads - a collection of soft-threads that share some resources. Every
-hard-thread can run only one of its soft-thread at the time, but several
-hard-threads would be able to run simultaneously, assuming suitable
-locking mechanisms are in place.
-</p>
+</h3_section>
 
-<p>
-A <a href="http://groups.yahoo.com/group/fc-solve-discuss/message/377">scheme
-for Multi-threading Freecell Solver</a> was proposed by Shlomi Fish, but the
-actual implementation of the locking was not implemented yet. To do so, one
-should write an abstraction of threading and locking mechanisms
-(<code>fc_solve_thread_*</code>), which will either default to doing nothing,
-or to running the appropriate threading functions of any threading API (be
-it POSIX threads, the Win32 API, APR or whatever).
-</p>
-
-<p>
-Making Freecell Solver thread-enabled is not high on my agenda, because few
-users have multi-processor machines that can somehow benefit from this scheme.
-Those with uni-processor machines are better off using several soft-threads
-within a single hard-thread that are arbitrated by the program.
-</p>
-
-<h3 id="failed_allocs">Safety from Failed Memory Allocations</h3>
+<h3_section id="failed_allocs" title="Safety from Failed Memory Allocations">
 
 <p>
 Freecell Solver uses many calls to the memory allocations, but does not check
@@ -185,40 +134,9 @@ This will involve a great deal of extra code and complexity, but will make
 Freecell Solver more secure and fail-proof.
 </p>
 
-<h3 id="client_server_multi_tasking">A Client/Server Multi-tasking Architecture</h3>
+</h3_section>
 
-<p>
-Yet another speculative feature that was inspired by a talk I had with
-Dave Goehrig in which he claimed multi-processing in Linux was more efficient
-than multi-threading. (a claim I saw elsewhere). I believe the Game AI model
-gives way to multi-threading better because all scans operating on the
-same states collection need access to all the states present in it. However,
-it is possible that a multi-processed model will still work better.
-</p>
-
-<p>
-What would be done is that the parent process (the server) will hold the
-entire state collection and will spawn children process which each will
-take the responsibility of running a hard thread. The hard threads will
-query the parent process (through some Inter-Process Communication mechanism,
-probably an anonymous pipe) about the presence of states there. The server
-process will answer the queries one by one and will add relevant states to the
-client processes. Once one of them queries the empty state, it will terminate
-all the children processes, and reconstruct the graph from there.
-</p>
-
-<p>
-This is much easier done on UNIXes or UNIX-like systems where multi-processing
-is much stronger than on Win32. (&lt;rant /&gt;) It also may be worthwhile for
-each client process to hold a local cache of states, so it won't query the
-server excessively.
-</p>
-
-<p>
-Again, this is something I'm planning to do, after I implement multi-threading, if I do it at all.
-</p>
-
-<h3 id="generalising">Generalising Freecell Solver to non-card Games</h3>
+<h3_section id="generalising" title="Generalising Freecell Solver to non-card Games">
 
 <p>
 This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
@@ -253,7 +171,11 @@ for single-card-deal Klondike in kpat that can solve on average 50% of the
 games. (I don't think it is a back-tracking heuristic, though).
 </p>
 
-<h2 id="finale">Finale</h2>
+</h3_section>
+
+</h2_section>
+
+<h2_section id="finale" title="Finale">
 
 <p>
 If all or most of these changes take effect, Freecell Solver will become much
@@ -283,11 +205,13 @@ has reached a similar state. So people, hack on! (On Freecell Solver or
 something else.)
 </p>
 
+</h2_section>
+
 <hr />
 
-<h2 id="completed">Completed Tasks</h2>
+<h2_section id="completed" title="Completed Tasks">
 
-<h3 id="identifier_prefix">Shortening the Identifier Prefix</h3>
+<h3_section id="identifier_prefix" title="Shortening the Identifier Prefix">
 
 <p>
 At the moment, the global Freecell Solver identifiers use the
@@ -303,7 +227,9 @@ be named <code>freecell_solver_user_</code>. This is not an issue because they
 are not used internally.
 </p>
 
-<h3 id="automated_test_suite">Writing an Automated Testing Framework</h3>
+</h3_section>
+
+<h3_section id="automated_test_suite" title="Writing an Automated Testing Framework">
 
 <p>
 Freecell Solver at the moment has very little if any automatic tests that were
@@ -350,7 +276,9 @@ written in other languages or frameworks, because they are better than no
 tests at all, and can easily be re-implemented should the need arise.
 </p>
 
-<h3 id="scons">Converting the Install Procedure to SCons</h3>
+</h3_section>
+
+<h3_section id="scons" title="Converting the Install Procedure to SCons">
 
 <p>
 At the moment, Freecell Solver uses
@@ -375,7 +303,9 @@ build-system to use <a href="http://www.cmake.org/">CMake</a> instead, and
 we are happy with this choice.
 </p>
 
-<h3 id="pysol_integration">PySol Integration</h3>
+</h3_section>
+
+<h3_section id="pysol_integration" title="PySol Integration">
 
 <p>
 PySol by Markus Oberhumer is by far the most feature-rich and complete
@@ -416,7 +346,9 @@ PySolFC instead on the PySol homepage, and I have been happy with it as well.
 Thanks to the PySolFC developers for making it happen.
 </p>
 
-<h3 id="cmd_line_prefix_tree">Command Line Prefix Tree Handling</h3>
+</h3_section>
+
+<h3_section id="cmd_line_prefix_tree" title="Command Line Prefix Tree Handling">
 
 <p>
 At the moment, each flag in the command line is checked by comparing for
@@ -439,7 +371,9 @@ for this purpose.
 <b>Note:</b> already implemented in freecell-solver-2.12.0.
 </p>
 
-<h3 id="rcs_state_storage">RCS-like State Storage</h3>
+</h3_section>
+
+<h3_section id="rcs_state_storage" title="RCS-like State Storage">
 
 <p>
 <a href="http://dmoz.org/Computers/Software/Configuration_Management/Tools/Revision_Control_System/">RCS</a>
@@ -484,7 +418,9 @@ older storage method that stores the position's layout itself in memory is
 still available as a compile-time option and will continue to be maintained.
 </p>
 
-<h3 id="java">Porting to Java</h3>
+</h3_section>
+
+<h3_section id="java" title="Porting to Java">
 
 <p>
 Imagine being able to browse to a web-site which will present you with
@@ -511,7 +447,7 @@ compiler gcc can compile code to its virtual machine. However, at the moment,
 Java is the de-facto technology for making programs run inside a browser.
 </p>
 
-<h4 id="java__note">Note</h4>
+<h4_section id="java__note" title="Note">
 
 <ol>
 
@@ -547,3 +483,118 @@ to Java instead of JavaScript.
 <p>
 As a result of all these points, we mark this task as done.
 </p>
+
+</h4_section>
+
+</h3_section>
+
+<h3_section id="state_lookups" title="State Lookups">
+
+<p>
+Currently, in order to find a suitable meta-move, Freecell Solver performs
+a large number of nested loops, each searching all the columns or
+freecells for suitable cards or card combinations. However, it is possible
+that one can speed up such queries by "compiling" the state and forming a
+lookup table, that will allow the elimination of some loops.
+</p>
+
+<p>
+A prospective volunteer for implementing this should study the code and
+see where such lookups can be made, implement the state compilation (once for
+each inspected state), and convert the code to using them.
+</p>
+
+<p>
+<b>Note:</b> This was implemented to a very limited extent in only three
+of the move functions in <code>freecell.c</code>. (As determined by profiling)
+It should be implemented in other move functions as well, while possibly
+extending the functionality scope.
+</p>
+
+</h3_section>
+
+<h3_section id="multi_threading" title="Multi-Threading">
+
+<p>
+Freecell Solver can run several scans on the same states collection. However,
+it can only run a certain scan for a given number of iterations, suspend it
+with purely high-level mechanisms, and then run a different scan instead. Later
+on, the original scan can be resumed. However, it is still not possible to
+run two scans on the same state collection in two different threads
+simultaneously without risking the integrity of the data and the program
+as a whole.
+</p>
+
+<p>
+The code-base foundation for thread-enabling is already in the code, based on
+the distinction between soft-threads that encompass a single scan, and
+hard-threads - a collection of soft-threads that share some resources. Every
+hard-thread can run only one of its soft-thread at the time, but several
+hard-threads would be able to run simultaneously, assuming suitable
+locking mechanisms are in place.
+</p>
+
+<p>
+A <a href="http://groups.yahoo.com/group/fc-solve-discuss/message/377">scheme
+for Multi-threading Freecell Solver</a> was proposed by Shlomi Fish, but the
+actual implementation of the locking was not implemented yet. To do so, one
+should write an abstraction of threading and locking mechanisms
+(<code>fc_solve_thread_*</code>), which will either default to doing nothing,
+or to running the appropriate threading functions of any threading API (be
+it POSIX threads, the Win32 API, APR or whatever).
+</p>
+
+<p>
+Making Freecell Solver thread-enabled is not high on my agenda, because few
+users have multi-processor machines that can somehow benefit from this scheme.
+Those with uni-processor machines are better off using several soft-threads
+within a single hard-thread that are arbitrated by the program.
+</p>
+
+<p>
+<b>Rejected:</b> resource sharing multi-threading does not perform too well
+due to excessive locking. See <a href="https://www.shlomifish.org/philosophy/books-recommends/#algorithm_design_manual">this book</a> for more info.
+</p>
+
+</h3_section>
+
+<h3_section id="client_server_multi_tasking" title="A Client/Server Multi-tasking Architecture">
+
+<p>
+Yet another speculative feature that was inspired by a talk I had with
+Dave Goehrig in which he claimed multi-processing in Linux was more efficient
+than multi-threading. (a claim I saw elsewhere). I believe the Game AI model
+gives way to multi-threading better because all scans operating on the
+same states collection need access to all the states present in it. However,
+it is possible that a multi-processed model will still work better.
+</p>
+
+<p>
+What would be done is that the parent process (the server) will hold the
+entire state collection and will spawn children process which each will
+take the responsibility of running a hard thread. The hard threads will
+query the parent process (through some Inter-Process Communication mechanism,
+probably an anonymous pipe) about the presence of states there. The server
+process will answer the queries one by one and will add relevant states to the
+client processes. Once one of them queries the empty state, it will terminate
+all the children processes, and reconstruct the graph from there.
+</p>
+
+<p>
+This is much easier done on UNIXes or UNIX-like systems where multi-processing
+is much stronger than on Win32. (&lt;rant /&gt;) It also may be worthwhile for
+each client process to hold a local cache of states, so it won't query the
+server excessively.
+</p>
+
+<p>
+Again, this is something I'm planning to do, after I implement multi-threading, if I do it at all.
+</p>
+
+<p>
+<b>Rejected:</b> for similar reasons.
+</p>
+
+</h3_section>
+
+</h2_section>

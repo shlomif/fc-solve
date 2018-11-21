@@ -11,7 +11,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    fcs_depth_multi_queue_t q;
+    fcs_depth_multi_queue q;
 } QueueInC;
 
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_depth, int first_item_i) {
@@ -21,7 +21,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_
         QueueInC * s;
         New(42, s, 1, QueueInC);
 
-        const_AUTO(first_item, (fcs_offloading_queue_item_t)first_item_i);
+        const_AUTO(first_item, (offloading_queue_item)first_item_i);
         fcs_depth_multi_queue__init(&(s->q), savepv(offload_dir_path), first_depth, &first_item);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -32,17 +32,17 @@ static inline QueueInC * deref(SV * const obj) {
     return (QueueInC*)SvIV(SvRV(obj));
 }
 
-static inline fcs_depth_multi_queue_t * q(SV * const obj) {
+static inline fcs_depth_multi_queue * q(SV * const obj) {
     return &(deref(obj)->q);
 }
 
 void insert(SV* obj, int depth, int item_i) {
-    const_AUTO(item, (fcs_offloading_queue_item_t)item_i);
+    const_AUTO(item, (offloading_queue_item)item_i);
     fcs_depth_multi_queue__insert( q(obj), depth, &item );
 }
 
 AV* extract_proto(SV* obj) {
-    fcs_offloading_queue_item_t item;
+    offloading_queue_item item;
     int ret_depth;
     AV * const ret = newAV();
 

@@ -28,6 +28,9 @@ MACRO(my_board_gen_prog myprog tgt)
     )
 ENDMACRO()
 
+my_board_gen_prog("fc_solve_find_index_s2ints.py" "fc_solve_find_index_s2ints")
+my_board_gen_prog("find-freecell-deal-index.py" "find_index_prog")
+my_board_gen_prog("gen-multiple-pysol-layouts" "gen_multi_layouts_prog")
 my_board_gen_prog("make_pysol_freecell_board.py" "make_pysol_board")
 my_board_gen_prog("transpose-freecell-board.py" "transpose_freecell_board_prog")
 # Empty list
@@ -51,9 +54,19 @@ RUN_POD2MAN(
     "Freecell Solver ${VERSION}"
 )
 
+RUN_POD2MAN(
+    "_pod_targets"
+    "gen-multiple-pysol-layouts.pod"
+    "gen-multiple-pysol-layouts.6"
+    "6"
+    "Freecell Solver"
+    "Freecell Solver ${VERSION}"
+)
+
 
 IF (UNIX)
     INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
+    INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/gen-multiple-pysol-layouts.6" 6)
     INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/transpose-freecell-board.py.6" 6)
     # INSTALL_MAN("fc-solve-board_gen.6" 6)
 
@@ -69,8 +82,12 @@ INSTALL(
         "bin"
 )
 
-
 ADD_CUSTOM_TARGET(
     "docs_pods" ALL
     DEPENDS ${_pod_targets}
+)
+
+ADD_LIBRARY (fcs_find_deal
+    SHARED
+    find_deal.c
 )

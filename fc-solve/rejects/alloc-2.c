@@ -87,4 +87,3 @@ void fc_solve_compact_allocator_finish(fcs_compact_allocator_t * allocator)
 
     free(allocator->packs);
 }
-

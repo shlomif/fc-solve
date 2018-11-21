@@ -4,11 +4,9 @@ Release: 1
 License: MIT
 Group: Amusement/Games
 Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.xz
-Buildroot: %{_tmppath}/freecell-solver-root
 URL: http://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
-BuildRequires: ack
 BuildRequires: cmake
 BuildRequires: gmp-devel
 BuildRequires: perl(base)
@@ -47,7 +45,7 @@ BuildRequires: perl(Test::TrailingSpace)
 BuildRequires: perl(Test::Trap)
 BuildRequires: perl(warnings)
 BuildRequires: perl(YAML::XS)
-BuildRequires: perl-devel
+BuildRequires: perl-devel >= 5.14.0
 BuildRequires: python3-random2
 BuildRequires: tap-devel
 BuildRequires: the_silver_searcher
@@ -71,12 +69,12 @@ games of Freecell and similar variants of card solitaire.
 
 This package is mandatory for the Freecell Solver executable too.
 
-%package -n libfreecell-solver0-devel
+%package -n libfreecell-solver-devel
 Summary: The Freecell Solver development tools for solving Freecell games
 Group: Amusement/Games
 Requires: libfreecell-solver0 = %{version}
 
-%description -n libfreecell-solver0-devel
+%description -n libfreecell-solver-devel
 Freecell Solver is a library for automatically solving boards of Freecell and
 similar variants of card Solitaire. This package contains the header files and
 static libraries necessary for developing programs using Freecell Solver.
@@ -97,16 +95,6 @@ It is not generally required.
 
 %prep
 %setup
-# This is a hack that is meant to make sure the README of the board
-# generation programs resides inside the board_gen sub-dir of the
-# documentation directory.
-cd board_gen
-mkdir doc
-cd doc
-mkdir board_gen
-cd board_gen
-cp ../../README .
-
 
 %build
 %cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12
@@ -117,18 +105,11 @@ cd build
 perl ../run-tests.pl
 
 %install
-rm -rf %buildroot
 cd build
-%{make_install}
-
-rm -f %buildroot/usr/bin/make-microsoft-freecell-board
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+%make_install
 
 %files -n libfreecell-solver0
-%{_libdir}/libfreecell-solver.so*
+%{_libdir}/libfreecell-solver.so.*
 /usr/share/freecell-solver/presetrc
 /usr/share/freecell-solver/presets/*
 
@@ -138,23 +119,23 @@ rm -f %buildroot/usr/bin/make-microsoft-freecell-board
 %files
 %defattr(-,root,root)
 /usr/bin/fc-solve
+/usr/bin/fc_solve_find_index_s2ints.py
+/usr/bin/find-freecell-deal-index.py
 /usr/bin/freecell-solver-fc-pro-range-solve
 /usr/bin/freecell-solver-multi-thread-solve
 /usr/bin/freecell-solver-range-parallel-solve
+/usr/bin/gen-multiple-pysol-layouts
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/pi-make-microsoft-freecell-board
 /usr/bin/transpose-freecell-board.py
 %{_mandir}/*/*
 %{_docdir}/*
 
-%files -n libfreecell-solver0-devel
+%files -n libfreecell-solver-devel
 %defattr(-,root,root)
 /usr/include/freecell-solver/*.h
-/usr/bin/freecell-solver-config
+%{_libdir}/libfreecell-solver.so
 %{_libdir}/pkgconfig/*.pc
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Tue Mar 31 2009 Shlomi Fish <shlomif@iglu.org.il> 2.21.2-1

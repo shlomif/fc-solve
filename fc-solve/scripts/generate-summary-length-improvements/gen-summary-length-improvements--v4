@@ -44,7 +44,7 @@ foreach my $seed (1 .. 1000)
 
         my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn"#;
         print "$cmd\n";
-        open(my $fh, "$cmd |");
+        open(my $fh, '-|', $cmd)
         my $deal = 0;
         open my $d_fh, '>', $out_fn_deltas;
         while (my $l = <$fh>)

@@ -1,31 +1,51 @@
 os: linux
-dist: trusty
-# See https://github.com/travis-ci/travis-ci/issues/8378 ; remove later
-group: deprecated-2017Q3
+# dist: trusty
+dist: xenial
+go:
+    - '1.11.x'
+language: c
 python:
     - '3.6'
 before_install:
     - sudo apt-get update -qq
-    - sudo apt-get install -y cmake cmake-data cpanminus gperf libgmp-dev libgoogle-perftools-dev libperl-dev mercurial ninja-build python3 python3-setuptools perl python3-pip silversearcher-ag valgrind
+    - sudo apt-get --no-install-recommends install -y asciidoc cmake cmake-data cpanminus dbtoepub docbook-xsl docbook-xsl-ns gperf libdb5.3-dev libgd-dev libgmp-dev libgoogle-perftools-dev libhunspell-dev libperl-dev lynx mercurial ninja-build python3 python3-setuptools perl python3-pip silversearcher-ag valgrind wml xsltproc
+    - sudo ln -s /usr/bin/make /usr/bin/gmake
+    - eval "$(GIMME_GO_VERSION=1.11 gimme)"
+    - go get -u github.com/tdewolff/minify/cmd/minify
+      # - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
+      # - sudo cpanm Text::Hunspell
+    - cpanm local::lib
+    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
+    # For the fc-solve docs
+    - gem install asciidoctor
+    # For wml
+    - cpanm --notest Bit::Vector Carp::Always Class::XSAccessor File::Which GD Getopt::Long IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
+    - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
+    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
+    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
+    - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
+    - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
+    - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
 install:
-    - which python3
-    - python3 --version
-    - sudo -H `which python3` -m pip install cffi
-    - sudo -H `which python3` -m pip install random2
-    - sudo -H `which python3` -m pip install Zenfilter
-      # Temporary workaround for a problem in running the Inline::C test
-      # suite with latest EU::MM - install Inline::C with no tests.
-      #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
-    - sudo cpanm --notest Inline::C
-      # Speed up installing the deps.
-    - sudo cpanm --notest Task::FreecellSolver::Testing
-    - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
-    - tar -xvf libtap-1.12.0.tar.bz2
-    - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
-    - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
+    - sudo -H `which python3` -m pip install cffi cookiecutter pycotap random2 six vnu_validator Zenfilter
+      # For G-S-V dzil
+    - cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
+      # For the website
+    - cpanm --quiet App::Deps::Verify App::XML::DocBook::Builder
+    - (cd fc-solve/site/wml/ && deps-app plinst -i bin/required-modules.yml )
+    - cpanm --quiet --notest Task::FreecellSolver::Testing
+    - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
+    - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
+    - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
 perl:
     - "5.24"
-python:
-    - "3.5"
 script:
-    - export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 ; set -o pipefail ; cd fc-solve/source ; perl ../scripts/multi_config_tests.pl 2>&1 | zenfilter --count-step=500 --last=500 --filter='^Running:.*?\[idx\s*=\s*[0-9]+\s*/\s*[0-9]+'
+    - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
+    - bash fc-solve/scripts/run-ci-tests.bash
+sudo: required
+cache:
+    ccache: true
+    directories:
+        - $HOME/perl_modules
+# services:
+#     - docker

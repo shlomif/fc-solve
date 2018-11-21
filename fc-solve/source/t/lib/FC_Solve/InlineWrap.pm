@@ -1,5 +1,6 @@
 package FC_Solve::InlineWrap;
 
+use 5.014;
 use strict;
 use warnings;
 
@@ -14,7 +15,7 @@ sub import
 
     my ($pkg) = caller(0);
 
-    my $src = delete( $args{C} );
+    my $src  = delete( $args{C} );
     my $libs = delete( $args{l} ) // '';
 
     my @workaround_for_a_heisenbug =
@@ -27,10 +28,11 @@ sub import
     }
 
     my @inline_params = (
-        C                 => $src,
-        name              => $pkg,
-        NAME              => $pkg,
-        INC               => "-I" . $ENV{FCS_PATH} . " -I" . $ENV{FCS_SRC_PATH},
+        C    => $src,
+        name => $pkg,
+        NAME => $pkg,
+        INC =>
+"-I$ENV{FCS_PATH}/include -I$ENV{FCS_SRC_PATH}/include -I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
         CCFLAGS           => $ccflags,
         CLEAN_AFTER_BUILD => 0,
         LIBS              => "-L$ENV{FCS_PATH} $libs",

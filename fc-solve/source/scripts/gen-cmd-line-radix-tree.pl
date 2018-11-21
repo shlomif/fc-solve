@@ -107,7 +107,7 @@ path($inc_h)->spew_utf8(
         $str =~
             s#(^|\n)(struct CommandOption \*(?:$|\n|\r\n))#${1}static $2#gms;
         $str;
-        }
+    }
 );
 
 __END__

@@ -7,12 +7,10 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * iter_handler_base.h - define the basic my_iter_handler function.
- */
+// iter_handler_base.h - define the basic my_iter_handler function.
 static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
-    const int depth, void *const user_instance,
-    const fc_solve_display_information_context_t *const dc,
+    const int depth, void *const user_instance GCC_UNUSED,
+    const fc_solve_display_information_context *const dc,
     const fcs_int_limit_t parent_iter_num)
 {
     printf("Iteration: %li\nDepth: %i\nStored-States: %li\nScan: %s\n",
@@ -23,7 +21,12 @@ static inline void my_iter_handler_base(const fcs_int_limit_t iter_num,
         (long)freecell_solver_user_get_num_states_in_collection_long(
             user_instance),
 #endif
-        freecell_solver_user_get_current_soft_thread_name(user_instance));
+#ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+        "scan"
+#else
+        freecell_solver_user_get_current_soft_thread_name(user_instance)
+#endif
+    );
     if (dc->display_parent_iter_num)
     {
         printf("Parent Iteration: %li\n", (long)parent_iter_num);

@@ -1,4 +1,3 @@
-
 #define my_brfs_queue (soft_thread->method_specific.befs.meth.brfs.bfs_queue)
 #define my_brfs_queue_last_item \
     (soft_thread->method_specific.befs.meth.brfs.bfs_queue_last_item)
@@ -142,4 +141,3 @@ enum
 
 };
 #endif
-

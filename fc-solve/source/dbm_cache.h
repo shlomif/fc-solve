@@ -17,9 +17,9 @@ extern "C" {
 #endif
 
 #include "meta_alloc.h"
-#include "fcs_enums.h"
+#include "freecell-solver/fcs_enums.h"
 
-#include "fcs_dllexport.h"
+#include "freecell-solver/fcs_dllexport.h"
 #include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
@@ -28,13 +28,13 @@ extern "C" {
 static int fc_solve_compare_lru_cache_keys(const void *const void_a,
     const void *const void_b, void *context GCC_UNUSED)
 {
-#define GET_PARAM(p) ((((const fcs_cache_key_info_t *)(p))->key))
+#define GET_PARAM(p) ((((const fcs_cache_key_info *)(p))->key))
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
-static inline void cache_destroy_key(fcs_cache_key_info_t *cache_key)
+static inline void cache_destroy_key(fcs_cache_key_info *cache_key)
 {
     for (; cache_key; cache_key = RECYCLE_BIN_NEXT(cache_key))
     {
@@ -43,7 +43,7 @@ static inline void cache_destroy_key(fcs_cache_key_info_t *cache_key)
     }
 }
 
-static inline void cache_destroy(fcs_lru_cache_t *cache)
+static inline void cache_destroy(fcs_lru_cache *cache)
 {
     cache_destroy_key(cache->recycle_bin);
     cache_destroy_key(cache->lowest_pri);
@@ -52,9 +52,8 @@ static inline void cache_destroy(fcs_lru_cache_t *cache)
         &(cache->states_values_to_keys_allocator));
 }
 
-static inline void cache_init(fcs_lru_cache_t *const cache,
-    const long max_num_elements_in_cache,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+static inline void cache_init(fcs_lru_cache *const cache,
+    const long max_num_elements_in_cache, meta_allocator *const meta_alloc)
 {
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
@@ -75,10 +74,10 @@ static inline void cache_init(fcs_lru_cache_t *const cache,
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static inline fcs_bool_t cache_does_key_exist(
-    fcs_lru_cache_t *const cache, fcs_cache_key_t *const key)
+static inline bool cache_does_key_exist(
+    fcs_lru_cache *const cache, fcs_cache_key *const key)
 {
-    const fcs_cache_key_info_t to_check = {.key = *key};
+    const fcs_cache_key_info to_check = {.key = *key};
     const dict_key_t existing_key =
         fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
     if (!existing_key)
@@ -88,8 +87,7 @@ static inline fcs_bool_t cache_does_key_exist(
     else
     {
         /* First - promote this key to the top of the cache. */
-        fcs_cache_key_info_t *const existing =
-            (fcs_cache_key_info_t *)existing_key;
+        fcs_cache_key_info *const existing = (fcs_cache_key_info *)existing_key;
 
         if (existing->higher_pri)
         {
@@ -114,11 +112,11 @@ static inline fcs_bool_t cache_does_key_exist(
     }
 }
 
-static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
-    const fcs_cache_key_t *key, const fcs_fcc_move_t *moves_to_parent,
-    const fcs_fcc_move_t final_move)
+static inline fcs_cache_key_info *cache_insert(fcs_lru_cache *cache,
+    const fcs_cache_key *key, const fcs_fcc_move *moves_to_parent,
+    const fcs_fcc_move final_move)
 {
-    fcs_cache_key_info_t *cache_key;
+    fcs_cache_key_info *cache_key;
     var_AUTO(kaz_tree, cache->kaz_tree);
 
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
@@ -131,7 +129,7 @@ static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
     }
     else
     {
-        cache_key = (fcs_cache_key_info_t *)fcs_compact_alloc_ptr(
+        cache_key = (fcs_cache_key_info *)fcs_compact_alloc_ptr(
             &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
         cache_key->moves_to_key = NULL;
         ++cache->count_elements_in_cache;
@@ -140,7 +138,7 @@ static inline fcs_cache_key_info_t *cache_insert(fcs_lru_cache_t *cache,
     cache_key->key = *key;
     if (moves_to_parent)
     {
-        fcs_fcc_move_t *moves;
+        fcs_fcc_move *moves;
         const_AUTO(len, strlen((const char *)moves_to_parent));
         cache_key->moves_to_key = moves =
             SREALLOC(cache_key->moves_to_key, len + 1 + 1);

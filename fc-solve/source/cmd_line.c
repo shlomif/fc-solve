@@ -7,16 +7,11 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * cmd_line.c - the Freecell Solver command line arguments-like parsing
- * routines. Useful for more easily configuring a Freecell Solver instance.
- */
+// cmd_line.c - the Freecell Solver command line arguments-like parsing
+// routines. Useful for more easily configuring a Freecell Solver instance.
+#include "fcs_conf.h"
 
-#include "config.h"
-
-#ifdef HAVE_VASPRINTF
-#define _GNU_SOURCE
-#else
+#ifndef HAVE_VASPRINTF
 #include "asprintf.h"
 #endif
 
@@ -27,7 +22,7 @@
 #endif
 
 #include "set_weights.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "split_cmd_line.h"
 
 #include "prefix.h"
@@ -45,8 +40,8 @@ static inline void nullify_newline(char *const line)
 }
 
 #define MAX_PATH_LEN 4000
-static inline fcs_bool_t read_preset(const char *const preset_name,
-    args_man_t *const args_man, char *const opened_files_dir,
+static inline bool read_preset(const char *const preset_name,
+    fcs_args_man *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
     char home_dir_presetrc[MAX_PATH_LEN];
@@ -92,7 +87,7 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
         (const char *)global_presetrc,
         user_preset_dir,
     };
-    fcs_bool_t read_next_preset = FALSE;
+    bool read_next_preset = FALSE;
     for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); ++path_idx)
     {
         const char *const path = presetrc_pathes[path_idx];
@@ -158,7 +153,9 @@ static inline fcs_bool_t read_preset(const char *const preset_name,
     return TRUE;
 }
 
-static inline char *calc_errstr_s(const char *const format, ...)
+#ifdef FCS_WITH_ERROR_STRS
+static inline __attribute__((format(printf, 1, 2))) char *calc_errstr_s(
+    const char *const format, ...)
 {
     va_list my_va_list;
 
@@ -173,7 +170,6 @@ static inline char *calc_errstr_s(const char *const format, ...)
     return errstr;
 }
 
-#ifdef FCS_WITH_ERROR_STRS
 #define ASSIGN_ERR_STR(error_string, format, ...)                              \
     *(error_string) = calc_errstr_s(format, __VA_ARGS__)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)    \
@@ -205,8 +201,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
         char **const error_string),
     const int file_nesting_count, freecell_solver_str_t opened_files_dir)
 {
-    args_man_t preset_args;
-    char dir[MAX_PATH_LEN];
+    fcs_args_man preset_args;
+    char dir[MAX_PATH_LEN + 1];
 
     dir[0] = '\0';
 
@@ -371,10 +367,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
             PROCESS_OPT_ARG();
-#ifndef FCS_FREECELL_ONLY
-            freecell_solver_user_set_sequence_move(
-                instance, !strcmp((*arg), "unlimited"));
-#endif
+            FCS_ON_NOT_FC_ONLY(freecell_solver_user_set_sequence_move(
+                instance, !strcmp((*arg), "unlimited")));
             break;
 
         case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by;
@@ -508,9 +502,11 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_TRIM_MAX_STORED_STATES: /* STRINGS=-tmss|--trim-max-stored-states;
                                               */
             PROCESS_OPT_ARG();
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             freecell_solver_set_stored_states_trimming_limit(
                 instance, atol((*arg)));
+#endif
 #endif
             break;
 
@@ -696,7 +692,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 buffer[fread(buffer, 1, file_len, f)] = '\0';
                 fclose(f);
 
-                args_man_t args_man = fc_solve_args_man_chop(buffer);
+                fcs_args_man args_man = fc_solve_args_man_chop(buffer);
                 free(buffer);
 
                 if (num_file_args_to_skip < args_man.argc)

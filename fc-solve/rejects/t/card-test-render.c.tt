@@ -1,0 +1,17 @@
+[% IF 0 # Removing because the set_suit and set_rank() functions
+        # were removed.
+%]
+    {
+        fcs_card_t mycard;
+        mycard = fc_solve_empty_card;
+
+        fcs_card_set_suit(mycard, [% suit.idx %]);
+        fcs_card_set_rank(mycard, [% rank.idx %]);
+
+        fc_solve_card_stringify(mycard, buffer, [% t %]);
+        /* TEST */
+        [%- SET num_tests = num_tests + 1 -%]
+        ok (!strcmp(buffer, [% card_string %]),
+            "Trying to render " [% card_string %] " into a string");
+    }
+[% END %]

@@ -11,6 +11,7 @@
 #pragma once
 
 #include <limits.h>
+#include <stdint.h>
 #include <time.h>
 #ifdef __unix__
 #include <unistd.h>
@@ -19,9 +20,9 @@
 #include "alloc_wrap.h"
 #include "bool.h"
 #include "count.h"
-#include "fcs_dllexport.h"
+#include "freecell-solver/fcs_dllexport.h"
 #include "fcs_err.h"
-#include "fcs_limit.h"
+#include "freecell-solver/fcs_limit.h"
 #include "likely.h"
 #include "min_and_max.h"
 #include "portable_time.h"

@@ -16,9 +16,9 @@ use Test::Differences qw( eq_or_diff );
 
     # TEST
     eq_or_diff(
-        scalar(`perl trace.pl DEMOS-programs/data/amateur-star.sh | sha256sum -`),
+        scalar(
+            `perl trace.pl DEMOS-programs/data/amateur-star.sh | sha256sum -`),
         "bf715fa2d5bbfdc0a48c68472e0ac85273e17986504e291fc7dbb2a87fcf03b0  -\n",
         "perl trace.pl gives the same results for amateur-star.sh",
     );
 }
-

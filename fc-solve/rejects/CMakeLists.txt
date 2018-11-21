@@ -61,4 +61,3 @@ ADD_CUSTOM_TARGET(
     "--source-dir" "${CMAKE_CURRENT_SOURCE_DIR}"
     "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
 )
-

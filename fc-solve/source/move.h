@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * move.h - header file for the move and move stacks functions of
- * Freecell Solver
- */
+// move.h - header file for the move and move stacks functions.
 #pragma once
 
 #ifdef __cplusplus
@@ -22,31 +19,28 @@ extern "C" {
 #include "indirect_buffer.h"
 
 #ifdef FCS_WITH_MOVES
-extern const fcs_internal_move_t fc_solve_empty_move;
+extern const fcs_internal_move fc_solve_empty_move;
 #endif
 
 #define FCS_MOVE_STACK_GROW_BY 16
 
 #ifdef FCS_WITH_MOVES
 static inline void fcs_move_stack_push(
-    fcs_move_stack_t *const stack, const fcs_internal_move_t move)
+    fcs_move_stack *const stack, const fcs_internal_move move)
 {
-    /* If all the moves inside the stack are taken then
-       resize the move vector */
+    // If all the moves inside the stack are taken then resize the move vector
     const size_t pos = ++stack->num_moves;
-
     if (!(pos & (FCS_MOVE_STACK_GROW_BY - 1)))
     {
         stack->moves = SREALLOC(stack->moves, pos + FCS_MOVE_STACK_GROW_BY);
     }
-
     stack->moves[pos - 1] = move;
 }
 
-static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
+static inline void fcs_move_stack_params_push(fcs_move_stack *const stack,
     const int type, const int src, const int dest, const int num_cards_in_seq)
 {
-    fcs_internal_move_t temp_move;
+    fcs_internal_move temp_move;
 
     fcs_int_move_set_type(temp_move, type);
     fcs_int_move_set_src(temp_move, src);
@@ -56,21 +50,21 @@ static inline void fcs_move_stack_params_push(fcs_move_stack_t *const stack,
     fcs_move_stack_push(stack, temp_move);
 }
 
-static inline void fcs_move_stack_non_seq_push(fcs_move_stack_t *const stack,
-    const int type, const int src, const int dest)
+static inline void fcs_move_stack_non_seq_push(
+    fcs_move_stack *const stack, const int type, const int src, const int dest)
 {
     fcs_move_stack_params_push(stack, type, src, dest, 1);
 }
 
 static inline void fcs_push_1card_seq(
-    fcs_move_stack_t *const stack, const int src, const int dest)
+    fcs_move_stack *const stack, const int src, const int dest)
 {
     fcs_move_stack_params_push(
         stack, FCS_MOVE_TYPE_STACK_TO_STACK, src, dest, 1);
 }
 
-static inline fcs_bool_t fc_solve_move_stack_pop(
-    fcs_move_stack_t *const stack, fcs_internal_move_t *const move)
+static inline bool fc_solve_move_stack_pop(
+    fcs_move_stack *const stack, fcs_internal_move *const move)
 {
     if (stack->num_moves > 0)
     {
@@ -86,9 +80,9 @@ static inline fcs_bool_t fc_solve_move_stack_pop(
 #define fcs_move_stack_static_destroy(stack) free((stack).moves)
 #define fcs_move_stack_reset(stack) (stack)->num_moves = 0
 
-void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
-    fcs_state_locs_struct_t *const locs,
-    const fcs_internal_move_t move FREECELLS_AND_STACKS_ARGS());
+void fc_solve_apply_move(fcs_state *const ptr_state_key,
+    fcs_state_locs_struct *const locs,
+    const fcs_internal_move move FREECELLS_AND_STACKS_ARGS());
 
 /*
     The purpose of this function is to convert the moves from using
@@ -96,41 +90,41 @@ void fc_solve_apply_move(fcs_state_t *const ptr_state_key,
     user positions.
 */
 
-static inline fcs_move_stack_t fcs_move_stack__new(void)
+static inline fcs_move_stack fcs_move_stack__new(void)
 {
-    return (fcs_move_stack_t){.num_moves = 0,
+    return (fcs_move_stack){.num_moves = 0,
         .moves = malloc(sizeof(fcs_move_t) * FCS_MOVE_STACK_GROW_BY)};
 }
 
 static inline void fc_solve_move_stack_swallow_stack(
-    fcs_move_stack_t *const stack, fcs_move_stack_t *const src_stack)
+    fcs_move_stack *const stack, fcs_move_stack *const src_stack)
 {
-    fcs_internal_move_t move;
+    fcs_internal_move move;
     while (!fc_solve_move_stack_pop(src_stack, &move))
     {
         fcs_move_stack_push(stack, move);
     }
 }
 
-static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
-    const fcs_state_keyval_pair_t *const init_state,
-    fcs_state_locs_struct_t *const locs FREECELLS_AND_STACKS_ARGS())
+static inline void fc_solve_move_stack_normalize(fcs_move_stack *const moves,
+    const fcs_state_keyval_pair *const init_state,
+    fcs_state_locs_struct *const locs FREECELLS_AND_STACKS_ARGS())
 {
-    fcs_internal_move_t in_move;
-    fcs_state_keyval_pair_t s_and_info;
+    fcs_internal_move in_move;
+    fcs_state_keyval_pair s_and_info;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    fcs_internal_move_t out_move = fc_solve_empty_move;
+    fcs_internal_move out_move = fc_solve_empty_move;
     FCS_STATE__DUP_keyval_pair(s_and_info, *init_state);
 
 #ifdef INDIRECT_STACK_STATES
-    for (int i = 0; i < STACKS_NUM__VAL; i++)
+    for (size_t i = 0; i < STACKS_NUM__VAL; i++)
     {
         fcs_copy_stack(
             s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
     }
 #endif
 
-    fcs_move_stack_t temp_moves = fcs_move_stack__new();
+    fcs_move_stack temp_moves = fcs_move_stack__new();
 
     while (!fc_solve_move_stack_pop(moves, &in_move))
     {
@@ -158,8 +152,10 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
         case FCS_MOVE_TYPE_FREECELL_TO_STACK:
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
+#if MAX_NUM_FREECELLS > 0
             fcs_int_move_set_src(
                 out_move, locs->fc_locs[(int)fcs_int_move_get_src(in_move)]);
+#endif
             break;
         default:
             break;
@@ -175,8 +171,10 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
 
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
         case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
+#if MAX_NUM_FREECELLS > 0
             fcs_int_move_set_dest(
                 out_move, locs->fc_locs[(int)fcs_int_move_get_dest(in_move)]);
+#endif
             break;
 
         case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
@@ -196,13 +194,9 @@ static inline void fc_solve_move_stack_normalize(fcs_move_stack_t *const moves,
         fcs_move_stack_push((&temp_moves), out_move);
     }
 
-    /*
-     * temp_moves contain the needed moves in reverse order. So let's use
-     * swallow_stack to put them in the original in the correct order.
-     *
-     * */
+    // temp_moves contain the needed moves in reverse order. So let's use
+    // swallow_stack to put them in the original in the correct order.
     fcs_move_stack_reset(moves);
-
     fc_solve_move_stack_swallow_stack(moves, (&temp_moves));
     fcs_move_stack_static_destroy(temp_moves);
 }
@@ -217,7 +211,7 @@ static inline char fc_solve__freecell_to_char(const int fc_idx)
     return 'a' + fc_solve_move__convert_freecell_num(fc_idx);
 }
 static inline void fc_solve_move_to_string_w_state(char *const string,
-    fcs_state_keyval_pair_t *const state, const fcs_move_t move,
+    fcs_state_keyval_pair *const state, const fcs_move_t move,
     const int standard_notation)
 {
 #define state_key (&(state->s))
@@ -352,22 +346,22 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
 
 typedef struct
 {
-    fcs_collectible_state_t *state_ptr;
+    fcs_collectible_state *state_ptr;
     union {
         void *ptr;
         int i;
         char c[sizeof(void *) / sizeof(char)];
     } context;
-} fcs_derived_states_list_item_t;
+} fcs_derived_states_list_item;
 
 typedef struct
 {
     size_t num_states;
-    fcs_derived_states_list_item_t *states;
-} fcs_derived_states_list_t;
+    fcs_derived_states_list_item *states;
+} fcs_derived_states_list;
 
 extern void fc_solve_derived_states_list_add_state(
-    fcs_derived_states_list_t *, fcs_collectible_state_t *, int);
+    fcs_derived_states_list *, fcs_collectible_state *, int);
 
 #ifdef __cplusplus
 }

@@ -6,24 +6,26 @@ use warnings;
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use vars (qw(@fields %fields_map));
-@fields = (qw(
-    cmd_line
-    id
-    used
-));
+@fields = (
+    qw(
+        cmd_line
+        id
+        used
+        )
+);
 
-%fields_map = (map { $_ => 1 } @fields);
+%fields_map = ( map { $_ => 1 } @fields );
 
-__PACKAGE__->mk_acc_ref(\@fields);
+__PACKAGE__->mk_acc_ref( \@fields );
 
 sub _init
 {
     my $self = shift;
     my (%args) = @_;
     $self->used(0);
-    foreach my $field (grep {exists($fields_map{$_})} keys(%args))
+    foreach my $field ( grep { exists( $fields_map{$_} ) } keys(%args) )
     {
-        $self->$field($args{$field});
+        $self->$field( $args{$field} );
     }
 
     return 0;
@@ -52,7 +54,7 @@ sub data_file_path
 {
     my $self = shift;
 
-    return "./data/" . $self->id() .  ".data.bin";
+    return "./data/" . $self->id() . ".data.bin";
 }
 
 1;
@@ -70,4 +72,3 @@ or distributed except according to the terms contained in the COPYING file.
 Copyright (c) 2010 Shlomi Fish
 
 =cut
-

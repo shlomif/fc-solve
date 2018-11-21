@@ -47,4 +47,3 @@ Copyright (c) 2000 Shlomi Fish
 Licensed under L<https://opensource.org/licenses/mit-license.php> .
 
 =cut
-

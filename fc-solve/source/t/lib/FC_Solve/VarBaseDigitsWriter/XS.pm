@@ -8,11 +8,11 @@ use FC_Solve::InlineWrap (
 #include "var_base_writer.h"
 
 SV* _proto_new() {
-        fcs_var_base_writer_t * s;
+        fcs_var_base_writer * s;
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsWriter::XS");
 
-        New(42, s, 1, fcs_var_base_writer_t);
+        New(42, s, 1, fcs_var_base_writer);
         fc_solve_var_base_writer_init(s);
         fc_solve_var_base_writer_start(s);
 
@@ -21,8 +21,8 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-static inline fcs_var_base_writer_t * deref(SV * const obj) {
-    return (fcs_var_base_writer_t *)SvIV(SvRV(obj));
+static inline fcs_var_base_writer * deref(SV * const obj) {
+    return (fcs_var_base_writer *)SvIV(SvRV(obj));
 }
 
 void _proto_write(SV* obj, int base, int item) {
@@ -37,7 +37,7 @@ SV * _proto_get_data(SV* obj) {
 }
 
 void DESTROY(SV* obj) {
-  fcs_var_base_writer_t * s = deref(obj);
+  fcs_var_base_writer * s = deref(obj);
   fc_solve_var_base_writer_release(s);
   Safefree(s);
 }

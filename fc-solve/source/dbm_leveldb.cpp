@@ -6,8 +6,7 @@
 #include "dbm_solver.h"
 #include "dbm_cache.h"
 
-extern "C" void fc_solve_dbm_store_init(
-    fcs_dbm_store_t *store, const char *path)
+extern "C" void fc_solve_dbm_store_init(fcs_dbm_store *store, const char *path)
 {
     leveldb::DB *db;
     leveldb::Options options;
@@ -15,11 +14,11 @@ extern "C" void fc_solve_dbm_store_init(
     leveldb::Status status = leveldb::DB::Open(options, path, &db);
     assert(status.ok());
 
-    *store = (fcs_dbm_store_t)db;
+    *store = (fcs_dbm_store)db;
 }
 
-extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
-    fcs_dbm_store_t store, const unsigned char *key_raw)
+extern "C" bool fc_solve_dbm_store_does_key_exist(
+    fcs_dbm_store store, const unsigned char *key_raw)
 {
     leveldb::Slice key((const char *)(key_raw + 1), key_raw[0]);
     std::string value;
@@ -29,7 +28,7 @@ extern "C" fcs_bool_t fc_solve_dbm_store_does_key_exist(
         .ok();
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store_t store,
+bool fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store store,
     const unsigned char *key_raw, unsigned char *parent_and_move)
 {
     leveldb::Slice key((const char *)(key_raw + 1), key_raw[0]);
@@ -53,7 +52,7 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store_t store,
 
 #define MAX_ITEMS_IN_TRANSACTION 10000
 extern "C" void fc_solve_dbm_store_offload_pre_cache(
-    fcs_dbm_store_t store, fcs_pre_cache_t *pre_cache)
+    fcs_dbm_store store, fcs_pre_cache_t *pre_cache)
 {
     leveldb::DB *db;
 #ifdef FCS_DBM_USE_LIBAVL
@@ -108,7 +107,7 @@ extern "C" void fc_solve_dbm_store_offload_pre_cache(
 #undef item
 #endif
 
-extern "C" void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
+extern "C" void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {
     delete ((leveldb::DB *)store);
 }

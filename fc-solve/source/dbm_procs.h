@@ -25,14 +25,14 @@ extern "C" {
 static int fc_solve_compare_pre_cache_keys(
     const void *const void_a, const void *const void_b, void *const context)
 {
-#define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
+#define GET_PARAM(p) ((((const pre_cache_key_val_pair *)(p))->key))
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
-static inline void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+static inline void pre_cache_init(
+    fcs_pre_cache *const pre_cache_ptr, meta_allocator *const meta_alloc)
 {
     pre_cache_ptr->tree_recycle_bin = NULL;
     pre_cache_ptr->kaz_tree =
@@ -44,10 +44,10 @@ static inline void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
     pre_cache_ptr->count_elements = 0;
 }
 
-static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
-    fcs_encoded_state_buffer_t *key, fcs_encoded_state_buffer_t *parent)
+static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
+    fcs_encoded_state_buffer *key, fcs_encoded_state_buffer *parent)
 {
-    fcs_pre_cache_key_val_pair_t *to_insert;
+    pre_cache_key_val_pair *to_insert;
 
     if (pre_cache->kv_recycle_bin)
     {
@@ -66,16 +66,16 @@ static inline void pre_cache_insert(fcs_pre_cache_t *pre_cache,
     pre_cache->count_elements++;
 }
 
-static inline fcs_bool_t pre_cache_does_key_exist(
-    fcs_pre_cache_t *pre_cache, fcs_encoded_state_buffer_t *key)
+static inline bool pre_cache_does_key_exist(
+    fcs_pre_cache *pre_cache, fcs_encoded_state_buffer *key)
 {
-    fcs_pre_cache_key_val_pair_t to_check = {.key = *key};
+    pre_cache_key_val_pair to_check = {.key = *key};
     return (
         fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }
 
 static inline void cache_populate_from_pre_cache(
-    fcs_lru_cache_t *const cache, fcs_pre_cache_t *const pre_cache)
+    fcs_lru_cache *const cache, fcs_pre_cache *const pre_cache)
 {
 #ifdef FCS_DBM_USE_LIBAVL
     struct rb_traverser trav;
@@ -85,8 +85,8 @@ static inline void cache_populate_from_pre_cache(
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
          item = rb_t_next(&trav))
     {
-        cache_insert(cache, &(((fcs_pre_cache_key_val_pair_t *)(item))->key),
-            NULL, '\0');
+        cache_insert(
+            cache, &(((pre_cache_key_val_pair *)(item))->key), NULL, '\0');
     }
 #else
     var_AUTO(kaz_tree, pre_cache->kaz_tree);
@@ -94,14 +94,13 @@ static inline void cache_populate_from_pre_cache(
          node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
         cache_insert(
-            cache, &(((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key));
+            cache, &(((pre_cache_key_val_pair *)(node->dict_key))->key));
     }
 #endif
 }
 
-static inline void pre_cache_offload_and_destroy(
-    fcs_pre_cache_t *const pre_cache, fcs_dbm_store_t store,
-    fcs_lru_cache_t *const cache)
+static inline void pre_cache_offload_and_destroy(fcs_pre_cache *const pre_cache,
+    fcs_dbm_store store, fcs_lru_cache *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
     cache_populate_from_pre_cache(cache, pre_cache);
@@ -123,9 +122,9 @@ static inline void pre_cache_offload_and_destroy(
 
 #ifndef FCS_DBM_CACHE_ONLY
 
-static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
-    const fcs_dbm_store_t store, fcs_lru_cache_t *const cache,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+static inline void pre_cache_offload_and_reset(fcs_pre_cache *const pre_cache,
+    const fcs_dbm_store store, fcs_lru_cache *const cache,
+    meta_allocator *const meta_alloc)
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
     pre_cache_init(pre_cache, meta_alloc);
@@ -135,33 +134,32 @@ static inline void pre_cache_offload_and_reset(fcs_pre_cache_t *const pre_cache,
 
 #endif // FCS_DBM_WITHOUT_CACHES
 
-typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
+typedef struct fcs_dbm_solver_thread_struct dbm_solver_thread;
 
 typedef struct
 {
-    fcs_dbm_solver_thread_t *thread;
-} thread_arg_t;
+    dbm_solver_thread *thread;
+} thread_arg;
 
-static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const unsigned char move,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+static inline void instance_check_key(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    const int key_depth, fcs_encoded_state_buffer *const key,
+    fcs_dbm_record *const parent, const uint8_t move,
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 );
 
-static inline fcs_bool_t instance_check_multiple_keys(
-    fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance,
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t **lists,
+static inline bool instance_check_multiple_keys(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    fcs_dbm__cache_store__common *const cache_store GCC_UNUSED,
+    meta_allocator *const meta_alloc GCC_UNUSED, fcs_derived_state **lists,
     size_t batch_size
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
@@ -196,7 +194,7 @@ static inline fcs_bool_t instance_check_multiple_keys(
         }
     }
 #ifdef MAX_FCC_DEPTH
-    const fcs_bool_t have_more = !q_stats_is_empty(
+    const bool have_more = !q_stats_is_empty(
         &instance->colls_by_depth[instance->curr_depth].queue.stats);
 
     if (have_more)
@@ -208,13 +206,13 @@ static inline fcs_bool_t instance_check_multiple_keys(
         fcs_condvar_broadcast(&(instance->monitor));
     }
 #else
-    const fcs_bool_t have_more = FALSE;
+    const bool have_more = FALSE;
 #endif
     fcs_lock_unlock(&instance->common.storage_lock);
     return have_more;
 }
 
-static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
+static void instance_print_stats(dbm_solver_instance *const instance)
 {
     const_AUTO(mytime, fcs_get_time());
     FILE *const out_fh = instance->common.out_fh;
@@ -233,11 +231,10 @@ static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
 #ifdef DEBUG_FOO
 
 static inline void instance_debug_out_state(
-    fcs_dbm_solver_instance_t *const instance,
-    fcs_encoded_state_buffer_t *enc_state)
+    dbm_solver_instance *const instance, fcs_encoded_state_buffer *enc_state)
 {
-    fcs_state_keyval_pair_t state;
-    fcs_state_locs_struct_t locs;
+    fcs_state_keyval_pair state;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
@@ -245,7 +242,7 @@ static inline void instance_debug_out_state(
     fc_solve_delta_stater_decode_into_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
-    fcs_render_state_str_t state_str;
+    fcs_render_state_str state_str;
     FCS__RENDER_STATE(state_str, &(state.s), &locs);
     fprintf(instance->common.out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
     fflush(instance->common.out_fh);
@@ -257,15 +254,15 @@ static inline void instance_debug_out_state(
     }
 #endif
 
-static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
-    fcs_encoded_state_buffer_t **const ptr_trace, int *const ptr_trace_num)
+static void calc_trace(fcs_dbm_record *const ptr_initial_record,
+    fcs_encoded_state_buffer **const ptr_trace, int *const ptr_trace_num)
 {
 #define GROW_BY 100
     size_t trace_num = 0;
     size_t trace_max_num = GROW_BY;
-    fcs_encoded_state_buffer_t *trace = SMALLOC(trace, trace_max_num);
-    fcs_encoded_state_buffer_t *key_ptr = trace;
-    fcs_dbm_record_t *record = ptr_initial_record;
+    fcs_encoded_state_buffer *trace = SMALLOC(trace, trace_max_num);
+    fcs_encoded_state_buffer *key_ptr = trace;
+    fcs_dbm_record *record = ptr_initial_record;
 
     while (record)
     {
@@ -286,7 +283,7 @@ static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
 }
 
 static inline void mark_and_sweep_old_states(
-    fcs_dbm_solver_instance_t *const instance, dict_t *const kaz_tree,
+    dbm_solver_instance *const instance, dict_t *const kaz_tree,
     const int curr_depth)
 {
     /* Now that we are about to ascend to a new depth, let's
@@ -333,7 +330,7 @@ static inline void mark_and_sweep_old_states(
                 (long long)idx, (long long)items_count);
 #else
             fprintf(
-                out_fh, "Mark+Sweep Progress - %zd/%zd\n", idx, items_count);
+                out_fh, "Mark+Sweep Progress - %zu/%zu\n", idx, items_count);
 #endif
         }
     }
@@ -364,7 +361,7 @@ static inline void mark_and_sweep_old_states(
 #define DESTROY_CACHE(instance) DESTROY_STORE(instance)
 #endif
 
-static inline void instance_increment(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_increment(dbm_solver_instance *const instance)
 {
     --instance->common.count_of_items_in_queue;
     ++instance->common.queue_num_extracted_and_processed;
@@ -380,11 +377,11 @@ static inline void instance_increment(fcs_dbm_solver_instance_t *const instance)
 }
 
 static inline void fcs_dbm__cache_store__init(
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_dbm_instance_common_elems_t *const common,
-    fcs_meta_compact_allocator_t *const meta_alloc,
-    const char *const dbm_store_path, const long pre_cache_max_count,
-    const long caches_delta)
+    fcs_dbm__cache_store__common *const cache_store,
+    dbm_instance_common_elems *const common,
+    meta_allocator *const meta_alloc GCC_UNUSED,
+    const char *const dbm_store_path, const long pre_cache_max_count GCC_UNUSED,
+    const long caches_delta GCC_UNUSED)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -401,13 +398,13 @@ static inline void fcs_dbm__cache_store__init(
 
 typedef struct
 {
-    fcs_dbm_variant_type_t local_variant;
+    fcs_dbm_variant_type local_variant;
     const char *offload_dir_path, *dbm_store_path;
     long pre_cache_max_count, iters_delta_limit, caches_delta;
     size_t num_threads;
-} fcs_dbm_common_input_t;
+} fcs_dbm_common_input;
 
-static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
+static const fcs_dbm_common_input fcs_dbm_common_input_init = {
     .local_variant = FCS_DBM_VARIANT_2FC_FREECELL,
     .offload_dir_path = NULL,
     .dbm_store_path = "./fc_solve_dbm_store",
@@ -416,8 +413,8 @@ static const fcs_dbm_common_input_t fcs_dbm_common_input_init = {
     .caches_delta = 1000000,
     .num_threads = 2};
 
-static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
-    char **const argv, int *const arg, fcs_dbm_common_input_t *const inp)
+static inline bool fcs_dbm__extract_common_from_argv(const int argc,
+    char **const argv, int *const arg, fcs_dbm_common_input *const inp)
 {
     const char *param;
     if ((param = TRY_PARAM("--pre-cache-max-count")))
@@ -478,9 +475,9 @@ static inline fcs_bool_t fcs_dbm__extract_common_from_argv(const int argc,
     return FALSE;
 }
 
-static inline fcs_dbm_record_t *cache_store__has_key(
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent)
+static inline fcs_dbm_record *cache_store__has_key(
+    fcs_dbm__cache_store__common *const cache_store,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
     if (cache_does_key_exist(&(cache_store->cache), key))
@@ -498,7 +495,7 @@ static inline fcs_dbm_record_t *cache_store__has_key(
         return NULL;
     }
 #endif
-    return ((fcs_dbm_record_t *)key);
+    return ((fcs_dbm_record *)key);
 #else
     return fc_solve_dbm_store_insert_key_value(
         cache_store->store, key, parent, TRUE);
@@ -506,11 +503,10 @@ static inline fcs_dbm_record_t *cache_store__has_key(
 }
 
 #ifndef FCS_DBM_WITHOUT_CACHES
-static inline fcs_cache_key_info_t *cache_store__insert_key(
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const fcs_fcc_move_t *const moves_to_parent,
-    const unsigned char move GCC_UNUSED)
+static inline fcs_cache_key_info *cache_store__insert_key(
+    fcs_dbm__cache_store__common *const cache_store,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
+    const fcs_fcc_move *const moves_to_parent, const uint8_t move GCC_UNUSED)
 {
 #ifndef FCS_DBM_CACHE_ONLY
     pre_cache_insert(&(cache_store->pre_cache), key, &(parent->key));

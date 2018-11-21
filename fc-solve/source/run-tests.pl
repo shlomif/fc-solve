@@ -1,24 +1,21 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
+use 5.014;
 use strict;
 use warnings;
 use autodie;
 
-use Cwd        ();
-use File::Spec ();
-use File::Copy qw/ copy /;
-use File::Path qw/ mkpath /;
 use Getopt::Long qw/ GetOptions /;
 use Env::Path ();
 use Path::Tiny qw/ path /;
-use File::Basename qw/ basename dirname /;
+use File::Basename qw/ basename /;
 
-my $bindir     = dirname(__FILE__);
-my $abs_bindir = File::Spec->rel2abs($bindir);
+my $bindir     = path(__FILE__)->parent;
+my $abs_bindir = $bindir->absolute;
 
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
-my $num_jobs = $ENV{TEST_JOBS};
+my $num_jobs  = $ENV{TEST_JOBS};
 
 sub _is_parallized
 {
@@ -67,44 +64,39 @@ sub myglob
 }
 
 {
-    my $fcs_path = Cwd::getcwd();
-    local $ENV{FCS_PATH}     = $fcs_path;
-    local $ENV{FCS_SRC_PATH} = $abs_bindir;
+    my $fcs_path = Path::Tiny->cwd;
+    local $ENV{FCS_PATH}                = $fcs_path;
+    local $ENV{FCS_SRC_PATH}            = $abs_bindir;
+    local $ENV{PYTHONDONTWRITEBYTECODE} = '1';
 
     local $ENV{FCS_TEST_TAGS} = join ' ',
         sort { $a cmp $b }
-        ( path( File::Spec->catdir( File::Spec->curdir(), "t", "TAGS.txt" ) )
-            ->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g );
+        ( path('.')->child(qw/t TAGS.txt/)->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g );
 
-    my $preset_dest =
-        File::Spec->catdir( File::Spec->curdir(), "t", "Presets" );
-    my $preset_src = File::Spec->catfile( $abs_bindir, "Presets" );
-    my $pset_files_dest = File::Spec->catdir( $preset_dest, "presets" );
-    my $pset_files_src  = File::Spec->catdir( $preset_src,  "presets" );
-    mkpath($pset_files_dest);
+    my $preset_dest     = path('.')->child( "t", "Presets" );
+    my $preset_src      = $abs_bindir->child("Presets");
+    my $pset_files_dest = $preset_dest->child("presets");
+    my $pset_files_src  = $preset_src->child("presets");
+    $pset_files_dest->mkpath;
     foreach my $f ( path($pset_files_src)->children(qr{\.sh\z}) )
     {
-        $f->copy( File::Spec->catfile( $pset_files_dest, $f->basename ) );
+        $f->copy( $pset_files_dest->child( $f->basename ) );
     }
 
-    my $files_dest_abs =
-        File::Spec->rel2abs(
-        File::Spec->catfile( $pset_files_dest, "STUB.TXT" ) );
+    my $files_dest_abs = $pset_files_dest->child("STUB.TXT")->absolute;
 
     $files_dest_abs =~ s{STUB\.TXT\z}{};
 
-    my $testing_preset_rc =
-        File::Spec->rel2abs( File::Spec->catfile( $preset_dest, "presetrc" ) );
-    path($testing_preset_rc)
-        ->spew_utf8(
-        path( File::Spec->catfile( $fcs_path, "Presets", "presetrc" ) )
-            ->slurp_utf8 =~ s{^(dir=)([^\n]*)}{$1$files_dest_abs}gmrs );
+    my $testing_preset_rc = $preset_dest->child("presetrc")->absolute;
+    $testing_preset_rc->spew_utf8(
+        $fcs_path->child( "Presets", "presetrc" )->slurp_utf8 =~
+            s{^(dir=)([^\n]*)}{$1$files_dest_abs}gmrs );
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
     local $ENV{FREECELL_SOLVER_QUIET}    = 1;
     Env::Path->PATH->Prepend(
-        File::Spec->catdir( Cwd::getcwd(), "board_gen" ),
-        File::Spec->catdir( $abs_bindir, "t", "scripts" ),
+        Path::Tiny->cwd->child("board_gen"),
+        $abs_bindir->child( "t", "scripts" ),
     );
 
     my $IS_WIN = ( $^O eq "MSWin32" );
@@ -117,7 +109,7 @@ sub myglob
         Env::Path->PATH->Append($fcs_path);
     }
 
-    my $foo_lib_dir = File::Spec->catdir( $abs_bindir, "t", "lib" );
+    my $foo_lib_dir = $abs_bindir->child( "t", "lib" );
     foreach my $add_lib ( Env::Path->PERL5LIB(), Env::Path->PYTHONPATH() )
     {
         $add_lib->Append($foo_lib_dir);
@@ -126,9 +118,7 @@ sub myglob
     my $get_config_fn = sub {
         my $basename = shift;
 
-        return File::Spec->rel2abs(
-            File::Spec->catdir( $bindir, "t", "config", $basename ),
-        );
+        return $bindir->child( "t", "config", $basename )->absolute;
     };
 
     local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
@@ -147,7 +137,7 @@ sub myglob
     );
 
     my $is_ninja = ( -e "build.ninja" );
-    my $MAKE = $IS_WIN ? 'gmake' : 'make';
+    my $MAKE     = $IS_WIN ? 'gmake' : 'make';
     if ($is_ninja)
     {
         system( "ninja", "boards" );
@@ -192,6 +182,7 @@ sub myglob
         my $re = qr/$exclude_re_s/ms;
         @tests = grep { basename($_) !~ $re } @tests;
     }
+    @tests = grep { basename($_) !~ /\A(?:lextab|yacctab)\.py\z/ } @tests;
 
     if ( !$ENV{FCS_TEST_BUILD} )
     {
@@ -203,9 +194,12 @@ sub myglob
         @tests = grep { !/valgrind/ } @tests;
     }
 
-    print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
-    print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
-    print STDERR "FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>\n";
+    print STDERR <<"EOF";
+FCS_PATH = $ENV{FCS_PATH}
+FCS_SRC_PATH = $ENV{FCS_SRC_PATH}
+FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>
+EOF
+
     if ( $ENV{FCS_TEST_SHELL} )
     {
         system("bash");

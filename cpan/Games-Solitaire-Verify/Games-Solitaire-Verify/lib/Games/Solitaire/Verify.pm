@@ -11,8 +11,6 @@ Games::Solitaire::Verify - verify solutions for solitaire games.
 
 =cut
 
-our $VERSION = '0.1701';
-
 =head1 SYNOPSIS
 
     use Games::Solitaire::Verify::Solution;
@@ -51,4 +49,4 @@ Shlomi Fish, L<http://www.shlomifish.org/>.
 
 =cut
 
-1; # End of Games::Solitaire::Verify
+1;    # End of Games::Solitaire::Verify

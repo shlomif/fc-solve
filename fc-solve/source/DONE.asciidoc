@@ -1,0 +1,623 @@
+* Add fcs_flip_top_card() to the things that are not done in FCS_FREECELL_ONLY.
+
+* Change fc_solve_rand_alloc() away from malloc() into handling a pointer
+to a rand_struct.
+
+* Put the rest of the news (from http://fc-solve.shlomifish.org/ ) inside the
+NEWS file.
+
+* Try to convert the macro-mania in tests.h (sfs_check_state_begin() /
+sfs_check_state_end() ) to functions, and see if it actually makes it faster.
+
+* Write automated tests for split_cmd_line.c .
+
+* Make sure that "rpmbuild -tb freecell-solver....tar.bz2" works.
+Right now, it only works if the .tar.gz is present.
+
+* Experiment with getting rid of pointer to functions in the hash comparison
+functions. They may incur a large run-time overhead. (inspired by Linux
+kernel patterns from LWN.net).
+
+* s/may be/maybe/ in +README.win32.txt+ .
+
+* Update the "long solutions" help screen of fc-solve with the new presets.
+
+* Deal with the inability to "make package_source" inside an unpacked
+.../freecell-solver-x.y.z/ directory.
+
+* Make sure that we can build Freecell Solver inside a ./build directory
+without relying on asciidoc.
+
+* Abstract away the hash changes for the columns-vs-states hash.
+** Create an enum for choosing which one.
+
+* Investigate +pi-make-microsoft-freecell-board 254076 | fc-solve -l by+ -
+it should be solvable.
+
+* Convert the +char * []+ arrays in the fcs_cl.h etc. to
++const char * []+ (arrays of constant strings). Its use is a relic of
++char * argv[]+ being non-const and having them as constant will bring many
+advantages.
+
+* Check that AsciiDoc is not required for preparing an .rpm (using a
+test script.)
+
+* Handle the case where the instance->hard_threads are re-allocated and
+the pointers from the soft_threads to them are not updated.
+
+* Add a +-o+ option to fc-solve to output to a different file than stdout.
+
+* Flares: make sure the empty/null plan generates a run-indef followed by
+a checkpoint instead of just a run-indef.
+** Correct the tests.
+
+* Extract the common functionality out of both copies of the "initialise
+new instance_item copies in +lib.c+ .
+** Also the flares.
+
+* Implement Gary Campbell's FCELL.COM's methodology of trying several
+atomic scans in different instances (with bounded quotas) and picking the
+shortest solution out of them all. Slow, but will produce highly short
+solutions.
+** Called Flares - we've started to implement them and should continue.
+** See the Flares functional spec under ../docs
+
+* Update fc-solve and friends to handle the "wrong-flares-plan" compilation
+problem.
+
+* Change "A*" in the code's comments to BeFS.
+
+* Normalise the +_free()+ and +_finish()+ methods in regards to the previous
+commits of the A* functionality.
+
+* Implement Soft-DFS and Random-DFS as pointers to test functions, similar
+to what was done in the BeFS/BFS scan. Currently there is this code there:
+
+----------------
+fc_solve_sfs_tests[tests_order_tests[
+                        the_soft_dfs_info->test_index
+                    ] & FCS_TEST_ORDER_NO_FLAGS_MASK]
+----------------
+
+* Convert some of the documentation to Perl-POD or DocBook.
+** Converted to AsciiDoc, which can generate DocBook.
+
+* Find a way to update the ChangeLog from the svn.
+** Rejected per advice of http://producingoss.com/[Producing Open Source
+Software]
+
+* Convert the boolean values in the C code to a specialised boolean typedef
+called +fcs_bool_t+, just so readers can tell they are booleans instead of
+ints.
+
+* Deal with the fact that:
++./freecell-solver-range-parallel-solve 1 100 1 -mi 1+ displays
+"Unsolved Board" instead of "Intractable Board".
+
+* Add a quick way to get rid of --fc-only from +./Tatzer -l p4b+ /
++./Tatzer -l x64b+ .
+
+* Add compact allocation for the Breadth-first-search (BrFS/BFS) queue
+items.
+** With recycling.
+
+* Adapt more fcs_collectible_state_t * storage backends for FCS_RCS_STATES.
+(libavl2 comes to mind.)
+
+* Write a program to summarise an fc-solve invocation, giving the verdict,
+validity, number of moves in the solution, number of iterations, and stored
+states. It should be a wrapper for the fc-solve command line.
+    - done: +scripts/summarize-fc-solve+ .
+
+* Restore the old -mss flag behaviour and create a new trim-max-stored-states
+flag where the new behaviour happens. max_stored_states should always increase,
+and trim_max_stored_states should decrease if states were removed.
+
+* Get rid of pushing an +FCS_MOVE_TYPE_CANONIZE+ move into each
++moves_to_parent+ moves stack and instead apply it upon recalculating
+the derived state.
+
+* Finish the conversion of the range solvers/etc. to +portable_int64.h+ and
++portable_time.h+ .
+
+* Make sure the total_num_iters is only a 64-bit integer without an
+intermediate 32-bit one - it just adds clutter to the code and is a premature
+optimisation (and may be a de-optimisation).
+
+* Add a BSD-licence-styled balanced binary tree implementation in the Freecell
+Solver sources and have it use it for both stuff in the +--rcs+ option (and
+possibly others)
+** Kazlib's Red-Black tree looks like a good candidate.
+
+* Implement the compact_allocators recycling in the remaining places in
+the code.
+** Already implemented for the hard_thread->allocator.
+
+* Add an option to use nedtries (a +size_t+ -based trie) instead of libJudy
+for the mapping backend of the LRU cache in scans.c.
+    - rejected because it reportedely performs badly for large data sets.
+
+* Add an +--ms+ / +-M+ flag to make_pysol_freecell_board.py to generate
+the Microsoft (or pseudo-Microsoft) deals even for deals larger than 32,000.
+
+* Optimize the Soft-DFS and Random-DFS tests_list implementation (direct
+pointers to test functions).
+
+* Refactor +scripts/parallel-range-solver-total+ - extract the section
+marked as TODO .
+
+* Make sure it also keeps track of min/max of the counts.
+
+* Create a meaningful man-page from +README.xml+ / +USAGE.xml+ etc.
+
+* Add some command line examples to +USAGE.txt+ .
+
+* Also add the dead-ends trimming to the BeFS scan.
+** Investigate the following crash:
+
+--------------------------------------------------------
+set args --method soft-dfs --st-name 'dfs' -nst --method a-star --st-name 'befs' --trim-max-stored-states 100 --prelude '200@befs,100@dfs,1000@befs,500000@dfs' -s -i -p -t -sam 1941.board
+b main
+r
+b scans.c:1958 if (top_card_idx >= 7+12)
+c
+--------------------------------------------------------
+
+* The cols_bit_mask_lengths in delta_states.c should be only the maximum,
+because the columns can be rearranged.
+    - or think about it.
+
+* Make fcs_stack_compare GCC_INLINE.
+
+* pi-make-microsoft-freecell-board 24 | ./fc-solve -p -t -s -i -sam -mi 50 -l eo -ni -l eo | grep Iteration | less
+** Does not limit the iterations for the second instance.
+
+* Fix the bug in commit No. 4345 also in the C code. Apply the patch and test
+the FCC derived states list.
+    - Done, but found that these two states are not equivalent whether in
+    Perl or in C - another bug.
+
+Foundations: H-K C-K D-J S-Q
+Freecells:  QD  KD
+: KS
+:
+:
+:
+:
+:
+:
+:
+
+and:
+
+Foundations: H-K C-K D-J S-Q
+Freecells:  QD  KD
+:
+:
+:
+:
+:
+:
+:
+: KS
+
+* Investigate why
++./dbm_fc_solver <(pi-make-microsoft-freecell-board -t 12064)+
+finished after +Reached 3000000 ; States-in-collection: 3018329+ now
+and not after +Reached 11600000 ; States-in-collection: 11617536+ in
+r4339 when https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1097
+was reported.
+    - I don't recall the exact specifics, but there were some code breakups
+    and some compilation flags that did not play nice.
+
+* FCC-Solver: also output the final iterations count, right before
+the main function exits.
+
+* Extract a function to do the prepare_state_s + initial_user_state_to_c +
+encode_state all in one.
+** It is fc_solve_user_INTERNAL_delta_states_enc_and_dec .
+
+* Implement the FCC-based solver (Fully-connected components):
+     - Test the out_num_positions_in_the_fcc.
+     - Add more tests for fcc_brfs.
+
+* Convert the +moves+ field of +fcs_fcc_moves_seq_t+ in +fcc_brfs_test.h+ to
+a linked list of structs of 8 (number configurable) bytes and a next pointer
+that are compactly allocated by a +meta_alloc.h+.
+
+* Consider converting more linked lists+binary trees combinations in
++fcc_solver.c+ into only binary trees.
+
+* Shove the signed char of the balance of libavl/avl.c into the
+last char of the key_and_move_to_parent’s +fcs_encoded_state_buffer_t+. It
+probably wastes some space due to struct alignment/parity.
+
+* Compress the data in the offloading queue frames by storing only the
+pointers instead of the whole +fcs_encoded_state_buffer_t+.
+
+* See why +../Tatzer --num-stacks=13 --without-depth-field ..+ does not solve
+the board
+whereas +../Tatzer --num-stacks=13 ..+ does for
++./fc-solve -l mo -g bakers_dozen -sp r:tf -sam -s -i -p -t -sel -mi 500000 bakers_dozen-154.board+ .
+The board is the output of +make_pysol_freecell_board.py -t 154 bakers_dozen+ .
+
+* Create a small macro to test if a card is empty. There are a lot of places
+in the code with +if ((fcs_card_card_num(top_card) == 0))+ / etc.
+
+* Rename the occurrences of fcs_card_card_num()/etc. to fcs_card_rank() which
+is more standard terminology.
+
+* Make the state input accept columns that start with a ":" at the beginning
+of the line (for easier input).
+
+* Try to convert the core libfreecell-solver code to meta_alloc and see if
+it makes a difference in speed (rejected).
+
+* Check for thread-safety of the meta_allocator construct in +dbm_fc_solver.c+.
+
+* Prune for variants whose empty columns cannot be filled at all: there is
+no point in moving the last card in a column to a parent on a different
+column, because then the column won't be able to be filled and will be left
+to disuse.
+** See for example: Baker’s Dozen.
+
+* Trap one of the UNIX signals in fc-solve to quit prematurely with a valid
+footer of "Iterations limit reached"/etc.
+
+* Create a more compact queue for +dbm_solver.c+ which has a header of the
+next pointer to the item, some integers for start and finish within
+the queue, as well as a vector/array of items that are extracted. Then the
+segment is recycled as a whole.
+** Possibly offload the queue segments to the hard disk.
+
+* Adapt the new balanced binary tree to store entire encoded_keys instead of
+pointers (to save space).
+
+* Do the test for +SUSPEND_PROCESS+ (+check_if_limits_exceeded()+ ) in only
+one place. There isn't a need for it to be done in several places.
+
+* Remove "ST-Name:" from the debug output - we already have "Scan:".
+
+* Make sure that run_hard_thread runs the soft_thread up to the limit of the
+instance->num_times or the soft_thread's upper bound instead of entering
+and exiting.
+
+* Add an option to convert the stack_locs and fc_locs to a
+MAX_NUM_STACKS-factorial permutation that can be stored compactly. (superseded
+by the fc_locs/stack_locs elimination).
+
+* With the +fc-solve+ command line program: add a flag to trigger different
+notice on having reached +FCS_SUSPEND_PROCESS+. (Implemented as
++--show-extended-limits+ .)
+
+* Experiment with using "selection sort" instead of "insertion sort" when
+sorting small data sets (columns, freecells, derived states, etc.). (Insertion
+sort is faster).
+
+* Inline fc_solve_free_instance().
+
+* Experiment with making fcs_move_t a bit-field with half-octets/etc. for
+the various fields.
+** Make sure that the amount required can fit there using CMake and a log2
+function.
+** Done in +internal_move_struct.h+.
+
+* Divide the scan type variable into two variables: super-scan
+(DFS vs BeFS/BFS/Opt) and sub-scan (random_dfs, soft_dfs, etc.), to facilitate
+multiplexing them.
+
+* See about getting rid of the unused context variable where appropriate.
+
+* Add a way to build the various libavl2 trees to be used as
+positions/columns collections.
+
+* Play with moving commonly accessed struct elements to the start of
+the struct to fit within the processor's cache line. Like the Linux kernel
+where the most important elements are at the first 32 bytes of the struct.
+
+* Experiment with using a union in the soft_thread to unify common elements
+that are used only by one of the scans.
+
+* Move the trunk, branches, tags, etc. to under /fc-solve. (?)
+
+* Experiment with using bit members for cards:
+** http://en.wikipedia.org/wiki/Bit_field
+
+* Abstract away the move of a single card from one column to another
+in freecell.c.
+** [ Rejected. Does not appear to be a real need. ]
+
+* Implement long/64-bit/intptr_t limits to the number of states/etc. to make
+the code more 64-bit-enabled.
+** Implement a 64-bit-ready callback.
+
+* Translate the solution output of dbm_fc_solver / depth_dbm_fc_solver to
+fc-solve for validation.
+** Done: see +scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl+ .
+
+* Added +expand-solitaire-multi-card-moves+ for expanding multi-card moves to
+atomic, single-card, moves.
+
+* [dbm_fc_solver]: create a different positions collection and queue for
+every depth of non-reversible moves, and recycle the depths that were fully
+traversed. This is similar to the FCC-fc-solver (FCC == fully connected
+components), but without the costly FCC analysis.
+** A bug:
+----------------------
+./depth_dbm_fc_solver --num-threads 1 \
+    --offload-dir-path ~/tmp/queue-offload/ 12064.board :
+
+Reached 25004188 ; States-in-collection: 25004188 ; Time: 1343325174.469632
+>>>Queue Stats: inserted=25004188 items_in_queue=0 extracted=25004188
+
+./dbm_fc_solver --num-threads 1 \
+    --offload-dir-path ~/tmp/queue-offload/ 12064.board :
+
+Reached 11629132 ; States-in-collection: 11629132 ; Time: 1343325500.110992
+>>>Queue Stats: inserted=11629132 items_in_queue=0 extracted=11629132
+----------------------
+
+* Fix fc_solve_sfs_raymond_prune() (in libfrecell-solver) and horne_prune()
+for non-Freecell variants.
+** The prune should operate differently based on the how sequences are built.
+
+* Implement the measurement of "non-reversibility" of the state inside
+the befs_rater.
+** This is a measurement of how many cards were moved to the foundations
+and how many are not on top of designated parents. See the depth_dbm_solver.c
+for more information.
+**Done - to do so assign identical weights to the first and sixth BeFS
+weights - +1,0,0,0,0,1+.
+
+* Implement the parser for the state ordering based on arbitrary sortings.
+** Like +--tests-order '[0123456789]=asw(depth=1)'+ .
+** Done - with a different syntax +--tests-order '[0123456789]=asw(1,0,1,0)'+
+
+* Cache the list of the empty stacks and empty freecells inside the
+soft_thread for easy reference.
+** Convert the freecell.c routines to use it.
+** Tried it - it made the performance worse.
+
+* Implement a --flares-iters-factor option for multiplying the iters count
+allocated to each flare by a constant factor (so one can say make them times
+10, or times 100 or times 0.5, etc.).
+    - Test more thoroughly.
+
+* Convert the functions in lib.c to do
++fcs_user_t * user = (fcs_user_t *)api_instance;+ .
+
+* Investigate the scan of:
++--method random-dfs -to '[01]=rand()[23456789]=rand()' -dto '13,[0123456]=asw(1)' -sp r:tf+.
+* It seems to yield good results.
+** It generates a relatively short and a fast solution for MS #6240 , for
+which "-l micro-finance" generates the longest solution out of the Microsoft
+32K
+
+* Add a FCS_2FC_FREECELL_ONLY macro for quickly solving 2 freecell games.
+** Implements as -l ci7b -nfc=2
+
+* Code a generic tests grouping.
+
+* Convert the card initializers to an fcs_make_card constructor instead
+of two separate set_rank and set_suit calls.
+
+* Made sure the dbm_fc_solver and depth_dbm_fc_solver won't crash on 32-bit
+machines (such as i386/i586/i686) due to trying to use the lower bits
+of the pointers as flags for the AVL tree, and other fitting stuff into
+pointers games.
+** Test suite now passes on 32-bit architectures.
+
+* Investigate the valgrind errors on processing layouts with 7 stacks
+instead of 8 such as:
+
+--------------------------------------------------------
+5H QH 3C AC 3H 4H QD 4C
+QC 9S 6H 9H 3S KS 3D 2C
+5D 2S JC 5C JH 6D AS 9C
+2D KD TH TC TD 8D 8C
+7H JS KH TS KC 7C QS
+AH 5S 6S AD 8H JD 4S
+7S 6C 7D 4D 8S 9D 2H
+--------------------------------------------------------
+
+* Investigate why:
+
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 22215757927177568630 | ./scripts/summarize-fc-solve -l qsi -fif 10 --flares-choice fc_solve
+Verdict: Solved ; Iters: 238995 ; Length: 86
+shlomif[fcs]:$trunk/fc-solve/source$ make_pysol_freecell_board.py -F -t 22215757927177568630 | ./scripts/summarize-fc-solve -l qsi -fif 10 --flares-choice fcpro
+Verdict: Solved ; Iters: 203952 ; Length: 87
+shlomif[fcs]:$trunk/fc-solve/source$
+--------------------------------------------------------
+
+They shouldn't result in a different number of iterations.
+
+* Add a textarea to specify arbitrary +fc-solve+ flags to the JS solver so
+people can use it to solve other variants aside from Freecell, and for
+other uses.
+
+* Fix the missing files (the presets one) on Windows due to the NullSoft
+installer not packaging them.
+** Make sure they are referenced correctly from the prefix.
+*** ( Possibly using the Win32/Win64 registry.)
+
+* Fix the STDERR message on fc-solve.exe startup on Windows to not suggest
+that they should type fc-solve --help in that window.
+
+* Add an explanation for the format of the solutions with some
+demonstration. So people will understand what "AS", "AH", "QH", etc. mean
+** To the README.
+
+* Write the email to fc-solve-discuss about the bug with the lack
+of trailing newlines in layout input in the last specified column.
+
+* Investigate the fact that we get different solutions in the
+emscripten/JS translation for the boards with the +-l as+ preset.
+** False alarm - after turning off the Unicode suits, getting rid of
+the “1-based” offsets in the moves, and eliminating trailing space,
+the results for +-l as+ for both the initial MS Freecell #24 board, and
+the board given by Olaf were identical.
+
+* Revamp the generation of the emscripten code
+("libfreecell-solver.js") to not require an explicit installation into
+$HOME/apps/fcs-for-pysol / etc. and ../Tatzer call step.
+** Also possibly have a shorter prefix.
+
+* Investigate this problem:
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/B$ pi-make-microsoft-freecell-board -t 3 | PATH="`pwd`:$PATH" perl ../source/scripts/summarize-fc-solve -- --method patsolve
+Invalid solution! at ../source/scripts/summarize-fc-solve line 83.
+--------------------------------------------------------
+
+* Make sure that --method patsolve's stats are reported.
+
+* Check how the soft_threads/hard_threads/flares/etc. are done with-respect-to
++--method patsolve+ .
+
+* Add -dto2 flag for a corrected depth tests' order because -dto 13,$FOO is
+equivalent to -dto2 13,13$FOO .
+
+* Erroneous summary-fc-solve output:
+--------------------------------------------------------
+shlomif[fcs]:$trunk/fc-solve/B$ ./summary-fc-solve $(seq 1592 1600) -- --method random-dfs -to '[0123456789]' -sp r:tf -opt -opt-to '0123456789ABCDE' -seed 24 -mi 10000
+1592 = Verdict: Solved ; Iters: 305 ; Length: 153
+1593 = Verdict: Solved ; Iters: 2678 ; Length: 147
+1594 = Verdict: Solved ; Iters: 459 ; Length: 160
+1595 = Verdict: Solved ; Iters: 2928 ; Length: 138
+1596 = Verdict: Solved ; Iters: 503 ; Length: 172
+1597 = Verdict: Solved ; Iters: 173 ; Length: 143
+1598 = Verdict: Solved ; Iters: 361 ; Length: 136
+1599 = Verdict: Solved ; Iters: 7809 ; Length: 172
+1600 = Verdict: Solved ; Iters: 193 ; Length: 137
+shlomif[fcs]:$trunk/fc-solve/B$ ./summary-fc-solve $(seq 1591 1600) -- --method random-dfs -to '[0123456789]' -sp r:tf -opt -opt-to '0123456789ABCDE' -seed 24 -mi 10000
+1591 = Verdict: Intractable ; Iters: 10000 ; Length: -1
+1592 = Verdict: Unsolved ; Iters: 223 ; Length: -1
+1593 = Verdict: Unsolved ; Iters: 2598 ; Length: -1
+1594 = Verdict: Unsolved ; Iters: 367 ; Length: -1
+1595 = Verdict: Unsolved ; Iters: 2852 ; Length: -1
+1596 = Verdict: Unsolved ; Iters: 401 ; Length: -1
+1597 = Verdict: Unsolved ; Iters: 93 ; Length: -1
+1598 = Verdict: Unsolved ; Iters: 285 ; Length: -1
+1599 = Verdict: Unsolved ; Iters: 7691 ; Length: -1
+1600 = Verdict: Unsolved ; Iters: 119 ; Length: -1
+shlomif[fcs]:$trunk/fc-solve/B$
+--------------------------------------------------------
+
+“Verdict: Unsolved” should never appear because all these games can be solved
+by the scan, but may be intaractable.
+
+* Investigate why the Win32 package does not run on Windows XP.
+** It runs fine on Windows 7.
+** Thanks to Manish Jain for the report.
+** Found out that it was a Windows 64-bit package - the package for 4.2.0
+which was built on WinXP is working fine on 32-bit systems.
+
+* Eliminate the non-effective, user-specified limits - they were underused
+and under-referenced and mostly superseded by the effective limits.
+( +instance.h+ ).
+
+* See if any of the +INT_MAX+ s should be converted to +LONG_MAX+ and/or
+define a new constant for that.
+
+* Add a compile-time flag to cancel the +-tmss|--trim-max-stored-states+
+feature along with all the associated code (including the hash foreach and
+the hash +list_of_vacant_items+).
+
+* Investigate why MS deal No. 124 with the +ve+ preset does not finish in
+http://fc-solve.shlomifish.org/js-fc-solve/text/ .
+** See commit 70a0a780cf87f7f6c0791f630bf339ac99086094
+** “Bug fix: iterative iters limit on flares.”
+
+* Make sure the depth_dbm_fc_solver is working on 32-bit architectures.
+
+* Investigate ways to perform more pointer arithmetics and
+(ptr < end_ptr) ; ptr++ . A lot of code is under-optimized this way.
+
+* See if GCC_INLINE-ing the functions inside fcs_hash.c will yield
+any benefit.
+
+* Check if converting the various STRUCT_QUERY_FLAGs to individual
+fcs_bool_t-s speeds things up.
+** Checked and converted.
+
+* Consider a [partial] testing of FCS_DISABLE_MULTI_FLARES.
+** Perhaps implement conditional of more disabled features in -l
+x64t/-l ci7t/etc.
+
+* Implement a transpose command (to flip a layout from vertical to horizontal)
+by request of Manish.
+** With tests.
+
+* Experiment with generating the command-line arguments parsing using gperf
+(perfect hash): http://www.ibm.com/developerworks/library/l-gperf/index.html .
+
+* Investigate why this depth_dbm_solver invocation with Freecell as the game,
+multi-threading and 4 freecells runs for many hours with many iterations, but
+consumes very little RAM (below 0.1%).
+
+------------
+./depth_dbm_fc_solver --num-threads 4 --offload-dir-path /home/shlomif/tmp/depth-dbm/ 1107600547.board | tee 1107600547.depth_dbm.dump
+------------
+
+* Experiment with +__int128+ in GCC wrt the delta_states (instead of GMP).
+See: https://www.nu42.com/2016/01/excellent-optimization-story.html .
+
+* Make sure the code uses GMP instead of +__int128+ for the non-DeBondt states
+encoding.
+** *Resolution*: it does not depend on it because it uses +bit_rw.h+ .
+
+* Make sure that
++cmake -DCMAKE_INSTALL_PREFIX="$HOME/apps/to-del-fcs" ../source+ builds and
+passes the tests fine.
+** *Resolution*: added to +scripts/multi_config_tests.pl+ .
+
+* Add Test::RunValgrind to the testing CPAN task.
+
+* Convert +board_gen/pi_make_microsoft_freecell_board.c+ to use the common
+rand-gen .h files in +fc-solve/source+, to: 1. Avoid code duplication. 2.
+Enable the extended seeds' range.
+
+* Try to build the code on ARM Linux and get the tests to pass.
+** Tests now pass on ARM Linux - thanks to https://www.scaleway.com/ for
+providing the ARM Linux server.
+
+* See about the failing test on 32-bit i586 Linux.
+
+* Try to convert the fcs_is_parent() functions to a lookup bit vector based
+on 64*64 bits.
+
+* Currently +var_base*.h+ use many type casting and other minor inefficiencies.
+
+* Try different +fcs_hash.c+ hash fill factors, and try to avoid unnecessary
+calculations to check if it should be rehashed.
+
+Refactor/optimize to avoid that.
+
+* Try to convert to an open addressing hash instead of chaining (for better
+memory localisation).
+** Attempted on a branch - was slower.
+
+* Investigate a way to have positions_by_rank also index according to the
+suit, and to traverse only the possible parents or children based on the
+suit.
+
+* In the states handling, there's still some room for pointer arithmetics.
+
+* Port to Java (?)
+
+* Make the dbm_fc_solver not dependent on http://gmplib.org/ by implementing
+our own big ints.
+
+* Get the tests to run and pass on MS Windows (32-bit/64-bit) and implement
+AppVeyor Continuous Integration.
+
+* Add a limit to stacks number (in the case of Indirect Stack States),
+number of states that are stored anywhere, etc.
+
+* Set up a move func which moves a card from a freecell to an empty stack and
+immediately puts a child card on top.
+** See: https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
+
+* Try using +try_lock()+ instead of +lock()+ for mutexes where appropriate
+and see if it improves performance.
+

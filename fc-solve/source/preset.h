@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-#include "config.h"
+#include "fcs_conf.h"
 
 #ifndef FCS_FREECELL_ONLY
 #include "instance.h"
@@ -25,16 +25,16 @@ typedef struct
     unsigned long long allowed_moves;
     int preset_id;
 
-    fcs_game_type_params_t game_params;
+    fcs_game_type_params game_params;
 
     char moves_order[FCS_MOVE_FUNCS_NUM * 3 + 1];
-} fcs_preset_t;
+} fcs_preset;
 
 extern fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
-    fc_solve_instance_t *, const fcs_preset_t *);
+    fcs_instance *, const fcs_preset *);
 
 extern fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
-    const char *, const fcs_preset_t **);
+    const char *, const fcs_preset **);
 
 #define fcs_duplicate_preset(d, s) ((d) = (s))
 

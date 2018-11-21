@@ -1,14 +1,18 @@
-#include '../template.wml'
+#include "template5.wml"
 
 <latemp_subject "Online Demos of Freecell Solver" />
 
+<h2_section id="about" title="About">
+
 <p>
 These are online demos of Freecell Solver that you can run in the convenience
-of your own browser. They require JavaScript to be available, enabled
+of your own browser. They require JavaScript to be available, enabled,
 and whitelisted.
 </p>
 
-<h2 id="text-based">Text-based version</h2>
+</h2_section>
+
+<h2_section id="text-based" title="Text-based version">
 
 <p>
 A rudimentary and functional version of the text-based solver allowing to
@@ -25,10 +29,32 @@ solve any arbitrary Freecell deal online.
 
 </ul>
 
-<h2 id="rich-webui-based">Rich Web-UI</h2>
+</h2_section>
+
+<h2_section id="find-deal" title="Freecell Deal Index Finder">
+
+<p>
+Find the deal number of a Freecell deal based on its initial layout.
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="find-deal/"><strong>Deal Finder</strong></a>
+</p>
+</li>
+
+</ul>
+
+</h2_section>
+
+<h2_section id="rich-webui-based" title="Rich Web-UI">
 
 <p>
 We are working on a Rich Web User-interface version based on
 <a href="http://www.solitairey.com/">Solitairey</a>. However, it is not
 ready yet.
 </p>
+
+</h2_section>

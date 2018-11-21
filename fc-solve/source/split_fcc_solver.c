@@ -7,26 +7,22 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * split_fcc_solver.c - a specialised solver that solves one FCC (=
- * fully connected component) at a time - meant to try to
- * reduce the memory consumption. See
- * ../docs/split-fully-connected-components-based-solver-planning.txt
- * in the Freecell Solver git repository.
- */
-
+// split_fcc_solver.c - a specialised solver that solves one FCC (=
+// fully connected component) at a time - meant to try to
+// reduce the memory consumption. See
+// ../docs/split-fully-connected-components-based-solver-planning.txt
+// in the Freecell Solver git repository.
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
 #include <assert.h>
-
 #include "depth_multi_queue.h"
 
 typedef struct
 {
-    fcs_dbm__cache_store__common_t cache_store;
-    fcs_meta_compact_allocator_t queue_meta_alloc;
-    fcs_depth_multi_queue_t depth_queue;
-} fcs_dbm_collection_by_depth_t;
+    fcs_dbm__cache_store__common cache_store;
+    meta_allocator queue_meta_alloc;
+    fcs_depth_multi_queue depth_queue;
+} fcs_dbm_collection_by_depth;
 
 typedef struct FccEntryPointList FccEntryPointList;
 typedef struct FccEntryPointNode FccEntryPointNode;
@@ -36,7 +32,7 @@ struct FccEntryPointNode
     RB_ENTRY(FccEntryPointNode) entry_;
     struct
     {
-        fcs_dbm_record_t key;
+        fcs_dbm_record key;
         /* fcc_entry_point_value_t */
         struct
         {
@@ -64,26 +60,26 @@ static const FccEntryPointList FccEntryPointList_init =
 
 typedef struct
 {
-    fcs_dbm_collection_by_depth_t coll;
-    fcs_lock_t global_lock;
+    fcs_dbm_collection_by_depth coll;
+    fcs_lock global_lock;
     const char *offload_dir_path;
     int curr_depth;
-    fcs_dbm_instance_common_elems_t common;
-    fcs_meta_compact_allocator_t fcc_meta_alloc;
+    dbm_instance_common_elems common;
+    meta_allocator fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
-    fcs_compact_allocator_t fcc_entry_points_allocator;
-    fcs_lock_t fcc_entry_points_lock;
+    compact_allocator fcc_entry_points_allocator;
+    fcs_lock fcc_entry_points_lock;
     FccEntryPointNode *start_key_ptr;
 #if 0
-    fcs_bool_t was_start_key_reachable;
+    bool was_start_key_reachable;
 #endif
     int start_key_moves_count;
-    fcs_lock_t output_lock;
+    fcs_lock output_lock;
 #if 0
     FILE * consumed_states_fh;
 #endif
-    fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask;
-    fcs_lock_t fcc_exit_points_output_lock;
+    fcs_which_moves_bitmask fingerprint_which_irreversible_moves_bitmask;
+    fcs_lock fcc_exit_points_output_lock;
     FILE *fcc_exit_points_out_fh;
     FILE *fingerprint_fh;
     char *fingerprint_line;
@@ -94,7 +90,7 @@ typedef struct
     char *moves_base64_encoding_buffer;
     size_t moves_base64_encoding_buffer_max_len;
     const char *dbm_store_path;
-} fcs_dbm_solver_instance_t;
+} dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
     (instance->curr_depth + list->num_non_reversible_moves_including_prune)
@@ -104,9 +100,9 @@ typedef struct
 RB_GENERATE_STATIC(
     FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
 
-static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_common_input_t *const inp,
-    fcs_which_moves_bitmask_t *fingerprint_which_irreversible_moves_bitmask,
+static inline void instance_init(dbm_solver_instance *const instance,
+    const fcs_dbm_common_input *const inp,
+    fcs_which_moves_bitmask *fingerprint_which_irreversible_moves_bitmask,
     FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->fcc_meta_alloc));
@@ -127,7 +123,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
         {
             for (size_t i = 0;
                  i < COUNT(fingerprint_which_irreversible_moves_bitmask->s);
-                 i++)
+                 ++i)
             {
                 unsigned char c =
                     fingerprint_which_irreversible_moves_bitmask->s[i];
@@ -150,7 +146,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     fcs_lock_init(&instance->fcc_entry_points_lock);
     fcs_lock_init(&instance->fcc_exit_points_output_lock);
     {
-        fcs_dbm_collection_by_depth_t *const coll = &(instance->coll);
+        fcs_dbm_collection_by_depth *const coll = &(instance->coll);
 
         fcs_dbm__cache_store__init(&(coll->cache_store), &(instance->common),
             &(coll->queue_meta_alloc), inp->dbm_store_path,
@@ -158,11 +154,11 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
     }
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_destroy(dbm_solver_instance *const instance)
 {
     fc_solve_compact_allocator_finish(&(instance->fcc_entry_points_allocator));
     fc_solve_meta_compact_allocator_finish(&(instance->fcc_meta_alloc));
-    fcs_dbm_collection_by_depth_t *coll = &(instance->coll);
+    fcs_dbm_collection_by_depth *coll = &(instance->coll);
     fcs_depth_multi_queue__destroy(&(coll->depth_queue));
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
     fc_solve_meta_compact_allocator_finish(&(coll->queue_meta_alloc));
@@ -177,35 +173,35 @@ static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 
 struct fcs_dbm_solver_thread_struct
 {
-    fcs_dbm_solver_instance_t *instance;
-    fc_solve_delta_stater_t delta_stater;
-    fcs_meta_compact_allocator_t thread_meta_alloc;
+    dbm_solver_instance *instance;
+    fcs_delta_stater delta_stater;
+    meta_allocator thread_meta_alloc;
     int state_depth;
 };
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_dbm_queue_item_t physical_item;
-    fcs_dbm_record_t *token = NULL;
-    fcs_derived_state_t *derived_list = NULL, *derived_list_recycle_bin = NULL;
-    fcs_compact_allocator_t derived_list_allocator;
-    fcs_state_keyval_pair_t state;
+    fcs_dbm_queue_item physical_item;
+    fcs_dbm_record *token = NULL;
+    fcs_derived_state *derived_list = NULL, *derived_list_recycle_bin = NULL;
+    compact_allocator derived_list_allocator;
+    fcs_state_keyval_pair state;
+#ifdef WITH__base64_encoding_buffer
     char *base64_encoding_buffer = NULL;
-#if 0
     size_t base64_encoding_buffer_max_len = 0;
 #endif
 
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-    const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
+    const_AUTO(thread, ((thread_arg *)void_arg)->thread);
     const_SLOT(instance, thread);
     const_AUTO(delta_stater, &(thread->delta_stater));
     const_AUTO(local_variant, instance->common.variant);
 
-    fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
+    fcs_dbm_queue_item *item = NULL, *prev_item = NULL;
     long queue_num_extracted_and_processed = 0;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(thread->thread_meta_alloc));
@@ -213,7 +209,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     TRACE("%s\n", "instance_run_solver_thread start");
     const_AUTO(coll, &(instance->coll));
 #if 0
-    fcs_bool_t was_start_key_reachable = instance->was_start_key_reachable;
+    bool was_start_key_reachable = instance->was_start_key_reachable;
 #endif
     while (1)
     {
@@ -228,8 +224,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
-                    &(thread->state_depth),
-                    (fcs_offloading_queue_item_t *)(&token)))
+                    &(thread->state_depth), (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -278,8 +273,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 &(key)
             );
 
-            fcs_bool_t to_prune = FALSE;
-            fcs_bool_t to_output = FALSE;
+            bool to_prune = FALSE;
+            bool to_output = FALSE;
             if (val_proto)
             {
                 val_proto->kv.val.is_reachable = TRUE;
@@ -385,7 +380,9 @@ static void *instance_run_solver_thread(void *const void_arg)
         prev_item = item;
     }
 
+#ifdef WITH__base64_encoding_buffer
     free(base64_encoding_buffer);
+#endif
     fc_solve_compact_allocator_finish(&(derived_list_allocator));
     TRACE("%s\n", "instance_run_solver_thread end");
     return NULL;
@@ -394,7 +391,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 #include "depth_dbm_procs.h"
 
 static inline void instance_alloc_num_moves(
-    fcs_dbm_solver_instance_t *const instance, const size_t buffer_size)
+    dbm_solver_instance *const instance, const size_t buffer_size)
 {
     if (buffer_size > instance->max_moves_to_state_len)
     {
@@ -404,24 +401,24 @@ static inline void instance_alloc_num_moves(
     }
 }
 
-static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const unsigned char move GCC_UNUSED,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+static inline void instance_check_key(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    const int key_depth, fcs_encoded_state_buffer *const key,
+    fcs_dbm_record *const parent, const unsigned char move GCC_UNUSED,
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     const_AUTO(local_variant, instance->common.variant);
 #endif
     const_AUTO(coll, &(instance->coll));
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -436,7 +433,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 
             fcs_depth_multi_queue__insert(&(coll->depth_queue),
                 thread->state_depth + 1,
-                (const fcs_offloading_queue_item_t *)(&token));
+                (const offloading_queue_item *)(&token));
 
             ++instance->common.count_of_items_in_queue;
             ++instance->common.num_states_in_collection;
@@ -451,15 +448,15 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
 
             /* Calculate the new fingerprint to which the exit
              * point belongs. */
-            fcs_which_moves_bitmask_t new_fingerprint = {{'\0'}};
-            for (size_t i = 0; i < COUNT(new_fingerprint.s); i++)
+            fcs_which_moves_bitmask new_fingerprint = {{'\0'}};
+            for (size_t i = 0; i < COUNT(new_fingerprint.s); ++i)
             {
                 new_fingerprint.s[i] =
                     which_irreversible_moves_bitmask->s[i] +
                     instance->fingerprint_which_irreversible_moves_bitmask.s[i];
             }
             int trace_num;
-            fcs_encoded_state_buffer_t *trace;
+            fcs_encoded_state_buffer *trace;
             fcs_lock_lock(&instance->fcc_exit_points_output_lock);
             /* instance->storage_lock is already locked
              * in instance_check_multiple_keys and we should not
@@ -470,6 +467,10 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 fcc_entry_key.kv.key.key = trace[trace_num - 1];
                 FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
                     &(instance->fcc_entry_points), &fcc_entry_key);
+                if (!val_proto)
+                {
+                    goto cleanup;
+                }
                 const long location_in_file =
                     val_proto->kv.val.location_in_file;
                 fseek(instance->fingerprint_fh, location_in_file, SEEK_SET);
@@ -503,7 +504,7 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 moves_to_state_len + trace_num - 1;
             instance_alloc_num_moves(instance, added_moves_to_output);
             unsigned char *const moves_to_state = instance->moves_to_state;
-            for (int i = trace_num - 1; i > 0; i--)
+            for (int i = trace_num - 1; i > 0; --i)
             {
                 moves_to_state[moves_to_state_len + trace_num - 1 - i] =
                     get_move_from_parent_to_child(instance,
@@ -538,11 +539,11 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
                 instance->moves_base64_encoding_buffer);
 #ifdef DEBUG_OUT
             {
-                fcs_state_keyval_pair_t state;
+                fcs_state_keyval_pair state;
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
                 fc_solve_delta_stater_decode_into_state(&(thread->delta_stater),
                     key->s, &state, indirect_stacks_buffer);
-                fcs_render_state_str_t state_str;
+                fcs_render_state_str state_str;
                 FCS__RENDER_STATE(state_str, &(state.s), &locs);
                 fprintf(stderr, "Check Key: <<<\n%s\n>>>\n\n[%s %s %ld %s]\n\n",
                     state_str, fingerprint_base64, state_base64,
@@ -551,14 +552,15 @@ static inline void instance_check_key(fcs_dbm_solver_thread_t *const thread,
             }
 #endif
             fflush(instance->fcc_exit_points_out_fh);
+        cleanup:
             fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
             free(trace);
         }
     }
 }
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
-    fcs_state_keyval_pair_t *const init_state, FccEntryPointNode *key_ptr,
+static void instance_run_all_threads(dbm_solver_instance *const instance,
+    fcs_state_keyval_pair *const init_state, FccEntryPointNode *key_ptr,
     const size_t num_threads)
 {
     const_AUTO(threads,
@@ -585,7 +587,7 @@ int main(int argc, char *argv[])
 {
     build_decoding_table();
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     const char *mod_base64_fcc_fingerprint = NULL;
@@ -594,10 +596,10 @@ int main(int argc, char *argv[])
     const char *filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     const char *param;
-    fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
+    fcs_dbm_common_input inp = fcs_dbm_common_input_init;
 
     int arg;
-    for (arg = 1; arg < argc; arg++)
+    for (arg = 1; arg < argc; ++arg)
     {
         if (fcs_dbm__extract_common_from_argv(argc, argv, &arg, &inp))
         {
@@ -636,11 +638,11 @@ int main(int argc, char *argv[])
         fc_solve_err("One or more of these parameters was not specified: %s\n",
             "--board, --fingerprint, --input, --output, --offload-dir-path");
     }
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     read_state_from_file(inp.local_variant, filename,
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);
-    fcs_which_moves_bitmask_t fingerprint_which_irreversible_moves_bitmask = {
+    fcs_which_moves_bitmask fingerprint_which_irreversible_moves_bitmask = {
         {'\0'}};
     {
         size_t fingerprint_data_len = 0;
@@ -656,25 +658,19 @@ int main(int argc, char *argv[])
         }
     }
 
-#ifndef FCS_FREECELL_ONLY
     const_AUTO(local_variant, inp.local_variant);
-#endif
     const_AUTO(num_threads, inp.num_threads);
 
     /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth.
      */
 
-    fc_solve_delta_stater_t delta;
-    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        CALC_SEQUENCES_ARE_BUILT_BY()
-#endif
-    );
+    fcs_delta_stater delta;
+    fc_solve_delta_stater_init(&delta, local_variant, &init_state.s, STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));
 
-    fcs_dbm_solver_instance_t instance;
+    dbm_solver_instance instance;
     FccEntryPointNode *key_ptr = NULL;
-    fcs_encoded_state_buffer_t parent_state_enc;
+    fcs_encoded_state_buffer parent_state_enc;
 
     instance_init(
         &instance, &inp, &fingerprint_which_irreversible_moves_bitmask, stdout);
@@ -696,7 +692,7 @@ int main(int argc, char *argv[])
 #endif
 
     long location_in_file = 0;
-    fcs_bool_t was_init = FALSE;
+    bool was_init = FALSE;
 #ifdef HAVE_GETLINE
     while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size,
                fingerprint_fh) != -1)
@@ -746,8 +742,8 @@ int main(int argc, char *argv[])
         RB_INSERT(FccEntryPointList, &(instance.fcc_entry_points), entry_point);
 
         {
-            const fcs_offloading_queue_item_t token =
-                ((const fcs_offloading_queue_item_t)(&(entry_point->kv.key)));
+            const offloading_queue_item token =
+                ((const offloading_queue_item)(&(entry_point->kv.key)));
             if (was_init)
             {
                 fcs_depth_multi_queue__insert(
@@ -773,13 +769,14 @@ int main(int argc, char *argv[])
     instance.moves_to_state = NULL;
     instance.max_moves_to_state_len = instance.moves_to_state_len = 0;
 
-    count_of_instance_runs++;
+    ++count_of_instance_runs;
 
-    char fcc_exit_points_out_fn[PATH_MAX + 1],
+    char fcc_exit_points_out_fn[PATH_MAX - 40],
         fcc_exit_points_out_fn_temp[PATH_MAX + 1];
-    sprintf(fcc_exit_points_out_fn, "%s/exits.%ld", path_to_output_dir,
-        count_of_instance_runs);
-    sprintf(fcc_exit_points_out_fn_temp, "%s.temp", fcc_exit_points_out_fn);
+    snprintf(fcc_exit_points_out_fn, COUNT(fcc_exit_points_out_fn),
+        "%s/exits.%ld", path_to_output_dir, count_of_instance_runs);
+    snprintf(fcc_exit_points_out_fn_temp, PATH_MAX, "%s.temp",
+        fcc_exit_points_out_fn);
     instance.fcc_exit_points_out_fh = fopen(fcc_exit_points_out_fn_temp, "wt");
 
     instance_run_all_threads(&instance, &init_state, key_ptr, NUM_THREADS());

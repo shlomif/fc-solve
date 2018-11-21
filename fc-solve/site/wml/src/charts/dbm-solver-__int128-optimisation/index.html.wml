@@ -1,14 +1,16 @@
+#include "prelude.wml"
+<set-var latemp_html_standard="xhtml5" />
+#include "Inc/html5-shims.wml"
 <?xml version="1.0" encoding="utf-8"?>
-<!DOCTYPE
-    html PUBLIC "-//W3C//DTD XHTML 1.1//EN"
-    "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 <head>
     <title>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
     <link href="$(ROOT)/css/flot/examples/examples.css" rel="stylesheet" type="text/css" />
-    <script type="text/javascript" src="$(ROOT)/js/jq.js"></script>
-    <script type="text/javascript" src="$(ROOT)/js/jquery.flot.js"></script>
+    <js_script src="$(ROOT)/js/jq.js"></js_script>
+    <js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+    <js_requirejs />
 </head>
 <body>
     <h1>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</h1>
@@ -34,7 +36,7 @@
     </ul>
     <h2>Data</h2>
     <div>
-<textarea id="data" style="height:100px;" cols="80" rows="20" readonly="1">
+<textarea id="data" style="height:100px;" cols="80" rows="20" readonly="readonly">
 OldIterations	OldTimeSinceStart	NewTimeSinceStart
 200000	1.31821012496948	0.634008884429932
 300000	2.49772810935974	1.28861284255981
@@ -1099,6 +1101,11 @@ OldIterations	OldTimeSinceStart	NewTimeSinceStart
 106175321	1510.94977021217	1052.10817599297
 </textarea>
     </div>
-<script type="text/javascript" src="chart-using-flot.js"></script>
+<js_script>
+requirejs.config({
+    baseUrl: '$(ROOT)/js',
+    });
+require(["chart-using-flot--int128-opt"], function (chart) { });
+</js_script>
 </body>
 </html>

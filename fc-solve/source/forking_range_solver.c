@@ -7,25 +7,18 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- *  forking_range_solver.c - a range solver that solves different boards in
- *  several UNIX processes.
- *
- *  See also:
- *      - fc_pro_range_solver.c
- *      - serial_range_solver.c
- *      - threaded_range_solver.c
- */
+//  forking_range_solver.c - a range solver that solves different boards in
+//  several UNIX processes.
+//
+//  See also:
+//      - fc_pro_range_solver.c
+//      - serial_range_solver.c
+//      - threaded_range_solver.c
 #ifdef __linux__
 #define USE_EPOLL
-#endif
-
-#include <sys/wait.h>
-
-#ifdef USE_EPOLL
 #include <sys/epoll.h>
 #endif
-
+#include <sys/wait.h>
 #include "range_solvers.h"
 #include "try_param.h"
 
@@ -51,30 +44,30 @@ static long long total_num_iters = 0, total_num_finished_boards = 0;
 typedef struct
 {
     int child_to_parent_pipe[2], parent_to_child_pipe[2];
-} worker_t;
+} fcs_worker;
 
 typedef struct
 {
     long long board_num, quota_end;
-} request_t;
+} request_type;
 
 typedef struct
 {
     long long num_iters, num_finished_boards;
-} response_t;
+} response_type;
 
 static inline void write_request(const long long end_board,
     const long long board_num_step, long long *const next_board_num_ptr,
-    const worker_t *const worker)
+    const fcs_worker *const worker)
 {
-    request_t req;
+    request_type req;
     if ((*next_board_num_ptr) > end_board)
     {
         /* We only absolutely need to initialize .board_num here, but the
          * Coverity Scan scanner complains about quota_end being uninitialized
          * when passed to write() so we initialize it here as well.
          * */
-        req = (request_t){.board_num = -1, .quota_end = -1};
+        req = (request_type){.board_num = -1, .quota_end = -1};
     }
     else
     {
@@ -89,11 +82,11 @@ static inline void write_request(const long long end_board,
     write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req));
 }
 
-static inline void transaction(const worker_t *const worker, const int read_fd,
-    const long long end_board, const long long board_num_step,
-    long long *const next_board_num_ptr)
+static inline void transaction(const fcs_worker *const worker,
+    const int read_fd, const long long end_board,
+    const long long board_num_step, long long *const next_board_num_ptr)
 {
-    response_t response;
+    response_type response;
     if (read(read_fd, &response, sizeof(response)) <
         (ssize_t)(sizeof(response)))
     {
@@ -105,7 +98,7 @@ static inline void transaction(const worker_t *const worker, const int read_fd,
     write_request(end_board, board_num_step, next_board_num_ptr, worker);
 }
 
-static inline int read_fd(const worker_t *const worker)
+static inline int read_fd(const fcs_worker *const worker)
 {
     return worker->child_to_parent_pipe[READ_FD];
 }
@@ -135,25 +128,25 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     fc_solve_print_started_at();
     void *const instance = simple_alloc_and_parse(argc, argv, arg);
-    worker_t workers[num_workers];
+    fcs_worker workers[num_workers];
 
     for (size_t idx = 0; idx < num_workers; ++idx)
     {
         if (pipe(workers[idx].child_to_parent_pipe))
         {
             fc_solve_err(
-                "C->P Pipe for worker No. %zd failed! Exiting.\n", idx);
+                "C->P Pipe for worker No. %zu failed! Exiting.\n", idx);
         }
         if (pipe(workers[idx].parent_to_child_pipe))
         {
             fc_solve_err(
-                "P->C Pipe for worker No. %zd failed! Exiting.\n", idx);
+                "P->C Pipe for worker No. %zu failed! Exiting.\n", idx);
         }
 
         switch (fork())
         {
         case -1:
-            fc_solve_err("Fork for worker No. %zd failed! Exiting.\n", idx);
+            fc_solve_err("Fork for worker No. %zu failed! Exiting.\n", idx);
 
         case 0:
         {
@@ -162,11 +155,11 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
             /* I'm one of the slaves */
-            request_t req;
+            request_type req;
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
                 req.board_num != -1)
             {
-                response_t response = {
+                response_type response = {
                     .num_iters = 0,
                     .num_finished_boards = req.quota_end - req.board_num + 1,
                 };
@@ -261,7 +254,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
         for (int i = 0; i < nfds; ++i)
         {
-            const worker_t *const worker = events[i].data.ptr;
+            const fcs_worker *const worker = events[i].data.ptr;
             transaction(worker, read_fd(worker), end_board, board_num_step,
                 &next_board_num);
         }

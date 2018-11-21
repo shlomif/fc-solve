@@ -10,21 +10,23 @@ the parameters of the variant.
 
 =cut
 
-our $VERSION = '0.1701';
-
 use parent 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;
 
-__PACKAGE__->mk_acc_ref([qw(
-    empty_stacks_filled_by
-    num_columns
-    num_decks
-    num_freecells
-    rules
-    seq_build_by
-    sequence_move
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            empty_stacks_filled_by
+            num_columns
+            num_decks
+            num_freecells
+            rules
+            seq_build_by
+            sequence_move
+            )
+    ]
+);
 
 =head1 SYNOPSIS
 
@@ -42,14 +44,14 @@ __PACKAGE__->mk_acc_ref([qw(
 
 =cut
 
-my %seqs_build_by = (map { $_ => 1 } (qw(alt_color suit rank)));
-my %empty_stacks_filled_by_map = (map { $_ => 1 } (qw(kings any none)));
-my %seq_moves = (map { $_ => 1 } (qw(limited unlimited)));
-my %rules_collection = (map { $_ => 1 } (qw(freecell simple_simon)));
+my %seqs_build_by              = ( map { $_ => 1 } (qw(alt_color suit rank)) );
+my %empty_stacks_filled_by_map = ( map { $_ => 1 } (qw(kings any none)) );
+my %seq_moves                  = ( map { $_ => 1 } (qw(limited unlimited)) );
+my %rules_collection = ( map { $_ => 1 } (qw(freecell simple_simon)) );
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     # Set the variant
     #
@@ -57,12 +59,13 @@ sub _init
     {
         my $seq_build_by = $args->{seq_build_by};
 
-        if (!exists($seqs_build_by{$seq_build_by}))
+        if ( !exists( $seqs_build_by{$seq_build_by} ) )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::SeqBuildBy->throw(
-                    error => "Unrecognised seq_build_by",
-                    value => $seq_build_by,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::SeqBuildBy
+                ->throw(
+                error => "Unrecognised seq_build_by",
+                value => $seq_build_by,
+                );
         }
         $self->seq_build_by($seq_build_by);
     }
@@ -70,12 +73,13 @@ sub _init
     {
         my $esf = $args->{empty_stacks_filled_by};
 
-        if (!exists($empty_stacks_filled_by_map{$esf}))
+        if ( !exists( $empty_stacks_filled_by_map{$esf} ) )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::EmptyStacksFill->throw(
-                    error => "Unrecognised empty_stacks_filled_by",
-                    value => $esf,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::EmptyStacksFill
+                ->throw(
+                error => "Unrecognised empty_stacks_filled_by",
+                value => $esf,
+                );
         }
 
         $self->empty_stacks_filled_by($esf);
@@ -84,12 +88,13 @@ sub _init
     {
         my $num_decks = $args->{num_decks};
 
-        if (! (($num_decks == 1) || ($num_decks == 2)) )
+        if ( !( ( $num_decks == 1 ) || ( $num_decks == 2 ) ) )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::NumDecks->throw(
-                    error => "Wrong Number of Decks",
-                    value => $num_decks,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::NumDecks
+                ->throw(
+                error => "Wrong Number of Decks",
+                value => $num_decks,
+                );
         }
         $self->num_decks($num_decks);
     }
@@ -97,14 +102,14 @@ sub _init
     {
         my $num_columns = $args->{num_columns};
 
-        if (($num_columns =~ /\D/)
-                ||
-            ($num_columns == 0))
+        if (   ( $num_columns =~ /\D/ )
+            || ( $num_columns == 0 ) )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks->throw(
-                    error => "num_columns is not a number",
-                    value => $num_columns,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::Stacks
+                ->throw(
+                error => "num_columns is not a number",
+                value => $num_columns,
+                );
         }
         $self->num_columns($num_columns)
     }
@@ -112,12 +117,13 @@ sub _init
     {
         my $num_freecells = $args->{num_freecells};
 
-        if ($num_freecells =~ /\D/)
+        if ( $num_freecells =~ /\D/ )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::Freecells->throw(
-                    error => "num_freecells is not a number",
-                    value => $num_freecells,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::Freecells
+                ->throw(
+                error => "num_freecells is not a number",
+                value => $num_freecells,
+                );
         }
         $self->num_freecells($num_freecells);
     }
@@ -125,12 +131,13 @@ sub _init
     {
         my $seq_move = $args->{sequence_move};
 
-        if (!exists($seq_moves{$seq_move}))
+        if ( !exists( $seq_moves{$seq_move} ) )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::SeqMove->throw(
-                    error => "Unrecognised sequence_move",
-                    value => $seq_move,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::SeqMove
+                ->throw(
+                error => "Unrecognised sequence_move",
+                value => $seq_move,
+                );
         }
 
         $self->sequence_move($seq_move);
@@ -139,12 +146,13 @@ sub _init
     {
         my $rules = $args->{rules} || "freecell";
 
-        if (!exists($rules_collection{$rules}))
+        if ( !exists( $rules_collection{$rules} ) )
         {
-            Games::Solitaire::Verify::Exception::VariantParams::Param::Rules->throw(
-                    error => "Unrecognised rules",
-                    value => $rules,
-            );
+            Games::Solitaire::Verify::Exception::VariantParams::Param::Rules
+                ->throw(
+                error => "Unrecognised rules",
+                value => $rules,
+                );
         }
         $self->rules($rules);
     }
@@ -227,12 +235,12 @@ sub clone
     return __PACKAGE__->new(
         {
             empty_stacks_filled_by => $self->empty_stacks_filled_by(),
-            num_columns => $self->num_columns(),
-            num_decks => $self->num_decks(),
-            num_freecells => $self->num_freecells(),
-            rules => $self->rules(),
-            seq_build_by => $self->seq_build_by(),
-            sequence_move => $self->sequence_move(),
+            num_columns            => $self->num_columns(),
+            num_decks              => $self->num_decks(),
+            num_freecells          => $self->num_freecells(),
+            rules                  => $self->rules(),
+            seq_build_by           => $self->seq_build_by(),
+            sequence_move          => $self->sequence_move(),
         }
     );
 }

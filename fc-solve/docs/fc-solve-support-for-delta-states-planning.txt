@@ -23,4 +23,3 @@ We will define two macros/inline-functions:
 
 fcs_state_stored_to_expanded
 fcs_state_expanded_to_stored
-

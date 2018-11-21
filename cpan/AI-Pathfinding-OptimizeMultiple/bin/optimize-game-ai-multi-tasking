@@ -38,4 +38,3 @@ optimize-game-ai-multi-tasking - command line driver for L<AI::Pathfinding::Opti
 To be written.
 
 =cut
-

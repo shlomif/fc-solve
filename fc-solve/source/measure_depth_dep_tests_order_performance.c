@@ -7,13 +7,10 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * measure_depth_dep_tests_order_performance.c - measure the relative
- * depth-dependent
- * performance of two scans.
- */
+// measure_depth_dep_tests_order_performance.c - measure the relative
+// depth-dependent performance of two scans.
 #include "rinutils.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "try_param.h"
 #include "range_solvers.h"
@@ -43,10 +40,10 @@ static void print_help(void)
 
 typedef struct
 {
-    fcs_portable_time_t start_time, end_time;
+    fcs_portable_time start_time, end_time;
     fcs_int_limit_t num_iters;
     int verdict;
-} result_t;
+} result;
 
 static const char *known_parameters[] = {NULL};
 
@@ -69,10 +66,12 @@ static void set_tests_order(
 
 static inline int range_solvers_main(int argc, char *argv[], int arg,
     const long long start_board, const long long end_board,
-    const long long stop_at)
+    const long long stop_at GCC_UNUSED)
 {
     /* char buffer[2048]; */
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     fcs_int_limit_t iters_limit = 100000;
+#endif
     int max_var_depth_to_check = 100;
     FCS__DECL_ERR_PTR(error_string);
     const char *scan1_to = NULL, *scan2_to = NULL;
@@ -112,7 +111,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else if ((param = TRY_P("--iters-limit")))
         {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             iters_limit = (fcs_int_limit_t)atol(param);
+#endif
         }
         else if ((param = TRY_P("--max-var-depth")))
         {
@@ -142,7 +143,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fc_solve_print_started_at();
     fflush(stdout);
 
-    result_t *const results =
+    result *const results =
         SMALLOC(results, (size_t)(end_board - start_board + 1));
 
     FILE *const output_fh = fopen(output_filename, "wt");
@@ -160,12 +161,12 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         set_tests_order(instance, 0, scan1_to);
         set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
-        result_t *curr_result;
+        result *curr_result;
         int board_num;
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
-            fcs_state_string_t state_string;
+            fcs_state_string state_string;
             get_board(board_num, state_string);
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES

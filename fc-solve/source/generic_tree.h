@@ -7,19 +7,14 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * generic_tree.h - provide a unified interface to either kaz_tree.h
- * or libavl/rb.h .
- */
-
+// generic_tree.h - provide a unified interface to either kaz_tree.h
+// or fcs-libavl/rb.h .
 #pragma once
-
-#include "config.h"
+#include "fcs_conf.h"
 
 #ifdef FCS_DBM_USE_LIBAVL
 
 #include "rb.h"
-
 typedef struct rb_table dict_t;
 typedef void *dict_key_t;
 #define fc_solve_kaz_tree_destroy(tree) rb_destroy(tree, NULL)
@@ -28,10 +23,10 @@ typedef void *dict_key_t;
 #define fc_solve_kaz_tree_lookup_value(tree, value) rb_find(tree, value)
 #define fc_solve_kaz_tree_delete_by_value(tree, value) rb_delete(tree, value)
 #define fc_solve_kaz_tree_alloc_insert(tree, value) rb_insert(tree, value)
+
 #else
 
 #include "kaz_tree.h"
-
 static inline void fc_solve_kaz_tree_delete_by_value(
     dict_t *const kaz_tree, dict_key_t value)
 {

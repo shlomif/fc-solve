@@ -8,26 +8,24 @@ use strict;
 Games::Solitaire::Verify::Move - a class wrapper for an individual
 Solitaire move.
 
-=head1 VERSION
-
-Version 0.01
-
 =cut
-
-our $VERSION = '0.1701';
 
 use parent 'Games::Solitaire::Verify::Base';
 
 use Games::Solitaire::Verify::Exception;
 
-__PACKAGE__->mk_acc_ref([qw(
-    source_type
-    dest_type
-    source
-    dest
-    num_cards
-    _game
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            source_type
+            dest_type
+            source
+            dest
+            num_cards
+            _game
+            )
+    ]
+);
 
 =head1 SYNOPSIS
 
@@ -46,9 +44,9 @@ __PACKAGE__->mk_acc_ref([qw(
 
 sub _from_fcs_string
 {
-    my ($self, $str) = @_;
+    my ( $self, $str ) = @_;
 
-    if ($str =~ m{\AMove a card from stack (\d+) to the foundations\z})
+    if ( $str =~ m{\AMove a card from stack (\d+) to the foundations\z} )
     {
         my $source = $1;
 
@@ -57,7 +55,7 @@ sub _from_fcs_string
 
         $self->source($source);
     }
-    elsif ($str =~ m{\AMove a card from freecell (\d+) to the foundations\z})
+    elsif ( $str =~ m{\AMove a card from freecell (\d+) to the foundations\z} )
     {
         my $source = $1;
 
@@ -66,9 +64,9 @@ sub _from_fcs_string
 
         $self->source($source);
     }
-    elsif ($str =~ m{\AMove a card from freecell (\d+) to stack (\d+)\z})
+    elsif ( $str =~ m{\AMove a card from freecell (\d+) to stack (\d+)\z} )
     {
-        my ($source, $dest) = ($1, $2);
+        my ( $source, $dest ) = ( $1, $2 );
 
         $self->source_type("freecell");
         $self->dest_type("stack");
@@ -76,9 +74,9 @@ sub _from_fcs_string
         $self->source($source);
         $self->dest($dest);
     }
-    elsif ($str =~ m{\AMove a card from stack (\d+) to freecell (\d+)\z})
+    elsif ( $str =~ m{\AMove a card from stack (\d+) to freecell (\d+)\z} )
     {
-        my ($source, $dest) = ($1, $2);
+        my ( $source, $dest ) = ( $1, $2 );
 
         $self->source_type("stack");
         $self->dest_type("freecell");
@@ -86,9 +84,9 @@ sub _from_fcs_string
         $self->source($source);
         $self->dest($dest);
     }
-    elsif ($str =~ m{\AMove (\d+) cards from stack (\d+) to stack (\d+)\z})
+    elsif ( $str =~ m{\AMove (\d+) cards from stack (\d+) to stack (\d+)\z} )
     {
-        my ($num_cards, $source, $dest) = ($1, $2, $3);
+        my ( $num_cards, $source, $dest ) = ( $1, $2, $3 );
 
         $self->source_type("stack");
         $self->dest_type("stack");
@@ -97,7 +95,8 @@ sub _from_fcs_string
         $self->dest($dest);
         $self->num_cards($num_cards);
     }
-    elsif ($str =~ m{\AMove the sequence on top of Stack (\d+) to the foundations\z})
+    elsif ( $str =~
+        m{\AMove the sequence on top of Stack (\d+) to the foundations\z} )
     {
         my $source = $1;
 
@@ -109,20 +108,19 @@ sub _from_fcs_string
     else
     {
         Games::Solitaire::Verify::Exception::Parse::FCS->throw(
-            error => "Cannot parse 'FCS' String",
-        );
+            error => "Cannot parse 'FCS' String", );
     }
 }
 
 sub _init
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
-    $self->_game($args->{game});
+    $self->_game( $args->{game} );
 
-    if (exists($args->{fcs_string}))
+    if ( exists( $args->{fcs_string} ) )
     {
-        return $self->_from_fcs_string($args->{fcs_string});
+        return $self->_from_fcs_string( $args->{fcs_string} );
     }
 }
 
@@ -152,4 +150,4 @@ Number of cards affects - only relevant for a stack-to-stack move usually.
 
 =cut
 
-1; # End of Games::Solitaire::Verify::Move
+1;    # End of Games::Solitaire::Verify::Move

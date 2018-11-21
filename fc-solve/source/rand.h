@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * rand.h - header for the Freecell Solver pseudo-random number generator.
- */
+// rand.h - header for the Freecell Solver pseudo-random number generator.
 #pragma once
 
 #ifdef __cplusplus
@@ -18,26 +16,22 @@ extern "C" {
 
 #include "rinutils.h"
 
-typedef long fcs_rand_t;
+typedef long fcs_rand_gen;
 
 static inline void fc_solve_rand_init(
-    fcs_rand_t *const my_rand, const unsigned int seed)
+    fcs_rand_gen *const my_rand, const unsigned int seed)
 {
     *my_rand = (long)seed;
 }
 
-static inline int fc_solve_rand_rand15(fcs_rand_t *const my_rand)
+static inline int fc_solve_rand_rand15(fcs_rand_gen *const my_rand)
 {
     return ((((*my_rand) = ((*my_rand) * 214013 + 2531011)) >> 16) & 0x7fff);
 }
 
-/*
- *
- * This function constructs a larger integral number of out of two
- * 15-bit ones.
- *
- * */
-static inline int fc_solve_rand_get_random_number(fcs_rand_t *const my_rand)
+// This function constructs a larger integral number of out of two
+// 15-bit ones.
+static inline int fc_solve_rand_get_random_number(fcs_rand_gen *const my_rand)
 {
     const int first = fc_solve_rand_rand15(my_rand);
     return (first | (fc_solve_rand_rand15(my_rand) << 15));

@@ -7,11 +7,9 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
- * boards and displays the moves counts and the number of moves in their
- * solution.
- */
+// fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
+// boards and displays the moves counts and the number of moves in their
+// solution.
 #include "default_iter_handler.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
@@ -19,8 +17,8 @@
 #include "try_param.h"
 
 static inline void fc_pro_get_board(const long long deal_idx,
-    fcs_state_string_t state_string,
-    fcs_state_keyval_pair_t *const pos IND_BUF_T_PARAM(indirect_stacks_buffer))
+    fcs_state_string state_string,
+    fcs_state_keyval_pair *const pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     get_board_l(deal_idx, state_string);
     fc_solve_initial_user_state_to_c(
@@ -35,9 +33,11 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 {
     const char *variant = "freecell";
     long long total_num_iters = 0;
-    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+    bool was_total_iterations_limit_per_board_set = FALSE;
+#endif
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = INIT_BINARY_OUTPUT;
+    fcs_binary_output binary_output = INIT_BINARY_OUTPUT;
 
     for (; arg < argc; arg++)
     {
@@ -59,8 +59,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else if ((param = TRY_P("--total-iterations-limit")))
         {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             was_total_iterations_limit_per_board_set = TRUE;
             total_iterations_limit_per_board = atol(param);
+#endif
         }
         else
         {
@@ -71,14 +73,14 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fc_solve_print_started_at();
     fflush(stdout);
 
-    fc_solve_display_information_context_t display_context =
+    fc_solve_display_information_context display_context =
         INITIAL_DISPLAY_CONTEXT;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, cmd_line_callback, &display_context, TRUE);
 
     bin_init(&binary_output, &start_board, &end_board,
         &total_iterations_limit_per_board);
-    const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
+    const bool variant_is_freecell = (!strcmp(variant, "freecell"));
 #ifndef FCS_FREECELL_ONLY
     if (!variant_is_freecell)
     {
@@ -97,7 +99,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     char buffer[2000];
     for (long long board_num = start_board; board_num <= end_board; board_num++)
     {
-        fcs_state_keyval_pair_t pos;
+        fcs_state_keyval_pair pos;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         if (variant_is_freecell)
         {
@@ -123,7 +125,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         int num_iters;
         int num_moves;
         int num_fcpro_moves;
-        fcs_moves_processed_t fc_pro_moves = {.moves = NULL};
+        fcs_moves_processed fc_pro_moves = {.moves = NULL};
 
         switch (freecell_solver_user_solve_board(instance, buffer))
         {
@@ -177,7 +179,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         if (fc_pro_moves.moves)
         {
 #ifdef FCS_WITH_MOVES
-            fcs_extended_move_t move;
+            fcs_extended_move move;
             int len = 0;
             while (
                 !fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))

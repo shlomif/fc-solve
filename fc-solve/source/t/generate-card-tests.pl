@@ -21,7 +21,8 @@ sub rank_normalize
     }
 }
 
-my $implicit_t = ( path("../fcs_back_compat.h")->slurp_utf8 =~
+my $implicit_t =
+    ( path("../include/freecell-solver/fcs_back_compat.h")->slurp_utf8 =~
         /^#define FCS_BREAK_BACKWARD_COMPAT_1\r?$/ms ? 1 : 0 );
 
 my $template = Template->new( { ABSOLUTE => 1, }, );

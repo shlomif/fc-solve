@@ -8,4 +8,3 @@
 <xsl:param name="admon.graphics.path" select="'stylesheet-images/'"/>
 
 </xsl:stylesheet>
-

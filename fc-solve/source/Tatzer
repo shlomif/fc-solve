@@ -6,101 +6,96 @@
 #
 # "Tatzer" (Taf-Tzadik-Reish) is the Hebrew word for "configure!".
 
+use 5.014;
 use strict;
 use warnings;
+use autodie;
 
-use File::Path qw(rmtree);
-use File::Basename qw(dirname);
 use Getopt::Long;
+use Path::Tiny qw/path/;
 
-my %BOOL_OPTS_WITH_FALSE_DEFAULTS =
-(
-    'avoid-tcmalloc' => 'FCS_AVOID_TCMALLOC',
-    'break-back-compat-1' => 'FCS_BREAK_BACKWARD_COMPAT_1',
-    'disable-check-valid' => 'FCS_DISABLE_STATE_VALIDITY_CHECK',
-    'disable-err-strs' => 'FCS_DISABLE_ERROR_STRINGS',
-    'disable-flares' => 'FCS_DISABLE_MULTI_FLARES',
-    'disable-moves-track' => 'FCS_DISABLE_MOVES_TRACKING',
-    'disable-ni' => 'FCS_DISABLE_MULTI_NEXT_INSTS',
+my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
+    'avoid-tcmalloc'            => 'FCS_AVOID_TCMALLOC',
+    'break-back-compat-1'       => 'FCS_BREAK_BACKWARD_COMPAT_1',
+    'break-back-compat-2'       => 'FCS_BREAK_BACKWARD_COMPAT_2',
+    'disable-check-valid'       => 'FCS_DISABLE_STATE_VALIDITY_CHECK',
+    'disable-err-strs'          => 'FCS_DISABLE_ERROR_STRINGS',
+    'disable-flares'            => 'FCS_DISABLE_MULTI_FLARES',
+    'disable-moves-track'       => 'FCS_DISABLE_MOVES_TRACKING',
+    'disable-ni'                => 'FCS_DISABLE_MULTI_NEXT_INSTS',
     'disable-num-stored-states' => 'FCS_DISABLE_NUM_STORED_STATES',
-    'disable-resume' => 'FCS_WITHOUT_EXPORTED_RESUME_SOLUTION',
-    'disable-patsolve' => 'FCS_DISABLE_PATSOLVE',
-    'disable-simple-simon' => 'FCS_DISABLE_SIMPLE_SIMON',
-    'fc-only' => 'FCS_FREECELL_ONLY',
+    'disable-resume'            => 'FCS_WITHOUT_EXPORTED_RESUME_SOLUTION',
+    'disable-patsolve'          => 'FCS_DISABLE_PATSOLVE',
+    'disable-simple-simon'      => 'FCS_DISABLE_SIMPLE_SIMON',
+    'fc-only'                   => 'FCS_FREECELL_ONLY',
     'hard-code-calc-real-depth' => 'FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE',
     'hard-code-reparent-states' => 'FCS_HARD_CODE_REPARENT_STATES_AS_FALSE',
-    'hard-code-scans-synergy' => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
-    'hard-code-sp-rtf' => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
-    'hard-code-theme' => 'FCS_USE_PRECOMPILED_CMD_LINE_THEME',
-    'omit-frame' => 'OPTIMIZATION_OMIT_FRAME_POINTER',
-    'rcs' => 'FCS_ENABLE_RCS_STATES',
-    'secondary' => 'FCS_ENABLE_SECONDARY_HASH_VALUE',
-    'single-ht' => 'FCS_SINGLE_HARD_THREAD',
-    'static' => 'FCS_LINK_TO_STATIC',
-    'tracemem' => 'FCS_TRACE_MEM',
-    'with-compact-moves' => 'FCS_USE_COMPACT_MOVE_TOKENS',
-    'without-depth-field' => 'FCS_WITHOUT_DEPTH_FIELD',
-    'without-fc-pro' => 'FCS_WITHOUT_FC_PRO_MOVES_COUNT',
-    'without-help' => 'FCS_WITHOUT_CMD_LINE_HELP',
-    'without-max-num-states' => 'FCS_WITHOUT_MAX_NUM_STATES',
-    'without-iter-handler' => 'FCS_WITHOUT_ITER_HANDLER',
-    'without-trim' => 'FCS_WITHOUT_TRIM_MAX_STORED_STATES',
-    'without-visited-iter' => 'FCS_WITHOUT_VISITED_ITER',
+    'hard-code-scans-synergy'   => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
+    'hard-code-sp-rtf'          => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
+    'hard-code-theme'           => 'FCS_USE_PRECOMPILED_CMD_LINE_THEME',
+    'omit-frame'                => 'OPTIMIZATION_OMIT_FRAME_POINTER',
+    'print-solved'              => 'FCS_RANGE_SOLVERS_PRINT_SOLVED',
+    'rcs'                       => 'FCS_ENABLE_RCS_STATES',
+    'secondary'                 => 'FCS_ENABLE_SECONDARY_HASH_VALUE',
+    'single-ht'                 => 'FCS_SINGLE_HARD_THREAD',
+    'static'                    => 'FCS_LINK_TO_STATIC',
+    'tracemem'                  => 'FCS_TRACE_MEM',
+    'unsafe'                    => 'FCS_UNSAFE',
+    'with-compact-moves'        => 'FCS_USE_COMPACT_MOVE_TOKENS',
+    'without-depth-field'       => 'FCS_WITHOUT_DEPTH_FIELD',
+    'without-fc-pro'            => 'FCS_WITHOUT_FC_PRO_MOVES_COUNT',
+    'without-help'              => 'FCS_WITHOUT_CMD_LINE_HELP',
+    'without-max-num-states'    => 'FCS_WITHOUT_MAX_NUM_STATES',
+    'without-iter-handler'      => 'FCS_WITHOUT_ITER_HANDLER',
+    'without-trim'              => 'FCS_WITHOUT_TRIM_MAX_STORED_STATES',
+    'without-visited-iter'      => 'FCS_WITHOUT_VISITED_ITER',
+);
+
+my %TRUE_BOOL_OPTS = (
+    'build-docs'   => 'FCS_BUILD_DOCS',
+    'test-suite'   => 'FCS_WITH_TEST_SUITE',
+    'with-ctx-var' => 'FCS_WITH_CONTEXT_VARIABLE',
+);
+
+my %INT_OPTS = (
+    'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
+    'max-rank'              => 'FCS_MAX_RANK',
+    'nfc'                   => 'FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY',
+    'num-stacks'            => 'MAX_NUM_STACKS',
+    'pack-size'             => 'FCS_IA_PACK_SIZE',
+    'scan-buckets-num'      => 'FCS_MAX_NUM_SCANS_BUCKETS',
+);
+
+my %STR_OPTS = (
+    'arch'        => { param => 'CPU_ARCH', },
+    'dbm'         => { param => 'FCS_DBM_BACKEND', },
+    'libavl2-c'   => { param => 'FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE' },
+    'libavl2-p'   => { param => 'FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE' },
+    'prefix'      => { param => 'CMAKE_INSTALL_PREFIX', },
+    'states-type' => { param => 'STATES_TYPE', },
+    (
+        map {
+            my ( $key, $param ) = @$_;
+            ( $key => +{ prefix => "${param}_", param => $param } )
+        } (
+            [ 'c|cols'            => 'FCS_STACK_STORAGE' ],
+            [ 'p|pos'             => 'FCS_STATE_STORAGE' ],
+            [ 'rcs-cache-storage' => 'FCS_RCS_CACHE_STORAGE' ],
+        )
+    ),
 );
 
 my @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS = keys %BOOL_OPTS_WITH_FALSE_DEFAULTS;
 
 my %bool_opts_with_false_defaults__values =
-(
-    map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
-);
+    ( map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS );
 
-my %TRUE_BOOL_OPTS =
-(
-    'build-docs' => 'FCS_BUILD_DOCS',
-    'test-suite' => 'FCS_WITH_TEST_SUITE',
-    'with-ctx-var' => 'FCS_WITH_CONTEXT_VARIABLE',
-);
-my @TRUE_BOOL_KEYS = keys %TRUE_BOOL_OPTS;
+my @TRUE_BOOL_KEYS         = keys %TRUE_BOOL_OPTS;
 my %true_bool_opts__values = map { $_ => 1 } @TRUE_BOOL_KEYS;
-
-my %INT_OPTS =
-(
-    'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
-    'nfc' => 'FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY',
-    'num-stacks' => 'MAX_NUM_STACKS',
-    'pack-size' => 'FCS_IA_PACK_SIZE',
-    'scan-buckets-num' => 'FCS_MAX_NUM_SCANS_BUCKETS',
-);
 
 my @INT_OPS__KEYS = keys %INT_OPTS;
 
-my %int_opts__values =
-(
-    map { $_ => undef() } @INT_OPS__KEYS
-);
-$int_opts__values{'max-bench-threads-num'} = 4;
-
-my %STR_OPTS =
-(
-    'arch' => { param => 'CPU_ARCH', },
-    'dbm' => { param => 'FCS_DBM_BACKEND', },
-    'libavl2-c' => { param => 'FCS_STACK_STORAGE_LIBAVL2_TREE_TYPE' },
-    'libavl2-p' => { param => 'FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE' },
-    'prefix' => {param => 'CMAKE_INSTALL_PREFIX',},
-    'states-type' => { param => 'STATES_TYPE', },
-    (map
-        {
-            my ($key, $param) = @$_;
-            ($key => +{ prefix => "${param}_", param => $param })
-        }
-        (
-            ['c|cols' => 'FCS_STACK_STORAGE'],
-            ['p|pos' => 'FCS_STATE_STORAGE'],
-            ['rcs-cache-storage' => 'FCS_RCS_CACHE_STORAGE' ],
-        )
-    ),
-);
+my %int_opts__values = ( map { $_ => undef() } @INT_OPS__KEYS );
 
 my @STR_OPTS__KEYS = keys %STR_OPTS;
 for my $k (@STR_OPTS__KEYS)
@@ -109,8 +104,9 @@ for my $k (@STR_OPTS__KEYS)
     $STR_OPTS{$k}{'prefix'} //= '';
 }
 
-$STR_OPTS{'prefix'}{value} = '/usr';
-$STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE';
+$int_opts__values{'max-bench-threads-num'} = 4;
+$STR_OPTS{'prefix'}{value}                 = '/usr';
+$STR_OPTS{'rcs-cache-storage'}{value}      = 'KAZ_TREE';
 
 my $build_type = "debug";
 my $generate_what;
@@ -120,7 +116,7 @@ my $google_state_storage;
 sub set_both
 {
     my $val = shift;
-    foreach my $k ('c|cols', 'p|pos')
+    foreach my $k ( 'c|cols', 'p|pos' )
     {
         $STR_OPTS{$k}{'value'} = $val;
     }
@@ -143,6 +139,7 @@ sub _google_set_both
     return;
 }
 _google_set_both("SPARSE");
+
 sub _set_to_google_hash
 {
     set_both("GOOGLE_DENSE_HASH");
@@ -150,84 +147,148 @@ sub _set_to_google_hash
     return;
 }
 
-my %themes =
-(
-    tt => [qw(-r --notest-suite --static)],
-    bench => [qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1)],
-    fc_bench => [qw( -l bench --fc-only --without-fc-pro) ],
-    mem_reduction_settings => [qw(
-        --rcs --with-compact-moves --without-depth-field
-        )],
-    reduce_mem => [ qw(-l bench -l mem_reduction_settings) ],
-    fc_reduce_mem => [ qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=2) ],
-    testing => [qw(--rwd --dbm=kaztree --test-suite --num-stacks=13),],
-    extra_speed => [qw(--break-back-compat-1 --without-fc-pro --without-max-num-states --without-trim --disable-flares --disable-moves-track --disable-check-valid --disable-patsolve --disable-resume --hard-code-reparent-states  --hard-code-calc-real-depth --disable-err-strs --disable-num-stored-states --without-help),],
+my %themes = (
+    tt    => [qw(-r --notest-suite --static)],
+    bench => [
+        qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1)
+    ],
+    fc_bench => [qw( -l bench --fc-only --without-fc-pro --nobuild-docs )],
+    mem_reduction_settings => [
+        qw(
+            --rcs --with-compact-moves --without-depth-field
+            )
+    ],
+    reduce_mem => [qw(-l bench -l mem_reduction_settings)],
+    fc_reduce_mem =>
+        [qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=2)],
+    testing     => [ qw(--rwd --dbm=kaztree --test-suite --num-stacks=13), ],
+    extra_speed => [
+        qw(--break-back-compat-1 --without-fc-pro --without-max-num-states --without-trim --disable-flares --disable-moves-track --disable-check-valid --disable-patsolve --disable-resume --hard-code-reparent-states  --hard-code-calc-real-depth --disable-err-strs --disable-num-stored-states --without-help),
+    ],
+    extra_speed2 => [
+        qw(-l n2b),
+        qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler --unsafe --break-back-compat-2)
+    ],
+    extra_speed3 =>
+        [qw(-l extra_speed2 --no-without-max-num-states --nohard-code-theme)],
+
     # Role for enabling the pseudo-DFS solver
-    pdfs => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
+    pdfs       => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
+    pysol_defs => [ '--num-stacks=14', '--nobreak-back-compat-1', ],
+    zerofc     => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
+    zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
 );
 
-foreach my $rec (
-    {id => "c2", a => "core2",},
-    {id => "ci7", a => "corei7-avx",},
-    {id => "n2", a => "native",},
-    {id => "p4", a => "pentium4"},
-    {id => "x64", a => "barcelona"},
-)
+my $SEED_KEY = 'FCS_THEME_RAND';
+my $SEED     = $ENV{$SEED_KEY};
+if ( defined $SEED )
 {
-    my $id = $rec->{id};
+    if ( $SEED =~ /[^0-9]/ )
+    {
+        die "Invalid value for seed!";
+    }
+    my %k;
+    foreach my $flags ( values %themes )
+    {
+        for ( my $idx = 0 ; $idx < @$flags ; ++$idx )
+        {
+            my $flag = $flags->[$idx];
+            if ( $flag eq '-l' )
+            {
+                ++$idx;
+            }
+            else
+            {
+                $k{$flag} = 1;
+            }
+        }
+    }
+    my @k = sort { $a cmp $b } keys %k;
+
+    require Math::Random::MT;
+    my $gen = Math::Random::MT->new($SEED);
+    my @subset;
+    foreach my $key (@k)
+    {
+        if ( $gen->rand() < 0.5 )
+        {
+            push @subset, $key;
+        }
+    }
+    my $FN = "run-t-$SEED.bash";
+    path($FN)->spew_utf8("$^X $0 @subset\n");
+    delete $ENV{$SEED_KEY};
+    exec( "bash", $FN );
+}
+
+my $HOME = $ENV{HOME};
+
+foreach my $rec (
+    { id => "c2",  a => "core2", },
+    { id => "ci7", a => "corei7-avx", },
+    { id => "n2",  a => "native", },
+    { id => "p4",  a => "pentium4" },
+    { id => "x64", a => "barcelona" },
+    )
+{
+    my $id   = $rec->{id};
     my $arch = $rec->{a};
 
-    $themes{$id} = ["--arch=$arch"];
+    $themes{$id} = [ "--arch=$arch", "--prefix=$HOME/apps/fcs", ];
 
     my $def = sub {
-        my ($suffix, $theme) = @_;
-        $themes{$id.$suffix} = [@$theme];
+        my ( $suffix, $theme ) = @_;
+        $themes{ $id . $suffix } = [@$theme];
         return;
     };
     my $id_def = sub {
-        my ($suffix, $theme) = @_;
-        return $def->($suffix, ['-l', $theme, '-l', $id]);
+        my ( $suffix, $theme ) = @_;
+        return $def->( $suffix, [ '-l', $theme, '-l', $id ] );
     };
     my $bb_def = sub {
-        my ($suffix, $theme) = @_;
-        return $def->($suffix, ['-l', $id.'bb', @$theme]);
+        my ( $suffix, $theme ) = @_;
+        return $def->( $suffix, [ '-l', $id . 'bb', @$theme ] );
     };
-    # Benchmark for freecell only
-    $id_def->(b => 'fc_bench');
-    # Generalised benchmark - not freecell-only - should pass the tests.
-    $id_def->(bb => 'bench');
-    # Memory conserving theme - for freecell only
-    $id_def->(m => 'fc_reduce_mem');
-    # Generalised Memory conserving theme - not only for freecell
-    $id_def->(mm => 'reduce_mem');
-    # Testing theme - aims to run the tests quickly
-    $bb_def->(t => [qw(-l testing)]);
 
-    if (defined(my $HOME = $ENV{HOME}))
-    {
-        # For use by PySolFC
-        $bb_def->(_pysol => ['--num-stacks=14', '--nobreak-back-compat-1', "--prefix=$HOME/apps/fcs-for-pysol",]);
-    }
+    # Benchmark for freecell only
+    $id_def->( b => 'fc_bench' );
+
+    # Generalised benchmark - not freecell-only - should pass the tests.
+    $id_def->( bb => 'bench' );
+
+    # Memory conserving theme - for freecell only
+    $id_def->( m => 'fc_reduce_mem' );
+
+    # Generalised Memory conserving theme - not only for freecell
+    $id_def->( mm => 'reduce_mem' );
+
+    # Testing theme - aims to run the tests quickly
+    $bb_def->( t => [qw(-l testing)] );
+
+    # For use by PySolFC
+    $bb_def->(
+        _pysol => [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ]
+    );
 }
 
 my @new_argv = @ARGV;
 
 CALC_NEW_ARGV:
-for (my $idx = 0; $idx < @new_argv ; $idx++)
+for ( my $idx = 0 ; $idx < @new_argv ; ++$idx )
 {
-    if (my ($arg_val) = $new_argv[$idx] =~ m{\A-l(.*)\z}ms)
+    if ( my ($arg_val) = $new_argv[$idx] =~ m{\A-l(.*)\z}ms )
     {
         my $start_idx = $idx;
 
-        my $param = $arg_val || $new_argv[++$idx];
+        my $param = $arg_val || $new_argv[ ++$idx ];
 
-        if (! (my $cmd = $themes{$param}) )
+        if ( !( my $cmd = $themes{$param} ) )
         {
             die "Unknown -l argument $param!";
         }
         else
         {
-            splice (@new_argv, $start_idx, $idx-$start_idx+1, @$cmd);
+            splice( @new_argv, $start_idx, $idx - $start_idx + 1, @$cmd );
         }
 
         $idx = $start_idx;
@@ -237,14 +298,14 @@ for (my $idx = 0; $idx < @new_argv ; $idx++)
 
 @ARGV = @new_argv;
 
-if ($ENV{VERBOSE})
+if ( $ENV{VERBOSE} )
 {
     print "<@ARGV>";
 }
 
 GetOptions(
     'd|debug' => sub {
-        my ($opt, $val) = @_;
+        my ( $opt, $val ) = @_;
         if ($val)
         {
             $build_type = "debug";
@@ -252,25 +313,25 @@ GetOptions(
         return;
     },
     'r|release' => sub {
-        my ($opt, $val) = @_;
+        my ( $opt, $val ) = @_;
         if ($val)
         {
             $build_type = "release";
         }
-        elsif ($build_type eq "release")
+        elsif ( $build_type eq "release" )
         {
             $build_type = "debug";
         }
         return;
     },
-    'hash' => \&set_hash,
+    'hash'    => \&set_hash,
     'profile' => sub {
-        my ($opt, $val) = @_;
+        my ( $opt, $val ) = @_;
         if ($val)
         {
             $build_type = "profile";
         }
-        elsif ($build_type eq "profile")
+        elsif ( $build_type eq "profile" )
         {
             $build_type = "debug";
         }
@@ -281,30 +342,35 @@ GetOptions(
         return;
     },
     'gen=s' => \$generate_what,
-    'rwd' => sub {
-        my ($opt, $val) = @_;
+    'rwd'   => sub {
+        my ( $opt, $val ) = @_;
 
         $build_type = "RelWithDebInfo";
 
         return;
     },
-    'kazlib' => sub { $STR_OPTS{'p|pos'}{value} = $STR_OPTS{'rcs-cache-storage'}{value} = 'KAZ_TREE'; },
-    'judy' => sub { return set_both("JUDY"); },
+    'kazlib' => sub {
+        $STR_OPTS{'p|pos'}{value} = $STR_OPTS{'rcs-cache-storage'}{value} =
+            'KAZ_TREE';
+    },
+    'judy'            => sub { return set_both("JUDY"); },
     'lrb|libredblack' => sub { return set_both("LIBREDBLACK_TREE"); },
-    'dense' => sub { return _set_to_google_hash("DENSE"); },
-    'sparse' => sub { return _set_to_google_hash("SPARSE"); },
-    (map {; "$_!" => \($bool_opts_with_false_defaults__values{$_}) } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
-    (map {; "$_!" => \($true_bool_opts__values{$_}) } @TRUE_BOOL_KEYS),
-    (map {; "$_=i" => \($int_opts__values{$_}) } @INT_OPS__KEYS),
-    (map {; "$_=s" => \($STR_OPTS{$_}{value}) } @STR_OPTS__KEYS),
-) or
-    die "Wrong options";
+    'dense'           => sub { return _set_to_google_hash("DENSE"); },
+    'sparse'          => sub { return _set_to_google_hash("SPARSE"); },
+    (
+        map { ; "$_!" => \( $bool_opts_with_false_defaults__values{$_} ) }
+            @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
+    ),
+    ( map { ; "$_!"  => \( $true_bool_opts__values{$_} ) } @TRUE_BOOL_KEYS ),
+    ( map { ; "$_=i" => \( $int_opts__values{$_} ) } @INT_OPS__KEYS ),
+    ( map { ; "$_=s" => \( $STR_OPTS{$_}{value} ) } @STR_OPTS__KEYS ),
+) or die "Wrong options";
 
 my $path_to_source_dir;
 
 if (@ARGV)
 {
-    $path_to_source_dir = shift(@ARGV);
+    $path_to_source_dir = path( shift(@ARGV) );
 
     if (@ARGV)
     {
@@ -313,62 +379,105 @@ if (@ARGV)
 }
 else
 {
-    $path_to_source_dir = dirname($0);
+    $path_to_source_dir = path($0)->parent;
 }
 
-if ($bool_opts_with_false_defaults__values{rcs})
+if ( $bool_opts_with_false_defaults__values{rcs} )
 {
     $STR_OPTS{'states-type'}{'value'} = 'COMPACT_STATES';
 }
 
-if ($STR_OPTS{'libavl2-p'}{value})
+if ( $STR_OPTS{'libavl2-p'}{value} )
 {
     $STR_OPTS{'p|pos'}{value} = 'LIBAVL2_TREE';
 }
 
-if ($STR_OPTS{'libavl2-c'}{value})
+if ( $STR_OPTS{'libavl2-c'}{value} )
 {
     $STR_OPTS{'c|cols'}{value} = 'LIBAVL2_TREE';
 }
 
-if ($build_type eq "debug")
+if ( $build_type eq "debug" )
 {
     $STR_OPTS{dbm}{value} ||= 'kaztree';
 }
 
 # This cache is sometimes causing problems.
-unlink("CMakeCache.txt");
-rmtree(['_Inline', 't/_Inline']);
-unlink(glob("*.so"));
+eval { unlink("CMakeCache.txt"); };
+eval {
+    foreach my $p ( '_Inline', 't/_Inline' )
+    {
+        path($p)->remove_tree;
+    }
+};
+eval { unlink( glob("*.so") ); };
 
-my @cmd= ("cmake",
-    (defined($ENV{CMAKE_MAKE_PROGRAM}) ? "-DCMAKE_MAKE_PROGRAM=$ENV{CMAKE_MAKE_PROGRAM}" : ()),
-    (defined($generate_what) ? ("-G", $generate_what) : ()),
+my @cmd = (
+    "cmake",
+    (
+        defined( $ENV{CMAKE_MAKE_PROGRAM} )
+        ? "-DCMAKE_MAKE_PROGRAM=$ENV{CMAKE_MAKE_PROGRAM}"
+        : ()
+    ),
+    ( defined($generate_what) ? ( "-G", $generate_what ) : () ),
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DDATADIR=$STR_OPTS{prefix}{value}/share",
     "-DBUILD_STATIC_LIBRARY=",
-    "-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
-    "-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
+"-DFCS_WHICH_COLUMNS_GOOGLE_HASH=FCS_WHICH_COLUMNS_GOOGLE_HASH__$google_stack_storage",
+"-DFCS_WHICH_STATES_GOOGLE_HASH=FCS_WHICH_STATES_GOOGLE_HASH__$google_state_storage",
+
     # Specifying a -D variable explicitly if it's not used gives a warning,
     # so we need to check that it is used.
-    ((($STR_OPTS{'libavl2-c'}{value} || $STR_OPTS{'libavl2-p'}{value}) && exists($ENV{"LIBAVL2_SOURCE_DIR"}))
-        ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
+    (
+        (
+            ( $STR_OPTS{'libavl2-c'}{value} || $STR_OPTS{'libavl2-p'}{value} )
+                && exists( $ENV{"LIBAVL2_SOURCE_DIR"} )
+        ) ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
     ),
-    ($STR_OPTS{dbm}{value} ? ("-DFCS_ENABLE_DBM_SOLVER=1") : ()),
-    (defined( $int_opts__values{nfc} ) ? ("-DFCS_DBM_FREECELLS_NUM=$int_opts__values{nfc}") : ()),
-    (map { $bool_opts_with_false_defaults__values{$_} ? ("-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1") : () } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS),
-    (map { '-D' . $TRUE_BOOL_OPTS{$_} . '=' . ($true_bool_opts__values{$_} ? '1': '') } @TRUE_BOOL_KEYS),
-    (map { defined($int_opts__values{$_}) ? ("-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_}) : () } @INT_OPS__KEYS),
-    (map { my $k = $_; my $r = $STR_OPTS{$k}; my $v = $r->{value}; defined($v) ? ("-D$r->{param}=$r->{prefix}$v") : () } @STR_OPTS__KEYS),
+    ( $STR_OPTS{dbm}{value} ? ("-DFCS_ENABLE_DBM_SOLVER=1") : () ),
+    (
+        defined( $int_opts__values{nfc} )
+        ? ("-DFCS_DBM_FREECELLS_NUM=$int_opts__values{nfc}")
+        : ()
+    ),
+    (
+        map {
+            $bool_opts_with_false_defaults__values{$_}
+                ? ( "-D" . $BOOL_OPTS_WITH_FALSE_DEFAULTS{$_} . "=1" )
+                : ()
+        } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS
+    ),
+    (
+        map {
+                  '-D'
+                . $TRUE_BOOL_OPTS{$_} . '='
+                . ( $true_bool_opts__values{$_} ? '1' : '' )
+        } @TRUE_BOOL_KEYS
+    ),
+    (
+        map {
+            defined( $int_opts__values{$_} )
+                ? ( "-D" . $INT_OPTS{$_} . "=" . $int_opts__values{$_} )
+                : ()
+        } @INT_OPS__KEYS
+    ),
+    (
+        map {
+            my $k = $_;
+            my $r = $STR_OPTS{$k};
+            my $v = $r->{value};
+            defined($v) ? ("-D$r->{param}=$r->{prefix}$v") : ()
+        } @STR_OPTS__KEYS
+    ),
 );
 
-if (defined ($path_to_source_dir))
+if ( defined($path_to_source_dir) )
 {
     push @cmd, $path_to_source_dir;
 }
 
-print(join(" ", @cmd), "\n");
+print( join( " ", @cmd ), "\n" );
 my $exit_code = system(@cmd);
 exit($exit_code);
 

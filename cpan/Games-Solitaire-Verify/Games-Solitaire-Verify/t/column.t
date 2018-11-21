@@ -14,25 +14,25 @@ use Games::Solitaire::Verify::Column;
     );
 
     # TEST
-    is ($column->len(), 3, "Column has three cards");
+    is( $column->len(), 3, "Column has three cards" );
 
     # TEST
-    is ($column->pos(0)->rank(), 13, "Card[0].rank");
+    is( $column->pos(0)->rank(), 13, "Card[0].rank" );
 
     # TEST
-    is ($column->pos(0)->suit(), "H", "Card[0].suit");
+    is( $column->pos(0)->suit(), "H", "Card[0].suit" );
 
     # TEST
-    is ($column->pos(1)->rank(), 12, "Card[1].rank");
+    is( $column->pos(1)->rank(), 12, "Card[1].rank" );
 
     # TEST
-    is ($column->pos(1)->suit(), "S", "Card[1].suit");
+    is( $column->pos(1)->suit(), "S", "Card[1].suit" );
 
     # TEST
-    is ($column->pos(2)->rank(), 5, "Card[2].rank");
+    is( $column->pos(2)->rank(), 5, "Card[2].rank" );
 
     # TEST
-    is ($column->pos(2)->suit(), "C", "Card[2].rank");
+    is( $column->pos(2)->suit(), "C", "Card[2].rank" );
 }
 
 {
@@ -45,13 +45,13 @@ use Games::Solitaire::Verify::Column;
     my $copy = $column->clone();
 
     # TEST
-    is ($copy->len(), 5, "Length of copy");
+    is( $copy->len(), 5, "Length of copy" );
 
     # TEST
-    is ($copy->pos(1)->rank(), 10, "Rank of Copy Card");
+    is( $copy->pos(1)->rank(), 10, "Rank of Copy Card" );
 
     # TEST
-    is ($copy->pos(1)->suit(), "S", "Suit of Copy Card");
+    is( $copy->pos(1)->suit(), "S", "Suit of Copy Card" );
 }
 
 {
@@ -70,13 +70,13 @@ use Games::Solitaire::Verify::Column;
     $column1->append($column2);
 
     # TEST
-    is ($column1->len(), 6, "Column has 6 cards after appending");
+    is( $column1->len(), 6, "Column has 6 cards after appending" );
 
     # TEST
-    is ($column1->pos(3)->rank(), 7, "Rank of appended card");
+    is( $column1->pos(3)->rank(), 7, "Rank of appended card" );
 
     # TEST
-    is ($column1->pos(3)->suit(), "S", "Suit of appended card");
+    is( $column1->pos(3)->suit(), "S", "Suit of appended card" );
 }
 
 {
@@ -89,23 +89,19 @@ use Games::Solitaire::Verify::Column;
     my $card = $column->pop();
 
     # TEST
-    is ($column->len(), 3, "Column has three cards");
+    is( $column->len(), 3, "Column has three cards" );
 
     # TEST
-    is ($card->rank(), 3, "Popped card rank");
+    is( $card->rank(), 3, "Popped card rank" );
 
     # TEST
-    is ($card->suit(), "S", "Card[0].suit");
+    is( $card->suit(), "S", "Card[0].suit" );
 }
 
 {
     # TEST:$num_columns=4
-    my @column_strings = (
-        ": KH QS 5C 3S",
-        ": 7S 6D 5C",
-        ": 3D TS 4H 5C 6D",
-        ": KH QS 5C",
-    );
+    my @column_strings =
+        ( ": KH QS 5C 3S", ": 7S 6D 5C", ": 3D TS 4H 5C 6D", ": KH QS 5C", );
 
     foreach my $string (@column_strings)
     {
@@ -114,8 +110,9 @@ use Games::Solitaire::Verify::Column;
                 string => $string,
             },
         );
+
         # TEST*$num_columns
-        is ($column->to_string(), $string, "Stringification of '$string'");
+        is( $column->to_string(), $string, "Stringification of '$string'" );
     }
 }
 
@@ -127,18 +124,17 @@ use Games::Solitaire::Verify::Column;
     );
 
     # TEST
-    is ($column->len(), 0, "Column has zero cards");
+    is( $column->len(), 0, "Column has zero cards" );
 
     # TEST
-    is ($column->to_string(), ":", "No trailing space on empty column");
+    is( $column->to_string(), ":", "No trailing space on empty column" );
 }
 
 {
     my $column;
 
-    eval
-    {
-        $column= Games::Solitaire::Verify::Column->new(
+    eval {
+        $column = Games::Solitaire::Verify::Column->new(
             {
                 string => "KH QS 5C",
             },
@@ -158,9 +154,8 @@ use Games::Solitaire::Verify::Column;
 {
     my $column;
 
-    eval
-    {
-        $column= Games::Solitaire::Verify::Column->new(
+    eval {
+        $column = Games::Solitaire::Verify::Column->new(
             {
                 string => "==<foo />== KH QS 5C",
             },

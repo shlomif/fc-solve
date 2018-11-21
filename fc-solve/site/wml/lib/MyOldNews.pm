@@ -3,10 +3,9 @@ package MyOldNews;
 use strict;
 use warnings;
 
-my @old_news =
-(
-          {
-            'html' => '
+my @old_news = (
+    {
+        'html' => '
 <p>
 Freecell Solver version 0.4 was released. This version contains three major
 code optimizations, so it now runs much faster. It can now also start
@@ -14,12 +13,12 @@ solving from a non-initial board.
 </p>
 
 ',
-            'mon' => 6,
-            'day_of_month' => 6,
-            'year' => 2000
-          },
-          {
-            'html' => '
+        'mon'          => 6,
+        'day_of_month' => 6,
+        'year'         => 2000
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver version 0.6 was released. This version features a more
 modular code as well as the following usability features:
@@ -39,12 +38,12 @@ order can be found that will solve a given board really fast.</li>
 </ol>
 
 ',
-            'mon' => 7,
-            'day_of_month' => 28,
-            'year' => 2000
-          },
-          {
-            'html' => '
+        'mon'          => 7,
+        'day_of_month' => 28,
+        'year'         => 2000
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver version 0.8.0 was released. New features in this version
 include:
@@ -78,12 +77,12 @@ or
 </ol>
 
 ',
-            'mon' => 8,
-            'day_of_month' => 28,
-            'year' => 2000
-          },
-          {
-            'html' => '
+        'mon'          => 8,
+        'day_of_month' => 28,
+        'year'         => 2000
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver version 0.10.0 was released. This version features support
 for several Solitaire variants besides Freecell, such as Forecell, Seahaven
@@ -93,12 +92,12 @@ well as several bug-fixes.
 
 
 ',
-            'mon' => 10,
-            'day_of_month' => 9,
-            'year' => 2000
-          },
-          {
-            'html' => '
+        'mon'          => 10,
+        'day_of_month' => 9,
+        'year'         => 2000
+    },
+    {
+        'html' => '
 <p>Freecell Solver version 1.0.0 was released. This version can solve more
 game types, and can be compiled so it will be less memory intensive which is
 especially good for such games as Die Schlange or Der Katzenschwanz.</p>
@@ -113,12 +112,12 @@ rather version 1.x.y. Hoorah for the new initial digit!</p>
 
 
 ',
-            'mon' => 11,
-            'day_of_month' => 19,
-            'year' => 2000
-          },
-          {
-            'html' => '
+        'mon'          => 11,
+        'day_of_month' => 19,
+        'year'         => 2000
+    },
+    {
+        'html' => '
 <p>
 Version 1.2.0 of Freecell Solver is now available for download. This version
 has several improved moves so it can solve more boards. It also sports a
@@ -132,12 +131,12 @@ developers who are interested to look under its hood.
 </p>
 
 ',
-            'mon' => 12,
-            'day_of_month' => 21,
-            'year' => 2000
-          },
-          {
-            'html' => '
+        'mon'          => 12,
+        'day_of_month' => 21,
+        'year'         => 2000
+    },
+    {
+        'html' => '
 <p>
 I have set up a <a href="http://fc-solve.berlios.de/">mirror</a> for Freecell
 Solver at <a href="http://developer.berlios.de/">BerliOS</a>. It will
@@ -151,12 +150,12 @@ connectivity at the Technion was not fail-safe, and I want a backup site.
 </p>
 
 ',
-            'mon' => 1,
-            'day_of_month' => 26,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 1,
+        'day_of_month' => 26,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 The long-awaited Freecell Solver 1.4.0 is now available. Changes from the
 previous version include some fixes for bugs and memory leaks (mostly
@@ -170,12 +169,12 @@ A choice between all of those scans is available at run-time.
 
 
 ',
-            'mon' => 2,
-            'day_of_month' => 7,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 2,
+        'day_of_month' => 7,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 I have set up a mailing-list for Freecell Solver. For the mailing-list
 homepage and for subscription information consult the following page:
@@ -195,12 +194,12 @@ you can still E-mail me (Shlomi Fish).
 
 
 ',
-            'mon' => 2,
-            'day_of_month' => 12,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 2,
+        'day_of_month' => 12,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver version 1.6.0 has been released. It supports a solution path
 optimization routine which enables it to generate solutions that contain a
@@ -214,12 +213,12 @@ for interested developers to understand it.
 </p>
 
 ',
-            'mon' => 4,
-            'day_of_month' => 11,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 4,
+        'day_of_month' => 11,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver version 1.8.0 was released into the world. Its main
 highlight is its new building process based on GNU Autotools. Now, one
@@ -234,12 +233,12 @@ supported by Freecell Solver.
 </p>
 
 ',
-            'mon' => 8,
-            'day_of_month' => 31,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 8,
+        'day_of_month' => 31,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver version 1.10.0 was released. This version can now solve
 deals of Simple Simon, as well as solving all the Freecell-like variants
@@ -247,12 +246,12 @@ that it could before.
 </p>
 
 ',
-            'mon' => 10,
-            'day_of_month' => 2,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 10,
+        'day_of_month' => 2,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.0.0 was released. This version features a lot of new
 enhancements and additions:
@@ -271,12 +270,12 @@ linked against.</li>
 </ol>
 
 ',
-            'mon' => 12,
-            'day_of_month' => 19,
-            'year' => 2001
-          },
-          {
-            'html' => '
+        'mon'          => 12,
+        'day_of_month' => 19,
+        'year'         => 2001
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.2.0 came into the world today. This release features
 several improvements and fixes to the library\'s internals - it now resides
@@ -287,12 +286,12 @@ possible to build an RPM by typing executing rpm -ta on the archive.
 </p>
 
 ',
-            'mon' => 2,
-            'day_of_month' => 18,
-            'year' => 2002
-          },
-          {
-            'html' => '
+        'mon'          => 2,
+        'day_of_month' => 18,
+        'year'         => 2002
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.4.0 was released. The highlight of this release is the
 ability for several scans to operate on the same state collection. This is
@@ -302,12 +301,12 @@ and does not require system multi-threading.
 
 
 ',
-            'mon' => 3,
-            'day_of_month' => 29,
-            'year' => 2002
-          },
-          {
-            'html' => '
+        'mon'          => 3,
+        'day_of_month' => 29,
+        'year'         => 2002
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.6.0 has been spotted in the wild. This version features
 atomic moves, which are slower than the traditional ones, but guarantee
@@ -322,12 +321,12 @@ and cleaned up, which makes Freecell Solver much faster than it was before.
 </p>
 
 ',
-            'mon' => 7,
-            'day_of_month' => 12,
-            'year' => 2002
-          },
-          {
-            'html' => '
+        'mon'          => 7,
+        'day_of_month' => 12,
+        'year'         => 2002
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.8.0 has been released. This version features a better
 documentation and help screens, a preset system, and an option to read
@@ -340,12 +339,12 @@ All in all: a lot of added usability!
 </p>
 
 ',
-            'mon' => 9,
-            'day_of_month' => 28,
-            'year' => 2002
-          },
-          {
-            'html' => '
+        'mon'          => 9,
+        'day_of_month' => 28,
+        'year'         => 2002
+    },
+    {
+        'html' => '
 <p>
 There is now <a href="./pysol/">PySol Integration with Freecell Solver</a>
 available here. This enables receiving hints from Freecell Solver and seeing
@@ -353,12 +352,12 @@ demos of it while within PySol.
 </p>
 
 ',
-            'mon' => 10,
-            'day_of_month' => 4,
-            'year' => 2003
-          },
-          {
-            'html' => '
+        'mon'          => 10,
+        'day_of_month' => 4,
+        'year'         => 2003
+    },
+    {
+        'html' => '
 <p>
 The <a href="download.html">Downloads</a> are now working again. Plus,
 several new pages were added or updated in the site:
@@ -381,12 +380,12 @@ Solver</a>.
 </ol>
 
 ',
-            'mon' => 12,
-            'day_of_month' => 15,
-            'year' => 2005
-          },
-          {
-            'html' => '
+        'mon'          => 12,
+        'day_of_month' => 15,
+        'year'         => 2005
+    },
+    {
+        'html' => '
 <p>
 <a href="http://en.wikipedia.org/wiki/Perl_6">Perl 6</a> will be ready by
 Christmas, but of an unknown year. On the other hand, Freecell Solver 2.12.0,
@@ -403,12 +402,12 @@ Happy holidays and hope you enjoy this release.
 </p>
 
 ',
-            'mon' => 12,
-            'day_of_month' => 10,
-            'year' => 2008
-          },
-          {
-            'html' => '
+        'mon'          => 12,
+        'day_of_month' => 10,
+        'year'         => 2008
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.14.0 was released today. This release features a major
 speed boost, and an important bug fix: when "--sequence-move unlimited"
@@ -424,12 +423,12 @@ releases with notable features.
 </p>
 
 ',
-            'mon' => 1,
-            'day_of_month' => 25,
-            'year' => 2009
-          },
-          {
-            'html' => '
+        'mon'          => 1,
+        'day_of_month' => 25,
+        'year'         => 2009
+    },
+    {
+        'html' => '
 <p>
 Freecell Solver 2.16.0 is now available. Culminating many person-years
 of effort (OK - some person-days of effort), it is the best release todate.
@@ -451,10 +450,10 @@ optimisations and enhancements.
 </p>
 
 ',
-            'mon' => 3,
-            'day_of_month' => 15,
-            'year' => 2009
-          },
+        'mon'          => 3,
+        'day_of_month' => 15,
+        'year'         => 2009
+    },
 );
 
 sub get_old_news

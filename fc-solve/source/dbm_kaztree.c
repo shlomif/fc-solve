@@ -9,22 +9,21 @@
  */
 #include "dbm_solver.h"
 #include "generic_tree.h"
-
 #include "dbm_kaztree_compare.h"
 
 typedef struct
 {
     dict_t *kaz_tree;
-    fcs_meta_compact_allocator_t meta_alloc;
+    meta_allocator meta_alloc;
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
 #endif
-} dbm_t;
+} fcs_dbm;
 
-void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
+void fc_solve_dbm_store_init(fcs_dbm_store *const store,
     const char *path GCC_UNUSED, void **const recycle_bin_ptr)
 {
-    dbm_t *const db = SMALLOC1(db);
+    fcs_dbm *const db = SMALLOC1(db);
 
     fc_solve_meta_compact_allocator_init(&(db->meta_alloc));
 
@@ -35,23 +34,23 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     fc_solve_compact_allocator_init(&(db->allocator), &(db->meta_alloc));
 #endif
 
-    *store = (fcs_dbm_store_t)db;
+    *store = (fcs_dbm_store)db;
 }
 
-dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store_t store)
+dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 {
-    return (((dbm_t *)store)->kaz_tree);
+    return (((fcs_dbm *)store)->kaz_tree);
 }
 
 /*
  * Returns TRUE if the key was added (it didn't already exist.)
  * */
-fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
-    const fcs_encoded_state_buffer_t *key, fcs_dbm_record_t *const parent,
-    const fcs_bool_t should_modify_parent GCC_UNUSED)
+fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
+    const fcs_encoded_state_buffer *key, fcs_dbm_record *const parent,
+    const bool should_modify_parent GCC_UNUSED)
 {
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-    fcs_dbm_record_t record_on_stack;
+    fcs_dbm_record record_on_stack;
 
     /* This memset() call is done to please valgrind and for general
      * good measure. It is not absolutely necessary (but should not
@@ -61,13 +60,13 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     memset(&record_on_stack, '\0', sizeof(record_on_stack));
 #endif
 
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
 
-    fcs_dbm_record_t *to_check;
+    fcs_dbm_record *to_check;
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     to_check = &record_on_stack;
 #else
-    to_check = (fcs_dbm_record_t *)fcs_compact_alloc_ptr(
+    to_check = (fcs_dbm_record *)fcs_compact_alloc_ptr(
         &(db->allocator), sizeof(*to_check));
 #endif
 
@@ -78,8 +77,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     to_check->key = *key;
     to_check->parent = parent->parent;
 #endif
-    fcs_bool_t ret =
-        (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+    bool ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     if (!ret)
@@ -94,7 +92,7 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
             fcs_dbm_record_increment_refcount(parent);
         }
 
-        return ((fcs_dbm_record_t *)(fc_solve_kaz_tree_lookup_value(
+        return ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
             db->kaz_tree, to_check)));
     }
     else
@@ -103,14 +101,13 @@ fcs_dbm_record_t *fc_solve_dbm_store_insert_key_value(fcs_dbm_store_t store,
     }
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent(
-    fcs_dbm_store_t store, const unsigned char *key, unsigned char *parent)
+bool fc_solve_dbm_store_lookup_parent(
+    fcs_dbm_store store, const unsigned char *key, unsigned char *parent)
 {
-    fcs_dbm_record_t to_check = {
-        .key = *(const fcs_encoded_state_buffer_t *)key};
+    fcs_dbm_record to_check = {.key = *(const fcs_encoded_state_buffer *)key};
 
     dict_key_t existing =
-        fc_solve_kaz_tree_lookup_value(((dbm_t *)store)->kaz_tree, &to_check);
+        fc_solve_kaz_tree_lookup_value(((fcs_dbm *)store)->kaz_tree, &to_check);
     if (!existing)
     {
         return FALSE;
@@ -118,28 +115,28 @@ fcs_bool_t fc_solve_dbm_store_lookup_parent(
     else
     {
 #ifdef FCS_DBM_RECORD_POINTER_REPR
-        fcs_dbm_record_t *const p =
-            fcs_dbm_record_get_parent_ptr((fcs_dbm_record_t *)existing);
+        fcs_dbm_record *const p =
+            fcs_dbm_record_get_parent_ptr((fcs_dbm_record *)existing);
 
         if (p)
         {
-            *(fcs_encoded_state_buffer_t *)parent = p->key;
+            *(fcs_encoded_state_buffer *)parent = p->key;
         }
         else
         {
-            fcs_init_encoded_state((fcs_encoded_state_buffer_t *)parent);
+            fcs_init_encoded_state((fcs_encoded_state_buffer *)parent);
         }
 #else
-        *(fcs_encoded_state_buffer_t *)parent =
-            ((fcs_dbm_record_t *)existing)->parent;
+        *(fcs_encoded_state_buffer *)parent =
+            ((fcs_dbm_record *)existing)->parent;
 #endif
         return TRUE;
     }
 }
 
-extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
+extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
 
     fc_solve_kaz_tree_destroy(db->kaz_tree);
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS

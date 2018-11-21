@@ -394,3 +394,9 @@ static inline fcs_card_t fcs_char2card(unsigned char c)
 #define fcs_card_is_valid(card) (fcs_card_rank(card) != 0)
 
 #endif
+static inline fcs_bool_t fcs_is_parent_card__helper(
+    const fcs_card_t child, const fcs_card_t parent)
+{
+    return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&
+            ((fcs_card_suit(child) & 0x1) != (fcs_card_suit(parent) & 0x1)));
+}

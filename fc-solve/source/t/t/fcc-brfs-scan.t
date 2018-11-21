@@ -28,7 +28,7 @@ typedef struct
 } FccStartPoint;
 
 AV * find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
-    fcs_FCC_start_point_result_t * fcc_start_points;
+    fcs_FCC_start_point_result * fcc_start_points;
     long num_new_positions;
     STRLEN count_start_moves = SvLEN(moves_prefix);
 
@@ -127,7 +127,7 @@ static void free_char_p_p(string_list_t p)
 }
 
 int is_fcc_new(char * init_state_s, char * start_state_s, AV * min_states_av, AV * states_in_cache_av) {
-    fcs_bool_t ret;
+    bool ret;
     string_list_t min_states = av_to_char_p_p(min_states_av);
     string_list_t states_in_cache = av_to_char_p_p(states_in_cache_av);
 

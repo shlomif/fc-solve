@@ -11,8 +11,8 @@
 
 #include "dbm_procs_inner.h"
 
-static inline void dbm__spawn_threads(fcs_dbm_solver_instance_t *const instance,
-    const size_t num_threads, main_thread_item_t *const threads)
+static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
+    const size_t num_threads, main_thread_item *const threads)
 {
 #ifdef T
     FILE *const out_fh = instance->common.out_fh;
@@ -23,7 +23,7 @@ static inline void dbm__spawn_threads(fcs_dbm_solver_instance_t *const instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fc_solve_err("Worker Thread No. %zd Initialization failed!\n", i);
+            fc_solve_err("Worker Thread No. %zu Initialization failed!\n", i);
         }
     }
 
@@ -34,23 +34,22 @@ static inline void dbm__spawn_threads(fcs_dbm_solver_instance_t *const instance,
     TRACE("Finished running threads for curr_depth=%d\n", instance->curr_depth);
 }
 
-static inline void init_thread(fcs_dbm_solver_thread_t *const thread)
+static inline void init_thread(dbm_solver_thread *const thread)
 {
     fc_solve_meta_compact_allocator_init(&(thread->thread_meta_alloc));
 }
 
-static inline void free_thread(fcs_dbm_solver_thread_t *const thread)
+static inline void free_thread(dbm_solver_thread *const thread)
 {
     fc_solve_meta_compact_allocator_finish(&(thread->thread_meta_alloc));
 }
 
 /* Returns if the process should terminate. */
-static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *const instance,
-    fc_solve_delta_stater_t *const delta)
+static bool handle_and_destroy_instance_solution(
+    dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
-    fcs_bool_t ret = FALSE;
+    bool ret = FALSE;
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance);
     if (instance->common.queue_solution_was_found)

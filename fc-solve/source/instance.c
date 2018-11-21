@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * instance.c - instance/hard_thread/soft_thread functions for
- * Freecell Solver.
- */
+// instance.c - instance/hard_thread/soft_thread functions for Freecell Solver.
 #include "instance_for_lib.h"
 #include "instance.h"
 #include "move_funcs_order.h"
@@ -36,37 +33,36 @@
     The library functions inside lib.c (a.k.a fcs_user()) give an
     easier approach for embedding Freecell Solver into your library. The
     intent of this comment is to document the code, rather than to be
-    a guideline for the user.
+    a guideline for the end-user.
 */
 
-const fcs_default_weights_t fc_solve_default_befs_weights = {
+static const fcs_default_weights fc_solve_default_befs_weights = {
     .weights = {0.5, 0, 0.3, 0, 0.2, 0}};
 
 static inline void soft_thread_clean_soft_dfs(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
-    fcs_soft_dfs_stack_item_t *const soft_dfs_info =
+    fcs_soft_dfs_stack_item *const soft_dfs_info =
         DFS_VAR(soft_thread, soft_dfs_info);
-    /* Check if a Soft-DFS-type scan was called in the first place */
+    // Check if a Soft-DFS-type scan was called in the first place
     if (!soft_dfs_info)
     {
-        /* If not - do nothing */
         return;
     }
 
-    /* De-allocate the Soft-DFS specific stacks */
-    const fcs_soft_dfs_stack_item_t *info_ptr = soft_dfs_info;
-    const fcs_soft_dfs_stack_item_t *const max_info_ptr =
+    // De-allocate the Soft-DFS specific stacks
+    const fcs_soft_dfs_stack_item *info_ptr = soft_dfs_info;
+    const fcs_soft_dfs_stack_item *const max_info_ptr =
         info_ptr + DFS_VAR(soft_thread, depth);
-    const fcs_soft_dfs_stack_item_t *const dfs_max_info_ptr =
+    const fcs_soft_dfs_stack_item *const dfs_max_info_ptr =
         info_ptr + DFS_VAR(soft_thread, dfs_max_depth);
 
-    for (; info_ptr < max_info_ptr; info_ptr++)
+    for (; info_ptr < max_info_ptr; ++info_ptr)
     {
         free(info_ptr->derived_states_list.states);
         free(info_ptr->derived_states_random_indexes);
     }
-    for (; info_ptr < dfs_max_info_ptr; info_ptr++)
+    for (; info_ptr < dfs_max_info_ptr; ++info_ptr)
     {
         if (likely(info_ptr->derived_states_list.states))
         {
@@ -81,7 +77,7 @@ static inline void soft_thread_clean_soft_dfs(
 }
 
 extern void fc_solve_free_soft_thread_by_depth_move_array(
-    fc_solve_soft_thread_t *const soft_thread)
+    fcs_soft_thread *const soft_thread)
 {
     const_AUTO(
         by_depth_moves, soft_thread->by_depth_moves_order.by_depth_moves);
@@ -115,15 +111,47 @@ static inline void accumulate_tests_by_ptr(
     }
 }
 
-void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
-    const fcs_foreach_st_callback_choice_t callback_choice, void *const context)
+static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
+    const foreach_st_callback_choice callback_choice, void *const context)
+{
+    switch (callback_choice)
+    {
+    case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
+        soft_thread_clean_soft_dfs(soft_thread);
+        break;
+
+    case FOREACH_SOFT_THREAD_FREE_INSTANCE:
+        fc_solve_free_instance_soft_thread_callback(soft_thread);
+        break;
+
+    case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
+        accumulate_tests_by_ptr((size_t *)context,
+            &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
+        break;
+
+    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
+    {
+        size_t moves_order = 0;
+
+        accumulate_tests_by_ptr(&moves_order,
+            &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
+
+        STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
+            (moves_order == *(size_t *)context));
+    }
+    break;
+    }
+}
+
+void fc_solve_foreach_soft_thread(fcs_instance *const instance,
+    const foreach_st_callback_choice callback_choice, void *const context)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
     const int_fast32_t num_soft_threads =
         instance->hard_thread.num_soft_threads;
-    for (int_fast32_t st_idx = 0; st_idx <= num_soft_threads; st_idx++)
+    for (int_fast32_t st_idx = 0; st_idx <= num_soft_threads; ++st_idx)
     {
-        fc_solve_soft_thread_t *soft_thread;
+        fcs_soft_thread *soft_thread;
         if (st_idx < num_soft_threads)
         {
             soft_thread = &(instance->hard_thread.soft_threads[st_idx]);
@@ -138,11 +166,13 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
         {
             break;
         }
+        soft_thread_run_cb(soft_thread, callback_choice, context);
+    }
 #else
     for (uint_fast32_t ht_idx = 0; ht_idx <= instance->num_hard_threads;
-         ht_idx++)
+         ++ht_idx)
     {
-        fc_solve_hard_thread_t *hard_thread;
+        fcs_hard_thread *hard_thread;
         if (ht_idx < instance->num_hard_threads)
         {
             hard_thread = &(instance->hard_threads[ht_idx]);
@@ -158,40 +188,9 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
             break;
         }
         ST_LOOP_START()
-#endif
-
-        switch (callback_choice)
         {
-        case FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS:
-            soft_thread_clean_soft_dfs(soft_thread);
-            break;
-
-        case FOREACH_SOFT_THREAD_FREE_INSTANCE:
-            fc_solve_free_instance_soft_thread_callback(soft_thread);
-            break;
-
-        case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
-            accumulate_tests_by_ptr((size_t *)context,
-                &(soft_thread->by_depth_moves_order.by_depth_moves[0]
-                        .moves_order));
-            break;
-
-        case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
-        {
-            size_t moves_order = 0;
-
-            accumulate_tests_by_ptr(&moves_order,
-                &(soft_thread->by_depth_moves_order.by_depth_moves[0]
-                        .moves_order));
-
-            STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
-                (moves_order == *(size_t *)context));
+            soft_thread_run_cb(soft_thread, callback_choice, context);
         }
-        break;
-        }
-#ifdef FCS_SINGLE_HARD_THREAD
-    }
-#else
     }
 #endif
 }
@@ -200,10 +199,10 @@ void fc_solve_foreach_soft_thread(fc_solve_instance_t *const instance,
 static inline
 #endif
     void
-    fc_solve_init_soft_thread(fc_solve_hard_thread_t *const hard_thread,
-        fc_solve_soft_thread_t *const soft_thread)
+    fc_solve_init_soft_thread(
+        fcs_hard_thread *const hard_thread, fcs_soft_thread *const soft_thread)
 {
-    *soft_thread = (fc_solve_soft_thread_t){
+    *soft_thread = (fcs_soft_thread){
         .hard_thread = hard_thread,
         .id = (HT_INSTANCE(hard_thread)->next_soft_thread_id)++,
         .method_specific =
@@ -254,7 +253,9 @@ static inline
         .super_method_type = FCS_SUPER_METHOD_DFS,
         .master_to_randomize = FALSE,
         .checked_states_step = 50,
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
         .name = "",
+#endif
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
         .enable_pruning = FALSE,
 #endif
@@ -274,9 +275,9 @@ static inline
 
 void fc_solve_instance__init_hard_thread(
 #ifndef FCS_SINGLE_HARD_THREAD
-    fc_solve_instance_t *const instance,
+    fcs_instance *const instance,
 #endif
-    fc_solve_hard_thread_t *const hard_thread)
+    fcs_hard_thread *const hard_thread)
 {
 #ifndef FCS_SINGLE_HARD_THREAD
     hard_thread->instance = instance;
@@ -287,11 +288,11 @@ void fc_solve_instance__init_hard_thread(
     HT_FIELD(hard_thread, soft_threads) = NULL;
 
     fc_solve_new_soft_thread(hard_thread);
-
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     HT_FIELD(hard_thread, prelude_as_string) = NULL;
+#endif
     HT_FIELD(hard_thread, prelude) = NULL;
     HT_FIELD(hard_thread, prelude_num_items) = 0;
-    HT_FIELD(hard_thread, prelude_idx) = 0;
 
     fc_solve_reset_hard_thread(hard_thread);
     fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
@@ -307,39 +308,6 @@ void fc_solve_instance__init_hard_thread(
 #endif
 }
 
-/* These are all stack comparison functions to be used for the stacks
-   cache when using INDIRECT_STACK_STATES
-*/
-#if defined(INDIRECT_STACK_STATES)
-
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
-/* A hash calculation function for use in glib's hash */
-static guint fc_solve_glib_hash_stack_hash_function(gconstpointer key)
-{
-    guint hash_value_int;
-    /* Calculate the hash value for the stack */
-    /* This hash function was ripped from the Perl source code.
-     * (It is not derived work however). */
-    const char *s_ptr = (char *)key;
-    const char *const s_end = s_ptr + fcs_col_len((fcs_card_t *)key) + 1;
-    hash_value_int = 0;
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
-
-static gint fc_solve_glib_hash_stack_compare(gconstpointer a, gconstpointer b)
-{
-    return !(fc_solve_stack_compare_for_comparison(a, b));
-}
-#endif /* (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH) */
-
-#endif /* defined(INDIRECT_STACK_STATES) */
-
 typedef struct
 {
     int idx;
@@ -348,12 +316,17 @@ typedef struct
         FREECELL,
         COLUMN
     } type;
-} find_card_ret_t;
+} find_card_ret;
 
+// This function traces the solution from the final state down to the initial
+// state
+#ifdef FCS_WITH_MOVES
+
+#ifndef FCS_DISABLE_PATSOLVE
 static inline int find_empty_col(
-    const fcs_state_t *const dynamic_state STACKS_NUM__ARG)
+    const fcs_state *const dynamic_state STACKS_NUM__ARG)
 {
-    for (int i = 0; i < STACKS_NUM__VAL; i++)
+    for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
         if (fcs_state_col_is_empty(*dynamic_state, i))
         {
@@ -364,10 +337,10 @@ static inline int find_empty_col(
     return -1;
 }
 
-static inline int find_col_card(const fcs_state_t *const dynamic_state,
-    const fcs_card_t needle STACKS_NUM__ARG)
+static inline int find_col_card(
+    const fcs_state *const dynamic_state, const fcs_card needle STACKS_NUM__ARG)
 {
-    for (int i = 0; i < STACKS_NUM__VAL; i++)
+    for (size_t i = 0; i < STACKS_NUM__VAL; ++i)
     {
         const_AUTO(col, fcs_state_get_col(*dynamic_state, i));
         const int col_len = fcs_col_len(col);
@@ -380,10 +353,11 @@ static inline int find_col_card(const fcs_state_t *const dynamic_state,
     return -1;
 }
 
-static inline int find_fc_card(const fcs_state_t *const dynamic_state,
-    const fcs_card_t needle FREECELLS_NUM__ARG)
+#if MAX_NUM_FREECELLS > 0
+static inline int find_fc_card(const fcs_state *const dynamic_state,
+    const fcs_card needle FREECELLS_NUM__ARG)
 {
-    for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
+    for (size_t dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
     {
         if (fcs_freecell_card(*dynamic_state, dest) == needle)
         {
@@ -393,34 +367,32 @@ static inline int find_fc_card(const fcs_state_t *const dynamic_state,
 
     return -1;
 }
+#endif
 
-static inline find_card_ret_t find_card_src_string(
-    const fcs_state_t *const dynamic_state,
-    const fcs_card_t needle FREECELLS_AND_STACKS_ARGS())
+static inline find_card_ret find_card_src_string(
+    const fcs_state *const dynamic_state,
+    const fcs_card needle FREECELLS_AND_STACKS_ARGS())
 {
     const int src_col_idx =
         find_col_card(dynamic_state, needle PASS_STACKS(STACKS_NUM__VAL));
+#if MAX_NUM_FREECELLS > 0
     if (src_col_idx < 0)
     {
-        return (find_card_ret_t){
-            .idx = (find_fc_card(
-                dynamic_state, needle PASS_FREECELLS(FREECELLS_NUM__VAL))),
+        return (find_card_ret){.idx = (find_fc_card(dynamic_state,
+                                   needle PASS_FREECELLS(FREECELLS_NUM__VAL))),
             .type = FREECELL};
     }
     else
+#endif
     {
-        return (find_card_ret_t){.idx = src_col_idx, .type = COLUMN};
+        return (find_card_ret){.idx = src_col_idx, .type = COLUMN};
     }
 }
+#endif
 
-/*
- * This function traces the solution from the final state down
- * to the initial state
- * */
-#ifdef FCS_WITH_MOVES
-extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
+extern void fc_solve_trace_solution(fcs_instance *const instance)
 {
-    fcs_internal_move_t canonize_move = fc_solve_empty_move;
+    fcs_internal_move canonize_move = fc_solve_empty_move;
     fcs_int_move_set_type(canonize_move, FCS_MOVE_TYPE_CANONIZE);
 
     instance_free_solution_moves(instance);
@@ -434,14 +406,14 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
     const_SLOT(solving_soft_thread, instance);
     if (solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
     {
-        fcs_state_locs_struct_t locs;
+        fcs_state_locs_struct locs;
         fc_solve_init_locs(&(locs));
         const_SLOT(pats_scan, solving_soft_thread);
         var_AUTO(num_moves, pats_scan->num_moves_to_win);
 
-        fcs_state_keyval_pair_t s_and_info;
+        fcs_state_keyval_pair s_and_info;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
-        FCS_STATE__DUP_keyval_pair(s_and_info, *(instance->state_copy_ptr));
+        FCS_STATE__DUP_keyval_pair(s_and_info, (instance->state_copy));
 
 #ifndef HARD_CODED_NUM_STACKS
         const int stacks_num = INSTANCE_STACKS_NUM;
@@ -450,9 +422,9 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         const int freecells_num = INSTANCE_FREECELLS_NUM;
 #endif
 
-        fcs_state_t *const s = &(s_and_info.s);
+        fcs_state *const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
-        for (int i = 0; i < STACKS_NUM__VAL; i++)
+        for (int i = 0; i < STACKS_NUM__VAL; ++i)
         {
             fcs_copy_stack(
                 s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
@@ -465,15 +437,16 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
         var_AUTO(move_ptr, pats_scan->moves_to_win);
         for (size_t i = 0; i < num_moves; ++i, ++move_ptr)
         {
-            const fcs_card_t card = move_ptr->card;
-            fcs_internal_move_t out_move = fc_solve_empty_move;
+            const fcs_card card = move_ptr->card;
+            fcs_internal_move out_move = fc_solve_empty_move;
             switch (move_ptr->totype)
             {
+#if MAX_NUM_FREECELLS > 0
             case FCS_PATS__TYPE_FREECELL:
             {
                 int src_col_idx;
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
-                     src_col_idx++)
+                     ++src_col_idx)
                 {
                     var_AUTO(
                         src_col, fcs_state_get_col(s_and_info.s, src_col_idx));
@@ -488,7 +461,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                     }
                 }
 
-                for (int dest = 0; dest < FREECELLS_NUM__VAL; dest++)
+                for (int dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
                 {
                     if (fcs_freecell_is_empty(s_and_info.s, dest))
                     {
@@ -501,11 +474,12 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
                 }
             }
             break;
+#endif
             case FCS_PATS__TYPE_FOUNDATION:
             {
-                const find_card_ret_t src = find_card_src_string(
-                    &(s_and_info.s), card PASS_FREECELLS(FREECELLS_NUM__VAL)
-                                         PASS_STACKS(STACKS_NUM__VAL));
+                const find_card_ret src = find_card_src_string(&(s_and_info.s),
+                    card PASS_FREECELLS(FREECELLS_NUM__VAL)
+                        PASS_STACKS(STACKS_NUM__VAL));
                 if (src.type == FREECELL)
                 {
                     fcs_int_move_set_type(
@@ -522,8 +496,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             break;
             default:
             {
-                const fcs_card_t dest_card = move_ptr->destcard;
-                const find_card_ret_t src = find_card_src_string(s,
+                const fcs_card dest_card = move_ptr->destcard;
+                const find_card_ret src = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));
                 if (src.type == FREECELL)
@@ -556,7 +530,7 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
     else
 #endif
     {
-        fcs_collectible_state_t *s1 = instance->final_state;
+        fcs_collectible_state *s1 = instance->final_state;
 
         /* Retrace the step from the current state to its parents */
         while (FCS_S_PARENT(s1) != NULL)
@@ -569,8 +543,8 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
             fcs_move_stack_push(solution_moves_ptr, canonize_move);
 
             /* Merge the move stack */
-            const fcs_move_stack_t *const stack = FCS_S_MOVES_TO_PARENT(s1);
-            const fcs_internal_move_t *const moves = stack->moves;
+            const fcs_move_stack *const stack = FCS_S_MOVES_TO_PARENT(s1);
+            const fcs_internal_move *const moves = stack->moves;
             for (int move_idx = stack->num_moves - 1; move_idx >= 0; --move_idx)
             {
                 fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
@@ -586,37 +560,34 @@ extern void fc_solve_trace_solution(fc_solve_instance_t *const instance)
 }
 #endif
 
-/*
-    This function should be called after the user has retrieved the
-    results generated by the scan as it will destroy them.
-  */
-void fc_solve_finish_instance(fc_solve_instance_t *const instance)
+// This function should be called after the user has retrieved the results
+// generated by the scan, as it will destroy them.
+void fc_solve_finish_instance(fcs_instance *const instance)
 {
-/* De-allocate the state collection */
+// De-allocate the state collection
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     rbdestroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_states_tree_destroy(instance->tree, NULL);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
-        fc_solve_kaz_tree_free_nodes(instance->tree);
-        fc_solve_kaz_tree_destroy(instance->tree);
+    fc_solve_kaz_tree_free_nodes(instance->tree);
+    fc_solve_kaz_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-        g_tree_destroy(instance->tree);
+    g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
-        Word_t rc_word;
-        JHSFA(rc_word, instance->judy_array);
+    Word_t rc_word;
+    JHSFA(rc_word, instance->judy_array);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-        g_hash_table_destroy(instance->hash);
+    g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-        fc_solve_hash_free(&(instance->hash));
+    fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-        fc_solve_states_google_hash_free(instance->hash);
+    fc_solve_states_google_hash_free(instance->hash);
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif
 
-/* De-allocate the stack collection while free()'ing the stacks
-in the process */
+// De-allocate the stack collection while free()'ing the stacks in the process
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     fc_solve_hash_free(&(instance->stacks_hash));
@@ -631,8 +602,8 @@ in the process */
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_columns_google_hash_free(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
-    Word_t rc_word;
-    JHSFA(rc_word, instance->stacks_judy_array);
+    Word_t cache_rc_word;
+    JHSFA(cache_rc_word, instance->stacks_judy_array);
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
@@ -649,8 +620,8 @@ in the process */
 #ifdef FCS_RCS_STATES
 
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-    Word_t rc_word;
-    JLFA(rc_word, instance->rcs_states_cache.states_values_to_keys_map);
+    Word_t rcs_rc_word;
+    JLFA(rcs_rc_word, instance->rcs_states_cache.states_values_to_keys_map);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     fc_solve_kaz_tree_free_nodes(instance->rcs_states_cache.kaz_tree);
     fc_solve_kaz_tree_destroy(instance->rcs_states_cache.kaz_tree);
@@ -664,11 +635,8 @@ in the process */
         instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
 }
 
-fc_solve_soft_thread_t *fc_solve_new_soft_thread(
-    fc_solve_hard_thread_t *const hard_thread)
+fcs_soft_thread *fc_solve_new_soft_thread(fcs_hard_thread *const hard_thread)
 {
-    /* Make sure we are not exceeding the maximal number of soft threads
-     * for an instance. */
     if (HT_INSTANCE(hard_thread)->next_soft_thread_id == MAX_NUM_SCANS)
     {
         return NULL;
@@ -678,7 +646,7 @@ fc_solve_soft_thread_t *fc_solve_new_soft_thread(
         SREALLOC(HT_FIELD(hard_thread, soft_threads),
             HT_FIELD(hard_thread, num_soft_threads) + 1);
 
-    fc_solve_soft_thread_t *ret;
+    fcs_soft_thread *ret;
 
     fc_solve_init_soft_thread(hard_thread,
         (ret = &(HT_FIELD(hard_thread,

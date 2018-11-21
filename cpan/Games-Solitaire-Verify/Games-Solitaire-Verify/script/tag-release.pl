@@ -6,12 +6,10 @@ use warnings;
 use IO::All;
 
 my ($version) =
-    (map { m{\$VERSION *= *'([^']+)'} ? ($1) : () }
-    io->file("./lib/Games/Solitaire/Verify.pm")->getlines()
-    )
-    ;
+    ( map { m{\Aversion *= *(\S+)\n?\z} ? ($1) : () }
+        io->file("./dist.ini")->getlines() );
 
-if (!defined ($version))
+if ( !defined($version) )
 {
     die "Version is undefined!";
 }
@@ -22,5 +20,5 @@ my @cmd = (
     "Games-Solitaire-Verify-$version",
 );
 
-print join(" ", map { /\s/ ? qq{"$_"} : $_ } @cmd), "\n";
+print join( " ", map { /\s/ ? qq{"$_"} : $_ } @cmd ), "\n";
 exec(@cmd);

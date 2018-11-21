@@ -1,6 +1,8 @@
-#include '../template.wml'
+#include "template5.wml"
 
 <latemp_subject "Getting Academic Credit for Working on Freecell Solver" />
+
+<h2_section id="about" title="About">
 
 <p>
 <b>Last Updated</b>: 14-Dec-2005
@@ -28,3 +30,4 @@ appreciated. This is while a from-scratch project usually has very little
 influence on the software scene, eventually.
 </p>
 
+</h2_section>

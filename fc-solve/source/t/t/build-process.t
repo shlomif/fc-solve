@@ -4,12 +4,10 @@ use strict;
 use warnings;
 
 use Test::More;
-use File::Spec ();
 use List::MoreUtils qw(none);
-use Cwd ();
-use File::Path qw/ mkpath rmtree /;
 use Env::Path ();
-use File::Temp qw/ tempdir /;
+use Path::Tiny qw/ path /;
+use Test::Differences qw/ eq_or_diff /;
 
 # Remove FCS_TEST_BUILD so we won't run the tests with infinite recursion.
 if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
@@ -20,7 +18,7 @@ if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
 plan tests => 15;
 
 # Change directory to the Freecell Solver base distribution directory.
-my $src_path = $ENV{"FCS_SRC_PATH"};
+my $src_path = path( $ENV{"FCS_SRC_PATH"} );
 
 sub test_cmd
 {
@@ -47,8 +45,8 @@ sub test_cmd
 }
 
 {
-    my $temp_dir = tempdir( CLEANUP => 1 );
-    my $before_temp_cwd = Cwd::getcwd();
+    my $temp_dir        = Path::Tiny->tempdir;
+    my $before_temp_cwd = Path::Tiny->cwd->absolute;
 
     chdir($temp_dir);
 
@@ -59,12 +57,9 @@ sub test_cmd
     test_cmd( [ "make", "package_source" ],
         "make package_source is successful" );
 
-    open my $ver_fh, "<", File::Spec->catfile( $src_path, "ver.txt" );
-    my $version = <$ver_fh>;
-    close($ver_fh);
-    chomp($version);
+    my ($version) = $src_path->child("ver.txt")->lines_utf8( { chomp => 1 } );
 
-    my $base     = "freecell-solver-$version";
+    my $base     = path("freecell-solver-$version");
     my $tar_arc  = "$base.tar";
     my $arc_name = "$tar_arc.xz";
 
@@ -78,7 +73,7 @@ sub test_cmd
     # TEST
     ok( scalar( -d $base ), "The directory was created" );
 
-    my $orig_cwd = Cwd::getcwd();
+    my $orig_cwd = Path::Tiny->cwd->absolute;
 
     chdir($base);
 
@@ -100,47 +95,31 @@ sub test_cmd
 
     # TEST
     ok(
-        scalar(
-            -f File::Spec->catfile(
-                File::Spec->curdir(), $base, "CMakeLists.txt"
-            )
-        ),
+        scalar( -f path($base)->child("CMakeLists.txt") ),
         "CMakeLists.txt exists",
     );
 
     # TEST
     ok(
-        scalar(
-            -f File::Spec->catfile(
-                File::Spec->curdir(), $base, "HACKING.txt"
-            )
-        ),
-        "HACKING.txt exists",
+        scalar( -f path($base)->child("HACKING.asciidoc") ),
+        "HACKING.asciidoc exists",
     );
 
     chdir($orig_cwd);
 
-    my $failing_asciidoc_dir = File::Spec->catdir( $orig_cwd, "asciidoc-fail" );
-    rmtree($failing_asciidoc_dir);
-    mkpath($failing_asciidoc_dir);
+    my $failing_asciidoc_dir = $orig_cwd->child("asciidoc-fail");
+    $failing_asciidoc_dir->remove_tree;
+    $failing_asciidoc_dir->mkpath;
 
-    my $asciidoc_bin = File::Spec->catfile( $failing_asciidoc_dir, "asciidoc" );
-
-    {
-        open my $out, ">", $asciidoc_bin
-            or die "Cannot write to '$asciidoc_bin'";
-        print {$out} <<"EOF";
+    my $asciidoc_bin = $failing_asciidoc_dir->child("asciidoc");
+    path($asciidoc_bin)->spew_utf8(<<"EOF");
 #!$^X
 exit(-1);
 EOF
-
-        close($out);
-    }
-
     chmod( 0755, $asciidoc_bin );
 
     # Delete the unpacked directory.
-    rmtree($base);
+    $base->remove_tree;
 
     # Now test the rpm building.
     {
@@ -164,14 +143,15 @@ EOF
         chomp(@tar_lines);
 
         # TEST
-        ok(
-            ( none { m{/config\.h\z} } @tar_lines ),
-            "Archive does not contain config.h files"
-        );
+        eq_or_diff( [ grep { m{/config\.h\z} } @tar_lines ],
+            [], "Archive does not contain config.h files" );
 
         # TEST
         ok(
-            ( none { m{/freecell-solver-range-parallel-solve\z} } @tar_lines ),
+            (
+                none { m{/freecell-solver-range-parallel-solve\z} }
+                @tar_lines
+            ),
             "Archive does not contain the range solver executable"
         );
 
@@ -188,7 +168,7 @@ EOF
         );
     }
 
-    rmtree($failing_asciidoc_dir);
+    $failing_asciidoc_dir->remove_tree;
 
     chdir($before_temp_cwd);
 }

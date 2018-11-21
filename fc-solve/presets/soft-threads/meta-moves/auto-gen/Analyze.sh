@@ -9,4 +9,3 @@ perl analyze.pl |
     done) |
     grep -F "This game is solveable" |
     wc -l
-

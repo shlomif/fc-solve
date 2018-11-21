@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_move_to_string.h - the move_to_string function.
- */
+// dbm_move_to_string.h - the move_to_string function.
 #pragma once
 
 #include "rinutils.h"
@@ -18,7 +16,7 @@
 extern "C" {
 #endif
 
-static void move_to_string(unsigned char move, char *const move_buffer)
+static void move_to_string(uint8_t move, char *const move_buffer)
 {
     char *s = move_buffer;
 

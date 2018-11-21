@@ -1,9 +1,9 @@
-#include '../template.wml'
+#include "template5.wml"
 #include "xhtml/1.x/std/toc.wml"
 
 <latemp_subject "How We Benchmark Freecell Solver (Version 1)" />
 
-<h2 id="summary">Summary</h2>
+<h2_section id="summary" title="Summary">
 
 <img src="cat-on-a-bench.jpg" alt="A cat sitting on a bench" style="float:right;margin:1em" />
 
@@ -15,18 +15,20 @@ may provide some insights for your benchmarking efforts, and we welcome further
 insights into it.
 </p>
 
+</h2_section>
+
 <h2* id="toc">Table of contents</h2*>
 
 <toc />
 
-<h2 id="intro">Introduction</h2>
+<h2_section id="intro" title="Introduction">
 
 <p>
 <b>Publishing Date:</b> 3 October 2017.
 </p>
 
 <p>
-This article aims to collect and share the insights we accumulated from
+This article aims to collect and share the insights we have accumulated from
 benchmarking
 <a href="http://fc-solve.shlomifish.org/">Freecell Solver</a> which is a
 CPU and RAM intensive software application written in C. It is written from
@@ -34,9 +36,11 @@ the point of view of benchmarking it on a modern
 <a href="https://en.wikipedia.org/wiki/Linux">GNU/Linux</a> installation.
 </p>
 
-<h2 id="points">Points</h2>
+</h2_section>
 
-<h3 id="sudo_renice">Use the “sudo_renice” script</h3>
+<h2_section id="points" title="Points">
+
+<h3_section id="sudo_renice" title="Use the “sudo_renice” script">
 
 <p>
 <a href="https://github.com/shlomif/shlomif-computer-settings/blob/master/shlomif-settings/home-bin-executables/bin/sudo_renice">sudo_renice</a> is a shell wrapper
@@ -55,7 +59,9 @@ It is reproduced here:
 sudo nice -n-20 ionice -c1 -n0 sudo -u "$USER" "$@"
 </pre>
 
-<h3>Use the same machine and same operating system installation for both timings</h3>
+</h3_section>
+
+<h3_section id="same_sys" title="Use the same machine and same operating system installation for both timings">
 
 <p>
 It is important to run both the "before" and "after" versions of the benchmark
@@ -63,7 +69,9 @@ on the same physical computer, with the same system installation and in
 similar conditions - one after the other.
 </p>
 
-<h3>Make sure the benchmarked process is practically the only thing running</h3>
+</h3_section>
+
+<h3_section id="isolate" title="Make sure the benchmarked process is practically the only thing running">
 
 <p>
 We noticed that running an X environment with a resource-heavy desktop
@@ -79,7 +87,9 @@ system services or
 or stale processes that were not killed).
 </p>
 
-<h3>Make sure the system is not overheated</h3>
+</h3_section>
+
+<h3_section id="not_overheated" title="Make sure the system is not overheated">
 
 <p>
 We noticed that once the computer becomes overheated, the CPU is
@@ -90,7 +100,9 @@ and perhaps by waiting a little using the UNIX
 <a href="https://en.wikipedia.org/wiki/Sleep_%28Unix%29">sleep command</a>.
 </p>
 
-<h3>Run each benchmarked process several times</h3>
+</h3_section>
+
+<h3_section id="run_several_times" title="Run each benchmarked process several times">
 
 <p>
 Keep track of the results, and try to see which are generally (minimally,
@@ -98,7 +110,9 @@ on average, etc.) faster. Also see <a href="https://www.mail-archive.com/linux-i
 on the Linux-IL mailing list.
 </p>
 
-<h3>Compile flags</h3>
+</h3_section>
+
+<h3_section id="compile_flags" title="Compile flags">
 
 <p>
 You should build both versions using CPU flags for maximal performance such
@@ -108,7 +122,9 @@ as <code>-O3</code>, <code>-march=native</code>, <code>-flto</code>,
 useful as well.
 </p>
 
-<h3>malloc library</h3>
+</h3_section>
+
+<h3_section id="malloc_lib" title="malloc library">
 
 <p>
 One should link against a
@@ -118,7 +134,11 @@ Other prominent mallocs, which are not mentioned in the first link, are <a href=
 and <a href="https://github.com/r-lyeh/ltalloc">ltalloc</a>
 </p>
 
-<h2 id="links">Links and References</h2>
+</h3_section>
+
+</h2_section>
+
+<h2_section id="links" title="Links and References">
 
 <ul>
 
@@ -139,7 +159,9 @@ Code for Speed</i></a> - an earlier wikibook written by me.
 
 </ul>
 
-<h2 id="credits">Credits</h2>
+</h2_section>
+
+<h2_section id="credits" title="Credits">
 
 <ul>
 
@@ -149,6 +171,7 @@ Code for Speed</i></a> - an earlier wikibook written by me.
 </p>
 </li>
 </ul>
+</h2_section>
 
 <define-tag cc_by_british_blurb>
 <preserve year />
@@ -176,6 +199,8 @@ explicit requirements</a> that are being spelt from abiding by that licence.
 
 </define-tag>
 
-<h2 id="licence">Licence</h2>
+<h2_section id="licence" title="Licence">
 
 <cc_by_british_blurb year="2017" />
+
+</h2_section>

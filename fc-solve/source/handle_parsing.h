@@ -7,11 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * handle_parsing.h - header file for convenient wrappers for handling
- * parsing the arguments.
- */
-
+// handle_parsing.h - header file for convenient wrappers for handling
+// parsing the arguments.
 #pragma once
 
 #ifdef __cplusplus
@@ -20,9 +17,9 @@ extern "C" {
 
 #include "rinutils.h"
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #else
-#include "fcs_user.h"
+#include "freecell-solver/fcs_user.h"
 #include "fc_solve__precompiled__theme.h"
 #endif
 enum
@@ -30,10 +27,13 @@ enum
     EXIT_AND_RETURN_0 = FCS_CMD_LINE_USER
 };
 
-static inline void *alloc_instance_and_parse(const int argc, char **const argv,
-    int *const arg_ptr, freecell_solver_str_t *const known_parameters,
-    const freecell_solver_user_cmd_line_known_commands_callback_t callback,
-    void *const callback_context, const fcs_bool_t only_recognized)
+static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
+    char **const argv GCC_UNUSED, int *const arg_ptr GCC_UNUSED,
+    freecell_solver_str_t *const known_parameters GCC_UNUSED,
+    const freecell_solver_user_cmd_line_known_commands_callback_t callback
+        GCC_UNUSED,
+    void *const callback_context GCC_UNUSED,
+    const bool only_recognized GCC_UNUSED)
 {
     void *const instance = freecell_solver_user_alloc();
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
@@ -85,7 +85,7 @@ static inline void *simple_alloc_and_parse(
     return alloc_instance_and_parse(argc, argv, &arg, NULL, NULL, NULL, TRUE);
 }
 
-static inline void print_flares_plan_error(void *const instance)
+static inline void print_flares_plan_error(void *const instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_ERROR_STRS
     fprintf(stderr, "Flares Plan: %s\n",

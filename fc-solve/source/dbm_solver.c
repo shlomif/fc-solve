@@ -18,21 +18,21 @@
 
 typedef struct
 {
-    fcs_dbm__cache_store__common_t cache_store;
+    fcs_dbm__cache_store__common cache_store;
     /* The queue */
-    fcs_meta_compact_allocator_t meta_alloc;
-    fcs_offloading_queue_t queue;
+    meta_allocator meta_alloc;
+    fcs_offloading_queue queue;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
     const char *offload_dir_path;
 #endif
-    fcs_dbm_instance_common_elems_t common;
-} fcs_dbm_solver_instance_t;
+    dbm_instance_common_elems common;
+} dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH() 0
 
 #include "dbm_procs.h"
-static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
-    const fcs_dbm_common_input_t *const inp, const long iters_delta_limit,
+static inline void instance_init(dbm_solver_instance *const instance,
+    const fcs_dbm_common_input *const inp, const long iters_delta_limit,
     FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
@@ -49,7 +49,7 @@ static inline void instance_init(fcs_dbm_solver_instance_t *const instance,
         inp->caches_delta);
 }
 
-static inline void instance_recycle(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_recycle(dbm_solver_instance *const instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -66,7 +66,7 @@ static inline void instance_recycle(fcs_dbm_solver_instance_t *const instance)
     instance->common.count_of_items_in_queue = 0;
 }
 
-static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
+static inline void instance_destroy(dbm_solver_instance *const instance)
 {
     fcs_offloading_queue__destroy(&(instance->queue));
     DESTROY_CACHE(instance);
@@ -75,23 +75,23 @@ static inline void instance_destroy(fcs_dbm_solver_instance_t *const instance)
 }
 
 static inline void instance_check_key(
-    fcs_dbm_solver_thread_t *const thread GCC_UNUSED,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth GCC_UNUSED,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const unsigned char move GCC_UNUSED,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
+    dbm_solver_thread *const thread GCC_UNUSED,
+    dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
+    const uint8_t move GCC_UNUSED,
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
 #ifdef FCS_DBM_CACHE_ONLY
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
-    fcs_dbm_record_t *token;
+    fcs_dbm_record *token;
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_cache_key_info_t *cache_key = cache_store__insert_key(
+        fcs_cache_key_info *cache_key = cache_store__insert_key(
             &(instance->cache_store), key, parent, moves_to_parent, move);
 #endif
         /* Now insert it into the queue. */
@@ -102,42 +102,42 @@ static inline void instance_check_key(
         instance_debug_out_state(instance, &(token->key));
 
         fcs_offloading_queue__insert(
-            &(instance->queue), ((fcs_offloading_queue_item_t *)(&token)));
+            &(instance->queue), ((offloading_queue_item *)(&token)));
         ++instance->common.count_of_items_in_queue;
     }
 }
 
 struct fcs_dbm_solver_thread_struct
 {
-    fcs_dbm_solver_instance_t *instance;
-    fc_solve_delta_stater_t delta_stater;
+    dbm_solver_instance *instance;
+    fcs_delta_stater delta_stater;
 };
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
-    fcs_dbm_queue_item_t physical_item;
-    fcs_state_keyval_pair_t state;
-    fcs_dbm_record_t *token = NULL;
+    fcs_dbm_queue_item physical_item;
+    fcs_state_keyval_pair state;
+    fcs_dbm_record *token = NULL;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
-    const_AUTO(thread, ((thread_arg_t *)void_arg)->thread);
-    fcs_dbm_solver_instance_t *const instance = thread->instance;
-    fc_solve_delta_stater_t *const delta_stater = &(thread->delta_stater);
+    const_AUTO(thread, ((thread_arg *)void_arg)->thread);
+    dbm_solver_instance *const instance = thread->instance;
+    fcs_delta_stater *const delta_stater = &(thread->delta_stater);
 
-    fcs_dbm_queue_item_t *item = NULL, *prev_item = NULL;
+    fcs_dbm_queue_item *item = NULL, *prev_item = NULL;
     long queue_num_extracted_and_processed = 0;
 
-    fcs_compact_allocator_t derived_list_allocator;
+    compact_allocator derived_list_allocator;
     fc_solve_compact_allocator_init(
         &(derived_list_allocator), &(instance->meta_alloc));
-    fcs_derived_state_t *derived_list_recycle_bin = NULL;
-    fcs_derived_state_t *derived_list = NULL;
+    fcs_derived_state *derived_list_recycle_bin = NULL;
+    fcs_derived_state *derived_list = NULL;
     FILE *const out_fh = instance->common.out_fh;
-    fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type local_variant = instance->common.variant;
 
     TRACE("%s\n", "instance_run_solver_thread start");
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
     while (1)
@@ -152,8 +152,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (fcs_offloading_queue__extract(&(instance->queue),
-                    (fcs_offloading_queue_item_t *)(&token)))
+            if (fcs_offloading_queue__extract(
+                    &(instance->queue), (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
                 item = &physical_item;
@@ -231,18 +231,17 @@ static void *instance_run_solver_thread(void *const void_arg)
     return NULL;
 }
 
-static fcs_bool_t populate_instance_with_intermediate_input_line(
-    fcs_dbm_solver_instance_t *const instance,
-    fc_solve_delta_stater_t *const delta,
-    fcs_state_keyval_pair_t *const init_state_ptr, char *const line,
-    const long line_num, fcs_encoded_state_buffer_t *const parent_state_enc)
+static bool populate_instance_with_intermediate_input_line(
+    dbm_solver_instance *const instance, fcs_delta_stater *const delta,
+    fcs_state_keyval_pair *const init_state_ptr, char *const line,
+    const long line_num, fcs_encoded_state_buffer *const parent_state_enc)
 {
-    fcs_encoded_state_buffer_t final_stack_encoded_state;
-    fcs_encoded_state_buffer_t running_key;
-    fcs_state_keyval_pair_t running_state;
-    fcs_dbm_record_t *token = NULL;
+    fcs_encoded_state_buffer final_stack_encoded_state;
+    fcs_encoded_state_buffer running_key;
+    fcs_state_keyval_pair running_state;
+    fcs_dbm_record *token = NULL;
 #ifdef DEBUG_OUT
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
 
@@ -257,7 +256,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
     const char *s_ptr = line;
     while (*(s_ptr) != '|')
     {
-        int hex_digits;
+        unsigned int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
             fc_solve_err("Error in reading state in line %ld of the "
@@ -265,11 +264,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
                 line_num);
         }
 #ifdef FCS_DEBONDT_DELTA_STATES
-        final_stack_encoded_state.s[(s_ptr - line) >> 1] =
-            (unsigned char)hex_digits;
+        final_stack_encoded_state.s[(s_ptr - line) >> 1] = (uint8_t)hex_digits;
 #else
         final_stack_encoded_state.s[++final_stack_encoded_state.s[0]] =
-            (unsigned char)hex_digits;
+            (uint8_t)hex_digits;
 #endif
         s_ptr += 2;
     }
@@ -283,10 +281,10 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
      * state. */
     fcs_init_and_encode_state(
         delta, local_variant, &(running_state), &running_key);
-    fcs_dbm_record_t *running_parent = NULL;
+    fcs_dbm_record *running_parent = NULL;
 
 #ifdef FCS_DBM_CACHE_ONLY
-    fcs_fcc_move_t *running_moves = NULL;
+    fcs_fcc_move *running_moves = NULL;
     cache_store__insert_key(&(instance->cache_store), &(running_key),
         &running_parent, running_moves, '\0');
 #else
@@ -295,16 +293,16 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 #endif
     ++instance->common.num_states_in_collection;
 
-    int hex_digits;
+    unsigned int hex_digits;
     while (sscanf(s_ptr, "%2X,", &hex_digits) == 1)
     {
         FCS__OUTPUT_STATE(
             stdout, "BEFORE_RUNNING_STATE == ", &(running_state.s), &locs);
-        fcs_card_t src_card;
+        fcs_card src_card;
 
         s_ptr += 3;
 
-        const_AUTO(move, (fcs_fcc_move_t)hex_digits);
+        const_AUTO(move, (fcs_fcc_move)hex_digits);
         /* Apply the move. */
         int src = (move & 0xF);
         int dest = ((move >> 4) & 0xF);
@@ -319,18 +317,19 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
         else
         {
             src -= 8;
-            if (src < 4)
-            {
-                src_card = fcs_freecell_card(the_state, src);
-                fcs_empty_freecell(the_state, src);
-            }
-            else
+            if (src >= 4)
             {
                 fc_solve_err("Error in reading state in line %ld of the "
                              "--intermediate-input - source cannot be a "
                              "foundation.",
                     line_num);
             }
+#if MAX_NUM_FREECELLS > 0
+            src_card = fcs_freecell_card(the_state, src);
+            fcs_empty_freecell(the_state, src);
+#else
+            abort();
+#endif
         }
         /* Apply src_card to dest. */
         if (dest < 8)
@@ -342,7 +341,9 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             dest -= 8;
             if (dest < 4)
             {
+#if MAX_NUM_FREECELLS > 0
                 fcs_put_card_in_freecell(the_state, dest, src_card);
+#endif
             }
             else
             {
@@ -393,7 +394,7 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
             line_num);
     }
     fcs_offloading_queue__insert(
-        &(instance->queue), (const fcs_offloading_queue_item_t *)(&token));
+        &(instance->queue), (const offloading_queue_item *)(&token));
     ++instance->common.count_of_items_in_queue;
 
     return TRUE;
@@ -401,11 +402,11 @@ static fcs_bool_t populate_instance_with_intermediate_input_line(
 
 #include "dbm_procs_inner.h"
 
-static void init_thread(fcs_dbm_solver_thread_t *const thread) {}
-static void free_thread(fcs_dbm_solver_thread_t *const thread) {}
+static void init_thread(dbm_solver_thread *const thread GCC_UNUSED) {}
+static void free_thread(dbm_solver_thread *const thread GCC_UNUSED) {}
 
-static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
-    fcs_state_keyval_pair_t *init_state, const size_t num_threads)
+static void instance_run_all_threads(dbm_solver_instance *const instance,
+    fcs_state_keyval_pair *init_state, const size_t num_threads)
 {
     const_AUTO(threads,
         dbm__calc_threads(instance, init_state, num_threads, init_thread));
@@ -414,7 +415,7 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fc_solve_err("Worker Thread No. %zd Initialization failed!\n", i);
+            fc_solve_err("Worker Thread No. %zu Initialization failed!\n", i);
         }
     }
 
@@ -427,15 +428,14 @@ static void instance_run_all_threads(fcs_dbm_solver_instance_t *const instance,
 }
 
 /* Returns if the process should terminate. */
-static fcs_bool_t handle_and_destroy_instance_solution(
-    fcs_dbm_solver_instance_t *const instance,
-    fc_solve_delta_stater_t *const delta)
+static bool handle_and_destroy_instance_solution(
+    dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
-    fcs_bool_t ret = FALSE;
-    fcs_dbm_record_t *token;
+    bool ret = FALSE;
+    fcs_dbm_record *token;
 #ifdef DEBUG_OUT
-    fcs_dbm_variant_type_t local_variant = instance->common.variant;
+    fcs_dbm_variant_type local_variant = instance->common.variant;
 #endif
 
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
@@ -452,11 +452,11 @@ static fcs_bool_t handle_and_destroy_instance_solution(
         fflush(out_fh);
         if (instance->common.should_terminate == QUEUE_TERMINATE)
         {
-            fcs_dbm_queue_item_t physical_item;
-            fcs_dbm_queue_item_t *const item = &physical_item;
+            fcs_dbm_queue_item physical_item;
+            fcs_dbm_queue_item *const item = &physical_item;
 
             while (fcs_offloading_queue__extract(
-                &(instance->queue), (fcs_offloading_queue_item_t *)(&token)))
+                &(instance->queue), (offloading_queue_item *)(&token)))
             {
                 physical_item.key = token->key;
 
@@ -475,7 +475,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 fflush(out_fh);
 
 #ifdef FCS_DBM_CACHE_ONLY
-                fcs_fcc_move_t *move_ptr = item->moves_to_key;
+                fcs_fcc_move *move_ptr = item->moves_to_key;
                 if (move_ptr)
                 {
                     while (*(move_ptr))
@@ -486,7 +486,7 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 }
 #else
                 int trace_num;
-                fcs_encoded_state_buffer_t *trace;
+                fcs_encoded_state_buffer *trace;
                 calc_trace(token, &trace, &trace_num);
 
 /*
@@ -506,8 +506,8 @@ static fcs_bool_t handle_and_destroy_instance_solution(
                 fprintf(out_fh, "\n");
                 fflush(out_fh);
 #ifdef DEBUG_OUT
-                fcs_state_keyval_pair_t state;
-                fcs_state_locs_struct_t locs;
+                fcs_state_keyval_pair state;
+                fcs_state_locs_struct locs;
                 fc_solve_init_locs(&locs);
                 DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
@@ -540,10 +540,10 @@ int main(int argc, char *argv[])
     long start_line = 1;
     const char *out_filename = NULL, *intermediate_input_filename = NULL;
     FILE *intermediate_in_fh = NULL;
-    fcs_bool_t skip_queue_output = FALSE;
+    bool skip_queue_output = FALSE;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     const char *param;
-    fcs_dbm_common_input_t inp = fcs_dbm_common_input_init;
+    fcs_dbm_common_input inp = fcs_dbm_common_input_init;
 
     int arg;
     for (arg = 1; arg < argc; arg++)
@@ -573,26 +573,22 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("%s\n", "Junk arguments!");
     }
-    else if (arg == argc)
+    if (arg == argc)
     {
         fc_solve_err("%s\n", "No board specified.");
     }
     const_AUTO(num_threads, inp.num_threads);
 
     FILE *const out_fh = calc_out_fh(out_filename);
-    fcs_state_keyval_pair_t init_state;
+    fcs_state_keyval_pair init_state;
     read_state_from_file(inp.local_variant, argv[arg],
         &init_state PASS_IND_BUF_T(init_indirect_stacks_buffer));
     horne_prune__simple(inp.local_variant, &init_state);
 
     const_AUTO(local_variant, inp.local_variant);
-    fc_solve_delta_stater_t delta;
-    fc_solve_delta_stater_init(&delta, &init_state.s, STACKS_NUM, FREECELLS_NUM
-#ifndef FCS_FREECELL_ONLY
-        ,
-        FCS_SEQ_BUILT_BY_ALTERNATE_COLOR
-#endif
-    );
+    fcs_delta_stater delta;
+    fc_solve_delta_stater_init(&delta, local_variant, &init_state.s, STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
     if (intermediate_input_filename)
     {
@@ -615,14 +611,14 @@ int main(int argc, char *argv[])
         char *line = SMALLOC(line, line_size);
 #endif
         long line_num = 0;
-        fcs_bool_t queue_solution_was_found = FALSE;
-        fcs_dbm_solver_instance_t queue_instance;
-        fcs_dbm_solver_instance_t limit_instance;
+        bool queue_solution_was_found = FALSE;
+        dbm_solver_instance queue_instance;
+        dbm_solver_instance limit_instance;
 
         instance_init(&queue_instance, &inp, -1, out_fh);
         instance_init(&limit_instance, &inp, inp.iters_delta_limit, out_fh);
 
-        fcs_bool_t found_line;
+        bool found_line;
         do
         {
             ++line_num;
@@ -649,7 +645,7 @@ int main(int argc, char *argv[])
                 }
                 skip_queue_output = FALSE;
                 {
-                    fcs_encoded_state_buffer_t parent_state_enc;
+                    fcs_encoded_state_buffer parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
                             &limit_instance, &delta, &init_state, line,
                             line_num, &parent_state_enc))
@@ -688,7 +684,7 @@ int main(int argc, char *argv[])
 
                 if (!skip_queue_output)
                 {
-                    fcs_encoded_state_buffer_t parent_state_enc;
+                    fcs_encoded_state_buffer parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
                             &queue_instance, &delta, &init_state, line,
                             line_num, &parent_state_enc))
@@ -729,11 +725,11 @@ int main(int argc, char *argv[])
     }
     else
     {
-        fcs_dbm_solver_instance_t instance;
+        dbm_solver_instance instance;
         instance_init(&instance, &inp, inp.iters_delta_limit, out_fh);
-        fcs_encoded_state_buffer_t *key_ptr;
+        fcs_encoded_state_buffer *key_ptr;
 #define KEY_PTR() (key_ptr)
-        fcs_encoded_state_buffer_t parent_state_enc;
+        fcs_encoded_state_buffer parent_state_enc;
 
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(
@@ -742,7 +738,7 @@ int main(int argc, char *argv[])
          * initial state. */
         fcs_init_encoded_state(&(parent_state_enc));
 
-        fcs_dbm_record_t *token;
+        fcs_dbm_record *token;
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(
             &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
@@ -752,7 +748,7 @@ int main(int argc, char *argv[])
 #endif
 
         fcs_offloading_queue__insert(
-            &(instance.queue), (const fcs_offloading_queue_item_t *)&token);
+            &(instance.queue), (const offloading_queue_item *)&token);
         ++instance.common.num_states_in_collection;
         ++instance.common.count_of_items_in_queue;
 

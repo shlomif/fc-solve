@@ -83,10 +83,6 @@ L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Games-Solitaire-Verify>
-
 =back
 
 =head1 AUTHORS
@@ -101,5 +97,3 @@ This program is released under the following license: MIT/Expat
 ( L<http://www.opensource.org/licenses/mit-license.php> ).
 
 =cut
-
-

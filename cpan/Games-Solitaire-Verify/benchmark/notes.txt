@@ -74,4 +74,3 @@ options) the new benchmark is:
 real    2m21.000s
 user    9m16.878s
 sys     0m3.499s
-

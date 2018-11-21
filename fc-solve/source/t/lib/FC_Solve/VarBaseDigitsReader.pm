@@ -9,11 +9,8 @@ __PACKAGE__->mk_acc_ref( [qw(_data)] );
 
 sub _init
 {
-    my $self = shift;
-    my $args = shift;
-
+    my ( $self, $args ) = @_;
     $self->_data( $args->{data} );
-
     return;
 }
 

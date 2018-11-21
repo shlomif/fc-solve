@@ -17,10 +17,11 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
-#include "fcs_user.h"
+#include "freecell-solver/fcs_user.h"
 
 static inline void fc_solve_set_weights(freecell_solver_str_t start_num,
-    const freecell_solver_str_t string_end, double *const befs_weights)
+    const freecell_solver_str_t string_end,
+    fc_solve_weighting_float *const befs_weights)
 {
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; ++i)
     {
@@ -42,7 +43,8 @@ static inline void fc_solve_set_weights(freecell_solver_str_t start_num,
             return;
         }
         char *end_num;
-        befs_weights[i] = strtod(start_num, &end_num);
+        const_AUTO(val, strtod(start_num, &end_num));
+        befs_weights[i] = max(val, 0.0);
         start_num = end_num;
     }
 }

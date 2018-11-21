@@ -1,18 +1,14 @@
-#include '../template.wml'
+#include "template5.wml"
 
 <latemp_subject "Don Woods' Freecell Solver" />
 
-<p>
-<a href="don_woods_solver.zip">don_woods_solver.zip</a>
-</p>
-
-<p>
-<a href="FC-Pro-Source-2003-05-17.zip">Current Source Code for Freecell Pro</a>
-</p>
+<h2_section id="about" title="About these files">
 
 <p>
 This is the source code for the famous Freecell solver by
-<a href="http://www.icynic.com/~don/">Don Woods</a>. It is basically
+<a href="http://www.icynic.com/~don/">Don Woods</a> (also see
+<a href="https://en.wikipedia.org/wiki/Don_Woods_(programmer)">his Wikipedia
+page</a>). It is basically
 4 different solvers for four different Freecell variants which are
 using a very similar algorithm. Maybe it is possible to abstract
 the game rules and integrate all of them into one solver.
@@ -22,17 +18,40 @@ the game rules and integrate all of them into one solver.
 The copyright notice says:
 </p>
 
+<blockquote>
+
 <p>
-<i>
 (c) Copyright 1993, 1997, Donald R. Woods.  Shareware: Right is granted to
 freely redistribute this source provided this notice is retained.
-</i>
 </p>
+
+</blockquote>
 
 <p>
 Note that a more optimized derivative of this solver (for Freecell alone),
 which was modified by Wilson Callan and Adrian Ettlinger, is available as part
-of <a href="http://www.rrhistorical.com/rrdata/Fcpro65/">Freecell Pro</a>.
+of <a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a>.
 FC-Pro is an open-source GPLed program, whose <a href="FC-Pro-Source-2003-05-17.zip">source code</a> is available.
 </p>
 
+</h2_section>
+
+<h2_section id="downloads" title="Downloads">
+
+<ul>
+
+<li>
+<p>
+<a href="don_woods_solver.zip">don_woods_solver.zip</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="FC-Pro-Source-2003-05-17.zip">Current Source Code for Freecell Pro</a>
+</p>
+</li>
+
+</ul>
+
+</h2_section>

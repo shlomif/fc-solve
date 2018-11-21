@@ -1,0 +1,39 @@
+<define-tag docbook_formats>
+
+<preserve docbase source_href />
+
+<set-var %attributes />
+<h2_section id="formats" title="Formats">
+
+<ul>
+
+<li>
+<a href="<get-var docbase />/">HTML (read online)</a>
+</li>
+
+<li>
+<a href="<get-var docbase />.raw.html">HTML on one page</a>
+</li>
+
+<li>
+<a href="<get-var docbase />.pdf">Acrobat Reader (PDF)</a>
+</li>
+
+<li>
+<a href="<get-var docbase />.epub">EPUB</a>
+</li>
+
+<li>
+<a href="<get-var docbase />.rtf">Microsoft Word RTF</a>
+</li>
+
+<li>
+<a href="<get-var source_href />">The Original DocBook</a>
+</li>
+
+</ul>
+
+</h2_section>
+
+<restore docbase source_href />
+</define-tag>

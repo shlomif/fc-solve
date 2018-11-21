@@ -7,18 +7,15 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * serial_range_solver.c - the Freecell Solver range solver.
- *
- * Also see:
- *  - fc_pro_range_solver.c - range solver that can count the moves in
- *  the solution and display the FC-Pro ones.
- *  - threaded_range_solver.c - solve different boards in several POSIX
- *  threads.
- */
+// serial_range_solver.c - the Freecell Solver range solver.
+//
+// Also see:
+//  - fc_pro_range_solver.c - range solver that can count the moves in
+//  the solution and display the FC-Pro ones.
+//  - threaded_range_solver.c - solve different boards in several POSIX
+//  threads.
 #include "default_iter_handler.h"
 #include "cl_callback_range.h"
-#include "handle_parsing.h"
 #include "trace_mem.h"
 #include "try_param.h"
 #include "range_solvers.h"
@@ -27,9 +24,11 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long start_board, long long end_board, const long long stop_at)
 {
     long long total_num_iters = 0;
-    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+    bool was_total_iterations_limit_per_board_set = FALSE;
+#endif
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = INIT_BINARY_OUTPUT;
+    fcs_binary_output binary_output = INIT_BINARY_OUTPUT;
     const char *solutions_directory = NULL;
     char *solution_fn = NULL;
 
@@ -42,8 +41,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else if ((param = TRY_P("--total-iterations-limit")))
         {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             was_total_iterations_limit_per_board_set = TRUE;
             total_iterations_limit_per_board = (fcs_int_limit_t)atol(param);
+#endif
         }
         else if ((param = TRY_P("--solutions-directory")))
         {
@@ -60,7 +61,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fc_solve_print_started_at();
     fflush(stdout);
 
-    fc_solve_display_information_context_t display_context =
+    fc_solve_display_information_context display_context =
         INITIAL_DISPLAY_CONTEXT;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
         known_parameters, cmd_line_callback, &display_context, TRUE);
@@ -78,7 +79,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     for (long long board_num = start_board; board_num <= end_board; ++board_num)
     {
-        fcs_state_string_t state_string;
+        fcs_state_string state_string;
         get_board(board_num, state_string);
 
         const int ret =
@@ -100,10 +101,16 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             print_int(&binary_output, -2);
             break;
 
-        default:
+        case FCS_STATE_WAS_SOLVED:
+#ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
+            printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
+#endif
             print_int(&binary_output,
                 (int)freecell_solver_user_get_num_times_long(instance));
             break;
+
+        default:
+            fc_solve_err("%s", "Unknown ret code!");
         }
 
         if (solutions_directory)

@@ -23,7 +23,7 @@ __PACKAGE__->populate(
     [
         'id24' => {
             args => { id => "freecell24", deal => 24 },
-            msg => "Verifying the solution of deal #24",
+            msg  => "Verifying the solution of deal #24",
         },
         'bakers_game24default' => {
             args => {
@@ -49,11 +49,11 @@ __PACKAGE__->populate(
         },
         'freecell1941' => {
             args => { id => "freecell1941", deal => 1941 },
-            msg => "Verifying 1941 (The Hardest Deal)",
+            msg  => "Verifying 1941 (The Hardest Deal)",
         },
         'freecell24empty' => {
             args => { id => "freecell24empty", deal => 24, theme => [], },
-            msg => "Solving Deal #24 with the default heuristic",
+            msg  => "Solving Deal #24 with the default heuristic",
         },
         'freecell617jgl' => {
             args => {

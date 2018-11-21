@@ -3,9 +3,7 @@ package FC_Solve::SplitTests;
 use strict;
 use warnings;
 use autodie;
-
-use Data::Dumper ();
-
+use Data::Dumper      ();
 use Test::Data::Split ();
 
 sub gen

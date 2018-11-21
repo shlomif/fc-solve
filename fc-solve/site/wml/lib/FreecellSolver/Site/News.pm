@@ -4,58 +4,54 @@ use strict;
 use warnings;
 use autodie;
 use utf8;
-
 use parent 'HTML::Widgets::NavMenu::Object';
-use parent 'Class::Accessor';
-
 use Path::Tiny qw/ path /;
 use MyOldNews ();
-use DateTime ();
+use DateTime  ();
 
-__PACKAGE__->mk_accessors(qw(
-    dir
-    items
-    num_on_front
-    ));
+__PACKAGE__->mk_accessors(
+    qw(
+        dir
+        items
+        num_on_front
+        )
+);
 
-my @old_news_items =
-(
-    map
-    {
+my @old_news_items = (
+    map {
         +{
             body => $_->{'html'},
             date => DateTime->new(
-                year => $_->{year},
+                year  => $_->{year},
                 month => $_->{mon},
-                day => $_->{day_of_month}
-                ),
+                day   => $_->{day_of_month}
+            ),
         }
-    } @{MyOldNews::get_old_news()}
+    } @{ MyOldNews::get_old_news() }
 );
 
 sub file_to_news_item
 {
-    my $self = shift;
+    my $self     = shift;
     my $filename = shift;
-    my $text = path ( $self->dir()."/".$filename)->slurp_utf8;
+    my $text     = path( $self->dir() . "/" . $filename )->slurp_utf8;
     my $title;
-    if ($text =~ s{\A<!-- TITLE=(.*?)-->\n}{})
+    if ( $text =~ s{\A<!-- TITLE=(.*?)-->\n}{} )
     {
         $title = $1;
     }
-    $text =~ s!<p>!<p class="newsitem">!g;
-    $text =~ s!<ol>!<ol class="newsitem">!g;
-    $text =~ s!<ul>!<ul class="newsitem">!g;
-    $text =~ s#<div class="blogger-post-footer"><img.*?</div>##ms;
-    $text =~ s#<(/?)tt#<${1}code#g;
+    $text     =~ s!<p>!<p class="newsitem">!g;
+    $text     =~ s!<ol>!<ol class="newsitem">!g;
+    $text     =~ s!<ul>!<ul class="newsitem">!g;
+    $text     =~ s#<div class="blogger-post-footer"><img.*?</div>##ms;
+    $text     =~ s#<(/?)tt#<${1}code#g;
     $filename =~ /\A(\d{4})-(\d{2})-(\d{2})\.html\z/;
-    my ($y, $m, $d) = ($1, $2, $3);
-    return
-        +{
-            'date' => DateTime->new(year => $y, month => $m, day => $d),
-            'body' => $text,
-            'title' => $title,
-        };
+    my ( $y, $m, $d ) = ( $1, $2, $3 );
+    return +{
+        'date'  => DateTime->new( year => $y, month => $m, day => $d ),
+        'body'  => $text,
+        'title' => $title,
+    };
 }
 
 sub calc_rss_items
@@ -65,19 +61,15 @@ sub calc_rss_items
     opendir my $dir, $self->dir();
     my @files = readdir($dir);
     closedir($dir);
-    @files = (grep { /^\d{4}-\d{2}-\d{2}\.html$/ } @files);
+    @files = ( grep { /^\d{4}-\d{2}-\d{2}\.html$/ } @files );
     @files = sort { $a cmp $b } @files;
-    return [
-        map {
-            $self->file_to_news_item($_)
-        } @files
-        ];
+    return [ map { $self->file_to_news_item($_) } @files ];
 }
 
 sub calc_items
 {
     my $self = shift;
-    return [@old_news_items, @{$self->calc_rss_items()}];
+    return [ @old_news_items, @{ $self->calc_rss_items() } ];
 }
 
 sub _init
@@ -87,7 +79,7 @@ sub _init
     $self->dir("../lib/feeds/fc-solve.blogspot/");
     $self->num_on_front(7);
 
-    $self->items($self->calc_items());
+    $self->items( $self->calc_items() );
 
     return 0;
 }
@@ -98,37 +90,39 @@ sub get_item_html
     my $item = shift;
 
     my $title = $item->{title};
-    my $date = $item->{date};
+    my $date  = $item->{date};
 
-    return "<h3 class=\"newsitem\" id=\""
-        . $date->strftime("news-%Y-%m-%d")
-        . "\">" . $date->strftime("%d-%b-%Y")
-        . (defined($title) ? ": $title" : "")
-        . "</h3>\n\n"
+    return
+          "<article><header><h3 class=\"newsitem\" id=\""
+        . $date->strftime("news-%Y-%m-%d") . "\">"
+        . $date->strftime("%d-%b-%Y")
+        . ( defined($title) ? ": $title" : "" )
+        . "</h3></header>\n\n"
         . $item->{'body'}
-        ;
+        . "</article>\n";
 }
 
 sub render_items
 {
-    my $self = shift;
+    my $self  = shift;
     my $items = shift;
-    return join("\n\n", (map { $self->get_item_html($_) } @$items));
+    return join( "\n\n", ( map { $self->get_item_html($_) } @$items ) );
 }
 
 sub render_front_page
 {
-    my $self = shift;
-    my @items = reverse(@{$self->items()});
-    return $self->render_items([@items[0..($self->num_on_front()-1)]]);
+    my $self  = shift;
+    my @items = reverse( @{ $self->items() } );
+    return $self->render_items(
+        [ @items[ 0 .. ( $self->num_on_front() - 1 ) ] ] );
 }
 
 sub render_old
 {
-    my $self = shift;
-    my @items = @{$self->items()};
-    return $self->render_items([reverse(@items[0 .. (@items - $self->num_on_front())])]);
+    my $self  = shift;
+    my @items = @{ $self->items() };
+    return $self->render_items(
+        [ reverse( @items[ 0 .. ( @items - $self->num_on_front() ) ] ) ] );
 }
 
 1;
-

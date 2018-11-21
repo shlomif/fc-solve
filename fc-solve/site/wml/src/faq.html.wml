@@ -1,15 +1,21 @@
-#include '../template.wml'
+#include "template5.wml"
 #include "xhtml/1.x/std/toc.wml"
 
 <latemp_subject "The Freecell Solver Frequently Asked Questions (F.A.Q.) List" />
 
+<div class="wrap-me">
+
+<section>
+<header>
 <h2* id="toc">Table of contents</h2*>
+</header>
 
 <toc />
+</section>
 
-<h2 id="questions">The Questions</h2>
+<h2_section id="questions" title="The Questions">
 
-<h3 id="what_is_it">What is Freecell Solver? What is a solver for Freecell in general?</h3>
+<h3_section id="what_is_it" title="What is Freecell Solver? What is a solver for Freecell in general?">
 
 <p>
 <a href="https://en.wikipedia.org/wiki/FreeCell">Freecell (or “FreeCell”)</a>
@@ -40,7 +46,36 @@ but Freecell appears to be the most popular variant out of them, and the
 name is kept for historical reasons.
 </p>
 
-<h3 id="what_are_ms_deals">What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?</h3>
+</h3_section>
+
+<h3_section id="what_is_solitaire" title="What is Solitaire? Is it the Windows implementation of Klondike?">
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Patience_%28game%29">“Patience” or
+“Solitaire”</a> are any single-player card game, or at least those played
+using the standard
+<a href="https://en.wikipedia.org/wiki/French_playing_cards">French playing cards</a>.
+One such solitaire variant is <a href="https://en.wikipedia.org/wiki/Klondike_(solitaire)">Klondike</a>
+which has become associated with card Solitaire in general, and
+was implemented as
+<a href="https://en.wikipedia.org/wiki/Microsoft_Solitaire">a game for
+Microsoft Windows</a> under the name "Solitaire". Nevertheless, there are many
+other variants of card Solitaire, and Freecell is one of them.
+</p>
+
+<p>
+In some countries, "Solitaire" can also refer to
+<a href="https://en.wikipedia.org/wiki/Peg_solitaire">peg solitaire</a>.
+</p>
+
+<p>
+You can find <a href="$(ROOT)/links.html#other_solvers">a list of solvers</a>
+for various variants of patience games in our links page.
+</p>
+
+</h3_section>
+
+<h3_section id="what_are_ms_deals" title="What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?">
 
 <p>
 Microsoft shipped several implementations of Freecell for its Windows operating
@@ -103,7 +138,9 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 </li>
 </ol>
 
-<h3 id="solve_all_games">Can Freecell Solver solve all the Freecell layouts?</h3>
+</h3_section>
+
+<h3_section id="solve_all_games" title="Can Freecell Solver solve all the Freecell layouts?">
 
 <p>
 First of all, despite popular belief, a small percentage of the standard
@@ -159,7 +196,9 @@ which is impossible to win with 8 freecells or fewer.
 </li>
 </ol>
 
-<h3 id="a_move_seems_wrong">I think I found a wrong move in the solution? What can I do?</h3>
+</h3_section>
+
+<h3_section id="a_move_seems_wrong" title="I think I found a wrong move in the solution? What can I do?">
 
 <p>
 While it is not unthinkable that Freecell Solver will have a bug and will
@@ -171,8 +210,15 @@ demonstrated to them, they were in fact possible.
 <p>
 One can find the maximal number of cards that can be moved as a sequence
 in Freecell using the formula
-<code>max_cards = (1 + num_vacant_freecells) * (2 ^ num_vacant_columns)</code>
-(where “*” is multiplication and “^” is exponentiation.). One can also try using
+<code>max_cards = (1 + num_vacant_freecells) * (2 ^ num_columns)</code>
+(where “*” is multiplication and “^” is <a href="https://en.wikipedia.org/wiki/Exponentiation">exponentiation</a>.). Note that <code>num_columns</code>
+refers to the number of <b>intermediate/temporary</b> columns one uses in the
+the transfer and if you are trying to transfer cards to an empty column, the
+number will be smaller.
+</p>
+
+<p>
+One can also try using
 <a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
 in order to filter solutions and produce ones with multi-card moves
@@ -186,7 +232,9 @@ option to expand such moves and one can use it in most modern JavaScript-enabled
 browsers without having to install any additional software on your computer.
 </p>
 
-<h3 id="abuse_of_fc_solve">I think I found an abuse of Freecell Solver. What should I do?</h3>
+</h3_section>
+
+<h3_section id="abuse_of_fc_solve" title="I think I found an abuse of Freecell Solver. What should I do?">
 
 <p>
 We received a report or two about various people or companies distributing
@@ -217,7 +265,9 @@ or library (which violates the no warranty paragraph of the licence) everything
 should be fine and the “abuse” of the program is acceptable.
 </p>
 
-<h3 id="what_are_the_uses_of_a_solver">What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?</h3>
+</h3_section>
+
+<h3_section id="what_are_the_uses_of_a_solver" title="What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?">
 
 <p>
 Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
@@ -250,7 +300,9 @@ by finding whether reached states are solvable. This provides a combined
 solving technique, that is greater than the sum of both parts.
 </p>
 
-<h3 id="does_anyone_care">Does anyone care about this project? I think no one cares about it except you.</h3>
+</h3_section>
+
+<h3_section id="does_anyone_care" title="Does anyone care about this project? I think no one cares about it except you.">
 
 <p>
 The short answer is that: yes, some people care. As of November 2016, I received
@@ -279,7 +331,9 @@ Freecell may have been declining in popularity lately, but I expect interest
 in it to continue for a while.
 </p>
 
-<h3 id="new_solver_is_too_slow">I started writing a solver for Freecell (of my own) but it is too slow. What can I do?</h3>
+</h3_section>
+
+<h3_section id="new_solver_is_too_slow" title="I started writing a solver for Freecell (of my own) but it is too slow. What can I do?">
 
 <p>
 The problem with many naïve Freecell solving programs is that, while they
@@ -299,7 +353,7 @@ note that their code (and especially Freecell Solver’s) may be somewhat
 complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
 <a href="$(ROOT)/docs/">Freecell Solver documentation</a> as well as the
-<a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/">archives of
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">archives of
 the fc-solve-discuss mailing list</a> for some insights and ideas.
 </p>
 
@@ -359,8 +413,9 @@ authors of other open-source solvers may be happy for help as well, so if
 you want to help to improve something more mature, then contact us.
 </p>
 
-<h3 id="integrate_fcs_into_program">May I integrate Freecell Solver into my
-program? If so - how?</h3>
+</h3_section>
+
+<h3_section id="integrate_fcs_into_program" title="May I integrate Freecell Solver into my program? If so - how?">
 
 <p>
 Yes, you can, as long as you accept the
@@ -392,7 +447,9 @@ Good luck and please let us know if you run into any trouble, or,
 alternatively, if you are successful.
 </p>
 
-<h3 id="solutions_are_too_long">The Solutions I got are too long. What can I do?</h3>
+</h3_section>
+
+<h3_section id="solutions_are_too_long" title="The Solutions I got are too long. What can I do?">
 
 <p>
 You can try using a flares-based preset such as “video-editing” and
@@ -402,7 +459,7 @@ be:
 </p>
 
 <pre>
-pi-make-microsoft-freecell-board -t 24 | \
+pi-make-microsoft-freecell-board -t 24 | \\
     fc-solve -l ve --flares-choice fcpro -fif 10 -
 </pre>
 
@@ -413,7 +470,9 @@ that will yield something. There are some examples for those in the individual
 flares and soft threads under the “Presets/presets” directory.
 </p>
 
-<h3 id="which_prog_lang">Which programming language (or programming languages) is Freecell Solver written in?</h3>
+</h3_section>
+
+<h3_section id="which_prog_lang" title="Which programming language (or programming languages) is Freecell Solver written in?">
 
 <p>
 The core Freecell Solver source is written in the GNU11 version of
@@ -453,7 +512,9 @@ sh:             970 (2.42%)
 cpp:            277 (0.69%)
 </pre>
 
-<h3 id="why_in_c">Why is Freecell Solver written in C? Why not in another language?</h3>
+</h3_section>
+
+<h3_section id="why_in_c" title="Why is Freecell Solver written in C? Why not in another language?">
 
 <p>
 Part of the reason why Freecell Solver is written in C, is because the first
@@ -543,8 +604,9 @@ is still maintained directly, and the generated JavaScript code is not
 idiomatic JavaScript.
 </p>
 
+</h3_section>
 
-<h3 id="unsolvable_solution">I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?</h3>
+<h3_section id="unsolvable_solution" title="I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?">
 
 <p>
 The default Freecell Solver heuristic may have a small number of deals that
@@ -554,8 +616,9 @@ and the <a href="$(ROOT)/docs/distro/USAGE.html">USAGE.html</a> file for
 more information.
 </p>
 
-<h3 id="is_fc_solve_completed">Have you completed/finished the work on
-Freecell Solver? Is it done yet?</h3>
+</h3_section>
+
+<h3_section id="is_fc_solve_completed" title="Have you completed/finished the work on Freecell Solver? Is it done yet?">
 
 <p>
 I am getting asked that a lot, and I find it a strange notion. It is similar
@@ -589,8 +652,9 @@ earlier blog post</a> about “Finished Projects, Maintained Projects and Those
 that are Up For Adoption”.
 </p>
 
-<h3 id="wasnt_freecell_solved_yet">“‘Freecell Solver’? Hasn’t Freecell been
-solved yet?”</h3>
+</h3_section>
+
+<h3_section id="wasnt_freecell_solved_yet" title="“‘Freecell Solver’? Hasn’t Freecell been solved yet?”">
 
 <p>
 This question shows a basic misunderstanding of what Freecell is, and the
@@ -612,7 +676,9 @@ some layouts, but hopefully the chance of this risk can be minimised
 with the more advanced searches.
 </p>
 
-<h3 id="is_fc_solve_written_in_perl">Is Freecell Solver written in Perl?</h3>
+</h3_section>
+
+<h3_section id="is_fc_solve_written_in_perl" title="Is Freecell Solver written in Perl?">
 
 <p>
 For some reason, some people assume that I (= Shlomi Fish) wrote Freecell
@@ -657,7 +723,7 @@ does it use?</h3>
 
 <p>
 The exact algorithm used by “fc-solve” can be configured using the various
-command line arguments it accepts which are documented in the
+command line arguments it accepts, which are documented in the
 <a href="$(ROOT)/docs/distro/README.html">README</a> and
 <a href="$(ROOT)/docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
 “-l” flag can load some predefined configurations, which are essentially a
@@ -724,3 +790,268 @@ initial deals of some popular Solitaire implementations, and some
 integration with Freecell Solver, that provides it with automated input, and
 also uses its moves output to display the solution.
 </p>
+
+<h3 id="deal_11982">I found a solution for MS Deal No. 11,982 - should I
+report it to you?</h3>
+
+<p>
+That deal was found to be impossible by most human
+players, and all automated solvers that tried to solve it (including
+<a href="https://github.com/boundedvariation/Freecell">a solver</a> which
+is written in <a href="https://en.wikipedia.org/wiki/Haskell_%28programming_language%29">Haskell</a>,
+which is a statically typed programming language that code that is written in
+it tends to exhibit very few bugs.). Nevertheless, we would welcome a proof
+to the contrary given it actually refers to the actual deal.
+</p>
+
+<p>
+For the record, the card arrangement is:
+</p>
+
+<pre>
+ --  --  --  --  --  --  --  --
+ AH  AS  4H  AC  2D  6S  TS  JS
+ 3D  3H  QS  QC  8S  7H  AD  KS
+ KD  6H  5S  4D  9H  JH  9S  3C
+ JC  5D  5C  8C  9D  TD  KH  7C
+ 6C  2C  TH  QH  6D  TC  4S  7S
+ JD  7D  8H  9C  2H  QD  4C  5H
+ KC  8D  2S  3S
+</pre>
+
+<p>
+Or arranged with the piles in each text line:
+</p>
+
+<pre>
+: AH 3D KD JC 6C JD KC
+: AS 3H 6H 5D 2C 7D 8D
+: 4H QS 5S 5C TH 8H 2S
+: AC QC 4D 8C QH 9C 3S
+: 2D 8S 9H 9D 6D 2H
+: 6S 7H JH TD TC QD
+: TS AD 9S KH 4S 4C
+: JS KS 3C 7C 7S 5H
+</pre>
+
+<p>
+Here is a <a href="$(ROOT)/images/pysol-freecell-ms11982.png">screenshot
+of that deal in PySol</a>.
+</p>
+
+<p>
+If, and only if, the cards match, please record a solution using
+<a href="http://pysolfc.sourceforge.net/">PySol FC</a> and send us the saved
+game. Make sure you are playing Freecell with exactly four reserves and not some other
+variant.
+</p>
+
+<p>
+Note that
+<a href="https://www.makorrishon.co.il/nrg/online/10/ART/939/623.html">NRG
+Israel reported</a> (in Hebrew) that an Israeli couple was able to solve
+deal no. 11,982 but they didn't record the solution, and it is possible that
+it exploited a bug in
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">MS Freecell</a>.
+</p>
+
+<hr />
+
+<p>
+A partial list of the solvers that have failed in finding a solution to #11,982:
+</p>
+
+<ol>
+
+<li>
+<p>
+The aforementioned solver written in Haskell.
+</p>
+</li>
+
+<li>
+<p>
+fc-solve / libfreecell-solver - hosted on this site.
+</p>
+</li>
+
+<li>
+<p>
+The dbm_fc_solver - shares some code with fc-solve and part of the Freecell Solver
+distribution.
+</p>
+</li>
+
+<li>
+<p>
+The depth_dbm_fc_solver - shares some code with both dbm_fc_solver and fc-solve.
+</p>
+</li>
+
+<li>
+<p>
+The original <a href="http://cards.wikia.com/wiki/Patsolve">patsolve</a> by Dr. Tom
+Holroyd.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/patsolve">patsolve-shlomif</a> which shares
+some code with fc-solve.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://fc-solve.shlomifish.org/don_woods.html">Don Woods' Freecell Solver</a> -
+written in C with available source.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/shirl-hart-freecell-solver">Shirl Hart's solver</a> -
+written in Java with an <a href="https://metacpan.org/release/Freecell-App">earlier
+version</a> in Perl 5.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.numin8r.us/programs/">Gary Campbell's FCELL.COM</a> - written
+in x86 assembly for DOS.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://sourceforge.net/projects/freecelljsolver/">FreeCell Java Solver</a>
+- open source under the GPLv3.
+</p>
+</li>
+</ol>
+
+</h3_section>
+
+<h3_section id="complexity" title="What is the runtime complexity of solving Freecell?">
+
+<p>
+Generalised Freecell (where there is an
+arbitrary number of ranks) was shown to be
+an <a href="https://github.com/shlomif/Freenode-programming-channel-FAQ/blob/master/FAQ.mdwn#what-do-np-complete-np-hard-etc-mean">NP-complete problem</a>
+and as a result, it is likely that no efficient solution for solving that
+in the general case can be found (but it is possible that some good heuristics
+can be devised).
+</p>
+
+<p>
+That put aside, Freecell is a degenerate case where the number of ranks is
+fixed at 13 (ace-to-king).
+</p>
+
+</h3_section>
+
+<h3_section id="what_is_pysol" title="What is PySol? What is PySol FC? Are they solvers as well?">
+
+<p>
+No, actually <a href="http://pysolfc.sourceforge.net/">PySol FC</a>, which
+is short for "Python Solitaire Fan Club edition" is an open source suite of
+card solitaire / patience games, which includes, but is not limited to several
+Freecell-like variants. While it includes some solver and hints functionality
+and makes use of Freecell Solver and other solvers, it contains many other
+features including allowing a human to play the games on their own.
+</p>
+
+<p>
+Note that Shlomi Fish, who is the chief maintainer of Freecell Solver, also
+co-maintains PySol FC so he tends to talk about his work on both.
+</p>
+
+<p>
+For some more information, see:
+</p>
+
+<ol>
+
+<li>
+<p>
+<a href="https://en.wikipedia.org/wiki/PySol">Wikipedia Page</a>
+</p>
+</li>
+</ol>
+
+</h3_section>
+
+<h3_section id="is_freecell_the_ms_game" title="“Freecell”? Is it the Microsoft/Windows game?">
+
+<p>
+Yes, and no. The "Freecell" game (see its <a href="https://en.wikipedia.org/wiki/FreeCell">wikipedia entry</a>)
+was invented by Paul Alfille based on an earlier game called "Baker's Game"
+and was implemented for the PLATO educational computer system back in 1978. The
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">Microsoft Windows Freecell</a>
+implementation came later and made the game much more well-known
+and popular, but had some limitations. While Freecell Solver can handle the
+MS FreeCell deals, parameters and rules perfectly fine, it also has run-time
+support for many variations on them, and accepts any arbitrary layout of the
+cards, including those at mid play, as input.
+</p>
+
+</h3_section>
+
+<h3_section id="is_it_foss" title="Is Freecell Solver open source?">
+
+<p>
+Freecell Solver is
+<a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free and
+open source software</a>
+under the permissive and common
+<a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
+and provided free-of-charge for download or use online. You can find the
+latest development sources in
+<a href="https://github.com/shlomif/fc-solve">its GitHub repository</a>
+and call also download release source archive files from
+<a href="$(ROOT)/download.html">the download page</a>. Share and enjoy!
+</p>
+
+<p>
+Contributions are welcome.
+</p>
+
+</h3_section>
+
+<h3_section id="exceeded_512GB" title="What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?">
+
+<p>
+We were trying to conclusively determine whether MS deal no. 384,243 was
+<a href="http://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html">winnable or impossible to solve with <b>two</b> freecells</a>.
+This was done by running the depth_dbm_fc_solver on an <a href="https://en.wikipedia.org/wiki/Supercomputer">HPC</a>
+node which used <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> processors
+and had 512 gigabytes of RAM. We were given indirect access to it thanks
+to a certain university. Note that steps were taken to reduce the RAM
+consumption and it seems unlikely that there were memory leaks in the code.
+</p>
+
+<p>
+We have been able to complete a <a href="$(ROOT)/charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
+milliard range</a> using an AWS node with only 256 GB of RAM and about
+40-50 GB of hard disk (though we could probably use less or make use
+of <a href="https://github.com/s3fs-fuse/s3fs-fuse">s3fs-fuse</a> or similar
+— to save on costs).
+</p>
+
+<p>
+It is true that
+<a href="https://en.wikiquote.org/wiki/Bill_Gates#Misattributed">a quote mis-attributed to Bill Gates</a>
+says “640 kB [of RAM] ought to be enough for anybody” but many computing
+tasks require much more than that and Freecell is <a href="#complexity">a hard
+(NP-complete) problem</a>. There may be ways to reduce RAM consumption further
+using a different algorithm, by distributing calculations, or other techniques.
+As usual, patches/<a href="https://help.github.com/articles/about-pull-requests/">pull requests</a> or ideas are welcome.
+</p>
+
+</h3_section>
+
+</h2_section>
+
+</div>

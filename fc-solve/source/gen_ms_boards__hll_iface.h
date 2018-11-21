@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * gen_ms_boards__hll_iface.h - high-level-language interface to the rand.
- */
+// gen_ms_boards__hll_iface.h - high-level-language interface to the rand.
 #pragma once
 
 #ifdef __cplusplus
@@ -20,14 +18,13 @@ extern "C" {
 
 typedef struct
 {
-    microsoft_rand_t deal_idx;
-    microsoft_rand_t seedx;
-} fc_solve__hll_ms_rand_t;
+    microsoft_rand deal_idx;
+    microsoft_rand seedx;
+} fc_solve__hll_ms_rand;
 
-extern fc_solve__hll_ms_rand_t *fc_solve__hll_ms_rand__get_singleton(void);
-extern void fc_solve__hll_ms_rand__init(
-    fc_solve__hll_ms_rand_t *, const char *);
-extern int fc_solve__hll_ms_rand__mod_rand(fc_solve__hll_ms_rand_t *, int);
+extern fc_solve__hll_ms_rand *fc_solve__hll_ms_rand__get_singleton(void);
+extern void fc_solve__hll_ms_rand__init(fc_solve__hll_ms_rand *, const char *);
+extern int fc_solve__hll_ms_rand__mod_rand(fc_solve__hll_ms_rand *, int);
 
 #ifdef __cplusplus
 }

@@ -7,22 +7,19 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * split_cmd_line.c: split command line arguments from a big string according
- * to a subset of Bourne shell's semantics. Useful for reading command
- * line arguments from files.
- */
-
+// split_cmd_line.c: split command line arguments from a big string according
+// to a subset of Bourne shell's semantics. Useful for reading command
+// line arguments from files.
 #include "split_cmd_line.h"
 
 typedef struct
 {
-    args_man_t args_man;
+    fcs_args_man args_man;
     /* These fields are for internal use only. */
     char *last_arg, *last_arg_ptr, *last_arg_end;
-} args_man_wrapper_t;
+} args_man_wrapper;
 
-void fc_solve_args_man_free(args_man_t *const manager)
+void fc_solve_args_man_free(fcs_args_man *const manager)
 {
     const_SLOT(argc, manager);
     const_SLOT(argv, manager);
@@ -37,7 +34,7 @@ void fc_solve_args_man_free(args_man_t *const manager)
 }
 
 static inline void add_to_last_arg(
-    args_man_wrapper_t *const manager, const char c)
+    args_man_wrapper *const manager, const char c)
 {
     *(manager->last_arg_ptr++) = c;
 
@@ -51,7 +48,7 @@ static inline void add_to_last_arg(
     }
 }
 
-static inline void push_args_last_arg(args_man_wrapper_t *const manager)
+static inline void push_args_last_arg(args_man_wrapper *const manager)
 {
     const int len = manager->last_arg_ptr - manager->last_arg;
     char *const new_arg = SMALLOC(new_arg, len + 1);
@@ -70,29 +67,29 @@ static inline void push_args_last_arg(args_man_wrapper_t *const manager)
     manager->last_arg_ptr = manager->last_arg;
 }
 
-static inline fcs_bool_t is_whitespace(const char c)
+static inline bool is_whitespace(const char c)
 {
     return ((c == ' ') || (c == '\t') || (c == '\n') || (c == '\r'));
 }
 
-static inline args_man_t fc_solve_args_man_alloc(void)
+static inline fcs_args_man fc_solve_args_man_alloc(void)
 {
-    const args_man_t ret = {
+    const fcs_args_man ret = {
         .argc = 0, .argv = SMALLOC(ret.argv, FC_SOLVE__ARGS_MAN_GROW_BY)};
     return ret;
 }
 
-args_man_t fc_solve_args_man_chop(const char *const string)
+fcs_args_man fc_solve_args_man_chop(const char *const string)
 {
     const char *s = string;
 
-    args_man_wrapper_t manager = {.args_man = fc_solve_args_man_alloc()};
+    args_man_wrapper manager = {.args_man = fc_solve_args_man_alloc()};
     manager.last_arg_ptr = manager.last_arg = SMALLOC(manager.last_arg, 1024);
     manager.last_arg_end = manager.last_arg + 1023;
 
     while (*s != '\0')
     {
-        fcs_bool_t push_next_arg_flag = FALSE;
+        bool push_next_arg_flag = FALSE;
 
         while (is_whitespace(*s))
         {
@@ -112,8 +109,8 @@ args_man_t fc_solve_args_man_chop(const char *const string)
             continue;
         }
 
-        fcs_bool_t should_still_loop = TRUE;
-        fcs_bool_t in_arg = FALSE;
+        bool should_still_loop = TRUE;
+        bool in_arg = FALSE;
         while (should_still_loop)
         {
             switch (*s)

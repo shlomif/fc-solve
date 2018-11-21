@@ -1,0 +1,83 @@
+---
+# Shamelessly taken from https://github.com/plicease/Dist-Zilla-PluginBundle-Author-Plicease/blob/master/.appveyor.yml
+# Thanks!
+install:
+    - choco install ag
+    - choco install strawberryperl
+    - if not exist C:\libtap mkdir C:\libtap
+    - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
+    - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - python3 -mpip install cffi pycotap random2 six
+    - perl -v
+    - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
+    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PERL5LIB=C:/_P5/lib/perl5
+    - SET PERL_LOCAL_LIB_ROOT=C:/_P5
+    - SET PERL_MB_OPT=--install_base C:/_P5
+    - SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
+    - perl -v
+    - cpanm --notest Devel::Trace Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
+    - if not exist C:\libtap\gperf-3.0.4.tar.gz curl -fsS -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
+    - copy C:\libtap\gperf-3.0.4.tar.gz .
+    - tar -xvf gperf-3.0.4.tar.gz
+    - cd gperf-3.0.4 && perl -e "if (-e qq#C:\\libtap\\bin\\gperf.exe#) { exit(0); } $ENV{PATH} = qq#C:\\msys64\\mingw64\\bin;$ENV{PATH}#; system('sh configure --prefix=C:/libtap') or system('gmake') or system('gmake install');" && cd ..
+    - git clone -b cmake https://github.com/shlomif/libtap
+    - mkdir libtap\b
+    - cd libtap\b
+    - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
+    - cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    - echo %PATH%
+    - gmake
+    - gmake install
+    - cd ..\..\
+build: off
+test_script:
+    - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
+    - set LIBRARY_PATH=C:\libtap\lib
+    - set CMAKE_LIBRARY_PATH=C:\libtap\lib
+    - set LD_LIBRARY_PATH=C:\libtap\lib
+    - set CPATH=C:\libtap\include
+    - set PATH=C:\libtap\bin;%PATH%
+    - set HARNESS_BREAK=1
+    - set FCS_USE_TEST_RUN=1
+    - mkdir fc-solve\b
+    - cd fc-solve\b
+    - perl ../source/Tatzer -G "MinGW Makefiles" -l x64t
+    - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
+    - echo %PATH%
+    - gmake
+    - type cmd_line_inc.h
+    - python3 -mpip install cffi random2 six
+    - gmake boards
+    # Trying this hack to take more precendence for Inline::C / etc.
+    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
+    - perl ../source/run-tests.pl
+    - cd ..
+    - mkdir pkg-build-win64
+    - cd pkg-build-win64
+    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
+    - gmake package
+    - cd ..
+    - mkdir pkg-build
+    - cd pkg-build
+    # For generating 32-bit release binaries.
+    - SET PATH=C:\MinGW\bin;%PATH%
+    - perl ../source/Tatzer -G "MinGW Makefiles" --notest-suite -r
+    - gmake package
+    # For generating the binaries zip for https://github.com/shlomif/PySolFC/issues/58 ( PySol )
+    - perl ../source/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite -r --prefix=c:\fcs-pysol
+    - gmake install
+    - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
+# Disabling due to cache invalidation problems
+# cache:
+#     - C:\libtap -> .appveyor.yml
+#     - C:\_P5 -> .appveyor.yml
+#     - C:\strawberry -> .appveyor.yml
+shallow_clone: true
+artifacts:
+    - path: 'fc-solve\pkg-build\fc-solve-for-pysol.zip'
+      name: Freecell Solver Zip Distribution for PySol FC
+    - path: 'fc-solve\pkg-build\freecell-solver-*-win32.exe'
+      name: Freecell Solver Win32 Package
+    - path: 'fc-solve\pkg-build-win64\freecell-solver-*-win64.exe'
+      name: Freecell Solver Win64 Package

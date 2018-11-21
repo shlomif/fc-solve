@@ -7,7 +7,8 @@ use AI::Pathfinding::OptimizeMultiple::App::CmdLine;
 
 use vars qw($trap);
 
-eval q{use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );};
+eval
+q{use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );};
 
 if ($@)
 {
@@ -16,11 +17,10 @@ if ($@)
 
 plan tests => 6;
 
-my @running_modes =
-(
+my @running_modes = (
     {
         blurb_base => 'modulino',
-        sub_ref => sub {
+        sub_ref    => sub {
             my ($flags) = @_;
             AI::Pathfinding::OptimizeMultiple::App::CmdLine->new(
                 {
@@ -31,9 +31,9 @@ my @running_modes =
     },
     {
         blurb_base => 'cmd_line',
-        sub_ref => sub {
+        sub_ref    => sub {
             my ($flags) = @_;
-            system($^X, "bin/optimize-game-ai-multi-tasking", @$flags);
+            system( $^X, "bin/optimize-game-ai-multi-tasking", @$flags );
         },
     },
 );
@@ -43,25 +43,20 @@ foreach my $mode (@running_modes)
 {
     my $blurb_base = $mode->{blurb_base};
 
-    trap(sub { return $mode->{sub_ref}->([qw(--help)]); } );
+    trap( sub { return $mode->{sub_ref}->( [qw(--help)] ); } );
 
     # TEST*$num_subs
-    like (
-        $trap->stdout(),
-        qr/--output/,
+    like( $trap->stdout(), qr/--output/,
         "stdout matches --output flag. ($blurb_base)",
     );
 
     # TEST*$num_subs
-    like (
+    like(
         $trap->stdout(),
         qr/--help[^\n]*-h[^\n]*displays this help screen/ms,
         "stdout matches --output flag. ($blurb_base)",
     );
 
     # TEST*$num_subs
-    ok (
-        scalar (!$trap->die),
-        "No exception was thrown. ($blurb_base)",
-    );
+    ok( scalar( !$trap->die ), "No exception was thrown. ($blurb_base)", );
 }

@@ -27,7 +27,7 @@ static void trim_trailing_whitespace(char *const as_str)
         char *prev_src = src;
         while (*src == ' ')
         {
-            src++;
+            ++src;
         }
         if (*(src) == '\0')
         {

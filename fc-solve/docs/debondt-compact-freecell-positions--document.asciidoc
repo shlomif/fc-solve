@@ -1,0 +1,290 @@
+Compact Freecell Positions "deBondt" Encoding Document
+======================================================
+Shlomi Fish <shlomif@cpan.org>
+:Date: 2018-09-05
+:Revision: $Id$
+
+[id="spec"]
+The spec
+--------
+
+Hi all,
+
+I'm forwarding a message I sent to Dr. de Bondt about compactly representing
+Freecell positions/states. Now that I think of it, I think we don't need to
+store the single card move-from-parent-state at all, because we can enumerate
+all the moves from the parent to its children and see which one matches the one
+in the solution (because we hold a parent state pointer).
+
+Furthermore, I have another scheme in mind that is similar to my original
+scheme where we store a bit for whether the cards on the columns or in the
+Freecells are (H vs. D) or (C vs. S) and so on, and would like to look into it.
+And naturally, I should play with representing the existing encoding more
+compactly as one large number.
+
+Regards,
+
+Shlomi Fish
+
+Begin forwarded message:
+
+---------------------------------------------
+Date: Sat, 26 May 2012 15:56:22 +0300
+From: Shlomi Fish <shlomif@...>
+To: Michiel de Bondt <MichieldeB@...>, M.deBondt@...
+Subject: Re: Freecell states
+---------------------------------------------
+
+
+Hi Michiel,
+
+Since I don't know if the @... address is still active, I'm CCing this
+to your university E-mail, which I found on this paper you have written
+http://www.math.ru.nl/onderzoek/reports/rep2004/rep04_18.ps.gz by following
+the links on a Google search for your name.
+
+It seems like you are interested in the NP-completeness of Minesweeper, of
+which I have heard back when I studied in the Technion, and is also a game
+included in Windows 3.x. That's Impressive.
+
+See below for my response.
+
+On Tue, 16 Sep 2003 22:54:37 +0200
+Michiel de Bondt <MichieldeB@...> wrote:
+
+> Hello Shlomi,
+>
+> You made a solver of Freecell. I wish to discuss about how the states
+> are stored. I have understood that you represent a state by 8 pointers
+> (to the 8 stacks) and some other info, but forgive me if I am wrong. 8
+> 16-bit pointers already take 128 bits of memory. I thought out a way to
+> store a state with only 128 bits. It works with <= 52 freecells, <= 52
+> stacks, and <= 52 cards per stack. Here is how.
+>
+> For each card, except the aces, the individual state of that card is
+> stored, which can take 6 values. Since 216 <= 256, you can store 3 cards
+> in a byte, so 48/3 = 16 bytes are needed for the state representant.
+>
+> The individual state of a card C, say jack of diamonds, represents what
+> is below it.
+>
+> 1 C is the lowest card of a stack.
+> 2 C lies on queen of spades.
+> 3 C lies on queen of clubs.
+> 4 C was moved to the foundations (i.e. on ten of diamonds).
+> 5 C lies on a free cell.
+> 6 C does not satisfy one of the above (i.e. C lies on the card it
+> initially lies on).
+>
+
+I nearly forgot about that E-mail thread and your suggestion, but I've ran into
+it when I was going over my old Freecell Solver-related E-mail and in the
+context of having implemented the so-called delta states:
+
+http://fc-solve.shlomifish.org/to-do.html#orig_calc_states
+
+Now this resulted in compactly stored states - varying in size, but never more
+than 18 bytes (or 144 bits), which I've placed into 24 bytes for parity (and
+also was able to eventually pack more stuff there, like the leading, or the AVL
+tree's balance).
+
+Now, your suggestion about storing the states of 3 cards in a byte of 256 values
+can be improved by calculating a big +6^52+ number and storing it in the number
+of necessary bits:
+
+[stem]
+++++
+log_2(6) * 52 = 134.4180500375 bits (bytes: 17)
+++++
+
+That's already an improvement over the potentially long 18 bytes, but we can
+do even better. If you remember, the only valid positions for Aces (given
+Horne's prune) are in their original position (#6 in your case), or in the
+foundation (#4 in your case), so we can have:
+
+[stem]
+++++
+log_2(6) * 48 + log_2(2) * 4 = 128.078200034615 bits (bytes: 17)
+++++
+
+In addition, cases #2 and #3 are not possible for kings, so they only have 4
+possible cases, so we get:
+
+[stem]
+++++
+log_2(6) * 44 + log_2(2) * 4 + log_2(4) * 4 = 125.738350031731 bits (bytes: 16)
+++++
+
+That already fits in 16 bytes or 128 bits.
+
+But we can do even better. If we first encode the value of each foundation
+(from 0 to King - 14 values in total), we can remove one option (#4 in your
+case) from each of the bases and get:
+
+[stem]
+++++
+log_2(14) * 4 + log_2(5) * 44 + log_2(1) * 4 + log_2(3) * 4 = 123.734105866159 bits (bytes: 16)
+++++
+
+
+Something else I tried is to encode the length of the cards which remained in
+their original position since the start of play, in each of the 8 columns, like
+so:
+
+0-1 cards: 0 (because 1 remaining cards is equivalent to none)
+2 cards: 1
+3 cards: 2
+4 cards: 3
+5 cards: 4
+6 cards: 5
+7 cards: 6
+
+Then since there are 4 columns with seven initial cards and 4 columns of six,
+we get:
+
+[stem]
+++++
+log_2(7) * 4 + log_2(6) * 4 + log_2(14) * 4 + log_2(4) * 44 + log_2(1) * 4 + log_2(2) * 4 = 128.798689379345 bits (bytes: 17)
+++++
+
+As you see it made matters worse, so I guess it's better to use the 123.73 bits
+notation.
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+I also would like to encode the move-to-the-parent-state as compactly as
+possible. Since in the case of the DBM-fc-solver, it is a single card move,
+then there are these possibilities:
+
+1. 4 moves to each of the foundation - H, S, C, D (from the appropriate card).
+
+2. Moves from the top of the column to any one of the freecells - 8 in total.
+
+3. Moves from any of the Freecells to at most three options in the columns (two
+possible parent cards, and one empty stack) - 4*3 in total.
+
+4. Moves from one column to another (parent #1, parent #2 or an empty column) -
+24 in total, for simplicity's sake (probably can be reduced further).
+
+In total we get 48 in total. If we add it to the state representation we get:
+
+[stem]
+++++
+log_2(48) * 1 + log_2(14) * 4 + log_2(5) * 44 + log_2(1) * 4 + log_2(3) * 4 = 129.31906836688 bits (bytes: 17)
+++++
+
+So we need 130 bits. However, there are at least 3*2 of them in the low-bits of
+the three pointers (left tree child, right tree child and
+pointer-to-game-parent-node) in the tree representation (3*3 if these are
+64-bit pointers), so we can use those for the two remaining bits (and also the
+AVL tree balance or R/B tree node colour), and as a result be able to represent
+each key as 16-bytes instead of 24 bytes, and save 8 bytes (or 64-bits) per
+state.
+
+So I guess that mission accomplished.
+
+Thanks for the insight!
+
+Best regards,
+
+­— Shlomi Fish
+
+> Suppose you wish to use e.g. +2^n+ MB for the hash table, with 1 <= n <=
+> 9. Cards 0 to 5 are stored in the first 16 bits of the state
+> representant. Cards 6 to 8 are stored in the next 8 bits. Cards 9 to 47
+> are stored after that.
+> Now compute a hash value with XOR arithmetic, such that the individual
+> states of the cards are given by the following amount of bits.
+>
+> Card 0..5: 0 bits
+> Card 6..8: 16 bits
+> Card 9..47: 15+n bits
+>
+> You get a hash value of 15+n bits this way. Now XOR this value with the
+> first 15+n bits of the state representant. This is the number of the
+> bucket where the state representant is stored. But the trick is, that
+> only the last 128-(15+n) bits of the state representant need to be
+> stored in the bucket.
+>
+> The remaining 15+n bits are used to point to the next state in the
+> bucket. This next state is in another table of 15+n entries: the first
+> table only contains "first buckets states". The third and subsequent
+> states are also in the second table, each pointed by the remaining 15+n
+> bits.
+>
+> Since each byte of the state representant is redundant, it is no problem
+> to reserve the value 0 or -1 in the first word of the table entry for
+> "empty". The value 0 in a pointer in either of both tables indicates
+> that there is no next entry, i.e., the end of the bucket is reached, so
+> the index 0 can not be used for the second table.
+>
+> Two tables of +2^(15+n)+ entries of 16 bytes take +2*16*2^15*2^n+ = +2^n+ MB
+> of memory.
+>
+> This way of storing seems efficient to me. To move a row of cards to
+> another stack, only the lowest card need to be moved in terms of the
+> above way of storing. Further, no ordering routines are needed.
+>
+> If you do not wish to search deep, just discourage your search by the
+> amount of cards that have state 6. If no cards have state 6, then you
+> have solved the board. So if you demand that the count of state 6 cards
+> decreases one every 100 moves, you do not get deeper than 5200 moves.
+>
+> Best regards, Michiel
+>
+>
+
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+
+[id="gent-blake--improvement"]
+The Ian Gent and Charles Blake Improved Encoding
+------------------------------------------------
+
+Ian Gent and Charles Blake were able to improve upon this scheme, quoting
+below:
+
+
+Hi Shlomi,
+
+I enjoyed reading the discussion you linked to and I thought about it some more and I think I can reduce the number of bits from there. Of course the saving may not be worth the extra computations required to recompute the states.
+
+For foundations, how many cards are on each of the foundations, S, H, C, D
+0 to 13 for four foundations:
+
+log2(14)*4 = 15.2294196882
+
+For each tableaux column, what is the length of the built sequence at the bottom, 0 to 12?  0 indicates space.  12 is max as we ignore aces.:
+
+Log2(13)*8 = 29.6035177451.
+
+For each tableaux column which is not a space, what is the top card of its built sequence at the bottom?
+
+For cards originally in that column except the top card, distinguish between they are in their original position or the column was previously emptied and that card is now at the top.
+As usual ignore aces.
+
+So there are 58 possibilities for the piles with 7 cards and 57 for the piles with 6.
+
+log2(58)*4+log2(57)*4 = 46.7634840372
+
+Total so far = log2(14)*4 + log2(13)*8 + log2(58)*4+log2(57)*4 = 91.5964214705 bits
+
+From this we now know each foundation and also each tableau in full EXCEPT for the choice of the two coloured cards at each point in its built sequence.  So e.g. if column 1 has a built sequence of length 4, with the top card of that sequence being the 7C in its original position, then we know that the column contains its original cards down to the 7C, followed by a red 6, a black 5, and a red 4.  So we have to determine whether it's 6H or 6D, 5S or 5C, and 4H or 4D.
+
+In fact we can do this very efficiently. We can ignore Ks and As so there are only 11 ranks, and two colours, for 22 choices to be made.  But we only need one bit for each one.
+
+For each rank/colour, e.g. black 6, the bit tells us whether the leftmost occurrence of the card in a built sequence is S or C (or H or D for red cards).  If there are two built black 6s then the second occurrence is determined.
+So we need 22 bits for this.
+
+Total so far = 113.5964214705
+
+And now we have done this we need zero more bits for the freecells! Every card in the tableau or foundations is determined so any cards not already placed are in freecells.
+
+So 114 bits can completely determine the state of a game, of course given the original layout, and assuming that aces are autoplayed.
+
+In fact this is not at all tight and the 114 bits can be reduced. We know that the foundations plus length of built sequences adds up to no more than 48, so a better encoding would need fewer bits than the almost 45 we use now.
+
+Furthermore we can do even better if you are prepared to accept symmetric equivalent of states instead of the original. I.e. there are more compact encodings possible if we say that two states with the same columns in different orders lead to the same encoding.
+
+Not sure if this is of any interest to you but I enjoyed thinking about it.
+
+Ian

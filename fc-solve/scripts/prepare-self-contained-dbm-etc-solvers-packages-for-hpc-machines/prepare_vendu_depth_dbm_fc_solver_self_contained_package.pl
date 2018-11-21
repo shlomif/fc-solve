@@ -7,10 +7,11 @@ use FindBin ();
 use lib "$FindBin::Bin";
 use PrepareAppAws;
 
-my @deals =
-(qw/
-504179225
-8203007169
-/);
+my @deals = (
+    qw/
+        504179225
+        8203007169
+        /
+);
 
-PrepareAppAws->new({deals => [@deals],})->run;
+PrepareAppAws->new( { deals => [@deals], } )->run;

@@ -72,7 +72,7 @@ sub r
         },
     );
 
-    my $verdict = $solution->verify();
+    my $verdict      = $solution->verify();
     my $test_verdict = Test::More::ok( !$verdict, $msg );
 
     if ( !$test_verdict )

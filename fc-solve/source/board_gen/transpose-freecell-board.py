@@ -7,7 +7,6 @@
 #
 # Licensed under the MIT/Expat License.
 
-# imports
 import sys
 import re
 
@@ -18,7 +17,7 @@ class LinesHandler:
         self.content = content
         self.line_num = 0
 
-    def _find_indexes(self, myregex, too_many_msg, not_at_start_msg):
+    def _find_indices(self, myregex, too_many_msg, not_at_start_msg):
         idxs = [x for x in range(self.line_num, len(self.content))
                 if re.match(myregex, self.content[x])]
 
@@ -36,37 +35,37 @@ class LinesHandler:
     def _extract_optional_line_from_start(self, validregex, wrong_fmt_msg,
                                           myregex, too_many_msg,
                                           not_at_start_msg):
-        i = self._find_indexes(myregex, too_many_msg, not_at_start_msg)
+        i = self._find_indices(myregex, too_many_msg, not_at_start_msg)
         if i == self.line_num:
-            l = self.content[self.line_num]
-            if not re.match(validregex, l):
+            line = self.content[self.line_num]
+            if not re.match(validregex, line):
                 raise ValueError(wrong_fmt_msg)
             self.line_num += 1
-            return re.sub(r'\s+$', '', l)
+            return re.sub(r'\s+$', '', line)
         else:
             return None
 
 
-def shlomif_main(args):
+def cmd_line_main(args):
     output_to_stdout = True
     output_fn = None
     while args[1][0] == '-':
-        if (args[1] == "-o"):
+        if args[1] == "-o":
             args.pop(0)
             if not len(args):
                 raise ValueError("-o must accept an argument.")
             output_fn = args[1]
             output_to_stdout = False
             args.pop(0)
-        elif (args[1] == '-'):
+        elif args[1] == '-':
             break
         else:
             raise ValueError("Unknown flag " + args[1] + "!")
 
     input_from_stdin = True
     input_fn = None
-    if (len(args) >= 2):
-        if (args[1] != "-"):
+    if len(args) >= 2:
+        if args[1] != "-":
             input_fn = args[1]
             input_from_stdin = False
             args.pop(0)
@@ -78,7 +77,7 @@ def shlomif_main(args):
         with open(input_fn) as f:
             content = f.readlines()
 
-    layout = [[None for x in range(0, 52)] for l in range(0, 52)]
+    layout = [[None for x in range(52)] for line in range(52)]
 
     rank_re = r'[A23456789TJQK]'
     suit_re = r'[HCDS]'
@@ -109,11 +108,11 @@ def shlomif_main(args):
     max_col = -1
 
     while h.line_num < len(content):
-        l = content[h.line_num]
+        line = content[h.line_num]
         x = 0
         pos = 0
-        while x < len(l):
-            s = l[x:min(x+3, len(l))]
+        while x < len(line):
+            s = line[x:min(x+3, len(line))]
             card = None
             if not re.match(r'^\s*$', s):
                 m = re.match(r'^(' + card_re + r') ?$', s)
@@ -131,12 +130,12 @@ def shlomif_main(args):
             pos += 1
         h.line_num += 1
 
-    for idx in range(0, max_col + 1):
-        l = layout[idx]
-        while not l[-1]:
-            l.pop()
-        for x in range(0, len(l)):
-            if not l[x]:
+    for idx in range(max_col + 1):
+        line = layout[idx]
+        while not line[-1]:
+            line.pop()
+        for x in range(len(line)):
+            if not line[x]:
                 raise ValueError(
                     "Stack no. %d contains a gap at position no. %d. Aborting."
                     % (idx+1, x+1)
@@ -149,11 +148,11 @@ def shlomif_main(args):
             return
         _out_line(foundations_line)
         _out_line(freecells_line)
-        for l in layout[0:max_col+1]:
-            _out_line(" ".join([":"] + l))
+        for line in layout[0:max_col+1]:
+            _out_line(" ".join([":"] + line))
 
     return 0
 
 
 if __name__ == "__main__":
-    sys.exit(shlomif_main(sys.argv))
+    sys.exit(cmd_line_main(sys.argv))

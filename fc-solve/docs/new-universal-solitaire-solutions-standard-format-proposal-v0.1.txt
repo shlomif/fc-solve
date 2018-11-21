@@ -65,7 +65,7 @@ Source_Or_Dest_Id = union {
 
 # This comment is used by human players to annotate their solutions.
 # Alternatively, it can be used by automated solvers.
-# See http://tech.groups.yahoo.com/group/fc-solve-discuss/message/173
+# See https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/173
 Comment = Struct {
     union {
         Plain_Text_Comment; # Plain Text

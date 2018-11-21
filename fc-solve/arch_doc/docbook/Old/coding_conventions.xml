@@ -155,8 +155,6 @@ sis-open.org/docbook/xml/4.1.2/docbookx.dtd"[]> -->
         </para>
     </section>
 </chapter>
-
-
 <!-- Keep this comment at the end of the file
 Local variables:
 mode: xml
@@ -174,4 +172,3 @@ sgml-local-ecat-files:nil
 sgml-parent-document: "fcs_arch_doc.xml"
 End:
 -->
-

@@ -42,7 +42,6 @@ EOF
 '-lfcs_delta_states_test -lfcs_debondt_delta_states_test -lfcs_dbm_calc_derived_test -lgmp',
 );
 
-use IO::Handle;
 use FC_Solve::DeltaStater          ();
 use FC_Solve::DeltaStater::DeBondt ();
 
@@ -56,9 +55,9 @@ my $max_num_bits = 0;
 my $which_encoding = ( $ENV{FCS_ENC} || '' );
 
 my $is_c_debondt = ( $which_encoding eq 'Cd' );
-my $is_debondt = ( $is_c_debondt or $which_encoding eq 'd' );
+my $is_debondt   = ( $is_c_debondt or $which_encoding eq 'd' );
 
-my $variant = ( $ENV{FCS_VARIANT} || 'freecell' );
+my $variant         = ( $ENV{FCS_VARIANT} || 'freecell' );
 my $is_bakers_dozen = ( $variant eq 'bakers_dozen' );
 
 sub perl_debondt_enc_and_dec

@@ -8,18 +8,25 @@
  * Copyright (c) 2016 Shlomi Fish
  */
 #pragma once
-#include "fcs_user.h"
-#include "config.h"
+#include "fcs_conf.h"
 #include "output_to_file.h"
 #include "iter_handler_base.h"
 
-static void my_iter_handler(void *const user_instance,
-    const fcs_int_limit_t iter_num, const int depth, void *const ptr_state,
-    const fcs_int_limit_t parent_iter_num, void *const context)
+#ifndef FCS_WITHOUT_ITER_HANDLER
+static void my_iter_handler(void *const user_instance GCC_UNUSED,
+    const fcs_int_limit_t iter_num GCC_UNUSED, const int depth GCC_UNUSED,
+    void *const ptr_state GCC_UNUSED,
+    const fcs_int_limit_t parent_iter_num GCC_UNUSED,
+    void *const context GCC_UNUSED)
 {
 #ifdef FCS_WITH_MOVES
-    const fc_solve_display_information_context_t *const dc =
-        (const fc_solve_display_information_context_t *const)context;
+    const fc_solve_display_information_context *const dc =
+        (const fc_solve_display_information_context *const)context;
+    const_SLOT(iters_display_step, dc);
+    if (iters_display_step > 1 && (iter_num % iters_display_step != 0))
+    {
+        return;
+    }
     my_iter_handler_base(iter_num, depth, user_instance, dc, parent_iter_num);
     if (dc->debug_iter_state_output)
     {
@@ -31,3 +38,4 @@ static void my_iter_handler(void *const user_instance,
     }
 #endif
 }
+#endif

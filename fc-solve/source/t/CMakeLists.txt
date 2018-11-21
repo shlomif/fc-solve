@@ -21,7 +21,7 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
         COMMAND "perl" ARGS "${CMAKE_CURRENT_SOURCE_DIR}/generate-card-tests.pl"
         MAIN_DEPENDENCY "${CMAKE_CURRENT_SOURCE_DIR}/${C_FILE}.tt"
         DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/generate-card-tests.pl"
-            "${CMAKE_CURRENT_BINARY_DIR}/../fcs_back_compat.h"
+            "${CMAKE_CURRENT_BINARY_DIR}/../include/freecell-solver/fcs_back_compat.h"
     )
 
 ENDMACRO ()
@@ -45,10 +45,13 @@ ENDMACRO ()
 
 IF (FCS_WITH_TEST_SUITE)
 
-    CHECK_FOR_MULTIPLE_PERL_MODULES("Task::FreecellSolver::Testing")
-
-    IF (NOT found_python3_random2)
-        MESSAGE (FATAL_ERROR "python3 and the random2 module from PyPI is required for running the test suite. Please install them.")
+    SET (MODULE "Task::FreecellSolver::Testing")
+    EXECUTE_PROCESS (
+        COMMAND "${PERL_EXECUTABLE}" "-M${MODULE}=" "-e" "exit(0)"
+        RESULT_VARIABLE "RESULT"
+    )
+    IF (NOT RESULT EQUAL 0)
+        MESSAGE(FATAL_ERROR "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
     ENDIF ()
 
     FIND_LIBRARY(LIBTAP_LIB tap)
@@ -88,7 +91,6 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "bit-reader-and-writer-test.c"
         PROPERTIES
             OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bit_rw.h"
-            GENERATED "1"
     )
 
     IF ("${DEBONDT_DELTA_STATES}")
@@ -142,20 +144,20 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     # "dbm-kaztree-compare-records-test.c" build.
     ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1"
         "-I${CMAKE_CURRENT_SOURCE_DIR}/.."
-        "-I${CMAKE_CURRENT_SOURCE_DIR}/../libavl/"
+        "-I${CMAKE_CURRENT_SOURCE_DIR}/../fcs-libavl/"
         )
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
 
     GEN_INDIVIDUAL_TESTS(
         "generate_valgrind_tests"
-        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-valgrind-test-scripts.pl"
+        "${PROJECT_SOURCE_DIR}/scripts/gen-individual-valgrind-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/valgrind--range_parallel_solve__11982_opt.t"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Valgrind.pm"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Valgrind/Data.pm"
     )
     GEN_INDIVIDUAL_TESTS(
         "generate_verify_tests"
-        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-verify-test-scripts.pl"
+        "${PROJECT_SOURCE_DIR}/scripts/gen-individual-verify-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/verify--id24.t"
 
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/Verify.pm"
@@ -163,7 +165,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
     )
     GEN_INDIVIDUAL_TESTS(
         "generate_cmp_digest_tests"
-        "${PROJECT_SOURCE_DIR}/scripts/generate-individual-compare-digests-test-scripts.pl"
+        "${PROJECT_SOURCE_DIR}/scripts/gen-individual-compare-digests-test-scripts.pl"
         "${CMAKE_CURRENT_BINARY_DIR}/t/cmpdigest--id24.t"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/Test/CheckResults.pm"
         "${CMAKE_CURRENT_SOURCE_DIR}/lib/FC_Solve/CheckResults/Data.pm"

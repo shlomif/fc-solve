@@ -12,16 +12,16 @@
 #define IS_ARG(s) (!strcmp(arg_str, (s)))
 #define IS_ARG_LONG(shrt, lng) (IS_ARG("-" shrt) || IS_ARG("--" lng))
 
-static inline void set_iter_handler(
-    void *const instance, fc_solve_display_information_context_t *const dc)
+static inline void set_iter_handler(void *const instance GCC_UNUSED,
+    fc_solve_display_information_context *const dc GCC_UNUSED)
 {
 #ifndef FCS_WITHOUT_ITER_HANDLER
     freecell_solver_user_set_iter_handler_long(instance, my_iter_handler, dc);
 #endif
 }
 
-static inline fcs_bool_t cmd_line_cb__handle_common(const char *const arg_str,
-    void *const instance, fc_solve_display_information_context_t *const dc)
+static inline bool cmd_line_cb__handle_common(const char *const arg_str,
+    void *const instance, fc_solve_display_information_context *const dc)
 {
     if (IS_ARG_LONG("i", "iter-output"))
     {
@@ -83,6 +83,11 @@ static inline fcs_bool_t cmd_line_cb__handle_common(const char *const arg_str,
     else if (IS_ARG_LONG("sel", "show-exceeded-limits"))
     {
         dc->show_exceeded_limits = TRUE;
+        return TRUE;
+    }
+    else if (IS_ARG_LONG("hoi", "hint-on-intractable"))
+    {
+        dc->hint_on_intract = TRUE;
         return TRUE;
     }
     return FALSE;

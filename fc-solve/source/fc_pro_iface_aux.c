@@ -12,7 +12,7 @@
 
 #ifdef FCS_WITH_MOVES
 void fc_solve_moves_processed_render_move(
-    const fcs_extended_move_t move, char *string)
+    const fcs_extended_move move, char *string)
 {
     switch (fcs_move_get_type(move.move))
     {

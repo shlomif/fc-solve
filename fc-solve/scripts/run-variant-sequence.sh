@@ -32,4 +32,3 @@ seq "$start" "$end" |  \
         tail -3 ;
     date +"T=%s.%N"
 done) | tee -a total_dump.txt
-

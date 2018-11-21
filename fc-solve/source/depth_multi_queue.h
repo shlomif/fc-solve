@@ -23,24 +23,24 @@ extern "C" {
 typedef struct
 {
     const char *offload_dir_path;
-    fcs_queue_stats_t stats;
+    fcs_queue_stats stats;
     long min_depth, max_depth, max_depth_margin;
     /*
      * page_to_write_to, page_for_backup and page_to_read_from always
      * point to the two "pages" below, but they can be swapped and
      * page_for_backup may be NULL.
      */
-    fcs_offloading_queue_t *queues_by_depth;
+    fcs_offloading_queue *queues_by_depth;
     long next_queue_id;
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE
-    fcs_meta_compact_allocator_t *meta_alloc;
+    meta_allocator *meta_alloc;
 #endif
-} fcs_depth_multi_queue_t;
+} fcs_depth_multi_queue;
 
 #define DEPTH_Q_GROW_BY 32
 
 static inline void fcs_depth_multi_queue__new_queue(
-    fcs_depth_multi_queue_t *const queue, fcs_offloading_queue_t *const q)
+    fcs_depth_multi_queue *const queue, fcs_offloading_queue *const q)
 {
     fcs_offloading_queue__init(q
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -54,8 +54,8 @@ static inline void fcs_depth_multi_queue__new_queue(
 }
 
 static inline void fcs_depth_multi_queue__insert(
-    fcs_depth_multi_queue_t *const queue, const int depth,
-    const fcs_offloading_queue_item_t *const item)
+    fcs_depth_multi_queue *const queue, const int depth,
+    const offloading_queue_item *const item)
 {
     while (depth > queue->max_depth)
     {
@@ -70,6 +70,7 @@ static inline void fcs_depth_multi_queue__insert(
             &(queue->queues_by_depth[queue->max_depth - queue->min_depth]));
     }
 
+    assert(depth >= queue->min_depth);
     fcs_offloading_queue__insert(
         &(queue->queues_by_depth[depth - queue->min_depth]), item);
 
@@ -77,8 +78,8 @@ static inline void fcs_depth_multi_queue__insert(
 }
 
 static inline void fcs_depth_multi_queue__init(
-    fcs_depth_multi_queue_t *const queue, const char *offload_dir_path,
-    const int first_depth, const fcs_offloading_queue_item_t *const first_item)
+    fcs_depth_multi_queue *const queue, const char *offload_dir_path,
+    const int first_depth, const offloading_queue_item *const first_item)
 {
     queue->offload_dir_path = offload_dir_path;
     fcs_queue_stats_init(&queue->stats);
@@ -95,7 +96,7 @@ static inline void fcs_depth_multi_queue__init(
 }
 
 static inline void fcs_depth_multi_queue__destroy(
-    fcs_depth_multi_queue_t *const queue)
+    fcs_depth_multi_queue *const queue)
 {
     const int limit = queue->max_depth - queue->min_depth;
     if (queue->queues_by_depth == NULL)
@@ -110,30 +111,24 @@ static inline void fcs_depth_multi_queue__destroy(
     queue->queues_by_depth = NULL;
 }
 
-static inline fcs_bool_t fcs_depth_multi_queue__extract(
-    fcs_depth_multi_queue_t *const queue, int *const return_depth,
-    fcs_offloading_queue_item_t *const return_item)
+static inline bool fcs_depth_multi_queue__extract(
+    fcs_depth_multi_queue *const queue, int *const return_depth,
+    offloading_queue_item *const return_item)
 {
     if (q_stats_is_empty(&queue->stats))
     {
         return FALSE;
     }
 
-    while (q_stats_is_empty(&queue->queues_by_depth[0].stats))
+    int depth = 0;
+    while (q_stats_is_empty(&queue->queues_by_depth[depth].stats))
     {
-        var_AUTO(save_queue, queue->queues_by_depth[0]);
-        memmove(queue->queues_by_depth, queue->queues_by_depth + 1,
-            sizeof(queue->queues_by_depth[0]) *
-                (queue->max_depth - queue->min_depth));
-        queue->queues_by_depth[queue->max_depth - queue->min_depth] =
-            save_queue;
-        queue->max_depth++;
-        queue->min_depth++;
-        queue->max_depth_margin++;
+        ++depth;
     }
 
-    *return_depth = queue->min_depth;
-    fcs_offloading_queue__extract(&(queue->queues_by_depth[0]), return_item);
+    *return_depth = depth + queue->min_depth;
+    fcs_offloading_queue__extract(
+        &(queue->queues_by_depth[depth]), return_item);
     q_stats_extract(&queue->stats);
     return TRUE;
 }

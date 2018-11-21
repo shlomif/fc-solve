@@ -14,7 +14,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    pri_queue_t pq;
+    pri_queue pq;
 } PqInC;
 
 SV* _proto_new() {
@@ -33,7 +33,7 @@ static inline PqInC * deref(SV * const obj) {
     return (PqInC*)SvIV(SvRV(obj));
 }
 
-static inline pri_queue_t * q(SV * const obj) {
+static inline pri_queue * q(SV * const obj) {
     return &(deref(obj)->pq);
 }
 
@@ -44,11 +44,11 @@ int is_empty(SV * obj) {
 void push(SV * obj, char * val, int rating) {
     SV * const sv = newSVpv(val, 0);
 
-    fc_solve_pq_push(q(obj), (fcs_collectible_state_t *)sv, rating);
+    fc_solve_pq_push(q(obj), (fcs_collectible_state *)sv, rating);
 }
 
 SV * pop(SV * obj) {
-    fcs_collectible_state_t * val;
+    fcs_collectible_state * val;
 
     fc_solve_pq_pop(q(obj), &val);
 

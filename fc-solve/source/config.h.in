@@ -7,7 +7,6 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-
 /*
  * config.h - Configuration file for Freecell Solver
  *
@@ -19,7 +18,7 @@
 extern "C" {
 #endif
 
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_back_compat.h"
 
 #cmakedefine COMPACT_STATES
 #cmakedefine INDIRECT_STACK_STATES
@@ -67,6 +66,8 @@ extern "C" {
 #cmakedefine FCS_DISABLE_STATE_VALIDITY_CHECK
 #cmakedefine FCS_ENABLE_PRUNE__R_TF__UNCOND
 #cmakedefine FCS_USE_PRECOMPILED_CMD_LINE_THEME
+#cmakedefine FCS_RANGE_SOLVERS_PRINT_SOLVED
+#cmakedefine FCS_UNSAFE
 /*
  * This flag controls a hash behaviour. It seems to improve things somewhat.
  * */
@@ -84,28 +85,10 @@ extern "C" {
 // This flag determines whether we are using the more compact but slower,
 // internal move tokens.
 #cmakedefine FCS_USE_COMPACT_MOVE_TOKENS
-#cmakedefine FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY ${FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY}
+#define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY ${FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY}
 
 #ifndef FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
 #define FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 4
-#endif
-
-
-#ifndef FCS_DISABLE_MULTI_FLARES
-#define FCS_WITH_FLARES
-#endif
-#ifndef FCS_DISABLE_MULTI_NEXT_INSTS
-#define FCS_WITH_NI
-#endif
-
-#ifndef FCS_DISABLE_MOVES_TRACKING
-#define FCS_WITH_MOVES
-#endif
-
-#ifdef FCS_WITH_MOVES
-#define SFS__PASS_MOVE_STACK(arg) , arg
-#else
-#define SFS__PASS_MOVE_STACK(arg)
 #endif
 
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
@@ -119,19 +102,11 @@ extern "C" {
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 #cmakedefine FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
 #endif
-/*
- * The maximal number of Freecells. For efficiency's sake it should be a
- * multiple of 4.
- * */
 
 #ifdef FCS_FREECELL_ONLY
 #define HARD_CODED_NUM_FREECELLS FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY
 #define HARD_CODED_NUM_STACKS 8
 #define HARD_CODED_NUM_DECKS 1
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-#define FCS_DISABLE_SIMPLE_SIMON
-#endif
-
 #endif
 
 #ifdef HARD_CODED_NUM_FREECELLS
@@ -142,19 +117,12 @@ extern "C" {
 
 #cmakedefine FCS_DBM_FREECELLS_NUM ${FCS_DBM_FREECELLS_NUM}
 
-/*
- * The maximal number of Stacks. For efficiency's sake it should be a
- * multiple of 4.
- * */
-
 #ifdef HARD_CODED_NUM_STACKS
 #define MAX_NUM_STACKS HARD_CODED_NUM_STACKS
 #else
 #define MAX_NUM_STACKS ${MAX_NUM_STACKS}
 #endif
-/*
- * The maximal number of initial cards that can be found in a stack.
- * */
+
 #define MAX_NUM_INITIAL_CARDS_IN_A_STACK ${MAX_NUM_INITIAL_CARDS_IN_A_STACK}
 
 #ifdef HARD_CODED_NUM_DECKS
@@ -192,36 +160,12 @@ extern "C" {
 
 #define FCS_RCS_CACHE_STORAGE ${FCS_RCS_CACHE_STORAGE}
 
-/* Define to 1 if you have the `m' library (-lm). */
-#cmakedefine HAVE_LIBM
 #cmakedefine HAVE_STRNCASECMP
 #cmakedefine HAVE_VASPRINTF
 #cmakedefine FCS_USE_INT128_FOR_VAR_BASE
 
-/* Name of package */
-#define PACKAGE "${PACKAGE}"
-
-/* Define to the address where bug reports for this package should be sent. */
-#define PACKAGE_BUGREPORT "${PACKAGE_BUGREPORT}"
-
-/* Define to the full name of this package. */
-#define PACKAGE_NAME "${PACKAGE_NAME}"
-
-/* Define to the full name and version of this package. */
-#define PACKAGE_STRING "${PACKAGE_STRING}"
-
-/* Define to the one symbol short name of this package. */
-#define PACKAGE_TARNAME "${PACKAGE_TARNAME}"
-
-/* Define to the version of this package. */
-#define PACKAGE_VERSION "${PACKAGE_VERSION}"
-
 /* Version number of package */
 #define VERSION "${VERSION}"
-
-#ifndef FCS_INT_BIT_SIZE_LOG2
-#define FCS_INT_BIT_SIZE_LOG2 ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
-#endif
 
 #define FCS_WHICH_STATES_GOOGLE_HASH__DENSE  0
 #define FCS_WHICH_STATES_GOOGLE_HASH__SPARSE 1
@@ -232,31 +176,8 @@ extern "C" {
 #define FCS_WHICH_COLUMNS_GOOGLE_HASH ${FCS_WHICH_COLUMNS_GOOGLE_HASH}
 #define FCS_WHICH_STATES_GOOGLE_HASH ${FCS_WHICH_STATES_GOOGLE_HASH}
 
-#if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES) )
-#error FCS_RCS_STATES requires COMPACT_STATES
-#endif
-
-#ifdef _WIN32
-#define plan_tests(...) plan(__VA_ARGS__)
-#endif
-
-#ifdef _POSIX_C_SOURCE
-#if _POSIX_C_SOURCE > 200809L
-#define HAVE_GETLINE 1
-#endif
-#endif
-
-#if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&  \
-         defined(HARD_CODED_NUM_DECKS))
-#define HARD_CODED_ALL
-#define HARD__SET_GAME_PARAMS()
-#else
-#define HARD__SET_GAME_PARAMS() SET_GAME_PARAMS()
-#endif
-#ifdef FCS_ENABLE_PRUNE__R_TF__UNCOND
-#define freecell_solver_user_set_pruning(...)
-#endif
-
+// How many ranks there are - Ace to King == 13.
+#define FCS_MAX_RANK ${FCS_MAX_RANK}
 #ifdef __cplusplus
-}
+};
 #endif

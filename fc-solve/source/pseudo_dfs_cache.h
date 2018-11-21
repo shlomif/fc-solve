@@ -19,35 +19,34 @@ extern "C" {
 
 #include <Judy.h>
 #include "meta_alloc.h"
-#include "fcs_enums.h"
+#include "freecell-solver/fcs_enums.h"
 #include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 
-typedef fcs_state_t fcs_pdfs_key_t;
+typedef fcs_encoded_state_buffer fcs_pdfs_key;
 
 typedef struct fcs_pdfs_key_info_struct
 {
-    fcs_pdfs_key_t key;
+    fcs_pdfs_key key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
      * */
     struct fcs_pdfs_key_info_struct *lower_pri, *higher_pri;
-} fcs_pdfs_cache_key_info_t;
+} fcs_pdfs_cache_key_info;
 
 typedef struct
 {
     Pvoid_t states_values_to_keys_map;
-    fcs_compact_allocator_t states_values_to_keys_allocator;
+    compact_allocator states_values_to_keys_allocator;
     long count_elements_in_cache, max_num_elements_in_cache;
-    fcs_pdfs_cache_key_info_t *lowest_pri, *highest_pri;
+    fcs_pdfs_cache_key_info *lowest_pri, *highest_pri;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
-    fcs_pdfs_cache_key_info_t *recycle_bin;
-} fcs_pseudo_dfs_lru_cache_t;
+    fcs_pdfs_cache_key_info *recycle_bin;
+} fcs_pseudo_dfs_lru_cache;
 
-static inline void fcs_pdfs_cache_destroy(
-    fcs_pseudo_dfs_lru_cache_t *const cache)
+static inline void fcs_pdfs_cache_destroy(fcs_pseudo_dfs_lru_cache *const cache)
 {
     Word_t rc_word;
     JHSFA(rc_word, cache->states_values_to_keys_map);
@@ -55,9 +54,8 @@ static inline void fcs_pdfs_cache_destroy(
         &(cache->states_values_to_keys_allocator));
 }
 
-static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
-    const long max_num_elements_in_cache,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache *const cache,
+    const long max_num_elements_in_cache, meta_allocator *const meta_alloc)
 {
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 
@@ -70,10 +68,10 @@ static inline void fcs_pdfs_cache_init(fcs_pseudo_dfs_lru_cache_t *const cache,
     cache->max_num_elements_in_cache = max_num_elements_in_cache;
 }
 
-static inline const fcs_bool_t fcs_pdfs_cache_does_key_exist(
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
+static inline bool fcs_pdfs_cache_does_key_exist(
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_pdfs_key *const key)
 {
-    fcs_pdfs_cache_key_info_t *existing;
+    fcs_pdfs_cache_key_info *existing;
 
     Word_t *PValue;
     JHSG(PValue, cache->states_values_to_keys_map, key, sizeof(*key));
@@ -116,10 +114,10 @@ static inline const fcs_bool_t fcs_pdfs_cache_does_key_exist(
     }
 }
 
-static inline fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
-    fcs_pseudo_dfs_lru_cache_t *const cache, fcs_pdfs_key_t *const key)
+static inline fcs_pdfs_cache_key_info *fcs_pdfs_cache_insert(
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_pdfs_key *const key)
 {
-    fcs_pdfs_cache_key_info_t *cache_key;
+    fcs_pdfs_cache_key_info *cache_key;
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
         cache_key = cache->lowest_pri;
@@ -132,7 +130,7 @@ static inline fcs_pdfs_cache_key_info_t *fcs_pdfs_cache_insert(
     }
     else
     {
-        cache_key = (fcs_pdfs_cache_key_info_t *)fcs_compact_alloc_ptr(
+        cache_key = (fcs_pdfs_cache_key_info *)fcs_compact_alloc_ptr(
             &(cache->states_values_to_keys_allocator), sizeof(*cache_key));
         ++cache->count_elements_in_cache;
     }

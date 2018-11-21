@@ -7,8 +7,8 @@ use 5.012;
 
 use MooX qw/late/;
 
-has iters => (isa => 'Int', is => 'rw', required => 1);
-has scan_idx => (isa => 'Int', is => 'ro', required => 1);
+has iters    => ( isa => 'Int', is => 'rw', required => 1 );
+has scan_idx => ( isa => 'Int', is => 'ro', required => 1 );
 
 sub clone
 {
@@ -16,13 +16,13 @@ sub clone
 
     return ref($self)->new(
         {
-            iters => $self->iters(),
+            iters    => $self->iters(),
             scan_idx => $self->scan_idx(),
         }
     );
 }
 
-1; # End of AI::Pathfinding::OptimizeMultiple::ScanRun;
+1;    # End of AI::Pathfinding::OptimizeMultiple::ScanRun;
 
 __END__
 

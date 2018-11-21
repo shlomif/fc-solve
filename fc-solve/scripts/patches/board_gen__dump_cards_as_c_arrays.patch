@@ -1,0 +1,29 @@
+diff --git a/fc-solve/source/board_gen/fc_solve_find_index_s2ints.py b/fc-solve/source/board_gen/fc_solve_find_index_s2ints.py
+index 596f07325..37d5aa202 100755
+--- a/fc-solve/source/board_gen/fc_solve_find_index_s2ints.py
++++ b/fc-solve/source/board_gen/fc_solve_find_index_s2ints.py
+@@ -81,6 +81,8 @@ def ms_rearrange(cards):
+     for i in range(13):
+         for j in (0, 39, 26, 13):
+             c.append(cards[i + j])
++    print("{" + ", ".join('"'+CardRenderer(True).to_s(card)+'"'
++                          for card in c) + "}")
+     return c
+ 
+ 
+diff --git a/fc-solve/source/board_gen/make_pysol_freecell_board.py b/fc-solve/source/board_gen/make_pysol_freecell_board.py
+index 6ed5f550e..ddd2eb9ab 100755
+--- a/fc-solve/source/board_gen/make_pysol_freecell_board.py
++++ b/fc-solve/source/board_gen/make_pysol_freecell_board.py
+@@ -185,7 +185,10 @@ def shuffle(cards, game_num, which_deals):
+     r = LCRandom31() if ms else MTRandom() if which_deals == \
+         RandomBase.DEALS_PYSOLFC else LCRandom64()
+     r.setSeed(game_num)
+-    return r.shuffle(ms_rearrange(cards) if ms else cards)
++    ret = r.shuffle(ms_rearrange(cards) if ms else cards)
++    print("{" + ", ".join('"'+CardRenderer(True).to_s(card)+'"'
++                          for card in ret) + "}")
++    return ret
+ 
+ 
+ class Game:

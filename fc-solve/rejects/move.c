@@ -76,4 +76,3 @@ void fcs_move_stack_reset(
     stack->num_moves = 0;
 }
 #endif
-

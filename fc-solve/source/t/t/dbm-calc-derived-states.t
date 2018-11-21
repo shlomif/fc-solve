@@ -27,7 +27,7 @@ typedef struct
     unsigned char move;
     int core_irreversible_moves_count;
     int num_non_reversible_moves_including_prune;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
 } DerivedState;
 
 AV * perl_perform_horne_prune(char * init_state_s) {
@@ -45,7 +45,7 @@ AV * perl_perform_horne_prune(char * init_state_s) {
 
 AV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
     int count;
-    fcs_derived_state_debug_t * derived_states;
+    fcs_derived_state_debug * derived_states;
     fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         FCS_DBM_VARIANT_2FC_FREECELL,
         init_state_s,
@@ -131,7 +131,7 @@ sub which_irrev_moves_as_hashref
                     ->[$suit_int];
                 my $v = vec( $bitmask, ( $rank_int << 2 ) + $suit_int, 2 );
                 $v ? ( $card => $v ) : ();
-                } ( 0 .. ( 4 - 1 ) )
+            } ( 0 .. ( 4 - 1 ) )
         } ( 0 .. ( 13 - 1 ) )
     };
 }

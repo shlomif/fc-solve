@@ -24,41 +24,74 @@ project also span some other code for testing and for support.
 
 # Repository structure
 
-## fc-solve/source/
+## [fc-solve/source/](./fc-solve/source/)
 
 This contains the source of the solver itself. One can use CMake to build it.
 
-## Games-Solitaire-Verify/Games-Solitaire-Verify
+## [cpan/Games-Solitaire-Verify/Games-Solitaire-Verify](./cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/)
 
 This is the Games-Solitaire-Verify CPAN module. For more information see:
 
-[https://metacpan.org/release/Games-Solitaire-Verify](https://metacpan.org/release/Games-Solitaire-Verify)
+* [Homepage](http://fc-solve.shlomifish.org/verify-code/)
+* [MetaCPAN](https://metacpan.org/release/Games-Solitaire-Verify)
 
-## Task-FreecellSolver-Testing
+## [Task-FreecellSolver-Testing](./Task-FreecellSolver-Testing/)
 
 This is a CPAN module for installing the various test dependencies that
 are found on CPAN.
 
-## fc-solve/arch\_doc
+## [cpan/Task-FreecellSolver-Testing-MultiConfig](./cpan/Task-FreecellSolver-Testing-MultiConfig/)
+
+This is a CPAN module for installing the various test dependencies that
+are found on CPAN. More comprehensive.
+
+## [fc-solve/arch\_doc](./fc-solve/arch\_doc/)
 
 The Freecell Solver Architecture Document. Somewhat out-of-date, but may
 be studied for general enlightenment.
 
-## fc-solve/presets
+## [fc-solve/presets](./fc-solve/presets/)
 
 Some code that is used in order to calculate the built-in command-line
 presets, like “-l good-intentions” or “-l maliciously-obscure”. Not very
 documented. This code is written in parts in Perl, Bash and Mono.NET.
 
-## fc-solve/rejects
+## [fc-solve/rejects](./fc-solve/rejects/)
 
 Contains code that is no longer used.
 
-## fc-solve/docs
+## [fc-solve/docs](./fc-solve/docs/)
 
 Contains various documents that are not part of the main source distribution.
 Mostly specifications and planning documents.
 
-## fc-solve/benchmarks
+## [fc-solve/benchmarks](./fc-solve/benchmarks/)
 
 Logs of various benchmarks of the code.
+
+# How to use the library
+
+The external API, which is provided by
+[fcs_user.h](fc-solve/source/fcs_user.h) ,
+[fcs_cl.h](fc-solve/source/fcs_cl.h) and
+some other headers, is not documented, but it corresponds to the command line
+interface that is
+documented in
+the [USAGE](http://fc-solve.shlomifish.org/docs/distro/USAGE.html) and
+the [README](http://fc-solve.shlomifish.org/docs/distro/README.html) documents,
+has some examples in the code, and should not be hard to use.
+
+# Related repositories and links
+
+* [Impossible 4-freecells and 5-freecells deals in Freecell Pro](https://github.com/shlomif/freecell-pro-impossible-deals)
+* [Freecell Pro 3 freecells impossible and intractable deals](https://github.com/shlomif/freecell-pro-3fc-deals--split)
+* [Finding zero freecells deals in the fc-pro range](https://github.com/shlomif/freecell-pro-0fc-deals)
+* [The minimal number of freecells needed to win for each deal in the original Microsoft FreeCell 32,000 deals.](https://github.com/shlomif/MicrosoftFreeCell32000-minimal-freecells)
+* [Lack of PGO investigation.](https://github.com/shlomif/investigate-lack-of-PGO-in-gcc-5.2.x--re-fc-solve)
+* [Freecell Solver's Site Assets](https://github.com/shlomif/fc-solve-site-assets)
+* [patsolve](https://github.com/shlomif/patsolve) - a different Solitaire solver with interdependencies on this one.
+* [Haskell Freecell library](https://github.com/shlomif/Freecell)
+
+* [PySol](https://pysolfc.sourceforge.io/) - an open source Solitaire game collection
+* [kpat](https://games.kde.org/game.php?game=kpat)
+* [solitaire.gg](https://github.com/KyleU/solitaire.gg)

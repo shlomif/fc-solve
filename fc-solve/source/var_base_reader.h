@@ -15,24 +15,26 @@
 
 typedef struct
 {
-    fcs_var_base_int_t data;
+    var_base_int data;
 #ifndef FCS_USE_INT128_FOR_VAR_BASE
     /* To avoid memory fragmentation, we keep those here and re use them. */
-    fcs_var_base_int_t data_byte_offset;
-    fcs_var_base_int_t r;
+    var_base_int data_byte_offset;
+    var_base_int r;
 #endif
-} fcs_var_base_reader_t;
+} fcs_var_base_reader;
 
-static inline void fc_solve_var_base_reader_init(fcs_var_base_reader_t *const s)
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+#define fc_solve_var_base_reader_init(s)
+#else
+static inline void fc_solve_var_base_reader_init(fcs_var_base_reader *const s)
 {
     FCS_var_base_int__init(s->data);
     FCS_var_base_int__init(s->data_byte_offset);
     FCS_var_base_int__init(s->r);
 }
-
-static inline void fc_solve_var_base_reader_start(
-    fcs_var_base_reader_t *const s, const unsigned char *const data,
-    const size_t data_len)
+#endif
+static inline void fc_solve_var_base_reader_start(fcs_var_base_reader *const s,
+    const unsigned char *const data, const size_t data_len)
 {
     FCS_var_base_int__set_ui(s->data, 0);
 #define NUM_BITS 8
@@ -40,7 +42,7 @@ static inline void fc_solve_var_base_reader_start(
     for (size_t count = 0; count < data_len; count++, shift_count += NUM_BITS)
     {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-        s->data |= (((fcs_var_base_int_t)data[count]) << shift_count);
+        s->data |= (((var_base_int)data[count]) << shift_count);
 #else
         FCS_var_base_int__set_ui(
             s->data_byte_offset, (unsigned long)data[count]);
@@ -51,10 +53,10 @@ static inline void fc_solve_var_base_reader_start(
 }
 
 static inline unsigned long fc_solve_var_base_reader_read(
-    fcs_var_base_reader_t *const reader, const unsigned long base)
+    fcs_var_base_reader *const reader, const unsigned long base)
 {
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
-    fcs_var_base_int_t rem;
+    var_base_int rem;
 #else
 #define rem (reader->r)
 #endif
@@ -66,10 +68,14 @@ static inline unsigned long fc_solve_var_base_reader_read(
 #endif
 }
 
+#ifdef FCS_USE_INT128_FOR_VAR_BASE
+#define fc_solve_var_base_reader_release(s)
+#else
 static inline void fc_solve_var_base_reader_release(
-    fcs_var_base_reader_t *const s)
+    fcs_var_base_reader *const s)
 {
     FCS_var_base_int__clear(s->data);
     FCS_var_base_int__clear(s->r);
     FCS_var_base_int__clear(s->data_byte_offset);
 }
+#endif

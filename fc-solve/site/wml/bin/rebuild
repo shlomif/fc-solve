@@ -1,0 +1,13 @@
+#!/bin/bash
+rebuild()
+{
+    (
+        set -x
+        set -e
+        git clean -dxf .
+        bash -x bin/install-npm-deps.sh
+        ./gen-helpers
+        gmake -j4 test
+    )
+}
+rebuild

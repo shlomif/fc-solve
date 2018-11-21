@@ -2237,13 +2237,14 @@ This scan generated 191 states.
 END_OF_SOL
 
 open my $fh, '<', \$input_text;
-my $solution = Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax->new(
+my $solution =
+    Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax->new(
     {
-        input_fh => $fh,
-        variant => "freecell",
+        input_fh  => $fh,
+        variant   => "freecell",
         output_fh => \*STDOUT,
     },
-);
+    );
 
 my $verdict = $solution->verify();
 if ($verdict)

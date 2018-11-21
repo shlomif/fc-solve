@@ -1,5 +1,14 @@
 Revision history for Games-Solitaire-Verify
 
+0.1900  2018-08-02
+        - Add verify_contents() to ::State and check for initial board sanity
+        on the solution.
+            - It was an accidental bug/feature.
+        - Add the --max-rank flag and options.
+
+0.1800  2018-05-02
+        - Add lib/Games/Solitaire/Verify/State/LaxParser.pm .
+
 0.1701  2016-02-28
         - Fix the tests (and the code) of method ->print could not be found in
         IO::Handle/IO::File on older perls.
@@ -136,7 +145,7 @@ Revision history for Games-Solitaire-Verify
         affected by kings_only, etc. I.e: it always allows to move an
         arbitrary number of cards when it is specified.
             - Bug discovered based on this post by larrysan:
-            - http://tech.groups.yahoo.com/group/fc-solve-discuss/message/856
+            - https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/856
 
 0.04    2008-08-07
         - Now verify_and_perform_move in Games::Solitaire::Verify::State

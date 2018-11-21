@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template5.wml"
 
 <latemp_subject "Freecell Solver PySol Integration"  />
 
@@ -24,8 +24,7 @@ an excellent cross-platform Solitaire Suite written in Python.
 
 <h2>Files to Download</h2>
 
-<table border="1" summary="Files to download at the left; Descriptions at
-the right">
+<table class="downloads">
 <tr>
 <td>
 <linktofile "FreecellSolver-0.2.0.tar.gz" />
@@ -68,4 +67,3 @@ a time. Plus, Simple Simon cannot work because Freecell Solver
 also moves non-homogeneous sequences as one, so it was not enabled at the
 moment.
 </p>
-

@@ -1,4 +1,4 @@
-#include '../template.wml'
+#include "template5.wml"
 #include "fcs-distribution-docs.wml"
 
 <latemp_subject "Download Freecell Solver" />
@@ -17,10 +17,11 @@
 </define-tag>
 
 <define-tag download_stop>
-<div class="stop">
+<section class="stop">
+<header>
 <img src="$(ROOT)/images/Stop_hand_nuvola.png" class="sign" alt="Stop Sign" />
-
 <h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
+</header>
 
 <p>
 Freecell Solver is <b>not</b> a graphical program, and is instead oriented
@@ -37,17 +38,21 @@ which is open-source, cross-platform, configurable, and supports a very
 large number of Solitaire variants.
 </p>
 
-</div>
+</section>
 </define-tag>
 
 <download_stop />
 
-<h2 id="latest-stable">Latest Stable Versions</h2>
+<h2_section id="latest-stable" title="Latest Stable Versions">
 
-<table class="downloads" summary="Upper Row - The Freecell Solver Source Code. Lower Row - Windows 32-bit Binaries. Links are at the left; Descriptions are at the Right.">
+<table class="downloads">
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
 <tr>
 <td>
-<link_to_download_file "freecell-solver-4.14.1.tar.xz" />
+<link_to_download_file "freecell-solver-5.0.0.tar.xz" />
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -56,7 +61,7 @@ Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
 
 <tr>
 <td>
-<link_to_download_file "freecell-solver-4.14.1-win32.exe" />
+<link_to_download_file "freecell-solver-5.0.0-win32.exe" />
 </td>
 <td>
 Win32 Binaries. Download the .exe, double-click it, and an
@@ -64,11 +69,21 @@ interactive installer will start.
 </td>
 </tr>
 
+<tr>
+<td>
+<link_to_download_file "freecell-solver-5.0.0-win64.exe" />
+</td>
+<td>
+Binaries for x86-64 Windows.
+</td>
+</tr>
 </table>
 
-<h2 id="distributions">How to install in various Linux/etc. distributions</h2>
+</h2_section>
 
-<h3 id="distros_deb_ubuntu">Debian/Ubuntu/Linux Mint</h3>
+<h2_section id="distributions" title="How to install in various Linux/etc. distributions">
+
+<h3_section id="distros_deb_ubuntu" title="Debian/Ubuntu/Linux Mint">
 
 <img src="$(ROOT)/images/50px-Debian-OpenLogo.svg.png" alt="Debian Logo"
     class="dist_logo"
@@ -78,22 +93,27 @@ interactive installer will start.
 />
 
 <p>
-Type <code>apt-get install freecell-solver</code> as root. The version may be
-somewhat old, but hopefully mostly bug-free. Also see the
+Type <code>apt-get install freecell-solver-bin</code> as root. The version may
+be somewhat old, but hopefully mostly bug-free. Also see the
 <a href="http://packages.debian.org/source/squeeze/freecell-solver">Debian Package page</a>.
 </p>
 
-<h3 id="distros_fedora">Fedora</h3>
+</h3_section>
 
-<img src="$(ROOT)/images/fedora-logo.png" alt="Fedora Logo"
+<h3_section id="distros_fedora" title="Fedora">
+
+<img src="$(ROOT)/images/fedora-logo.min.svg" alt="Fedora Logo"
 class="dist_logo"
 />
 
 <p>
-None yet.
+Type <code>dnf install freecell-solver</code> as root. Also see the
+<a href="FILL_IN">Fedora Package page</a>.
 </p>
 
-<h3 id="distros_mandriva_mageia">Mandriva / Mageia</h3>
+</h3_section>
+
+<h3_section id="distros_mandriva_mageia" title="Mandriva / Mageia">
 
 <img src="$(ROOT)/images/100px-Mageia_logo.svg.png" alt="Mageia Logo"
     class="dist_logo" />
@@ -103,7 +123,21 @@ Type <code>urpmi freecell-solver</code>. You may need to configure the right
 appropriate networked repositories in the Mageia Control Centre.
 </p>
 
-<h3 id="distros_freebsd">FreeBSD</h3>
+</h3_section>
+
+<h3_section id="distros_arch" title="Arch Linux">
+
+<img src="$(ROOT)/images/Arch_Linux_logo.svg" alt="Arch Linux Logo"
+    class="dist_logo" style="height:50px" />
+
+<p>
+See <a href="https://www.archlinux.org/packages/extra/x86_64/freecell-solver/">the Arch Linux
+package page</a>. <code>pacman -S freecell-solver</code> should work.
+</p>
+
+</h3_section>
+
+<h3_section id="distros_freebsd" title="FreeBSD">
 
 <img src="$(ROOT)/images/Freebsd_logo.svg.png" alt="FreeBSD Logo"
     class="dist_logo" />
@@ -113,11 +147,15 @@ See <a href="http://www.freshports.org/games/freecell-solver">the FreeBSD
 Freshports page</a>.
 </p>
 
+</h3_section>
+
+</h2_section>
+
 <define-tag develversion>
 
-<h2 id="devel-versions">Development Versions</h2>
+<h2_section id="devel-versions" title="Development Versions">
 
-<table class="downloads" summary="The Development Version for Freecell Solver. Link for download is on the left; Description is on the right.">
+<table class="downloads">
 
 <tr>
 <td>
@@ -129,12 +167,15 @@ The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_
 </tr>
 
 </table>
+
+</h2_section>
+
 </define-tag>
 
 <ifneq "$(WITH_DEVEL_VERSION)" ""
     "<develversion />" />
 
-<h2 id="vcs-version">Latest Version from Git (= the Version Control System)</h2>
+<h2_section id="vcs-version" title="Latest Version from Git (= the Version Control System)">
 
 <ul>
 <li>
@@ -148,12 +189,16 @@ up-and-running.
 </li>
 </ul>
 
-<h2 id="download_other_solvers">Other Solvers</h2>
+</h2_section>
+
+<h2_section id="download_other_solvers" title="Other Solvers">
 
 <ul>
 
 <li>
-<link_to_download_file "patsolve-shlomif-3.0.3.tar.bz2" />
+<link_to_download_file "patsolve-shlomif-3.0.3.tar.bz2" /> -
+see <a href="https://github.com/shlomif/patsolve">the git repository</a>
+for a more up-to-date version.
 </li>
 
 <li>
@@ -162,16 +207,21 @@ up-and-running.
 
 </ul>
 
-<h2 id="docs">Documents</h2>
+</h2_section>
+
+<h2_section id="docs" title="Documents">
 
 <fcs_distribution_documents />
 
-<h2 id="utils">Utility Programs</h2>
+</h2_section>
 
-<table class="downloads" summary="Utility programs and patches for use within various Solitaire Implementations. Links are on the left; descriptions are on the right.">
+<h2_section id="utils" title="Utility Programs">
+
+<table class="downloads">
+<when>
 <tr>
 <td>
-<a href="palm_patience_getgame.tar.gz">palm_patience_getgame.tar.gz</a>
+<a href="palm_patience_getgame.tar.gz">Palm Pat Dumper</a>
 </td>
 <td>
 Dumps games from Patience 2.5 on PalmOS. You need all the
@@ -179,6 +229,7 @@ usual PalmOS tools to use this. The README tells you where
 you can find Patience 2.5. prc file included.
 </td>
 </tr>
+</when>
 
 <tr>
 <td>
@@ -191,7 +242,7 @@ This is a patch for xpat2 that dumps its games to a file.
 
 <tr>
 <td>
-<a href="patience-1.9.patch">patience-1.9.patch</a>
+<a href="patience-1.9.patch">patience 1.9 patch</a>
 </td>
 <td>
 Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">"Patience" Tcl implementation</a>.
@@ -200,33 +251,41 @@ Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-e
 
 </table>
 
-<h2 id="results-and-data">Results and Data</h2>
+</h2_section>
 
-<table class="downloads" summary="Results and Data. Left column is the file to download with the link. Right column is the description">
+<h2_section id="results-and-data" title="Results and Data">
+
+<table class="downloads">
 <tr>
 <td>
-<a href="$(ROOT)/downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz</a>
+<a href="$(ROOT)/downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">2fc results on Amadiro machine</a>
 </td>
 <td>
-See <a href="http://tech.groups.yahoo.com/group/fc-solve-discuss/message/1099">the
-message titled “[Better Version] Final Report for the 2-Freecells-based ‘DBM’
-Freecell Solver”</a>.
+See <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1099">the
+message</a> titled “[Better Version] Final Report for the 2-Freecells-based
+‘DBM’ Freecell Solver”.
 </td>
 </tr>
 </table>
 
-<h2 id="older-stable">Older Versions</h2>
+</h2_section>
+
+<h2_section id="older-stable" title="Older Versions">
 
 <define-tag ver>
-<tr>
-<td>
+<li>
+<p>
 <a href="$(ROOT)/downloads/fc-solve/freecell-solver-%0.%1.tar.<get-var download_suffix />">Version %0.%1</a>
-</td>
-</tr>
+</p>
+</li>
 </define-tag>
 
-<table class="downloads" summary="Older versions of Freecell Solver. In decreasing version number.">
+<ul class="old_vers">
 <set-var download_suffix="xz" />
+<ver "4.20" "0" />
+<ver "4.18" "0" />
+<ver "4.16" "0" />
+<ver "4.14" "1" />
 <ver "4.12" "1" />
 <ver "4.10" "0" />
 <ver "4.8" "0" />
@@ -282,8 +341,8 @@ Freecell Solver”</a>.
 <ver "0.6" "2" />
 <ver "0.4" "2" />
 <ver "0.2" "1" />
-</table>
+</ul>
 
 <undef ver />
 
-
+</h2_section>

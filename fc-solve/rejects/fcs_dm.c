@@ -148,4 +148,3 @@ int fc_solve_merge_large_and_small_sorted_arrays
 
     return 1;
 }
-

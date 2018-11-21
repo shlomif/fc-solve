@@ -18,8 +18,8 @@ extern "C" {
 #endif
 
 #include "meta_alloc.h"
-#include "fcs_enums.h"
-#include "fcs_dllexport.h"
+#include "freecell-solver/fcs_enums.h"
+#include "freecell-solver/fcs_dllexport.h"
 #include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
@@ -28,20 +28,19 @@ extern "C" {
 
 typedef struct fcs_derived_state_struct
 {
-    fcs_state_keyval_pair_t state;
-    fcs_encoded_state_buffer_t key;
-    fcs_dbm_record_t *parent;
+    fcs_state_keyval_pair state;
+    fcs_encoded_state_buffer key;
+    fcs_dbm_record *parent;
     struct fcs_derived_state_struct *next;
     int core_irreversible_moves_count;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
-    fcs_fcc_move_t move;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
+    fcs_fcc_move move;
     int num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-} fcs_derived_state_t;
+} fcs_derived_state;
 
 static inline void fcs_derived_state_list__recycle(
-    fcs_derived_state_t **const p_recycle_bin,
-    fcs_derived_state_t **const p_list)
+    fcs_derived_state **const p_recycle_bin, fcs_derived_state **const p_list)
 {
     var_AUTO(list, *p_list);
     var_AUTO(bin, *p_recycle_bin);
@@ -56,7 +55,7 @@ static inline void fcs_derived_state_list__recycle(
     *p_list = NULL;
 }
 
-#define MAKE_MOVE(src, dest) ((fcs_fcc_move_t)((src) | ((dest) << 4)))
+#define MAKE_MOVE(src, dest) ((fcs_fcc_move)((src) | ((dest) << 4)))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx + 8)
 #define FOUND2MOVE(idx) ((idx) + (8 + 4))
@@ -93,7 +92,7 @@ static inline void fcs_derived_state_list__recycle(
         }                                                                      \
         else                                                                   \
         {                                                                      \
-            ptr_new_state = (fcs_derived_state_t *)fcs_compact_alloc_ptr(      \
+            ptr_new_state = (fcs_derived_state *)fcs_compact_alloc_ptr(        \
                 derived_list_allocator, sizeof(*ptr_new_state));               \
         }                                                                      \
         memset(&(ptr_new_state->which_irreversible_moves_bitmask), '\0',       \
@@ -104,8 +103,8 @@ static inline void fcs_derived_state_list__recycle(
     }
 
 static inline void fc_solve_add_to_irrev_moves_bitmask(
-    fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
-    const fcs_card_t moved_card, const int count)
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
+    const fcs_card moved_card, const int count)
 {
     unsigned char *const by_rank_ptr =
         which_irreversible_moves_bitmask->s + fcs_card_rank(moved_card) - 1;
@@ -138,13 +137,12 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-static inline int calc_foundation_to_put_card_on(
-    const fcs_dbm_variant_type_t local_variant, fcs_state_t *const ptr_state,
-    const fcs_card_t card)
+static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
+    fcs_state *const ptr_state, const fcs_card card)
 {
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
+    FCS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
     const int_fast32_t rank = fcs_card_rank(card);
     const int_fast32_t suit = fcs_card_suit(card);
     for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
@@ -176,21 +174,21 @@ static inline int calc_foundation_to_put_card_on(
 
 typedef struct
 {
-    fcs_fcc_moves_list_item_t *recycle_bin;
-    fcs_compact_allocator_t *allocator;
-} fcs_fcc_moves_seq_allocator_t;
+    fcs_fcc_moves_list_item *recycle_bin;
+    compact_allocator *allocator;
+} fcs_fcc_moves_seq_allocator;
 
-static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
-    fcs_fcc_moves_seq_allocator_t *const allocator)
+static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
+    fcs_fcc_moves_seq_allocator *const allocator)
 {
-    fcs_fcc_moves_list_item_t *new_item;
+    fcs_fcc_moves_list_item *new_item;
     if (allocator->recycle_bin)
     {
         allocator->recycle_bin = (new_item = allocator->recycle_bin)->next;
     }
     else
     {
-        new_item = (fcs_fcc_moves_list_item_t *)fcs_compact_alloc_ptr(
+        new_item = (fcs_fcc_moves_list_item *)fcs_compact_alloc_ptr(
             allocator->allocator, sizeof(*new_item));
     }
     new_item->next = NULL;
@@ -204,18 +202,17 @@ static inline fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
 #define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
 /* Returns the number of amortized irreversible moves performed. */
-static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr,
-    fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
-    fcs_fcc_moves_seq_t *const moves_seq,
-    fcs_fcc_moves_seq_allocator_t *const allocator)
+static inline int horne_prune(const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const init_state_kv_ptr,
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
+    fcs_fcc_moves_seq *const moves_seq,
+    fcs_fcc_moves_seq_allocator *const allocator)
 {
-    fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
+    fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
     int count_moves_so_far = 0;
     int count_additional_irrev_moves = 0;
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
+    FCS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
 
 #define the_state (init_state_kv_ptr->s)
     uint_fast32_t num_cards_moved;
@@ -231,7 +228,7 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
                 continue;
             }
             /* Get the top card in the stack */
-            const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
+            const fcs_card card = fcs_col_get_card(col, cards_num - 1);
             const int dest_foundation =
                 calc_foundation_to_put_card_on(local_variant, &the_state, card);
             if (dest_foundation >= 0)
@@ -256,10 +253,11 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
             }
         }
 
-        /* Now check the same for the free cells */
+#if MAX_NUM_FREECELLS > 0
+        // Now check the same for the free cells
         for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
-            const fcs_card_t card = fcs_freecell_card(the_state, fc);
+            const fcs_card card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
             {
                 const int dest_foundation = calc_foundation_to_put_card_on(
@@ -279,17 +277,18 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
                 }
             }
         }
+#endif
     } while (num_cards_moved);
 
     /* modify moves_seq in-place. */
     if (count_moves_so_far && moves_seq)
     {
-        fcs_fcc_moves_list_item_t **iter = &(moves_seq->moves_list);
+        fcs_fcc_moves_list_item **iter = &(moves_seq->moves_list);
 
         /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
-         * to point at the place to either write the new moves or alternatively
-         * (on parity) on the pointer to allocate a new list_item for the
-         * moves.
+         * to point at the place to either write the new moves or
+         * alternatively (on parity) on the pointer to allocate a new
+         * list_item for the moves.
          *
          * If count is 0, then we should move 0.
          * If count is 1, then we should move 0.
@@ -331,16 +330,16 @@ static inline int horne_prune(const fcs_dbm_variant_type_t local_variant,
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
-static inline int horne_prune__simple(
-    const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr)
+static inline int horne_prune__simple(const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const init_state_kv_ptr)
 {
-    fcs_which_moves_bitmask_t no_use = {{'\0'}};
+    fcs_which_moves_bitmask no_use = {{'\0'}};
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 
-static inline fcs_bool_t card_cannot_be_placed(const fcs_state_t *const s,
-    const uint16_t ds, const fcs_card_t card, const int sequences_are_built_by)
+static inline bool card_cannot_be_placed(const fcs_state *const s,
+    const uint16_t ds, const fcs_card card,
+    const int sequences_are_built_by GCC_UNUSED)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));
     const_AUTO(col_len, fcs_col_len(col));
@@ -349,9 +348,8 @@ static inline fcs_bool_t card_cannot_be_placed(const fcs_state_t *const s,
 }
 
 #define the_state (init_state_kv_ptr->s)
-static inline fcs_bool_t is_state_solved(
-    const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr)
+static inline bool is_state_solved(
+    fcs_state_keyval_pair *const init_state_kv_ptr)
 {
     for (int suit = 0; suit < DECKS_NUM * 4; suit++)
     {
@@ -363,20 +361,19 @@ static inline fcs_bool_t is_state_solved(
     return TRUE;
 }
 
-static inline fcs_bool_t instance_solver_thread_calc_derived_states(
-    const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr,
-    fcs_dbm_record_t *const parent_ptr,
-    fcs_derived_state_t **const derived_list,
-    fcs_derived_state_t **const derived_list_recycle_bin,
-    fcs_compact_allocator_t *const derived_list_allocator,
-    const fcs_bool_t perform_horne_prune)
+static inline bool instance_solver_thread_calc_derived_states(
+    const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const init_state_kv_ptr,
+    fcs_dbm_record *const parent_ptr, fcs_derived_state **const derived_list,
+    fcs_derived_state **const derived_list_recycle_bin,
+    compact_allocator *const derived_list_allocator,
+    const bool perform_horne_prune)
 {
-    fcs_derived_state_t *ptr_new_state;
+    fcs_derived_state *ptr_new_state;
     int empty_stack_idx = -1;
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #define new_state (ptr_new_state->state.s)
-    if (is_state_solved(local_variant, init_state_kv_ptr))
+    if (is_state_solved(init_state_kv_ptr))
     {
         return TRUE;
     }
@@ -413,8 +410,9 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
+#if MAX_NUM_FREECELLS > 0
     int empty_fc_idx = -1;
-    /* Move freecell cards to foundations. */
+    // Move freecell cards to foundations.
     for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
@@ -442,6 +440,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             break;
         }
     }
+#endif
 
     const int cards_num_min_limit =
         ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0);
@@ -475,7 +474,8 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
         }
     }
 
-    /* Move freecell card on top of a parent */
+#if MAX_NUM_FREECELLS > 0
+    // Move freecell card on top of a parent
     for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
@@ -499,6 +499,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
         }
     }
+#endif
 
     if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) &&
         (empty_stack_idx >= 0))
@@ -527,6 +528,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
 
+#if MAX_NUM_FREECELLS > 0
         /* Freecell card -> Empty Stack. */
         for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
@@ -544,8 +546,10 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
             COMMIT_NEW_STATE(
                 FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx), TRUE, card);
         }
+#endif
     }
 
+#if MAX_NUM_FREECELLS > 0
     if (empty_fc_idx >= 0)
     {
         /* Stack Card to Empty Freecell */
@@ -568,6 +572,7 @@ static inline fcs_bool_t instance_solver_thread_calc_derived_states(
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
+#endif
     /* Perform Horne's Prune on all the states,
      * or just set their num irreversible moves counts.
      * */

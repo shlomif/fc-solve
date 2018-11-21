@@ -44,8 +44,6 @@ extern "C" {
 
 #define BEFS_MAX_DEPTH 20000
 
-extern const fcs_default_weights_t fc_solve_default_befs_weights;
-
 #ifdef FCS_FREECELL_ONLY
 #define is_filled_by_any_card() TRUE
 #else
@@ -53,49 +51,37 @@ extern const fcs_default_weights_t fc_solve_default_befs_weights;
     (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)
 #endif
 static inline void fc_solve_initialize_befs_rater(
-    fc_solve_soft_thread_t *const soft_thread,
-    fc_solve_state_weighting_t *const weighting)
+    fcs_soft_thread *const soft_thread, fcs_state_weighting *const weighting)
 {
-    double *const befs_weights = weighting->befs_weights.weights;
-    double normalized_befs_weights[COUNT(weighting->befs_weights.weights)];
-
+    const fc_solve_weighting_float *const befs_weights =
+        weighting->befs_weights.weights;
     /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
-    double sum = 0;
+    fc_solve_weighting_float sum = 0;
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
-        if (befs_weights[i] < 0)
-        {
-            befs_weights[i] = fc_solve_default_befs_weights.weights[i];
-        }
         sum += befs_weights[i];
     }
     if (sum < 1e-6)
     {
         sum = 1;
     }
-    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
-    {
-        normalized_befs_weights[i] = ((befs_weights[i] /= sum) * INT_MAX);
-    }
-#ifndef HARD_CODED_NUM_STACKS
-    fc_solve_hard_thread_t *const hard_thread = soft_thread->hard_thread;
-    fc_solve_instance_t *const instance = HT_INSTANCE(hard_thread);
-#endif
+    const_AUTO(factor, INT_MAX / sum);
+#define W(idx) (befs_weights[idx] * factor)
+    fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const fcs_bool_t unlimited_sequence_move_var =
-        INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+    const bool unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
 #define unlimited_sequence_move FALSE
 #endif
 
-    const double num_cards_out_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_OUT] /
-        (LOCAL_DECKS_NUM * 52);
+    const fc_solve_weighting_float num_cards_out_factor =
+        W(FCS_BEFS_WEIGHT_CARDS_OUT) / (LOCAL_DECKS_NUM * 52);
 
-    double out_sum = 0.0;
+    fc_solve_weighting_float out_sum = 0.0;
     const_PTR(
         num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     for (int i = 0; i <= 13; i++, out_sum += num_cards_out_factor)
@@ -104,7 +90,7 @@ static inline void fc_solve_initialize_befs_rater(
     }
 
     weighting->max_sequence_move_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE] /
+        W(FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE) /
         (is_filled_by_any_card()
                 ? (unlimited_sequence_move
                           ? (LOCAL_FREECELLS_NUM + INSTANCE_STACKS_NUM)
@@ -113,19 +99,17 @@ static inline void fc_solve_initialize_befs_rater(
                 : (unlimited_sequence_move ? LOCAL_FREECELLS_NUM : 1));
 
     weighting->cards_under_sequences_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES] /
-        soft_thread->initial_cards_under_sequences_value;
+        W(FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES) /
+        instance->initial_cards_under_sequences_value;
 
     weighting->seqs_over_renegade_cards_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS] /
+        W(FCS_BEFS_WEIGHT_SEQS_OVER_RENEGADE_CARDS) /
         FCS_SEQS_OVER_RENEGADE_POWER(LOCAL_DECKS_NUM * (13 * 4));
 
-    weighting->depth_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_DEPTH] / BEFS_MAX_DEPTH;
+    weighting->depth_factor = W(FCS_BEFS_WEIGHT_DEPTH) / BEFS_MAX_DEPTH;
 
     weighting->num_cards_not_on_parents_factor =
-        normalized_befs_weights[FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS] /
-        (LOCAL_DECKS_NUM * 52);
+        W(FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS) / (LOCAL_DECKS_NUM * 52);
 
     weighting->should_go_over_stacks =
         (weighting->max_sequence_move_factor ||
@@ -133,13 +117,14 @@ static inline void fc_solve_initialize_befs_rater(
             weighting->seqs_over_renegade_cards_factor);
 }
 #undef unlimited_sequence_move
+#undef W
 
-typedef int fcs_depth_t;
+typedef int fcs_depth;
 
-static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
+static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
 {
 #ifdef FCS_WITHOUT_DEPTH_FIELD
-    register fcs_depth_t ret = 0;
+    register fcs_depth ret = 0;
     while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
     {
         ++ret;
@@ -151,7 +136,8 @@ static inline fcs_depth_t calc_depth(fcs_collectible_state_t *ptr_state)
 }
 
 #ifdef DEBUG
-static inline void fcs_trace(const char *const format, ...)
+static inline __attribute__((format(printf, 1, 2))) void fcs_trace(
+    const char *const format, ...)
 {
     va_list my_va_list;
     va_start(my_va_list, format);
@@ -165,10 +151,12 @@ static inline void fcs_trace(const char *const format, ...)
 }
 #endif
 
-static inline fcs_game_limit_t count_num_vacant_freecells(
-    const fcs_game_limit_t freecells_num, const fcs_state_t *const state_ptr)
+static inline fcs_game_limit count_num_vacant_freecells(
+    const fcs_game_limit freecells_num GCC_UNUSED,
+    const fcs_state *const state_ptr GCC_UNUSED)
 {
-    fcs_game_limit_t num_vacant_freecells = 0;
+#if MAX_NUM_FREECELLS > 0
+    fcs_game_limit num_vacant_freecells = 0;
     for (int i = 0; i < freecells_num; i++)
     {
         if (fcs_freecell_is_empty(*state_ptr, i))
@@ -178,32 +166,33 @@ static inline fcs_game_limit_t count_num_vacant_freecells(
     }
 
     return num_vacant_freecells;
+#else
+    return 0;
+#endif
 }
 
-static inline pq_rating_t befs_rate_state(
-    const fc_solve_soft_thread_t *const soft_thread,
-    const fc_solve_state_weighting_t *const weighting,
-    const fcs_state_t *const state, const int negated_depth)
+static inline pq_rating befs_rate_state(
+    const fcs_soft_thread *const soft_thread,
+    const fcs_state_weighting *const weighting, const fcs_state *const state,
+    const int negated_depth)
 {
-#ifndef FCS_FREECELL_ONLY
     const_AUTO(instance, fcs_st_instance(soft_thread));
-    const int sequences_are_built_by =
-        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
-#endif
+    FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
+                           GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
     HARD__SET_GAME_PARAMS();
 
 #ifndef FCS_FREECELL_ONLY
-    const fcs_bool_t unlimited_sequence_move_var =
-        INSTANCE_UNLIMITED_SEQUENCE_MOVE;
+    const bool unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
 #define unlimited_sequence_move FALSE
 #endif
 
-    fc_solve_seq_cards_power_type_t cards_under_sequences = 0;
-    fc_solve_seq_cards_power_type_t seqs_over_renegade_cards = 0;
+    fcs_seq_cards_power_type cards_under_sequences = 0;
+    fcs_seq_cards_power_type seqs_over_renegade_cards = 0;
 
-    double sum = (max(0, negated_depth) * weighting->depth_factor);
+    fc_solve_weighting_float sum =
+        (max(0, negated_depth) * weighting->depth_factor);
     const_PTR(
         num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     if (num_cards_out_lookup_table[1])
@@ -216,7 +205,7 @@ static inline pq_rating_t befs_rate_state(
         }
     }
 
-    fcs_game_limit_t num_vacant_stacks = 0;
+    fcs_game_limit num_vacant_stacks = 0;
     if (weighting->should_go_over_stacks)
     {
         for (int a = 0; a < LOCAL_STACKS_NUM; ++a)
@@ -249,7 +238,7 @@ static inline pq_rating_t befs_rate_state(
             }
         }
 
-        const fcs_game_limit_t num_vacant_freecells =
+        const fcs_game_limit num_vacant_freecells =
             count_num_vacant_freecells(LOCAL_FREECELLS_NUM, state);
 #define CALC_VACANCY_VAL()                                                     \
     (is_filled_by_any_card()                                                   \
@@ -258,14 +247,14 @@ static inline pq_rating_t befs_rate_state(
                       : ((num_vacant_freecells + 1) << num_vacant_stacks))     \
             : (unlimited_sequence_move ? (num_vacant_freecells) : 0))
         sum += ((CALC_VACANCY_VAL() * weighting->max_sequence_move_factor) +
-                ((soft_thread->initial_cards_under_sequences_value -
+                ((instance->initial_cards_under_sequences_value -
                      cards_under_sequences) *
                     weighting->cards_under_sequences_factor) +
                 (seqs_over_renegade_cards *
                     weighting->seqs_over_renegade_cards_factor));
     }
 
-    const double num_cards_not_on_parents_weight =
+    const fc_solve_weighting_float num_cards_not_on_parents_weight =
         weighting->num_cards_not_on_parents_factor;
     if (num_cards_not_on_parents_weight)
     {
@@ -304,8 +293,8 @@ static inline pq_rating_t befs_rate_state(
     (state_key = (*(fc_solve_lookup_state_key_from_val(instance, PTR_STATE))))
 #define PTR_STATE (pass.val)
 #define DECLARE_STATE()                                                        \
-    fcs_state_t state_key;                                                     \
-    fcs_kv_state_t pass = {.key = &(state_key)}
+    fcs_state state_key;                                                       \
+    fcs_kv_state pass = {.key = &(state_key)}
 
 #else
 
@@ -316,8 +305,8 @@ static inline pq_rating_t befs_rate_state(
          .key = &FCS_SCANS_the_state, .val = &(PTR_STATE->info)})
 #define PTR_STATE (ptr_state_raw)
 #define DECLARE_STATE()                                                        \
-    fcs_collectible_state_t *ptr_state_raw;                                    \
-    fcs_kv_state_t pass
+    fcs_collectible_state *ptr_state_raw;                                      \
+    fcs_kv_state pass
 #endif
 
 #define ASSIGN_ptr_state(my_value)                                             \
@@ -329,20 +318,20 @@ static inline pq_rating_t befs_rate_state(
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
 /*
- * The calculate_real_depth() inline function traces the path of the state up
- * to the original state, and thus calculates its real depth.
+ * The calculate_real_depth() inline function traces the path of the state
+ * up to the original state, and thus calculates its real depth.
  *
  * It then assigns the newly updated depth throughout the path.
  *
  * */
 
-static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
-    fcs_collectible_state_t *const ptr_state_orig)
+static inline void calculate_real_depth(
+    const bool calc_real_depth, fcs_collectible_state *const ptr_state_orig)
 {
     if (calc_real_depth)
     {
         int_fast32_t this_real_depth = -1;
-        fcs_collectible_state_t *temp_state = ptr_state_orig;
+        fcs_collectible_state *temp_state = ptr_state_orig;
         /* Count the number of states until the original state. */
         while (temp_state != NULL)
         {
@@ -370,9 +359,9 @@ static inline void calculate_real_depth(const fcs_bool_t calc_real_depth,
  * */
 
 static inline void mark_as_dead_end__proto(
-    fcs_collectible_state_t *const ptr_state_input)
+    fcs_collectible_state *const ptr_state_input)
 {
-    fcs_collectible_state_t *temp_state = (ptr_state_input);
+    fcs_collectible_state *temp_state = (ptr_state_input);
     /* Mark as a dead end */
     FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
     temp_state = FCS_S_PARENT(temp_state);
@@ -424,10 +413,10 @@ static inline void mark_as_dead_end__proto(
         BUMP_NUM_CHECKED_STATES__HT()                                          \
     }
 
-static inline fcs_game_limit_t count_num_vacant_stacks(
-    const fcs_game_limit_t stacks_num, const fcs_state_t *const state_ptr)
+static inline fcs_game_limit count_num_vacant_stacks(
+    const fcs_game_limit stacks_num, const fcs_state *const state_ptr)
 {
-    fcs_game_limit_t num_vacant_stacks = 0;
+    fcs_game_limit num_vacant_stacks = 0;
 
     for (int i = 0; i < stacks_num; i++)
     {
@@ -440,8 +429,8 @@ static inline fcs_game_limit_t count_num_vacant_stacks(
     return num_vacant_stacks;
 }
 
-static inline fcs_bool_t fcs__should_state_be_pruned__state(
-    const fcs_collectible_state_t *const ptr_state)
+static inline bool fcs__should_state_be_pruned__state(
+    const fcs_collectible_state *const ptr_state)
 {
     return (!(FCS_S_VISITED(ptr_state) & FCS_VISITED_GENERATED_BY_PRUNING));
 }
@@ -450,9 +439,8 @@ static inline fcs_bool_t fcs__should_state_be_pruned__state(
 #define fcs__should_state_be_pruned(enable_pruning, ptr_state)                 \
     fcs__should_state_be_pruned__state(ptr_state)
 #else
-static inline fcs_bool_t fcs__should_state_be_pruned(
-    const fcs_bool_t enable_pruning,
-    const fcs_collectible_state_t *const ptr_state)
+static inline bool fcs__should_state_be_pruned(
+    const bool enable_pruning, const fcs_collectible_state *const ptr_state)
 {
     return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));
 }
@@ -468,8 +456,8 @@ static inline fcs_bool_t fcs__should_state_be_pruned(
             (instance->i__num_checked_states)))
 #endif
 static inline fcs_int_limit_t calc_ht_max_num_states(
-    const fc_solve_instance_t *const instance,
-    const fc_solve_hard_thread_t *const hard_thread)
+    const fcs_instance *const instance GCC_UNUSED,
+    const fcs_hard_thread *const hard_thread)
 {
     const_AUTO(a, HT_FIELD(hard_thread, ht__max_num_checked_states));
 #ifdef FCS_WITHOUT_MAX_NUM_STATES
@@ -484,7 +472,7 @@ static inline fcs_int_limit_t calc_ht_max_num_states(
 #undef ptr_state_key
 #undef unlimited_sequence_move
 
-static void init_group(fc_solve_soft_thread_t *const soft_thread,
+static void init_group(fcs_soft_thread *const soft_thread,
     fcs_moves_group *const out, const fcs_moves_group *const in)
 {
     if (in->shuffling_type == FCS_SINGLE)
@@ -519,8 +507,7 @@ static void init_group(fc_solve_soft_thread_t *const soft_thread,
     }
 }
 
-static inline void add_to_move_funcs_list(
-    fc_solve_soft_thread_t *const soft_thread,
+static inline void add_to_move_funcs_list(fcs_soft_thread *const soft_thread,
     fcs_moves_group **const out_move_funcs_list, size_t *const num_so_far,
     const fcs_moves_group *const indexes, const size_t count_to_add)
 {

@@ -1,4 +1,3 @@
-
 #ifndef __CMD_LINE_CHOP_H
 #define __CMD_LINE_CHOP_H
 
@@ -16,4 +15,3 @@ extern void args_man_free(args_man_t * manager);
 extern int args_man_chop(args_man_t * manager, char * string);
 
 #endif /* #ifndef __CMD_LINE_CHOP_H */
-

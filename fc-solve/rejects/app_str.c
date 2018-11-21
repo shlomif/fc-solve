@@ -51,4 +51,3 @@ void fc_solve_append_string_sprintf(
 
     return;
 }
-

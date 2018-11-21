@@ -39,28 +39,29 @@ package FCS::SimuTest;
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use IO::All;
-use Test::Trap qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
+use Test::Trap
+    qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
-__PACKAGE__->mk_acc_ref([qw(text_ref fn_base)]);
+__PACKAGE__->mk_acc_ref( [qw(text_ref fn_base)] );
 
 sub _init
 {
     my $self = shift;
 
-    my ($fn_base, $cmd_line) = @_;
+    my ( $fn_base, $cmd_line ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     $self->fn_base($fn_base);
 
-    trap {
-        Test::More::ok (!system(
-                join(
-                    " ", $^X, "process.pl", @$cmd_line,
-                    "--simulate-to=".$self->_simulate_to(),
-                    ">",
-                    $self->_output_got()
-                )
+    trap
+    {
+        Test::More::ok(
+            !system(
+                join( " ",
+                    $^X,        "process.pl",
+                    @$cmd_line, "--simulate-to=" . $self->_simulate_to(),
+                    ">",        $self->_output_got() )
             ),
             "Running to " . $self->_simulate_to(),
         );
@@ -68,11 +69,12 @@ sub _init
 
     my $stderr = $trap->stderr();
 
-    Test::More::is ($stderr, "",
-        "process.pl of " . $self->_simulate_to()
-        . " did not return any errors on stderr");
+    Test::More::is( $stderr, "",
+              "process.pl of "
+            . $self->_simulate_to()
+            . " did not return any errors on stderr" );
 
-    $self->text_ref(\(scalar(io->file($self->_simulate_to)->slurp())));
+    $self->text_ref( \( scalar( io->file( $self->_simulate_to )->slurp() ) ) );
 
     return $self;
 }
@@ -89,9 +91,10 @@ sub _output_got
 
 sub _extract_line
 {
-    my ($self, $board_id) = @_;
+    my ( $self, $board_id ) = @_;
 
-    if (my ($line) = ${$self->text_ref()} =~ m{^(\Q$board_id\E:[^\n]*?)\n}ms)
+    if ( my ($line) =
+        ${ $self->text_ref() } =~ m{^(\Q$board_id\E:[^\n]*?)\n}ms )
     {
         return $line;
     }
@@ -103,18 +106,18 @@ sub _extract_line
 
 sub is_board_line
 {
-    my ($self, $board_id, $expected, $blurb) = @_;
+    my ( $self, $board_id, $expected, $blurb ) = @_;
 
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    Test::More::is ($self->_extract_line($board_id), $expected, $blurb);
+    Test::More::is( $self->_extract_line($board_id), $expected, $blurb );
 }
 
 sub DESTROY
 {
     my $self = shift;
 
-    unlink($self->_simulate_to(), $self->_output_got());
+    unlink( $self->_simulate_to(), $self->_output_got() );
 
     return;
 }
@@ -123,14 +126,12 @@ package main;
 
 {
     # TEST*2
-    my $simu = FCS::SimuTest->new("300-quota", ["--quotas-expr='((300)x100)'"]);
+    my $simu =
+        FCS::SimuTest->new( "300-quota", ["--quotas-expr='((300)x100)'"] );
 
     # TEST
-    $simu->is_board_line(
-        1,
-        q{1:Solved:300@2,245@9,:545},
-        "1 was simulated correctly."
-    );
+    $simu->is_board_line( 1, q{1:Solved:300@2,245@9,:545},
+        "1 was simulated correctly." );
 
     # TEST
     $simu->is_board_line(
@@ -142,14 +143,12 @@ package main;
 
 {
     # TEST*2
-    my $simu = FCS::SimuTest->new("100-200-quota", ["--quotas-expr='((100,200)x100)'"]);
+    my $simu = FCS::SimuTest->new( "100-200-quota",
+        ["--quotas-expr='((100,200)x100)'"] );
 
     # TEST
-    $simu->is_board_line(
-        1000,
-        q{1000:Solved:126@2,:126},
-        "1,000 was simulated correctly."
-    );
+    $simu->is_board_line( 1000, q{1000:Solved:126@2,:126},
+        "1,000 was simulated correctly." );
 
     # TEST
     $simu->is_board_line(

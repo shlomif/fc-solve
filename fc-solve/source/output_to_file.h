@@ -7,9 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * output_to_file.h - header file for outputting a solution to a file.
- */
+// output_to_file.h - header file for outputting a solution to a file.
 #pragma once
 
 #ifdef __cplusplus
@@ -17,28 +15,30 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
-#include "fcs_enums.h"
-#include "fcs_user.h"
+#include "freecell-solver/fcs_enums.h"
+#include "freecell-solver/fcs_user.h"
 
 typedef struct
 {
     const char *output_filename;
     int standard_notation;
-    fcs_bool_t debug_iter_state_output;
+    bool debug_iter_state_output;
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-    fcs_bool_t parseable_output;
+    bool parseable_output;
 #endif
-    fcs_bool_t canonized_order_output;
+    bool canonized_order_output;
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
-    fcs_bool_t display_10_as_t;
+    bool display_10_as_t;
 #endif
-    fcs_bool_t display_parent_iter_num;
-    fcs_bool_t display_moves;
-    fcs_bool_t display_states;
-    fcs_bool_t show_exceeded_limits;
-} fc_solve_display_information_context_t;
+    bool display_parent_iter_num;
+    bool display_moves;
+    bool display_states;
+    bool show_exceeded_limits;
+    bool hint_on_intract;
+    size_t iters_display_step;
+} fc_solve_display_information_context;
 
-static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT = {
+static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
     .debug_iter_state_output = FALSE,
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
     .parseable_output = FALSE,
@@ -52,17 +52,22 @@ static const fc_solve_display_information_context_t INITIAL_DISPLAY_CONTEXT = {
     .display_states = TRUE,
     .standard_notation = FC_SOLVE__STANDARD_NOTATION_NO,
     .output_filename = NULL,
-    .show_exceeded_limits = FALSE};
+    .show_exceeded_limits = FALSE,
+    .hint_on_intract = FALSE,
+    .iters_display_step = 1,
+};
 
 static inline void fc_solve_output_result_to_file(FILE *const output_fh,
     void *const instance, const int ret,
-    const fc_solve_display_information_context_t *const dc_ptr)
+    const fc_solve_display_information_context *const dc_ptr)
 {
     const_AUTO(display_context, (*dc_ptr));
-    if (ret == FCS_STATE_WAS_SOLVED)
+    const bool was_solved = (ret == FCS_STATE_WAS_SOLVED);
+    const bool was_suspend = (ret == FCS_STATE_SUSPEND_PROCESS);
+#ifdef FCS_WITH_MOVES
+    if (was_solved || (display_context.hint_on_intract && was_suspend))
     {
         fputs("-=-=-=-=-=-=-=-=-=-=-=-\n\n", output_fh);
-#ifdef FCS_WITH_MOVES
         fcs_move_t move;
         char state_as_string[1000];
 
@@ -132,19 +137,13 @@ static inline void fc_solve_output_result_to_file(FILE *const output_fh,
         {
             fputs("\n\n", output_fh);
         }
+    }
 #endif
-
-        fputs("This game is solveable.\n", output_fh);
-    }
-    else if (display_context.show_exceeded_limits &&
-             (ret == FCS_STATE_SUSPEND_PROCESS))
-    {
-        fputs("Iterations count exceeded.\n", output_fh);
-    }
-    else
-    {
-        fputs("I could not solve this game.\n", output_fh);
-    }
+    fputs((was_solved ? "This game is solveable.\n"
+                      : (display_context.show_exceeded_limits && was_suspend)
+                            ? "Iterations count exceeded.\n"
+                            : "I could not solve this game.\n"),
+        output_fh);
 
     fprintf(output_fh, "Total number of states checked is %ld.\n",
         (long)freecell_solver_user_get_num_times_long(instance));

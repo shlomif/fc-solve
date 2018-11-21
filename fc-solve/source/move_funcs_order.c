@@ -8,15 +8,9 @@
  * Copyright (c) 2000 Shlomi Fish
  */
 // move_funcs_order.c - contains the fc_solve_apply_moves_order function.
-#include "fcs_back_compat.h"
+#include "freecell-solver/fcs_back_compat.h"
 #include "move_funcs_order.h"
 #include "set_weights.h"
-
-#ifdef FCS_WITH_ERROR_STRS
-#define SET_ERR(s) strcpy(error_string, s);
-#else
-#define SET_ERR(s)
-#endif
 
 static int parse_group(fcs_moves_group *const moves_order,
     const char **ptr_s FCS__PASS_ERR_STR(char *const error_string))
@@ -29,6 +23,13 @@ static int parse_group(fcs_moves_group *const moves_order,
 
     const_AUTO(string, *ptr_s);
     const_AUTO(len, strlen(string));
+#ifndef FCS_UNSAFE
+#ifdef FCS_WITH_ERROR_STRS
+#define SET_ERR(s) strcpy(error_string, s);
+#else
+#define SET_ERR(s)
+#endif
+#endif
 
     for (i = 0; i < len; i++)
     {
@@ -54,22 +55,26 @@ static int parse_group(fcs_moves_group *const moves_order,
 
         if ((string[i] == ')') || (string[i] == ']'))
         {
+#ifndef FCS_UNSAFE
             if (!i)
             {
                 SET_ERR("There's an empty group.");
                 return 2;
             }
+#endif
             /* Try to parse the ordering function. */
             if (string[i + 1] == '=')
             {
                 i += 2;
                 const char *const open_paren = strchr(string + i, '(');
+#ifndef FCS_UNSAFE
                 if (!open_paren)
                 {
                     SET_ERR("A = ordering function is missing its "
                             "open parenthesis - (");
                     return 5;
                 }
+#endif
                 if (string_starts_with(string + i, "rand", open_paren))
                 {
                     moves_order->shuffling_type = FCS_RAND;
@@ -82,23 +87,28 @@ static int parse_group(fcs_moves_group *const moves_order,
                 {
                     moves_order->shuffling_type = FCS_MOVE_KIND_SEQ;
                 }
+#ifndef FCS_UNSAFE
                 else
                 {
                     SET_ERR("Unknown = ordering function");
                     return 6;
                 }
+#endif
                 const char *const aft_open_paren = open_paren + 1;
                 const char *const close_paren = strchr(aft_open_paren, ')');
+#ifndef FCS_UNSAFE
                 if (!close_paren)
                 {
                     SET_ERR("= ordering function not terminated with a ')'");
                     return 7;
                 }
+#endif
                 if (moves_order->shuffling_type == FCS_WEIGHTING)
                 {
                     fc_solve_set_weights(aft_open_paren, close_paren,
                         moves_order->weighting.befs_weights.weights);
                 }
+#ifndef FCS_UNSAFE
                 else
                 {
                     if (close_paren != aft_open_paren)
@@ -109,6 +119,7 @@ static int parse_group(fcs_moves_group *const moves_order,
                         return 8;
                     }
                 }
+#endif
                 /*
                  * a will be incremented so it should be -1 here -
                  * at the end of the token/expression.
@@ -182,11 +193,13 @@ int fc_solve_apply_moves_order(fcs_moves_group *const moves_order,
                 .shuffling_type = FCS_SINGLE,
                 .num = 1};
     }
+#ifndef FCS_UNSAFE
     if (i != len)
     {
         SET_ERR("The Input string is too long.");
         return 4;
     }
+#endif
 
 #ifdef FCS_WITH_ERROR_STRS
     error_string[0] = '\0';
