@@ -90,7 +90,7 @@ my @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS = keys %BOOL_OPTS_WITH_FALSE_DEFAULTS;
 my %bool_opts_with_false_defaults__values =
     ( map { $_ => 0 } @BOOL_OPTS_WITH_FALSE_DEFAULTS__KEYS );
 
-my @TRUE_BOOL_KEYS = keys %TRUE_BOOL_OPTS;
+my @TRUE_BOOL_KEYS         = keys %TRUE_BOOL_OPTS;
 my %true_bool_opts__values = map { $_ => 1 } @TRUE_BOOL_KEYS;
 
 my @INT_OPS__KEYS = keys %INT_OPTS;
