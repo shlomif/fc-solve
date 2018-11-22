@@ -28,6 +28,7 @@ class Expander {
     public modified_state = { f: [], c: [] };
     public empty_fc_indexes: number[] = [];
     public empty_stack_indexes: number[] = [];
+    public ret_array: any[] = [];
 
     constructor() {
         return;
@@ -138,8 +139,6 @@ export function fc_solve_expand_move(
     }
     num_cards_moved_at_each_stage.push(num_cards);
 
-    const ret_array = [];
-
     let output_state_promise = () => {
         return;
     };
@@ -160,7 +159,7 @@ export function fc_solve_expand_move(
                 })
                 .join("");
 
-        ret_array.push({
+        expander.ret_array.push({
             str: state_string,
             type: "s",
         });
@@ -195,7 +194,7 @@ export function fc_solve_expand_move(
     function add_move(my_move) {
         output_state_promise();
 
-        ret_array.push({
+        expander.ret_array.push({
             str: _render_move(my_move),
             type: "m",
         });
@@ -275,5 +274,5 @@ export function fc_solve_expand_move(
         expander.empty_stack_indexes,
     );
 
-    return ret_array;
+    return expander.ret_array;
 }
