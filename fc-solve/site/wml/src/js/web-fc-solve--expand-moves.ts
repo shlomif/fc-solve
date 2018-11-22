@@ -229,18 +229,7 @@ export function fc_solve_expand_move(
         initial_src_state_str,
     );
 
-    const num_cards_moved_at_each_stage = [];
-
-    let num_cards = 0;
-    num_cards_moved_at_each_stage.push(num_cards);
     const step_width = 1 + expander.empty_fc_indexes.length;
-    while (
-        (num_cards = Math.min(num_cards + step_width, ultimate_num_cards)) <
-        ultimate_num_cards
-    ) {
-        num_cards_moved_at_each_stage.push(num_cards);
-    }
-    num_cards_moved_at_each_stage.push(num_cards);
 
     let recursive_move;
     recursive_move = (
