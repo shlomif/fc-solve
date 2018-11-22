@@ -29,6 +29,7 @@ class Expander {
     public empty_fc_indexes: number[] = [];
     public empty_stack_indexes: number[] = [];
     public ret_array: any[] = [];
+    public foundations_str: string;
 
     constructor() {
         return;
@@ -60,6 +61,16 @@ class Expander {
                 expander.modified_state.f[idx] = { t: "s", s: fc_s };
             }
         }
+        const foundations_match = initial_src_state_str.match(
+            /^(Foundations:[^\n]*\n)/,
+        );
+
+        if (!foundations_match) {
+            throw "Cannot find foundations.";
+        }
+
+        expander.foundations_str = foundations_match[1];
+
         return;
     }
     public perform_move(my_move) {
@@ -84,6 +95,30 @@ class Expander {
             );
             expander.modified_state.f[src] = null;
         }
+
+        return;
+    }
+    public past_first_output_state() {
+        const expander = this;
+        const state_string =
+            expander.foundations_str +
+            "Freecells:" +
+            expander.modified_state.f
+                .map((fc) => {
+                    return !fc ? "    " : fc.t === "s" ? fc.s : "  " + fc.c;
+                })
+                .join("") +
+            "\n" +
+            expander.modified_state.c
+                .map((col) => {
+                    return ": " + col.join(" ") + "\n";
+                })
+                .join("");
+
+        expander.ret_array.push({
+            str: state_string,
+            type: "s",
+        });
 
         return;
     }
@@ -141,16 +176,6 @@ export function fc_solve_expand_move(
         }
     }
 
-    const foundations_match = initial_src_state_str.match(
-        /^(Foundations:[^\n]*\n)/,
-    );
-
-    if (!foundations_match) {
-        throw "Cannot find foundations.";
-    }
-
-    const foundations_str = foundations_match[1];
-
     const num_cards_moved_at_each_stage = [];
 
     let num_cards = 0;
@@ -169,27 +194,7 @@ export function fc_solve_expand_move(
     };
 
     const past_first_output_state_promise = () => {
-        const state_string =
-            foundations_str +
-            "Freecells:" +
-            expander.modified_state.f
-                .map((fc) => {
-                    return !fc ? "    " : fc.t === "s" ? fc.s : "  " + fc.c;
-                })
-                .join("") +
-            "\n" +
-            expander.modified_state.c
-                .map((col) => {
-                    return ": " + col.join(" ") + "\n";
-                })
-                .join("");
-
-        expander.ret_array.push({
-            str: state_string,
-            type: "s",
-        });
-
-        return;
+        return expander.past_first_output_state();
     };
 
     function add_move(my_move) {
