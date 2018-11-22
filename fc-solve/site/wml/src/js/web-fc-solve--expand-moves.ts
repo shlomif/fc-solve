@@ -62,6 +62,31 @@ class Expander {
         }
         return;
     }
+    public perform_move(my_move) {
+        const expander = this;
+        const src = my_move.src;
+        const dest = my_move.dest;
+        if (my_move.t === "s2f") {
+            expander.modified_state.f[dest] = {
+                c: expander.modified_state.c[src].pop(),
+                t: "c",
+            };
+        } else if (my_move.t === "s2s") {
+            expander.modified_state.c[dest].push(
+                expander.modified_state.c[src].pop(),
+            );
+        } else {
+            if (expander.modified_state.f[src].t !== "c") {
+                throw "Wrong val in " + src + "Freecell.";
+            }
+            expander.modified_state.c[dest].push(
+                expander.modified_state.f[src].c,
+            );
+            expander.modified_state.f[src] = null;
+        }
+
+        return;
+    }
 }
 
 export function fc_solve_expand_move(
@@ -167,30 +192,6 @@ export function fc_solve_expand_move(
         return;
     };
 
-    function perform_move(my_move) {
-        const src = my_move.src;
-        const dest = my_move.dest;
-        if (my_move.t === "s2f") {
-            expander.modified_state.f[dest] = {
-                c: expander.modified_state.c[src].pop(),
-                t: "c",
-            };
-        } else if (my_move.t === "s2s") {
-            expander.modified_state.c[dest].push(
-                expander.modified_state.c[src].pop(),
-            );
-        } else {
-            if (expander.modified_state.f[src].t !== "c") {
-                throw "Wrong val in " + src + "Freecell.";
-            }
-            expander.modified_state.c[dest].push(
-                expander.modified_state.f[src].c,
-            );
-            expander.modified_state.f[src] = null;
-        }
-
-        return;
-    }
     function add_move(my_move) {
         output_state_promise();
 
@@ -199,7 +200,7 @@ export function fc_solve_expand_move(
             type: "m",
         });
 
-        perform_move(my_move);
+        expander.perform_move(my_move);
 
         output_state_promise = past_first_output_state_promise;
 
