@@ -97,31 +97,6 @@ class Expander {
 
         return;
     }
-    public perform_move(my_move) {
-        const expander = this;
-        const src = my_move.src;
-        const dest = my_move.dest;
-        if (my_move.t === "s2f") {
-            expander.modified_state.f[dest] = {
-                c: expander.modified_state.c[src].pop(),
-                t: "c",
-            };
-        } else if (my_move.t === "s2s") {
-            expander.modified_state.c[dest].push(
-                expander.modified_state.c[src].pop(),
-            );
-        } else {
-            if (expander.modified_state.f[src].t !== "c") {
-                throw "Wrong val in " + src + "Freecell.";
-            }
-            expander.modified_state.c[dest].push(
-                expander.modified_state.f[src].c,
-            );
-            expander.modified_state.f[src] = null;
-        }
-
-        return;
-    }
     public past_first_output_state() {
         const expander = this;
         const state_string =
@@ -146,22 +121,6 @@ class Expander {
 
         return;
     }
-    public add_move(my_move) {
-        const expander = this;
-        expander.output_state_promise(expander);
-
-        expander.ret_array.push({
-            str: _render_move(my_move),
-            type: "m",
-        });
-
-        expander.perform_move(my_move);
-
-        expander.output_state_promise =
-            expander.past_first_output_state_promise;
-
-        return;
-    }
     public move_using_freecells(source: number, dest: number, count: number) {
         const expander = this;
         const num_cards_thru_freecell = count - 1;
@@ -180,6 +139,47 @@ class Expander {
                 src: expander.empty_fc_indexes[i],
                 dest,
             });
+        }
+
+        return;
+    }
+    private add_move(my_move) {
+        const expander = this;
+        expander.output_state_promise(expander);
+
+        expander.ret_array.push({
+            str: _render_move(my_move),
+            type: "m",
+        });
+
+        expander.perform_move(my_move);
+
+        expander.output_state_promise =
+            expander.past_first_output_state_promise;
+
+        return;
+    }
+    private perform_move(my_move) {
+        const expander = this;
+        const src = my_move.src;
+        const dest = my_move.dest;
+        if (my_move.t === "s2f") {
+            expander.modified_state.f[dest] = {
+                c: expander.modified_state.c[src].pop(),
+                t: "c",
+            };
+        } else if (my_move.t === "s2s") {
+            expander.modified_state.c[dest].push(
+                expander.modified_state.c[src].pop(),
+            );
+        } else {
+            if (expander.modified_state.f[src].t !== "c") {
+                throw "Wrong val in " + src + "Freecell.";
+            }
+            expander.modified_state.c[dest].push(
+                expander.modified_state.f[src].c,
+            );
+            expander.modified_state.f[src] = null;
         }
 
         return;
@@ -243,7 +243,12 @@ export function fc_solve_expand_move(
     num_cards_moved_at_each_stage.push(num_cards);
 
     let recursive_move;
-    recursive_move = (source, dest, num_cards_r, empty_cols) => {
+    recursive_move = (
+        source: number,
+        dest: number,
+        num_cards_r: number,
+        empty_cols: number[],
+    ) => {
         if (num_cards_r <= 0) {
             // Do nothing - the no-op.
             return;
