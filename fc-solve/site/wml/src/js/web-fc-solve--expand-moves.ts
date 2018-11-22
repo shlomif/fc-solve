@@ -30,7 +30,6 @@ class Expander {
     public empty_stack_indexes: number[] = [];
     public ret_array: any[] = [];
     public foundations_str: string;
-
     constructor() {
         return;
     }
@@ -122,6 +121,29 @@ class Expander {
 
         return;
     }
+    public add_move(my_move) {
+        const expander = this;
+        expander.output_state_promise(expander);
+
+        expander.ret_array.push({
+            str: _render_move(my_move),
+            type: "m",
+        });
+
+        expander.perform_move(my_move);
+
+        expander.output_state_promise =
+            expander.past_first_output_state_promise;
+
+        return;
+    }
+    private output_state_promise = (expander: Expander) => {
+        return;
+    };
+
+    private past_first_output_state_promise = (expander: Expander) => {
+        return expander.past_first_output_state();
+    };
 }
 
 export function fc_solve_expand_move(
@@ -189,42 +211,23 @@ export function fc_solve_expand_move(
     }
     num_cards_moved_at_each_stage.push(num_cards);
 
-    let output_state_promise = () => {
-        return;
-    };
-
-    const past_first_output_state_promise = () => {
-        return expander.past_first_output_state();
-    };
-
-    function add_move(my_move) {
-        output_state_promise();
-
-        expander.ret_array.push({
-            str: _render_move(my_move),
-            type: "m",
-        });
-
-        expander.perform_move(my_move);
-
-        output_state_promise = past_first_output_state_promise;
-
-        return;
-    }
-
     function move_using_freecells(source, dest, count) {
         const num_cards_thru_freecell = count - 1;
         for (let i = 0; i < num_cards_thru_freecell; ++i) {
-            add_move({
+            expander.add_move({
                 t: "s2f",
                 src: source,
                 dest: expander.empty_fc_indexes[i],
             });
         }
-        add_move({ t: "s2s", src: source, dest });
+        expander.add_move({ t: "s2s", src: source, dest });
 
         for (let i = num_cards_thru_freecell - 1; i >= 0; --i) {
-            add_move({ t: "f2s", src: expander.empty_fc_indexes[i], dest });
+            expander.add_move({
+                t: "f2s",
+                src: expander.empty_fc_indexes[i],
+                dest,
+            });
         }
 
         return;
