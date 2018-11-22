@@ -34,10 +34,35 @@ class Expander {
         return;
     }
     public populate_freecells(
+        num_stacks: number,
         num_freecells: number,
+        ultimate_source: number,
+        ultimate_dest: number,
         initial_src_state_str: string,
     ) {
         const expander = this;
+        const col_matches = initial_src_state_str.match(/(\n:[^\n]+)/g);
+
+        if (!col_matches || col_matches.length !== num_stacks) {
+            throw "Miscount of stacks.";
+        }
+
+        for (let idx = 0; idx < num_stacks; ++idx) {
+            let cards = col_matches[idx].match(/\w{2}/g);
+
+            if (!cards) {
+                cards = [];
+            }
+
+            expander.modified_state.c[idx] = cards;
+            if (
+                idx !== ultimate_dest &&
+                idx !== ultimate_source &&
+                cards.length === 0
+            ) {
+                expander.empty_stack_indexes.push(idx);
+            }
+        }
         const freecell_match = initial_src_state_str.match(
             /\nFreecells:([^\n]*)\n/,
         );
@@ -196,30 +221,13 @@ export function fc_solve_expand_move(
     const expander = new Expander();
 
     // Need to process this move.
-    expander.populate_freecells(num_freecells, initial_src_state_str);
-
-    const col_matches = initial_src_state_str.match(/(\n:[^\n]+)/g);
-
-    if (!col_matches || col_matches.length !== num_stacks) {
-        throw "Miscount of stacks.";
-    }
-
-    for (let idx = 0; idx < num_stacks; ++idx) {
-        let cards = col_matches[idx].match(/\w{2}/g);
-
-        if (!cards) {
-            cards = [];
-        }
-
-        expander.modified_state.c[idx] = cards;
-        if (
-            idx !== ultimate_dest &&
-            idx !== ultimate_source &&
-            cards.length === 0
-        ) {
-            expander.empty_stack_indexes.push(idx);
-        }
-    }
+    expander.populate_freecells(
+        num_stacks,
+        num_freecells,
+        ultimate_source,
+        ultimate_dest,
+        initial_src_state_str,
+    );
 
     const num_cards_moved_at_each_stage = [];
 
