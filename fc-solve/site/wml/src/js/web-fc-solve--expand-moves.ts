@@ -241,42 +241,36 @@ export function fc_solve_expand_move(
         if (num_cards_r <= 0) {
             // Do nothing - the no-op.
             return;
-        } else {
-            const running_empty_cols = empty_cols.slice(0);
-            const steps = [];
-
-            while (Math.ceil(num_cards_r / step_width) > 1) {
-                // Top power of two in num_steps
-                const rec_num_steps = _find_max_step(
-                    Math.ceil(num_cards_r / step_width),
-                );
-                const count_cards = rec_num_steps * step_width;
-                const temp_dest = running_empty_cols.shift();
-                recursive_move(
-                    source,
-                    temp_dest,
-                    count_cards,
-                    running_empty_cols,
-                );
-
-                steps.push({
-                    count: count_cards,
-                    dest: temp_dest,
-                    source,
-                });
-                num_cards_r -= count_cards;
-            }
-            expander.move_using_freecells(source, dest, num_cards_r);
-
-            for (const s of steps.reverse()) {
-                recursive_move(s.dest, dest, s.count, running_empty_cols);
-                running_empty_cols.push(s.dest);
-                running_empty_cols.sort((a, b) => {
-                    return a - b;
-                });
-            }
-            return;
         }
+        const running_empty_cols = empty_cols.slice(0);
+        const steps = [];
+
+        while (Math.ceil(num_cards_r / step_width) > 1) {
+            // Top power of two in num_steps
+            const rec_num_steps = _find_max_step(
+                Math.ceil(num_cards_r / step_width),
+            );
+            const count_cards = rec_num_steps * step_width;
+            const temp_dest = running_empty_cols.shift();
+            recursive_move(source, temp_dest, count_cards, running_empty_cols);
+
+            steps.push({
+                count: count_cards,
+                dest: temp_dest,
+                source,
+            });
+            num_cards_r -= count_cards;
+        }
+        expander.move_using_freecells(source, dest, num_cards_r);
+
+        for (const s of steps.reverse()) {
+            recursive_move(s.dest, dest, s.count, running_empty_cols);
+            running_empty_cols.push(s.dest);
+            running_empty_cols.sort((a, b) => {
+                return a - b;
+            });
+        }
+        return;
     };
 
     recursive_move(
