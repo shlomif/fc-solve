@@ -137,6 +137,29 @@ class Expander {
 
         return;
     }
+    public move_using_freecells(source: number, dest: number, count: number) {
+        const expander = this;
+        const num_cards_thru_freecell = count - 1;
+        for (let i = 0; i < num_cards_thru_freecell; ++i) {
+            expander.add_move({
+                t: "s2f",
+                src: source,
+                dest: expander.empty_fc_indexes[i],
+            });
+        }
+        expander.add_move({ t: "s2s", src: source, dest });
+
+        for (let i = num_cards_thru_freecell - 1; i >= 0; --i) {
+            expander.add_move({
+                t: "f2s",
+                src: expander.empty_fc_indexes[i],
+                dest,
+            });
+        }
+
+        return;
+    }
+
     private output_state_promise = (expander: Expander) => {
         return;
     };
@@ -211,28 +234,6 @@ export function fc_solve_expand_move(
     }
     num_cards_moved_at_each_stage.push(num_cards);
 
-    function move_using_freecells(source, dest, count) {
-        const num_cards_thru_freecell = count - 1;
-        for (let i = 0; i < num_cards_thru_freecell; ++i) {
-            expander.add_move({
-                t: "s2f",
-                src: source,
-                dest: expander.empty_fc_indexes[i],
-            });
-        }
-        expander.add_move({ t: "s2s", src: source, dest });
-
-        for (let i = num_cards_thru_freecell - 1; i >= 0; --i) {
-            expander.add_move({
-                t: "f2s",
-                src: expander.empty_fc_indexes[i],
-                dest,
-            });
-        }
-
-        return;
-    }
-
     let recursive_move;
     recursive_move = (source, dest, num_cards_r, empty_cols) => {
         if (num_cards_r <= 0) {
@@ -263,7 +264,7 @@ export function fc_solve_expand_move(
                 });
                 num_cards_r -= count_cards;
             }
-            move_using_freecells(source, dest, num_cards_r);
+            expander.move_using_freecells(source, dest, num_cards_r);
 
             for (const s of steps.reverse()) {
                 recursive_move(s.dest, dest, s.count, running_empty_cols);
