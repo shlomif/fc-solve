@@ -32,6 +32,35 @@ class Expander {
     constructor() {
         return;
     }
+    public populate_freecells(
+        num_freecells: number,
+        initial_src_state_str: string,
+    ) {
+        const expander = this;
+        const freecell_match = initial_src_state_str.match(
+            /\nFreecells:([^\n]*)\n/,
+        );
+        if (!freecell_match) {
+            throw "Cannot match freecell exception.";
+        }
+
+        const freecell_string: string = freecell_match[1];
+
+        if (freecell_string.length !== 4 * num_freecells) {
+            throw "Miscount of freecells.";
+        }
+
+        for (let idx = 0; idx < num_freecells; ++idx) {
+            const fc_s = freecell_string.substring(idx * 4, (idx + 1) * 4);
+            if (fc_s === "    ") {
+                expander.modified_state.f[idx] = null;
+                expander.empty_fc_indexes.push(idx);
+            } else {
+                expander.modified_state.f[idx] = { t: "s", s: fc_s };
+            }
+        }
+        return;
+    }
 }
 
 export function fc_solve_expand_move(
@@ -61,29 +90,7 @@ export function fc_solve_expand_move(
     const expander = new Expander();
 
     // Need to process this move.
-
-    const freecell_match = initial_src_state_str.match(
-        /\nFreecells:([^\n]*)\n/,
-    );
-    if (!freecell_match) {
-        throw "Cannot match freecell exception.";
-    }
-
-    const freecell_string = freecell_match[1];
-
-    if (freecell_string.length !== 4 * num_freecells) {
-        throw "Miscount of freecells.";
-    }
-
-    for (let idx = 0; idx < num_freecells; ++idx) {
-        const fc_s = freecell_string.substring(idx * 4, (idx + 1) * 4);
-        if (fc_s === "    ") {
-            expander.modified_state.f[idx] = null;
-            expander.empty_fc_indexes.push(idx);
-        } else {
-            expander.modified_state.f[idx] = { t: "s", s: fc_s };
-        }
-    }
+    expander.populate_freecells(num_freecells, initial_src_state_str);
 
     const col_matches = initial_src_state_str.match(/(\n:[^\n]+)/g);
 
