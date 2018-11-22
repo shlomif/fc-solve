@@ -34,7 +34,7 @@ class Expander {
     constructor() {
         return;
     }
-    public populate_freecells(
+    public init_from_string(
         num_stacks: number,
         num_freecells: number,
         ultimate_source: number,
@@ -269,7 +269,7 @@ export function fc_solve_expand_move(
     const expander = new Expander();
 
     // Need to process this move.
-    expander.populate_freecells(
+    expander.init_from_string(
         num_stacks,
         num_freecells,
         ultimate_source,
