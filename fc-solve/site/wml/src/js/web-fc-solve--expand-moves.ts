@@ -24,6 +24,16 @@ function _render_move(my_move): string {
     }
 }
 
+class Expander {
+    public modified_state = { f: [], c: [] };
+    public empty_fc_indexes: number[] = [];
+    public empty_stack_indexes: number[] = [];
+
+    constructor() {
+        return;
+    }
+}
+
 export function fc_solve_expand_move(
     num_stacks: number,
     num_freecells: number,
@@ -48,12 +58,9 @@ export function fc_solve_expand_move(
 
     const ultimate_source = _to_int(matched[2]);
     const ultimate_dest = _to_int(matched[3]);
+    const expander = new Expander();
 
     // Need to process this move.
-    const empty_fc_indexes: number[] = [];
-    const empty_stack_indexes: number[] = [];
-
-    const modified_state = { f: [], c: [] };
 
     const freecell_match = initial_src_state_str.match(
         /\nFreecells:([^\n]*)\n/,
@@ -71,10 +78,10 @@ export function fc_solve_expand_move(
     for (let idx = 0; idx < num_freecells; ++idx) {
         const fc_s = freecell_string.substring(idx * 4, (idx + 1) * 4);
         if (fc_s === "    ") {
-            modified_state.f[idx] = null;
-            empty_fc_indexes.push(idx);
+            expander.modified_state.f[idx] = null;
+            expander.empty_fc_indexes.push(idx);
         } else {
-            modified_state.f[idx] = { t: "s", s: fc_s };
+            expander.modified_state.f[idx] = { t: "s", s: fc_s };
         }
     }
 
@@ -91,13 +98,13 @@ export function fc_solve_expand_move(
             cards = [];
         }
 
-        modified_state.c[idx] = cards;
+        expander.modified_state.c[idx] = cards;
         if (
             idx !== ultimate_dest &&
             idx !== ultimate_source &&
             cards.length === 0
         ) {
-            empty_stack_indexes.push(idx);
+            expander.empty_stack_indexes.push(idx);
         }
     }
 
@@ -115,7 +122,7 @@ export function fc_solve_expand_move(
 
     let num_cards = 0;
     num_cards_moved_at_each_stage.push(num_cards);
-    const step_width = 1 + empty_fc_indexes.length;
+    const step_width = 1 + expander.empty_fc_indexes.length;
     while (
         (num_cards = Math.min(num_cards + step_width, ultimate_num_cards)) <
         ultimate_num_cards
@@ -134,13 +141,13 @@ export function fc_solve_expand_move(
         const state_string =
             foundations_str +
             "Freecells:" +
-            modified_state.f
+            expander.modified_state.f
                 .map((fc) => {
                     return !fc ? "    " : fc.t === "s" ? fc.s : "  " + fc.c;
                 })
                 .join("") +
             "\n" +
-            modified_state.c
+            expander.modified_state.c
                 .map((col) => {
                     return ": " + col.join(" ") + "\n";
                 })
@@ -158,18 +165,22 @@ export function fc_solve_expand_move(
         const src = my_move.src;
         const dest = my_move.dest;
         if (my_move.t === "s2f") {
-            modified_state.f[dest] = {
-                c: modified_state.c[src].pop(),
+            expander.modified_state.f[dest] = {
+                c: expander.modified_state.c[src].pop(),
                 t: "c",
             };
         } else if (my_move.t === "s2s") {
-            modified_state.c[dest].push(modified_state.c[src].pop());
+            expander.modified_state.c[dest].push(
+                expander.modified_state.c[src].pop(),
+            );
         } else {
-            if (modified_state.f[src].t !== "c") {
+            if (expander.modified_state.f[src].t !== "c") {
                 throw "Wrong val in " + src + "Freecell.";
             }
-            modified_state.c[dest].push(modified_state.f[src].c);
-            modified_state.f[src] = null;
+            expander.modified_state.c[dest].push(
+                expander.modified_state.f[src].c,
+            );
+            expander.modified_state.f[src] = null;
         }
 
         return;
@@ -192,12 +203,16 @@ export function fc_solve_expand_move(
     function move_using_freecells(source, dest, count) {
         const num_cards_thru_freecell = count - 1;
         for (let i = 0; i < num_cards_thru_freecell; ++i) {
-            add_move({ t: "s2f", src: source, dest: empty_fc_indexes[i] });
+            add_move({
+                t: "s2f",
+                src: source,
+                dest: expander.empty_fc_indexes[i],
+            });
         }
         add_move({ t: "s2s", src: source, dest });
 
         for (let i = num_cards_thru_freecell - 1; i >= 0; --i) {
-            add_move({ t: "f2s", src: empty_fc_indexes[i], dest });
+            add_move({ t: "f2s", src: expander.empty_fc_indexes[i], dest });
         }
 
         return;
@@ -250,7 +265,7 @@ export function fc_solve_expand_move(
         ultimate_source,
         ultimate_dest,
         ultimate_num_cards,
-        empty_stack_indexes,
+        expander.empty_stack_indexes,
     );
 
     return ret_array;
