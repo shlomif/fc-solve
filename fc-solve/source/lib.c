@@ -1050,8 +1050,9 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
             for (uint_fast32_t s = 0; s < prev_derived_list.num_states; s++)
             {
                 fcs_kv_state this_pass;
-                FCS_STATE_collectible_to_kv(
-                    &this_pass, prev_derived_list.states[s].state_ptr);
+                const_AUTO(
+                    this_state_ptr, prev_derived_list.states[s].state_ptr);
+                FCS_STATE_collectible_to_kv(&this_pass, this_state_ptr);
                 const fcs_game_limit num_vacant_freecells =
                     count_num_vacant_freecells(
                         INSTANCE_FREECELLS_NUM, this_pass.key);
@@ -1069,8 +1070,19 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
                     is_simple_simon
 #endif
                 );
+#define USE_ANYWAY
+#ifdef USE_ANYWAY
+                const_AUTO(before_num, next_derived_list.num_states);
+#endif
                 fc_solve__moves_order__call(g.m.move_funcs[i], soft_thread,
                     this_pass, &next_derived_list);
+#ifdef USE_ANYWAY
+                if (next_derived_list.num_states == before_num)
+                {
+                    fc_solve_derived_states_list_add_state(
+                        &next_derived_list, this_state_ptr, 0);
+                }
+#endif
             }
             free(prev_derived_list.states);
             prev_derived_list = next_derived_list;
@@ -1114,9 +1126,7 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
     }
     fcs_derived_states_list_item *const derived_states =
         derived_list->states + init_num_states;
-    switch (g.shuffling_type)
-    {
-    case FCS_RAND:
+    if (g.shuffling_type == FCS_RAND)
     {
         for (size_t i = num_states - 1; i > 0; i--)
         {
@@ -1128,9 +1138,7 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
             rand_array[j] = swap_save;
         }
     }
-    break;
-
-    case FCS_WEIGHTING:
+    else if (g.shuffling_type == FCS_WEIGHTING)
     {
         const fcs_state_weighting *const weighting = &g.weighting;
 #ifdef FCS_RCS_STATES
@@ -1161,8 +1169,6 @@ void fc_solve__moves_order__call(const fcs_moves_group g,
                 *(--move) = temp;
             }
         }
-    }
-    break;
     }
     fcs_derived_states_list_item new_derived_states[num_states];
     for (size_t i = 0; i < num_states; i++)
@@ -1417,12 +1423,6 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
 
                 if (!was_pruned)
                 {
-                    const fcs_game_limit num_vacant_freecells =
-                        count_num_vacant_freecells(
-                            LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
-                    const fcs_game_limit num_vacant_stacks =
-                        count_num_vacant_stacks(
-                            LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
                     /* Check if we have reached the empty state */
                     if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
                                  (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
@@ -1575,6 +1575,10 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
                     }
                     break;
 
+                case FCS_SINGLE:
+                    break;
+                case FCS_MOVE_KIND_SEQ:
+                    break;
                 case FCS_NO_SHUFFLING:
                     break;
                 }
