@@ -140,8 +140,10 @@ static int parse_group(fcs_moves_group *const moves_order,
             (fcs_moves_group){.m.idx = fc_solve_string_to_move_num(string[i]),
                 .shuffling_type = FCS_SINGLE};
     }
+#ifndef FCS_UNSAFE
     *ptr_s = string + i;
     SET_ERR("Unclosed group.");
+#endif
     return 4;
 }
 
@@ -177,11 +179,13 @@ int fc_solve_apply_moves_order(fcs_moves_group *const moves_order,
             continue;
         }
 
+#ifndef FCS_UNSAFE
         if ((string[i] == ')') || (string[i] == ']'))
         {
             SET_ERR("There's an empty group.");
             return 2;
         }
+#endif
 
         if (!(++moves_order->num & (MOVES_GROW_BY - 1)))
         {
