@@ -232,8 +232,8 @@ static inline void compile_prelude(fcs_hard_thread *const hard_thread)
 #endif
 
 static inline void set_next_soft_thread(fcs_hard_thread *const hard_thread,
-    const int_fast32_t scan_idx, const fcs_int_limit_t quota,
-    int_fast32_t *const st_idx_ptr)
+    const uint_fast32_t scan_idx, const fcs_int_limit_t quota,
+    uint_fast32_t *const st_idx_ptr)
 {
     (*st_idx_ptr) = scan_idx;
     /*
@@ -421,7 +421,7 @@ static int rcs_cmp_states(
 #endif
 
 static inline void set_next_prelude_item(fcs_hard_thread *const hard_thread,
-    const fc_solve_prelude_item *const prelude, int_fast32_t *const st_idx_ptr)
+    const fc_solve_prelude_item *const prelude, uint_fast32_t *const st_idx_ptr)
 {
     const fc_solve_prelude_item next_item =
         prelude[HT_FIELD(hard_thread, prelude_idx)++];
@@ -1549,10 +1549,10 @@ static inline void init_dfs(fcs_soft_thread *const soft_thread)
  * a while loop
  * */
 static inline void switch_to_next_soft_thread(
-    fcs_hard_thread *const hard_thread, const int_fast32_t num_soft_threads,
+    fcs_hard_thread *const hard_thread, const uint_fast32_t num_soft_threads,
     const fcs_soft_thread *const soft_threads,
     const fc_solve_prelude_item *const prelude, const size_t prelude_num_items,
-    int_fast32_t *const st_idx_ptr)
+    uint_fast32_t *const st_idx_ptr)
 {
     if (HT_FIELD(hard_thread, prelude_idx) < prelude_num_items)
     {
@@ -1560,7 +1560,7 @@ static inline void switch_to_next_soft_thread(
     }
     else
     {
-        const int_fast32_t next_st_idx =
+        const uint_fast32_t next_st_idx =
             ((1 + (*st_idx_ptr)) % num_soft_threads);
         set_next_soft_thread(hard_thread, next_st_idx,
             soft_threads[next_st_idx].checked_states_step, st_idx_ptr);
@@ -1657,14 +1657,14 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 #else
     fcs_instance *const instance = hard_thread->instance;
 #endif
-    int_fast32_t *const st_idx_ptr = &(HT_FIELD(hard_thread, st_idx));
+    uint_fast32_t *const st_idx_ptr = &(HT_FIELD(hard_thread, st_idx));
     /*
      * Again, making sure that not all of the soft_threads in this
      * hard thread are finished.
      * */
 
     fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
-    const int_fast32_t num_soft_threads =
+    const uint_fast32_t num_soft_threads =
         HT_FIELD(hard_thread, num_soft_threads);
     const fc_solve_prelude_item *const prelude = HT_FIELD(hard_thread, prelude);
     fcs_soft_thread *const soft_threads = HT_FIELD(hard_thread, soft_threads);

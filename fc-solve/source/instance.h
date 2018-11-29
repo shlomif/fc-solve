@@ -294,7 +294,7 @@ struct fc_solve_hard_thread_struct
     /*
      * The index for the soft-thread that is currently processed
      * */
-    int_fast32_t st_idx;
+    uint_fast32_t st_idx;
     /*
      * This is the mechanism used to allocate memory for stacks, states
      * and move stacks.
