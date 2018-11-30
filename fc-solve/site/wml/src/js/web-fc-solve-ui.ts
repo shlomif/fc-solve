@@ -4,11 +4,6 @@ import * as w from "./web-fc-solve";
 import {
     BoardParseResult,
     ErrorLocationType,
-    fcs_js__card_from_string,
-    fcs_js__column_from_string,
-    fcs_js__foundations_from_string,
-    fcs_js__freecells_from_string,
-    Foundations,
     ParseErrorType,
 } from "./fcs-validate";
 
