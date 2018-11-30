@@ -672,7 +672,7 @@ export class BoardParseResult {
         const too_many_cards__errors: ParseError[] = [];
         const not_enough_cards__errors: ParseError[] = [];
         for (const suit of _suits) {
-            _ranks.map((rank) => {
+            for (const rank of _ranks) {
                 const count = counter[suit][rank];
                 function add_error(arr, type_, locs) {
                     arr.push(new ParseError(type_, locs, new Card(rank, suit)));
@@ -697,7 +697,7 @@ export class BoardParseResult {
                         [],
                     );
                 }
-            });
+            }
         }
         that.errors.push(...too_many_cards__errors);
         that.errors.push(...not_enough_cards__errors);
