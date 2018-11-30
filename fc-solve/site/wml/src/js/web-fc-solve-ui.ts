@@ -1,6 +1,16 @@
 import * as base_ui from "./fcs-base-ui";
 import * as Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
+import {
+    BoardParseResult,
+    ErrorLocationType,
+    fcs_js__card_from_string,
+    fcs_js__column_from_string,
+    fcs_js__foundations_from_string,
+    fcs_js__freecells_from_string,
+    Foundations,
+    ParseErrorType,
+} from "./fcs-validate";
 
 const FC_Solve = w.FC_Solve;
 const _my_module = Module()({});
@@ -52,9 +62,66 @@ class FC_Solve_UI {
             string_params: that._get_string_params(),
         });
 
-        that._solve_err_code = that._instance.do_solve(
-            that._calc_initial_board_string(),
+        const parse_error_control = $("#board_parse_error");
+        const parse_error_wrapper = $("#board_parse__wrap");
+        const parse_error_control_hide_class: string = "hide";
+
+        parse_error_wrapper.addClass(parse_error_control_hide_class);
+
+        const board_string = that._calc_initial_board_string();
+        const validate = new BoardParseResult(
+            that._instance.get_num_stacks(),
+            that._instance.get_num_freecells(),
+            board_string,
         );
+
+        if (!validate.is_valid) {
+            let err_s: string = "";
+
+            for (const e of validate.errors) {
+                let es: string = "";
+                function _render_locs() {
+                    for (const loc of e.locs) {
+                        es += "    " + "* ";
+                        if (loc.type_ === ErrorLocationType.Column) {
+                            es += "Column " + (1 + loc.idx);
+                        } else if (loc.type_ === ErrorLocationType.Freecells) {
+                            es += "Freecells";
+                        } else if (
+                            loc.type_ === ErrorLocationType.Foundations
+                        ) {
+                            es += "Foundations";
+                        }
+                        es += "\n";
+                    }
+                }
+                if (e.type_ === ParseErrorType.TOO_MUCH_OF_CARD) {
+                    es +=
+                        "* Too much of the card " + e.card.toString() + " :\n";
+                    _render_locs();
+                } else if (e.type_ === ParseErrorType.NOT_ENOUGH_OF_CARD) {
+                    es +=
+                        "* Missing card " +
+                        e.card.toString() +
+                        " ; Present locations :\n";
+                    _render_locs();
+                } else if (e.type_ === ParseErrorType.LINE_PARSE_ERROR) {
+                    es += "* Line parsing error:\n";
+                    _render_locs();
+                } else if (
+                    e.type_ === ParseErrorType.FOUNDATIONS_NOT_AT_START
+                ) {
+                    es += '* The "Foundations" line is not at the start.\n';
+                }
+                err_s += es;
+            }
+            that._webui_set_status_callback("error", "Parse Error");
+            parse_error_wrapper.removeClass(parse_error_control_hide_class);
+            parse_error_control.val(err_s);
+            return;
+        }
+
+        that._solve_err_code = that._instance.do_solve(board_string);
 
         that._handle_err_code();
 
@@ -295,7 +362,7 @@ class FC_Solve_UI {
     private _get_cmd_line_preset() {
         return $("#preset").val();
     }
-    private _calc_initial_board_string() {
+    private _calc_initial_board_string(): string {
         return ($("#stdin").val() as string).replace(/#[^\r\n]*\r?\n?/g, "");
     }
     private _disable_output_display() {

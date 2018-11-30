@@ -65,6 +65,11 @@ Input a card patience/solitaire layout in the <a href="$(ROOT)/docs/distro/READM
 
 </p>
 
+<div class="hide" id="board_parse__wrap">
+<label for="board_parse_error">Board Input Parsing Errors:</label><br />
+<textarea id="board_parse_error" cols="30" rows="10" readonly="readonly"></textarea>
+</div>
+
 <div id="fcs_advanced">
 <:{
 use FreecellSolver::ExtractGames;

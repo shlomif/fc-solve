@@ -63,7 +63,7 @@ textarea.emscripten {
     }
 }
 
-#status_wrap {
+#status_wrap , #board_parse__wrap {
     clear: none;
     float: left;
     border: orange 1pt solid;
@@ -155,4 +155,18 @@ textarea.emscripten {
 
 .state {
     margin-top: 1em;
+}
+
+#board_parse__wrap {
+    &.hide {
+        display: none;
+    }
+    label {
+        font-family: sans-serif;
+        font-weight: bold;
+        font-size: 90%;
+    }
+    textarea {
+        margin-top: 1em;
+    }
 }
