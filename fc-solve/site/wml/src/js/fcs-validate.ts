@@ -465,7 +465,7 @@ export function fcs_js__foundations_from_string(
     if (!p.consume_match(/^(Foundations\:)/)) {
         return make_ret(
             false,
-            'Wrong line prefix for freecells - should be "Freecells:"',
+            'Wrong line prefix for the foundations - should be "Foundations:"',
         );
     }
 

@@ -79,13 +79,17 @@ class FC_Solve_UI {
                     for (const loc of e.locs) {
                         es += "    " + "* ";
                         if (loc.type_ === ErrorLocationType.Column) {
-                            es += "Column " + (1 + loc.idx);
+                            const col_idx = loc.idx;
+                            es += "Column " + (1 + col_idx) + ": ";
+                            es += validate.columns[col_idx].error;
                         } else if (loc.type_ === ErrorLocationType.Freecells) {
-                            es += "Freecells";
+                            es += "Freecells: ";
+                            es += validate.freecells.error;
                         } else if (
                             loc.type_ === ErrorLocationType.Foundations
                         ) {
-                            es += "Foundations";
+                            es += "Foundations: ";
+                            es += validate.foundations.error;
                         }
                         es += "\n";
                     }
