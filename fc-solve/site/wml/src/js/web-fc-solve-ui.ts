@@ -110,10 +110,14 @@ class FC_Solve_UI {
                 }
                 err_s += es;
             }
-            that._webui_set_status_callback("error", "Parse Error");
-            parse_error_wrapper.removeClass(parse_error_control_hide_class);
             parse_error_control.val(err_s);
-            return;
+            // Disabling for now because the error messages are too cryptic
+            // TODO : restore after improving.
+            if (false) {
+                that._webui_set_status_callback("error", "Parse Error");
+                parse_error_wrapper.removeClass(parse_error_control_hide_class);
+                return;
+            }
         }
 
         that._solve_err_code = that._instance.do_solve(board_string);
