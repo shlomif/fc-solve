@@ -23,6 +23,13 @@ function _increment_move_indices(move_s) {
 }
 
 const ENABLE_VALIDATION = true;
+function highlight_in_board(start: number, end: number) {
+    (document.getElementById("stdin") as HTMLInputElement).setSelectionRange(
+        start,
+        end,
+    );
+    return;
+}
 
 class FC_Solve_UI {
     private _instance: w.FC_Solve = null;
@@ -78,45 +85,67 @@ class FC_Solve_UI {
             for (const e of validate.errors) {
                 let es: string = "";
                 function _render_locs() {
+                    let ul = "";
                     for (const loc of e.locs) {
-                        es += "    " + "* ";
+                        ul += "<li><p>";
+                        let text: string = "";
                         if (loc.type_ === ErrorLocationType.Column) {
                             const col_idx = loc.idx;
-                            es += "Column " + (1 + col_idx) + ": ";
-                            es += validate.columns[col_idx].error;
+                            text += "Column " + (1 + col_idx) + ": ";
+                            text += validate.columns[col_idx].error;
                         } else if (loc.type_ === ErrorLocationType.Freecells) {
-                            es += "Freecells: ";
-                            es += validate.freecells.error;
+                            text += "Freecells: ";
+                            text += validate.freecells.error;
                         } else if (
                             loc.type_ === ErrorLocationType.Foundations
                         ) {
-                            es += "Foundations: ";
-                            es += validate.foundations.error;
+                            text += "Foundations: ";
+                            text += validate.foundations.error;
                         }
-                        es += "\n";
+                        ul +=
+                            base_ui.escapeHtml(text) +
+                            '<button class="loc" onclick="javascript:highlight_in_board(' +
+                            base_ui.escapeHtml(loc.start.toString()) +
+                            "," +
+                            base_ui.escapeHtml(loc.end.toString()) +
+                            ')">Show Location</button>';
+                        ul += "</p></li>";
+                    }
+                    if (ul.length > 0) {
+                        es += "<ul>" + ul + "</ul>";
                     }
                 }
+                es += "<li>";
+                function _p(text: string) {
+                    return "<p>" + base_ui.escapeHtml(text) + "</pi>";
+                }
                 if (e.type_ === ParseErrorType.TOO_MUCH_OF_CARD) {
-                    es +=
-                        "* Too much of the card " + e.card.toString() + " :\n";
+                    es += _p(
+                        "Too much of the card " + e.card.toString() + " :",
+                    );
                     _render_locs();
                 } else if (e.type_ === ParseErrorType.NOT_ENOUGH_OF_CARD) {
-                    es +=
-                        "* Missing card " +
-                        e.card.toString() +
-                        " ; Present locations :\n";
+                    es += _p(
+                        "Missing card " +
+                            e.card.toString() +
+                            " ; Present locations :",
+                    );
                     _render_locs();
                 } else if (e.type_ === ParseErrorType.LINE_PARSE_ERROR) {
-                    es += "* Line parsing error:\n";
+                    es += _p("Line parsing error:");
                     _render_locs();
                 } else if (
                     e.type_ === ParseErrorType.FOUNDATIONS_NOT_AT_START
                 ) {
-                    es += '* The "Foundations" line is not at the start.\n';
+                    es += _p('The "Foundations" line is not at the start.');
                 }
+                es += "</li>";
                 err_s += es;
             }
-            parse_error_control.val(err_s);
+            if (err_s.length > 0) {
+                err_s = "<ul>" + err_s + "</ul>";
+            }
+            parse_error_control.html(err_s);
             // Disabling for now because the error messages are too cryptic
             // TODO : restore after improving.
             if (ENABLE_VALIDATION) {
@@ -386,6 +415,48 @@ class FC_Solve_UI {
                 that._is_unicode_cards_checked(),
             is_unicode_cards_chars: that._is_unicode_cards_checked(),
         });
+    }
+    private _calcBoardParse_error_string(validate: BoardParseResult) {
+        const that = this;
+        let err_s: string = "";
+
+        for (const e of validate.errors) {
+            let es: string = "";
+            function _render_locs() {
+                for (const loc of e.locs) {
+                    es += "    " + "* ";
+                    if (loc.type_ === ErrorLocationType.Column) {
+                        const col_idx = loc.idx;
+                        es += "Column " + (1 + col_idx) + ": ";
+                        es += validate.columns[col_idx].error;
+                    } else if (loc.type_ === ErrorLocationType.Freecells) {
+                        es += "Freecells: ";
+                        es += validate.freecells.error;
+                    } else if (loc.type_ === ErrorLocationType.Foundations) {
+                        es += "Foundations: ";
+                        es += validate.foundations.error;
+                    }
+                    es += "\n";
+                }
+            }
+            if (e.type_ === ParseErrorType.TOO_MUCH_OF_CARD) {
+                es += "* Too much of the card " + e.card.toString() + " :\n";
+                _render_locs();
+            } else if (e.type_ === ParseErrorType.NOT_ENOUGH_OF_CARD) {
+                es +=
+                    "* Missing card " +
+                    e.card.toString() +
+                    " ; Present locations :\n";
+                _render_locs();
+            } else if (e.type_ === ParseErrorType.LINE_PARSE_ERROR) {
+                es += "* Line parsing error:\n";
+                _render_locs();
+            } else if (e.type_ === ParseErrorType.FOUNDATIONS_NOT_AT_START) {
+                es += '* The "Foundations" line is not at the start.\n';
+            }
+            err_s += es;
+        }
+        return err_s;
     }
 }
 
