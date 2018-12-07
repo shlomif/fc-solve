@@ -243,7 +243,7 @@ export function fcs_js__column_from_string(
 ): ColumnParseResult {
     const p = new CardsStringParser<Card>(orig_s, fcs_js__card_from_string);
 
-    const match = p.consume_match("^((?:: +)?)");
+    const match = p.consume_match("^((?:: +|:(?:$|(?=\n)))?)");
 
     if (force_leading_colon && !match[1].length) {
         return new ColumnParseResult(

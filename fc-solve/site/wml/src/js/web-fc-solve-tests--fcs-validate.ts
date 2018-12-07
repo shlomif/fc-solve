@@ -1154,4 +1154,32 @@ export function test_fcs_validate(QUnit: any) {
             }
         },
     );
+    QUnit.test("verify_state BoardParseResult empty column", (a: Assert) => {
+        a.expect(3);
+        const deal = `# MS Freecell Deal #10016
+Freecells: TH 4H JH 8H
+: 5H QD TD 7H KH TC QS
+: 8S AD JD 6D AS 9D AC
+: JC 7C QH 6H 4S TS KC
+: 5C 7D KS JS 8D 2S 2C
+: 5S 9C 2H 4D 9H 9S 2D
+: 6C 3H QC 6S 5D KD 3S
+: AH 8C 7S 4C 3C 3D
+:
+`;
+        const result = new BoardParseResult(8, 4, deal);
+
+        // TEST
+        a.ok(result.is_valid, "parsed correctly.");
+
+        // TEST
+        a.equal(result.columns.length, 8, "There are 8 columns");
+
+        // TEST
+        a.deepEqual(
+            result.columns[8 - 1].col.getArrOfStrs(),
+            [],
+            "final column was parsed fine.",
+        );
+    });
 }
