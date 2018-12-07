@@ -96,6 +96,14 @@ class Column {
             return that.getCard(i).toString();
         });
     }
+    public toString(): string {
+        const that = this;
+        return (
+            Array.prototype.concat
+                .apply([], [[":"], that.getArrOfStrs()])
+                .join(" ") + "\n"
+        );
+    }
 }
 
 const suit_re: string = "[HCDS]";
@@ -298,6 +306,15 @@ class Freecells {
             return card !== null ? card.toString() : "-";
         });
     }
+
+    public toString(): string {
+        const that = this;
+        return (
+            Array.prototype.concat
+                .apply([], [["Freecells:"], that.getArrOfStrs()])
+                .join(" ") + "\n"
+        );
+    }
 }
 
 // TODO : Merge common functionality with ColumnParseResult into a base class.
@@ -403,6 +420,24 @@ export class Foundations {
             }
         }
         return;
+    }
+
+    public toString(): string {
+        const that = this;
+        const arr: string[] = [];
+        for (const suit of _suits) {
+            const val = that.getByIdx(0, suit);
+            if (val > 0) {
+                arr.push(
+                    _suits__int_to_str[suit] + "-" + _ranks__int_to_str[val],
+                );
+            }
+        }
+        return (
+            Array.prototype.concat
+                .apply([], [["Foundations:"], arr])
+                .join(" ") + "\n"
+        );
     }
 
     private _validateDeckSuit(deck: number, suit: number) {
@@ -705,5 +740,19 @@ export class BoardParseResult {
         that.errors.push(...not_enough_cards__errors);
 
         return;
+    }
+    public getBoardString(): string {
+        const that = this;
+        let ret: string = "";
+        if (that.foundations) {
+            ret += that.foundations.foundations.toString();
+        }
+        if (that.freecells) {
+            ret += that.freecells.freecells.toString();
+        }
+        for (const col of that.columns) {
+            ret += col.col.toString();
+        }
+        return ret;
     }
 }

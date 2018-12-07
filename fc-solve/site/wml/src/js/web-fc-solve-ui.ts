@@ -22,6 +22,8 @@ function _increment_move_indices(move_s) {
     );
 }
 
+const ENABLE_VALIDATION = true;
+
 class FC_Solve_UI {
     private _instance: w.FC_Solve = null;
     private _solve_err_code = null;
@@ -117,14 +119,16 @@ class FC_Solve_UI {
             parse_error_control.val(err_s);
             // Disabling for now because the error messages are too cryptic
             // TODO : restore after improving.
-            if (false) {
+            if (ENABLE_VALIDATION) {
                 that._webui_set_status_callback("error", "Parse Error");
                 parse_error_wrapper.removeClass(parse_error_control_hide_class);
                 return;
             }
         }
 
-        that._solve_err_code = that._instance.do_solve(board_string);
+        that._solve_err_code = that._instance.do_solve(
+            ENABLE_VALIDATION ? validate.getBoardString() : board_string,
+        );
 
         that._handle_err_code();
 
@@ -366,7 +370,8 @@ class FC_Solve_UI {
         return $("#preset").val();
     }
     private _calc_initial_board_string(): string {
-        return ($("#stdin").val() as string).replace(/#[^\r\n]*\r?\n?/g, "");
+        const ret: string = $("#stdin").val() as string;
+        return ENABLE_VALIDATION ? ret : ret.replace(/#[^\r\n]*\r?\n?/g, "");
     }
     private _disable_output_display() {
         $("#output").attr("disabled", "true");
