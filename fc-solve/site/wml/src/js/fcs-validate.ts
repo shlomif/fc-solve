@@ -659,7 +659,7 @@ export class BoardParseResult {
             p.skipComments();
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
-            const col = fcs_js__column_from_string(start_char_idx, l, true);
+            const col = fcs_js__column_from_string(start_char_idx, l, false);
             if (!col.is_correct) {
                 that.errors.push(
                     new ParseError(
