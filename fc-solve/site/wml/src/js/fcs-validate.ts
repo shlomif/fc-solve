@@ -179,6 +179,11 @@ class StringParser {
         }
         return m;
     }
+    public skipComments(): void {
+        const that = this;
+        that.consume_match(/^((?:[ \t]*#[^\n\r]*\r?\n)*)/);
+        return;
+    }
 }
 
 class CardsStringParser<CardType> extends StringParser {
@@ -592,6 +597,7 @@ export class BoardParseResult {
             });
         });
         const p = new StringParser(orig_s);
+        p.skipComments();
         if (p.match(foundations_prefix_re)) {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
@@ -616,6 +622,7 @@ export class BoardParseResult {
                 return;
             }
         }
+        p.skipComments();
         if (p.match(new RegExp("^" + freecells_prefix_re + ":"))) {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
@@ -645,6 +652,7 @@ export class BoardParseResult {
             }
         }
         for (let i = 0; i < num_stacks; i++) {
+            p.skipComments();
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const col = fcs_js__column_from_string(start_char_idx, l, true);

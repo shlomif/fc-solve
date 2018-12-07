@@ -1079,63 +1079,77 @@ export function test_fcs_validate(QUnit: any) {
         (a: Assert) => {
             const foundations_prefixes = ["Foundations:", "Founds:", "FOUNDS:"];
             const freecells_prefixes = ["Freecells:", "FC:"];
+            const comments_prefixes = [
+                "",
+                "# A comment\n    # An indented comment\n",
+            ];
 
             a.expect(
-                6 * foundations_prefixes.length * freecells_prefixes.length,
+                6 *
+                    foundations_prefixes.length *
+                    freecells_prefixes.length *
+                    comments_prefixes.length,
             );
-            for (const foundations_prefix of foundations_prefixes) {
-                for (const freecells_prefix of freecells_prefixes) {
-                    const deal_24_ish =
-                        foundations_prefix +
-                        " S-A\n" +
-                        freecells_prefix +
-                        " QD\n" +
-                        ": 4C 2C 9C 8C QS 4S 2H\n" +
-                        ": 5H QH 3C AC 3H 4H\n" +
-                        ": QC 9S 6H 9H 3S KS 3D\n" +
-                        ": 5D 2S JC 5C JH 6D\n" +
-                        ": 2D KD TH TC TD 8D\n" +
-                        ": 7H JS KH TS KC 7C\n" +
-                        ": AH 5S 6S AD 8H JD\n" +
-                        ": 7S 6C 7D 4D 8S 9D\n";
-                    const result = new BoardParseResult(8, 4, deal_24_ish);
+            for (const comments_prefix of comments_prefixes) {
+                for (const foundations_prefix of foundations_prefixes) {
+                    for (const freecells_prefix of freecells_prefixes) {
+                        const deal_24_ish =
+                            comments_prefix +
+                            foundations_prefix +
+                            " S-A\n" +
+                            freecells_prefix +
+                            " QD\n" +
+                            ": 4C 2C 9C 8C QS 4S 2H\n" +
+                            ": 5H QH 3C AC 3H 4H\n" +
+                            ": QC 9S 6H 9H 3S KS 3D\n" +
+                            ": 5D 2S JC 5C JH 6D\n" +
+                            ": 2D KD TH TC TD 8D\n" +
+                            ": 7H JS KH TS KC 7C\n" +
+                            ": AH 5S 6S AD 8H JD\n" +
+                            ": 7S 6C 7D 4D 8S 9D\n";
+                        const result = new BoardParseResult(8, 4, deal_24_ish);
 
-                    // TEST
-                    a.ok(result.is_valid, "parsed correctly.");
+                        // TEST
+                        a.ok(result.is_valid, "parsed correctly.");
 
-                    // TEST
-                    a.equal(result.columns.length, 8, "There are 8 columns");
+                        // TEST
+                        a.equal(
+                            result.columns.length,
+                            8,
+                            "There are 8 columns",
+                        );
 
-                    // TEST
-                    a.deepEqual(
-                        result.foundations.foundations.getByIdx(
-                            0,
-                            suits__str_to_int.get("S"),
-                        ),
-                        1,
-                        "S-A foundation",
-                    );
+                        // TEST
+                        a.deepEqual(
+                            result.foundations.foundations.getByIdx(
+                                0,
+                                suits__str_to_int.get("S"),
+                            ),
+                            1,
+                            "S-A foundation",
+                        );
 
-                    // TEST
-                    a.deepEqual(
-                        result.columns[0].col.getArrOfStrs(),
-                        "4C 2C 9C 8C QS 4S 2H".split(" "),
-                        "column 0 was parsed fine.",
-                    );
+                        // TEST
+                        a.deepEqual(
+                            result.columns[0].col.getArrOfStrs(),
+                            "4C 2C 9C 8C QS 4S 2H".split(" "),
+                            "column 0 was parsed fine.",
+                        );
 
-                    // TEST
-                    a.deepEqual(
-                        result.columns[1].col.getArrOfStrs(),
-                        "5H QH 3C AC 3H 4H".split(" "),
-                        "column 1 was parsed fine.",
-                    );
+                        // TEST
+                        a.deepEqual(
+                            result.columns[1].col.getArrOfStrs(),
+                            "5H QH 3C AC 3H 4H".split(" "),
+                            "column 1 was parsed fine.",
+                        );
 
-                    // TEST
-                    a.deepEqual(
-                        result.columns[7].col.getArrOfStrs(),
-                        "7S 6C 7D 4D 8S 9D".split(" "),
-                        "column 7 was parsed fine.",
-                    );
+                        // TEST
+                        a.deepEqual(
+                            result.columns[7].col.getArrOfStrs(),
+                            "7S 6C 7D 4D 8S 9D".split(" "),
+                            "column 7 was parsed fine.",
+                        );
+                    }
                 }
             }
         },
