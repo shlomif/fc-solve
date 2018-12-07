@@ -29,9 +29,9 @@ for (const rank of _ranks) {
     ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
 }
 const _suits__int_to_str: string = "HCDS";
-const _suits__str_to_int = {};
+export let suits__str_to_int = new Map<string, number>();
 for (const suit of _suits) {
-    _suits__str_to_int[_suits__int_to_str.substring(suit, suit + 1)] = suit;
+    suits__str_to_int.set(_suits__int_to_str.substring(suit, suit + 1), suit);
 }
 
 class Card {
@@ -106,7 +106,7 @@ export function fcs_js__card_from_string(s: string): Card {
     if (!m) {
         throw 'Invalid format for a card - "' + s + '"';
     }
-    return new Card(ranks__str_to_int[m[1]], _suits__str_to_int[m[2]]);
+    return new Card(ranks__str_to_int[m[1]], suits__str_to_int.get(m[2]));
 }
 
 class BaseResult {
@@ -339,7 +339,7 @@ export function fcs_js__freecells_from_string(
         );
     }
 
-    if (!p.consume_match(/^(Freecells\: +)/)) {
+    if (!p.consume_match(new RegExp("^(" + freecells_prefix_re + ": +)"))) {
         return make_ret(
             false,
             'Wrong line prefix for freecells - should be "Freecells:"',
@@ -437,6 +437,8 @@ class FoundationsParseResult extends BaseResult {
     }
 }
 
+const foundations_prefix_re = /^((?:Foundations|Founds|FOUNDS)\:)/;
+const freecells_prefix_re = "(?:Freecells|FC|Fc)";
 export function fcs_js__foundations_from_string(
     num_decks: number,
     start_char_idx: number,
@@ -462,7 +464,7 @@ export function fcs_js__foundations_from_string(
         );
     }
 
-    if (!p.consume_match(/^(Foundations\:)/)) {
+    if (!p.consume_match(foundations_prefix_re)) {
         return make_ret(
             false,
             'Wrong line prefix for the foundations - should be "Foundations:"',
@@ -484,7 +486,7 @@ export function fcs_js__foundations_from_string(
         if (
             !founds.setByIdx(
                 0,
-                _suits__str_to_int[suit],
+                suits__str_to_int.get(suit),
                 ranks__str_to_int[m[3]],
             )
         ) {
@@ -555,7 +557,7 @@ export class BoardParseResult {
             });
         });
         const p = new StringParser(orig_s);
-        if (p.match(/^Foundations:/)) {
+        if (p.match(foundations_prefix_re)) {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const fo = fcs_js__foundations_from_string(1, start_char_idx, l);
@@ -579,7 +581,7 @@ export class BoardParseResult {
                 return;
             }
         }
-        if (p.match(/^Freecells:/)) {
+        if (p.match(new RegExp("^" + freecells_prefix_re + ":"))) {
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const fc = fcs_js__freecells_from_string(
