@@ -668,7 +668,6 @@ export class BoardParseResult {
             }
             that.columns.push(col);
         }
-        // TODO : Implement duplicate/missing cards.
         if (that.foundations) {
             for (const suit of _suits) {
                 for (const rank of _perl_range(

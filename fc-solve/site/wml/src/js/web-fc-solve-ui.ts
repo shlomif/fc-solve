@@ -23,13 +23,6 @@ function _increment_move_indices(move_s) {
 }
 
 const ENABLE_VALIDATION = true;
-function highlight_in_board(start: number, end: number) {
-    (document.getElementById("stdin") as HTMLInputElement).setSelectionRange(
-        start,
-        end,
-    );
-    return;
-}
 
 class FC_Solve_UI {
     private _instance: w.FC_Solve = null;
@@ -92,7 +85,7 @@ class FC_Solve_UI {
                         if (loc.type_ === ErrorLocationType.Column) {
                             const col_idx = loc.idx;
                             text += "Column " + (1 + col_idx) + ": ";
-                            text += validate.columns[col_idx].error;
+                            text += "Not parsed correctly.";
                         } else if (loc.type_ === ErrorLocationType.Freecells) {
                             text += "Freecells: ";
                             text += validate.freecells.error;
@@ -117,7 +110,7 @@ class FC_Solve_UI {
                 }
                 es += "<li>";
                 function _p(text: string) {
-                    return "<p>" + base_ui.escapeHtml(text) + "</pi>";
+                    return "<p>" + base_ui.escapeHtml(text) + "</p>";
                 }
                 if (e.type_ === ParseErrorType.TOO_MUCH_OF_CARD) {
                     es += _p(

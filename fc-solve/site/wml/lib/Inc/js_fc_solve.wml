@@ -49,6 +49,12 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 
 <js_script>
+function highlight_in_board(start,end) {
+    const el = document.getElementById("stdin");
+    el.focus();
+    el.setSelectionRange(start,end);
+    return;
+}
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
