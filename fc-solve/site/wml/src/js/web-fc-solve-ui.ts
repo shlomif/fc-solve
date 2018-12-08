@@ -85,7 +85,7 @@ class FC_Solve_UI {
                         if (loc.type_ === ErrorLocationType.Column) {
                             const col_idx = loc.idx;
                             text += "Column " + (1 + col_idx) + ": ";
-                            text += "Not parsed correctly.";
+                            text += validate.columns[col_idx].error;
                         } else if (loc.type_ === ErrorLocationType.Freecells) {
                             text += "Freecells: ";
                             text += validate.freecells.error;

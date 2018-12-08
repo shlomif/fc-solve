@@ -655,11 +655,12 @@ export class BoardParseResult {
                 return;
             }
         }
-        for (let i = 0; i < num_stacks; i++) {
+        for (let i = 0; i < num_stacks; ++i) {
             p.skipComments();
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const col = fcs_js__column_from_string(start_char_idx, l, false);
+            that.columns.push(col);
             if (!col.is_correct) {
                 that.errors.push(
                     new ParseError(
@@ -678,7 +679,6 @@ export class BoardParseResult {
                 that.is_valid = false;
                 return;
             }
-            that.columns.push(col);
         }
         if (that.foundations) {
             for (const suit of _suits) {
