@@ -1,6 +1,7 @@
 import {
     BoardParseResult,
     ErrorLocationType,
+    capitalize_cards,
     fcs_js__card_from_string,
     fcs_js__column_from_string,
     fcs_js__foundations_from_string,
@@ -1241,4 +1242,37 @@ Foundations:
             );
         },
     );
+    QUnit.test("convert cards to uppercase", (a: Assert) => {
+        a.expect(1);
+        const want_deal = `# MS Freecell Deal #10016
+Foundations: H-A   # a comment
+Freecells: QS
+: 5H QD TD 7H KH TC
+: 8S AD JD 6D AS 9D AC
+: JC 7C QH 6H 4S TS KC
+: 5C 7D KS JS 8D 2S 2C
+: 5S 9C 2H 4D 9H 9S 2D
+: 6C 3H QC 6S 5D KD 3S
+8C 7S 4C 3C 3D   # Another comment.
+: TH 4H JH 8H
+`;
+        const input1 = `# MS Freecell Deal #10016
+Foundations: h-a   # a comment
+Freecells: Qs
+: 5H QD TD 7H KH TC
+: 8S AD JD 6D AS 9D AC
+: JC 7C QH 6H 4S TS KC
+: 5C 7D KS JS 8D 2S 2C
+: 5S 9C 2H 4d 9h 9S 2D
+: 6C 3H QC 6S 5D KD 3S
+8C 7S 4C 3c 3D   # Another comment.
+: TH 4H jh 8H
+`;
+        // TEST
+        a.deepEqual(
+            capitalize_cards(input1),
+            want_deal,
+            "capitalize_cards works test",
+        );
+    });
 }
