@@ -1,5 +1,6 @@
 import { jq_querystring } from "./jq_qs";
 import * as w from "./web-fc-solve";
+import { capitalize_cards } from "./fcs-validate";
 // import jq_querystring as jq_querystring;
 
 const entityMap = {
@@ -33,6 +34,15 @@ export function populate_input_with_numbered_deal(): void {
             w.deal_ms_fc_board(previous_deal_idx),
     );
 
+    return;
+}
+
+export function set_up__capitalize_cards(): void {
+    $("#capitalize_cards").click(() => {
+        const ctl = $("#stdin");
+        ctl.val(capitalize_cards(ctl.val() as string));
+        return;
+    });
     return;
 }
 

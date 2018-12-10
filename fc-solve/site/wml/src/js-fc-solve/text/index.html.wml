@@ -34,6 +34,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <label for="stdin">Input:</label><br />
 <textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
 <button id="run_do_solve">Solve!</button>
+<button id="capitalize_cards" title="Convert the cards in the input to uppercase letters">Capitalize the Cards</button>
 <label for="preset">Solving method:</label>
 <select id="preset" class="phoenix">
 <option value="lg" selected="selected">“Looking Glass” (fastest on average)</option>

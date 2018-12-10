@@ -504,9 +504,12 @@ function toggle_expand_moves() {
     return;
 }
 
-export function set_up_handlers() {
+export function set_up_handlers(): void {
     $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
     $("#run_do_solve").click(fc_solve_do_solve);
+    base_ui.set_up__capitalize_cards();
+
+    return;
 }
 
 export function set_up() {

@@ -81,6 +81,7 @@ export function find_deal_ui(): void {
 export function set_up_handlers(): void {
     $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
     $("#run_do_solve").click(find_deal_ui);
+    base_ui.set_up__capitalize_cards();
 
     return;
 }
