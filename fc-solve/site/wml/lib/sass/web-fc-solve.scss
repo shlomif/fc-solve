@@ -170,3 +170,8 @@ textarea.emscripten {
         margin-top: 1em;
     }
 }
+
+.diags_wrap {
+    display: flex;
+    flex-direction: column;
+}
