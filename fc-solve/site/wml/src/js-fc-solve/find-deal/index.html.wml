@@ -31,10 +31,7 @@ Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solv
 
 <div class="fcs_common">
 
-<label for="stdin">Input:</label><br />
-<textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
-<button id="run_do_solve">Find!</button>
-<button id="capitalize_cards" title="Convert the cards in the input to uppercase letters">Capitalize the Cards</button>
+<stdin_and_buttons main_id="run_do_solve" main_text="Find!"/>
 
 </div> ;;; end of fcs_common
 

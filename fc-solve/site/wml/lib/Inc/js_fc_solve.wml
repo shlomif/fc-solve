@@ -178,3 +178,15 @@ plugin for jQuery using the HTML5 localStorage mechanism.
 </p>
 </li>
 </define-tag>
+
+<define-tag stdin_and_buttons>
+<preserve main_id main_text />
+<set-var %attributes />
+
+<label for="stdin">Input:</label><br />
+<textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
+<button id="<get-var main_id/>"><get-var main_text/></button>
+<button id="capitalize_cards" title="Convert the cards in the input to uppercase letters">Capitalize the Cards</button>
+
+<restore main_id main_text />
+</define-tag>
