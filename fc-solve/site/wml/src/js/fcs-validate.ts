@@ -99,11 +99,14 @@ class BoardTextLine {
         }
         return;
     }
+    public getContent(): string {
+        return this.content;
+    }
     public capitalize(): string {
         const that = this;
         const ret =
             that.prefix +
-            that.content.toUpperCase() +
+            that.getContent().toUpperCase() +
             that.comment +
             that.newline;
         return ret;
@@ -609,9 +612,11 @@ export enum ParseErrorType {
     FOUNDATIONS_NOT_AT_START,
     FREECELLS_NOT_AT_START,
     LINE_PARSE_ERROR,
+    LOWERCASE_LETTERS,
 }
 
 class ParseError {
+    public problem_strings: string[] = [];
     constructor(
         public type_: ParseErrorType,
         public locs: ErrorLocation[],
@@ -628,8 +633,8 @@ class ParseLocation {
 }
 
 export class BoardParseResult {
-    public errors: ParseError[];
-    public is_valid: boolean;
+    public errors: ParseError[] = [];
+    public is_valid: boolean = true;
     public foundations: FoundationsParseResult;
     public freecells: FreecellsParseResult;
     public columns: ColumnParseResult[];
@@ -640,13 +645,29 @@ export class BoardParseResult {
     ) {
         const that = this;
 
-        that.errors = [];
+        const lines = orig_s.match(/[^\n]*\n?/g).map((l) => {
+            return new BoardTextLine(l);
+        });
+        for (const l of lines) {
+            const matches = l.getContent().match(/[a-z]+/g);
+            if (matches && matches.length > 0) {
+                const err = new ParseError(
+                    ParseErrorType.LOWERCASE_LETTERS,
+                    [],
+                    fcs_js__card_from_string("AH"),
+                );
+                err.problem_strings = matches;
+                that.errors.push(err);
+                that.is_valid = false;
+            }
+        }
         that.columns = [];
         const counter: ParseLocation[][][] = _suits.map((i) => {
             return _perl_range(0, MAX_RANK).map((i) => {
                 return [];
             });
         });
+
         const p = new StringParser(orig_s);
         p.skipComments();
         if (p.match(foundations_prefix_re)) {
@@ -762,7 +783,6 @@ export class BoardParseResult {
                 );
             }
         });
-        that.is_valid = true;
         const NUM_WANTED_CARDS: number = 1;
         const too_many_cards__errors: ParseError[] = [];
         const not_enough_cards__errors: ParseError[] = [];

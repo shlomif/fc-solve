@@ -124,6 +124,14 @@ class FC_Solve_UI {
                             " ; Present locations :",
                     );
                     _render_locs();
+                } else if (e.type_ === ParseErrorType.LOWERCASE_LETTERS) {
+                    es += _p(
+                        "Lowercase letters found as ranks or suits in the input: " +
+                            e.problem_strings
+                                .map((s) => "“" + s + "”")
+                                .join(", ") +
+                            " . Perhaps use the “Capitalize” button.",
+                    );
                 } else if (e.type_ === ParseErrorType.LINE_PARSE_ERROR) {
                     es += _p("Line parsing error:");
                     _render_locs();
