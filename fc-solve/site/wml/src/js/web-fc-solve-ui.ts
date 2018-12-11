@@ -132,6 +132,10 @@ class FC_Solve_UI {
                                 .join(", ") +
                             " . Perhaps use the “Capitalize” button.",
                     );
+                } else if (e.type_ === ParseErrorType.HAS_10_STRINGS) {
+                    es += _p(
+                        "Found occurrences of the invalid rank “10” which should be replaced with “T”.",
+                    );
                 } else if (e.type_ === ParseErrorType.LINE_PARSE_ERROR) {
                     es += _p("Line parsing error:");
                     _render_locs();

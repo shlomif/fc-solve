@@ -613,6 +613,7 @@ export enum ParseErrorType {
     FREECELLS_NOT_AT_START,
     LINE_PARSE_ERROR,
     LOWERCASE_LETTERS,
+    HAS_10_STRINGS,
 }
 
 class ParseError {
@@ -649,16 +650,31 @@ export class BoardParseResult {
             return new BoardTextLine(l);
         });
         for (const l of lines) {
-            const matches = l.getContent().match(/[a-z]+/g);
-            if (matches && matches.length > 0) {
-                const err = new ParseError(
-                    ParseErrorType.LOWERCASE_LETTERS,
-                    [],
-                    fcs_js__card_from_string("AH"),
-                );
-                err.problem_strings = matches;
-                that.errors.push(err);
-                that.is_valid = false;
+            {
+                const matches = l.getContent().match(/[a-z]+/g);
+                if (matches && matches.length > 0) {
+                    const err = new ParseError(
+                        ParseErrorType.LOWERCASE_LETTERS,
+                        [],
+                        fcs_js__card_from_string("AH"),
+                    );
+                    err.problem_strings = matches;
+                    that.errors.push(err);
+                    that.is_valid = false;
+                }
+            }
+            {
+                const matches = l.getContent().match(/10/g);
+                if (matches && matches.length > 0) {
+                    const err = new ParseError(
+                        ParseErrorType.HAS_10_STRINGS,
+                        [],
+                        fcs_js__card_from_string("AH"),
+                    );
+                    err.problem_strings = matches;
+                    that.errors.push(err);
+                    that.is_valid = false;
+                }
             }
         }
         that.columns = [];

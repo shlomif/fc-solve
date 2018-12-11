@@ -1306,4 +1306,33 @@ Foundations:
             a.deepEqual(error.problem_strings, ["qs"], "Error of right type.");
         },
     );
+    QUnit.test(
+        "verify_state BoardParseResult '10' string error",
+        (a: Assert) => {
+            a.expect(2);
+            const deal = `# MS Freecell Deal #10016
+Foundations:
+: 5H QD TD 7H KH TC QS
+: 8S AD JD 6D AS 9D AC
+: JC 7C QH 6H 4S 10S KC
+: 5C 7D KS JS 8D 2S 2C
+: 5S 9C 2H 4D 9H 9S 2D
+: 6C 3H QC 6S 5D KD 3S
+: AH 8C 7S 4C 3C 3D
+: TH 4H JH 8H
+`;
+            const result = new BoardParseResult(8, 4, deal);
+
+            // TEST
+            a.notOk(result.is_valid, "not parsed correctly.");
+
+            const error = result.errors[0];
+            // TEST
+            a.deepEqual(
+                error.type_,
+                ParseErrorType.HAS_10_STRINGS,
+                "Error of right type.",
+            );
+        },
+    );
 }
