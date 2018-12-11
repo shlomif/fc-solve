@@ -32,6 +32,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <div class="fcs_common">
 
 <stdin_and_buttons main_id="run_do_solve" main_text="Solve!"/>
+<br />
 <label for="preset">Solving method:</label>
 <select id="preset" class="phoenix">
 <option value="lg" selected="selected">“Looking Glass” (fastest on average)</option>
