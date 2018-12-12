@@ -18,6 +18,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'avoid-tcmalloc'            => 'FCS_AVOID_TCMALLOC',
     'break-back-compat-1'       => 'FCS_BREAK_BACKWARD_COMPAT_1',
     'break-back-compat-2'       => 'FCS_BREAK_BACKWARD_COMPAT_2',
+    'dbm-single-thread'         => 'FCS_DBM_SINGLE_THREAD',
     'disable-check-valid'       => 'FCS_DISABLE_STATE_VALIDITY_CHECK',
     'disable-err-strs'          => 'FCS_DISABLE_ERROR_STRINGS',
     'disable-flares'            => 'FCS_DISABLE_MULTI_FLARES',
@@ -177,6 +178,7 @@ my %themes = (
     pysol_defs => [ '--num-stacks=14', '--nobreak-back-compat-1', ],
     zerofc     => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
+    zerofcst   => [qw(-l zerofc --dbm-single-thread)],
 );
 
 my $SEED_KEY = 'FCS_THEME_RAND';
