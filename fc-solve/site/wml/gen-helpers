@@ -29,14 +29,7 @@ if ( not -e "lib/jquery/jquery-phoenix/" )
         "git clone",
     );
 }
-_exec(
-    [
-        'cookiecutter', '-f', '--no-input',
-        'gh:shlomif/cookiecutter--shlomif-latemp-sites',
-        'project_slug=.',
-    ],
-    'cookiecutter failed.'
-);
+_exec( [ $^X, 'bin/my-cookiecutter.pl' ], 'cookiecutter failed.' );
 require HTML::Latemp::DocBook::GenMake;
 HTML::Latemp::DocBook::GenMake->new(
     { dest_var => '$(D)', post_dest_var => '$(D)' } )->generate;

@@ -3,65 +3,32 @@ required:
     executables:
         - exe: "asciidoctor"
           url: "https://asciidoctor.org/"
-        - exe: "cookiecutter"
-          url: "https://github.com/audreyr/cookiecutter"
         - exe: "docmake"
           url: "http://www.shlomifish.org/open-source/projects/docmake/"
-        - exe: "latemp-config"
-          url: "http://web-cpan.shlomifish.org/latemp/"
         - exe: "minify"
           url: "https://github.com/tdewolff/minify/tree/master/cmd/minify"
-        - exe: "node"
-          url: "https://nodejs.org/en/"
-        - exe: "npm"
-          url: "https://nodejs.org/en/"
         - exe: "python3"
           url: "https://www.python.org/"
-        - exe: "sass"
-          url: "http://sass-lang.com/"
-        - exe: "wml"
-          url: "http://www.shlomifish.org/open-source/projects/website-meta-language/"
-        - exe: "wml-params-conf"
-          url: "http://www.shlomifish.org/open-source/projects/website-meta-language/"
-        - exe: "xsltproc"
-          url: "http://xmlsoft.org/XSLT/"
         - exe: "xz"
           url: "http://tukaani.org/xz/"
         - exe: "zip"
           url: "Info-Zip"
     meta_data:
         keys:
+            desc: This task package installs some of the packages that Shlomi Fish needs.
             package_name: task-freecell-solver-site
             summary: 'Require fc-solve site deps'
             url: 'http://fc-solve.shlomifish.org/'
             desc: 'This task package installs some of the packages that Shlomi Fish needs.'
     perl5_modules:
-        Carp::Always: 0
         Code::TidyAll::Plugin::ESLint: 0
         Code::TidyAll::Plugin::TSLint: 0
-        Data::Munge: 0
-        File::Find::Object::Rule: 0
         File::ReadBackwards: 0
-        File::Update: 0
-        File::Which: 0
-        HTML::Latemp::GenMakeHelpers: 0
-        HTML::Spelling::Site: 0
         HTML::T5: 0
-        HTML::TokeParser::Simple: 0
-        IO::All: 0
-        List::MoreUtils: 0
         Moo: 0
         MooX: 0
         MooX::late: 0
         Parallel::ForkManager::Segmented: 0
-        Path::Tiny: 0
         Perl::Critic: 0
         Perl::Tidy: 0
-        Template: 0
-        Test::Code::TidyAll: 0
-        Test::File::Find::CaseCollide: 0
-        Test::HTML::Recursive::DeprecatedTags: 0
-        Test::HTML::Tidy::Recursive: 0
-        Test::HTML::Tidy::Recursive::Strict: 0
-        Text::WrapAsUtf8: 0
         XML::Feed: 0

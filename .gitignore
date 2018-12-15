@@ -53,6 +53,7 @@
 /fc-solve/site/wml/bin/Run-YUI-Compressor
 /fc-solve/site/wml/bin/batch-inplace-html-minifier
 /fc-solve/site/wml/bin/clean-up-docbook-xhtml-1.1.xslt
+/fc-solve/site/wml/bin/common-required-deps.yml
 /fc-solve/site/wml/bin/extract-spelling-errors.pl
 /fc-solve/site/wml/bin/gen-build-deps
 /fc-solve/site/wml/bin/gen-rpm-for-build-deps
