@@ -1,4 +1,5 @@
 define(["web-fc-solve-tests", "web-fc-solve-tests--fcs-validate", "qunit"], function (t, fcs_valid, QUnit) {
+    QUnit.config.autostart = false;
     return function() {
         const _log_cb = ((window.location.href.indexOf("alert") >= 0) ? alert : console.log);
         QUnit.done(function( details ) {
@@ -10,13 +11,16 @@ define(["web-fc-solve-tests", "web-fc-solve-tests--fcs-validate", "qunit"], func
               _log_cb( `Finished running module : ${name} Failed/total: ${failed}, ${total}` );
         });
 
+        /*
         QUnit.module("BeforeMeta");
         QUnit.test("silence_qunit", function(assert) {
             assert.ok(true, "foo");
         });
+        */
         var test_js_fc_solve_class = t.test_js_fc_solve_class;
         try {
             test_js_fc_solve_class(QUnit, function () {
+                QUnit.start();
                 var was_called = false;
                 fcs_valid.test_fcs_validate(QUnit);
                 was_called = true;
