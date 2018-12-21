@@ -460,8 +460,9 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 );
             }
         });
-        my_callback();
     });
+
+    my_callback();
 
     return;
 };
