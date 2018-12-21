@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 34;
+use Test::More tests => 36;
 use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
@@ -248,6 +248,40 @@ SKIP:
 qr/\nCould not solve successfully\.\r?\nhandle_and_destroy_instance_solution end\r?\n?\z/,
             "1107600547 run finished.",
         );
+    }
+}
+
+{
+SKIP:
+    {
+        if ( is_without_dbm() )
+        {
+            Test::More::skip( "without the dbm fc_solvers", 2 );
+        }
+        foreach my $solver ( 'depth_dbm_fc_solver', 'dbm_fc_solver' )
+        {
+            my $status;
+            trap
+            {
+                $status = system(
+                    bin_exe_raw( [$solver] ),
+                    "--offload-dir-path",
+                    ( tempdir( CLEANUP => 1 ) . '/' ),
+                    bin_board('11982.board'),
+                );
+            };
+
+            my $out   = $trap->stdout();
+            my @stats = $out =~
+/(\n>>>Queue Stats: inserted=[0-9]+ items_in_queue=[0-9]+ extracted=[0-9]+\n)/g;
+
+            # TEST
+            like(
+                $stats[-1],
+                qr/ items_in_queue=0 /,
+"queue is reported as empty in the $solver run for an impossible deal.",
+            );
+        }
     }
 }
 

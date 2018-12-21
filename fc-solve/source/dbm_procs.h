@@ -222,8 +222,7 @@ static void instance_print_stats(dbm_solver_instance *const instance)
         instance->common.count_num_processed,
         instance->common.num_states_in_collection, FCS_TIME_GET_SEC(mytime),
         FCS_TIME_GET_USEC(mytime), instance->common.num_states_in_collection,
-        instance->common.num_states_in_collection -
-            instance->common.count_num_processed,
+        instance->common.count_of_items_in_queue,
         instance->common.count_num_processed);
     fflush(out_fh);
 }

@@ -7,19 +7,16 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_solver.c - a specialised solver that offloads the states' collection
- * to an on-disk DBM database such as Berkeley DB or Google's LevelDB. Has
- * been adapted to be completely in-memory. It makes use of delta_states.c
- * for a very compact storage.
- */
+// dbm_solver.c - a specialised solver that offloads the states' collection
+// to an on-disk DBM database such as Berkeley DB or Google's LevelDB. Has
+// been adapted to be completely in-memory. It makes use of delta_states.c
+// for a very compact storage.
 
 #include "dbm_solver_head.h"
 
 typedef struct
 {
     fcs_dbm__cache_store__common cache_store;
-    /* The queue */
     meta_allocator meta_alloc;
     fcs_offloading_queue queue;
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -103,7 +100,6 @@ static inline void instance_check_key(
 
         fcs_offloading_queue__insert(
             &(instance->queue), ((offloading_queue_item *)(&token)));
-        ++instance->common.count_of_items_in_queue;
     }
 }
 
