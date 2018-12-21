@@ -31,7 +31,8 @@
     "tslint-config-radiosilence": "^1.0.1",
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.2.2",
-    "uglify-es": "^3.3.9"
+    "uglify-es": "^3.3.9",
+    "yarn": "^1.12.3"
   },
   "devDependencies": {},
   "scripts": {

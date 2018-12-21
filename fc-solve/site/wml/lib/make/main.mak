@@ -111,13 +111,17 @@ dummy: $(FIND_INDEX__PYJS__TARGETS)
 dummy: $(DEST_BROWSERIFY_JS)
 
 OUT_PREF = lib/out-babel/js
-OUT_BROWSERIFY_JS = $(patsubst %,$(OUT_PREF)/%,$(BASE_BROWSERIFY_JS))
+out_pref_jsify = $(addprefix $(OUT_PREF)/,$(1))
+OUT_BROWSERIFY_JS = $(call out_pref_jsify,$(BASE_BROWSERIFY_JS))
 
 $(DEST_BROWSERIFY_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
 	$(MULTI_YUI) -o $@ $<
 
-$(OUT_BROWSERIFY_JS): %:
+$(OUT_PREF)/big-integer.js: %:
 	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
+
+$(OUT_PREF)/qunit.js: %: lib/jquery/qunit/dist/qunit.js
+	cp -f $< $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 

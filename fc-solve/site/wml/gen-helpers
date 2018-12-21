@@ -29,6 +29,16 @@ if ( not -e "lib/jquery/jquery-phoenix/" )
         "git clone",
     );
 }
+if ( not -e "lib/jquery/qunit/" )
+{
+    _exec(
+        [
+"cd lib/jquery/ && git clone https://github.com/qunitjs/qunit && cd qunit && yarn install && yarn build"
+
+        ],
+        "git clone",
+    );
+}
 _exec( [ $^X, 'bin/my-cookiecutter.pl' ], 'cookiecutter failed.' );
 require HTML::Latemp::DocBook::GenMake;
 HTML::Latemp::DocBook::GenMake->new(

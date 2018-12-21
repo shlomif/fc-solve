@@ -16,6 +16,8 @@ my $finder = Test::TrailingSpace->new(
      (?:\A (?:\./)?
         (?:node_modules)
             |
+        (?:lib/jquery/qunit/)
+            |
         (?:lib/out-babel/js/$bigint)
             |
         (?:

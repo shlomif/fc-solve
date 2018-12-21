@@ -130,6 +130,7 @@
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/h_sections.wml
 /fc-solve/site/wml/lib/jquery/jquery-phoenix/
+/fc-solve/site/wml/lib/jquery/qunit/
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 /fc-solve/site/wml/lib/make/build-deps/build-deps.stamp
 /fc-solve/site/wml/lib/make/deps.mak
