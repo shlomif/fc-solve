@@ -91,8 +91,6 @@ static inline void instance_check_key(
         fcs_cache_key_info *cache_key = cache_store__insert_key(
             &(instance->cache_store), key, parent, moves_to_parent, move);
 #endif
-        /* Now insert it into the queue. */
-
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
 
@@ -136,9 +134,9 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 #endif
-    while (1)
+    while (true)
     {
-        /* First of all extract an item. */
+        // First of all extract an item.
         fcs_lock_lock(&instance->common.storage_lock);
 
         if (prev_item)
@@ -173,23 +171,21 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (!item)
         {
-            /* Sleep until more items become available in the
-             * queue. */
+            // Sleep until more items become available in the queue.
             const struct timespec ts = {.tv_sec = 0, .tv_nsec = 5000000};
             struct timespec no_use;
             nanosleep(&ts, &no_use);
         }
         else
         {
-            /* Handle item. */
+            // Handle item.
             fc_solve_delta_stater_decode_into_state(
                 delta_stater, item->key.s, &state, indirect_stacks_buffer);
-            /* A section for debugging. */
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state, token, &derived_list, &derived_list_recycle_bin,
-                    &derived_list_allocator, TRUE))
+                    &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->common.storage_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
@@ -197,7 +193,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 break;
             }
 
-            /* Encode all the states. */
+            // Encode all the states.
             for (var_AUTO(derived_iter, derived_list); derived_iter;
                  derived_iter = derived_iter->next)
             {
@@ -216,9 +212,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_list);
-            /* End handle item. */
         }
-        /* End of main thread loop */
+        // End of main thread loop
         prev_item = item;
     }
 
@@ -268,13 +263,12 @@ static bool populate_instance_with_intermediate_input_line(
         s_ptr += 2;
     }
 
-    /* Skip the '|'. */
+    // Skip the '|' character
     ++s_ptr;
 
     FCS_STATE__DUP_keyval_pair(running_state, *init_state_ptr);
 
-    /* The NULL parent and move for indicating this is the initial
-     * state. */
+    // The NULL parent and move for indicating this is the initial state.
     fcs_init_and_encode_state(
         delta, local_variant, &(running_state), &running_key);
     fcs_dbm_record *running_parent = NULL;
@@ -285,7 +279,7 @@ static bool populate_instance_with_intermediate_input_line(
         &running_parent, running_moves, '\0');
 #else
     running_parent = fc_solve_dbm_store_insert_key_value(
-        instance->cache_store.store, &(running_key), running_parent, TRUE);
+        instance->cache_store.store, &(running_key), running_parent, true);
 #endif
     ++instance->common.num_states_in_collection;
 
@@ -304,7 +298,7 @@ static bool populate_instance_with_intermediate_input_line(
         int dest = ((move >> 4) & 0xF);
 
 #define the_state (running_state.s)
-        /* Extract the card from the source. */
+        // Extract the card from the source.
         if (src < 8)
         {
             var_AUTO(src_col, fcs_state_get_col(the_state, src));
@@ -327,7 +321,7 @@ static bool populate_instance_with_intermediate_input_line(
             abort();
 #endif
         }
-        /* Apply src_card to dest. */
+        // Apply src_card to dest.
         if (dest < 8)
         {
             fcs_state_push(&the_state, dest, src_card);
@@ -363,10 +357,10 @@ static bool populate_instance_with_intermediate_input_line(
         }
 #else
         token = fc_solve_dbm_store_insert_key_value(
-            instance->cache_store.store, &(running_key), running_parent, TRUE);
+            instance->cache_store.store, &(running_key), running_parent, true);
         if (!token)
         {
-            return FALSE;
+            return false;
         }
 #endif
         ++instance->common.num_states_in_collection;
@@ -393,7 +387,7 @@ static bool populate_instance_with_intermediate_input_line(
         &(instance->queue), (const offloading_queue_item *)(&token));
     ++instance->common.count_of_items_in_queue;
 
-    return TRUE;
+    return true;
 }
 
 #include "dbm_procs_inner.h"
@@ -428,7 +422,7 @@ static bool handle_and_destroy_instance_solution(
     dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
-    bool ret = FALSE;
+    bool ret = false;
     fcs_dbm_record *token;
 #ifdef DEBUG_OUT
     fcs_dbm_variant_type local_variant = instance->common.variant;
@@ -440,7 +434,7 @@ static bool handle_and_destroy_instance_solution(
     if (instance->common.queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
-        ret = TRUE;
+        ret = true;
     }
     else if (instance->common.should_terminate != DONT_TERMINATE)
     {
@@ -485,10 +479,8 @@ static bool handle_and_destroy_instance_solution(
                 fcs_encoded_state_buffer *trace;
                 calc_trace(token, &trace, &trace_num);
 
-/*
- * We stop at 1 because the deepest state does not contain
- * a move (as it is the ultimate state).
- * */
+// We stop at 1 because the deepest state does not contain a move (as it is the
+// ultimate state).
 #define PENULTIMATE_DEPTH 1
                 for (int i = trace_num - 1; i >= PENULTIMATE_DEPTH; i--)
                 {
@@ -536,7 +528,7 @@ int main(int argc, char *argv[])
     long start_line = 1;
     const char *out_filename = NULL, *intermediate_input_filename = NULL;
     FILE *intermediate_in_fh = NULL;
-    bool skip_queue_output = FALSE;
+    bool skip_queue_output = false;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     const char *param;
     fcs_dbm_common_input inp = fcs_dbm_common_input_init;
@@ -607,7 +599,7 @@ int main(int argc, char *argv[])
         char *line = SMALLOC(line, line_size);
 #endif
         long line_num = 0;
-        bool queue_solution_was_found = FALSE;
+        bool queue_solution_was_found = false;
         dbm_solver_instance queue_instance;
         dbm_solver_instance limit_instance;
 
@@ -618,7 +610,7 @@ int main(int argc, char *argv[])
         do
         {
             ++line_num;
-            found_line = FALSE;
+            found_line = false;
 #ifdef HAVE_GETLINE
             while (getline(&line, &line_size, intermediate_in_fh) >= 0)
 #else
@@ -627,7 +619,7 @@ int main(int argc, char *argv[])
             {
                 if (strchr(line, '|') != NULL)
                 {
-                    found_line = TRUE;
+                    found_line = true;
                     break;
                 }
                 ++line_num;
@@ -639,7 +631,7 @@ int main(int argc, char *argv[])
                 {
                     continue;
                 }
-                skip_queue_output = FALSE;
+                skip_queue_output = false;
                 {
                     fcs_encoded_state_buffer parent_state_enc;
                     if (!populate_instance_with_intermediate_input_line(
@@ -655,8 +647,8 @@ int main(int argc, char *argv[])
                     if (limit_instance.common.queue_solution_was_found)
                     {
                         trace_solution(&limit_instance, out_fh, &delta);
-                        skip_queue_output = TRUE;
-                        queue_solution_was_found = TRUE;
+                        skip_queue_output = true;
+                        queue_solution_was_found = true;
                     }
                     else if (limit_instance.common.should_terminate ==
                              MAX_ITERS_TERMINATE)
@@ -674,7 +666,7 @@ int main(int argc, char *argv[])
                             "Pruning due to unsolvability in "
                             "intermediate-input line No. %ld\n",
                             line_num);
-                        skip_queue_output = TRUE;
+                        skip_queue_output = true;
                     }
                 }
 
@@ -694,17 +686,15 @@ int main(int argc, char *argv[])
                     if (handle_and_destroy_instance_solution(
                             &queue_instance, &delta))
                     {
-                        queue_solution_was_found = TRUE;
+                        queue_solution_was_found = true;
                     }
                 }
             }
 
             if (!queue_solution_was_found)
             {
-                /*
-                 * This recycles the instances by keeping the cache,
-                 * but making sure that the statistics and the queue are reset.
-                 * */
+                // This recycles the instances by keeping the cache,
+                // but making sure that the statistics and the queue are reset.
                 instance_recycle(&limit_instance);
                 instance_recycle(&queue_instance);
             }
@@ -718,6 +708,7 @@ int main(int argc, char *argv[])
 
         free(line);
         line = NULL;
+        fclose(intermediate_in_fh);
     }
     else
     {
@@ -730,8 +721,8 @@ int main(int argc, char *argv[])
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(
             &delta, local_variant, &(init_state), KEY_PTR());
-        /* The NULL parent_state_enc and move for indicating this is the
-         * initial state. */
+        // The NULL parent_state_enc and move for indicating this is the
+        // initial state.
         fcs_init_encoded_state(&(parent_state_enc));
 
         fcs_dbm_record *token;
@@ -740,7 +731,7 @@ int main(int argc, char *argv[])
             &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
 #else
         token = fc_solve_dbm_store_insert_key_value(
-            instance.cache_store.store, KEY_PTR(), NULL, TRUE);
+            instance.cache_store.store, KEY_PTR(), NULL, true);
 #endif
 
         fcs_offloading_queue__insert(
@@ -756,10 +747,6 @@ int main(int argc, char *argv[])
     if (out_filename)
     {
         fclose(out_fh);
-    }
-    if (intermediate_in_fh)
-    {
-        fclose(intermediate_in_fh);
     }
 
     return 0;
