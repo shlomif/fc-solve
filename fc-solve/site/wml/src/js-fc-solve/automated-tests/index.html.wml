@@ -14,7 +14,6 @@
 
 
 <h1 id="qunit-header">QUnit example</h1>
-<h2 id="qunit-banner">Banner</h2>
 <div id="qunit-testrunner-toolbar"></div>
 <h2 id="qunit-userAgent">User Agent</h2>
 <ol id="qunit-tests"></ol>
