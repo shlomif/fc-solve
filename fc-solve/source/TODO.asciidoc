@@ -21,6 +21,10 @@ solver (at least initially]):
 ** invalid characters.
 ** misformatting of the format.
 
+* Investigate whether one can optimize +forking_range_solver.c+ by making the
+requests and responses shorter.
+** Eliminate reporting the iterations.
+
 * Find how well the solver performs with different permutations of the
 order of columns/freecells.
 ** See if it's possible to combine several scans on such different
