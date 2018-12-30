@@ -53,7 +53,7 @@ typedef struct
 
 typedef struct
 {
-    long long num_iters, num_finished_boards;
+    long long offset;
 } response_type;
 
 static inline void write_request(const long long end_board,
@@ -81,10 +81,11 @@ static inline void write_request(const long long end_board,
 
     write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req));
 }
-
+const long long resp_mask = (1LL << ((sizeof(long long) * 8) - 1));
 static inline void transaction(const fcs_worker *const worker,
     const int read_fd, const long long end_board,
-    const long long board_num_step, long long *const next_board_num_ptr)
+    const long long board_num_step, long long *const next_board_num_ptr,
+    size_t *const num_active_workers)
 {
     response_type response;
     if (read(read_fd, &response, sizeof(response)) <
@@ -92,10 +93,17 @@ static inline void transaction(const fcs_worker *const worker,
     {
         return;
     }
-    total_num_iters += response.num_iters;
-    total_num_finished_boards += response.num_finished_boards;
+    if (response.offset & resp_mask)
+    {
+        total_num_iters += (response.offset & (~resp_mask));
+        --(*num_active_workers);
+    }
+    else
+    {
+        total_num_finished_boards += response.offset;
 
-    write_request(end_board, board_num_step, next_board_num_ptr, worker);
+        write_request(end_board, board_num_step, next_board_num_ptr, worker);
+    }
 }
 
 static inline int read_fd(const fcs_worker *const worker)
@@ -156,17 +164,19 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             close(w.child_to_parent_pipe[READ_FD]);
             /* I'm one of the slaves */
             request_type req;
+            response_type num_iters = {
+                .offset = 0,
+            };
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
                 req.board_num != -1)
             {
                 response_type response = {
-                    .num_iters = 0,
-                    .num_finished_boards = req.quota_end - req.board_num + 1,
+                    .offset = req.quota_end - req.board_num + 1,
                 };
                 for (; req.board_num <= req.quota_end; ++req.board_num)
                 {
                     range_solvers__solve(
-                        instance, req.board_num, &response.num_iters);
+                        instance, req.board_num, &num_iters.offset);
                     freecell_solver_user_recycle(instance);
                 }
                 write(w.child_to_parent_pipe[WRITE_FD], &response,
@@ -174,6 +184,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             }
             /* Cleanup */
             freecell_solver_user_free(instance);
+            num_iters.offset |= resp_mask;
+            write(w.child_to_parent_pipe[WRITE_FD], &num_iters,
+                sizeof(num_iters));
             close(w.child_to_parent_pipe[WRITE_FD]);
             close(w.parent_to_child_pipe[READ_FD]);
             return 0;
@@ -235,12 +248,14 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         write_request(
             end_board, board_num_step, &next_board_num, &(workers[idx]));
     }
+    var_AUTO(num_active_workers, num_workers);
 
-    while (total_num_finished_boards < total_num_boards_to_check)
+    while (total_num_finished_boards < total_num_boards_to_check ||
+           num_active_workers)
     {
         while (total_num_finished_boards >= next_milestone)
         {
-            fc_solve_print_reached(next_milestone, total_num_iters);
+            fc_solve_print_reached_no_iters(next_milestone);
             next_milestone += stop_at;
         }
 #ifdef USE_EPOLL
@@ -256,7 +271,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         {
             const fcs_worker *const worker = events[i].data.ptr;
             transaction(worker, read_fd(worker), end_board, board_num_step,
-                &next_board_num);
+                &next_board_num, &num_active_workers);
         }
 #else
         fd_set readers = initial_readers;
@@ -278,7 +293,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                     /* FD_ISSET can be set on EOF, so we check if
                      * read failed. */
                     transaction(&(workers[idx]), fd, end_board, board_num_step,
-                        &next_board_num);
+                        &next_board_num, &num_active_workers);
                 }
             }
         }
@@ -286,7 +301,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     }
     while (total_num_finished_boards >= next_milestone)
     {
-        fc_solve_print_reached(next_milestone, total_num_iters);
+        fc_solve_print_reached_no_iters(next_milestone);
         next_milestone += stop_at;
     }
 
