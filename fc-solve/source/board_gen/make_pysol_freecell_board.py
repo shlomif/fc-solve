@@ -116,6 +116,7 @@ class Board:
         self.with_freecells = with_freecells
         self.with_talon = with_talon
         self.with_foundations = with_foundations
+        self.raw_foundations_cb = None
         self.raw_foundations_line = None
         self.columns = Columns(num_columns)
         if self.with_freecells:
@@ -168,7 +169,9 @@ class Board:
             self.add_line("Talon: " + renderer.l_concat(self.talon))
         if self.with_foundations:
             self.print_foundations(renderer)
-        if self.raw_foundations_line:
+        if self.raw_foundations_cb:
+            self.add_line(self.raw_foundations_cb(renderer))
+        elif self.raw_foundations_line:
             self.add_line(self.raw_foundations_line)
         if self.with_freecells:
             self.add_line("Freecells: " + renderer.l_concat(self.freecells))
@@ -213,6 +216,7 @@ class Game:
                 "fan": None,
                 "black_hole": None,
                 "all_in_a_row": None,
+                "golf": None,
         }
 
     def __init__(self, game_id, game_num, which_deals, max_rank=13):
@@ -395,6 +399,15 @@ class Game:
                 game.add_freecell(c)
                 if game.game_id == "eight_off":
                     game.add_empty_fc()
+
+    def golf(game):
+        num_cols = 7
+        game.board = Board(num_cols, with_talon=True)
+        game.cyclical_deal(num_cols*5, num_cols)
+        game.add_all_to_talon()
+        card = game.board.talon.pop(0)
+        game.board.raw_foundations_cb = lambda renderer: 'Foundations: ' + \
+            renderer.l_concat([card])
 
     def gypsy(game):
         num_cols = 8
