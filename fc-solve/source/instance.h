@@ -324,14 +324,12 @@ struct fc_solve_hard_thread_struct
 #endif
 
     bool allocated_from_list;
-    int_fast32_t num_soft_threads;
+    uint_fast32_t num_soft_threads;
 
-    /*
-     * A counter that determines how many of the soft threads that belong
-     * to this hard thread have already finished. If it becomes
-     * num_soft_threads this thread is skipped.
-     * */
-    int num_soft_threads_finished;
+    // A counter that determines how many of the soft threads that belong
+    // to this hard thread have already finished. If it becomes
+    // num_soft_threads this thread is skipped.
+    uint_fast32_t num_soft_threads_finished;
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     char *prelude_as_string;

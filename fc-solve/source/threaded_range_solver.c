@@ -36,7 +36,6 @@ static void print_help(void)
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;
 static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
-#define UPDATE_TOTAL_NUM_ITERS_THRESHOLD 1000000
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 static char **context_argv;
 static int arg = 1, context_argc;

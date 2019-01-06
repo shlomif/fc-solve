@@ -336,7 +336,10 @@ int main(int argc, char *argv[])
     {
         fc_solve_err("%s\n", "No board specified.");
     }
+
+#ifndef FCS_DBM_SINGLE_THREAD
     const_AUTO(num_threads, inp.num_threads);
+#endif
 
     FILE *const out_fh = calc_out_fh(out_filename);
     fcs_state_keyval_pair init_state;

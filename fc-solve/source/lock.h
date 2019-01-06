@@ -34,18 +34,18 @@ extern "C" {
 
 typedef bool fcs_lock;
 typedef bool fcs_condvar;
-static inline void fcs_lock_lock(fcs_lock *const lock) {}
-static inline void fcs_lock_unlock(fcs_lock *const lock) {}
-static inline void fcs_lock_init(fcs_lock *const lock) {}
-static inline void fcs_lock_destroy(fcs_lock *const lock) {}
-static inline void fcs_condvar_init(fcs_condvar *const cond) {}
-static inline void fcs_condvar_destroy(fcs_condvar *const cond) {}
+static inline void fcs_lock_lock(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_lock_unlock(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_lock_init(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_lock_destroy(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_condvar_init(GCC_UNUSED fcs_condvar *const cond) {}
+static inline void fcs_condvar_destroy(GCC_UNUSED fcs_condvar *const cond) {}
 static inline void fcs_condvar__wait_on(
-    fcs_condvar *const cond, fcs_lock *const lock)
+    GCC_UNUSED fcs_condvar *const cond, GCC_UNUSED fcs_lock *const lock)
 {
 }
-static inline void fcs_condvar_signal(fcs_condvar *const cond) {}
-static inline void fcs_condvar_broadcast(fcs_condvar *const cond) {}
+static inline void fcs_condvar_signal(GCC_UNUSED fcs_condvar *const cond) {}
+static inline void fcs_condvar_broadcast(GCC_UNUSED fcs_condvar *const cond) {}
 #elif defined(FCS_DBM_USE_RWLOCK)
 
 typedef pthread_rwlock_fcfs_t *fcs_lock;

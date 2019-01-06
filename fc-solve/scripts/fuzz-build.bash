@@ -9,11 +9,10 @@
 if test "$1" = 'g'
 then
     export FCS_GCC=1
-    # seed=160
-    seed=17
+    seed=200
 else
     export CC=/usr/bin/clang CXX=/usr/bin/clang++ FCS_CLANG=1
-    seed=19
+    seed=1
 fi
 export CFLAGS="-Werror"
 while true

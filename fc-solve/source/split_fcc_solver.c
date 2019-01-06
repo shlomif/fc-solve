@@ -659,11 +659,10 @@ int main(int argc, char *argv[])
     }
 
     const_AUTO(local_variant, inp.local_variant);
+#ifndef FCS_DBM_SINGLE_THREAD
     const_AUTO(num_threads, inp.num_threads);
-
-    /* Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth.
-     */
-
+#endif
+    // Calculate the fingerprint_which_irreversible_moves_bitmask's curr_depth.
     fcs_delta_stater delta;
     fc_solve_delta_stater_init(&delta, local_variant, &init_state.s, STACKS_NUM,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));

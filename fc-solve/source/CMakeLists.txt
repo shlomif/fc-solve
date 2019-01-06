@@ -492,7 +492,7 @@ IF ("$ENV{FCS_GCC}")
     # -Wsuggest-attribute=const
     # -Wstringop-overflow=2
 
-    IF (NOT IS_DEBUG)
+    IF ((NOT IS_DEBUG) AND (NOT ("${CMAKE_BUILD_TYPE}" STREQUAL "RelWithDebInfo")))
         ADD_DEFINITIONS("-D_FORTIFY_SOURCE=2")
     ENDIF ()
 ENDIF ()
