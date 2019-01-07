@@ -1253,6 +1253,7 @@ depth_dbm
 depth_dbm_solver
 duckduckgo
 fcs_is_parent
+forking_range_solver
 i586
 ia
 misformatting
