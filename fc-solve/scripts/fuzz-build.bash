@@ -24,6 +24,6 @@ do
         let seed++
     else
         echo "seed=$seed failed"
-        exit 1
+        break
     fi
 done
