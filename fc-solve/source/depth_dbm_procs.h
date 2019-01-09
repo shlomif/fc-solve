@@ -18,18 +18,26 @@ static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
     FILE *const out_fh = instance->common.out_fh;
 #endif
     TRACE("Running threads for curr_depth=%d\n", instance->curr_depth);
-    for (size_t i = 0; i < num_threads; i++)
+    if (num_threads == 1)
     {
-        if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
-                &(threads[i].arg)))
-        {
-            fc_solve_err("Worker Thread No. %zu Initialization failed!\n", i);
-        }
+        instance_run_solver_thread(&(threads[0].arg));
     }
-
-    for (size_t i = 0; i < num_threads; i++)
+    else
     {
-        pthread_join(threads[i].id, NULL);
+        for (size_t i = 0; i < num_threads; i++)
+        {
+            if (pthread_create(&(threads[i].id), NULL,
+                    instance_run_solver_thread, &(threads[i].arg)))
+            {
+                fc_solve_err(
+                    "Worker Thread No. %zu Initialization failed!\n", i);
+            }
+        }
+
+        for (size_t i = 0; i < num_threads; i++)
+        {
+            pthread_join(threads[i].id, NULL);
+        }
     }
     TRACE("Finished running threads for curr_depth=%d\n", instance->curr_depth);
 }
