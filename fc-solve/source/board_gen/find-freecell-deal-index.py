@@ -8,7 +8,9 @@
 # Licensed under the MIT/Expat License.
 
 import sys
-from make_pysol_freecell_board import find_index_main, LCRandom31
+
+from make_pysol_freecell_board import LCRandom31, find_index_main
+
 from six.moves import range
 
 

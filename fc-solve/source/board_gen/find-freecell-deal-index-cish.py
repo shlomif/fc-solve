@@ -8,8 +8,10 @@
 # Licensed under the MIT/Expat License.
 
 import sys
-from make_pysol_freecell_board import find_index_main
+
 from find_index_lib_py import ffi, lib
+
+from make_pysol_freecell_board import find_index_main
 
 
 def _to_bytes(s):

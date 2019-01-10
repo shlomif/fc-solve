@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
-from cffi import FFI
 import platform
+
+from cffi import FFI
 
 ffi = FFI()
 lib = ffi.dlopen("./libfcs_find_deal." +

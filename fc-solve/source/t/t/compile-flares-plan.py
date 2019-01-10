@@ -2,6 +2,7 @@
 
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 import unittest
+
 from FC_Solve import FC_Solve_Suite
 
 

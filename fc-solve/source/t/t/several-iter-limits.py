@@ -1,10 +1,11 @@
 #!/usr/bin/env python3
 
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
-from FC_Solve import FC_Solve_Suite
-import re
 import os
+import re
 import unittest
+
+from FC_Solve import FC_Solve_Suite
 
 
 class MyTests(unittest.TestCase):

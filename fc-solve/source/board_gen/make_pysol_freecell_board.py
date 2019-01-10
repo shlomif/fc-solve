@@ -8,10 +8,12 @@
 #
 # This code is inspired by PySol by Markus F.X.J. Oberhumer and others.
 # See: http://pysolfc.sourceforge.net/ .
-import random2
 import sys
-from fc_solve_find_index_s2ints import createCards, Card, CardRenderer, \
+
+from fc_solve_find_index_s2ints import Card, CardRenderer, createCards, \
         find_index__board_string_to_ints, ms_rearrange
+
+import random2
 
 
 def empty_card():

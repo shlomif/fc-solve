@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 
-import subprocess
 import os
 import re
+import subprocess
 import unittest
 
 prog = os.environ['FCS_PATH'] + '/fc-solve'

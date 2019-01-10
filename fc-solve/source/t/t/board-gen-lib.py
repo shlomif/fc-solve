@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 
-import unittest
-from cffi import FFI
 import platform
+import unittest
+
+from cffi import FFI
 
 ffi = FFI()
 lib = ffi.dlopen("../libfcs_gen_ms_freecell_boards." +

@@ -7,8 +7,8 @@
 #
 # Licensed under the MIT/Expat License.
 
-import sys
 import re
+import sys
 
 
 class LinesHandler:

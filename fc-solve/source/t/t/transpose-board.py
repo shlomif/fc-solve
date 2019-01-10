@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 
-import subprocess
 import os
+import subprocess
 import unittest
 
 py_prog = os.environ['FCS_SRC_PATH'] + '/board_gen/transpose-freecell-board.py'

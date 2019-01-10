@@ -1,5 +1,6 @@
-from cffi import FFI
 import platform
+
+from cffi import FFI
 
 
 class FC_Solve:
