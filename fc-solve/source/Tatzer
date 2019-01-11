@@ -401,7 +401,7 @@ if ( $STR_OPTS{'libavl2-c'}{value} )
 
 if ( $build_type eq "debug" )
 {
-    $STR_OPTS{dbm}{value} ||= 'kaztree';
+    $STR_OPTS{dbm}{value} //= 'kaztree';
 }
 
 # This cache is sometimes causing problems.
