@@ -46,7 +46,6 @@ test_script:
     - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
     - gmake
-    - type cmd_line_inc.h
     - python3 -mpip install cffi random2 six
     - gmake boards
     # Trying this hack to take more precendence for Inline::C / etc.
