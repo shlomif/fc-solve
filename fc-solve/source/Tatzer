@@ -404,6 +404,11 @@ if ( $build_type eq "debug" )
     $STR_OPTS{dbm}{value} //= 'kaztree';
 }
 
+if ( $STR_OPTS{dbm}{value} eq 'none' )
+{
+    $STR_OPTS{dbm}{value} = '';
+}
+
 # This cache is sometimes causing problems.
 eval { unlink("CMakeCache.txt"); };
 eval {
