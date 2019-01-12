@@ -1,8 +1,8 @@
 Abstract
 --------
 
-This is a proposal for a universal format for encoding solitaire solutions.
-It grew out of a discussion on the fc-solve-discuss mailing list based on
+This is a proposal for a universal format for encoding https://en.wikipedia.org/wiki/Patience_(game)[card solitaire / patience] solutions.
+It grew out of a discussion on the https://groups.yahoo.com/neo/groups/fc-solve-discuss/info[fc-solve-discuss] mailing list based on
 some people's frustration with the so-called “standard notation” for
 notating Freecell.
 
@@ -12,14 +12,15 @@ human-readable format (though conversions to these format will be explicitly
 specified later.).
 
 Format:
--------
+------
 
-Rank = {Integer: from 0 to MAX_RANK } (MAX_RANK is normally 13 for French
-playing card, but is specified at the header).
+----------------------------------------------------------------------
+Rank = { Integer: from 0 to MAX_RANK } (MAX_RANK is normally 13 for French
+playing cards, but must be specified at the header).
 
-Suit = One Of{'H','C','D','S' }
+Suit = One Of { 'H', 'C', 'D', 'S' }
 
-Deck = {Integer: from 1 to NUM_DECKS }
+Deck = { Integer: between 0 and NUM_DECKS-1 inclusive }
 
 Card = {
     bool is_empty;
@@ -49,18 +50,21 @@ GamePosition = {
     Foundations foundations;
     Freecells freecells;
 
-    Column x NUM_COLUMNS;
+    Column columns[0 .. NUM_COLUMNS-1];
 }
 
-Column_Idx = {Integer: from 1 to NUM_COLUMNS }
-Freecell_Idx = {Integer: from 1 to NUM_FREECELLS }
+Column_Idx = {Integer: from 0 to NUM_COLUMNS-1 }
+Freecell_Idx = {Integer: from 0 to NUM_FREECELLS-1 }
 
-Source_Or_Dest_Id = union {
-    Column_Idx col;
+Source_Or_Dest_Id = struct {
+    enum type { Column, Freecell, Foundation...};
+    tagged union {
+        Column_Idx col;
         OR
-    Freecell_Idx freecell;
+            Freecell_Idx freecell;
         OR
-    Foundation_Id foundation;
+            Foundation_Id foundation;
+    }
 }
 
 # This comment is used by human players to annotate their solutions.
@@ -100,17 +104,15 @@ Move_With_Position = Struct {
 
 Solution = {
     GamePosition start_pos; # Required.
-    Move_With_Position moves[1 .. NUM_MOVES];
-    GamePosition final_position; # Optional
+    Move_With_Position moves[0 .. NUM_MOVES-1];
+    GamePosition final_position; # Required
 }
 
-
-
 Header = {
-    int NUM_DECKS;
-    int NUM_MOVES;
-    int NUM_COLUMNS;
-    int MAX_RANK;
+    uint NUM_DECKS;
+    uint NUM_MOVES;
+    uint NUM_COLUMNS;
+    uint MAX_RANK;
     String variant; # such as "freecell", "bakers_dozen", "bakers_game", etc.
     enum sequences_are_built_by {
         RANK, SUIT, ALTERNATE_COLOR
@@ -127,3 +129,4 @@ Total = {
     Header header;
     Solution solution;
 }
+----------------------------------------------------------------------
