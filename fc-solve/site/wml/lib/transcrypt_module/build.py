@@ -15,13 +15,15 @@ def main():
     # setup
     if not os.path.exists(DROOT):
         os.mkdir(DROOT)
-    if os.path.exists(os.path.join(SROOT, '__javascript__')):
-        shutil.rmtree(os.path.join(SROOT, '__javascript__'))
+    js_dir = '__target__'
+    if os.path.exists(os.path.join(SROOT, js_dir)):
+        shutil.rmtree(os.path.join(SROOT, js_dir))
 
     # transpile src/
-    run('transcrypt -xni -b -m --parent=.none src/fc_solve_find_index_s2ints.py')
-    shutil.copy(os.path.join(SROOT, '__javascript__', 'fc_solve_find_index_s2ints.min.js'), os.path.join(DROOT, 'fc_solve_find_index_s2ints.min.js'))
-    shutil.copy(os.path.join(SROOT, '__javascript__', 'fc_solve_find_index_s2ints.js'), os.path.join(DROOT, 'fc_solve_find_index_s2ints.js'))
+    run('transcrypt --esv 6 -xni -b -m --parent=.none src/fc_solve_find_index_s2ints.py')
+    run('rollup ' + os.path.join(SROOT, js_dir, 'fc_solve_find_index_s2ints.js') + ' --o ' + os.path.join(DROOT, 'fc_solve_find_index_s2ints.min.js') + ' --f cjs')
+    run('rollup ' + os.path.join(SROOT, js_dir, 'fc_solve_find_index_s2ints.js') + ' --o ' + os.path.join(DROOT, 'fc_solve_find_index_s2ints.js') + ' --f cjs')
+    # shutil.copy(os.path.join(SROOT, js_dir, 'fc_solve_find_index_s2ints.js'), os.path.join(DROOT, 'fc_solve_find_index_s2ints.js'))
 
 
 

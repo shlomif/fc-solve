@@ -27,6 +27,8 @@ my $finder = Test::TrailingSpace->new(
                 |
             lib/fc-solve-for-javascript
                 |
+            lib/transcrypt_module/src
+                |
             dest(?:-prod)?/(?:
                 (?:.*\.(?:epub|rtf|pdf)\z)
                     |
