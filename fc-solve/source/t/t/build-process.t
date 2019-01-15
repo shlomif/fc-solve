@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use List::MoreUtils qw(none);
+use List::MoreUtils qw/ none /;
 use Env::Path ();
 use Path::Tiny qw/ path /;
 use Test::Differences qw/ eq_or_diff /;
