@@ -333,7 +333,8 @@ struct fc_solve_hard_thread_struct
      * to this hard thread have already finished. If it becomes
      * num_soft_threads this thread is skipped.
      * */
-    fastest_type_for_num_soft_threads__signed_on_purpose num_soft_threads_finished;
+    fastest_type_for_num_soft_threads__signed_on_purpose
+        num_soft_threads_finished;
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     char *prelude_as_string;
