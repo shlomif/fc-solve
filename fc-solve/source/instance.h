@@ -267,6 +267,8 @@ typedef void (*instance_debug_iter_output_func)(
 typedef struct fc_solve_soft_thread_struct fcs_soft_thread;
 typedef struct fc_solve_instance_struct fcs_instance;
 
+typedef int_fast32_t fastest_type_for_num_soft_threads__signed_on_purpose;
+// typedef int fastest_type_for_num_soft_threads__signed_on_purpose;
 struct fc_solve_hard_thread_struct
 {
 #ifndef FCS_SINGLE_HARD_THREAD
@@ -324,12 +326,14 @@ struct fc_solve_hard_thread_struct
 #endif
 
     bool allocated_from_list;
-    uint_fast32_t num_soft_threads;
+    fastest_type_for_num_soft_threads__signed_on_purpose num_soft_threads;
 
-    // A counter that determines how many of the soft threads that belong
-    // to this hard thread have already finished. If it becomes
-    // num_soft_threads this thread is skipped.
-    uint_fast32_t num_soft_threads_finished;
+    /*
+     * A counter that determines how many of the soft threads that belong
+     * to this hard thread have already finished. If it becomes
+     * num_soft_threads this thread is skipped.
+     * */
+    fastest_type_for_num_soft_threads__signed_on_purpose num_soft_threads_finished;
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     char *prelude_as_string;
