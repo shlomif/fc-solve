@@ -404,7 +404,7 @@ if ( $build_type eq "debug" )
     $STR_OPTS{dbm}{value} //= 'kaztree';
 }
 
-if ( $STR_OPTS{dbm}{value} eq 'none' )
+if ( ( $STR_OPTS{dbm}{value} // '' ) eq 'none' )
 {
     $STR_OPTS{dbm}{value} = '';
 }
