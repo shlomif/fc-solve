@@ -837,14 +837,14 @@ static void verify_soft_dfs_stack(fcs_soft_thread *soft_thread)
     for (int depth = 0; depth < DFS_VAR(soft_thread, depth); ++depth)
     {
         var_AUTO(soft_dfs_info, &(DFS_VAR(soft_thread, soft_dfs_info)[depth]));
-        int *const rand_indexes = soft_dfs_info->derived_states_random_indexes;
+        var_AUTO(rand_indexes, soft_dfs_info->derived_states_random_indexes);
 
         const_AUTO(num_states, soft_dfs_info->derived_states_list.num_states);
 
         for (size_t i = soft_dfs_info->current_state_index; i < num_states; ++i)
         {
             verify_state_sanity(
-                soft_dfs_info->derived_states_list.states[rand_indexes[i]]
+                soft_dfs_info->derived_states_list.states[rand_indexes[i].idx]
                     .state_ptr);
         }
     }
