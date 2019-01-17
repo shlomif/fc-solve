@@ -1549,7 +1549,8 @@ static inline void init_dfs(fcs_soft_thread *const soft_thread)
  * a while loop
  * */
 static inline void switch_to_next_soft_thread(
-    fcs_hard_thread *const hard_thread, const uint_fast32_t num_soft_threads,
+    fcs_hard_thread *const hard_thread,
+    const fastest_type_for_num_soft_threads__unsigned num_soft_threads,
     const fcs_soft_thread *const soft_threads,
     const fc_solve_prelude_item *const prelude, const size_t prelude_num_items,
     uint_fast32_t *const st_idx_ptr)
@@ -1560,7 +1561,7 @@ static inline void switch_to_next_soft_thread(
     }
     else
     {
-        const uint_fast32_t next_st_idx =
+        const fastest_type_for_num_soft_threads__unsigned next_st_idx =
             ((1 + (*st_idx_ptr)) % num_soft_threads);
         set_next_soft_thread(hard_thread, next_st_idx,
             soft_threads[next_st_idx].checked_states_step, st_idx_ptr);
@@ -1664,8 +1665,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
      * */
 
     fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
-    const uint_fast32_t num_soft_threads =
-        HT_FIELD(hard_thread, num_soft_threads);
+    const_AUTO(num_soft_threads, HT_FIELD(hard_thread, num_soft_threads));
     const fc_solve_prelude_item *const prelude = HT_FIELD(hard_thread, prelude);
     fcs_soft_thread *const soft_threads = HT_FIELD(hard_thread, soft_threads);
 

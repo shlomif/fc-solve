@@ -145,9 +145,9 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
     const foreach_st_callback_choice callback_choice, void *const context)
 {
 #ifdef FCS_SINGLE_HARD_THREAD
-    const int_fast32_t num_soft_threads =
-        instance->hard_thread.num_soft_threads;
-    for (int_fast32_t st_idx = 0; st_idx <= num_soft_threads; ++st_idx)
+    const_AUTO(num_soft_threads, instance->hard_thread.num_soft_threads);
+    for (fastest_type_for_num_soft_threads__unsigned st_idx = 0;
+         st_idx <= num_soft_threads; ++st_idx)
     {
         fcs_soft_thread *soft_thread;
         if (st_idx < num_soft_threads)
