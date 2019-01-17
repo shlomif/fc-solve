@@ -919,7 +919,7 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         for (; rand_index_ptr < end_rand_index_ptr; rand_index_ptr++)
         {
             if (!fcs__is_state_a_dead_end(
-                    states[rand_index_ptr->idx].state_ptr))
+                    states[rand_index_ptr->rating_with_index__idx].state_ptr))
             {
                 *(dest_rand_index_ptr++) = *(rand_index_ptr);
             }
@@ -1218,7 +1218,7 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
                         }
 
                         the_soft_dfs_info->derived_states_random_indexes[0]
-                            .idx = 0;
+                            .rating_with_index__idx = 0;
                     }
                 }
 
@@ -1310,9 +1310,9 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
             rating_with_index *const rand_array =
                 the_soft_dfs_info->derived_states_random_indexes;
 
-            for (size_t i = 0; i < num_states; i++)
+            for (size_t i = 0; i < num_states; ++i)
             {
-                rand_array[i].idx = i;
+                rand_array[i].rating_with_index__idx = i;
             }
             /* If we just conducted the tests for a random group -
              * randomize. Else - keep those indexes as the unity vector.
@@ -1396,7 +1396,8 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
         while (++state_idx < num_states)
         {
             fcs_collectible_state *const single_derived_state =
-                derived_states[(*(++rand_int_ptr)).idx].state_ptr;
+                derived_states[(*(++rand_int_ptr)).rating_with_index__idx]
+                    .state_ptr;
 
             VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 

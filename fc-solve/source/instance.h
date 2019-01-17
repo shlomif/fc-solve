@@ -343,7 +343,7 @@ struct fc_solve_hard_thread_struct
 
 typedef struct
 {
-    int idx;
+    int rating_with_index__idx;
     pq_rating rating;
 } rating_with_index;
 
