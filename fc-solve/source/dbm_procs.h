@@ -368,8 +368,10 @@ static inline void instance_increment(dbm_solver_instance *const instance)
     {
         instance_print_stats(instance);
     }
-    if (instance->common.count_num_processed >=
-        instance->common.max_count_num_processed)
+    if (unlikely((instance->common.count_num_processed >=
+                     instance->common.max_count_num_processed) ||
+                 (instance->common.num_states_in_collection >=
+                     instance->common.max_num_states_in_collection)))
     {
         instance->common.should_terminate = MAX_ITERS_TERMINATE;
     }
@@ -399,7 +401,8 @@ typedef struct
 {
     fcs_dbm_variant_type local_variant;
     const char *offload_dir_path, *dbm_store_path;
-    long pre_cache_max_count, iters_delta_limit, caches_delta;
+    long pre_cache_max_count, iters_delta_limit, caches_delta,
+        max_num_states_in_collection;
     size_t num_threads;
 } fcs_dbm_common_input;
 
@@ -409,6 +412,7 @@ static const fcs_dbm_common_input fcs_dbm_common_input_init = {
     .dbm_store_path = "./fc_solve_dbm_store",
     .pre_cache_max_count = 1000000,
     .iters_delta_limit = -1,
+    .max_num_states_in_collection = -1,
     .caches_delta = 1000000,
     .num_threads = 2};
 
@@ -451,6 +455,11 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--num-threads must be at least 1.\n");
         }
+        return TRUE;
+    }
+    else if ((param = TRY_PARAM("--max-num-states")))
+    {
+        inp->max_num_states_in_collection = atol(param);
         return TRUE;
     }
     else if ((param = TRY_PARAM("--iters-delta-limit")))

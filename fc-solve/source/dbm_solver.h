@@ -87,7 +87,7 @@ typedef struct
     fcs_lock storage_lock;
     long queue_num_extracted_and_processed;
     fcs_encoded_state_buffer first_key;
-    long num_states_in_collection;
+    long num_states_in_collection, max_num_states_in_collection;
     FILE *out_fh;
     fcs_dbm_variant_type variant;
     long count_num_processed, count_of_items_in_queue, max_count_num_processed;
@@ -115,8 +115,8 @@ static inline void fcs_dbm__found_solution(
 }
 
 static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
-    const long iters_delta_limit, const fcs_dbm_variant_type local_variant,
-    FILE *const out_fh)
+    const long iters_delta_limit, const long max_num_states_in_collection,
+    const fcs_dbm_variant_type local_variant, FILE *const out_fh)
 {
     common->variant = local_variant;
     common->out_fh = out_fh;
@@ -125,6 +125,9 @@ static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
     common->queue_num_extracted_and_processed = 0;
     common->num_states_in_collection = 0;
     common->count_num_processed = 0;
+    common->max_num_states_in_collection =
+        ((max_num_states_in_collection < 0) ? LONG_MAX
+                                            : max_num_states_in_collection);
     if (iters_delta_limit >= 0)
     {
         common->max_count_num_processed =

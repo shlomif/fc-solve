@@ -30,7 +30,7 @@ typedef struct
 #include "dbm_procs.h"
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input *const inp, const long iters_delta_limit,
-    FILE *const out_fh)
+    const long max_num_states_in_collection, FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -39,8 +39,8 @@ static inline void instance_init(dbm_solver_instance *const instance,
 #else
     fcs_offloading_queue__init(&(instance->queue), &(instance->meta_alloc));
 #endif
-    fcs_dbm__common_init(
-        &(instance->common), iters_delta_limit, inp->local_variant, out_fh);
+    fcs_dbm__common_init(&(instance->common), iters_delta_limit,
+        max_num_states_in_collection, inp->local_variant, out_fh);
     fcs_dbm__cache_store__init(&(instance->cache_store), &(instance->common),
         &(instance->meta_alloc), inp->dbm_store_path, inp->pre_cache_max_count,
         inp->caches_delta);
@@ -604,8 +604,8 @@ int main(int argc, char *argv[])
         dbm_solver_instance queue_instance;
         dbm_solver_instance limit_instance;
 
-        instance_init(&queue_instance, &inp, -1, out_fh);
-        instance_init(&limit_instance, &inp, inp.iters_delta_limit, out_fh);
+        instance_init(&queue_instance, &inp, -1, -1, out_fh);
+        instance_init(&limit_instance, &inp, inp.iters_delta_limit, -1, out_fh);
 
         bool found_line;
         do
@@ -714,7 +714,7 @@ int main(int argc, char *argv[])
     else
     {
         dbm_solver_instance instance;
-        instance_init(&instance, &inp, inp.iters_delta_limit, out_fh);
+        instance_init(&instance, &inp, inp.iters_delta_limit, -1, out_fh);
         fcs_encoded_state_buffer *key_ptr;
 #define KEY_PTR() (key_ptr)
         fcs_encoded_state_buffer parent_state_enc;

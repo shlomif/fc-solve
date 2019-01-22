@@ -140,7 +140,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
     fcs_lock_init(&instance->global_lock);
     instance->offload_dir_path = inp->offload_dir_path;
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
-        inp->local_variant, out_fh);
+        inp->max_num_states_in_collection, inp->local_variant, out_fh);
 
     fcs_lock_init(&instance->output_lock);
     fcs_lock_init(&instance->fcc_entry_points_lock);

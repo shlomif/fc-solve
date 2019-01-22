@@ -50,7 +50,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
     instance->curr_depth = 0;
     instance->offload_dir_path = inp->offload_dir_path;
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
-        inp->local_variant, out_fh);
+        inp->max_num_states_in_collection, inp->local_variant, out_fh);
 
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
