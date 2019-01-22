@@ -11,5 +11,11 @@ if ( $ENV{FCS_TEST_SKIP_PERLTIDY} )
 }
 require Test::Code::TidyAll;
 
-Test::Code::TidyAll::tidyall_ok( conf_file => "$ENV{FCS_SRC_PATH}/.tidyallrc",
+Test::Code::TidyAll::tidyall_ok(
+    conf_file => "$ENV{FCS_SRC_PATH}/.tidyallrc",
+    (
+        !$ENV{FCS_TEST_CLANG_FORMAT}
+        ? ( selected_plugins => [qw(PerlTidy)], )
+        : ()
+    ),
 );
