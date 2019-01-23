@@ -16,10 +16,7 @@ sub transform_file
     path($fn)->parent->child($FMT)
         ->spew_raw( path( $self->tidyall->root_dir )->child($FMT)->slurp_raw );
     my @cmd = ( 'clang-format', '-style=file', '-i', $fn );
-    if ( system(@cmd) )
-    {
-        die 'not valid';
-    }
+    eval { system(@cmd); };
     return;
 }
 
@@ -27,20 +24,23 @@ sub transform_file
 
 =head1 NAME
 
-Code::TidyAll::Plugin::Flake8 - run flake8 using Code::TidyAll
+Code::TidyAll::Plugin::ClangFormat - run clang-format using Code::TidyAll
 
 =head1 SYNOPSIS
 
 In your C<.tidyallrc>:
 
-    [Flake8]
-    select = **/*.py
+    [ClangFormat]
+    select = **/*.{c,cpp,h,hpp}
+
+Also define a C<.clang-format> at the root_dir .
 
 =head1 DESCRIPTION
 
-This speeds up the flake8 python tool ( L<http://flake8.pycqa.org/en/latest/>
-) checking by caching results using L<Code::TidyAll> .
+This speeds up the clang-format tool ( L<https://clang.llvm.org/docs/ClangFormat.html>)
+checking and reformatting, by caching results using L<Code::TidyAll> .
 
-It was originally written for use by PySolFC
-( L<http://pysolfc.sourceforge.net/> ), an open suite of card solitaire
+It was originally written for use by Freecell Solver
+( L<https://fc-solve.shlomifish.org/> ), an open source automated solver
+for some variants of Patience / card solitaire.
 games.
