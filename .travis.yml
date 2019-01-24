@@ -33,7 +33,7 @@ install:
       # For the website
     - cpanm --quiet App::Deps::Verify App::XML::DocBook::Builder
     - (cd fc-solve/site/wml/ && perl bin/my-cookiecutter.pl && deps-app plinst -i bin/common-required-deps.yml -i bin/required-modules.yml )
-    - cpanm --quiet --notest Task::FreecellSolver::Testing
+    - cpanm --quiet --notest Code::TidyAll::Plugin::ClangFormat Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
     - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
     - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
