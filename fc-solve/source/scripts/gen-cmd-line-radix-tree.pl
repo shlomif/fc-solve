@@ -106,6 +106,12 @@ path($inc_h)->spew_utf8(
         my $str = path($temp_inc_h)->slurp_utf8();
         $str =~
             s#(^|\n)(struct CommandOption \*(?:$|\n|\r\n))#${1}static $2#gms;
+        my $DETERMINSTIC_BUILD = 1;
+        if ($DETERMINSTIC_BUILD)
+        {
+            $str =~
+                s#^(/\*[^\n]*--output-file=)\S+([^\n]*\*/)$#${1}temp.txt$2#ms;
+        }
         $str;
     }
 );

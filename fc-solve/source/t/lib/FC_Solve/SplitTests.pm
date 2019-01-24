@@ -47,8 +47,8 @@ sub gen
                 my ( $self, $args ) = @_;
                 my $data = $args->{data};
                 my $dump = sub {
-                    return Data::Dumper->new( [shift] )->Terse(1)->Indent(0)
-                        ->Dump;
+                    return Data::Dumper->new( [shift] )->Sortkeys(1)->Terse(1)
+                        ->Indent(0)->Dump;
                 };
                 return <<"EOF";
 #!/usr/bin/perl
