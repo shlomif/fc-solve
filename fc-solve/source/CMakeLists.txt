@@ -534,6 +534,16 @@ IF (BUILD_STATIC_LIBRARY)
         freecell-solver-static
         PROPERTIES OUTPUT_NAME "freecell-solver"
     )
+    # See https://en.wikipedia.org/wiki/Reproducible_builds
+    # https://reproducible-builds.org/ .
+    SET(_determinstic_build TRUE)
+    IF (_determinstic_build)
+        SET(CMAKE_RANLIB ":")
+        SET_TARGET_PROPERTIES(
+            freecell-solver-static
+            PROPERTIES STATIC_LIBRARY_OPTIONS "-D"
+        )
+    ENDIF ()
     SET_TARGET_PROPERTIES(
         ${FREECELL_SOLVER_LIBS}
         PROPERTIES CLEAN_DIRECT_OUTPUT 1
