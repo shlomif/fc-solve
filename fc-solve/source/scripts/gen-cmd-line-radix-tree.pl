@@ -85,7 +85,7 @@ sub del
 {
     if ( -e $inc_h )
     {
-        unlink($inc_h);
+        eval { unlink($inc_h); };
     }
 }
 

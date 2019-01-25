@@ -19,7 +19,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
         %*ENV{"CC"}="/usr/bin/clang";
         %*ENV{"CXX"}="/usr/bin/clang++";
         %*ENV{"FCS_CLANG"}=1;
-        $seed=1;
+        $seed = $rb ?? 24 !! 1;
     }
     %*ENV{"HARNESS_BREAK"}="1";
     %*ENV{"CFLAGS"}="-Werror";

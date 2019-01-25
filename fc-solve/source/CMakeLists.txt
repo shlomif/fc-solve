@@ -252,13 +252,17 @@ SET (CL_INC_SCRIPT "scripts/gen-cmd-line-radix-tree.pl")
 SET (cl_enum_h "${CMAKE_CURRENT_BINARY_DIR}/cmd_line_enum.h")
 
 add_gen_c("${BIN_CL_INC_H}" "${cl_enum_h}")
+SET(_cmd "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_SCRIPT}")
 ADD_CUSTOM_COMMAND(
     OUTPUT
         "${BIN_CL_INC_H}"
         "${cl_enum_h}"
-    COMMAND "${PERL_EXECUTABLE}" "${CMAKE_CURRENT_SOURCE_DIR}/${CL_INC_SCRIPT}"
+    COMMAND ${_cmd}
     DEPENDS "${CL_INC_SCRIPT}"
 )
+
+# Execute it right away to avoid missing files/includes
+EXECUTE_PROCESS(COMMAND ${_cmd})
 
 SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
