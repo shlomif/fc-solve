@@ -6,13 +6,13 @@
 # Distributed under terms of the MIT license.
 #
 
-sub MAIN(Bool :$g=False,Bool :$t=False)
+sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
 {
     my $seed;
     if ($g)
     {
         %*ENV{"FCS_GCC"}=1;
-        $seed=200;
+        $seed=1;
     }
     else
     {
@@ -25,6 +25,10 @@ sub MAIN(Bool :$g=False,Bool :$t=False)
     %*ENV{"CFLAGS"}="-Werror";
     my $cmd ="../source/Tatzer && make";
     $cmd ~= " && perl ../source/run-tests.pl" if $t;
+    if $rb
+    {
+        $cmd = Q:qq (bash -c ". ~/.bashrc && Theme fcs && _reprb_diff_builds");
+    }
     while True
     {
         say "Checking seed=$seed";
