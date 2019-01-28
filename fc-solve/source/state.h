@@ -953,6 +953,9 @@ static inline int fc_solve_stack_compare_for_comparison(
     const fcs_card *const s2 = (const fcs_card *const)v_s2;
 
     {
+#ifdef __cplusplus
+        using std::min;
+#endif
         const int min_len = min(s1[0], s2[0]);
         for (int a = 1; a <= min_len; a++)
         {

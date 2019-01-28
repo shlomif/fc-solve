@@ -12,7 +12,6 @@
 #pragma once
 
 #include "instance.h"
-#include "move.h"
 
 #ifdef FCS_WITH_MOVES
 static inline fcs_move_stack *fc_solve_move_stack_compact_allocate(

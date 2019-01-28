@@ -9,6 +9,8 @@
  */
 // min_and_max.h - header file for the min(a,b) and max(a,b) macros.
 #pragma once
+// C++ gets confused with these macros
+#ifndef __cplusplus
 
 #ifndef min
 #define min(a, b) ((a) < (b) ? (a) : (b))
@@ -16,4 +18,6 @@
 
 #ifndef max
 #define max(a, b) ((a) > (b) ? (a) : (b))
+#endif
+
 #endif

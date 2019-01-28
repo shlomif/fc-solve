@@ -79,11 +79,13 @@ typedef dense_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 
 extern "C" fcs_states_google_hash_handle fc_solve_states_google_hash_new()
 {
+    static fcs_state deleted_key = {0};
     StatesGoogleHash *ret = new StatesGoogleHash;
 
 #if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE)
     ret->set_empty_key(NULL);
 #endif
+    ret->set_deleted_key((char *)&deleted_key);
 
     return (fcs_states_google_hash_handle)(ret);
 }
@@ -169,15 +171,17 @@ typedef sparse_hash_set<char *, column_hash, column_equality> ColumnsGoogleHash;
 typedef dense_hash_set<char *, column_hash, column_equality> ColumnsGoogleHash;
 #endif
 
-extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
+extern "C" fcs_columns_google_hash_handle fc_solve_columns_google_hash_new()
 {
+    static char deleted_key[3] = "\xFF\xFF";
     ColumnsGoogleHash *ret = new ColumnsGoogleHash;
 
 #if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE)
     ret->set_empty_key(NULL);
 #endif
+    ret->set_deleted_key(deleted_key);
 
-    return (fcs_columns_google_hash_handle_t)(ret);
+    return (fcs_columns_google_hash_handle)(ret);
 }
 
 /*
@@ -188,7 +192,7 @@ extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
  * was set to it.
  */
 extern "C" bool fc_solve_columns_google_hash_insert(
-    fcs_columns_google_hash_handle_t void_hash, void *key, void **existing_key)
+    fcs_columns_google_hash_handle void_hash, void *key, void **existing_key)
 {
     ColumnsGoogleHash *hash = (ColumnsGoogleHash *)void_hash;
     std::pair<ColumnsGoogleHash::iterator, bool> result =
@@ -209,7 +213,7 @@ extern "C" bool fc_solve_columns_google_hash_insert(
 }
 
 extern "C" void fc_solve_columns_google_hash_free(
-    fcs_columns_google_hash_handle_t void_hash)
+    fcs_columns_google_hash_handle void_hash)
 {
     ColumnsGoogleHash *hash = (ColumnsGoogleHash *)void_hash;
 
