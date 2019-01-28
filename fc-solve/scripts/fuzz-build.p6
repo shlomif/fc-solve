@@ -23,6 +23,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     }
     %*ENV{"HARNESS_BREAK"}="1";
     %*ENV{"CFLAGS"}="-Werror";
+    %*ENV{"SOURCE_DATE_EPOCH"}="0";
     my $cmd ="../source/Tatzer && make";
     $cmd ~= " && perl ../source/run-tests.pl" if $t;
     if $rb
