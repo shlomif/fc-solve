@@ -12,7 +12,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     if ($g)
     {
         %*ENV{"FCS_GCC"}=1;
-        $seed=1;
+        $seed = $rb ?? 26 !! 1;
     }
     else
     {
@@ -22,7 +22,8 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
         $seed = $rb ?? 24 !! 1;
     }
     %*ENV{"HARNESS_BREAK"}="1";
-    %*ENV{"CFLAGS"}="-Werror";
+    my $SLIGHTLY-WRONG-GCC-FLAG-SEE-man-gcc = "-frandom-seed=24";
+    %*ENV{"CFLAGS"}="-Werror" ~ (($g && $rb) ?? " $SLIGHTLY-WRONG-GCC-FLAG-SEE-man-gcc"  !! "");
     %*ENV{"SOURCE_DATE_EPOCH"}="0";
     my $cmd ="../source/Tatzer && make";
     $cmd ~= " && perl ../source/run-tests.pl" if $t;
