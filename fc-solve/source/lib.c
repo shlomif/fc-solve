@@ -297,8 +297,13 @@ static inline void init_instance(fcs_instance *const instance)
                 move_funcs[num_move_funcs++].idx = bit_idx;
             }
         }
+        const_AUTO(old_move_funcs, move_funcs);
         move_funcs = SREALLOC(move_funcs,
             ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
+        if (unlikely(!move_funcs))
+        {
+            free(old_move_funcs);
+        }
         instance->opt_moves = (typeof(instance->opt_moves)){
             .num = 1,
             .groups = SMALLOC(instance->opt_moves.groups, MOVES_GROW_BY),

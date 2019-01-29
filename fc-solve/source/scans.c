@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * scans.c - The code that relates to the various scans.
- * Currently Hard DFS, Soft-DFS, Random-DFS, BeFS and BFS are implemented.
- */
+// scans.c - The code that relates to the various scans.
+// Currently Soft-DFS / Random-DFS, Best-FS and Breadth-FS are implemented.
 
 #include "scans.h"
 #include "meta_alloc.h"
@@ -26,9 +24,8 @@
     calc_depth(FCS_STATE_kv_to_collectible(ptr_state))
 
 #ifdef FCS_RCS_STATES
-/* TODO : Unit-test this function as it had had a bug beforehand
- * because lru_side had been an unsigned long.
- * */
+// TODO : Unit-test this function as it had had a bug beforehand
+// because lru_side had been an unsigned long.
 typedef const char *lru_side;
 
 extern int __attribute__((pure))
@@ -143,7 +140,12 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
             if (++parents_stack_len == parents_stack_max_len)
             {
                 parents_stack_max_len += 16;
+                const_AUTO(old_parents_stack, parents_stack);
                 parents_stack = SREALLOC(parents_stack, parents_stack_max_len);
+                if (unlikely(!parents_stack))
+                {
+                    free(old_parents_stack);
+                }
             }
         }
     }
