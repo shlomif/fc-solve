@@ -46,7 +46,7 @@ erase() is guaranteed not to invalidate any iterators.
 ```
 
 So my question is - am I using the sets' iterators correctly and safely
-(and cppcheck has emitted a false positive) or if not - how should my
+(and cppcheck has emitted a false positive), or if not - how should the
 code be fixed?
 
 Help will be appreciated.
