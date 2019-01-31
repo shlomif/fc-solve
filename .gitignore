@@ -146,6 +146,7 @@
 /fc-solve/site/wml/lib/transcrypt_module/dist/
 /fc-solve/site/wml/lib/transcrypt_module/fc_solve_find_index_s2ints.js
 /fc-solve/site/wml/lib/transcrypt_module/src/__javascript__/
+/fc-solve/site/wml/lib/transcrypt_module/src/__target__/
 /fc-solve/site/wml/lib/transcrypt_module/src/fc_solve_find_index_s2ints.py
 /fc-solve/site/wml/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/libfreecell-solver.wasm
