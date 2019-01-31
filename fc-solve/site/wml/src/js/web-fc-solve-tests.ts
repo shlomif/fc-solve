@@ -1,8 +1,10 @@
-const s2i = {
+/*const s2i = {
     find_index__board_string_to_ints: (s) => {
         return [5, 6];
     },
-}; // import * as s2i from "./dist/fc_solve_find_index_s2ints.js";
+};*/
+// import * as s2i from "./dist/fc_solve_find_index_s2ints.js";
+import * as s2i from "./s2ints_js";
 import * as Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 import * as test_strings from "./web-fcs-tests-strings";
@@ -248,7 +250,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
                 },
             });
 
-            if (false) {
+            if (true) {
                 const ints = s2i.find_index__board_string_to_ints(ms_deal_24);
                 const ints_s = ints
                     .map((i) => {

@@ -1,4 +1,4 @@
-import * as s2i from "./dist/fc_solve_find_index_s2ints";
+import * as s2i from "./s2ints_js";
 import * as base_ui from "./fcs-base-ui";
 import * as Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
