@@ -140,7 +140,7 @@ export class FC_Solve_Bookmarking {
         const loc = that._get_loc();
         return loc.protocol + "//" + loc.host + loc.pathname;
     }
-    private _each_control(cb: ((string) => void)): void {
+    private _each_control(cb: (string) => void): void {
         const that = this;
 
         that.bookmark_controls.forEach(cb);

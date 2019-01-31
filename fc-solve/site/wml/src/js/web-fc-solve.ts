@@ -2,6 +2,7 @@ import * as bigInt from "big-integer";
 import * as validate from "./fcs-validate";
 import * as expand from "./web-fc-solve--expand-moves";
 import { perl_range } from "./prange";
+import { suits__int_to_str, suit_re } from "./french-cards";
 
 const fc_solve_expand_move = expand.fc_solve_expand_move;
 
@@ -220,6 +221,8 @@ function fc_solve_2uni_found(match, p1, p2, offset, mystring) {
     return fc_solve_2uni_suit_map[p1] + p2;
 }
 
+const card_re = new RegExp("\\b([A2-9TJQK])(" + suit_re + ")\\b", "g");
+const found_re = new RegExp("\\b(" + suit_re + ")(-[0A2-9TJQK])\\b", "g");
 export class DisplayFilter {
     public is_unicode_cards: boolean;
     public is_unicode_cards_chars: boolean;
@@ -242,13 +245,13 @@ export class DisplayFilter {
         );
     }
     private _replace_char_card(s) {
-        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_char_card);
+        return s.replace(card_re, fc_solve_2uni_char_card);
     }
     private _replace_card(s) {
-        return s.replace(/\b([A2-9TJQK])([HCDS])\b/g, fc_solve_2uni_card);
+        return s.replace(card_re, fc_solve_2uni_card);
     }
     private _replace_found(s) {
-        return s.replace(/\b([HCDS])(-[0A2-9TJQK])\b/g, fc_solve_2uni_found);
+        return s.replace(found_re, fc_solve_2uni_found);
     }
 }
 

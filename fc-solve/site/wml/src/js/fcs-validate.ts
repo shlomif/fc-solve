@@ -1,4 +1,5 @@
 import { perl_range } from "./prange";
+import { suits__int_to_str, suit_re } from "./french-cards";
 
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
@@ -21,10 +22,9 @@ const _ranks: number[] = perl_range(MIN_RANK, MAX_RANK);
 for (const rank of _ranks) {
     ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
 }
-const _suits__int_to_str: string = "HCDS";
 export let suits__str_to_int = new Map<string, number>();
 for (const suit of _suits) {
-    suits__str_to_int.set(_suits__int_to_str.substring(suit, suit + 1), suit);
+    suits__str_to_int.set(suits__int_to_str.substring(suit, suit + 1), suit);
 }
 
 class Card {
@@ -60,7 +60,7 @@ class Card {
     public toString(): string {
         return (
             _ranks__int_to_str.substring(this.rank, this.rank + 1) +
-            _suits__int_to_str.substring(this.suit, this.suit + 1)
+            suits__int_to_str.substring(this.suit, this.suit + 1)
         );
     }
 }
@@ -149,7 +149,6 @@ class Column {
     }
 }
 
-const suit_re: string = "[HCDS]";
 const rank_re: string = "[A23456789TJQK]";
 const card_re: string = "(" + rank_re + ")(" + suit_re + ")";
 export function fcs_js__card_from_string(s: string): Card {
@@ -233,7 +232,7 @@ class CardsStringParser<CardType> extends StringParser {
     public cards: CardType[] = [];
     private is_start: boolean = true;
 
-    constructor(s: string, private card_mapper: ((string) => CardType)) {
+    constructor(s: string, private card_mapper: (string) => CardType) {
         super(s);
     }
 
@@ -261,7 +260,7 @@ class CardsStringParser<CardType> extends StringParser {
         return;
     }
 
-    public loop(re: any, callback: (() => any)): any {
+    public loop(re: any, callback: () => any): any {
         const p = this;
 
         while (p.should_loop()) {
@@ -481,7 +480,7 @@ export class Foundations {
             const val = that.getByIdx(0, suit);
             if (val > 0) {
                 arr.push(
-                    _suits__int_to_str[suit] + "-" + _ranks__int_to_str[val],
+                    suits__int_to_str[suit] + "-" + _ranks__int_to_str[val],
                 );
             }
         }
@@ -566,7 +565,9 @@ export function fcs_js__foundations_from_string(
         if (!m) {
             return make_ret(
                 false,
-                "Could not match a foundation string [HCDS]-[A23456789TJQK]",
+                "Could not match a foundation string " +
+                    suit_re +
+                    "-[A23456789TJQK]",
             );
         }
         const suit = m[2];
