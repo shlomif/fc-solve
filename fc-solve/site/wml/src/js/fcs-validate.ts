@@ -1,3 +1,5 @@
+import { perl_range } from "./prange";
+
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
     const value: string = "" + input;
@@ -10,20 +12,11 @@ function is_int(input: number): boolean {
 
 const _ranks__int_to_str: string = "0A23456789TJQK";
 export const ranks__str_to_int = {};
-function _perl_range(start: number, end: number): number[] {
-    const ret: number[] = [];
-
-    for (let i = start; i <= end; i++) {
-        ret.push(i);
-    }
-
-    return ret;
-}
 export const NUM_SUITS: number = 4;
-const _suits: number[] = _perl_range(0, NUM_SUITS - 1);
+const _suits: number[] = perl_range(0, NUM_SUITS - 1);
 export const MIN_RANK: number = 1;
 export const MAX_RANK: number = 13;
-const _ranks: number[] = _perl_range(MIN_RANK, MAX_RANK);
+const _ranks: number[] = perl_range(MIN_RANK, MAX_RANK);
 
 for (const rank of _ranks) {
     ranks__str_to_int[_ranks__int_to_str.substring(rank, rank + 1)] = rank;
@@ -142,7 +135,7 @@ class Column {
 
     public getArrOfStrs(): string[] {
         const that = this;
-        return _perl_range(0, that.getLen() - 1).map((i) => {
+        return perl_range(0, that.getLen() - 1).map((i) => {
             return that.getCard(i).toString();
         });
     }
@@ -356,7 +349,7 @@ class Freecells {
 
     public getArrOfStrs(): string[] {
         const that = this;
-        return _perl_range(0, that.getNum() - 1).map((i) => {
+        return perl_range(0, that.getNum() - 1).map((i) => {
             const card = that.getCard(i);
             return card !== null ? card.toString() : "-";
         });
@@ -679,7 +672,7 @@ export class BoardParseResult {
         }
         that.columns = [];
         const counter: ParseLocation[][][] = _suits.map((i) => {
-            return _perl_range(0, MAX_RANK).map((i) => {
+            return perl_range(0, MAX_RANK).map((i) => {
                 return [];
             });
         });
@@ -766,7 +759,7 @@ export class BoardParseResult {
         }
         if (that.foundations) {
             for (const suit of _suits) {
-                for (const rank of _perl_range(
+                for (const rank of perl_range(
                     1,
                     that.foundations.foundations.getByIdx(0, suit),
                 )) {
@@ -777,7 +770,7 @@ export class BoardParseResult {
             }
         }
         if (that.freecells) {
-            for (const i of _perl_range(
+            for (const i of perl_range(
                 0,
                 that.freecells.freecells.getNum() - 1,
             )) {
@@ -791,7 +784,7 @@ export class BoardParseResult {
         }
         that.columns.forEach((col_res, idx) => {
             const col = col_res.col;
-            for (const h of _perl_range(0, col.getLen() - 1)) {
+            for (const h of perl_range(0, col.getLen() - 1)) {
                 const card = col.getCard(h);
 
                 counter[card.getSuit()][card.getRank()].push(

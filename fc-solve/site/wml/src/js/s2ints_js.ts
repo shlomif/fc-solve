@@ -1,3 +1,5 @@
+import { perl_range } from "./prange";
+
 export function find_index__board_string_to_ints(content: string): number[] {
     if (content.length > 0 && content.slice(-1) !== "\n") {
         content += "\n";
@@ -99,16 +101,7 @@ export function find_index__board_string_to_ints(content: string): number[] {
         const col = i >> 3;
         const row = i % 8;
         const s = m[1 + col + (row >= 4 ? 4 * 7 + (row - 4) * 6 : row * 7)];
-        function _perl_range(start: number, end: number): number[] {
-            const ret: number[] = [];
-
-            for (let i = start; i <= end; i++) {
-                ret.push(i);
-            }
-
-            return ret;
-        }
-        const idx = _perl_range(0, n).filter((j) => cards[j] === s);
+        const idx = perl_range(0, n).filter((j) => cards[j] === s);
         if (idx.length !== 1) {
             throw "Foo";
         }

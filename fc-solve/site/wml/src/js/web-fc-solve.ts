@@ -1,6 +1,7 @@
 import * as bigInt from "big-integer";
 import * as validate from "./fcs-validate";
 import * as expand from "./web-fc-solve--expand-moves";
+import { perl_range } from "./prange";
 
 const fc_solve_expand_move = expand.fc_solve_expand_move;
 
@@ -787,20 +788,10 @@ export function deal_ms_fc_board(seed) {
     const randomizer = new MSRand({ gamenumber: seed });
     const num_cols = 8;
 
-    function _perl_range(start, end) {
-        const ret = [];
-
-        for (let i = start; i <= end; i++) {
-            ret.push(i);
-        }
-
-        return ret;
-    }
-
-    const columns = _perl_range(0, num_cols - 1).map(() => {
+    const columns = perl_range(0, num_cols - 1).map(() => {
         return [];
     });
-    let deck = _perl_range(0, 4 * 13 - 1);
+    let deck = perl_range(0, 4 * 13 - 1);
 
     randomizer.shuffle(deck);
 
