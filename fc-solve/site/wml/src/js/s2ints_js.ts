@@ -1,13 +1,10 @@
 import { perl_range } from "./prange";
-import { suit_re } from "./french-cards";
+import { rank_re, suit_re } from "./french-cards";
 
 export function find_index__board_string_to_ints(content: string): number[] {
     if (content.length > 0 && content.slice(-1) !== "\n") {
         content += "\n";
     }
-
-    const rank_s = "A23456789TJQK";
-    const rank_re = "[" + rank_s + "]";
 
     const card_re = rank_re + suit_re;
     const card_re_paren = "(" + card_re + ")";

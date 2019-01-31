@@ -1,5 +1,5 @@
 import { perl_range } from "./prange";
-import { suits__int_to_str, suit_re } from "./french-cards";
+import { rank_re, suits__int_to_str, suit_re } from "./french-cards";
 
 // Adapted from http://www.inventpartners.com/javascript_is_int - thanks.
 function is_int(input: number): boolean {
@@ -149,7 +149,6 @@ class Column {
     }
 }
 
-const rank_re: string = "[A23456789TJQK]";
 const card_re: string = "(" + rank_re + ")(" + suit_re + ")";
 export function fcs_js__card_from_string(s: string): Card {
     const m = s.match("^" + card_re + "$");
@@ -567,7 +566,8 @@ export function fcs_js__foundations_from_string(
                 false,
                 "Could not match a foundation string " +
                     suit_re +
-                    "-[A23456789TJQK]",
+                    "-" +
+                    rank_re,
             );
         }
         const suit = m[2];
