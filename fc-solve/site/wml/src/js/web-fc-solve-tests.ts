@@ -8,6 +8,7 @@ import * as s2i from "./s2ints_js";
 import * as Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 import * as test_strings from "./web-fcs-tests-strings";
+import { perl_range } from "./prange";
 
 const FC_Solve = w.FC_Solve;
 const FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
@@ -95,6 +96,22 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
 
             return success;
         }
+
+        QUnit.test("perl_range", (assert) => {
+            assert.expect(7);
+
+            function t(start, end, want, msg) {
+                return assert.deepEqual(perl_range(start, end), want, msg);
+            }
+            // TEST*7
+            t(0, 0, [0], "0->0");
+            t(0, 1, [0, 1], "0->1");
+            t(0, 2, [0, 1, 2], "0->2");
+            t(1, 6, [1, 2, 3, 4, 5, 6], "0->2");
+            t(-1, 1, [-1, 0, 1], "negative");
+            t(-5, -3, [-5, -4, -3], "negative");
+            t(4, 3, [], "reverse range");
+        });
 
         QUnit.test("FC_Solve main test", (assert) => {
             assert.expect(3);
