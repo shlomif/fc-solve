@@ -228,7 +228,11 @@ ADD_CUSTOM_COMMAND(
     DEPENDS "${is_parent_gen}"
 )
 # Execute it right away to avoid missing files/includes
-EXECUTE_PROCESS(COMMAND "${PERL_EXECUTABLE}" ${is_parent_args})
+EXECUTE_PROCESS(COMMAND "${PERL_EXECUTABLE}" ${is_parent_args} RESULT_VARIABLE _retcode)
+
+IF (NOT ("${_retcode}" STREQUAL "0"))
+    MESSAGE(FATAL_ERROR "${PERL_EXECUTABLE} ${is_parent_args} failed!")
+ENDIF ()
 
 SET (patsolve_dir "${pats_dir}/patsolve")
 SET (p_dir "${patsolve_dir}")
@@ -262,7 +266,10 @@ ADD_CUSTOM_COMMAND(
 )
 
 # Execute it right away to avoid missing files/includes
-EXECUTE_PROCESS(COMMAND ${_cmd})
+EXECUTE_PROCESS(COMMAND ${_cmd} RESULT_VARIABLE _retcode)
+IF (NOT ("${_retcode}" STREQUAL "0"))
+    MESSAGE(FATAL_ERROR "${_cmd} failed!")
+ENDIF ()
 
 SET (MOVE_C move_funcs_maps.c)
 SET (MOVE_H move_funcs_maps.h)
@@ -315,7 +322,11 @@ IF (NOT "${FCS_DISABLE_MOVES_TRACKING}")
 ENDIF ()
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
     SET (pp_dir "${CMAKE_CURRENT_SOURCE_DIR}/${p_dir}")
-    EXECUTE_PROCESS(COMMAND "python3" "${pp_dir}/param.py" "${pp_dir}/param.dat")
+    SET (cmd "python3" "${pp_dir}/param.py" "${pp_dir}/param.dat")
+    EXECUTE_PROCESS(COMMAND ${cmd} RESULT_VARIABLE _retcode)
+    IF (NOT ("${_retcode}" STREQUAL "0"))
+        MESSAGE(FATAL_ERROR "${cmd} failed!")
+    ENDIF ()
     add_lib_mods(${patsolve_modules})
 ENDIF ()
 IF (NOT "${FCS_USE_PRECOMPILED_CMD_LINE_THEME}")
