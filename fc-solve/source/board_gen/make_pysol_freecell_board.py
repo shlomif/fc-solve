@@ -102,7 +102,6 @@ class MTRandom(RandomBase, random2.Random):
 
 class Columns:
     def __init__(self, num):
-        self.num = num
         self.cols = [[] for _ in range(num)]
 
     def add(self, idx, card):
