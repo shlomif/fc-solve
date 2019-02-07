@@ -562,7 +562,7 @@ Freecell in Java.
 <p>
 <a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">Solver
 for “Black Hole” Solitaire</a> - a solver for the patience games
-“Black Hole” and “All in a Row” in C (originally in Perl 5) by the same
+“Golf”, “Black Hole”, and “All in a Row” in C (originally in Perl 5) by the same
 author as Freecell Solver.
 </p>
 </li>
@@ -658,6 +658,14 @@ wikipedia page had support for Freecell programmed by its users.
 <a href="https://github.com/boundedvariation/Freecell">Haskell freecell
 library</a> - contains a solver. Expat licence. Also see
 <a href="https://www.reddit.com/r/haskell/comments/2dkspq/haskell_freecell_library/">a Reddit discussion</a> about it.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://www.kde.org/applications/games/kpatience">KPatience / kpat</a> - contains
+solvers for some patience variants derived from a forked version of patsolve.
+Can be used from the command line by writing <code>./kpat --start 1 --end 32000 --solve 12</code> where the argument after "--solve" is the variant ID. Open source under GPLv2.
 </p>
 </li>
 
