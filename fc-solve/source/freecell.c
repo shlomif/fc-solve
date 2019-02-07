@@ -154,7 +154,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                 deck * 4 + fcs_card_suit(card));
 
             sfs_check_state_end();
-#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+// #ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#if 0
             return;
 #else
             break;
@@ -167,10 +168,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 #ifdef FCS_BREAK_BACKWARD_COMPAT_2
 #define RAR2
 #endif
-/*
- * This test moves single cards that are present in the freecells to
- * the foundations.
- * */
+// This test moves single cards that are present in the freecells to
+// the foundations.
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
 {
     tests_define_accessors_no_stacks(tests_state_context_val);
@@ -209,7 +208,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
                 deck * 4 + fcs_card_suit(card));
 
             sfs_check_state_end();
-#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+// #ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#if 0
             return;
 #else
             break;
