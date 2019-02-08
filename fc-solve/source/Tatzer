@@ -113,6 +113,7 @@ my $build_type = "debug";
 my $generate_what;
 my $google_stack_storage;
 my $google_state_storage;
+my $cmdl_compile;
 
 sub set_both
 {
@@ -172,6 +173,8 @@ my %themes = (
     ],
     extra_speed3 =>
         [qw(-l extra_speed2 --no-without-max-num-states --nohard-code-theme)],
+    ten_mil_bench =>
+        [qw(-l extra_speed2 --no-without-max-num-states --cmdline-compile)],
 
     # Role for enabling the pseudo-DFS solver
     pdfs       => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
@@ -306,7 +309,8 @@ if ( $ENV{VERBOSE} )
 }
 
 GetOptions(
-    'd|debug' => sub {
+    'cmdline-compile!' => \$cmdl_compile,
+    'd|debug'          => sub {
         my ( $opt, $val ) = @_;
         if ($val)
         {
@@ -482,6 +486,11 @@ my @cmd = (
 if ( defined($path_to_source_dir) )
 {
     push @cmd, $path_to_source_dir;
+}
+
+if ($cmdl_compile)
+{
+    system( $^X, "../scripts/cmd-line-compiler", "compile", "-mi", "700000" );
 }
 
 print( join( " ", @cmd ), "\n" );

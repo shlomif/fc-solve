@@ -80,6 +80,10 @@ EOF
                 }->{ shift(@_) };
             },
         },
+        '-mi' => {
+            f => 'freecell_solver_user_limit_iterations_long',
+            p => sub { return int(shift) . "L"; },
+        },
         '-seed' => {
             f => 'freecell_solver_user_set_random_seed',
             p => sub { return shift; },
@@ -127,8 +131,10 @@ EOF
             my @pre   = map { [ split /\@/, $_ ] } split /,/, $param;
             $out .= <<"EOF";
 {
-    static const fc_solve_prelude_item prelude[@{[scalar @pre]}] = {@{[join ",", map { "{.quota = $_->[0], .scan_idx = " . $names{$_->[1]} . '}' } @pre]}};
-    $f(instance, @{[scalar @pre]}, prelude);
+    #define PRELUDE_LEN @{[scalar @pre]}
+    static const fc_solve_prelude_item prelude[PRELUDE_LEN] = {@{[join ",", map { "{.quota = $_->[0], .scan_idx = " . $names{$_->[1]} . '}' } @pre]}};
+    $f(instance, PRELUDE_LEN, prelude);
+    #undef PRELUDE_LEN
 }
 EOF
         }
@@ -140,7 +146,7 @@ EOF
         elsif ( $s eq '-asw' )
         {
             my $param = $expanded->[ ++$i ];
-            my @vals = split /,/, $param;
+            my @vals  = split /,/, $param;
             while ( my ( $pos, $v ) = each @vals )
             {
                 $out .=
@@ -166,6 +172,7 @@ compile_cmd_line(
         argv => [
             '--read-from-file',
             "4,$ENV{FCS_SRC_PATH}/../scripts/TEST_OPTIMIZATIONS/lg-mod1.sh",
+            @ARGV[ 1 .. $#ARGV ],
         ],
         name   => 'obf',
         out_fn => 'fc_solve__precompiled__theme.h',
