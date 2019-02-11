@@ -59,3 +59,10 @@ export function fc_solve__chart_bind(chart_selector: string, plot): void {
         }
     });
 }
+export function fc_solve__get_fields(chart_selector: string): number[][] {
+    const lines = $(chart_selector)
+        .text()
+        .split("\n");
+    lines.shift();
+    return lines.map((l) => l.split("\t").map(parseFloat));
+}
