@@ -7,13 +7,17 @@ import {
 import "./jquery.flot";
 
 export function chart_data(data_selector: string, chart_selector: string) {
-    const series = [];
-    for (const fields of fc_solve__get_fields(data_selector)) {
-        series.push([fields[0], fields[1]]);
-    }
     const plot = $.plot(
         $(chart_selector),
-        [{ data: series, label: "queue-items(iters)" }],
+        [
+            {
+                data: fc_solve__get_fields(data_selector).map((fields) => [
+                    fields[0],
+                    fields[1],
+                ]),
+                label: "queue-items(iters)",
+            },
+        ],
         PLOT_PARAMS,
     );
 
