@@ -1078,8 +1078,19 @@ export function test_fcs_validate(QUnit: any) {
     QUnit.test(
         "verify_state BoardParseResult line prefix variants",
         (a: Assert) => {
-            const foundations_prefixes = ["Foundations:", "Founds:", "FOUNDS:"];
-            const freecells_prefixes = ["Freecells:", "FC:"];
+            const foundations_prefixes = [
+                "Foundations:",
+                "Founds:",
+                "FOUNDS:",
+                "founds:",
+            ];
+            const freecells_prefixes = [
+                "Freecells:",
+                "FC:",
+                "Fc:",
+                "fc:",
+                "freecells:",
+            ];
             const comments_prefixes = [
                 "",
                 "# A comment\n    # An indented comment\n",

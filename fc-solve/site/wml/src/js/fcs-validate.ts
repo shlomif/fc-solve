@@ -522,8 +522,8 @@ class FoundationsParseResult extends BaseResult {
     }
 }
 
-const foundations_prefix_re = /^((?:Foundations|Founds|FOUNDS)\:)/;
-const freecells_prefix_re = "(?:Freecells|FC|Fc)";
+const foundations_prefix_re = /^((?:Foundations|Founds|FOUNDS|founds)\:)/;
+const freecells_prefix_re = "(?:Freecells|FC|Fc|fc|freecells)";
 export function fcs_js__foundations_from_string(
     num_decks: number,
     start_char_idx: number,
