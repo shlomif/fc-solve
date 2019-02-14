@@ -9,7 +9,9 @@
 
 import sys
 
-from make_pysol_freecell_board import LCRandom31, find_index_main
+from make_pysol_freecell_board import find_index_main
+
+from pysol_cards.random import LCRandom31
 
 from six.moves import range
 
