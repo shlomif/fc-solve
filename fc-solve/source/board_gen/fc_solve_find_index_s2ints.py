@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
 #
-# make_pysol_freecell_board.py - generate PySol's solitaire deals.
-#
 # Copyright by Shlomi Fish, 2018
 #
 # Licensed under the MIT/Expat License.
