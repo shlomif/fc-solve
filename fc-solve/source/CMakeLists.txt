@@ -1090,15 +1090,26 @@ IF(ASCIIDOC_FOUND)
     ADD_DEPENDENCIES("${_master_pdf_target}" ${_pdf_targets})
 
     SET (_out "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.xml")
+    SET (_out_asc "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.txt")
     SET (_manpage "${fc_solve_manpage}")
 
+    IF ()
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${_manpage}"
+            COMMAND "xsltproc" "--output" "${_manpage}"
+                "--nonet" "/etc/asciidoc/docbook-xsl/manpage.xsl"
+                 "${_out}"
+            DEPENDS "${_out}"
+            COMMENT "Build man page ${_out}"
+        )
+    ENDIF ()
     ADD_CUSTOM_COMMAND(
         OUTPUT "${_manpage}"
-        COMMAND "xsltproc" "--output" "${_manpage}"
-            "--nonet" "/etc/asciidoc/docbook-xsl/manpage.xsl"
-             "${_out}"
-        DEPENDS "${_out}"
-        COMMENT "Build man page ${_out}"
+        COMMAND "${ASCIIDOC_EXECUTABLE}" "-o" "${_manpage}"
+            "--backend" "manpage"
+             "${_out_asc}"
+        DEPENDS "${_out_asc}"
+        COMMENT "Build man page ${_out_asc}"
     )
 
     ADD_CUSTOM_TARGET("fc_solve_man" ALL echo -n
