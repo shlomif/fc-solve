@@ -551,7 +551,7 @@ IF (BUILD_STATIC_LIBRARY)
     )
     # See https://en.wikipedia.org/wiki/Reproducible_builds
     # https://reproducible-builds.org/ .
-    SET(_determinstic_build TRUE)
+    SET(_determinstic_build $ENV{REPRODUCIBLE_BUILDS})
     IF (_determinstic_build)
         SET(CMAKE_RANLIB ":")
         SET_TARGET_PROPERTIES(
