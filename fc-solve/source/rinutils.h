@@ -13,7 +13,11 @@
 #include <limits.h>
 #include <stdint.h>
 #include <time.h>
-#ifdef __unix__
+#if defined(__unix__) || defined(__unix) ||                                    \
+    (defined(__APPLE__) && defined(__MACH__))
+#define FCS_UNIX
+#endif
+#ifdef FCS_UNIX
 #include <unistd.h>
 #endif
 

@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 #include "rinutils.h"
-#ifdef __unix__
+#ifdef FCS_UNIX
 #include <fcntl.h>
 #endif
 
@@ -216,7 +216,7 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
     char page_filename[PATH_MAX + 1];
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
-#ifdef __unix__
+#ifdef FCS_UNIX
     const int f = open(page_filename, O_RDONLY);
     read(f, page->data, sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
     close(f);
@@ -241,7 +241,7 @@ static inline void fcs_offloading_queue_page__offload(
     char page_filename[PATH_MAX + 1];
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
-#ifdef __unix__
+#ifdef FCS_UNIX
     const int f = creat(page_filename, 0644);
     write(f, page->data, sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
     close(f);
