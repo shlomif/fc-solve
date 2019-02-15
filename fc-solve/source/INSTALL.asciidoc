@@ -26,16 +26,20 @@ Or:
 
     ccmake .            # For the Curses-based configuration applet
 
-With a fallback to:
+Or:
 
     cmake .             # Non-interactive application.
 
-This will build and install the "freecell-solver" shared library,
-and "fc-solve" which is the Freecell Solver executable for you.
+And follow any of those with +make+ and +make install+ or similar.
 
-It will also build and install the board generation program. More
+This will build and install the "freecell-solver" shared library,
+and "fc-solve" which is the Freecell Solver executable.
+
+It will also build and install the board generation programs. More
 information about them can be found in the "board_gen" sub-directory of
 this distribution.
+
+For more information about CMake, see https://github.com/onqtam/awesome-cmake .
 
 [id="changing_limits"]
 Changing the Maximal number of Freecells or Stacks or Cards per Stack
