@@ -80,10 +80,6 @@ EOF
                 }->{ shift(@_) };
             },
         },
-        '-mi' => {
-            f => 'freecell_solver_user_limit_iterations_long',
-            p => sub { return int(shift) . "L"; },
-        },
         '-seed' => {
             f => 'freecell_solver_user_set_random_seed',
             p => sub { return shift; },
@@ -123,6 +119,16 @@ EOF
         {
             my $param = $expanded->[ ++$i ];
             $out .= "$rec->{f}(instance," . $rec->{p}->($param) . ");\n";
+        }
+        elsif ( $s eq '-mi' )
+        {
+            my $param = int( $expanded->[ ++$i ] );
+            my $f     = 'freecell_solver_user_limit_iterations_long';
+            $out .= <<"EOF";
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+freecell_solver_user_limit_iterations_long(instance, ${param}L);
+#endif
+EOF
         }
         elsif ( $s eq '--prelude' )
         {
