@@ -4,6 +4,21 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2018-07-24
 :Revision: $Id$
 
+Version 5.2.0: (20-Feb-2019)
+----------------------------
+
+1. Extract most of the python board generation logic into
+https://pypi.org/project/pysol-cards/ . Added support for dealing
+https://en.wikipedia.org/wiki/Golf_(patience) and other games.
+
+2. Add "--max-num-states" to the dbm solvers.
+
+3. Better portability to macOS.
+
+4. Fixes for google densehash.
+
+5. Cleanups and optimisations.
+
 Version 5.0.0: (27-Oct-2018)
 ----------------------------
 
