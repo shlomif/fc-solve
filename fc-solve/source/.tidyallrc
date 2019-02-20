@@ -1,5 +1,5 @@
 [ClangFormat]
-ignore = asprintf-1.0/* patsolve/patsolve/Rejects/* patsolve/patsolve/ga/* fcs-libavl/* sys/tree.h xxHash-wrapper/*/*
+ignore = build/**/* asprintf-1.0/* patsolve/patsolve/Rejects/* patsolve/patsolve/ga/* fcs-libavl/* sys/tree.h xxHash-wrapper/*/*
 select = **/*.{c,cpp,h,hpp}
 
 [PerlTidy]
