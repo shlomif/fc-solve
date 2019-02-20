@@ -200,6 +200,7 @@ CVS
 Calahan
 Callan
 CheckResults
+Cleanups
 CouchDB
 Cylab
 DEBUG_STATES
@@ -1206,19 +1207,28 @@ uppercase
 val
 x09
 
+==== In: dest/docs/distro/INSTALL.html
+
+awesome-cmake
+onqtam
+
 ==== In: dest/docs/distro/NEWS.html
 
+--max-num-states
 2G
 ABI
 DD-MMM-YYYY
+Golf_
 PACKAGE_VERSION
 appveyor
 asciidoc
 cffi
 ci
 cyan4973
+dbm
 dbm-solver
 dbm-solver-__int128-optimisation
+densehash
 depth_dbm_fc_solve
 depth_dbm_solver
 fc-pro-range-solver
@@ -1230,7 +1240,9 @@ int128
 int128-optimisation
 io
 libGMP
+macOS
 obf
+pysol-cards
 solution_moves
 transpose-freecell-board
 userland
