@@ -152,7 +152,7 @@ export function FC_Solve_init_wrappers_with_module(Module) {
     );
 
     fc_solve_Pointer_stringify = (ptr) => {
-        return Module.Pointer_stringify(ptr);
+        return Module.UTF8ToString(ptr, 10000);
     };
     fc_solve_FS_writeFile = (p1, p2, p3) => {
         return Module.FS.writeFile(p1, p2, p3);

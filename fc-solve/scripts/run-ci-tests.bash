@@ -8,6 +8,15 @@
 set -e
 set -x
 set -o pipefail
+emsdk_path="`pwd`/../emsdk"
+git clone https://github.com/emscripten-core/emsdk "$emsdk_path"
+a="`pwd`"
+cd "$emsdk_path"
+./emsdk update-tags
+./emsdk install latest
+./emsdk activate latest
+. "emsdk_env.sh"
+cd "$a"
 export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 SKIP_SPELL_CHECK=1
 which dbtoepub
 export DBTOEPUB="/usr/bin/ruby $(which dbtoepub)"

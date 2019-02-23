@@ -288,7 +288,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                 }
                 my $run = sub {
                     my ($args) = @_;
-                    unshift @$args, 'make', 'SKIP_EMCC=1',
+                    unshift @$args, 'make',
                         ( $ENV{DBTOEPUB} ? "DBTOEPUB=\"$ENV{DBTOEPUB}\"" : () ),
                         (
                         $ENV{DOCBOOK5_XSL_STYLESHEETS_PATH}
