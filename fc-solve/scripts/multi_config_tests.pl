@@ -286,7 +286,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                     }
                     exit(-1);
                 }
-                my $run = sub {
+                my $run_make = sub {
                     my ($args) = @_;
                     unshift @$args, 'make',
                         ( $ENV{DBTOEPUB} ? "DBTOEPUB=\"$ENV{DBTOEPUB}\"" : () ),
@@ -310,10 +310,10 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                         }
                     );
                 };
-                $run->( [] );
+                $run_make->( [] );
                 if ( not $args->{do_not_test} )
                 {
-                    $run->( ['test'] );
+                    $run_make->( ['test'] );
                 }
             }
         );
