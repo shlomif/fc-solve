@@ -21,6 +21,7 @@ before_install:
     # For wml
     - cpanm --notest Bit::Vector Carp::Always Class::XSAccessor File::Which GD Getopt::Long IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
     - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
+    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'libtap' 'https://github.com/shlomif/libtap-prev.git'
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
     - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
@@ -35,7 +36,6 @@ install:
     - (cd fc-solve/site/wml/ && perl bin/my-cookiecutter.pl && deps-app plinst -i bin/common-required-deps.yml -i bin/required-modules.yml )
     - cpanm --quiet --notest Code::TidyAll::Plugin::ClangFormat Task::FreecellSolver::Testing
     - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
-    - (cd .. && wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2 && tar -xvf libtap-1.12.0.tar.bz2 && ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install ) ; )
     - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
 perl:
     - "5.24"
