@@ -138,12 +138,9 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                     }
                 }
 #endif
-                /*
-                 * a will be incremented so it should be -1 here -
-                 * at the end of the token/expression.
-                 *
-                 * */
-                i = close_paren - string;
+                // a will be incremented so it should be -1 here -
+                // at the end of the token/expression.
+                i = (size_t)(close_paren - string);
             }
 #ifndef FCS_UNSAFE
             is_group = FALSE;
@@ -179,7 +176,7 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
 
         moves_order->groups[moves_order->num - 1]
             .move_funcs[moves_order->groups[moves_order->num - 1].num++]
-            .idx = fc_solve_string_to_move_num(string[i]);
+            .idx = (uint_fast32_t)fc_solve_string_to_move_num(string[i]);
 #ifndef FCS_UNSAFE
         is_start_group = FALSE;
 #endif

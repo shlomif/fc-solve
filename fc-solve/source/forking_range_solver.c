@@ -114,7 +114,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         const char *param;
         if ((param = TRY_P("--num-workers")))
         {
-            num_workers = atoi(param);
+            num_workers = (size_t)atoi(param);
         }
         else if ((param = TRY_P("--worker-step")))
         {

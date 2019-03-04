@@ -32,7 +32,7 @@ typedef struct
     int num_freecells;
     size_t num_columns;
     fcs_state *init_state, *derived_state;
-    int bits_per_orig_cards_in_column;
+    size_t bits_per_orig_cards_in_column;
     int card_states[CARD_ARRAY_LEN];
     int8_t bakers_dozen_topmost_cards_lookup[((1 << 6) / 8) + 1];
     fcs_var_base_reader r;
@@ -47,7 +47,7 @@ typedef struct
     size_t num_freecells;
     size_t num_columns;
     fcs_state *init_state, *derived_state;
-    int bits_per_orig_cards_in_column;
+    size_t bits_per_orig_cards_in_column;
 } fcs_delta_stater;
 #endif
 

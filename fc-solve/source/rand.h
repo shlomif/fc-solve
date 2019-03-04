@@ -19,9 +19,9 @@ extern "C" {
 typedef long fcs_rand_gen;
 
 static inline void fc_solve_rand_init(
-    fcs_rand_gen *const my_rand, const unsigned int seed)
+    fcs_rand_gen *const my_rand, const fcs_rand_gen seed)
 {
-    *my_rand = (long)seed;
+    *my_rand = seed;
 }
 
 static inline int fc_solve_rand_rand15(fcs_rand_gen *const my_rand)

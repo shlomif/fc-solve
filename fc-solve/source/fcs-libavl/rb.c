@@ -304,10 +304,10 @@ rb_delete (struct rb_table *tree, const void *item)
   for (cmp = -1; cmp != 0;
        cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param))
     {
-      int dir = cmp > 0;
+      bool dir = cmp > 0;
 
       pa[k] = p;
-      da[k++] = dir;
+      da[k++] = (unsigned char)dir;
 
       p = rb_process_link(p->rb_mylink[dir]);
       if (p == NULL)

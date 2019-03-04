@@ -53,13 +53,13 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
     }
 
 #define pos (pos_proto.s)
-    int virtual_stack_len[8];
+    stack_i virtual_stack_len[8];
     const int num_back_end_moves = moves_seq->num_moves;
     var_PTR(next_move_ptr, moves_seq->moves - 1);
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
     ret->next_move_idx = 0;
-    for (int i = 0; i < 8; ++i)
+    for (stack_i i = 0; i < 8; ++i)
     {
         virtual_stack_len[i] = fcs_state_col_len(pos, i);
     }
@@ -168,14 +168,14 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         {
             const_AUTO(src, fcs_move_get_src_freecell(move));
             const_AUTO(dest, fcs_move_get_dest_stack(move));
-            int num_cards = fcs_move_get_num_cards_in_seq(move);
+            stack_i num_cards = fcs_move_get_num_cards_in_seq(move);
             var_AUTO(src_col, fcs_state_get_col(pos, src));
             var_AUTO(dest_col, fcs_state_get_col(pos, dest));
-            const int src_len = fcs_col_len(src_col);
+            const stack_i src_len = fcs_col_len(src_col);
             assert(virtual_stack_len[src] >= src_len);
             if (virtual_stack_len[src] > src_len)
             {
-                const int virt_num_cards =
+                const stack_i virt_num_cards =
                     min((virtual_stack_len[src] - src_len), num_cards);
                 virtual_stack_len[src] -= virt_num_cards;
                 virtual_stack_len[dest] += virt_num_cards;

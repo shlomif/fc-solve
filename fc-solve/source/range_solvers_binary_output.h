@@ -113,8 +113,8 @@ static inline void bin_init(fcs_binary_output *const bin,
                     "Could not open \"%s\" for writing!\n", bin->filename);
             }
 
-            print_int(bin, *start_board_ptr);
-            print_int(bin, *end_board_ptr);
+            print_int(bin, (int)*start_board_ptr);
+            print_int(bin, (int)*end_board_ptr);
             print_int(bin, (int)(*total_iterations_limit_per_board_ptr));
         }
         else

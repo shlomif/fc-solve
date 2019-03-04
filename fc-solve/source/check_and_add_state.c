@@ -20,9 +20,9 @@
   */
 static inline void fc_solve_hash_rehash(hash_table *const hash)
 {
-    const int old_size = hash->size;
+    const_AUTO(old_size, hash->size);
 
-    const int new_size = old_size << 1;
+    const_AUTO(new_size, old_size << 1);
 
     /* Check for overflow. */
     if (new_size < old_size)
@@ -31,21 +31,21 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
         return;
     }
 
-    const int new_size_bitmask = new_size - 1;
+    const size_t new_size_bitmask = new_size - 1;
 
     const_SLOT(entries, hash);
     hash_table_entry *const new_entries =
         calloc(new_size, sizeof(new_entries[0]));
 
     /* Copy the items to the new hash while not allocating them again */
-    for (int i = 0; i < old_size; i++)
+    for (size_t i = 0; i < old_size; i++)
     {
         hash_item *item = entries[i].first_item;
         /* traverse the chain item by item */
         while (item != NULL)
         {
             /* The place in the new hash table */
-            const int place = item->hash_value & new_size_bitmask;
+            const size_t place = item->hash_value & new_size_bitmask;
 
             /* Store the next item in the linked list in a safe place,
                so we can retrieve it after the assignment */
@@ -246,7 +246,7 @@ static inline void fc_solve_cache_stacks(
         }
 
         var_AUTO(column, fcs_state_get_col(*(new_state_key), i));
-        const int col_len = (fcs_col_len(column) + 1);
+        const size_t col_len = (fcs_col_len(column) + 1);
 
         fcs_cards_column new_ptr =
             (fcs_cards_column)fcs_compact_alloc_ptr(stacks_allocator, col_len);

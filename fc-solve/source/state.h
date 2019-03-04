@@ -48,6 +48,7 @@ extern "C" {
     ((FCS_S_SCAN_VISITED(ptr_state))[(scan_id) >> FCS_CHAR_BIT_SIZE_LOG2] &    \
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1))))
 
+typedef uint_fast16_t stack_i;
 typedef uint8_t fcs_card;
 typedef fcs_card *fcs_cards_column;
 typedef const fcs_card *fcs_const_cards_column;
@@ -166,7 +167,7 @@ typedef uint8_t fcs_locs_type;
 #define fcs_card_is_empty(card) ((card) == 0)
 #define fcs_card_is_valid(card) ((card) != 0)
 
-static inline fcs_card fcs_make_card(const int rank, const int suit)
+static inline fcs_card fcs_make_card(const fcs_card rank, const fcs_card suit)
 {
     return (fcs_card)((((fcs_card)rank) << 2) | ((fcs_card)suit));
 }
@@ -179,8 +180,8 @@ static inline fcs_card fcs_make_card(const int rank, const int suit)
 #define fcs_state_col_len(s, i) fcs_col_len(fcs_state_get_col((s), (i)))
 #define fcs_state_col_is_empty(s, i) (fcs_state_col_len((s), (i)) == 0)
 
-#define fcs_card_rank(card) ((card) >> 2)
-#define fcs_card_suit(card) ((card)&0x03)
+#define fcs_card_rank(card) ((card) >> 2U)
+#define fcs_card_suit(card) ((card)&0x03U)
 
 static inline fcs_card fcs_col_get_rank(
     const fcs_const_cards_column col, const int card_idx)
@@ -195,7 +196,7 @@ static inline bool fcs_card_is_king(const fcs_card card)
 }
 
 static inline bool fcs_col_is_king(
-    const fcs_const_cards_column col, const int card_idx)
+    const fcs_const_cards_column col, const stack_i card_idx)
 {
     return fcs_card_is_king(fcs_col_get_card(col, card_idx));
 }
@@ -485,7 +486,7 @@ extern void fc_solve_card_stringify(
  * The suit letter may come somewhat after the beginning of the string.
  *
  * */
-static inline __attribute__((pure)) int fcs_str2suit(const char *suit)
+static inline __attribute__((pure)) fcs_card fcs_str2suit(const char *suit)
 {
     while (TRUE)
     {
@@ -513,7 +514,7 @@ static inline __attribute__((pure)) int fcs_str2suit(const char *suit)
  * the program.
  * */
 
-static inline __attribute__((pure)) int fcs_str2rank(const char *string)
+static inline __attribute__((pure)) fcs_card fcs_str2rank(const char *string)
 {
     while (1)
     {
@@ -724,7 +725,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
 
                 fcs_put_card_in_freecell(out, c,
                     ((*str == '*') || (*str == '-')) ? fc_solve_empty_card : ({
-                        const char rank = fcs_str2rank(str);
+                        const fcs_card rank = fcs_str2rank(str);
                         if (!rank)
                         {
                             return FALSE;
@@ -748,7 +749,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
         if (new_str2)
         {
             str = new_str2;
-            for (size_t f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); f_idx++)
+            for (size_t f_idx = 0; f_idx < (DECKS_NUM__VAL << 2); ++f_idx)
             {
                 fcs_set_foundation(out, f_idx, 0);
             }
@@ -760,7 +761,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
                     ++str;
                 if ((*str == '\n') || (*str == '\r'))
                     break;
-                const int f_idx = fcs_str2suit(str);
+                const size_t f_idx = fcs_str2suit(str);
                 ++str;
                 while (*str == '-')
                     ++str;
@@ -913,7 +914,8 @@ static inline state_validity_ret fc_solve_check_state_validity(
         {
             if (card_counts[suit_idx][rank] != DECKS_NUM__VAL)
             {
-                *misplaced_card = fcs_make_card(rank, suit_idx);
+                *misplaced_card =
+                    fcs_make_card((fcs_card)rank, (fcs_card)suit_idx);
                 return ((card_counts[suit_idx][rank] < DECKS_NUM__VAL)
                             ? FCS_STATE_VALIDITY__MISSING_CARD
                             : FCS_STATE_VALIDITY__EXTRA_CARD);
@@ -989,7 +991,7 @@ static inline int fc_solve_stack_compare_for_comparison(
 #endif
 
 static inline void set_scan_visited(
-    fcs_collectible_state *const ptr_state, const int scan_id)
+    fcs_collectible_state *const ptr_state, const size_t scan_id)
 {
     (FCS_S_SCAN_VISITED(ptr_state))[scan_id >> FCS_CHAR_BIT_SIZE_LOG2] |=
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1)));
@@ -1037,7 +1039,7 @@ static inline bool fcs_is_parent_card__helper(const fcs_card child,
     }
 
 static inline void fcs_col_transfer_cards(
-    fcs_cards_column dest_col, fcs_cards_column src_col, const int cards_num)
+    fcs_cards_column dest_col, fcs_cards_column src_col, const size_t cards_num)
 {
     fcs_card *const src_cards_ptr =
         &fcs_col_get_card(src_col, (fcs_col_len(src_col) -= cards_num));
@@ -1049,7 +1051,7 @@ static inline void fcs_col_transfer_cards(
 }
 
 static inline fcs_card fcs_state_pop_col_card(
-    fcs_state *const state, const int col_idx)
+    fcs_state *const state, const stack_i col_idx)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_card ret;
@@ -1058,14 +1060,14 @@ static inline fcs_card fcs_state_pop_col_card(
 }
 
 static inline void fcs_state_pop_col_top(
-    fcs_state *const state, const int col_idx)
+    fcs_state *const state, const size_t col_idx)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_pop_top(col);
 }
 
 static inline void fcs_state_push(
-    fcs_state *const state, const int col_idx, const fcs_card card)
+    fcs_state *const state, const size_t col_idx, const fcs_card card)
 {
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_push_card(col, card);

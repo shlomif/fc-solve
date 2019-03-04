@@ -294,8 +294,8 @@ static bool populate_instance_with_intermediate_input_line(
 
         const_AUTO(move, (fcs_fcc_move)hex_digits);
         /* Apply the move. */
-        int src = (move & 0xF);
-        int dest = ((move >> 4) & 0xF);
+        stack_i src = (move & 0xF);
+        stack_i dest = ((move >> 4) & 0xF);
 
 #define the_state (running_state.s)
         // Extract the card from the source.
@@ -475,14 +475,14 @@ static bool handle_and_destroy_instance_solution(
                     }
                 }
 #else
-                int trace_num;
+                size_t trace_num;
                 fcs_encoded_state_buffer *trace;
                 calc_trace(token, &trace, &trace_num);
 
 // We stop at 1 because the deepest state does not contain a move (as it is the
 // ultimate state).
 #define PENULTIMATE_DEPTH 1
-                for (int i = trace_num - 1; i >= PENULTIMATE_DEPTH; i--)
+                for (int i = (int)trace_num - 1; i >= PENULTIMATE_DEPTH; i--)
                 {
                     fprintf(out_fh, "%.2X,",
                         get_move_from_parent_to_child(
@@ -615,7 +615,7 @@ int main(int argc, char *argv[])
 #ifdef HAVE_GETLINE
             while (getline(&line, &line_size, intermediate_in_fh) >= 0)
 #else
-            while (fgets(line, line_size - 1, intermediate_in_fh))
+            while (fgets(line, (int)line_size - 1, intermediate_in_fh))
 #endif
             {
                 if (strchr(line, '|') != NULL)

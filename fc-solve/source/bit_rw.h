@@ -19,7 +19,7 @@ typedef uint8_t fcs_uchar;
 typedef struct
 {
     fcs_uchar *current;
-    int bit_in_char_idx;
+    size_t bit_in_char_idx;
     fcs_uchar *start;
 } fc_solve_bit_writer;
 
@@ -31,7 +31,7 @@ static inline void fc_solve_bit_writer_init(
 }
 
 static inline void fc_solve_bit_writer_write(
-    fc_solve_bit_writer *const writer, int len, fcs_bit_data data)
+    fc_solve_bit_writer *const writer, size_t len, fcs_bit_data data)
 {
     for (; len; len--, (data >>= 1))
     {
@@ -47,7 +47,7 @@ static inline void fc_solve_bit_writer_write(
 typedef struct
 {
     const fcs_uchar *current;
-    int bit_in_char_idx;
+    size_t bit_in_char_idx;
     const fcs_uchar *start;
 } fcs_bit_reader;
 
@@ -59,12 +59,12 @@ static inline void fc_solve_bit_reader_init(
 }
 
 static inline fcs_bit_data fc_solve_bit_reader_read(
-    fcs_bit_reader *reader, int len)
+    fcs_bit_reader *const reader, const size_t len)
 {
     fcs_bit_data ret = 0;
-    for (int idx = 0; idx < len; ++idx)
+    for (size_t idx = 0; idx < len; ++idx)
     {
-        ret |= (((*(reader->current) >> (reader->bit_in_char_idx++)) & 0x1)
+        ret |= (((*(reader->current) >> (reader->bit_in_char_idx++)) & 0x1U)
                 << idx);
 
         if (reader->bit_in_char_idx == NUM_BITS_IN_BYTES)

@@ -328,7 +328,7 @@ static inline int find_empty_col(
     {
         if (fcs_state_col_is_empty(*dynamic_state, i))
         {
-            return i;
+            return (int)i;
         }
     }
 
@@ -344,7 +344,7 @@ static inline int find_col_card(
         const int col_len = fcs_col_len(col);
         if (col_len > 0 && (fcs_col_get_card(col, col_len - 1) == needle))
         {
-            return i;
+            return (int)i;
         }
     }
 
@@ -359,7 +359,7 @@ static inline int find_fc_card(const fcs_state *const dynamic_state,
     {
         if (fcs_freecell_card(*dynamic_state, dest) == needle)
         {
-            return dest;
+            return (int)dest;
         }
     }
 
@@ -414,15 +414,15 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
         FCS_STATE__DUP_keyval_pair(s_and_info, (instance->state_copy));
 
 #ifndef HARD_CODED_NUM_STACKS
-        const int stacks_num = INSTANCE_STACKS_NUM;
+        const size_t stacks_num = INSTANCE_STACKS_NUM;
 #endif
 #ifndef HARD_CODED_NUM_FREECELLS
-        const int freecells_num = INSTANCE_FREECELLS_NUM;
+        const size_t freecells_num = INSTANCE_FREECELLS_NUM;
 #endif
 
         fcs_state *const s = &(s_and_info.s);
 #ifdef INDIRECT_STACK_STATES
-        for (int i = 0; i < STACKS_NUM__VAL; ++i)
+        for (stack_i i = 0; i < STACKS_NUM__VAL; ++i)
         {
             fcs_copy_stack(
                 s_and_info.s, s_and_info.info, i, indirect_stacks_buffer);
@@ -442,7 +442,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
 #if MAX_NUM_FREECELLS > 0
             case FCS_PATS__TYPE_FREECELL:
             {
-                int src_col_idx;
+                stack_i src_col_idx;
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
                      ++src_col_idx)
                 {
@@ -459,7 +459,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
                     }
                 }
 
-                for (int dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
+                for (stack_i dest = 0; dest < FREECELLS_NUM__VAL; ++dest)
                 {
                     if (fcs_freecell_is_empty(s_and_info.s, dest))
                     {
@@ -543,7 +543,8 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             /* Merge the move stack */
             const fcs_move_stack *const stack = FCS_S_MOVES_TO_PARENT(s1);
             const fcs_internal_move *const moves = stack->moves;
-            for (int move_idx = stack->num_moves - 1; move_idx >= 0; --move_idx)
+            for (long move_idx = (long)stack->num_moves - 1; move_idx >= 0;
+                 --move_idx)
             {
                 fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
             }
@@ -574,6 +575,10 @@ void fc_solve_finish_instance(fcs_instance *const instance)
     g_tree_destroy(instance->tree);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Word_t rc_word;
+#ifdef JERR
+#undef JERR
+#define JERR ((Word_t)(-1))
+#endif
     JHSFA(rc_word, instance->judy_array);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->hash);

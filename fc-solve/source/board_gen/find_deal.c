@@ -30,9 +30,10 @@ long long DLLEXPORT __attribute__((pure)) fc_solve_find_deal_in_range(
 }
 
 #define NUM_CARDS ((4 * 13) - 1)
+typedef uint_fast32_t fcs_find_deal__int;
 typedef struct
 {
-    uint_fast32_t ints[NUM_CARDS];
+    fcs_find_deal__int ints[NUM_CARDS];
     char ret[128];
 } find_deal;
 
@@ -56,7 +57,9 @@ void DLLEXPORT fc_solve_user__find_deal__fill(
     }
     for (size_t i = 0; i < NUM_CARDS; ++i)
     {
-        ret->ints[i] = atol(str + WIDTH * i);
+        char *no_use;
+        ret->ints[i] =
+            (fcs_find_deal__int)strtoul(str + WIDTH * i, &no_use, 10);
     }
 }
 

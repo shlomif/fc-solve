@@ -9,4 +9,5 @@
  */
 // game_type_limit.h: define fcs_game_limit.
 #pragma once
-typedef unsigned char fcs_game_limit;
+#include <stdint.h>
+typedef uint8_t fcs_game_limit;

@@ -89,14 +89,14 @@ typedef struct
 #endif
 
     /* The size of the hash table */
-    int size;
+    size_t size;
 
     /* A bit mask that extract the lowest bits out of the hash value */
-    int size_bitmask;
+    size_t size_bitmask;
     /* The number of elements stored inside the hash */
-    fcs_int_limit_t num_elems;
+    size_t num_elems;
 
-    fcs_int_limit_t max_num_elems_before_resize;
+    size_t max_num_elems_before_resize;
 
     compact_allocator allocator;
 #ifdef FCS_RCS_STATES
@@ -105,7 +105,7 @@ typedef struct
 } hash_table;
 
 static inline void fcs_hash_set_max_num_elems(
-    hash_table *const hash, const fcs_int_limit_t new_size)
+    hash_table *const hash, const size_t new_size)
 {
     hash->max_num_elems_before_resize = (new_size << 1);
 }
@@ -168,7 +168,7 @@ static inline void fc_solve_hash_foreach(hash_table *const hash,
 {
     const_SLOT(size, hash);
     var_AUTO(entries, hash->entries);
-    for (int i = 0; i < size; i++)
+    for (size_t i = 0; i < size; ++i)
     {
         hash_item **item = &(entries[i].first_item);
         while ((*item) != NULL)

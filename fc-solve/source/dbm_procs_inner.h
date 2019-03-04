@@ -109,7 +109,7 @@ static void trace_solution(dbm_solver_instance *const instance,
 /* Now trace the solution */
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_encoded_state_buffer *trace;
-    int trace_num;
+    size_t trace_num;
     fcs_state_keyval_pair state;
     uint8_t move = '\0';
     char move_buffer[500];
@@ -119,7 +119,7 @@ static void trace_solution(dbm_solver_instance *const instance,
     const_AUTO(local_variant, instance->common.variant);
     calc_trace(instance->common.queue_solution_ptr, &trace, &trace_num);
 
-    for (int i = trace_num - 1; i >= 0; i--)
+    for (ssize_t i = (ssize_t)trace_num - 1; i >= 0; i--)
     {
         fc_solve_delta_stater_decode_into_state(
             delta, trace[i].s, &state, indirect_stacks_buffer);

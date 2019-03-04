@@ -28,8 +28,8 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
     const fcs_internal_move move FREECELLS_AND_STACKS_ARGS())
 {
     fcs_cards_column col;
-    const int src = fcs_int_move_get_src(move);
-    const int dest = fcs_int_move_get_dest(move);
+    const stack_i src = fcs_int_move_get_src(move);
+    const stack_i dest = fcs_int_move_get_dest(move);
 
 #define state_key (ptr_state_key)
     switch (fcs_int_move_get_type(move))

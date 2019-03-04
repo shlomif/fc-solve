@@ -10,7 +10,7 @@
 // A test for the delta states routines.
 #include "delta_states_test_common.h"
 
-static fcs_card make_card(int rank, int suit)
+static fcs_card make_card(fcs_card rank, fcs_card suit)
 {
     return fcs_make_card(rank, suit);
 }

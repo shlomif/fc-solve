@@ -153,7 +153,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                     &fc_pro_moves, &pos, 4, &moves_seq);
 
                 num_fcpro_moves =
-                    fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
+                    (int)fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
 
                 if (moves_seq.moves)
                 {

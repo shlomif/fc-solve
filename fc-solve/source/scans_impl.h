@@ -112,9 +112,9 @@ static inline void fc_solve_initialize_befs_rater(
         W(FCS_BEFS_WEIGHT_NUM_CARDS_NOT_ON_PARENTS) / (LOCAL_DECKS_NUM * 52);
 
     weighting->should_go_over_stacks =
-        (weighting->max_sequence_move_factor ||
-            weighting->cards_under_sequences_factor ||
-            weighting->seqs_over_renegade_cards_factor);
+        ((bool)weighting->max_sequence_move_factor ||
+            (bool)weighting->cards_under_sequences_factor ||
+            (bool)weighting->seqs_over_renegade_cards_factor);
 }
 #undef unlimited_sequence_move
 #undef W
@@ -195,7 +195,7 @@ static inline pq_rating befs_rate_state(
         (max(0, negated_depth) * weighting->depth_factor);
     const_PTR(
         num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
-    if (num_cards_out_lookup_table[1])
+    if ((bool)num_cards_out_lookup_table[1])
     {
         const int num_foundations = (LOCAL_DECKS_NUM << 2);
         for (int found_idx = 0; found_idx < num_foundations; ++found_idx)
@@ -256,7 +256,7 @@ static inline pq_rating befs_rate_state(
 
     const fc_solve_weighting_float num_cards_not_on_parents_weight =
         weighting->num_cards_not_on_parents_factor;
-    if (num_cards_not_on_parents_weight)
+    if ((bool)num_cards_not_on_parents_weight)
     {
         int num_cards_not_on_parents = (LOCAL_DECKS_NUM * 52);
         for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
@@ -342,7 +342,7 @@ static inline void calculate_real_depth(
         /* Assign the new depth throughout the path */
         while (FCS_S_DEPTH(temp_state) != this_real_depth)
         {
-            FCS_S_DEPTH(temp_state) = this_real_depth;
+            FCS_S_DEPTH(temp_state) = (int)this_real_depth;
             --this_real_depth;
             temp_state = FCS_S_PARENT(temp_state);
         }

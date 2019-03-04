@@ -179,6 +179,14 @@ IF (FCS_ENABLE_RCS_STATES)
     SET (FCS_RCS_STATES 1)
 ENDIF ()
 
+include(TestBigEndian)
+TEST_BIG_ENDIAN(BIG_ENDIAN)
+IF (BIG_ENDIAN)
+    ADD_DEFINITIONS("-DXXH_CPU_LITTLE_ENDIAN=XXH_bigEndian")
+ELSE ()
+    ADD_DEFINITIONS("-DXXH_CPU_LITTLE_ENDIAN=XXH_littleEndian")
+ENDIF ()
+
 # Clone the patsolve repository with the appropriate branch.
 SET (pats_dir "patsolve")
 
@@ -497,7 +505,8 @@ ENDIF ()
 SHLOMIF_FINALIZE_FLAGS()
 
 IF ("$ENV{FCS_CLANG}")
-    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-format-nonliteral -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-extra-semi -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-conversion -Wno-sign-compare -Wno-overlength-strings -Wno-comma -Wno-disabled-macro-expansion")
+    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-format-nonliteral -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-extra-semi -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-overlength-strings -Wno-comma -Wno-disabled-macro-expansion")
+    # ADD_DEFINITIONS("-Weverything")
 ENDIF ()
 
 IF ("$ENV{FCS_GCC}")

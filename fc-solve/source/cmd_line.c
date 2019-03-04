@@ -182,11 +182,11 @@ static inline __attribute__((format(printf, 1, 2))) char *calc_errstr_s(
 #define PROCESS_OPT_ARG()                                                      \
     if ((++arg) == arg_argc)                                                   \
     {                                                                          \
-        *last_arg = arg - 1 - &(argv[0]);                                      \
+        *last_arg = (int)(arg - 1 - &(argv[0]));                               \
         return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                                 \
     }
 #define RET_ERROR_IN_ARG()                                                     \
-    *last_arg = arg - &(argv[0]);                                              \
+    *last_arg = (int)(arg - &(argv[0]));                                       \
     return FCS_CMD_LINE_ERROR_IN_ARG
 #define RET_ERR_STR(...)                                                       \
     ASSIGN_ERR_STR(__VA_ARGS__);                                               \
@@ -258,7 +258,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (*known_param)
             {
                 int ret, num_to_skip;
-                switch (callback(instance, argc, argv, arg - &(argv[0]),
+                switch (callback(instance, argc, argv, (int)(arg - &(argv[0])),
                     &num_to_skip, &ret, callback_context))
                 {
                 case FCS_CMD_LINE_SKIP:
@@ -266,7 +266,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     goto end_of_arg_loop;
 
                 case FCS_CMD_LINE_STOP:
-                    *last_arg = arg - &(argv[0]);
+                    *last_arg = (int)(arg - &(argv[0]));
                     return ret;
                 }
             }
@@ -282,7 +282,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         switch (opt)
         {
         case FCS_OPT_UNRECOGNIZED:
-            *last_arg = arg - &(argv[0]);
+            *last_arg = (int)(arg - &(argv[0]));
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
 
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
@@ -680,7 +680,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 fseek(f, 0, SEEK_END);
                 const long file_len = ftell(f);
-                char *buffer = SMALLOC(buffer, file_len + 1);
+                char *buffer = SMALLOC(buffer, (size_t)(file_len + 1));
                 if (buffer == NULL)
                 {
                     fclose(f);
@@ -689,7 +689,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                         "to parse the file. Quitting.\n");
                 }
                 fseek(f, 0, SEEK_SET);
-                buffer[fread(buffer, 1, file_len, f)] = '\0';
+                buffer[fread(buffer, 1, (size_t)(file_len), f)] = '\0';
                 fclose(f);
 
                 fcs_args_man args_man = fc_solve_args_man_chop(buffer);
@@ -714,7 +714,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                             (ret == FCS_CMD_LINE_OK)))
                     {
                         /* So we don't give a last_arg to the read file.*/
-                        *last_arg = arg - &(argv[0]);
+                        *last_arg = (int)(arg - &(argv[0]));
                         fc_solve_args_man_free(&args_man);
                         return ret;
                     }
@@ -866,7 +866,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     end_of_arg_loop:;
     }
 
-    *last_arg = arg - &(argv[0]);
+    *last_arg = (int)(arg - &(argv[0]));
     return FCS_CMD_LINE_OK;
 }
 

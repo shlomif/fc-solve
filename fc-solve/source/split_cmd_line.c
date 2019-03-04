@@ -41,7 +41,7 @@ static inline void add_to_last_arg(
     if (manager->last_arg_ptr == manager->last_arg_end)
     {
         char *const new_last_arg = SREALLOC(manager->last_arg,
-            manager->last_arg_end - manager->last_arg + 1024);
+            (size_t)(manager->last_arg_end - manager->last_arg + 1024));
         manager->last_arg_ptr += new_last_arg - manager->last_arg;
         manager->last_arg_end += new_last_arg - manager->last_arg + 1024;
         manager->last_arg = new_last_arg;
@@ -50,7 +50,7 @@ static inline void add_to_last_arg(
 
 static inline void push_args_last_arg(args_man_wrapper *const manager)
 {
-    const int len = manager->last_arg_ptr - manager->last_arg;
+    const size_t len = (size_t)(manager->last_arg_ptr - manager->last_arg);
     char *const new_arg = SMALLOC(new_arg, len + 1);
     strncpy(new_arg, manager->last_arg, len);
     new_arg[len] = '\0';
@@ -60,7 +60,7 @@ static inline void push_args_last_arg(args_man_wrapper *const manager)
     if (!(manager->args_man.argc & (FC_SOLVE__ARGS_MAN_GROW_BY - 1)))
     {
         manager->args_man.argv = SREALLOC(manager->args_man.argv,
-            manager->args_man.argc + FC_SOLVE__ARGS_MAN_GROW_BY);
+            (size_t)(manager->args_man.argc + FC_SOLVE__ARGS_MAN_GROW_BY));
     }
 
     /* Reset last_arg_ptr so we will have an entirely new argument */

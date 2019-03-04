@@ -23,7 +23,8 @@ static void my_iter_handler(void *const user_instance GCC_UNUSED,
     const fc_solve_display_information_context *const dc =
         (const fc_solve_display_information_context *const)context;
     const_SLOT(iters_display_step, dc);
-    if (iters_display_step > 1 && (iter_num % iters_display_step != 0))
+    if (iters_display_step > 1 &&
+        ((unsigned long)iter_num % iters_display_step != 0))
     {
         return;
     }

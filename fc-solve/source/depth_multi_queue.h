@@ -63,8 +63,8 @@ static inline void fcs_depth_multi_queue__insert(
         if (queue->max_depth == queue->max_depth_margin)
         {
             queue->max_depth_margin += DEPTH_Q_GROW_BY;
-            queue->queues_by_depth =
-                SREALLOC(queue->queues_by_depth, queue->max_depth_margin);
+            queue->queues_by_depth = SREALLOC(
+                queue->queues_by_depth, (size_t)queue->max_depth_margin);
         }
         fcs_depth_multi_queue__new_queue(queue,
             &(queue->queues_by_depth[queue->max_depth - queue->min_depth]));
@@ -87,8 +87,8 @@ static inline void fcs_depth_multi_queue__init(
     queue->min_depth = first_depth;
     queue->max_depth_margin = first_depth + DEPTH_Q_GROW_BY;
 
-    queue->queues_by_depth = SMALLOC(
-        queue->queues_by_depth, queue->max_depth_margin - queue->min_depth + 1);
+    queue->queues_by_depth = SMALLOC(queue->queues_by_depth,
+        (size_t)(queue->max_depth_margin - queue->min_depth + 1));
     fcs_depth_multi_queue__new_queue(queue, &(queue->queues_by_depth[0]));
     queue->max_depth = first_depth;
 
@@ -98,7 +98,7 @@ static inline void fcs_depth_multi_queue__init(
 static inline void fcs_depth_multi_queue__destroy(
     fcs_depth_multi_queue *const queue)
 {
-    const int limit = queue->max_depth - queue->min_depth;
+    const long limit = queue->max_depth - queue->min_depth;
     if (queue->queues_by_depth == NULL)
     {
         return;
@@ -126,7 +126,7 @@ static inline bool fcs_depth_multi_queue__extract(
         ++depth;
     }
 
-    *return_depth = depth + queue->min_depth;
+    *return_depth = depth + (int)queue->min_depth;
     fcs_offloading_queue__extract(
         &(queue->queues_by_depth[depth]), return_item);
     q_stats_extract(&queue->stats);

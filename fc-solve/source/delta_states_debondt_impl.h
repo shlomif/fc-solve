@@ -147,7 +147,7 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
 
     fc_solve_delta_stater__init_card_states(self);
 
-    for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
+    for (size_t suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
     {
         const unsigned long rank = fcs_foundation_value(*derived, suit_idx);
 
@@ -161,7 +161,7 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
 #define CARD_STATE(card) self->card_states[CARD_POS(card)]
 #define SET_CARD_STATE(card, opt) CARD_STATE(card) = (opt)
 #define RS_STATE(rank, suit_idx) CARD_STATE(fcs_make_card(rank, suit_idx))
-            RS_STATE(r, suit_idx) = OPT_DONT_CARE;
+            RS_STATE(((fcs_card)r), ((fcs_card)suit_idx)) = OPT_DONT_CARE;
         }
     }
 
@@ -261,12 +261,14 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
         {
-            const unsigned long opt = RS_STATE(rank, suit_idx);
+            const unsigned long opt =
+                (unsigned long)RS_STATE((fcs_card)rank, (fcs_card)suit_idx);
             unsigned long base;
 
             if (IS_BAKERS_DOZEN())
             {
-                const_AUTO(card, fcs_card2char(fcs_make_card(rank, suit_idx)));
+                const_AUTO(card, fcs_card2char(fcs_make_card(
+                                     (fcs_card)rank, (fcs_card)suit_idx)));
 
                 if (self->bakers_dozen_topmost_cards_lookup[card >> 3] &
                     (1 << (card & (8 - 1))))
@@ -306,7 +308,8 @@ static inline void delta_stater__fill_column_with_descendent_cards(
                              : ((fcs_card_suit(parent_card) & (0x1)) ^ 0x1));
              suit < FCS_NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
         {
-            const fcs_card candidate_card = fcs_make_card(candidate_rank, suit);
+            const fcs_card candidate_card =
+                fcs_make_card((fcs_card)candidate_rank, (fcs_card)suit);
 
             if (CARD_STATE(candidate_card) == wanted_opt)
             {
@@ -338,7 +341,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
         for (unsigned long rank = 1; rank <= foundation_rank; ++rank)
         {
-            RS_STATE(rank, suit_idx) = OPT_IN_FOUNDATION;
+            RS_STATE((fcs_card)rank, (fcs_card)suit_idx) = OPT_IN_FOUNDATION;
         }
 
         fcs_set_foundation(*ret, suit_idx, foundation_rank);
@@ -372,7 +375,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
         {
-            const fcs_card card = fcs_make_card(RANK_KING, suit_idx);
+            const fcs_card card = fcs_make_card(RANK_KING, (fcs_card)suit_idx);
 
             if (!IS_IN_FOUNDATIONS(card))
             {
@@ -390,7 +393,8 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
         {
-            const fcs_card card = fcs_make_card(rank, suit_idx);
+            const fcs_card card =
+                fcs_make_card((fcs_card)rank, (fcs_card)suit_idx);
             const_AUTO(card_char, fcs_card2char(card));
 
             if (IS_BAKERS_DOZEN())
@@ -406,13 +410,14 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
                 }
             }
 
-            const int existing_opt = RS_STATE(rank, suit_idx);
+            const int existing_opt =
+                RS_STATE((fcs_card)rank, (fcs_card)suit_idx);
 
             if (rank == 1)
             {
                 if (existing_opt < 0)
                 {
-                    RS_STATE(rank, suit_idx) = orig_pos_opt;
+                    RS_STATE((fcs_card)rank, (fcs_card)suit_idx) = orig_pos_opt;
                 }
             }
             else
@@ -426,7 +431,8 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
                 if (existing_opt < 0)
                 {
-                    RS_STATE(rank, suit_idx) = item_opt;
+                    RS_STATE((fcs_card)rank, (fcs_card)suit_idx) =
+                        (int)item_opt;
 
                     if (!IS_BAKERS_DOZEN())
                     {

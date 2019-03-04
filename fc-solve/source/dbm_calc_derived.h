@@ -55,7 +55,7 @@ static inline void fcs_derived_state_list__recycle(
     *p_list = NULL;
 }
 
-#define MAKE_MOVE(src, dest) ((fcs_fcc_move)((src) | ((dest) << 4)))
+#define MAKE_MOVE(src, dest) ((fcs_fcc_move)((src) | ((dest) << 4U)))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx + 8)
 #define FOUND2MOVE(idx) ((idx) + (8 + 4))
@@ -104,13 +104,13 @@ static inline void fcs_derived_state_list__recycle(
 
 static inline void fc_solve_add_to_irrev_moves_bitmask(
     fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
-    const fcs_card moved_card, const int count)
+    const fcs_card moved_card, const uint_fast32_t count)
 {
     unsigned char *const by_rank_ptr =
         which_irreversible_moves_bitmask->s + fcs_card_rank(moved_card) - 1;
-    const int suit_times_two = (fcs_card_suit(moved_card) << 1);
-    const int new_count =
-        ((((*by_rank_ptr) >> (suit_times_two)) & ((1 << 2) - 1)) + count);
+    const size_t suit_times_two = (fcs_card_suit(moved_card) << 1);
+    const size_t new_count =
+        ((((*by_rank_ptr) >> (suit_times_two)) & ((1U << 2U) - 1U)) + count);
     *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_times_two))));
     *by_rank_ptr |= (new_count << (suit_times_two));
 }
@@ -143,8 +143,8 @@ static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
 {
     FCS_ON_NOT_FC_ONLY(
         const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
-    const int_fast32_t rank = fcs_card_rank(card);
-    const int_fast32_t suit = fcs_card_suit(card);
+    const fcs_card rank = fcs_card_rank(card);
+    const fcs_card suit = fcs_card_suit(card);
     for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
     {
         if (fcs_foundation_value(*ptr_state, (deck << 2) + suit) == rank - 1)
@@ -165,7 +165,7 @@ static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
             }
             if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
             {
-                return (deck << 2) + suit;
+                return (int)((deck << 2) + suit);
             }
         }
     }
@@ -219,7 +219,7 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
     do
     {
         num_cards_moved = 0;
-        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             var_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const int cards_num = fcs_col_len(col);
@@ -248,14 +248,14 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
 
                 fcs_increment_foundation(the_state, dest_foundation);
 
-                additional_moves[count_moves_so_far++] =
-                    MAKE_MOVE(COL2MOVE(stack_idx), FOUND2MOVE(dest_foundation));
+                additional_moves[count_moves_so_far++] = MAKE_MOVE(
+                    COL2MOVE(stack_idx), FOUND2MOVE((stack_i)dest_foundation));
             }
         }
 
 #if MAX_NUM_FREECELLS > 0
         // Now check the same for the free cells
-        for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+        for (stack_i fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
             const fcs_card card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
@@ -272,8 +272,8 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
 
                     fcs_empty_freecell(the_state, fc);
                     fcs_increment_foundation(the_state, dest_foundation);
-                    additional_moves[count_moves_so_far++] =
-                        MAKE_MOVE(COL2MOVE(fc), FOUND2MOVE(dest_foundation));
+                    additional_moves[count_moves_so_far++] = MAKE_MOVE(
+                        COL2MOVE(fc), FOUND2MOVE((stack_i)dest_foundation));
                 }
             }
         }
@@ -338,7 +338,7 @@ static inline int horne_prune__simple(const fcs_dbm_variant_type local_variant,
 }
 
 static inline bool card_cannot_be_placed(const fcs_state *const s,
-    const uint16_t ds, const fcs_card card,
+    const stack_i ds, const fcs_card card,
     const int sequences_are_built_by GCC_UNUSED)
 {
     const_AUTO(col, fcs_state_get_col(*s, ds));
@@ -351,7 +351,7 @@ static inline bool card_cannot_be_placed(const fcs_state *const s,
 static inline bool is_state_solved(
     fcs_state_keyval_pair *const init_state_kv_ptr)
 {
-    for (int suit = 0; suit < DECKS_NUM * 4; suit++)
+    for (stack_i suit = 0; suit < DECKS_NUM * 4; suit++)
     {
         if (fcs_foundation_value(the_state, suit) < RANK_KING)
         {
@@ -370,7 +370,8 @@ static inline bool instance_solver_thread_calc_derived_states(
     const bool perform_horne_prune)
 {
     fcs_derived_state *ptr_new_state;
-    int empty_stack_idx = -1;
+    bool has_empty_stack = false;
+    stack_i empty_stack_idx = 0;
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
 #define new_state (ptr_new_state->state.s)
     if (is_state_solved(init_state_kv_ptr))
@@ -379,19 +380,20 @@ static inline bool instance_solver_thread_calc_derived_states(
     }
 
     /* Move top stack cards to foundations. */
-    for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
         const_AUTO(cards_num, fcs_col_len(col));
         if (cards_num == 0)
         {
             empty_stack_idx = stack_idx;
+            has_empty_stack = true;
             continue;
         }
         /* Get the top card in the stack */
         const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
         const_AUTO(suit, fcs_card_suit(card));
-        for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+        for (stack_i deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
             if (fcs_foundation_value(the_state, deck * 4 + suit) !=
                 fcs_card_rank(card) - 1)
@@ -413,16 +415,16 @@ static inline bool instance_solver_thread_calc_derived_states(
 #if MAX_NUM_FREECELLS > 0
     int empty_fc_idx = -1;
     // Move freecell cards to foundations.
-    for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+    for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; ++fc_idx)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
         if (fcs_card_is_empty(card))
         {
-            empty_fc_idx = fc_idx;
+            empty_fc_idx = (int)fc_idx;
             continue;
         }
         const_AUTO(suit, fcs_card_suit(card));
-        for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+        for (stack_i deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
         {
             if (fcs_foundation_value(the_state, deck * 4 + suit) !=
                 fcs_card_rank(card) - 1)
@@ -446,7 +448,7 @@ static inline bool instance_solver_thread_calc_derived_states(
         ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0);
 
     /* Move stack card on top of a parent */
-    for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
         const_AUTO(cards_num, fcs_col_len(col));
@@ -456,7 +458,7 @@ static inline bool instance_solver_thread_calc_derived_states(
         }
         const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
 
-        for (int ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
+        for (stack_i ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
         {
             if (ds == stack_idx || card_cannot_be_placed(&the_state, ds, card,
                                        sequences_are_built_by))
@@ -476,14 +478,14 @@ static inline bool instance_solver_thread_calc_derived_states(
 
 #if MAX_NUM_FREECELLS > 0
     // Move freecell card on top of a parent
-    for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+    for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
         const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
         if (!fcs_card_is_valid(card))
         {
             continue;
         }
-        for (int ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
+        for (stack_i ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
         {
             if (card_cannot_be_placed(
                     &the_state, ds, card, sequences_are_built_by))
@@ -501,11 +503,10 @@ static inline bool instance_solver_thread_calc_derived_states(
     }
 #endif
 
-    if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) &&
-        (empty_stack_idx >= 0))
+    if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) && has_empty_stack)
     {
         /* Stack Card to Empty Stack */
-        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const_AUTO(cards_num, fcs_col_len(col));
@@ -530,7 +531,7 @@ static inline bool instance_solver_thread_calc_derived_states(
 
 #if MAX_NUM_FREECELLS > 0
         /* Freecell card -> Empty Stack. */
-        for (int fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+        for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
             const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
             if (fcs_card_is_empty(card))
@@ -553,7 +554,7 @@ static inline bool instance_solver_thread_calc_derived_states(
     if (empty_fc_idx >= 0)
     {
         /* Stack Card to Empty Freecell */
-        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const_AUTO(cards_num, fcs_col_len(col));
@@ -568,7 +569,8 @@ static inline bool instance_solver_thread_calc_derived_states(
             fcs_state_pop_col_top(&new_state, stack_idx);
             fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
 
-            COMMIT_NEW_STATE(COL2MOVE(stack_idx), FREECELL2MOVE(empty_fc_idx),
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx),
+                FREECELL2MOVE((stack_i)empty_fc_idx),
                 FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }

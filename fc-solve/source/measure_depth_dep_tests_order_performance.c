@@ -162,7 +162,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
         result *curr_result;
-        int board_num;
+        long long board_num;
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
@@ -190,14 +190,14 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
-            fprintf(output_fh, "board[%d].ret == %d\n", board_num,
+            fprintf(output_fh, "board[%ld].ret == %d\n", (long)board_num,
                 curr_result->verdict);
-            fprintf(output_fh, "board[%d].iters == %ld\n", board_num,
+            fprintf(output_fh, "board[%ld].iters == %ld\n", (long)board_num,
                 (long)curr_result->num_iters);
 
 #define FPRINTF_TIME(label, field)                                             \
-    fprintf(output_fh, "board[%d].%s = " FCS_T_FMT "\n", board_num, label,     \
-        FCS_TIME_GET_SEC(curr_result->field),                                  \
+    fprintf(output_fh, "board[%ld].%s = " FCS_T_FMT "\n", (long)board_num,     \
+        label, FCS_TIME_GET_SEC(curr_result->field),                           \
         FCS_TIME_GET_USEC(curr_result->field));
 
             FPRINTF_TIME("start", start_time);

@@ -12,7 +12,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     if ($g)
     {
         %*ENV{"FCS_GCC"}=1;
-        $seed = $rb ?? 26 !! 20;
+        $seed = $rb ?? 26 !! 1;
     }
     else
     {

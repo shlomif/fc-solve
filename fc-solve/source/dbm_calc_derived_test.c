@@ -61,7 +61,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
         iter = iter->next;
     }
 
-    *(num_out_derived_states) = states_count;
+    *(num_out_derived_states) = (int)states_count;
 
     fcs_derived_state_debug *const debug_ret = SMALLOC(debug_ret, states_count);
     *(out_derived_states) = debug_ret;

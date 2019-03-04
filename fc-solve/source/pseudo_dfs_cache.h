@@ -49,6 +49,10 @@ typedef struct
 static inline void fcs_pdfs_cache_destroy(fcs_pseudo_dfs_lru_cache *const cache)
 {
     Word_t rc_word;
+#ifdef JERR
+#undef JERR
+#define JERR ((Word_t)(-1))
+#endif
     JHSFA(rc_word, cache->states_values_to_keys_map);
     fc_solve_compact_allocator_finish(
         &(cache->states_values_to_keys_allocator));
@@ -122,6 +126,10 @@ static inline fcs_pdfs_cache_key_info *fcs_pdfs_cache_insert(
     {
         cache_key = cache->lowest_pri;
         int rc_int;
+#ifdef JERR
+#undef JERR
+#define JERR ((int)(-1))
+#endif
         JHSD(rc_int, cache->states_values_to_keys_map, &(cache_key->key),
             sizeof(cache_key->key));
 

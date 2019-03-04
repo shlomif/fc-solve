@@ -75,7 +75,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
                 const int rank = fcs_card_rank(card);
 
                 p_by_r[FCS_POS_IDX(rank, suit)] =
-                    (fcs_pos_by_rank){.col = ds, .height = dc};
+                    (fcs_pos_by_rank){.col = (int8_t)ds, .height = (int8_t)dc};
             }
         }
     }
@@ -118,12 +118,13 @@ static inline void fc_solve__calc_positions_by_rank_data(
                     if (!fcs_is_parent_card(dest_below_card, dest_card))
                     {
                         fc_solve__assign_dest_stack_and_col_ptr(
-                            positions_by_rank, ds, dc, dest_card);
+                            positions_by_rank, (int8_t)ds, (int8_t)dc,
+                            dest_card);
                     }
                 }
             }
             fc_solve__assign_dest_stack_and_col_ptr(
-                positions_by_rank, ds, top_card_idx, dest_card);
+                positions_by_rank, (int8_t)ds, (int8_t)top_card_idx, dest_card);
         }
     }
 #undef state_key

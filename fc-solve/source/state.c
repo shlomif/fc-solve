@@ -317,7 +317,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 #if MAX_NUM_FREECELLS > 0
 #ifdef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
         int max_freecell_idx = -1;
-        for (int i = FREECELLS_NUM__VAL - 1; i >= 0; i--)
+        for (int i = (int)FREECELLS_NUM__VAL - 1; i >= 0; i--)
         {
             if (fcs_card_is_valid(fcs_freecell_card(*state, freecell_locs[i])))
             {
@@ -326,7 +326,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
             }
         }
 #else
-        const int max_freecell_idx = FREECELLS_NUM__VAL - 1;
+        const int max_freecell_idx = (int)FREECELLS_NUM__VAL - 1;
 #endif
 
         if (max_freecell_idx >= 0)

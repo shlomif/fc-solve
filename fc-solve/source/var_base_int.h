@@ -22,7 +22,7 @@ typedef unsigned __int128 var_base_int;
 #define FCS_var_base_int__mod_div(i, i_mod, base)                              \
     (i_mod) = (i) % (base);                                                    \
     (i) /= (base)
-#define FCS_var_base_int__get_ui(i) (i)
+#define FCS_var_base_int__get_ui(i) ((unsigned long)(i))
 #define FCS_var_base_int__clear(i)
 #define FCS_var_base_int__addmul_ui(i, i_mult, ul) ((i) += (i_mult) * (ul))
 #define FCS_var_base_int__mul_ui(i, ul) (i) *= (ul)

@@ -223,7 +223,8 @@ static inline void compile_prelude(fcs_hard_thread *const hard_thread)
         }
 #undef PRELUDE_GROW_BY
         prelude[num_items++] = (typeof(prelude[0])){
-            .scan_idx = soft_thread - ht_soft_threads, .quota = p_quota};
+            .scan_idx = (size_t)(soft_thread - ht_soft_threads),
+            .quota = p_quota};
     }
 
     HT_FIELD(hard_thread, prelude) = SREALLOC(prelude, num_items);
@@ -430,8 +431,8 @@ static inline void set_next_prelude_item(fcs_hard_thread *const hard_thread,
 {
     const fc_solve_prelude_item next_item =
         prelude[HT_FIELD(hard_thread, prelude_idx)++];
-    set_next_soft_thread(
-        hard_thread, next_item.scan_idx, next_item.quota, st_idx_ptr);
+    set_next_soft_thread(hard_thread, next_item.scan_idx,
+        (fcs_int_limit_t)next_item.quota, st_idx_ptr);
 }
 
 static inline void update_initial_cards_val(fcs_instance *const instance)
@@ -749,7 +750,8 @@ static inline void setup_opt_thread__helper(
     states in the solution path.
 */
 #ifdef FCS_SINGLE_HARD_THREAD
-static inline int optimize_solution(fcs_instance *const instance)
+static inline fc_solve_solve_process_ret_t optimize_solution(
+    fcs_instance *const instance)
 {
     fcs_soft_thread *const optimization_soft_thread =
         &(instance->optimization_soft_thread);
@@ -785,7 +787,8 @@ static inline int optimize_solution(fcs_instance *const instance)
 }
 #undef soft_thread
 #else
-static inline int optimize_solution(fcs_instance *const instance)
+static inline fc_solve_solve_process_ret_t optimize_solution(
+    fcs_instance *const instance)
 {
     fcs_soft_thread *soft_thread;
     fcs_hard_thread *optimization_thread;
@@ -930,7 +933,7 @@ static inline void free_states_handle_soft_dfs_soft_thread(
             }
         }
         soft_dfs_info->derived_states_list.num_states =
-            dest_rand_index_ptr - rand_indexes;
+            (size_t)(dest_rand_index_ptr - rand_indexes);
     }
 }
 
@@ -1009,8 +1012,8 @@ static void increase_dfs_max_depth(fcs_soft_thread *const soft_thread)
 {
     const_AUTO(new_dfs_max_depth,
         DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
-    DFS_VAR(soft_thread, soft_dfs_info) =
-        SREALLOC(DFS_VAR(soft_thread, soft_dfs_info), new_dfs_max_depth);
+    DFS_VAR(soft_thread, soft_dfs_info) = SREALLOC(
+        DFS_VAR(soft_thread, soft_dfs_info), (size_t)new_dfs_max_depth);
     memset(DFS_VAR(soft_thread, soft_dfs_info) +
                DFS_VAR(soft_thread, dfs_max_depth),
         '\0',
@@ -1022,7 +1025,8 @@ static void increase_dfs_max_depth(fcs_soft_thread *const soft_thread)
 // dfs_solve() is the event loop of the Random-DFS scan. DFS, which is
 // recursive in nature, is handled here without procedural recursion by using
 // some dedicated stacks for the traversal.
-static inline int dfs_solve(fcs_soft_thread *const soft_thread)
+static inline fc_solve_solve_process_ret_t dfs_solve(
+    fcs_soft_thread *const soft_thread)
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
@@ -1182,7 +1186,7 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
                 if (debug_iter_output_func)
                 {
                     debug_iter_output_func(debug_iter_output_context,
-                        *(instance_num_checked_states_ptr), DEPTH(),
+                        *(instance_num_checked_states_ptr), (int)DEPTH(),
                         (void *)instance, &pass,
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
@@ -1317,7 +1321,7 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
 
             for (size_t i = 0; i < num_states; ++i)
             {
-                rand_array[i].rating_with_index__idx = i;
+                rand_array[i].rating_with_index__idx = (int)i;
             }
             /* If we just conducted the tests for a random group -
              * randomize. Else - keep those indexes as the unity vector.
@@ -1337,7 +1341,7 @@ static inline int dfs_solve(fcs_soft_thread *const soft_thread)
                     for (size_t i = num_states - 1; i > 0; i--)
                     {
                         const typeof(i) j =
-                            (fc_solve_rand_get_random_number(rand_gen) %
+                            ((size_t)fc_solve_rand_get_random_number(rand_gen) %
                                 (i + 1));
 
                         const_AUTO(swap_save, rand_array[i]);
@@ -1613,7 +1617,8 @@ static inline fc_solve_solve_process_ret_t do_patsolve(
 }
 #endif
 
-static inline int solve(fcs_soft_thread *const soft_thread)
+static inline fc_solve_solve_process_ret_t solve(
+    fcs_soft_thread *const soft_thread)
 {
     switch (soft_thread->super_method_type)
     {
@@ -2192,20 +2197,20 @@ static void iter_handler_wrapper(void *const api_instance,
     };
     fc_solve_init_locs(&(state_raw.locs));
 
-#define CALL(func_ptr)                                                         \
-    (func_ptr)(api_instance, iter_num, depth, (void *)&state_raw,              \
-        parent_iter_num, user->iter_handler_context)
+#define CALL(func_ptr, type)                                                   \
+    (func_ptr)(api_instance, (type)iter_num, depth, (void *)&state_raw,        \
+        (type)parent_iter_num, user->iter_handler_context)
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
-    CALL(user->long_iter_handler);
+    CALL(user->long_iter_handler, fcs_int_limit_t);
 #else
     if (user->long_iter_handler)
     {
-        CALL(user->long_iter_handler);
+        CALL(user->long_iter_handler, fcs_int_limit_t);
     }
     else
     {
-        CALL(user->iter_handler);
+        CALL(user->iter_handler, int);
     }
 #endif
 #undef CALL
@@ -2252,8 +2257,8 @@ static FLARE_INLINE void user_next_flare(fcs_user *const user)
 {
     const_AUTO(instance_item, curr_inst(user));
 #ifdef FCS_WITH_FLARES
-    const_AUTO(
-        num_flares, instance_item->end_of_flares - instance_item->flares);
+    const_AUTO(num_flares,
+        (size_t)(instance_item->end_of_flares - instance_item->flares));
     instance_item->flares = SREALLOC(instance_item->flares, num_flares + 1);
     flare_item *const flare = instance_item->flares + num_flares;
     instance_item->end_of_flares = flare + 1;
@@ -2312,8 +2317,8 @@ static FLARE_INLINE void user_next_flare(fcs_user *const user)
 static NI_INLINE void user_next_instance(fcs_user *const user)
 {
 #ifdef FCS_WITH_NI
-    const_AUTO(
-        num_instances, user->end_of_instances_list - user->instances_list);
+    const_AUTO(num_instances,
+        (size_t)(user->end_of_instances_list - user->instances_list));
     user->instances_list = SREALLOC(user->instances_list, num_instances + 1);
 
     user->end_of_instances_list =
@@ -2414,7 +2419,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
         status1, fc_solve_get_preset_by_name(preset_name, &new_preset_ptr));
     if (status1 != FCS_PRESET_CODE_OK)
     {
-        return status1;
+        return (int)status1;
     }
 
     FLARES_LOOP_START()
@@ -2423,7 +2428,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 
     if (status2 != FCS_PRESET_CODE_OK)
     {
-        return status2;
+        return (int)status2;
     }
     INSTANCE_ITEM_FLARES_LOOP_END()
     INSTANCES_LOOP_END()
@@ -2689,8 +2694,8 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
                 item_end = strchr(after_at_sign, '\0');
             }
 
-            flare_item *const flare = find_flare(
-                flares, end_of_flares, after_at_sign, item_end - after_at_sign);
+            flare_item *const flare = find_flare(flares, end_of_flares,
+                after_at_sign, (size_t)(item_end - after_at_sign));
 
             if (!flare)
             {
@@ -2722,8 +2727,8 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
             }
             item_end = strchr(cmd_end, '\0');
 
-            flare_item *const flare =
-                find_flare(flares, end_of_flares, cmd_end, item_end - cmd_end);
+            flare_item *const flare = find_flare(
+                flares, end_of_flares, cmd_end, (size_t)(item_end - cmd_end));
             if (!flare)
             {
                 SET_ERROR("Unknown flare name in RunIndef command.");
@@ -2918,7 +2923,7 @@ static inline void calc_moves_seq(const fcs_move_stack *const solution_moves,
         ret_moves[i] = internal_move_to_user_move(*(--next_move_ptr));
     }
 
-    moves_seq->num_moves = num_moves;
+    moves_seq->num_moves = (int)num_moves;
     moves_seq->moves = ret_moves;
 }
 #endif
@@ -2982,7 +2987,8 @@ static int get_flare_move_count(
                 &(flare->moves_seq));
         }
 
-        return fc_solve_moves_processed_get_moves_left(&(flare->fc_pro_moves));
+        return (int)fc_solve_moves_processed_get_moves_left(
+            &(flare->fc_pro_moves));
     }
 #endif
 
@@ -3340,7 +3346,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
 int DLLEXPORT freecell_solver_user_resume_solution(void *const api_instance)
 {
-    return resume_solution((fcs_user *)api_instance);
+    const fc_solve_solve_process_ret_t ret =
+        resume_solution((fcs_user *)api_instance);
+    return (int)ret;
 }
 #endif
 
@@ -3382,7 +3390,8 @@ int DLLEXPORT freecell_solver_user_solve_board(
 #endif
 
 #ifdef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
-    return resume_solution(user);
+    const fc_solve_solve_process_ret_t ret = resume_solution(user);
+    return (int)ret;
 #else
     return freecell_solver_user_resume_solution(api_instance);
 #endif
@@ -3524,7 +3533,7 @@ void DLLEXPORT freecell_solver_user_free(void *const api_instance)
 int DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_current_depth(void *const api_instance)
 {
-    return (DFS_VAR(api_soft_thread(api_instance), depth));
+    return (int)(DFS_VAR(api_soft_thread(api_instance), depth));
 }
 
 #ifndef FCS_DISABLE_PATSOLVE
@@ -3645,7 +3654,8 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
     }
 
     fcs_user *const user = (fcs_user *)api_instance;
-    user->common_preset.game_params.freecells_num = freecells_num;
+    user->common_preset.game_params.freecells_num =
+        (fcs_game_limit)freecells_num;
     apply_game_params_for_all_instances(user);
 
     return 0;
@@ -3679,7 +3689,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
     }
 
     fcs_user *const user = (fcs_user *)api_instance;
-    user->common_preset.game_params.stacks_num = stacks_num;
+    user->common_preset.game_params.stacks_num = (fcs_game_limit)stacks_num;
     apply_game_params_for_all_instances(user);
 
     return 0;
@@ -3714,7 +3724,7 @@ int DLLEXPORT freecell_solver_user_set_num_decks(
         return 1;
     }
 
-    user->common_preset.game_params.decks_num = decks_num;
+    user->common_preset.game_params.decks_num = (fcs_game_limit)decks_num;
     apply_game_params_for_all_instances(user);
 
     return 0;
@@ -3799,7 +3809,7 @@ int DLLEXPORT __attribute__((const))
 freecell_solver_user_get_limit_iterations(void *const api_instance GCC_UNUSED)
 {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    return active_obj(api_instance)->effective_max_num_checked_states;
+    return (int)active_obj(api_instance)->effective_max_num_checked_states;
 #else
     return 0;
 #endif
@@ -3814,7 +3824,7 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
         const flare_item *const flare = calc_moves_flare(user);
-        return flare->moves_seq.num_moves - flare->next_move_idx;
+        return flare->moves_seq.num_moves - (int)flare->next_move_idx;
     }
     else
     {
@@ -4229,7 +4239,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 int DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_num_soft_threads_in_instance(void *const api_instance)
 {
-    return active_obj(api_instance)->next_soft_thread_id;
+    return (int)active_obj(api_instance)->next_soft_thread_id;
 }
 #endif
 
@@ -4469,7 +4479,7 @@ int DLLEXPORT freecell_solver_user_get_moves_sequence(
     const_AUTO(src_moves_seq, &(SINGLE_FLARE(user)->moves_seq));
     moves_seq->moves = memdup(src_moves_seq->moves,
         (sizeof(src_moves_seq->moves[0]) *
-            (moves_seq->num_moves = src_moves_seq->num_moves)));
+            (size_t)(moves_seq->num_moves = src_moves_seq->num_moves)));
     return 0;
 }
 #endif
@@ -4522,7 +4532,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
 #else
     *error_string = NULL;
 #endif
-    return ret;
+    return (int)ret;
 #else
     *error_string = NULL;
     return 0;
@@ -4538,7 +4548,7 @@ int DLLEXPORT FLARES_ATTR fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return curr_inst((fcs_user *const)api_instance)->num_plan_items;
+    return (int)curr_inst((fcs_user *const)api_instance)->num_plan_items;
 #else
     return 0;
 #endif
@@ -4572,7 +4582,7 @@ int DLLEXPORT FLARES_ATTR fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
 {
 #ifdef FCS_WITH_FLARES
     const_AUTO(instance_item, curr_inst((fcs_user *const)api_instance));
-    return instance_item->plan[item_idx].flare - instance_item->flares;
+    return (int)(instance_item->plan[item_idx].flare - instance_item->flares);
 #else
     return 0;
 #endif
@@ -4583,7 +4593,9 @@ fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
     void *const api_instance GCC_UNUSED, const int item_idx GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    return curr_inst((fcs_user *const)api_instance)->plan[item_idx].count_iters;
+    return (int)curr_inst((fcs_user *const)api_instance)
+        ->plan[item_idx]
+        .count_iters;
 #else
     return 0;
 #endif
@@ -4592,14 +4604,14 @@ fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
 int DLLEXPORT __attribute__((pure))
 fc_solve_user_INTERNAL_get_num_by_depth_tests_order(void *const api_instance)
 {
-    return api_soft_thread(api_instance)->by_depth_moves_order.num;
+    return (int)api_soft_thread(api_instance)->by_depth_moves_order.num;
 }
 
 int DLLEXPORT __attribute__((pure))
 fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     void *const api_instance, const int depth_idx)
 {
-    return api_soft_thread(api_instance)
+    return (int)api_soft_thread(api_instance)
         ->by_depth_moves_order.by_depth_moves[depth_idx]
         .max_depth;
 }

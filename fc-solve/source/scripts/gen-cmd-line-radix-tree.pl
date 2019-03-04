@@ -104,6 +104,8 @@ path($inc_h)->spew_utf8(
     do
     {
         my $str = path($temp_inc_h)->slurp_utf8();
+        $str =~ s#(register (unsigned int) hval = )(len;)#$1($2)$3#ms;
+
         $str =~
             s#(^|\n)(struct CommandOption \*(?:$|\n|\r\n))#${1}static $2#gms;
         my $DETERMINSTIC_BUILD = 1;

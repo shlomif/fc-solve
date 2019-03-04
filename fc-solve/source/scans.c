@@ -56,7 +56,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
     {
         fcs_cache_key_info *new_cache_state;
         const fcs_collectible_state *state_val;
-    } *parents_stack = SMALLOC(parents_stack, parents_stack_max_len);
+    } *parents_stack = SMALLOC(parents_stack, (size_t)parents_stack_max_len);
 
     parents_stack[0].state_val = orig_ptr_state_val;
 
@@ -141,7 +141,8 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
             {
                 parents_stack_max_len += 16;
                 const_AUTO(old_parents_stack, parents_stack);
-                parents_stack = SREALLOC(parents_stack, parents_stack_max_len);
+                parents_stack =
+                    SREALLOC(parents_stack, (size_t)parents_stack_max_len);
                 if (unlikely(!parents_stack))
                 {
                     free(old_parents_stack);

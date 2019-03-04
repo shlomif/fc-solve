@@ -38,7 +38,8 @@ static inline void fcs_move_stack_push(
 }
 
 static inline void fcs_move_stack_params_push(fcs_move_stack *const stack,
-    const int type, const int src, const int dest, const int num_cards_in_seq)
+    const int type, const size_t src, const size_t dest,
+    const size_t num_cards_in_seq)
 {
     fcs_internal_move temp_move;
 
@@ -50,14 +51,14 @@ static inline void fcs_move_stack_params_push(fcs_move_stack *const stack,
     fcs_move_stack_push(stack, temp_move);
 }
 
-static inline void fcs_move_stack_non_seq_push(
-    fcs_move_stack *const stack, const int type, const int src, const int dest)
+static inline void fcs_move_stack_non_seq_push(fcs_move_stack *const stack,
+    const int type, const size_t src, const size_t dest)
 {
     fcs_move_stack_params_push(stack, type, src, dest, 1);
 }
 
 static inline void fcs_push_1card_seq(
-    fcs_move_stack *const stack, const int src, const int dest)
+    fcs_move_stack *const stack, const size_t src, const size_t dest)
 {
     fcs_move_stack_params_push(
         stack, FCS_MOVE_TYPE_STACK_TO_STACK, src, dest, 1);
@@ -208,7 +209,7 @@ static inline int fc_solve_move__convert_freecell_num(const int fc_idx)
 
 static inline char fc_solve__freecell_to_char(const int fc_idx)
 {
-    return 'a' + fc_solve_move__convert_freecell_num(fc_idx);
+    return 'a' + (char)fc_solve_move__convert_freecell_num(fc_idx);
 }
 static inline void fc_solve_move_to_string_w_state(char *const string,
     fcs_state_keyval_pair *const state, const fcs_move_t move,

@@ -455,7 +455,7 @@ static inline void instance_check_key(
                     which_irreversible_moves_bitmask->s[i] +
                     instance->fingerprint_which_irreversible_moves_bitmask.s[i];
             }
-            int trace_num;
+            size_t trace_num;
             fcs_encoded_state_buffer *trace;
             fcs_lock_lock(&instance->fcc_exit_points_output_lock);
             /* instance->storage_lock is already locked
@@ -481,7 +481,8 @@ static inline void instance_check_key(
                     instance->fingerprint_fh);
 #else
                 fgets(instance->fingerprint_line,
-                    instance->fingerprint_line_size, instance->fingerprint_fh);
+                    (int)instance->fingerprint_line_size,
+                    instance->fingerprint_fh);
 #endif
                 char *const moves_to_state_enc =
                     strchr(strchr(instance->fingerprint_line, ' ') + 1, ' ') +
@@ -504,9 +505,10 @@ static inline void instance_check_key(
                 moves_to_state_len + trace_num - 1;
             instance_alloc_num_moves(instance, added_moves_to_output);
             unsigned char *const moves_to_state = instance->moves_to_state;
-            for (int i = trace_num - 1; i > 0; --i)
+            ssize_t s_trace_num = (ssize_t)trace_num - 1;
+            for (ssize_t i = s_trace_num; i > 0; --i)
             {
-                moves_to_state[moves_to_state_len + trace_num - 1 - i] =
+                moves_to_state[(ssize_t)moves_to_state_len + s_trace_num - i] =
                     get_move_from_parent_to_child(instance,
                         &(thread->delta_stater), trace[i], trace[i - 1]);
             }
@@ -696,8 +698,8 @@ int main(int argc, char *argv[])
     while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size,
                fingerprint_fh) != -1)
 #else
-    while (fgets(instance.fingerprint_line, instance.fingerprint_line_size - 1,
-        fingerprint_fh))
+    while (fgets(instance.fingerprint_line,
+        (int)instance.fingerprint_line_size - 1, fingerprint_fh))
 #endif
     {
         FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(

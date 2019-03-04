@@ -104,7 +104,7 @@ static inline void instance__inspect_new_state(
     if (depth == max_depth)
     {
         instance->stack =
-            SREALLOC(instance->stack, ++(instance->max_stack_depth));
+            SREALLOC(instance->stack, (size_t)(++(instance->max_stack_depth)));
         printf("Increasing to %lld\n", (long long)instance->max_stack_depth);
         fflush(stdout);
         instance->stack[max_depth] = (pseudo_dfs_stack_item){
@@ -144,7 +144,7 @@ static inline void instance__inspect_new_state(
             if (i >= stack_item->max_count_next_states)
             {
                 stack_item->next_states = SREALLOC(stack_item->next_states,
-                    ++(stack_item->max_count_next_states));
+                    (size_t)(++(stack_item->max_count_next_states)));
             }
             stack_item->next_states[i] = derived_list->key;
             insert_state(&(instance->store), &(stack_item->next_states[i]));
@@ -196,6 +196,10 @@ static inline void instance_free(dbm_solver_instance *const instance)
     instance->stack = NULL;
 
     Word_t rc_word;
+#ifdef JERR
+#undef JERR
+#define JERR ((Word_t)(-1))
+#endif
     JHSFA(rc_word, instance->store);
 
     fcs_pdfs_cache_destroy(&(instance->cache));

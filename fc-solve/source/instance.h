@@ -92,7 +92,7 @@ extern "C" {
 #define FCS_POS_BY_RANK_LEN (FCS_RANK_KING * FCS_POS_BY_RANK_WIDTH)
 typedef struct
 {
-    char col, height;
+    int8_t col, height;
 } fcs_pos_by_rank;
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
@@ -172,7 +172,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
     fcs_soft_thread *const end_soft_thread =                                   \
         ht_soft_threads + HT_FIELD(hard_thread, num_soft_threads);             \
     for (; soft_thread < end_soft_thread; ++soft_thread)
-#define MOVES_GROW_BY 16
+#define MOVES_GROW_BY 16U
 
 typedef struct
 {
@@ -444,10 +444,8 @@ struct fc_solve_soft_thread_struct
              * */
             fcs_rand_gen rand_gen;
 
-            /*
-             * The initial seed of this random number generator
-             * */
-            int rand_seed;
+            // The initial seed of this random number generator
+            fcs_rand_gen rand_seed;
 
             /*
              * The moves to be performed in a preprocessed form.

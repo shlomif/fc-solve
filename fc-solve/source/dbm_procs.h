@@ -254,7 +254,7 @@ static inline void instance_debug_out_state(
 #endif
 
 static void calc_trace(fcs_dbm_record *const ptr_initial_record,
-    fcs_encoded_state_buffer **const ptr_trace, int *const ptr_trace_num)
+    fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
 {
 #define GROW_BY 100
     size_t trace_num = 0;
