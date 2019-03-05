@@ -98,7 +98,7 @@ typedef struct
 #include "dbm_procs.h"
 #include "fcs_base64.h"
 RB_GENERATE_STATIC(
-    FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare);
+    FccEntryPointList, FccEntryPointNode, entry_, FccEntryPointNode_compare)
 
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input *const inp,

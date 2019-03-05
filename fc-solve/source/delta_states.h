@@ -28,7 +28,7 @@ extern "C" {
 
 typedef struct
 {
-    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by;)
     int num_freecells;
     size_t num_columns;
     fcs_state *init_state, *derived_state;
@@ -43,7 +43,7 @@ typedef struct
 #define FCS_ENCODED_STATE_COUNT_CHARS 24
 typedef struct
 {
-    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by;)
     size_t num_freecells;
     size_t num_columns;
     fcs_state *init_state, *derived_state;

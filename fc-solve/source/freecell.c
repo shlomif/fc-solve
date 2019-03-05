@@ -642,7 +642,7 @@ typedef struct
 {
     fcs_cards_column col;
     int_fast16_t col_len, col_len_minus_1, c, seq_end;
-    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by);
+    FCS_ON_NOT_FC_ONLY(int sequences_are_built_by;)
 } col_seqs_iter;
 
 static inline void col_seqs_iter__calc_end(col_seqs_iter *const iter)
