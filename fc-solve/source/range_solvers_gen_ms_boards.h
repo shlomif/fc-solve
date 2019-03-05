@@ -52,7 +52,12 @@ extern void DLLEXPORT fc_solve_get_board_l(
 static inline void get_board_l(const long long deal_idx, char *const ret)
 #endif
 {
+// #define FCS_DEAL_ONLY_UP_TO_2G
+#ifdef FCS_DEAL_ONLY_UP_TO_2G
+    long long seedx = deal_idx;
+#else
     long long seedx = microsoft_rand__calc_init_seedx(deal_idx);
+#endif
     strcpy(ret, "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
@@ -74,8 +79,16 @@ static inline void get_board_l(const long long deal_idx, char *const ret)
     microsoft_rand_uint num_cards_left = 52;
     for (size_t i = 0; i < 52; ++i)
     {
+#ifdef FCS_DEAL_ONLY_UP_TO_2G
+        const microsoft_rand_uint j =
+            microsoft_rand_rand(&seedx) % num_cards_left;
+#if 0
+        exit(-1);
+#endif
+#else
         const microsoft_rand_uint j =
             microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;
+#endif
         card_to_string(&ret[offset_by_i[i]], deck[j]);
         deck[j] = deck[--num_cards_left];
     }
