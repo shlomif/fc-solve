@@ -16,8 +16,8 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     }
     else
     {
-        %*ENV{"CC"}="/usr/bin/clang";
-        %*ENV{"CXX"}="/usr/bin/clang++";
+        %*ENV{"CC"}=run('which', 'clang', :out).out.slurp.chomp;
+        %*ENV{"CXX"}=run('which', 'clang++', :out).out.slurp.chomp;
         %*ENV{"FCS_CLANG"}=1;
         $seed = $rb ?? 24 !! 1;
     }
