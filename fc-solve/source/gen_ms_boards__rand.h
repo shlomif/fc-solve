@@ -22,18 +22,20 @@ typedef uint32_t microsoft_rand_uint;
 
 typedef long long microsoft_rand;
 
-static inline microsoft_rand microsoft_rand__calc_init_seedx(
-    const microsoft_rand deal_idx)
-{
-    return (microsoft_rand_uint)(
-        (deal_idx < 0x100000000LL) ? deal_idx : (deal_idx - 0x100000000LL));
-}
-
 static inline microsoft_rand_uint microsoft_rand_rand(
     microsoft_rand *const my_rand)
 {
     *my_rand = ((*my_rand) * 214013 + 2531011);
     return ((*my_rand) >> 16) & 0x7fff;
+}
+
+// #define FCS_DEAL_ONLY_UP_TO_2G
+#ifndef FCS_DEAL_ONLY_UP_TO_2G
+static inline microsoft_rand microsoft_rand__calc_init_seedx(
+    const microsoft_rand deal_idx)
+{
+    return (microsoft_rand_uint)(
+        (deal_idx < 0x100000000LL) ? deal_idx : (deal_idx - 0x100000000LL));
 }
 
 static inline microsoft_rand_uint microsoft_rand_randp(
@@ -56,6 +58,7 @@ static inline microsoft_rand_uint microsoft_rand__game_num_rand(
         return microsoft_rand_randp(seedx_ptr) + 1;
     }
 }
+#endif
 
 #ifdef __cplusplus
 }
