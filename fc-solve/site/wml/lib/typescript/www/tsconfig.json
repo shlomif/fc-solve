@@ -3,6 +3,7 @@
       "baseUrl": ".",
       "module": "amd",
       "moduleResolution": "node",
+      "noImplicitReturns": true,
       "outDir": "../../../lib/out-babel/js",
       "target":"es6"
   },
