@@ -26,6 +26,7 @@ SET(CPACK_SOURCE_PACKAGE_FILE_NAME "${CPACK_PACKAGE_NAME}-${CPACK_PACKAGE_VERSIO
 
 SET (base_with_ver "freecell-solver-[0-9]+\\\\.[0-9]+\\\\.[0-9]+")
 
+SET(CPACK_SOURCE_GENERATOR "TXZ")
 SET(CPACK_SOURCE_IGNORE_FILES
     "/.deps/"
     "~$"
