@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "outDir": "../../../lib/for-node/js",
+      "target":"es6"
+  },
+  "include": ["../../../src/js/**/*.ts"]
+}

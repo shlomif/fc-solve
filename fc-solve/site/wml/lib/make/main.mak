@@ -319,13 +319,14 @@ TYPESCRIPT_COMMON_DEPS = src/js/web-fc-solve.ts src/js/web-fcs-tests-strings.ts
 src/js/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/texts-lists.txt
 	perl $<
 
-run_tsc = tsc --target es6 --moduleResolution node --module $1 --outDir $$(dirname $@) $<
+# run_tsc = tsc --target es6 --moduleResolution node --module $1 --outDir $$(dirname $@) $<
+run_tsc = tsc --project lib/typescript/$1/tsconfig.json
 
 $(TYPESCRIPT_DEST_FILES): $(OUT_PREF)/%.js: src/js/%.ts $(TYPESCRIPT_COMMON_DEPS)
-	$(call run_tsc,amd)
+	$(call run_tsc,www)
 
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts $(TYPESCRIPT_COMMON_DEPS)
-	$(call run_tsc,commonjs)
+	$(call run_tsc,cmdline)
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js

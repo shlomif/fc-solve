@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "module": "amd",
+      "moduleResolution": "node",
+      "outDir": "../../../lib/out-babel/js",
+      "target":"es6"
+  },
+  "include": ["../../../src/js/**/*.ts"]
+}
