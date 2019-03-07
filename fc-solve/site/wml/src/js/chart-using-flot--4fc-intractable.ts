@@ -25,3 +25,25 @@ export function chart_data(data_selector: string, chart_selector: string) {
     fc_solve__chart_bind(chart_selector, plot);
     // $("#footer").prepend("Flot " + $.plot.version + " &ndash; ");
 }
+
+export function process_and_chart_data(
+    data_selector: string,
+    chart_selector: string,
+) {
+    const lines = $(data_selector)
+        .text()
+        .split("\n");
+    let head = lines.shift();
+    if (head.length === 0) {
+        head = lines.shift();
+    }
+    let text = "Iterations\t" + head + "\n";
+    const step = 1000000;
+    let reached = step;
+    for (const l of lines) {
+        text += "" + reached + "\t" + l + "\n";
+        reached += step;
+    }
+    $(data_selector).text(text);
+    return chart_data(data_selector, chart_selector);
+}

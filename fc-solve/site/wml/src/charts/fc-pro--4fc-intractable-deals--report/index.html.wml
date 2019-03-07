@@ -12,7 +12,7 @@
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
-require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.chart_data); }) } );
+require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
 </js_script>
 
 <h2* id="toc">Table of contents</h2*>
