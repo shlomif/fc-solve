@@ -198,11 +198,12 @@ sub myglob
 FCS_PATH = $ENV{FCS_PATH}
 FCS_SRC_PATH = $ENV{FCS_SRC_PATH}
 FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>
+$ENV{PERL5LIB}
 EOF
 
     if ( $ENV{FCS_TEST_SHELL} )
     {
-        system("bash");
+        system( $ENV{SHELL} );
     }
     elsif (@execute)
     {
