@@ -366,8 +366,13 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
             }
         );
         run_cmd( 'untar avl', { cmd => [ qw(tar -xvf), $AVLT ] } );
-        system(   qq#find $AVLV#
-                . q# -type f | xargs -d '\n' perl -i -lp -E 's/[\t ]+\z//'# );
+        path($AVLV)->visit(
+            sub {
+                my $p = shift;
+                $p->edit_raw( sub { s/[\t ]+$//gms; } ) if $p->is_file;
+            },
+            { recurse => 1, }
+        );
     }
     $ENV{LIBAVL2_SOURCE_DIR} = Path::Tiny->cwd->child($AVLV);
     print "LIBAVL2_SOURCE_DIR = $ENV{LIBAVL2_SOURCE_DIR}\n";
