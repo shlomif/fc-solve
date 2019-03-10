@@ -42,6 +42,9 @@ digests:
   freecell617jgl:
     hexdigest: 1eea0acb9eaea3045b2b61b2ba764ff686e27522bc1b0dd7d5ceeb760f5f2041
     len: 26737
+  freecell830910836ve:
+    hexdigest: 59b86e9f93f7caba9865363248af0f01cd6ded553d98067da0c80c53ce0a8c07
+    len: 24235
   qualified_seed_for_6240:
     hexdigest: 97eafb7e9f7c0eb91e9fc3098907eb3737e6318d327836da98f3c53c6d826e4a
     len: 22099

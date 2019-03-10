@@ -63,6 +63,15 @@ __PACKAGE__->populate(
             },
             msg => "Solving Deal #617 with the john-galt-line",
         },
+        'freecell830910836ve' => {
+            args => {
+                id      => "freecell830910836ve",
+                deal    => 830910836,
+                msdeals => 1,
+                theme   => [ qw/-l ve -mi 200000/, ],
+            },
+            msg => "stats tracking on limit-iters",
+        },
         'forecell1099default' => {
             args => {
                 id      => "forecell1099default",
