@@ -141,12 +141,14 @@ q#Test skipped because it uses flares, and we are running on a build without fla
         unlink($output_file);
     }
 
+    my $dump = 0;
     if ( $self->should_fill_in_id($id) )
     {
         $self->digests_storage->{digests}->{$id} = {
             'len'       => $sha->len(),
             'hexdigest' => $sha->hexdigest(),
         };
+        $dump = 1;
     }
     my $info = $self->digests_storage->{digests}->{$id};
 
@@ -168,6 +170,10 @@ EOF
 
     close($fc_solve_output);
 
+    if ($dump)
+    {
+        $self->end;
+    }
     return $test_verdict;
 }
 
