@@ -7,6 +7,7 @@ rebuild()
         git clean -dxf .
         bash -x bin/install-npm-deps.sh
         ./gen-helpers
+        gmake fastrender
         gmake test
     )
 }

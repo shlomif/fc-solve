@@ -44,7 +44,7 @@ DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
 
-WML_FLAGS += $(COMMON_PREPROC_FLAGS)
+LATEMP_WML_FLAGS += $(COMMON_PREPROC_FLAGS)
 
 WML_FLAGS += --passoption=2,-X3074 \
 			 -DLATEMP_THEME=sf.org1 \
@@ -52,6 +52,8 @@ WML_FLAGS += --passoption=2,-X3074 \
 	-I $${HOME}/apps/wml \
 	--passoption=7,--skip=imgsize,summary \
 
+WML_RENDER = LATEMP_WML_FLAGS="$(LATEMP_WML_FLAGS)" $1 bin/render $(D)
+T2_INCLUDE_WML_RENDER = $(call WML_RENDER,UNCOND=1) "${@:$(D)/%=%}"
 
 JS_MEM_BASE = libfreecell-solver.wasm
 JS_MEM_BASE__ASMJS = libfreecell-solver-asm.js.mem
@@ -102,6 +104,8 @@ else
 endif
 
 include lib/make/deps.mak
+
+all_deps:
 
 dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
@@ -367,8 +371,8 @@ $(T2_SVGS__svgz): %.svgz: %.min.svg
 
 min_svgs: $(T2_SVGS__MIN) $(T2_SVGS__svgz)
 
-all: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
-all: min_svgs
+all_deps: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
+all: all_deps min_svgs
 
 .PHONY:
 
@@ -416,3 +420,9 @@ $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xm
 
 $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
 	cp -f $< $@
+
+fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps
+	@echo $(MAKE) fastrender
+	@$(call WML_RENDER,) $(SRC_DOCS)
+	$(PROCESS_ALL_INCLUDES) $(HTMLS)
+

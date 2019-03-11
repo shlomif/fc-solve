@@ -146,3 +146,10 @@ foreach my $p ( ['PROD=1'], [] )
 {
     _exec( [ 'gmake', @$p, 'make-dirs', 'sects_cache' ], "sects_cache" );
 }
+my $render = path('bin/render');
+$render->spew_utf8(
+    path('bin/render-source.pl')->slurp_utf8() =~ s#^(?:use lib[^\n]+\n)+#
+    "use lib \"" . (`wml-params-conf --show-privlib` =~ s%[\n\r]+\z%%r) . "\";\n";
+    #emrs
+);
+$render->chmod(0755);
