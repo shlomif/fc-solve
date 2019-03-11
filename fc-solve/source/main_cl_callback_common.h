@@ -260,20 +260,32 @@ typedef enum
     ERROR = -1,
 } exit_code_type;
 
-#if 0
-static inline int solve_board(void * const instance, const char * const user_state)
+#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+//#if 0
+#include "fcs_user_internal.h"
+static inline int catch_more_bugs_solve_board(
+    void *const inst, const char *const user_state)
 {
-    fcs_int_limit_t limit = 500;
-    freecell_solver_user_limit_iterations_long(instance, limit);
-    int ret = freecell_solver_user_solve_board(instance, user_state);
-    while (ret == FCS_STATE_SUSPEND_PROCESS)
+    const fcs_int_limit_t CHUNKSIZE = 100;
+    const fcs_int_limit_t MAX_iters_p =
+        fc_solve_user_INTERNAL_query_iters_limit(inst);
+    const fcs_int_limit_t MAX_iters =
+        (MAX_iters_p < 0) ? LONG_MAX : MAX_iters_p;
+    fcs_int_limit_t limit = CHUNKSIZE;
+    limit = min(limit, MAX_iters);
+    freecell_solver_user_limit_iterations_long(inst, limit);
+    int ret = freecell_solver_user_solve_board(inst, user_state);
+    while (ret == FCS_STATE_SUSPEND_PROCESS && limit < MAX_iters)
     {
-        limit += 500;
-        freecell_solver_user_limit_iterations_long(instance, limit);
-        ret = freecell_solver_user_resume_solution(instance);
+        limit += CHUNKSIZE;
+        limit = min(limit, MAX_iters);
+        freecell_solver_user_limit_iterations_long(inst, limit);
+        ret = freecell_solver_user_resume_solution(inst);
     }
     return ret;
 }
+#define solve_board(instance, user_state)                                      \
+    catch_more_bugs_solve_board((instance), (user_state))
 #else
 #define solve_board(instance, user_state)                                      \
     freecell_solver_user_solve_board((instance), (user_state))
