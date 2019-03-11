@@ -424,5 +424,4 @@ $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a
 fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps
 	@echo $(MAKE) fastrender
 	@$(call WML_RENDER,) $(SRC_DOCS)
-	$(PROCESS_ALL_INCLUDES) $(HTMLS)
-
+	@$(PROCESS_ALL_INCLUDES) $(HTMLS)
