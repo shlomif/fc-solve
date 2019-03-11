@@ -7,6 +7,7 @@
 use strict;
 use warnings;
 use autodie;
+use 5.014;
 
 package Games::Solitaire::FC_Solve::Test::Trap::Obj;
 
@@ -164,11 +165,17 @@ my $FALSE = 0;
 # and we need to instruct rmtree to delete them as well.
 my $SAFE = $FALSE;
 
+my %skip_indices;
 my @tests;
 
 sub reg_test
 {
-    push @tests, [@_];
+    my $blurb = shift;
+    if ( ref $blurb ne 'HASH' )
+    {
+        $blurb = { blurb => $blurb, randomly_avoid => $FALSE, };
+    }
+    push @tests, [ $blurb, @_ ];
 }
 
 sub _calc_build_path
@@ -193,7 +200,9 @@ sub _chdir_run
 
 sub run_tests
 {
-    my ( $idx, $blurb_base_base, $args ) = @_;
+    my ( $idx, $blurb_rec, $args ) = @_;
+
+    my $blurb_base_base = $blurb_rec->{blurb};
 
     my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
         scalar(@tests);
@@ -202,6 +211,15 @@ sub run_tests
         run_cmd( "$blurb_base : $DESC", { cmd => [@$cmd] } );
     };
 
+    if ( exists $skip_indices{ $idx - $TEST_BASE_IDX } )
+    {
+        if ( not $blurb_rec->{randomly_avoid} )
+        {
+            die "foo $idx";
+        }
+        $run->( "SKIPPING shuffled index $idx.", ["true"] );
+        return;
+    }
     my $tatzer_args       = $args->{'tatzer_args'};
     my $cmake_args        = $args->{'cmake_args'};
     my $prepare_dist_args = $args->{'prepare_dist_args'};
@@ -435,37 +453,54 @@ reg_test(
         tatzer_args => [ @LB, qw(-l extra_speed --disable-err-strs) ]
     }
 );
+my $TRUE = 1;
 reg_test(
-    "build_only: no iter-handler",
+    { blurb => "build_only: no iter-handler", randomly_avoid => $TRUE, },
     {
         do_not_test => 1,
         tatzer_args => [ @LB, qw(-l extra_speed --without-iter-handler) ]
     }
 );
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
-reg_test( "Non-Debondt Delta States",
-    { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] } );
-reg_tatzer_test( "--rcs", qw(--rcs) );
+reg_test(
+    { blurb      => "Non-Debondt Delta States", randomly_avoid => $TRUE, },
+    { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] }
+);
+reg_tatzer_test( { blurb => "--rcs", randomly_avoid => $TRUE, }, qw(--rcs) );
 
-reg_lt_test( "libavl2 with COMPACT_STATES",
+reg_lt_test(
+    { blurb => "libavl2 with COMPACT_STATES", randomly_avoid => $TRUE, },
     qw(--states-type=COMPACT_STATES --libavl2-p=prb) );
 
 reg_lt_test(
-    "libavl2 with COMPACT_STATES and --rcs",
+    {
+        blurb          => "libavl2 with COMPACT_STATES and --rcs",
+        randomly_avoid => $TRUE,
+    },
     qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs),
 );
 
-reg_lt_test( "libavl2 with INDIRECT_STATES", qw(--libavl2-p=prb), );
+reg_lt_test(
+    { blurb => "libavl2 with INDIRECT_STATES", randomly_avoid => $TRUE, },
+    qw(--libavl2-p=prb), );
 
-reg_tatzer_test( "without-depth-field", qw(--without-depth-field) );
-reg_tatzer_test( "without-depth-field and rcs",
+reg_tatzer_test( { blurb => "without-depth-field", randomly_avoid => $TRUE, },
+    qw(--without-depth-field) );
+reg_tatzer_test(
+    { blurb => "without-depth-field and rcs", randomly_avoid => $TRUE, },
     qw(--without-depth-field --rcs) );
-reg_lt_test( "No FCS_SINGLE_HARD_THREAD", '--nosingle-ht' );
-
-reg_lt_test( "Break Backward Compatibility #1", '--break-back-compat-1' );
+reg_lt_test( { blurb => "No FCS_SINGLE_HARD_THREAD", randomly_avoid => $TRUE, },
+    '--nosingle-ht' );
 
 reg_lt_test(
-    "Freecell-only (as well as Break Backcompat)",
+    { blurb => "Break Backward Compatibility #1", randomly_avoid => $TRUE, },
+    '--break-back-compat-1' );
+
+reg_lt_test(
+    {
+        blurb          => "Freecell-only (as well as Break Backcompat)",
+        randomly_avoid => $TRUE,
+    },
     qw(--break-back-compat-1 --fc-only),
 );
 
@@ -479,6 +514,21 @@ reg_lt_test(
 "The following build dirs exist and interfere with the build - [ @found ]. Please remove them!";
     }
 }
+my @l;
+while ( my ( $idx, $run ) = each @tests )
+{
+    if ( $run->[0]->{randomly_avoid} )
+    {
+        push @l, $idx;
+
+        # say Data::Dumper->new( [ $idx, $run ] )->Dump;
+    }
+}
+use List::Util qw/ shuffle /;
+%skip_indices = map { $_ => $TRUE }
+    ( ( shuffle @l )[ 0 .. ( ( delete( $ENV{AVOID_NUM} ) // 0 ) - 1 ) ] );
+
+# say Data::Dumper->new( [ \%skip_indices ] )->Dump;
 
 _chdir_run(
     '../../',
