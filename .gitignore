@@ -60,6 +60,7 @@
 /fc-solve/site/wml/bin/html-min-cli-config-file.conf
 /fc-solve/site/wml/bin/jsmin
 /fc-solve/site/wml/bin/post-incs.pl
+/fc-solve/site/wml/bin/render
 /fc-solve/site/wml/bin/sort-check-spelling-file
 /fc-solve/site/wml/bin/spell-checker-iface
 /fc-solve/site/wml/bin/spell.bash
