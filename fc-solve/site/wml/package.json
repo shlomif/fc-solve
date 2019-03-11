@@ -25,7 +25,7 @@
     "qunit": "^2.9.2",
     "qunit-cli": "^0.2.0",
     "requirejs": "^2.3.6",
-    "rollup": "^1.4.1",
+    "rollup": "^1.6.0",
     "sass": "^1.17.2",
     "tslint": "^5.13.1",
     "tslint-config-prettier": "^1.18.0",
