@@ -19,7 +19,7 @@
 */
 #include <stdio.h>
 #include <string.h>
-#include "bool.h"
+#include <stdbool.h>
 #include "range_solvers_gen_ms_boards.h"
 
 int main(int argc, char *argv[])
