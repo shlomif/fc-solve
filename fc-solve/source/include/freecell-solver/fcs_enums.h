@@ -50,7 +50,8 @@ typedef enum
     FCS_STATE_NOT_BEGAN_YET,
     FCS_STATE_DOES_NOT_EXIST,
     FCS_STATE_OPTIMIZED,
-    FCS_STATE_FLARES_PLAN_ERROR
+    FCS_STATE_FLARES_PLAN_ERROR,
+    FCS_STATE_SOFT_SUSPEND_PROCESS
 } fc_solve_solve_process_ret_t;
 
 typedef enum

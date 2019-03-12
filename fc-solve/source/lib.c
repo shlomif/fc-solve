@@ -2024,6 +2024,7 @@ typedef struct
     // The global (sequence-wide) limit of the iterations. Used
     // by limit_iterations() and friends
     fcs_int_limit_t current_iterations_limit;
+    fcs_int_limit_t current_soft_iterations_limit;
 #endif
     fcs_stats iterations_board_started_at;
     // The number of iterations that the current instance started solving from.
@@ -2385,6 +2386,7 @@ static MYINLINE void user_initialize(fcs_user *const user)
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     user->current_iterations_limit = -1;
+    user->current_soft_iterations_limit = -1;
 #endif
 
     user->iterations_board_started_at = initial_stats;
@@ -2444,6 +2446,12 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
 {
     ((fcs_user *const)api_instance)->current_iterations_limit = max_iters;
+}
+
+void DLLEXPORT freecell_solver_user_soft_limit_iterations_long(
+    void *const api_instance, const fcs_int_limit_t max_iters)
+{
+    ((fcs_user *const)api_instance)->current_soft_iterations_limit = max_iters;
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -3007,6 +3015,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
+    bool process_ret = false;
 #ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
 #endif
@@ -3015,6 +3024,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
      * */
     do
     {
+        process_ret = false;
         const_AUTO(instance_item, curr_inst(user));
 
 #ifdef FCS_WITH_FLARES
@@ -3144,6 +3154,13 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         }
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
+        const_AUTO(current_iterations_limit,
+            (user->current_iterations_limit < 0
+                    ? user->current_soft_iterations_limit
+                    : user->current_soft_iterations_limit < 0
+                          ? user->current_iterations_limit
+                          : min(user->current_iterations_limit,
+                                user->current_soft_iterations_limit)));
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
 #define local_limit() (-1)
 #else
@@ -3157,7 +3174,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
         {
             const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
-                user->current_iterations_limit
+                current_iterations_limit
 #ifdef FCS_WITH_FLARES
 #define PARAMETERIZED_FIXED_LIMIT(increment)                                   \
     (user->iterations_board_started_at.num_checked_states + increment)
@@ -3191,10 +3208,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 user->iterations_board_started_at.num_checked_states,
                 user->current_iterations_limit);
 #endif
-            if (instance->effective_max_num_checked_states <= 0)
-            {
-                return FCS_STATE_SUSPEND_PROCESS;
-            }
+            process_ret = ((user->current_soft_iterations_limit >= 0) &&
+                           ((user->current_soft_iterations_limit <
+                                user->current_iterations_limit) ||
+                               (user->current_iterations_limit < 0)));
         }
 #endif
 
@@ -3290,9 +3307,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
              * First - check if we exceeded our limit. If so - we must terminate
              * and return now.
              * */
-            if (((user->current_iterations_limit >= 0) &&
+            if (((current_iterations_limit >= 0) &&
                     (user->iterations_board_started_at.num_checked_states >=
-                        user->current_iterations_limit))
+                        current_iterations_limit))
 #ifndef FCS_DISABLE_NUM_STORED_STATES
                 || (instance->num_states_in_collection >=
                        instance->effective_max_num_states_in_collection)
@@ -3347,11 +3364,17 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         ret == FCS_STATE_IS_NOT_SOLVEABLE);
 
 #ifdef FCS_WITH_NI
-    return (
-        user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret);
+    const_AUTO(r,
+        (user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret));
 #else
-    return ret;
+    const_AUTO(r, ret);
 #endif
+#if 0
+    fprintf(stderr, "process_ret=%d\n", process_ret);
+#endif
+    return ((r == FCS_STATE_SUSPEND_PROCESS && process_ret)
+                ? FCS_STATE_SOFT_SUSPEND_PROCESS
+                : r);
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION

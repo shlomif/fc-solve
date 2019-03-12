@@ -36,6 +36,9 @@ DLLEXPORT extern int freecell_solver_user_apply_preset(
 DLLEXPORT extern void freecell_solver_user_limit_iterations_long(
     void *user_instance, fcs_int_limit_t max_iters);
 
+void DLLEXPORT freecell_solver_user_soft_limit_iterations_long(
+    void *api_instance, fcs_int_limit_t max_iters);
+
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern void freecell_solver_user_limit_iterations(
     void *user_instance, int max_iters);

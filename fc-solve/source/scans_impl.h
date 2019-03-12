@@ -20,10 +20,10 @@ extern "C" {
 
 #ifdef FCS_SINGLE_HARD_THREAD
 #define check_if_limits_exceeded__num()                                        \
-    ((*instance_num_checked_states_ptr) == max_num_states)
+    ((*instance_num_checked_states_ptr) >= max_num_states)
 #else
 #define check_if_limits_exceeded__num()                                        \
-    ((*hard_thread_num_checked_states_ptr) == max_num_states)
+    ((*hard_thread_num_checked_states_ptr) >= max_num_states)
 #endif
 
 #ifdef FCS_DISABLE_NUM_STORED_STATES
