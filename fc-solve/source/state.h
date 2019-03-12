@@ -670,7 +670,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
     {                                                                          \
         if ((*str) == '\0')                                                    \
         {                                                                      \
-            return FALSE;                                                      \
+            return false;                                                      \
         }                                                                      \
     }
 
@@ -687,7 +687,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             ++str;
         }
 
-        first_line = FALSE;
+        first_line = false;
 
 #if MAX_NUM_FREECELLS > 0
         const_AUTO(new_str, FCS_PARSE_try_prefix(str,
@@ -728,7 +728,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
                         const fcs_card rank = fcs_str2rank(str);
                         if (!rank)
                         {
-                            return FALSE;
+                            return false;
                         }
                         fcs_make_card(rank, fcs_str2suit(str));
                     }));
@@ -822,7 +822,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             const_AUTO(my_card, fc_solve_card_parse_str(str));
             if (!fcs_card_rank(my_card))
             {
-                return FALSE;
+                return false;
             }
             fcs_col_push_card(col, my_card);
         }
@@ -1074,7 +1074,7 @@ static inline void fcs_state_push(
 }
 
 #ifdef FCS_FREECELL_ONLY
-#define FCS__SEQS_ARE_BUILT_BY_RANK() FALSE
+#define FCS__SEQS_ARE_BUILT_BY_RANK() false
 #else
 #define FCS__SEQS_ARE_BUILT_BY_RANK()                                          \
     (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)

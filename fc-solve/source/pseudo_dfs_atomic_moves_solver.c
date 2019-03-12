@@ -167,7 +167,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
     fcs_init_and_encode_state(&instance->delta_stater, local_variant,
         init_state, &instance->init_key);
-    instance->solution_was_found = FALSE;
+    instance->solution_was_found = false;
     instance->should_terminate = DONT_TERMINATE;
     instance->count_num_processed = 0;
     instance->max_count_num_processed = LONG_MAX;

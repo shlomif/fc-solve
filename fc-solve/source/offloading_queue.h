@@ -87,7 +87,7 @@ static inline bool fcs_offloading_queue__extract(
     if (!item)
     {
         *return_item = NULL;
-        return FALSE;
+        return false;
     }
 
     *return_item = item->datum;
@@ -324,7 +324,7 @@ static inline bool fcs_offloading_queue__extract(
     if (q_stats_is_empty(&queue->stats))
     {
         *return_item = NULL;
-        return FALSE;
+        return false;
     }
 
     if (!fcs_offloading_queue_page__can_extract(

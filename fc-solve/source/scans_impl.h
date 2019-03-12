@@ -75,7 +75,7 @@ static inline void fc_solve_initialize_befs_rater(
     const bool unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
-#define unlimited_sequence_move FALSE
+#define unlimited_sequence_move false
 #endif
 
     const fc_solve_weighting_float num_cards_out_factor =
@@ -185,7 +185,7 @@ static inline pq_rating befs_rate_state(
     const bool unlimited_sequence_move_var = INSTANCE_UNLIMITED_SEQUENCE_MOVE;
 #define unlimited_sequence_move unlimited_sequence_move_var
 #else
-#define unlimited_sequence_move FALSE
+#define unlimited_sequence_move false
 #endif
 
     fcs_seq_cards_power_type cards_under_sequences = 0;

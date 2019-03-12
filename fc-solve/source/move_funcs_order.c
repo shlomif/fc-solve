@@ -27,8 +27,8 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
 
     const_AUTO(len, strlen(string));
 #ifndef FCS_UNSAFE
-    bool is_group = FALSE;
-    bool is_start_group = FALSE;
+    bool is_group = false;
+    bool is_start_group = false;
 #ifdef FCS_WITH_ERROR_STRS
 #define SET_ERR(s) strcpy(error_string, s);
 #else
@@ -143,8 +143,8 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                 i = (size_t)(close_paren - string);
             }
 #ifndef FCS_UNSAFE
-            is_group = FALSE;
-            is_start_group = FALSE;
+            is_group = false;
+            is_start_group = false;
 #endif
 
             if (moves_order->groups[moves_order->num - 1].num)
@@ -178,7 +178,7 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
             .move_funcs[moves_order->groups[moves_order->num - 1].num++]
             .idx = (uint_fast32_t)fc_solve_string_to_move_num(string[i]);
 #ifndef FCS_UNSAFE
-        is_start_group = FALSE;
+        is_start_group = false;
 #endif
     }
 #ifndef FCS_UNSAFE

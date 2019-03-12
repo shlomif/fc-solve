@@ -94,7 +94,7 @@ static inline void init_stacks_map(
 {
     for (stack_i i = 0; i < STACKS_MAP_LEN; i++)
     {
-        stacks_map[i] = FALSE;
+        stacks_map[i] = false;
     }
     stacks_map[stack_idx] = stacks_map[ds] = true;
 }
@@ -485,7 +485,7 @@ static inline bool false_seq_index_loop(const int stacks_num,
     return generic_false_seq_index_loop(stacks_num, raw_state_raw,
         num_vacant_stacks, col, seqs, stack_idx, ds, behavior_flag,
         /* Params that should be ignored in this case. */
-        FALSE, fc_solve_empty_card, 0);
+        false, fc_solve_empty_card, 0);
 }
 
 #define IS_false_seq_index_loop(col, behavior_flag, stack_idx, ds)             \
@@ -559,7 +559,7 @@ DECLARE_MOVE_FUNCTION(
     {
         const fcs_card card = fcs_col_get_card(col, h + 1);
         bool should_search = true;
-        bool should_increment_num_true_seqs = FALSE;
+        bool should_increment_num_true_seqs = false;
         bool should_break;
         /* Stop if we reached the bottom of the stack */
         if (!((should_break = (h == -1))))
@@ -584,7 +584,7 @@ DECLARE_MOVE_FUNCTION(
                 sequences_analysis seqs;
 
             if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(
-                     dest_col, dc, stack_idx, ds, FALSE) &&
+                     dest_col, dc, stack_idx, ds, false) &&
                     (calc_max_simple_simon_seq_move(
                          seqs.after_junk_num_freestacks) >= num_true_seqs)))
             {
@@ -653,7 +653,7 @@ DECLARE_MOVE_FUNCTION(
                 sequences_analysis seqs;
 
                 if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(
-                         col, (int)end_of_src_seq - 1, stack_idx, ds, FALSE) &&
+                         col, (int)end_of_src_seq - 1, stack_idx, ds, false) &&
                         (calc_max_simple_simon_seq_move(
                              seqs.after_junk_num_freestacks) > num_true_seqs)))
                 {
@@ -785,7 +785,7 @@ DECLARE_MOVE_FUNCTION(
         populate_seq_points(dest_col, dc, &seqs);
 
         if (generic_false_seq_index_loop(LOCAL_STACKS_NUM, raw_state_raw,
-                num_vacant_stacks, dest_col, &seqs, stack_idx, ds, FALSE, true,
+                num_vacant_stacks, dest_col, &seqs, stack_idx, ds, false, true,
                 fcs_col_get_card(col, after_end_of_junk),
                 num_src_junk_true_seqs) &&
             (calc_max_simple_simon_seq_move(seqs.after_junk_num_freestacks) >=
@@ -1004,7 +1004,7 @@ DECLARE_MOVE_FUNCTION(
             /* Let's check if we can move the child after we are done
              * moving all the junk cards */
             if (!(IS_false_seq_index_loop(
-                      col, FALSE, stack_idx, (int)stack_idx) &&
+                      col, false, stack_idx, (int)stack_idx) &&
                     (calc_max_simple_simon_seq_move(
                          seqs.after_junk_num_freestacks) >=
                         child_num_true_seqs)))

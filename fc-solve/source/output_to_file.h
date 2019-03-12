@@ -39,21 +39,21 @@ typedef struct
 } fc_solve_display_information_context;
 
 static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
-    .debug_iter_state_output = FALSE,
+    .debug_iter_state_output = false,
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-    .parseable_output = FALSE,
+    .parseable_output = false,
 #endif
-    .canonized_order_output = FALSE,
+    .canonized_order_output = false,
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
-    .display_10_as_t = FALSE,
+    .display_10_as_t = false,
 #endif
-    .display_parent_iter_num = FALSE,
-    .display_moves = FALSE,
+    .display_parent_iter_num = false,
+    .display_moves = false,
     .display_states = true,
     .standard_notation = FC_SOLVE__STANDARD_NOTATION_NO,
     .output_filename = NULL,
-    .show_exceeded_limits = FALSE,
-    .hint_on_intract = FALSE,
+    .show_exceeded_limits = false,
+    .hint_on_intract = false,
     .iters_display_step = 1,
 };
 

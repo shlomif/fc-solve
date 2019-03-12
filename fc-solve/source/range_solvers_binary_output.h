@@ -82,7 +82,7 @@ static inline bool read_int(FILE *const f, long long *const dest)
     *dest = (buffer[0] +
              ((buffer[1] + ((buffer[2] + ((buffer[3]) << 8)) << 8)) << 8));
 
-    return FALSE;
+    return false;
 }
 
 static void read_int_wrapper(FILE *const in, long long *const var)

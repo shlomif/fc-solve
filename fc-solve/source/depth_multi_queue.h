@@ -117,7 +117,7 @@ static inline bool fcs_depth_multi_queue__extract(
 {
     if (q_stats_is_empty(&queue->stats))
     {
-        return FALSE;
+        return false;
     }
 
     int depth = 0;

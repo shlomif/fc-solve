@@ -70,7 +70,7 @@ static inline bool fc_solve_move_stack_pop(
     if (stack->num_moves > 0)
     {
         *move = stack->moves[--stack->num_moves];
-        return FALSE;
+        return false;
     }
     else
     {

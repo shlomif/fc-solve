@@ -16,7 +16,7 @@ typedef char fcs_render_state_str[2000];
     fc_solve_state_as_string(state_str, state_ptr,                             \
         locs PASS_FREECELLS(FREECELLS_NUM) PASS_STACKS(STACKS_NUM)             \
             PASS_DECKS(DECKS_NUM) FC_SOLVE__PASS_PARSABLE(true),               \
-        FALSE FC_SOLVE__PASS_T(true))
+        false FC_SOLVE__PASS_T(true))
 #else
 #define FCS__RENDER_STATE(state_str, state_ptr, locs) ((state_str)[0] = '\0')
 #endif

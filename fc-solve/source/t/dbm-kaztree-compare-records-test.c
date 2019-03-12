@@ -51,7 +51,7 @@ static int main_tests(void)
                 diag("compare_records(rec_a, rec_b) returned a wrong value for "
                      "position %zu.\n",
                     pos_idx);
-                all_good = FALSE;
+                all_good = false;
                 break;
             }
             if (!(compare_records(&rec_b, &rec_a, NULL) < 0))
@@ -59,7 +59,7 @@ static int main_tests(void)
                 diag("compare_records(rec_b, rec_a) returned a wrong value for "
                      "position %zu.\n",
                     pos_idx);
-                all_good = FALSE;
+                all_good = false;
                 break;
             }
         }

@@ -192,7 +192,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
                                                  *extracted_item;
     fcs_derived_state *derived_list_recycle_bin = NULL, *next_derived_iter;
     fcs_state_keyval_pair state;
-    bool running_min_was_assigned = FALSE;
+    bool running_min_was_assigned = false;
     fcs_encoded_state_buffer running_min = {{0}};
     long num_new_positions = 0;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
@@ -250,7 +250,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
             if (cache_does_key_exist(
                     does_state_exist_in_any_FCC_cache, &(running_min)))
             {
-                *is_min_by_sorting_new = FALSE;
+                *is_min_by_sorting_new = false;
                 goto free_resources;
             }
             else
@@ -271,7 +271,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
             &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
             /* Horne's Prune should be disabled because that interferes
              * with the FCC-depth. */
-            FALSE);
+            false);
 
         /* Allocate a spare 'new_item'. */
         if (queue_recycle_bin)
@@ -460,7 +460,7 @@ static bool fc_solve_add_start_point_in_mem(
      * retardo! */
     fcc_start_points->list = new_start_point;
 
-    return FALSE;
+    return false;
 }
 
 #ifdef __cplusplus

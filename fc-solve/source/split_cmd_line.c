@@ -89,7 +89,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
 
     while (*s != '\0')
     {
-        bool push_next_arg_flag = FALSE;
+        bool push_next_arg_flag = false;
 
         while (is_whitespace(*s))
         {
@@ -110,7 +110,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
         }
 
         bool should_still_loop = true;
-        bool in_arg = FALSE;
+        bool in_arg = false;
         while (should_still_loop)
         {
             switch (*s)
@@ -122,7 +122,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
             case '\r':
 
                 push_next_arg_flag = true;
-                should_still_loop = FALSE;
+                should_still_loop = false;
 
                 break;
 
@@ -135,14 +135,14 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                 case '\0':
                     s--;
                     push_next_arg_flag = true;
-                    should_still_loop = FALSE;
+                    should_still_loop = false;
                     break;
                 case '\r':
                 case '\n':
                     /* Skip to the next line. */
                     if (!in_arg)
                     {
-                        should_still_loop = FALSE;
+                        should_still_loop = false;
                     }
                     break;
                 default:
@@ -204,14 +204,14 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
 
             case '#':
 
-                in_arg = FALSE;
+                in_arg = false;
                 /* Skip to the next line */
                 while ((*s != '\0') && (*s != '\n'))
                 {
                     s++;
                 }
                 push_next_arg_flag = true;
-                should_still_loop = FALSE;
+                should_still_loop = false;
                 break;
 
             default:

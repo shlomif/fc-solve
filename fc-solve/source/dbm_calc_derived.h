@@ -355,7 +355,7 @@ static inline bool is_state_solved(
     {
         if (fcs_foundation_value(the_state, suit) < RANK_KING)
         {
-            return FALSE;
+            return false;
         }
     }
     return true;
@@ -438,7 +438,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             fcs_increment_foundation(new_state, deck * 4 + suit);
 
             COMMIT_NEW_STATE(
-                FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE, card)
+                FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), false, card)
             break;
         }
     }
@@ -590,7 +590,7 @@ static inline bool instance_solver_thread_calc_derived_states(
                         : 0));
     }
 
-    return FALSE;
+    return false;
 }
 
 #undef FROM_COL_IS_REVERSIBLE_MOVE

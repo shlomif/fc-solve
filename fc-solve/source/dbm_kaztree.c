@@ -110,7 +110,7 @@ bool fc_solve_dbm_store_lookup_parent(
         fc_solve_kaz_tree_lookup_value(((fcs_dbm *)store)->kaz_tree, &to_check);
     if (!existing)
     {
-        return FALSE;
+        return false;
     }
     else
     {

@@ -90,7 +90,7 @@ static inline bool fcs_pdfs_cache_does_key_exist(
 
     if (!existing)
     {
-        return FALSE;
+        return false;
     }
     else
     {

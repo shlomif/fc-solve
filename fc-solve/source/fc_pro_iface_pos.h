@@ -51,7 +51,7 @@ static inline bool fc_solve_moves_processed_get_next_move(
         return true;
     }
     *move = moves->moves[moves->next_move_idx++];
-    return FALSE;
+    return false;
 }
 
 static inline void fc_solve_moves_processed_free(

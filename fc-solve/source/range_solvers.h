@@ -55,7 +55,7 @@ static inline bool range_solvers__solve(void *const instance,
     }
 
     *total_num_iters_temp += freecell_solver_user_get_num_times_long(instance);
-    return FALSE;
+    return false;
 }
 
 static inline int range_solvers_main(

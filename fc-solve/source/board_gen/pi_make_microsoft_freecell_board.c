@@ -24,7 +24,7 @@
 
 int main(int argc, char *argv[])
 {
-    bool print_ts = FALSE;
+    bool print_ts = false;
 
     int arg = 1;
     if (arg < argc && !strcmp(argv[arg], "-t"))

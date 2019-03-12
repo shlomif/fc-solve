@@ -56,7 +56,7 @@ static inline bool cmd_line_cb__handle_common(const char *const arg_str,
     else if (IS_ARG_LONG("m", "display-moves"))
     {
         dc->display_moves = true;
-        dc->display_states = FALSE;
+        dc->display_states = false;
         return true;
     }
     else if (IS_ARG_LONG("sn", "standard-notation"))
@@ -90,5 +90,5 @@ static inline bool cmd_line_cb__handle_common(const char *const arg_str,
         dc->hint_on_intract = true;
         return true;
     }
-    return FALSE;
+    return false;
 }

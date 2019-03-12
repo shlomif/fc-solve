@@ -273,8 +273,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 &(key)
             );
 
-            bool to_prune = FALSE;
-            bool to_output = FALSE;
+            bool to_prune = false;
+            bool to_output = false;
             if (val_proto)
             {
                 val_proto->kv.val.is_reachable = true;
@@ -693,7 +693,7 @@ int main(int argc, char *argv[])
 #endif
 
     long location_in_file = 0;
-    bool was_init = FALSE;
+    bool was_init = false;
 #ifdef HAVE_GETLINE
     while (getline(&instance.fingerprint_line, &instance.fingerprint_line_size,
                fingerprint_fh) != -1)
@@ -735,7 +735,7 @@ int main(int argc, char *argv[])
 #if 0
         entry_point->kv.val.was_consumed =
             entry_point->kv.val.is_reachable =
-            FALSE;
+            false;
 #endif
 #endif
         entry_point->kv.val.location_in_file = location_in_file;

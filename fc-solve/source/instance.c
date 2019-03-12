@@ -244,18 +244,18 @@ static inline
                 .by_depth_moves =
                     SMALLOC1(soft_thread->by_depth_moves_order.by_depth_moves),
             },
-        .is_befs = FALSE,
+        .is_befs = false,
 #ifdef FCS_WITH_MOVES
-        .is_optimize_scan = FALSE,
+        .is_optimize_scan = false,
 #endif
         .super_method_type = FCS_SUPER_METHOD_DFS,
-        .master_to_randomize = FALSE,
+        .master_to_randomize = false,
         .checked_states_step = 50,
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
         .name = "",
 #endif
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-        .enable_pruning = FALSE,
+        .enable_pruning = false,
 #endif
 #ifndef FCS_DISABLE_PATSOLVE
         .pats_scan = NULL,

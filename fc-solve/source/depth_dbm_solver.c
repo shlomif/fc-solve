@@ -123,7 +123,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     {
         /* First of all extract a batch of items. */
         fcs_lock_lock(&instance->common.storage_lock);
-        bool should_break = FALSE;
+        bool should_break = false;
         fcs_batch_size batch_size = 0;
         if (prev_size > 0)
         {

@@ -370,7 +370,7 @@ guint fc_solve_hash_function(gconstpointer key)
  *    that were already checked.
  *    If it is:
  *
- *        5a. Return FALSE.
+ *        5a. Return false.
  *
  *    If it isn't:
  *
@@ -408,7 +408,7 @@ static inline bool handle_existing_void(fcs_instance *const instance,
     if (existing_void)
     {
         FCS_STATE_collectible_to_kv(existing_state_raw, existing_void);
-        return FALSE;
+        return false;
     }
     else
     {

@@ -235,7 +235,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
     const int cols_indexes[3], const int_fast16_t num_cards_1,
     const int_fast16_t num_cards_2)
 {
-    empty_two_cols_ret ret = {.src_idx = -1, .is_col = FALSE};
+    empty_two_cols_ret ret = {.src_idx = -1, .is_col = false};
 
     int_fast16_t num_cards_to_move_from_columns[3] = {
         num_cards_1, num_cards_2, -1};
@@ -290,7 +290,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
                 FCS_MOVE_TYPE_STACK_TO_FREECELL, (size_t)*col_idx, dest_fc_idx);
 
             ret = (empty_two_cols_ret){
-                .src_idx = (int)dest_fc_idx, .is_col = FALSE};
+                .src_idx = (int)dest_fc_idx, .is_col = false};
             --(*col_num_cards);
             ++dest_fc_idx;
         }
@@ -1570,11 +1570,11 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
     STACKS__SET_PARAMS();
 
     sfs_check_state_begin();
-    bool cards_were_moved = FALSE;
+    bool cards_were_moved = false;
     bool num_cards_moved;
     do
     {
-        num_cards_moved = FALSE;
+        num_cards_moved = false;
         for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const_AUTO(col, fcs_state_get_col(new_state_key, stack_idx));

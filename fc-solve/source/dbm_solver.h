@@ -120,7 +120,7 @@ static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
 {
     common->variant = local_variant;
     common->out_fh = out_fh;
-    common->queue_solution_was_found = FALSE;
+    common->queue_solution_was_found = false;
     common->should_terminate = DONT_TERMINATE;
     common->queue_num_extracted_and_processed = 0;
     common->num_states_in_collection = 0;

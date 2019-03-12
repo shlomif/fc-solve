@@ -57,7 +57,7 @@ static bool handle_and_destroy_instance_solution(
     dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {
     FILE *const out_fh = instance->common.out_fh;
-    bool ret = FALSE;
+    bool ret = false;
     TRACE("%s\n", "handle_and_destroy_instance_solution start");
     instance_print_stats(instance);
     if (instance->common.queue_solution_was_found)

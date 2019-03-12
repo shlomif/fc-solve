@@ -166,7 +166,7 @@ static inline bool instance_check_multiple_keys(
     /* Small optimization in case the list is empty. */
     if (batch_size == 1 && !lists[0])
     {
-        return FALSE;
+        return false;
     }
     fcs_lock_lock(&instance->common.storage_lock);
     for (typeof(batch_size) batch_i = 0; batch_i < batch_size; ++batch_i)
@@ -206,7 +206,7 @@ static inline bool instance_check_multiple_keys(
         fcs_condvar_broadcast(&(instance->monitor));
     }
 #else
-    const bool have_more = FALSE;
+    const bool have_more = false;
 #endif
     fcs_lock_unlock(&instance->common.storage_lock);
     return have_more;
@@ -480,7 +480,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         inp->dbm_store_path = param;
         return true;
     }
-    return FALSE;
+    return false;
 }
 
 static inline fcs_dbm_record *cache_store__has_key(

@@ -99,10 +99,8 @@ static inline void fc_solve_move_sequence_function(
     }
 
 #define tests__is_filled_by_any_card() true
-
-#define IS_FILLED_BY_KINGS_ONLY() FALSE
-
-#define IS_FILLED_BY_NONE() FALSE
+#define IS_FILLED_BY_KINGS_ONLY() false
+#define IS_FILLED_BY_NONE() false
 
 #else
 

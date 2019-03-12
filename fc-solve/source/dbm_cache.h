@@ -82,7 +82,7 @@ static inline bool cache_does_key_exist(
         fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
     if (!existing_key)
     {
-        return FALSE;
+        return false;
     }
     else
     {

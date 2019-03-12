@@ -29,7 +29,7 @@ static void my_iter_handler(void *const user_instance GCC_UNUSED,
         char state_string[1000];
         freecell_solver_user_iter_state_stringify(user_instance, state_string,
             ptr_state FC_SOLVE__PASS_PARSABLE(true),
-            FALSE FC_SOLVE__PASS_T(true));
+            false FC_SOLVE__PASS_T(true));
         printf("%s\n---------------\n\n\n", state_string);
         /* Now pass it to a secondary user_instance prune it. */
         void *const pruner = freecell_solver_user_alloc();

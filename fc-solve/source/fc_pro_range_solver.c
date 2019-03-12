@@ -34,7 +34,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     const char *variant = "freecell";
     long long total_num_iters = 0;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    bool was_total_iterations_limit_per_board_set = FALSE;
+    bool was_total_iterations_limit_per_board_set = false;
 #endif
     fcs_int_limit_t total_iterations_limit_per_board = -1;
     fcs_binary_output binary_output = INIT_BINARY_OUTPUT;

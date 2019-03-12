@@ -72,7 +72,7 @@ bool fc_solve_dbm_store_does_key_exist(
     }
     else if (ret == DB_NOTFOUND)
     {
-        return FALSE;
+        return false;
     }
     else
     {
@@ -98,7 +98,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store store,
     }
     else if (ret == DB_NOTFOUND)
     {
-        return FALSE;
+        return false;
     }
     else
     {

@@ -26,7 +26,7 @@ int main(const int argc, char **const argv)
     display_context = INITIAL_DISPLAY_CONTEXT;
     int arg = 1;
     instance = alloc_instance_and_parse(argc, argv, &arg, known_parameters,
-        fc_solve__cmd_line_callback, &display_context, FALSE);
+        fc_solve__cmd_line_callback, &display_context, false);
 
     FILE *output_fh;
 

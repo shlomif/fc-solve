@@ -87,7 +87,7 @@ static inline bool read_preset(const char *const preset_name,
         (const char *)global_presetrc,
         user_preset_dir,
     };
-    bool read_next_preset = FALSE;
+    bool read_next_preset = false;
     for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); ++path_idx)
     {
         const char *const path = presetrc_pathes[path_idx];
@@ -144,7 +144,7 @@ static inline bool read_preset(const char *const preset_name,
                 {
                     *args_man = fc_solve_args_man_chop(s);
                     fclose(f);
-                    return FALSE;
+                    return false;
                 }
             }
         }
