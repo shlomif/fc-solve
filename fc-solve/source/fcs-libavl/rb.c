@@ -24,10 +24,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "rb.h"
 
-#include "bool.h"
+
 #include "alloc_wrap.h"
 
 #ifdef WITH_AVL_BALANCE_FIELD

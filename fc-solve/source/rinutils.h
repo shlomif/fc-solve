@@ -11,6 +11,7 @@
 #pragma once
 
 #include <limits.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <time.h>
 #if defined(__unix__) || defined(__unix) ||                                    \
@@ -21,8 +22,8 @@
 #include <unistd.h>
 #endif
 
+#include "fcs_conf.h"
 #include "alloc_wrap.h"
-#include "bool.h"
 #include "count.h"
 #include "freecell-solver/fcs_dllexport.h"
 #include "fcs_err.h"

@@ -40,7 +40,6 @@ sub src_filenames
         $self->main_base . '.c',
         'alloc_wrap.h',
         'bit_rw.h',
-        'bool.h',
         'card.c',
         'count.h',
         'dbm_cache.h',

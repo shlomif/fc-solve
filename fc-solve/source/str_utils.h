@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#include "bool.h"
+#include <stdbool.h>
 #include <string.h>
 
 static inline bool string_starts_with(
