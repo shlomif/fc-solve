@@ -197,7 +197,7 @@ static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
 
 #define FROM_COL_IS_REVERSIBLE_MOVE()                                          \
     ((cards_num <= 1)                                                          \
-            ? TRUE                                                             \
+            ? true                                                             \
             : fcs_is_parent_card(card, fcs_col_get_card(col, cards_num - 2)))
 #define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
@@ -358,7 +358,7 @@ static inline bool is_state_solved(
             return FALSE;
         }
     }
-    return TRUE;
+    return true;
 }
 
 static inline bool instance_solver_thread_calc_derived_states(
@@ -376,7 +376,7 @@ static inline bool instance_solver_thread_calc_derived_states(
 #define new_state (ptr_new_state->state.s)
     if (is_state_solved(init_state_kv_ptr))
     {
-        return TRUE;
+        return true;
     }
 
     /* Move top stack cards to foundations. */
@@ -498,7 +498,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             fcs_state_push(&new_state, ds, card);
             fcs_empty_freecell(new_state, fc_idx);
 
-            COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
+            COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), true, card)
         }
     }
 #endif
@@ -545,7 +545,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             fcs_empty_freecell(new_state, fc_idx);
 
             COMMIT_NEW_STATE(
-                FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx), TRUE, card);
+                FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx), true, card);
         }
 #endif
     }

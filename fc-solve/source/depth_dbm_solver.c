@@ -119,7 +119,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
     fcs_dbm_record *tokens[max_batch_size];
     fcs_derived_state *derived_lists[max_batch_size];
-    while (TRUE)
+    while (true)
     {
         /* First of all extract a batch of items. */
         fcs_lock_lock(&instance->common.storage_lock);
@@ -189,7 +189,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state, token, &derived_lists[batch_i],
-                    &derived_list_recycle_bin, &derived_list_allocator, TRUE))
+                    &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_dbm_queue_item physical_item;
                 physical_item.key = token->key;
@@ -370,7 +370,7 @@ int main(int argc, char *argv[])
         &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
 #else
     token = fc_solve_dbm_store_insert_key_value(
-        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, TRUE);
+        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, true);
 #endif
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),

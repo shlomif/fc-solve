@@ -27,7 +27,7 @@
 static int main_tests(void)
 {
     {
-        bool all_good = TRUE;
+        bool all_good = true;
 
         for (size_t pos_idx = 1; pos_idx < sizeof(fcs_encoded_state_buffer);
              pos_idx++)

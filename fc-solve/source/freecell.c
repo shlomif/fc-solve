@@ -334,7 +334,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
             moves_ptr, col_idx_val, (size_t)put_cards_in_col_idx);
 
         ret = (empty_two_cols_ret){
-            .src_idx = put_cards_in_col_idx, .is_col = TRUE};
+            .src_idx = put_cards_in_col_idx, .is_col = true};
         --(*col_num_cards);
         ++put_cards_in_col_idx;
     }
@@ -845,7 +845,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 
                 if (!((c > 0) && ((IS_FILLED_BY_KINGS_ONLY())
                                          ? fcs_col_is_king(iter.col, c)
-                                         : TRUE)))
+                                         : true)))
                 {
                     continue;
                 }
@@ -886,7 +886,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 if (!((seq_start <= iter.seq_end) &&
                         ((IS_FILLED_BY_KINGS_ONLY())
                                 ? fcs_col_is_king(iter.col, (stack_i)seq_start)
-                                : TRUE)))
+                                : true)))
                 {
                     continue;
                 }
@@ -1593,7 +1593,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
                 continue;
             }
             /* We can safely move it. */
-            num_cards_moved = TRUE;
+            num_cards_moved = true;
 
             my_copy_stack(stack_idx);
             fcs_state_pop_col_top(&new_state_key, stack_idx);
@@ -1617,7 +1617,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             {
                 continue;
             }
-            num_cards_moved = TRUE;
+            num_cards_moved = true;
 
             fcs_empty_freecell(new_state_key, fc);
             fcs_increment_foundation(new_state_key, dest_foundation);
@@ -1628,7 +1628,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
 #endif
         if (num_cards_moved)
         {
-            cards_were_moved = TRUE;
+            cards_were_moved = true;
         }
     } while (num_cards_moved);
 

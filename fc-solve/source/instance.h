@@ -224,7 +224,7 @@ typedef struct
 } fcs_by_depth_moves_order;
 
 #define STRUCT_CLEAR_FLAG(instance, flag) (instance)->flag = FALSE
-#define STRUCT_TURN_ON_FLAG(instance, flag) (instance)->flag = TRUE
+#define STRUCT_TURN_ON_FLAG(instance, flag) (instance)->flag = true
 #define STRUCT_QUERY_FLAG(instance, flag) ((instance)->flag)
 #define STRUCT_SET_FLAG_TO(instance, flag, value) (instance)->flag = (value)
 

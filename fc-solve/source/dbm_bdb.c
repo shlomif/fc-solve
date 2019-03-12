@@ -68,7 +68,7 @@ bool fc_solve_dbm_store_does_key_exist(
     int ret;
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
-        return TRUE;
+        return true;
     }
     else if (ret == DB_NOTFOUND)
     {
@@ -94,7 +94,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store store,
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
         parent[0] = db->data.size - 1;
-        return TRUE;
+        return true;
     }
     else if (ret == DB_NOTFOUND)
     {

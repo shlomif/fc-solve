@@ -42,7 +42,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         else if ((param = TRY_P("--total-iterations-limit")))
         {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-            was_total_iterations_limit_per_board_set = TRUE;
+            was_total_iterations_limit_per_board_set = true;
             total_iterations_limit_per_board = (fcs_int_limit_t)atol(param);
 #endif
         }
@@ -64,7 +64,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fc_solve_display_information_context display_context =
         INITIAL_DISPLAY_CONTEXT;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
-        known_parameters, cmd_line_callback, &display_context, TRUE);
+        known_parameters, cmd_line_callback, &display_context, true);
 
     bin_init(&binary_output, &start_board, &end_board,
         &total_iterations_limit_per_board);

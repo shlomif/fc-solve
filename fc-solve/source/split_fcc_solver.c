@@ -277,7 +277,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             bool to_output = FALSE;
             if (val_proto)
             {
-                val_proto->kv.val.is_reachable = TRUE;
+                val_proto->kv.val.is_reachable = true;
                 const int moves_count = instance->start_key_moves_count
                     + item->moves_seq.count;
 
@@ -286,7 +286,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     if (val_proto->kv.val.depth <= moves_count)
                     {
                         /* We can prune based on here. */
-                        to_prune = TRUE;
+                        to_prune = true;
                     }
                     else
                     {
@@ -294,18 +294,18 @@ static void *instance_run_solver_thread(void *const void_arg)
                          * for future trimming. */
                         to_output = !(val_proto->kv.val.was_consumed);
                         val_proto->kv.val.depth = moves_count;
-                        val_proto->kv.val.was_consumed = TRUE;
+                        val_proto->kv.val.was_consumed = true;
                     }
                 }
                 else
                 {
                     if (! val_proto->kv.val.was_consumed)
                     {
-                        to_output = TRUE;
+                        to_output = true;
                         if (val_proto->kv.val.depth >= moves_count)
                         {
                             val_proto->kv.val.depth = moves_count;
-                            val_proto->kv.val.was_consumed = TRUE;
+                            val_proto->kv.val.was_consumed = true;
                         }
                     }
                 }
@@ -348,7 +348,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state, token, &derived_list, &derived_list_recycle_bin,
-                    &derived_list_allocator, TRUE))
+                    &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->global_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
@@ -729,7 +729,7 @@ int main(int argc, char *argv[])
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');
 #else
-        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, TRUE);
+        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, true);
 #endif
 
 #if 0
@@ -754,7 +754,7 @@ int main(int argc, char *argv[])
             {
                 fcs_depth_multi_queue__init(&(instance.coll.depth_queue),
                     instance.offload_dir_path, state_depth, &(token));
-                was_init = TRUE;
+                was_init = true;
             }
         }
         ++instance.common.num_states_in_collection;

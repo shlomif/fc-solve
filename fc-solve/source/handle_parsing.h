@@ -82,7 +82,7 @@ static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
 static inline void *simple_alloc_and_parse(
     const int argc, char **const argv, int arg)
 {
-    return alloc_instance_and_parse(argc, argv, &arg, NULL, NULL, NULL, TRUE);
+    return alloc_instance_and_parse(argc, argv, &arg, NULL, NULL, NULL, true);
 }
 
 static inline void print_flares_plan_error(void *const instance GCC_UNUSED)

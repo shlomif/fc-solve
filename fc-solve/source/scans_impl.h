@@ -45,7 +45,7 @@ extern "C" {
 #define BEFS_MAX_DEPTH 20000
 
 #ifdef FCS_FREECELL_ONLY
-#define is_filled_by_any_card() TRUE
+#define is_filled_by_any_card() true
 #else
 #define is_filled_by_any_card()                                                \
     (INSTANCE_EMPTY_STACKS_FILL == FCS_ES_FILLED_BY_ANY_CARD)

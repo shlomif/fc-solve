@@ -130,7 +130,7 @@ static inline bool fcs_depth_multi_queue__extract(
     fcs_offloading_queue__extract(
         &(queue->queues_by_depth[depth]), return_item);
     q_stats_extract(&queue->stats);
-    return TRUE;
+    return true;
 }
 
 #ifdef __cplusplus

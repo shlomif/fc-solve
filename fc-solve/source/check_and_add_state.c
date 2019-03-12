@@ -374,7 +374,7 @@ guint fc_solve_hash_function(gconstpointer key)
  *
  *    If it isn't:
  *
- *        5b. Add the new state and return TRUE.
+ *        5b. Add the new state and return true.
  * */
 
 static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
@@ -424,7 +424,7 @@ static inline bool handle_existing_void(fcs_instance *const instance,
             printf("\n\n");
         }
 #endif
-        return TRUE;
+        return true;
     }
 }
 #define HANDLE_existing_void(existing_void)                                    \

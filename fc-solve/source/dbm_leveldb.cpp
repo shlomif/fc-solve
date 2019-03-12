@@ -42,7 +42,7 @@ bool fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store store,
         memcpy(parent_and_move + 1, value.data() + 1,
             (parent_and_move[0] = value.length() - 1) + 1);
 
-        return TRUE;
+        return true;
     }
     else
     {

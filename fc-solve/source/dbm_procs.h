@@ -426,7 +426,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
         }
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--game")))
     {
@@ -442,12 +442,12 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("Unknown game '%s'. Aborting\n", param);
         }
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--offload-dir-path")))
     {
         inp->offload_dir_path = param;
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--num-threads")))
     {
@@ -455,17 +455,17 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--num-threads must be at least 1.\n");
         }
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--max-num-states")))
     {
         inp->max_num_states_in_collection = atol(param);
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--iters-delta-limit")))
     {
         inp->iters_delta_limit = atol(param);
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--caches-delta")))
     {
@@ -473,12 +473,12 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         {
             fc_solve_err("--caches-delta must be at least 1,000.\n");
         }
-        return TRUE;
+        return true;
     }
     else if ((param = TRY_PARAM("--dbm-store-path")))
     {
         inp->dbm_store_path = param;
-        return TRUE;
+        return true;
     }
     return FALSE;
 }
@@ -506,7 +506,7 @@ static inline fcs_dbm_record *cache_store__has_key(
     return ((fcs_dbm_record *)key);
 #else
     return fc_solve_dbm_store_insert_key_value(
-        cache_store->store, key, parent, TRUE);
+        cache_store->store, key, parent, true);
 #endif
 }
 

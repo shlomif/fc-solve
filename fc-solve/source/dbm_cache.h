@@ -108,7 +108,7 @@ static inline bool cache_does_key_exist(
             existing->higher_pri = NULL;
         }
 
-        return TRUE;
+        return true;
     }
 }
 

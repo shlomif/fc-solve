@@ -54,7 +54,7 @@ static inline bool lookup_state(store_type *const store,
 #else
     if (PValue != NULL)
     {
-        return TRUE;
+        return true;
     }
     else
     {
@@ -121,10 +121,10 @@ static inline void instance__inspect_new_state(
         delta_stater, state->s, &s, indirect_stacks_buffer);
     if (instance_solver_thread_calc_derived_states(instance->local_variant, &s,
             NULL, &derived_list, &(instance->derived_list_recycle_bin),
-            &(instance->derived_list_allocator), TRUE))
+            &(instance->derived_list_allocator), true))
     {
         instance->should_terminate = SOLUTION_FOUND_TERMINATE;
-        instance->solution_was_found = TRUE;
+        instance->solution_was_found = true;
         return;
     }
 

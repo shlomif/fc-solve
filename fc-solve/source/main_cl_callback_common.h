@@ -222,7 +222,7 @@ static void command_signal_handler(int signal_num GCC_UNUSED)
         {
             freecell_solver_user_set_iter_handler_long(
                 instance, my_iter_handler, &display_context);
-            debug_iter_output_on = TRUE;
+            debug_iter_output_on = true;
         }
 #endif
         break;

@@ -488,7 +488,7 @@ extern void fc_solve_card_stringify(
  * */
 static inline __attribute__((pure)) fcs_card fcs_str2suit(const char *suit)
 {
-    while (TRUE)
+    while (true)
     {
         switch (FC_SOLVE_MAP_CHAR(*suit))
         {
@@ -662,7 +662,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
     fc_solve_state_init(out_state, STACKS_NUM__VAL, indirect_stacks_buffer);
     const char *str = string;
 
-    bool first_line = TRUE;
+    bool first_line = true;
 
 #define out (out_state->s)
 /* Handle the end of string - shouldn't happen */
@@ -828,7 +828,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
         }
     }
 
-    return TRUE;
+    return true;
 }
 
 #undef out
@@ -1021,7 +1021,7 @@ static inline bool fcs_is_parent_card__helper(const fcs_card child,
 {
     return ((fcs_card_rank(child) + 1 == fcs_card_rank(parent)) &&
             ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
-                    ? TRUE
+                    ? true
                     : ((sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)
                               ? (fcs_card_suit(child) == fcs_card_suit(parent))
                               : ((fcs_card_suit(child) & 0x1) !=

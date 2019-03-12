@@ -142,7 +142,7 @@ static inline void alloc_instance(
         .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = FALSE,
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-        .FCS_RUNTIME_SCANS_SYNERGY = TRUE,
+        .FCS_RUNTIME_SCANS_SYNERGY = true,
 #endif
 #ifdef FCS_RCS_STATES
         .rcs_states_cache.max_num_elements_in_cache = 10000,
@@ -197,7 +197,7 @@ static inline void compile_prelude(fcs_hard_thread *const hard_thread)
         }
         if ((*p) == '\0')
         {
-            last_one = TRUE;
+            last_one = true;
         }
         char p_scan_copy[FCS_MAX_IDENT_LEN];
         strncpy(p_scan_copy, p_scan, COUNT(p_scan_copy));
@@ -737,7 +737,7 @@ static inline void setup_opt_thread__helper(
     }
 
     soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
-    soft_thread->is_optimize_scan = TRUE;
+    soft_thread->is_optimize_scan = true;
     soft_thread->is_befs = FALSE;
     STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
     fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
@@ -776,7 +776,7 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
             instance->hard_thread.soft_threads[instance->hard_thread.st_idx]
                 .enable_pruning;
 #endif
-        instance->is_optimization_st = TRUE;
+        instance->is_optimization_st = true;
     }
 
     setup_opt_thread__helper(instance, optimization_soft_thread);
@@ -949,7 +949,7 @@ static bool free_states_should_delete(void *const key, void *const context)
 
         --instance->active_num_states_in_collection;
 
-        return TRUE;
+        return true;
     }
     else
     {
@@ -1208,7 +1208,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                         fc_solve_sfs_raymond_prune(soft_thread, pass);
                     if (derived)
                     {
-                        was_pruned = TRUE;
+                        was_pruned = true;
                         the_soft_dfs_info->move_func_list_idx =
                             THE_MOVE_FUNCS_LIST.num;
                         fc_solve_derived_states_list_add_state(
@@ -2304,7 +2304,7 @@ static FLARE_INLINE void user_next_flare(fcs_user *const user)
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     flare->fc_pro_moves.moves = NULL;
 #endif
-    flare->instance_is_ready = TRUE;
+    flare->instance_is_ready = true;
     flare->obj_stats = initial_stats;
 }
 
@@ -2336,7 +2336,7 @@ static NI_INLINE void user_next_instance(fcs_user *const user)
         .current_plan_item_idx = 0,
         .minimal_flare = NULL,
         .intract_minimal_flare = NULL,
-        .all_plan_items_finished_so_far = TRUE,
+        .all_plan_items_finished_so_far = true,
     };
 #endif
 
@@ -2389,7 +2389,7 @@ static MYINLINE void user_initialize(fcs_user *const user)
 
     user->iterations_board_started_at = initial_stats;
 #ifdef FCS_WITH_NI
-    user->all_instances_were_suspended = TRUE;
+    user->all_instances_were_suspended = true;
 #endif
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -2644,7 +2644,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         instance_item->plan[1] =
             create_plan_item(FLARES_PLAN_CHECKPOINT, NULL, -1);
 
-        instance_item->flares_plan_compiled = TRUE;
+        instance_item->flares_plan_compiled = true;
         continue;
     }
 
@@ -2751,7 +2751,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         add_checkpoint_to_plan(instance_item);
     }
 
-    instance_item->flares_plan_compiled = TRUE;
+    instance_item->flares_plan_compiled = true;
     continue;
     INSTANCES_LOOP_END()
 
@@ -2811,7 +2811,7 @@ static inline bool duplicate_string_while_adding_a_trailing_newline(
         s[0] = '\n';
         s[1] = '\0';
     }
-    return TRUE;
+    return true;
 }
 #undef TRAILING_CHAR
 #undef MY_MARGIN
@@ -2821,7 +2821,7 @@ static inline void recycle_flare(flare_item *const flare)
     if (!flare->instance_is_ready)
     {
         recycle_inst(&(flare->obj));
-        flare->instance_is_ready = TRUE;
+        flare->instance_is_ready = true;
     }
 }
 
@@ -2953,7 +2953,7 @@ static void trace_flare_solution(fcs_user *const user, flare_item *const flare)
 #endif
 
     recycle_flare(flare);
-    flare->was_solution_traced = TRUE;
+    flare->was_solution_traced = true;
 }
 #endif
 
@@ -3034,7 +3034,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             /* Otherwise - restart the plan again. */
             else
             {
-                instance_item->all_plan_items_finished_so_far = TRUE;
+                instance_item->all_plan_items_finished_so_far = true;
                 instance_item->current_plan_item_idx = 0;
             }
         }
@@ -3274,7 +3274,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             if (was_run_now)
             {
                 recycle_inst(instance);
-                flare->instance_is_ready = TRUE;
+                flare->instance_is_ready = true;
             }
         }
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -3614,7 +3614,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         break;
 
     case FCS_METHOD_A_STAR:
-        soft_thread->is_befs = TRUE;
+        soft_thread->is_befs = true;
         break;
 
     case FCS_METHOD_RANDOM_DFS:
@@ -3638,7 +3638,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
             fc_solve_pats__init_soft_thread(
                 pats_scan, fcs_st_instance(soft_thread));
 
-            pats_scan->to_stack = TRUE;
+            pats_scan->to_stack = true;
 
             pats_scan->pats_solve_params =
                 (freecell_solver_pats__x_y_params_preset
@@ -4364,7 +4364,7 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
 
     if (!strcmp(pruning, "r:tf"))
     {
-        soft_thread->enable_pruning = TRUE;
+        soft_thread->enable_pruning = true;
     }
     else if (pruning[0] == '\0')
     {

@@ -74,7 +74,7 @@ static inline bool fc_solve_move_stack_pop(
     }
     else
     {
-        return TRUE;
+        return true;
     }
 }
 

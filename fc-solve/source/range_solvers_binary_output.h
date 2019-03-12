@@ -77,7 +77,7 @@ static inline bool read_int(FILE *const f, long long *const dest)
     unsigned char buffer[SIZE_INT];
     if (fread(buffer, 1, SIZE_INT, f) != SIZE_INT)
     {
-        return TRUE;
+        return true;
     }
     *dest = (buffer[0] +
              ((buffer[1] + ((buffer[2] + ((buffer[3]) << 8)) << 8)) << 8));

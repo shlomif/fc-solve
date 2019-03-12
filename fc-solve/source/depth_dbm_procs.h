@@ -63,7 +63,7 @@ static bool handle_and_destroy_instance_solution(
     if (instance->common.queue_solution_was_found)
     {
         trace_solution(instance, out_fh, delta);
-        ret = TRUE;
+        ret = true;
     }
     else if (instance->common.should_terminate != DONT_TERMINATE)
     {

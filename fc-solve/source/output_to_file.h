@@ -49,7 +49,7 @@ static const fc_solve_display_information_context INITIAL_DISPLAY_CONTEXT = {
 #endif
     .display_parent_iter_num = FALSE,
     .display_moves = FALSE,
-    .display_states = TRUE,
+    .display_states = true,
     .standard_notation = FC_SOLVE__STANDARD_NOTATION_NO,
     .output_filename = NULL,
     .show_exceeded_limits = FALSE,

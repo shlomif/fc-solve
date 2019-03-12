@@ -43,7 +43,7 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 }
 
 /*
- * Returns TRUE if the key was added (it didn't already exist.)
+ * Returns true if the key was added (it didn't already exist.)
  * */
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     const fcs_encoded_state_buffer *key, fcs_dbm_record *const parent,
@@ -130,7 +130,7 @@ bool fc_solve_dbm_store_lookup_parent(
         *(fcs_encoded_state_buffer *)parent =
             ((fcs_dbm_record *)existing)->parent;
 #endif
-        return TRUE;
+        return true;
     }
 }
 

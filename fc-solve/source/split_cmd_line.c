@@ -109,7 +109,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
             continue;
         }
 
-        bool should_still_loop = TRUE;
+        bool should_still_loop = true;
         bool in_arg = FALSE;
         while (should_still_loop)
         {
@@ -121,7 +121,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
             case '\0':
             case '\r':
 
-                push_next_arg_flag = TRUE;
+                push_next_arg_flag = true;
                 should_still_loop = FALSE;
 
                 break;
@@ -134,7 +134,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                 {
                 case '\0':
                     s--;
-                    push_next_arg_flag = TRUE;
+                    push_next_arg_flag = true;
                     should_still_loop = FALSE;
                     break;
                 case '\r':
@@ -154,8 +154,8 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
 
             case '\"':
 
-                in_arg = TRUE;
-                while (TRUE)
+                in_arg = true;
+                while (true)
                 {
                     const_AUTO(c, *(++s));
                     switch (c)
@@ -210,12 +210,12 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                 {
                     s++;
                 }
-                push_next_arg_flag = TRUE;
+                push_next_arg_flag = true;
                 should_still_loop = FALSE;
                 break;
 
             default:
-                in_arg = TRUE;
+                in_arg = true;
                 add_to_last_arg(&manager, *s);
                 s++;
                 break;

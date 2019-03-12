@@ -82,7 +82,7 @@ static uint8_t get_move_from_parent_to_child(
 
     instance_solver_thread_calc_derived_states(local_variant, &parent_state,
         NULL, &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
-        TRUE);
+        true);
 
     for (var_AUTO(derived_iter, derived_list); derived_iter;
          derived_iter = derived_iter->next)

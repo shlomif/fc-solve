@@ -100,7 +100,7 @@ static inline bool fcs_offloading_queue__extract(
     queue->queue_recycle_bin = item;
 
     q_stats_extract(&queue->stats);
-    return TRUE;
+    return true;
 }
 
 static inline void fcs_offloading_queue__insert(
@@ -354,7 +354,7 @@ static inline bool fcs_offloading_queue__extract(
     fcs_offloading_queue_page__extract(
         queue->pages + queue->page_idx_to_read_from, return_item);
 
-    return TRUE;
+    return true;
 }
 
 #endif

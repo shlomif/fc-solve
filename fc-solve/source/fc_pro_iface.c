@@ -34,7 +34,7 @@ static inline bool fc_solve_fc_pro__can_be_moved(
         (fcs_foundation_value(*s, suit) == rank - 1))
     {
         fcs_increment_foundation(*s, suit);
-        return TRUE;
+        return true;
     }
     return FALSE;
 }

@@ -366,7 +366,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
         if (fcs_col_len(col))
         {
-            orig_top_most_cards[CARD_POS(fcs_col_get_card(col, 0))] = TRUE;
+            orig_top_most_cards[CARD_POS(fcs_col_get_card(col, 0))] = true;
         }
     }
 

@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     int arg = 1;
     if (arg < argc && !strcmp(argv[arg], "-t"))
     {
-        print_ts = TRUE;
+        print_ts = true;
         ++arg;
     }
     const long long gamenumber = ((arg < argc) ? atoll(argv[arg++]) : 1);

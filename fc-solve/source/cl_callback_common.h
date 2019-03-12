@@ -26,69 +26,69 @@ static inline bool cmd_line_cb__handle_common(const char *const arg_str,
     if (IS_ARG_LONG("i", "iter-output"))
     {
         set_iter_handler(instance, dc);
-        return TRUE;
+        return true;
     }
     else if (IS_ARG_LONG("s", "state-output"))
     {
         set_iter_handler(instance, dc);
-        dc->debug_iter_state_output = TRUE;
-        return TRUE;
+        dc->debug_iter_state_output = true;
+        return true;
     }
     else if (IS_ARG_LONG("p", "parseable-output"))
     {
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-        dc->parseable_output = TRUE;
+        dc->parseable_output = true;
 #endif
-        return TRUE;
+        return true;
     }
     else if (IS_ARG_LONG("c", "canonized-order-output"))
     {
-        dc->canonized_order_output = TRUE;
-        return TRUE;
+        dc->canonized_order_output = true;
+        return true;
     }
     else if (IS_ARG_LONG("t", "display-10-as-t"))
     {
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
-        dc->display_10_as_t = TRUE;
+        dc->display_10_as_t = true;
 #endif
-        return TRUE;
+        return true;
     }
     else if (IS_ARG_LONG("m", "display-moves"))
     {
-        dc->display_moves = TRUE;
+        dc->display_moves = true;
         dc->display_states = FALSE;
-        return TRUE;
+        return true;
     }
     else if (IS_ARG_LONG("sn", "standard-notation"))
     {
         dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_REGULAR;
-        return TRUE;
+        return true;
     }
     else if (IS_ARG_LONG("snx", "standard-notation-extended"))
     {
         dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_EXTENDED;
-        return TRUE;
+        return true;
     }
     else if (IS_ARG_LONG("sam", "display-states-and-moves"))
     {
-        dc->display_moves = TRUE;
-        dc->display_states = TRUE;
-        return TRUE;
+        dc->display_moves = true;
+        dc->display_states = true;
+        return true;
     }
     else if (IS_ARG_LONG("pi", "display-parent-iter"))
     {
-        dc->display_parent_iter_num = TRUE;
-        return TRUE;
+        dc->display_parent_iter_num = true;
+        return true;
     }
     else if (IS_ARG_LONG("sel", "show-exceeded-limits"))
     {
-        dc->show_exceeded_limits = TRUE;
-        return TRUE;
+        dc->show_exceeded_limits = true;
+        return true;
     }
     else if (IS_ARG_LONG("hoi", "hint-on-intractable"))
     {
-        dc->hint_on_intract = TRUE;
-        return TRUE;
+        dc->hint_on_intract = true;
+        return true;
     }
     return FALSE;
 }

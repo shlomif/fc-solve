@@ -245,7 +245,7 @@ static void perform_FCC_brfs(const fcs_dbm_variant_type local_variant,
             (memcmp(&(extracted_item->key), &running_min, sizeof(running_min)) <
                 0))
         {
-            running_min_was_assigned = TRUE;
+            running_min_was_assigned = true;
             running_min = extracted_item->key;
             if (cache_does_key_exist(
                     does_state_exist_in_any_FCC_cache, &(running_min)))
@@ -402,7 +402,7 @@ static bool fc_solve_add_start_point_in_mem(
 
     if (fc_solve_kaz_tree_lookup_value(tree, enc_state))
     {
-        return TRUE;
+        return true;
     }
 
     fcc_brfs_add_key_to_tree(tree, enc_state);

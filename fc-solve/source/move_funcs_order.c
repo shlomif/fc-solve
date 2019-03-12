@@ -46,8 +46,8 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                 SET_ERR("There's a nested random group.");
                 return 1;
             }
-            is_group = TRUE;
-            is_start_group = TRUE;
+            is_group = true;
+            is_start_group = true;
 #endif
             if (moves_order->groups[moves_order->num - 1].num)
             {

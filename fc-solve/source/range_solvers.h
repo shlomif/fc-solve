@@ -42,7 +42,7 @@ static inline bool range_solvers__solve(void *const instance,
 
     case FCS_STATE_FLARES_PLAN_ERROR:
         print_flares_plan_error(instance);
-        return TRUE;
+        return true;
 
     case FCS_STATE_IS_NOT_SOLVEABLE:
         fc_solve_print_unsolved(board_num);

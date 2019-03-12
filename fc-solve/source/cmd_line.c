@@ -135,7 +135,7 @@ static inline bool read_preset(const char *const preset_name,
                 nullify_newline(line);
                 if (!strcmp(s, preset_name))
                 {
-                    read_next_preset = TRUE;
+                    read_next_preset = true;
                 }
             }
             else if ((s = try_str_prefix(line, "command=")))
@@ -150,7 +150,7 @@ static inline bool read_preset(const char *const preset_name,
         }
         fclose(f);
     }
-    return TRUE;
+    return true;
 }
 
 #ifdef FCS_WITH_ERROR_STRS

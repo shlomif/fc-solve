@@ -96,7 +96,7 @@ static inline void init_stacks_map(
     {
         stacks_map[i] = FALSE;
     }
-    stacks_map[stack_idx] = stacks_map[ds] = TRUE;
+    stacks_map[stack_idx] = stacks_map[ds] = true;
 }
 
 typedef struct
@@ -468,7 +468,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
         }
 
     found:
-        stacks_map[clear_junk_dest_stack] = TRUE;
+        stacks_map[clear_junk_dest_stack] = true;
         seqs->junk_move_to_stacks[false_seq_idx] =
             (size_t)clear_junk_dest_stack;
     }
@@ -558,7 +558,7 @@ DECLARE_MOVE_FUNCTION(
     for (int h = cards_num - 2; h >= -1; h--)
     {
         const fcs_card card = fcs_col_get_card(col, h + 1);
-        bool should_search = TRUE;
+        bool should_search = true;
         bool should_increment_num_true_seqs = FALSE;
         bool should_break;
         /* Stop if we reached the bottom of the stack */
@@ -568,12 +568,12 @@ DECLARE_MOVE_FUNCTION(
             /* If this is no longer a sequence - move to the next stack */
             if (!fcs_is_ss_false_parent(h_above_card, card))
             {
-                should_break = TRUE;
+                should_break = true;
             }
             else if ((should_search =
                              (!fcs_is_ss_suit_true(h_above_card, card))))
             {
-                should_increment_num_true_seqs = TRUE;
+                should_increment_num_true_seqs = true;
             }
         }
         if (should_search)
@@ -785,7 +785,7 @@ DECLARE_MOVE_FUNCTION(
         populate_seq_points(dest_col, dc, &seqs);
 
         if (generic_false_seq_index_loop(LOCAL_STACKS_NUM, raw_state_raw,
-                num_vacant_stacks, dest_col, &seqs, stack_idx, ds, FALSE, TRUE,
+                num_vacant_stacks, dest_col, &seqs, stack_idx, ds, FALSE, true,
                 fcs_col_get_card(col, after_end_of_junk),
                 num_src_junk_true_seqs) &&
             (calc_max_simple_simon_seq_move(seqs.after_junk_num_freestacks) >=
@@ -926,7 +926,7 @@ DECLARE_MOVE_FUNCTION(
         sequences_analysis seqs;
 
         if (POPULATE_AND_CHECK_IF_FALSE_SEQ(
-                dest_col, (int)dc, stack_idx, (int)ds, TRUE))
+                dest_col, (int)dc, stack_idx, (int)ds, true))
         {
             /* We can do it - so let's move */
             sfs_check_state_begin();

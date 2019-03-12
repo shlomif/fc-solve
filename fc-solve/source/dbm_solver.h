@@ -106,7 +106,7 @@ static inline void fcs_dbm__found_solution(
     fcs_dbm_queue_item *const item GCC_UNUSED)
 {
     common->should_terminate = SOLUTION_FOUND_TERMINATE;
-    common->queue_solution_was_found = TRUE;
+    common->queue_solution_was_found = true;
 #ifdef FCS_DBM_WITHOUT_CACHES
     common->queue_solution_ptr = token;
 #else
