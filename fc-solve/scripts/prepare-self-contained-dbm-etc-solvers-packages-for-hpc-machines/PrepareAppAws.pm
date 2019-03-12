@@ -4,8 +4,8 @@ use strict;
 use warnings;
 
 use Getopt::Long qw/ GetOptions /;
-use Moose;
-use PrepareCommon;
+use MooX qw/ late /;
+use PrepareCommon ();
 
 has 'fcc_solver'    => ( is => 'ro', isa => 'Bool',          default  => '' );
 has 'num_freecells' => ( is => 'ro', isa => 'Int',           default  => 4 );

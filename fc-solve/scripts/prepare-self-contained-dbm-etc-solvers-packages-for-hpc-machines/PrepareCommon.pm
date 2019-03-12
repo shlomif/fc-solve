@@ -5,8 +5,7 @@ use warnings;
 
 use Path::Tiny qw/ path /;
 use IO::All qw/ io /;
-
-use Moose;
+use MooX qw/ late /;
 
 has 'depth_dbm'  => ( is => 'ro', isa => 'Bool', required => 1 );
 has 'fcc_solver' => ( is => 'ro', isa => 'Bool', default  => 0 );
