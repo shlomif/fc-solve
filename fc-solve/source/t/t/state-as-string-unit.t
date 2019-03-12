@@ -41,9 +41,9 @@ SV * non_parsable_state_as_string(char * input_state_string) {
         PASS_FREECELLS(4)
         PASS_STACKS(8)
         PASS_DECKS(1)
-        FC_SOLVE__PASS_PARSABLE(FALSE)
-        , FALSE
-        PASS_T(FALSE)
+        FC_SOLVE__PASS_PARSABLE(false)
+        , false
+        PASS_T(false)
     );
 
     return newSVpv(ret, 0);

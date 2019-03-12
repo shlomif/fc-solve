@@ -46,7 +46,7 @@ bool fc_solve_dbm_store_lookup_parent_and_move(fcs_dbm_store store,
     }
     else
     {
-        return FALSE;
+        return false;
     }
 }
 

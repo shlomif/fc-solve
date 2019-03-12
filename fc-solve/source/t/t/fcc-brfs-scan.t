@@ -106,7 +106,7 @@ static string_list_t av_to_char_p_p(AV * av)
 
     for (int i = 0; i < len ; i++)
     {
-        SV * * item = av_fetch(av, i, FALSE);
+        SV * * item = av_fetch(av, i, false);
 
         assert(item);
         ret[i] = savepv(SvPVbyte_nolen((*item)));
@@ -441,7 +441,7 @@ EOF
                     }
                 )
             ),
-            'Testing that it returns FALSE if state is in the cache.',
+            'Testing that it returns false if state is in the cache.',
         );
     }
 }
@@ -503,6 +503,6 @@ EOF
                 }
             )
         ),
-        'Min state present returns FALSE.',
+        'Min state present returns false.',
     );
 }

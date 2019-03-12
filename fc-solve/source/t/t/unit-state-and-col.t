@@ -61,9 +61,9 @@ SV * as_string(SV * obj) {
         PASS_FREECELLS(4)
         PASS_STACKS(8)
         PASS_DECKS(1)
-        FC_SOLVE__PASS_PARSABLE(TRUE)
-        , FALSE
-        PASS_T(TRUE)
+        FC_SOLVE__PASS_PARSABLE(true)
+        , false
+        PASS_T(true)
     );
 
     return newSVpv(ret, 0);

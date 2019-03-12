@@ -108,13 +108,13 @@ extern "C" bool fc_solve_states_google_hash_insert(
     if (result.second)
     {
         *existing_key = NULL;
-        return FALSE;
+        return false;
     }
     else
     {
         *existing_key = (*(result.first));
 
-        return TRUE;
+        return true;
     }
 }
 
@@ -202,13 +202,13 @@ extern "C" bool fc_solve_columns_google_hash_insert(
     if (result.second)
     {
         *existing_key = NULL;
-        return FALSE;
+        return false;
     }
     else
     {
         *existing_key = (*(result.first));
 
-        return TRUE;
+        return true;
     }
 }
 
