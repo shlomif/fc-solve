@@ -267,18 +267,12 @@ static inline int catch_more_bugs_solve_board(
     void *const inst, const char *const user_state)
 {
     const fcs_int_limit_t CHUNKSIZE = 100;
-    const fcs_int_limit_t MAX_iters_p =
-        fc_solve_user_INTERNAL_query_iters_limit(inst);
-    const fcs_int_limit_t MAX_iters =
-        (MAX_iters_p < 0) ? LONG_MAX : MAX_iters_p;
     fcs_int_limit_t limit = CHUNKSIZE;
-    limit = min(limit, MAX_iters);
     freecell_solver_user_soft_limit_iterations_long(inst, limit);
     int ret = freecell_solver_user_solve_board(inst, user_state);
     while (ret == FCS_STATE_SOFT_SUSPEND_PROCESS)
     {
         limit += CHUNKSIZE;
-        limit = min(limit, MAX_iters);
         freecell_solver_user_soft_limit_iterations_long(inst, limit);
         ret = freecell_solver_user_resume_solution(inst);
     }
