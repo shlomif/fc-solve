@@ -266,7 +266,7 @@ typedef enum
 static inline int catch_more_bugs_solve_board(
     void *const inst, const char *const user_state)
 {
-    const fcs_int_limit_t CHUNKSIZE = 100;
+    const fcs_int_limit_t CHUNKSIZE = 1;
     fcs_int_limit_t limit = CHUNKSIZE;
     freecell_solver_user_soft_limit_iterations_long(inst, limit);
     int ret = freecell_solver_user_solve_board(inst, user_state);

@@ -3321,9 +3321,18 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
  * the board iterations limit.
  * */
 #ifdef FCS_WITH_FLARES
-                instance_item->current_plan_item_idx--;
-#endif
+                if (current_plan_item->type != FLARES_PLAN_RUN_COUNT_ITERS ||
+                    current_plan_item->remaining_quota)
+                {
+                    if (ret == FCS_STATE_SUSPEND_PROCESS)
+                    {
+                        instance_item->current_plan_item_idx--;
+                        break;
+                    }
+                }
+#else
                 break;
+#endif
             }
 
 #ifdef FCS_WITH_FLARES
@@ -3372,9 +3381,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #if 0
     fprintf(stderr, "process_ret=%d\n", process_ret);
 #endif
-    return ((r == FCS_STATE_SUSPEND_PROCESS && process_ret)
-                ? FCS_STATE_SOFT_SUSPEND_PROCESS
-                : r);
+    const_AUTO(ret2, (((r == FCS_STATE_SUSPEND_PROCESS) && process_ret)
+                             ? FCS_STATE_SOFT_SUSPEND_PROCESS
+                             : r));
+    return ret2;
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
