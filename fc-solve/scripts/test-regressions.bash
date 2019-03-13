@@ -1,4 +1,5 @@
 common='-s -i -p -t -sam -sel'
+common='-p -t -sam -sel'
 filt()
 {
     perl -lanE 's/[ \t]+$//; say if !/^Stored-/';
@@ -34,10 +35,24 @@ f()
         --flares-plan 'Run:300@dfs,Run:1000@befs,CP:,Run:100@dfs' \
         $common  <(pi-make-microsoft-freecell-board -t 6) | filt
 }
+idx=1
+f()
+{
+    "$1" -l ve -mi 100000 $common <(pi-make-microsoft-freecell-board -t "$idx") | filt | sha256sum
+}
 # f ./fc-solve
-(cd /usr && f fc-solve) > good
-f ./fc-solve > bad
-cmp good bad
-read
-nvim -O good bad
-# ; gvimdiff <(f fc-solve ) <(f ./fc-solve)
+(
+while true
+do
+    want="`cd /usr && f fc-solve`"
+    have="`f ./fc-solve`"
+    if test "$want" != "$have"
+    then
+        echo "wrong $idx"
+        exit -1
+    else
+        echo "$idx $have"
+    fi
+    let ++idx
+done
+) 2>&1 | timestamper |tee -a fcs-log-1.txt
