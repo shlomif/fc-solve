@@ -425,3 +425,5 @@ fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps
 	@echo $(MAKE) fastrender
 	@$(call WML_RENDER,) $(SRC_DOCS)
 	@$(PROCESS_ALL_INCLUDES) $(HTMLS)
+
+DBTOEPUB := ZIPOPT="-X" $(DBTOEPUB)
