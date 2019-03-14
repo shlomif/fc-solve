@@ -11,7 +11,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Getopt::Long;
+use Getopt::Long qw/ GetOptions /;
 use Path::Tiny qw/path/;
 
 my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
@@ -483,10 +483,7 @@ my @cmd = (
     ),
 );
 
-if ( defined($path_to_source_dir) )
-{
-    push @cmd, $path_to_source_dir;
-}
+push @cmd, $path_to_source_dir;
 
 if ($cmdl_compile)
 {
