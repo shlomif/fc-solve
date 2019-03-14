@@ -2154,8 +2154,7 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
 static inline fcs_int_limit_t get_num_times_long(fcs_user *const user)
 {
     return user->iterations_board_started_at.num_checked_states +
-           max(OBJ_STATS(user).num_checked_states,
-               user_obj(user)->i__num_checked_states) -
+           OBJ_STATS(user).num_checked_states -
            user->init_num_checked_states.num_checked_states;
 }
 
