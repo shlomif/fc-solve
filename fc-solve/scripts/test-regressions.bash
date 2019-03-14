@@ -1,5 +1,5 @@
 common='-s -i -p -t -sam -sel'
-common='-p -t -sam -sel'
+# common='-p -t -sam -sel'
 filt()
 {
     perl -lanE 's/[ \t]+$//; say if !/^Stored-/';
@@ -38,20 +38,24 @@ f()
 idx=1
 f()
 {
-    "$1" -l ve -mi 100000 $common <(pi-make-microsoft-freecell-board -t "$idx") | filt | sha256sum
+    "$1" -l ve -mi 50000 $common <(pi-make-microsoft-freecell-board -t "$idx") | filt
+}
+sf()
+{
+    f "$@" | sha256sum
 }
 # f ./fc-solve
 (
 while true
 do
-    want="`cd /usr && f fc-solve`"
-    have="`f ./fc-solve`"
-    if test "$want" != "$have"
+    (cd /usr && f fc-solve) > want
+    f ./fc-solve > have
+    if ! cmp want have
     then
         echo "wrong $idx"
-        exit -1
+        break
     else
-        echo "$idx $have"
+        echo "$idx"
     fi
     let ++idx
 done

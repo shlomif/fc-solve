@@ -3015,7 +3015,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool process_ret = false;
+#endif
 #ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
 #endif
@@ -3024,7 +3026,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
      * */
     do
     {
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
         process_ret = false;
+#endif
         const_AUTO(instance_item, curr_inst(user));
 
 #ifdef FCS_WITH_FLARES
@@ -3381,10 +3385,18 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #if 0
     fprintf(stderr, "process_ret=%d\n", process_ret);
 #endif
-    const_AUTO(ret2, (((r == FCS_STATE_SUSPEND_PROCESS) && process_ret)
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+    const_AUTO(ret2, (((r == FCS_STATE_SUSPEND_PROCESS) && process_ret &&
+                          ((user->current_iterations_limit < 0
+                                   ? FCS_INT_LIMIT_MAX
+                                   : user->current_iterations_limit) >
+                              freecell_solver_user_get_num_times_long(user)))
                              ? FCS_STATE_SOFT_SUSPEND_PROCESS
                              : r));
     return ret2;
+#else
+    return r;
+#endif
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION

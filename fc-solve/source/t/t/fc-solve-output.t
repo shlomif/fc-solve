@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 10;
+use Test::More tests => 11;
 use FC_Solve::GetOutput ();
 use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
@@ -143,6 +143,23 @@ sub trap_depth_dbm
             Total\ number\ of\ states\ checked\ is\ 10\.\n
         /msx,
         "Checking that '-sel' (shortened option) is working properly.",
+    );
+}
+
+{
+    my $fc_solve_output = trap_board(
+        { deal => 8, theme => [ '-l', 've', '-sel', '--max-iters', '100' ], } );
+
+    my $output_text = _get($fc_solve_output);
+
+    # TEST
+    like(
+        $output_text,
+        qr/
+            ^Iterations\ count\ exceeded\.\n
+            Total\ number\ of\ states\ checked\ is\ 100\.\n
+        /msx,
+        "Checking that it iterates for exactly --max-iters",
     );
 }
 
