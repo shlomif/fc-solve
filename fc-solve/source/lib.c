@@ -2024,6 +2024,7 @@ typedef struct
     // The global (sequence-wide) limit of the iterations. Used
     // by limit_iterations() and friends
     fcs_int_limit_t current_iterations_limit;
+    fcs_int_limit_t effective_current_iterations_limit;
     fcs_int_limit_t current_soft_iterations_limit;
 #endif
     fcs_stats iterations_board_started_at;
@@ -2386,6 +2387,7 @@ static MYINLINE void user_initialize(fcs_user *const user)
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     user->current_iterations_limit = -1;
+    user->effective_current_iterations_limit = FCS_INT_LIMIT_MAX;
     user->current_soft_iterations_limit = -1;
 #endif
 
@@ -2445,7 +2447,17 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
 {
-    ((fcs_user *const)api_instance)->current_iterations_limit = max_iters;
+    fcs_user *const user = (fcs_user *)api_instance;
+    if (max_iters < 0)
+    {
+        user->current_iterations_limit = -1;
+        user->effective_current_iterations_limit = FCS_INT_LIMIT_MAX;
+    }
+    else
+    {
+        user->current_iterations_limit =
+            user->effective_current_iterations_limit = max_iters;
+    }
 }
 
 void DLLEXPORT freecell_solver_user_soft_limit_iterations_long(
@@ -3214,8 +3226,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
             process_ret = ((user->current_soft_iterations_limit >= 0) &&
                            ((user->current_soft_iterations_limit <
-                                user->current_iterations_limit) ||
-                               (user->current_iterations_limit < 0)));
+                               user->effective_current_iterations_limit)));
         }
 #endif
 
@@ -3289,9 +3300,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             }
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-            if (user->current_iterations_limit >= 0 &&
-                freecell_solver_user_get_num_times_long(user) >=
-                    user->current_iterations_limit)
+            if (freecell_solver_user_get_num_times_long(user) >=
+                user->effective_current_iterations_limit)
             {
                 ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
                 break;
@@ -3397,9 +3407,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     if (r == FCS_STATE_SUSPEND_PROCESS)
     {
-        if (process_ret && ((user->current_iterations_limit < 0
-                                    ? FCS_INT_LIMIT_MAX
-                                    : user->current_iterations_limit) >
+        if (process_ret && (user->effective_current_iterations_limit >
                                freecell_solver_user_get_num_times_long(user)))
         {
             return FCS_STATE_SOFT_SUSPEND_PROCESS;
