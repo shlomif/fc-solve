@@ -75,26 +75,25 @@ sub trap_depth_dbm
     return { out_lines => \@lines };
 }
 
+sub _board_like
 {
-    my $fc_solve_output = trap_board(
-        {
-            deal  => 1941,
-            theme => [ '--show-exceeded-limits', '--max-iters', '10' ],
-        }
-    );
+    my ( $params, $re, $blurb ) = @_;
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    return like( _get( trap_board($params) ), $re, $blurb );
+}
 
-    my $output_text = _get($fc_solve_output);
-
-    # TEST
-    like(
-        $output_text,
-        qr/
+# TEST
+_board_like(
+    {
+        deal  => 1941,
+        theme => [ '--show-exceeded-limits', '--max-iters', '10' ],
+    },
+    qr/
             ^Iterations\ count\ exceeded\.\n
             Total\ number\ of\ states\ checked\ is\ 10\.\n
         /msx,
-        "Checking that --show-exceeded-limits is working properly.",
-    );
-}
+    "Checking that --show-exceeded-limits is working properly.",
+);
 
 {
     my $trap = sub {
@@ -129,60 +128,38 @@ sub trap_depth_dbm
     );
 }
 
-{
-    my $fc_solve_output = trap_board(
-        { deal => 1941, theme => [ '-sel', '--max-iters', '10' ], } );
-
-    my $output_text = _get($fc_solve_output);
-
-    # TEST
-    like(
-        $output_text,
-        qr/
+# TEST
+_board_like(
+    { deal => 1941, theme => [ '-sel', '--max-iters', '10' ], },
+    qr/
             ^Iterations\ count\ exceeded\.\n
             Total\ number\ of\ states\ checked\ is\ 10\.\n
         /msx,
-        "Checking that '-sel' (shortened option) is working properly.",
-    );
-}
+    "Checking that '-sel' (shortened option) is working properly.",
+);
 
-{
-    my $fc_solve_output = trap_board(
-        { deal => 8, theme => [ '-l', 've', '-sel', '--max-iters', '100' ], } );
-
-    my $output_text = _get($fc_solve_output);
-
-    # TEST
-    like(
-        $output_text,
-        qr/
+# TEST
+_board_like(
+    { deal => 8, theme => [ '-l', 've', '-sel', '--max-iters', '100' ], },
+    qr/
             ^This\ game\ is\ solveable\.\n
             Total\ number\ of\ states\ checked\ is\ 100\.\n
         /msx,
-        "Checking that it iterates for exactly --max-iters",
-    );
-}
+    "Checking that it iterates for exactly --max-iters",
+);
 
-{
-    my $fc_solve_output = trap_board(
-        {
-            deal  => 7186,
-            theme => [ '-l', 've', '-sel', '--max-iters', '1271' ],
-        }
-    );
-
-    my $output_text = _get($fc_solve_output);
-
-    # TEST
-    like(
-        $output_text,
-        qr/
+# TEST
+_board_like(
+    {
+        deal  => 7186,
+        theme => [ '-l', 've', '-sel', '--max-iters', '1271' ],
+    },
+    qr/
             ^This\ game\ is\ solveable\.\n
             Total\ number\ of\ states\ checked\ is\ 1271\.\n
         /msx,
-        "Checking that it iterates for exactly --max-iters",
-    );
-}
+    "Checking that it iterates for exactly --max-iters",
+);
 
 {
     my $GOOD_ITERS_COUNT = 60817;
