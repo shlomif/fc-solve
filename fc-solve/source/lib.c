@@ -2151,6 +2151,14 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
 #define FLARE_INLINE inline
 #endif
 
+static inline fcs_int_limit_t get_num_times_long(fcs_user *const user)
+{
+    return user->iterations_board_started_at.num_checked_states +
+           max(OBJ_STATS(user).num_checked_states,
+               user_obj(user)->i__num_checked_states) -
+           user->init_num_checked_states.num_checked_states;
+}
+
 #ifndef FCS_FREECELL_ONLY
 static inline void calc_variant_suit_mask_and_desired_suit_value(
     fcs_instance *const instance GCC_UNUSED)
@@ -3300,7 +3308,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             }
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-            if (freecell_solver_user_get_num_times_long(user) >=
+            if (get_num_times_long(user) >=
                 user->effective_current_iterations_limit)
             {
                 ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
@@ -3408,7 +3416,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
     if (r == FCS_STATE_SUSPEND_PROCESS)
     {
         if (process_ret && (user->effective_current_iterations_limit >
-                               freecell_solver_user_get_num_times_long(user)))
+                               get_num_times_long(user)))
         {
             return FCS_STATE_SOFT_SUSPEND_PROCESS;
         }
@@ -3874,11 +3882,7 @@ fcs_int_limit_t DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_num_times_long(void *api_instance)
 {
     fcs_user *const user = (fcs_user *)api_instance;
-
-    return user->iterations_board_started_at.num_checked_states +
-           max(OBJ_STATS(user).num_checked_states,
-               user_obj(user)->i__num_checked_states) -
-           user->init_num_checked_states.num_checked_states;
+    return get_num_times_long(user);
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
