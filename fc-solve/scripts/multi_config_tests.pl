@@ -395,6 +395,10 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
     $ENV{LIBAVL2_SOURCE_DIR} = Path::Tiny->cwd->child($AVLV);
     print "LIBAVL2_SOURCE_DIR = $ENV{LIBAVL2_SOURCE_DIR}\n";
 }
+elsif ( grep { !-f } glob( $ENV{LIBAVL2_SOURCE_DIR} . '/*.[ch]' ) )
+{
+    die "LIBAVL2_SOURCE_DIR is invalid.";
+}
 
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
