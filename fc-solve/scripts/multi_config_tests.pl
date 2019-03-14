@@ -395,7 +395,8 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
     $ENV{LIBAVL2_SOURCE_DIR} = Path::Tiny->cwd->child($AVLV);
     print "LIBAVL2_SOURCE_DIR = $ENV{LIBAVL2_SOURCE_DIR}\n";
 }
-elsif ( grep { !-f } glob( $ENV{LIBAVL2_SOURCE_DIR} . '/*.[ch]' ) )
+elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
+    or grep { !-f } glob( $ENV{LIBAVL2_SOURCE_DIR} . '/*.[ch]' ) )
 {
     die "LIBAVL2_SOURCE_DIR is invalid.";
 }
