@@ -35,10 +35,11 @@ f()
         --flares-plan 'Run:300@dfs,Run:1000@befs,CP:,Run:100@dfs' \
         $common  <(pi-make-microsoft-freecell-board -t 6) | filt
 }
-idx=1
+idx=7186
+mi=1270
 f()
 {
-    "$1" -l ve -mi 50000 $common <(pi-make-microsoft-freecell-board -t "$idx") | filt
+    "$1" -l ve -mi "$mi" $common <(pi-make-microsoft-freecell-board -t "$idx") | filt
 }
 sf()
 {
@@ -52,11 +53,11 @@ do
     f ./fc-solve > have
     if ! cmp want have
     then
-        echo "wrong $idx"
+        echo "wrong $idx $mi"
         break
     else
-        echo "$idx"
+        echo "$idx $mi"
     fi
-    let ++idx
+    let ++mi
 done
 ) 2>&1 | timestamper |tee -a fcs-log-1.txt

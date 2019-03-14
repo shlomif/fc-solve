@@ -3288,6 +3288,15 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 instance_item->minimal_flare = flare;
             }
 #endif
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+            if (user->current_iterations_limit >= 0 &&
+                freecell_solver_user_get_num_times_long(user) >=
+                    user->current_iterations_limit)
+            {
+                ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
+                break;
+            }
+#endif
             ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
         }
         else if (user->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
@@ -3386,17 +3395,27 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
     fprintf(stderr, "process_ret=%d\n", process_ret);
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    const_AUTO(ret2, (((r == FCS_STATE_SUSPEND_PROCESS) && process_ret &&
-                          ((user->current_iterations_limit < 0
-                                   ? FCS_INT_LIMIT_MAX
-                                   : user->current_iterations_limit) >
-                              freecell_solver_user_get_num_times_long(user)))
-                             ? FCS_STATE_SOFT_SUSPEND_PROCESS
-                             : r));
-    return ret2;
-#else
-    return r;
+    if (r == FCS_STATE_SUSPEND_PROCESS)
+    {
+        if (process_ret && ((user->current_iterations_limit < 0
+                                    ? FCS_INT_LIMIT_MAX
+                                    : user->current_iterations_limit) >
+                               freecell_solver_user_get_num_times_long(user)))
+        {
+            return FCS_STATE_SOFT_SUSPEND_PROCESS;
+        }
+#ifdef FCS_WITH_FLARES
+        const_AUTO(instance_item, curr_inst(user));
+        if (instance_item->minimal_flare)
+        {
+            SET_ACTIVE_FLARE(user, instance_item->minimal_flare);
+            user->init_num_checked_states = OBJ_STATS(user);
+            return FCS_STATE_WAS_SOLVED;
+        }
 #endif
+    }
+#endif
+    return r;
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION

@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 11;
+use Test::More tests => 12;
 use FC_Solve::GetOutput ();
 use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
@@ -156,8 +156,29 @@ sub trap_depth_dbm
     like(
         $output_text,
         qr/
-            ^Iterations\ count\ exceeded\.\n
+            ^This\ game\ is\ solveable\.\n
             Total\ number\ of\ states\ checked\ is\ 100\.\n
+        /msx,
+        "Checking that it iterates for exactly --max-iters",
+    );
+}
+
+{
+    my $fc_solve_output = trap_board(
+        {
+            deal  => 7186,
+            theme => [ '-l', 've', '-sel', '--max-iters', '1271' ],
+        }
+    );
+
+    my $output_text = _get($fc_solve_output);
+
+    # TEST
+    like(
+        $output_text,
+        qr/
+            ^This\ game\ is\ solveable\.\n
+            Total\ number\ of\ states\ checked\ is\ 1271\.\n
         /msx,
         "Checking that it iterates for exactly --max-iters",
     );
