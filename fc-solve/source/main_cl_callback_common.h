@@ -260,7 +260,9 @@ typedef enum
     ERROR = -1,
 } exit_code_type;
 
-#ifdef FCS_COMPILE_DEBUG_FUNCTIONS
+#if defined(FCS_COMPILE_DEBUG_FUNCTIONS) &&                                    \
+    !defined(FCS_WITHOUT_EXPORTED_RESUME_SOLUTION) &&                          \
+    !defined(FCS_WITHOUT_MAX_NUM_STATES)
 //#if 0
 #include "fcs_user_internal.h"
 static inline int catch_more_bugs_solve_board(

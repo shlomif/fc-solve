@@ -20,9 +20,6 @@ extern "C" {
 #endif
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-fcs_int_limit_t DLLEXPORT fc_solve_user_INTERNAL_query_iters_limit(
-    void *const api_instance);
-
 double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
     void *api_instance, int my_index);
 

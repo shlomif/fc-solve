@@ -4606,13 +4606,6 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
 #endif
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
-
-fcs_int_limit_t DLLEXPORT fc_solve_user_INTERNAL_query_iters_limit(
-    void *const api_instance)
-{
-    return ((fcs_user *const)api_instance)->current_iterations_limit;
-}
-
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     void *const api_instance GCC_UNUSED, char **const error_string)
 {

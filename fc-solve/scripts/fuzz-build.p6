@@ -25,7 +25,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     my $SLIGHTLY-WRONG-GCC-FLAG-SEE-man-gcc = "-frandom-seed=24";
     %*ENV{"CFLAGS"}="-Werror" ~ (($g && $rb) ?? " $SLIGHTLY-WRONG-GCC-FLAG-SEE-man-gcc"  !! "");
     %*ENV{"SOURCE_DATE_EPOCH"}="0";
-    my $cmd ="../scripts/Tatzer && make";
+    my $cmd ="../scripts/Tatzer && make -j5";
     $cmd ~= " && perl ../source/run-tests.pl" if $t;
     if $rb
     {
