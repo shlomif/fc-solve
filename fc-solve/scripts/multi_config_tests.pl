@@ -344,7 +344,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
             sub {
                 if ($tatzer_args)
                 {
-                    $run->( "Tatzer", [ '../source/Tatzer', @$tatzer_args ] );
+                    $run->( "Tatzer", [ '../scripts/Tatzer', @$tatzer_args ] );
                 }
                 else
                 {

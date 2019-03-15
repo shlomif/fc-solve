@@ -385,7 +385,7 @@ if (@ARGV)
 }
 else
 {
-    $path_to_source_dir = path($0)->parent;
+    $path_to_source_dir = path($0)->parent(2)->child('source');
 }
 
 if ( $bool_opts_with_false_defaults__values{rcs} )

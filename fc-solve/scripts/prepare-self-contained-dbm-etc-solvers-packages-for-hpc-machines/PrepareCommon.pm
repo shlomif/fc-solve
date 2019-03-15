@@ -1,7 +1,9 @@
 package PrepareCommon;
 
+use 5.014;
 use strict;
 use warnings;
+use autodie;
 
 use Path::Tiny qw/ path /;
 use IO::All qw/ io /;
@@ -139,9 +141,12 @@ sub run
     $build_dir->mkpath;
 
     chdir($build_dir);
-    system( $src_path->child("Tatzer"),
-        qw{-l x64b}, "--nfc=$num_freecells",
-        qw{--states-type=COMPACT_STATES --dbm=kaztree}, $src_path );
+    system( $src_path->parent->child( "scripts", "Tatzer" ),
+        qw{-l x64b},
+        "--nfc=$num_freecells",
+        qw{--states-type=COMPACT_STATES --dbm=kaztree},
+        $src_path
+    ) and die $!;
 
     foreach my $fn ('dbm_common.h')
     {

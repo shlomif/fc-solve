@@ -32,13 +32,14 @@ which qunit-cli
 which unxz
 which xz
 src="$(pwd)"
-test -f "$src/Tatzer"
+tzr="$src/../scripts/Tatzer"
+test -f "$tzr"
 test -f "$src/freecell.c"
 build="$src/../prerel-build"
 assets_dir="$src/../../../../Arcs/fc-solve-site-assets/fc-solve-site-assets"
 mkdir "$build"
 cd "$build"
-"$src/Tatzer" -l n2t
+"$tzr" -l n2t
 make
 FCS_TEST_BUILD=1 perl "$src"/run-tests.pl
 cd "$src"
