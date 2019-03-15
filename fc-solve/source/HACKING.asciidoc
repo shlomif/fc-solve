@@ -18,8 +18,8 @@ copy.
 +mkdir "$HOME"/progs/freecell/git/fc-solve/fc-solve/source/../build"+
 and cd to it.
 
-3. Run +../source/Tatzer -l fc_bench -l extra_speed+ (for a Freecell-only capable solver)
-or +../source/Tatzer -l bench+ (for a solver that can solve all supported
+3. Run +../scripts/Tatzer -l fc_bench -l extra_speed+ (for a Freecell-only capable solver)
+or +../scripts/Tatzer -l bench+ (for a solver that can solve all supported
 games). Also append these options:
 +
     a. +--max-bench-threads-num=4+ , where 4 is the maximal
@@ -113,8 +113,6 @@ echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bas
 -------------------
 git clone https://github.com/shlomif/fc-solve
 -------------------
-+
-(You can also use http://bundler.caurea.org/ ).
 
 5. +$ cd fc-solve/fc-solve/source/+
 
@@ -123,7 +121,7 @@ git clone https://github.com/shlomif/fc-solve
 7. Configure the Freecell Solver build
 +
 -------------------
-../Tatzer
+../../scripts/Tatzer
 -------------------
 
 8. Build Freecell Solver:
@@ -151,7 +149,7 @@ To run it use in the bash shell, either +bash ../scripts/split-fcc--all-in-one.b
 ------------------------------------
 mkdir -p ../B
 cd ../B
-../source/Tatzer -l pdfs
+../scripts/Tatzer -l pdfs
 make
 . ../scripts/split-fcc-SOURCE-ME.bash
 startup
