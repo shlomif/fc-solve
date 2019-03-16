@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 12;
+use Test::More tests => 13;
 use FC_Solve::GetOutput ();
 use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
@@ -159,6 +159,19 @@ _board_like(
             Total\ number\ of\ states\ checked\ is\ 1271\.\n
         /msx,
     "Checking that it iterates for exactly --max-iters",
+);
+
+# TEST
+_board_like(
+    {
+        deal  => 1109,
+        theme => [ '-l', 've', '-sel', '--max-iters', '6468' ],
+    },
+    qr/
+            ^This\ game\ is\ solveable\.\n
+            Total\ number\ of\ states\ checked\ is\ 6468\.\n
+        /msx,
+    "Checking that #1109/ve iterates for exactly --max-iters",
 );
 
 {

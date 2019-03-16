@@ -3293,8 +3293,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         user->init_num_checked_states = flare->obj_stats;
 
+        bool solved = false;
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
         {
+            solved = true;
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
             flare->was_solution_traced = false;
 #endif
@@ -3306,17 +3308,18 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 instance_item->minimal_flare = flare;
             }
 #endif
-#ifndef FCS_WITHOUT_MAX_NUM_STATES
-            if (get_num_times_long(user) >=
-                user->effective_current_iterations_limit)
-            {
-                ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
-                break;
-            }
-#endif
             ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
         }
-        else if (user->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
+        bool suspend = false;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+        if (get_num_times_long(user) >=
+            user->effective_current_iterations_limit)
+        {
+            suspend = true;
+            ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
+        }
+#endif
+        if (!solved && user->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
         {
             if (was_run_now)
             {
@@ -3369,7 +3372,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             current_plan_item->remaining_quota =
                 current_plan_item->initial_quota;
 #endif
-            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+            if (!suspend)
+            {
+                ret = FCS_STATE_IS_NOT_SOLVEABLE;
+            }
 /*
  * Determine if we exceeded the instance-specific quota and if
  * so, designate it as unsolvable.
