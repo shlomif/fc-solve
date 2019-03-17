@@ -1086,6 +1086,7 @@ Archlinux
 BSDLed
 Bondt
 Bortnik
+Ciarniello
 Gergeley
 Hai
 Jurij
@@ -1100,6 +1101,7 @@ RPMs
 Radchenko
 Reftel
 Rivest
+Ryshpan
 Scaleway
 ShareAlike
 Sinan
@@ -1108,6 +1110,7 @@ Tzafrir
 Unur
 Yotam
 burtleburtle
+coz
 debondt
 der
 don_woods
@@ -1117,6 +1120,7 @@ homelinux
 icynic
 ik
 kaz
+kde
 kylheku
 larrysan45
 lookup2
@@ -1126,6 +1130,7 @@ numin8r
 pysolfc
 pythack
 ru
+show_bug
 var_base_int
 wikimedia
 xrl

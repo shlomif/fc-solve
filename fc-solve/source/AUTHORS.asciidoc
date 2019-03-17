@@ -149,3 +149,7 @@ server to fix the production code and tests there.
 
 * http://www.mageia.org/en/[Mageia] - its build-system caught some test
 failures.
+
+* *Participants on* https://bugs.kde.org/show_bug.cgi?id=405187 ( Jonathan
+Ryshpan, coz, Dan Ciarniello, Clifford Snow ) - reporting some issues with
+kpat which inspired some bug fixes in Freecell Solver.
