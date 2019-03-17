@@ -258,6 +258,8 @@ SKIP:
         {
             Test::More::skip( "without the dbm fc_solvers", 2 );
         }
+
+        # TEST:$solver=2;
         foreach my $solver ( 'depth_dbm_fc_solver', 'dbm_fc_solver' )
         {
             my $status;
@@ -275,7 +277,7 @@ SKIP:
             my @stats = $out =~
 /(\n>>>Queue Stats: inserted=[0-9]+ items_in_queue=[0-9]+ extracted=[0-9]+\n)/g;
 
-            # TEST
+            # TEST*$solver
             like(
                 $stats[-1],
                 qr/ items_in_queue=0 /,

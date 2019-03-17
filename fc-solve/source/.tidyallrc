@@ -6,3 +6,6 @@ select = **/*.{c,cpp,h,hpp}
 argv = -ci=4 -bl -cti=0
 ignore = **/scripts/err-on-unbuilt-executable.pl **/{cmpdigest,valgrind,verify}--*.t
 select = **/*.{pl,pm,t}
+
+[TestCount]
+select = **/*.t
