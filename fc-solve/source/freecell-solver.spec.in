@@ -100,6 +100,7 @@ It is not generally required.
 %make_build
 
 %check
+rm -f t/t/tidyall.t
 cd build
 perl ../run-tests.pl
 
