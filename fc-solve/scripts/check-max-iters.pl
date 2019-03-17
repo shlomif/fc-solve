@@ -8,15 +8,17 @@ use autodie;
 use Getopt::Long qw/ GetOptions /;
 use Path::Tiny qw/path/;
 
-require Math::Random::MT;
-for my $deal ( 1145 .. 1e9 )
+# require Math::Random::MT;
+for my $deal ( 1 .. 1e9 )
 {
     say "Reached deal = $deal";
-    my $gen  = Math::Random::MT->new($deal);
-    my $step = 1000;
-    for my $base ( 0 .. 20 )
+
+    # my $gen  = Math::Random::MT->new($deal);
+    # my $step = 1000;
+    for my $base ( 0 .. 1_000 )
     {
-        my $mi = int( ( $base + $gen->rand() ) * $step );
+        say "Reached deal = $deal ; base = $base" if $base % 100 == 0;
+        my $mi = $base;
         my $out =
 `./board_gen/pi-make-microsoft-freecell-board -t $deal | ./fc-solve -l ve -mi $mi -p -t -sam -sel`;
         my ($iters) = $out =~ /\nTotal number of states checked is ([0-9]+)\./
