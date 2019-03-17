@@ -1,8 +1,23 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2018-07-24
+:Date: 2019-03-18
 :Revision: $Id$
+
+Version 5.4.0: (18-Mar-2019)
+----------------------------
+
+1. Fix several bugs related to freecell_solver_user_limit_iterations_long()
+, +--max-iters+, etc. Some of them could make the library consume many more
+resources than specified and so may have *SECURITY* implications. (
+https://bugs.kde.org/show_bug.cgi?id=405187 .)
+
+2. Added freecell_solver_user_soft_limit_iterations_long() and
+FCS_STATE_SOFT_SUSPEND_PROCESS to the API.
+
+3. Add a new FCS_DEAL_ONLY_UP_TO_2G compile-time option.
+
+4. Fix more GCC and clang warnings, and other cleanups.
 
 Version 5.2.0: (20-Feb-2019)
 ----------------------------
