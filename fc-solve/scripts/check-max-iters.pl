@@ -9,7 +9,7 @@ use Getopt::Long qw/ GetOptions /;
 use Path::Tiny qw/path/;
 
 require Math::Random::MT;
-for my $deal ( 1109 .. 1e9 )
+for my $deal ( 1145 .. 1e9 )
 {
     say "Reached deal = $deal";
     my $gen  = Math::Random::MT->new($deal);
@@ -24,7 +24,7 @@ for my $deal ( 1109 .. 1e9 )
 
         if ( $out =~ m%Iterations count exceeded% )
         {
-            die "fail2 $deal $base" if $iters != $mi;
+            die "fail2 $deal $base $iters $mi" if $iters != $mi;
         }
         elsif ( $out =~ m%This game is solv% )
         {

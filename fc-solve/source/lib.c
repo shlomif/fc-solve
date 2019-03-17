@@ -3261,7 +3261,15 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 
         if (was_run_now)
         {
-            ret = user->ret_code = flare->ret_code = resume_instance(instance);
+            ret = user->ret_code = flare->ret_code =
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+                (instance->effective_max_num_checked_states >
+                            instance->i__num_checked_states
+                        ? resume_instance(instance)
+                        : FCS_STATE_SUSPEND_PROCESS);
+#else
+                resume_instance(instance);
+#endif
             flare->instance_is_ready = false;
         }
 #ifdef FCS_WITH_NI

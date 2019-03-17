@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 13;
+use Test::More tests => 14;
 use FC_Solve::GetOutput ();
 use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
@@ -172,6 +172,16 @@ _board_like(
             Total\ number\ of\ states\ checked\ is\ 6468\.\n
         /msx,
     "Checking that #1109/ve iterates for exactly --max-iters",
+);
+
+# TEST
+_board_like(
+    { deal => 24, theme => [ '-sel', '--max-iters', '0' ], },
+    qr/
+            ^Iterations\ count\ exceeded\.\n
+            Total\ number\ of\ states\ checked\ is\ 0\.\n
+        /msx,
+    "Checking that --max-iters 0 is working.",
 );
 
 {
