@@ -3025,7 +3025,7 @@ static int get_flare_move_count(
 #endif
 
 static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
-    fcs_user *const user, const fc_solve_solve_process_ret_t r
+    fcs_user *const user, const fc_solve_solve_process_ret_t ret
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     ,
     const bool process_ret
@@ -3033,7 +3033,7 @@ static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
 )
 {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    if (r == FCS_STATE_SUSPEND_PROCESS)
+    if (ret == FCS_STATE_SUSPEND_PROCESS)
     {
         if (process_ret && (user->effective_current_iterations_limit >
                                get_num_times_long(user)))
@@ -3051,9 +3051,68 @@ static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
 #endif
     }
 #endif
-    return r;
+    return ret;
 }
 
+static inline fc_solve_solve_process_ret_t start_flare(
+    fcs_user *const user, fcs_instance *const instance)
+{
+    if (!fc_solve_initial_user_state_to_c(user->state_string_copy,
+            &(user->state), INSTANCE_FREECELLS_NUM, INSTANCE_STACKS_NUM,
+            INSTANCE_DECKS_NUM, user->indirect_stacks_buffer))
+    {
+#ifdef FCS_WITH_ERROR_STRS
+        user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
+#endif
+        return (user->ret_code = FCS_STATE_INVALID_STATE);
+    }
+
+#ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
+#ifndef FCS_WITH_ERROR_STRS
+    fcs_card state_validity_card;
+#endif
+    if (FCS_STATE_VALIDITY__OK !=
+        (
+#ifdef FCS_WITH_ERROR_STRS
+            user->state_validity_ret =
+#endif
+                fc_solve_check_state_validity(
+                    &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+                        PASS_STACKS(INSTANCE_STACKS_NUM)
+                            PASS_DECKS(INSTANCE_DECKS_NUM),
+#ifdef FCS_WITH_ERROR_STRS
+                    &(user->state_validity_card)
+#else
+                &state_validity_card
+#endif
+                        )))
+    {
+        return (user->ret_code = FCS_STATE_INVALID_STATE);
+    }
+#endif
+#ifdef FCS_WITH_MOVES
+    fc_solve_init_locs(&(user->initial_state_locs));
+    user->state_locs = user->initial_state_locs;
+    /* running_state and initial_non_canonized_state are
+     * normalized states. So We're duplicating
+     * state to it before user->state is canonized.
+     * */
+    FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
+#endif
+#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
+    FCS_STATE__DUP_keyval_pair(user->initial_non_canonized_state, user->state);
+#endif
+#ifdef FCS_WITH_MOVES
+    fc_solve_canonize_state_with_locs(&(user->state.s),
+        &(user->state_locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+            PASS_STACKS(INSTANCE_STACKS_NUM));
+#else
+    fc_solve_canonize_state(&(user->state.s)PASS_FREECELLS(
+        INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
+#endif
+    init_instance(instance);
+    return FCS_STATE_IS_NOT_SOLVEABLE;
+}
 #ifdef FCS_WITH_NI
 #define BUMP_CURR_INST()                                                       \
     user->current_instance++;                                                  \
@@ -3147,62 +3206,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 
         if (is_start_of_flare_solving)
         {
-            if (!fc_solve_initial_user_state_to_c(user->state_string_copy,
-                    &(user->state), INSTANCE_FREECELLS_NUM, INSTANCE_STACKS_NUM,
-                    INSTANCE_DECKS_NUM, user->indirect_stacks_buffer))
+            const_AUTO(r, start_flare(user, instance));
+            if (r == FCS_STATE_INVALID_STATE)
             {
-#ifdef FCS_WITH_ERROR_STRS
-                user->state_validity_ret =
-                    FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
-#endif
-                return (user->ret_code = FCS_STATE_INVALID_STATE);
+                return r;
             }
-
-#ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
-#ifndef FCS_WITH_ERROR_STRS
-            fcs_card state_validity_card;
-#endif
-            if (FCS_STATE_VALIDITY__OK !=
-                (
-#ifdef FCS_WITH_ERROR_STRS
-                    user->state_validity_ret =
-#endif
-                        fc_solve_check_state_validity(
-                            &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                                PASS_STACKS(INSTANCE_STACKS_NUM)
-                                    PASS_DECKS(INSTANCE_DECKS_NUM),
-#ifdef FCS_WITH_ERROR_STRS
-                            &(user->state_validity_card)
-#else
-                        &state_validity_card
-#endif
-                                )))
-            {
-                return (user->ret_code = FCS_STATE_INVALID_STATE);
-            }
-#endif
-#ifdef FCS_WITH_MOVES
-            fc_solve_init_locs(&(user->initial_state_locs));
-            user->state_locs = user->initial_state_locs;
-            /* running_state and initial_non_canonized_state are
-             * normalized states. So We're duplicating
-             * state to it before user->state is canonized.
-             * */
-            FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
-#endif
-#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
-            FCS_STATE__DUP_keyval_pair(
-                user->initial_non_canonized_state, user->state);
-#endif
-#ifdef FCS_WITH_MOVES
-            fc_solve_canonize_state_with_locs(&(user->state.s),
-                &(user->state_locs)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                    PASS_STACKS(INSTANCE_STACKS_NUM));
-#else
-            fc_solve_canonize_state(&(user->state.s)PASS_FREECELLS(
-                INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
-#endif
-            init_instance(instance);
         }
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
