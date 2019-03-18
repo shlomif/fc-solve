@@ -2852,7 +2852,7 @@ static inline void recycle_flare(flare_item *const flare)
     }
 }
 
-static void recycle_instance(
+static void user__recycle_instance_item(
     fcs_user *const user, fcs_instance_item *const instance_item)
 {
     INSTANCE_ITEM_FLARES_LOOP_START()
@@ -3237,7 +3237,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
              * move to the next instance, or exit. */
             if (instance_item->all_plan_items_finished_so_far)
             {
-                recycle_instance(user, instance_item);
+                user__recycle_instance_item(user, instance_item);
                 BUMP_CURR_INST();
             }
             /* Otherwise - restart the plan again. */
@@ -3387,7 +3387,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 flare->instance_is_ready = true;
             }
 #else
-            recycle_instance(user, instance_item);
+            user__recycle_instance_item(user, instance_item);
             BUMP_CURR_INST();
 #endif
         }
@@ -3449,7 +3449,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 flare->obj_stats.num_states_in_collection =
                     instance->num_states_in_collection;
 #endif
-                recycle_instance(user, instance_item);
+                user__recycle_instance_item(user, instance_item);
                 BUMP_CURR_INST();
             }
 #endif
@@ -4454,7 +4454,7 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
     fcs_user *const user = (fcs_user *)api_instance;
 
     INSTANCES_LOOP_START()
-    recycle_instance(user, instance_item);
+    user__recycle_instance_item(user, instance_item);
     INSTANCES_LOOP_END()
     user->iterations_board_started_at = initial_stats;
 }
