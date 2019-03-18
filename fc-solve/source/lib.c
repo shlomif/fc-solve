@@ -3040,9 +3040,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
 #endif
-    /*
-     * I expect user->current_instance to be initialized with some value.
-     * */
+    // I expect user->current_instance to be initialized with some value.
     do
     {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -3344,10 +3342,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
             flare->was_solution_traced = false;
 #endif
-            /*
-             * First - check if we exceeded our limit. If so - we must terminate
-             * and return now.
-             * */
+            // First - check if we exceeded our limit. If so - we must terminate
+            // and return now.
             if (((current_iterations_limit >= 0) &&
                     (user->iterations_board_started_at.num_checked_states >=
                         current_iterations_limit))
@@ -3357,10 +3353,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
             )
             {
-/* Bug fix:
- * We need to resume from the last flare in case we exceed
- * the board iterations limit.
- * */
+// Bug fix:
+// We need to resume from the last flare in case we exceed
+// the board iterations limit.
 #ifdef FCS_WITH_FLARES
                 if (current_plan_item->type != FLARES_PLAN_RUN_COUNT_ITERS ||
                     current_plan_item->remaining_quota)
@@ -3384,10 +3379,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             {
                 ret = FCS_STATE_IS_NOT_SOLVEABLE;
             }
-/*
- * Determine if we exceeded the instance-specific quota and if
- * so, designate it as unsolvable.
- * */
+// Determine if we exceeded the instance-specific quota and if
+// so, designate it as unsolvable.
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
             if ((local_limit() >= 0) &&
                 (instance->i__num_checked_states >= local_limit()))
@@ -3421,9 +3414,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         (user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret));
 #else
     const_AUTO(r, ret);
-#endif
-#if 0
-    fprintf(stderr, "process_ret=%d\n", process_ret);
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     if (r == FCS_STATE_SUSPEND_PROCESS)
