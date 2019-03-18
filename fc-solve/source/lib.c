@@ -3165,6 +3165,38 @@ static inline bool set_upper_limit(fcs_user *const user,
 }
 #endif
 
+static inline void flare__update_stats(
+    fcs_user *const user, fcs_instance *const instance, flare_item *const flare
+#ifdef FCS_WITH_FLARES
+    ,
+    const flare_iters_quota iters_quota,
+    flares_plan_item *const current_plan_item
+#endif
+)
+{
+    flare->obj_stats.num_checked_states = instance->i__num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    flare->obj_stats.num_states_in_collection =
+        instance->num_states_in_collection;
+#endif
+    const_AUTO(delta, flare->obj_stats.num_checked_states -
+                          user->init_num_checked_states.num_checked_states);
+    user->iterations_board_started_at.num_checked_states += delta;
+#ifdef FCS_WITH_FLARES
+    if (iters_quota >= 0)
+    {
+        current_plan_item->remaining_quota =
+            normalize_iters_quota(iters_quota - delta);
+    }
+#endif
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    user->iterations_board_started_at.num_states_in_collection +=
+        flare->obj_stats.num_states_in_collection -
+        user->init_num_checked_states.num_states_in_collection;
+#endif
+    user->init_num_checked_states = flare->obj_stats;
+}
+
 #ifdef FCS_WITH_NI
 #define BUMP_CURR_INST()                                                       \
     user->current_instance++;                                                  \
@@ -3315,27 +3347,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         }
 #endif
 
-        flare->obj_stats.num_checked_states = instance->i__num_checked_states;
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-        flare->obj_stats.num_states_in_collection =
-            instance->num_states_in_collection;
-#endif
-        const_AUTO(delta, flare->obj_stats.num_checked_states -
-                              user->init_num_checked_states.num_checked_states);
-        user->iterations_board_started_at.num_checked_states += delta;
+        flare__update_stats(user, instance, flare
 #ifdef FCS_WITH_FLARES
-        if (iters_quota >= 0)
-        {
-            current_plan_item->remaining_quota =
-                normalize_iters_quota(iters_quota - delta);
-        }
+            ,
+            iters_quota, current_plan_item
 #endif
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-        user->iterations_board_started_at.num_states_in_collection +=
-            flare->obj_stats.num_states_in_collection -
-            user->init_num_checked_states.num_states_in_collection;
-#endif
-        user->init_num_checked_states = flare->obj_stats;
+        );
 
         bool solved = false;
         if (user->ret_code == FCS_STATE_WAS_SOLVED)
