@@ -3268,12 +3268,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         flare_item *const flare = current_plan_item->flare;
 #else
         flare_item *const flare = &(instance_item->single_flare);
-
-        if (flare->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
-        {
-            recycle_instance(user, instance_item);
-            BUMP_CURR_INST();
-        }
 #endif
         fcs_instance *const instance = &(flare->obj);
 
@@ -3386,11 +3380,16 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         if (!solved && user->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
         {
+#ifdef FCS_WITH_FLARES
             if (was_run_now)
             {
                 recycle_inst(instance);
                 flare->instance_is_ready = true;
             }
+#else
+            recycle_instance(user, instance_item);
+            BUMP_CURR_INST();
+#endif
         }
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
         else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
