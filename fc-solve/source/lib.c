@@ -3115,10 +3115,14 @@ static inline fc_solve_solve_process_ret_t start_flare(
 }
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-static inline bool set_upper_limit(fcs_user *const user,
-    fcs_instance_item *const instance_item, fcs_instance *const instance,
-    const fcs_int_limit_t current_iterations_limit,
-    const flare_iters_quota iters_quota)
+static inline bool set_upper_limit(
+    fcs_user *const user, fcs_instance_item *const instance_item,
+    fcs_instance *const instance, const fcs_int_limit_t current_iterations_limit
+#ifdef FCS_WITH_FLARES
+    ,
+    const flare_iters_quota iters_quota
+#endif
+)
 {
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
 #define local_limit() (-1)
@@ -3265,14 +3269,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
         flare_item *const flare = &(instance_item->single_flare);
 
-        if (flare->ret_code == FCS_STATE_WAS_SOLVED)
-        {
-            user->init_num_checked_states = flare->obj_stats;
-
-            ret = user->ret_code = FCS_STATE_WAS_SOLVED;
-            break;
-        }
-        else if (flare->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
+        if (flare->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
         {
             recycle_instance(user, instance_item);
             BUMP_CURR_INST();
@@ -3301,8 +3298,13 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                           ? user->current_iterations_limit
                           : min(user->current_iterations_limit,
                                 user->current_soft_iterations_limit)));
-        process_ret = set_upper_limit(user, instance_item, instance,
-            current_iterations_limit, iters_quota);
+        process_ret = set_upper_limit(
+            user, instance_item, instance, current_iterations_limit
+#ifdef FCS_WITH_FLARES
+            ,
+            iters_quota
+#endif
+        );
 #endif
 
         user->init_num_checked_states.num_checked_states =
@@ -3368,8 +3370,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             {
                 instance_item->minimal_flare = flare;
             }
-#endif
             ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
+#else
+            break;
+#endif
         }
         bool suspend = false;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
