@@ -3113,6 +3113,58 @@ static inline fc_solve_solve_process_ret_t start_flare(
     init_instance(instance);
     return FCS_STATE_IS_NOT_SOLVEABLE;
 }
+
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+static inline bool set_upper_limit(fcs_user *const user,
+    fcs_instance_item *const instance_item, fcs_instance *const instance,
+    const fcs_int_limit_t current_iterations_limit,
+    const flare_iters_quota iters_quota)
+{
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+#define local_limit() (-1)
+#else
+#define local_limit() (instance_item->limit)
+#endif
+#ifdef FCS_WITH_FLARES
+#define NUM_ITERS_LIMITS 3
+#else
+#define NUM_ITERS_LIMITS 2
+#endif
+#define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
+    const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
+        current_iterations_limit
+#ifdef FCS_WITH_FLARES
+#define PARAMETERIZED_FIXED_LIMIT(increment)                                   \
+    (user->iterations_board_started_at.num_checked_states + increment)
+#define PARAMETERIZED_LIMIT(increment)                                         \
+    (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
+        ,
+        PARAMETERIZED_LIMIT(iters_quota)
+#endif
+    };
+
+    fcs_int_limit_t mymin = local_limit();
+    for (size_t limit_idx = 0; limit_idx < NUM_ITERS_LIMITS_MINUS_1;
+         limit_idx++)
+    {
+        const_AUTO(new_lim, limits[limit_idx]);
+        if (new_lim >= 0)
+        {
+            mymin = (mymin < 0) ? new_lim : min(mymin, new_lim);
+        }
+    }
+
+    instance->effective_max_num_checked_states =
+        ((mymin < 0)
+                ? FCS_INT_LIMIT_MAX
+                : (instance->i__num_checked_states + mymin -
+                      user->iterations_board_started_at.num_checked_states));
+    return ((user->current_soft_iterations_limit >= 0) &&
+            ((user->current_soft_iterations_limit <
+                user->effective_current_iterations_limit)));
+}
+#endif
+
 #ifdef FCS_WITH_NI
 #define BUMP_CURR_INST()                                                       \
     user->current_instance++;                                                  \
@@ -3221,57 +3273,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                           ? user->current_iterations_limit
                           : min(user->current_iterations_limit,
                                 user->current_soft_iterations_limit)));
-#ifdef FCS_BREAK_BACKWARD_COMPAT_1
-#define local_limit() (-1)
-#else
-#define local_limit() (instance_item->limit)
-#endif
-#ifdef FCS_WITH_FLARES
-#define NUM_ITERS_LIMITS 3
-#else
-#define NUM_ITERS_LIMITS 2
-#endif
-#define NUM_ITERS_LIMITS_MINUS_1 (NUM_ITERS_LIMITS - 1)
-        {
-            const fcs_int_limit_t limits[NUM_ITERS_LIMITS_MINUS_1] = {
-                current_iterations_limit
-#ifdef FCS_WITH_FLARES
-#define PARAMETERIZED_FIXED_LIMIT(increment)                                   \
-    (user->iterations_board_started_at.num_checked_states + increment)
-#define PARAMETERIZED_LIMIT(increment)                                         \
-    (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
-                ,
-                PARAMETERIZED_LIMIT(iters_quota)
-#endif
-            };
-
-            fcs_int_limit_t mymin = local_limit();
-            for (size_t limit_idx = 0; limit_idx < NUM_ITERS_LIMITS_MINUS_1;
-                 limit_idx++)
-            {
-                const_AUTO(new_lim, limits[limit_idx]);
-                if (new_lim >= 0)
-                {
-                    mymin = (mymin < 0) ? new_lim : min(mymin, new_lim);
-                }
-            }
-
-            instance->effective_max_num_checked_states =
-                ((mymin < 0) ? FCS_INT_LIMIT_MAX
-                             : (instance->i__num_checked_states + mymin -
-                                   user->iterations_board_started_at
-                                       .num_checked_states));
-#if 0
-            fprintf(stderr, "f=%ld ; %ld ; %ld ; %ld ; %ld\n",
-                instance->effective_max_num_checked_states,
-                instance->i__num_checked_states, mymin,
-                user->iterations_board_started_at.num_checked_states,
-                user->current_iterations_limit);
-#endif
-            process_ret = ((user->current_soft_iterations_limit >= 0) &&
-                           ((user->current_soft_iterations_limit <
-                               user->effective_current_iterations_limit)));
-        }
+        process_ret = set_upper_limit(user, instance_item, instance,
+            current_iterations_limit, iters_quota);
 #endif
 
         user->init_num_checked_states.num_checked_states =
