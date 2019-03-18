@@ -3222,12 +3222,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 user->init_num_checked_states = OBJ_STATS(user);
 
                 ret = user->ret_code = FCS_STATE_WAS_SOLVED;
-                break;
             }
-            else
-            {
-                continue;
-            }
+            continue;
         }
 
         const flare_iters_quota iters_quota =
