@@ -623,9 +623,9 @@
                     recycled to solve another. It uses instance.c to perform
                     its operations, and do the actual configuring and solving.
                     It supplies the API header file
-                    <filename>fcs_user.h</filename> which contains one
-                    function for doing any given operation, and these
-                    functions are implemented in lib.c.
+                    <filename>freecell-solver/fcs_user.h</filename> which
+                    contains one function for doing any given operation, and
+                    these functions are implemented in lib.c.
                 </para>
             </section>
 

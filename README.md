@@ -1,6 +1,6 @@
 # The Freecell Solver Repository Root README
 
-[Freecell Solver](http://fc-solve.shlomifish.org/) is an open source
+[Freecell Solver](https://fc-solve.shlomifish.org/) is an open source
 (distributed under the MIT/Expat licence) library, written in C, for attempting
 to solve several variants of card Solitaire/Patience, including
 [Freecell](http://en.wikipedia.org/wiki/FreeCell) ,
@@ -32,10 +32,10 @@ This contains the source of the solver itself. One can use CMake to build it.
 
 This is the Games-Solitaire-Verify CPAN module. For more information see:
 
-* [Homepage](http://fc-solve.shlomifish.org/verify-code/)
+* [Homepage](https://fc-solve.shlomifish.org/verify-code/)
 * [MetaCPAN](https://metacpan.org/release/Games-Solitaire-Verify)
 
-## [Task-FreecellSolver-Testing](./Task-FreecellSolver-Testing/)
+## [Task-FreecellSolver-Testing](./cpan/Task-FreecellSolver-Testing/)
 
 This is a CPAN module for installing the various test dependencies that
 are found on CPAN.
@@ -72,8 +72,8 @@ Logs of various benchmarks of the code.
 # How to use the library
 
 The external API, which is provided by
-[fcs_user.h](fc-solve/source/fcs_user.h) ,
-[fcs_cl.h](fc-solve/source/fcs_cl.h) and
+[freecell-solver/fcs_user.h](fc-solve/source/include/freecell-solver/fcs_user.h) ,
+[freecell-solver/fcs_cl.h](fc-solve/source/include/freecell-solver/fcs_cl.h) and
 some other headers, is not documented, but it corresponds to the command line
 interface that is
 documented in

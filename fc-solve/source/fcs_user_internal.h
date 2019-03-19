@@ -7,10 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fcs_user_internal.h - header files for the routines of fcs_user.h for
- * internal use.
- */
+// fcs_user_internal.h - header files for the routines of fcs_user.h for
+// internal use.
 #pragma once
 
 #include "freecell-solver/fcs_dllexport.h"
