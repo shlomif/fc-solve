@@ -3325,8 +3325,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         );
 
-        const bool solved = (ret == FCS_STATE_WAS_SOLVED);
-        if (solved)
+        if (ret == FCS_STATE_WAS_SOLVED)
         {
 #if defined(FCS_WITH_MOVES)
             flare->was_solution_traced = false;
@@ -3344,7 +3343,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             break;
 #endif
         }
-        if (!solved && ret == FCS_STATE_IS_NOT_SOLVEABLE)
+        else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
 #ifdef FCS_WITH_FLARES
             if (was_run_now)
