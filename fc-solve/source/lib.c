@@ -3345,11 +3345,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         }
 #ifdef FCS_WITHOUT_MAX_NUM_STATES
-        const bool WAS_SUSPENDED = false;
-#else
-        const bool WAS_SUSPENDED = (get_num_times_long(user) >=
-                                    user->effective_current_iterations_limit);
-        if (WAS_SUSPENDED)
+        if ((get_num_times_long(user) >=
+                user->effective_current_iterations_limit))
         {
             ret = FCS_STATE_SUSPEND_PROCESS;
             run_loop = false;
