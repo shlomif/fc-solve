@@ -1924,7 +1924,7 @@ typedef struct
     fcs_moves_processed fc_pro_moves;
 #endif
     fcs_stats obj_stats;
-#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
+#if defined(FCS_WITH_MOVES)
     bool was_solution_traced;
 #endif
 #ifdef FCS_WITH_MOVES
@@ -3324,7 +3324,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         const bool solved = (user->ret_code == FCS_STATE_WAS_SOLVED);
         if (solved)
         {
-#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
+#if defined(FCS_WITH_MOVES)
             flare->was_solution_traced = false;
 #endif
 #ifdef FCS_WITH_FLARES
@@ -3368,7 +3368,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #ifdef FCS_WITH_FLARES
             instance_item->intract_minimal_flare = flare;
 #endif
-#if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
+#if defined(FCS_WITH_MOVES)
             flare->was_solution_traced = false;
 #endif
             // First - check if we exceeded our limit. If so - we must terminate
