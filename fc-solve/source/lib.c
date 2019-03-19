@@ -3044,7 +3044,7 @@ static inline fc_solve_solve_process_ret_t start_flare(
 #ifdef FCS_WITH_ERROR_STRS
         user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
 #endif
-        return (user->ret_code = FCS_STATE_INVALID_STATE);
+        return FCS_STATE_INVALID_STATE;
     }
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
@@ -3067,7 +3067,7 @@ static inline fc_solve_solve_process_ret_t start_flare(
 #endif
                         )))
     {
-        return (user->ret_code = FCS_STATE_INVALID_STATE);
+        return FCS_STATE_INVALID_STATE;
     }
 #endif
 #ifdef FCS_WITH_MOVES
@@ -3187,6 +3187,7 @@ static inline void flare__update_stats(
 static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
+    bool run_loop;
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool process_ret = false;
@@ -3197,6 +3198,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
     // I expect user->current_instance to be initialized with some value.
     do
     {
+        run_loop = true;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
         process_ret = false;
 #endif
@@ -3233,7 +3235,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 SET_ACTIVE_FLARE(user, instance_item->minimal_flare);
                 user->init_num_checked_states = OBJ_STATS(user);
 
-                ret = user->ret_code = FCS_STATE_WAS_SOLVED;
+                ret = FCS_STATE_WAS_SOLVED;
+                run_loop = false;
             }
             continue;
         }
@@ -3253,10 +3256,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 
         if (is_start_of_flare_solving)
         {
-            const_AUTO(r, start_flare(user, instance));
-            if (r == FCS_STATE_INVALID_STATE)
+            ret = start_flare(user, instance);
+            if (ret == FCS_STATE_INVALID_STATE)
             {
-                return r;
+                break;
             }
         }
 
@@ -3296,7 +3299,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 
         if (was_run_now)
         {
-            ret = user->ret_code = flare->ret_code =
+            ret = flare->ret_code =
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
                 (instance->effective_max_num_checked_states >
                             instance->i__stats.num_checked_states
@@ -3305,6 +3308,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
                 resume_instance(instance);
 #endif
+            run_loop = (ret == FCS_STATE_IS_NOT_SOLVEABLE);
             flare->instance_is_ready = false;
         }
 #ifdef FCS_WITH_NI
@@ -3321,7 +3325,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         );
 
-        const bool solved = (user->ret_code == FCS_STATE_WAS_SOLVED);
+        const bool solved = (ret == FCS_STATE_WAS_SOLVED);
         if (solved)
         {
 #if defined(FCS_WITH_MOVES)
@@ -3334,7 +3338,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             {
                 instance_item->minimal_flare = flare;
             }
-            ret = user->ret_code = FCS_STATE_IS_NOT_SOLVEABLE;
+            ret = FCS_STATE_IS_NOT_SOLVEABLE;
+            run_loop = true;
 #else
             break;
 #endif
@@ -3346,10 +3351,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                                     user->effective_current_iterations_limit);
         if (WAS_SUSPENDED)
         {
-            ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
+            ret = FCS_STATE_SUSPEND_PROCESS;
+            run_loop = false;
         }
 #endif
-        if (!solved && user->ret_code == FCS_STATE_IS_NOT_SOLVEABLE)
+        if (!solved && ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
 #ifdef FCS_WITH_FLARES
             if (was_run_now)
@@ -3363,7 +3369,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         }
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-        else if (user->ret_code == FCS_STATE_SUSPEND_PROCESS)
+        else if (ret == FCS_STATE_SUSPEND_PROCESS)
         {
 #ifdef FCS_WITH_FLARES
             instance_item->intract_minimal_flare = flare;
@@ -3404,10 +3410,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             current_plan_item->remaining_quota =
                 current_plan_item->initial_quota;
 #endif
-            if (!WAS_SUSPENDED)
-            {
-                ret = FCS_STATE_IS_NOT_SOLVEABLE;
-            }
 // Determine if we exceeded the instance-specific quota and if
 // so, designate it as unsolvable.
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -3431,7 +3433,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #ifdef FCS_WITH_NI
         (user->current_instance < end_of_instances_list) &&
 #endif
-        ret == FCS_STATE_IS_NOT_SOLVEABLE);
+        run_loop);
+    if ((user->ret_code = ret) == FCS_STATE_INVALID_STATE)
+    {
+        return FCS_STATE_INVALID_STATE;
+    }
 
 #ifdef FCS_WITH_NI
     const_AUTO(r,
