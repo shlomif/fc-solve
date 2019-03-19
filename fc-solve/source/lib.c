@@ -3249,18 +3249,22 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         flare_item *const flare = &(instance_item->single_flare);
 #endif
         fcs_instance *const instance = &(flare->obj);
-
         SET_ACTIVE_FLARE(user, flare);
-        const bool is_start_of_flare_solving =
-            (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
-
-        if (is_start_of_flare_solving)
+        user->init_num_checked_states = instance->i__stats;
+        if (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
         {
             ret = start_flare(user, instance);
             if (ret == FCS_STATE_INVALID_STATE)
             {
                 break;
             }
+            start_process_with_board(instance, &(user->state),
+#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
+                &(user->initial_non_canonized_state)
+#else
+                NULL
+#endif
+            );
         }
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -3279,19 +3283,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         );
 #endif
-
-        user->init_num_checked_states = instance->i__stats;
-
-        if (is_start_of_flare_solving)
-        {
-            start_process_with_board(instance, &(user->state),
-#if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
-                &(user->initial_non_canonized_state)
-#else
-                NULL
-#endif
-            );
-        }
 
         const bool was_run_now =
             ((flare->ret_code == FCS_STATE_SUSPEND_PROCESS) ||
