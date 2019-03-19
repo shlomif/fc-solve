@@ -3321,10 +3321,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         );
 
-        bool solved = false;
-        if (user->ret_code == FCS_STATE_WAS_SOLVED)
+        const bool solved = (user->ret_code == FCS_STATE_WAS_SOLVED);
+        if (solved)
         {
-            solved = true;
 #if defined(FCS_WITH_MOVES) || defined(FCS_WITH_FLARES)
             flare->was_solution_traced = false;
 #endif
@@ -3340,12 +3339,13 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             break;
 #endif
         }
-        bool suspend = false;
-#ifndef FCS_WITHOUT_MAX_NUM_STATES
-        if (get_num_times_long(user) >=
-            user->effective_current_iterations_limit)
+#ifdef FCS_WITHOUT_MAX_NUM_STATES
+        const bool WAS_SUSPENDED = false;
+#else
+        const bool WAS_SUSPENDED = (get_num_times_long(user) >=
+                                    user->effective_current_iterations_limit);
+        if (WAS_SUSPENDED)
         {
-            suspend = true;
             ret = user->ret_code = FCS_STATE_SUSPEND_PROCESS;
         }
 #endif
@@ -3404,7 +3404,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             current_plan_item->remaining_quota =
                 current_plan_item->initial_quota;
 #endif
-            if (!suspend)
+            if (!WAS_SUSPENDED)
             {
                 ret = FCS_STATE_IS_NOT_SOLVEABLE;
             }
