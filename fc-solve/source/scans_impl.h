@@ -30,7 +30,7 @@ extern "C" {
 #define check_if_limits_exceeded__num_states()
 #else
 #define check_if_limits_exceeded__num_states()                                 \
-    || (instance->num_states_in_collection >=                                  \
+    || (instance->i__stats.num_states_in_collection >=                         \
            effective_max_num_states_in_collection)
 #endif
 
@@ -453,7 +453,7 @@ static inline bool fcs__should_state_be_pruned(
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
     (HT_FIELD(hard_thread, ht__num_checked_states) +                           \
         (instance->effective_max_num_checked_states -                          \
-            (instance->i__num_checked_states)))
+            (instance->i__stats.num_checked_states)))
 #endif
 static inline fcs_int_limit_t calc_ht_max_num_states(
     const fcs_instance *const instance GCC_UNUSED,

@@ -95,6 +95,20 @@ typedef struct
     int8_t col, height;
 } fcs_pos_by_rank;
 
+typedef struct
+{
+    fcs_int_limit_t num_checked_states;
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    fcs_int_limit_t num_states_in_collection;
+#endif
+} fcs_stats;
+
+static const fcs_stats initial_stats = {.num_checked_states = 0,
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    .num_states_in_collection = 0
+#endif
+};
+
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_SS_POS_BY_RANK_WIDTH (FCS_RANK_KING + 1)
 #define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
@@ -132,7 +146,8 @@ typedef void (*fc_solve_solve_for_state_move_func)(
 #define HT_FIELD(ht, field) (ht)->hard_thread.field
 #define HT_INSTANCE(hard_thread) (hard_thread)
 #define INST_HT0(instance) ((instance)->hard_thread)
-#define NUM_CHECKED_STATES (HT_INSTANCE(hard_thread)->i__num_checked_states)
+#define NUM_CHECKED_STATES                                                     \
+    (HT_INSTANCE(hard_thread)->i__stats.num_checked_states)
 typedef struct fc_solve_instance_struct fcs_hard_thread;
 extern void fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
     struct fc_solve_soft_thread_struct *const soft_thread);
@@ -550,9 +565,7 @@ struct fc_solve_instance_struct
 #endif
 #endif
 
-    /* The number of states that were checked by the solving algorithm. */
-    fcs_int_limit_t i__num_checked_states;
-
+    fcs_stats i__stats;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     /*
      * Limit for the maximal number of checked states.
@@ -661,7 +674,6 @@ struct fc_solve_instance_struct
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t active_num_states_in_collection;
 #endif
-    fcs_int_limit_t num_states_in_collection;
 #endif
 
 #ifdef FCS_SINGLE_HARD_THREAD

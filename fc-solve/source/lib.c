@@ -87,12 +87,11 @@ static inline void alloc_instance(
 {
     *(instance) = (fcs_instance){
         .meta_alloc = meta_alloc,
-        .i__num_checked_states = 0,
+        .i__stats = initial_stats,
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
         .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-        .num_states_in_collection = 0,
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
         .active_num_states_in_collection = 0,
         .effective_trim_states_in_collection_from = FCS_INT_LIMIT_MAX,
@@ -684,7 +683,7 @@ static inline void recycle_inst(fcs_instance *const instance)
 #ifdef FCS_WITH_MOVES
     instance_free_solution_moves(instance);
 #endif
-    instance->i__num_checked_states = 0;
+    instance->i__stats = initial_stats;
     instance->num_hard_threads_finished = 0;
 #ifdef FCS_SINGLE_HARD_THREAD
     recycle_ht(instance);
@@ -867,7 +866,7 @@ static void verify_soft_dfs_stack(fcs_soft_thread *soft_thread)
               "current_state_index=%ld ; num_states=%ld\n",                    \
         message, (long)DFS_VAR(soft_thread, depth),                            \
         (long)(the_soft_dfs_info - DFS_VAR(soft_thread, soft_dfs_info)),       \
-        (long)(instance->i__num_checked_states),                               \
+        (long)(instance->i__stats.num_checked_states),                         \
         (long)the_soft_dfs_info->move_func_list_idx,                           \
         (long)the_soft_dfs_info->move_func_idx,                                \
         (long)the_soft_dfs_info->current_state_index,                          \
@@ -1092,7 +1091,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     }
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
-        &(instance->i__num_checked_states);
+        &(instance->i__stats.num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
@@ -1418,7 +1417,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 set_scan_visited(single_derived_state, soft_thread_id);
 #ifndef FCS_WITHOUT_VISITED_ITER
                 FCS_S_VISITED_ITER(single_derived_state) =
-                    instance->i__num_checked_states;
+                    instance->i__stats.num_checked_states;
 #endif
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [aft set_visit]");
                 // I'm using current_state_indexes[depth]-1 because we already
@@ -1596,7 +1595,7 @@ static inline fc_solve_solve_process_ret_t do_patsolve(
 #ifndef FCS_SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
 #endif
-    HT_INSTANCE(hard_thread)->i__num_checked_states += after_scan_delta;
+    HT_INSTANCE(hard_thread)->i__stats.num_checked_states += after_scan_delta;
 
     switch (pats_scan->status)
     {
@@ -1650,12 +1649,12 @@ static inline fc_solve_solve_process_ret_t solve(
 #define instance_check_exceeded__num_states(instance)
 #else
 #define instance_check_exceeded__num_states(instance)                          \
-    || (instance->num_states_in_collection >=                                  \
+    || (instance->i__stats.num_states_in_collection >=                         \
            instance->effective_max_num_states_in_collection)
 #endif
 #define instance__check_exceeded_stats(instance)                               \
     ((ret == FCS_STATE_SUSPEND_PROCESS) &&                                     \
-        ((instance->i__num_checked_states >=                                   \
+        ((instance->i__stats.num_checked_states >=                             \
             instance->effective_max_num_checked_states)                        \
                 instance_check_exceeded__num_states(instance)))
 #endif
@@ -1901,20 +1900,6 @@ static inline fc_solve_solve_process_ret_t resume_instance(
 #ifdef FCS_SINGLE_HARD_THREAD
 #undef hard_thread
 #endif
-
-typedef struct
-{
-    fcs_int_limit_t num_checked_states;
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-    fcs_int_limit_t num_states_in_collection;
-#endif
-} fcs_stats;
-
-static const fcs_stats initial_stats = {.num_checked_states = 0,
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-    .num_states_in_collection = 0
-#endif
-};
 
 /* A flare is an alternative scan algorithm to be tried. All flares in
  * a single instance are being evaluated and then one picks the shortest
@@ -2973,12 +2958,7 @@ static void trace_flare_solution(fcs_user *const user, flare_item *const flare)
     calc_moves_seq(&(instance->solution_moves), &(flare->moves_seq));
     instance_free_solution_moves(instance);
     flare->next_move_idx = 0;
-    flare->obj_stats.num_checked_states = instance->i__num_checked_states;
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-    flare->obj_stats.num_states_in_collection =
-        instance->num_states_in_collection;
-#endif
-
+    flare->obj_stats = instance->i__stats;
     recycle_flare(flare);
     flare->was_solution_traced = true;
 }
@@ -3161,7 +3141,7 @@ static inline bool set_upper_limit(
     instance->effective_max_num_checked_states =
         ((mymin < 0)
                 ? FCS_INT_LIMIT_MAX
-                : (instance->i__num_checked_states + mymin -
+                : (instance->i__stats.num_checked_states + mymin -
                       user->iterations_board_started_at.num_checked_states));
     return ((user->current_soft_iterations_limit >= 0) &&
             ((user->current_soft_iterations_limit <
@@ -3178,11 +3158,7 @@ static inline void flare__update_stats(
 #endif
 )
 {
-    flare->obj_stats.num_checked_states = instance->i__num_checked_states;
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-    flare->obj_stats.num_states_in_collection =
-        instance->num_states_in_collection;
-#endif
+    flare->obj_stats = instance->i__stats;
     const_AUTO(delta, flare->obj_stats.num_checked_states -
                           user->init_num_checked_states.num_checked_states);
     user->iterations_board_started_at.num_checked_states += delta;
@@ -3301,12 +3277,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         );
 #endif
 
-        user->init_num_checked_states.num_checked_states =
-            instance->i__num_checked_states;
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-        user->init_num_checked_states.num_states_in_collection =
-            instance->num_states_in_collection;
-#endif
+        user->init_num_checked_states = instance->i__stats;
 
         if (is_start_of_flare_solving)
         {
@@ -3328,7 +3299,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             ret = user->ret_code = flare->ret_code =
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
                 (instance->effective_max_num_checked_states >
-                            instance->i__num_checked_states
+                            instance->i__stats.num_checked_states
                         ? resume_instance(instance)
                         : FCS_STATE_SUSPEND_PROCESS);
 #else
@@ -3406,7 +3377,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                     (user->iterations_board_started_at.num_checked_states >=
                         current_iterations_limit))
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-                || (instance->num_states_in_collection >=
+                || (instance->i__stats.num_states_in_collection >=
                        instance->effective_max_num_states_in_collection)
 #endif
             )
@@ -3441,14 +3412,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 // so, designate it as unsolvable.
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
             if ((local_limit() >= 0) &&
-                (instance->i__num_checked_states >= local_limit()))
+                (instance->i__stats.num_checked_states >= local_limit()))
             {
-                flare->obj_stats.num_checked_states =
-                    instance->i__num_checked_states;
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-                flare->obj_stats.num_states_in_collection =
-                    instance->num_states_in_collection;
-#endif
+                flare->obj_stats = instance->i__stats;
                 user__recycle_instance_item(user, instance_item);
                 BUMP_CURR_INST();
             }

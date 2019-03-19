@@ -397,7 +397,7 @@ static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     ++instance->active_num_states_in_collection;
 #endif
-    ++instance->num_states_in_collection;
+    ++instance->i__stats.num_states_in_collection;
 #endif
 }
 

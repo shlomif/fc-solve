@@ -367,7 +367,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 #endif
 
     fcs_int_limit_t *const instance_num_checked_states_ptr =
-        &(instance->i__num_checked_states);
+        &(instance->i__stats.num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
     fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
