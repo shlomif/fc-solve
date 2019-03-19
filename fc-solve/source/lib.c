@@ -3344,7 +3344,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             break;
 #endif
         }
-#ifdef FCS_WITHOUT_MAX_NUM_STATES
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
         if ((get_num_times_long(user) >=
                 user->effective_current_iterations_limit))
         {
