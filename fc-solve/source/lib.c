@@ -3344,14 +3344,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             break;
 #endif
         }
-#ifndef FCS_WITHOUT_MAX_NUM_STATES
-        if ((get_num_times_long(user) >=
-                user->effective_current_iterations_limit))
-        {
-            ret = FCS_STATE_SUSPEND_PROCESS;
-            run_loop = false;
-        }
-#endif
         if (!solved && ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
 #ifdef FCS_WITH_FLARES
