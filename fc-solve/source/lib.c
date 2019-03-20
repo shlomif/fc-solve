@@ -3563,12 +3563,9 @@ static MYINLINE void user_free_resources(fcs_user *const user)
 {
     FLARES_LOOP_START()
     {
-        const_SLOT(ret_code, flare);
         fcs_instance *const instance = &(flare->obj);
 
-        if ((ret_code != FCS_STATE_NOT_BEGAN_YET) &&
-            (ret_code != FCS_STATE_INVALID_STATE) &&
-            (!flare->instance_is_ready))
+        if (!flare->instance_is_ready)
         {
             fc_solve_finish_instance(instance);
         }
