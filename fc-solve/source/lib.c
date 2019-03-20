@@ -3287,7 +3287,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         const bool was_run_now =
             ((flare->ret_code == FCS_STATE_SUSPEND_PROCESS) ||
                 (flare->ret_code == FCS_STATE_NOT_BEGAN_YET));
-
         if (was_run_now)
         {
             ret = flare->ret_code =
@@ -3374,11 +3373,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 if (current_plan_item->type != FLARES_PLAN_RUN_COUNT_ITERS ||
                     current_plan_item->remaining_quota)
                 {
-                    if (ret == FCS_STATE_SUSPEND_PROCESS)
-                    {
-                        instance_item->current_plan_item_idx--;
-                        break;
-                    }
+                    --instance_item->current_plan_item_idx;
+                    break;
                 }
 #else
                 break;
