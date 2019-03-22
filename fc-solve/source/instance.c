@@ -583,7 +583,7 @@ void fc_solve_finish_instance(fcs_instance *const instance)
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_free(&(instance->hash));
+    // fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_states_google_hash_free(instance->hash);
 #else
@@ -593,7 +593,7 @@ void fc_solve_finish_instance(fcs_instance *const instance)
 // De-allocate the stack collection while free()'ing the stacks in the process
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_free(&(instance->stacks_hash));
+    // fc_solve_hash_free(&(instance->stacks_hash));
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)

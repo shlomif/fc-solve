@@ -154,6 +154,13 @@ static inline void fc_solve_hash_init(
     fc_solve_compact_allocator_init(&(hash->allocator), meta_alloc);
 }
 
+static inline void fc_solve_hash_recycle(hash_table *const hash)
+{
+    fc_solve_compact_allocator_recycle(&(hash->allocator));
+    memset(hash->entries, '\0', sizeof(hash->entries[0]) * hash->size);
+    hash->num_elems = 0;
+}
+
 static inline void fc_solve_hash_free(hash_table *const hash)
 {
     fc_solve_compact_allocator_finish(&(hash->allocator));

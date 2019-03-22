@@ -154,6 +154,36 @@ static inline void alloc_instance(
         .is_simple_simon = false,
 #endif
     };
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_init(meta_alloc, &(instance->hash),
+#ifdef FCS_INLINED_HASH_COMPARISON
+        FCS_INLINED_HASH__STATES
+#else
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+        fc_solve_state_compare_with_context,
+
+        NULL
+#else
+        fc_solve_state_compare
+#endif
+#endif
+    );
+#endif
+#ifdef INDIRECT_STACK_STATES
+#if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
+    fc_solve_hash_init(meta_alloc, &(instance->stacks_hash),
+#ifdef FCS_INLINED_HASH_COMPARISON
+        FCS_INLINED_HASH__COLUMNS
+#else
+#ifdef FCS_WITH_CONTEXT_VARIABLE
+        cmp_stacks_w_context, NULL
+#else
+        fc_solve_stack_compare_for_comparison
+#endif
+#endif
+    );
+#endif
+#endif
 
 #ifndef FCS_FREECELL_ONLY
     apply_preset_by_name(instance, "freecell");
@@ -495,19 +525,6 @@ static inline void start_process_with_board(fcs_instance *const instance,
     instance->hash =
         g_hash_table_new(fc_solve_hash_function, fc_solve_state_compare_equal);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_init(instance->meta_alloc, &(instance->hash),
-#ifdef FCS_INLINED_HASH_COMPARISON
-        FCS_INLINED_HASH__STATES
-#else
-#ifdef FCS_WITH_CONTEXT_VARIABLE
-        fc_solve_state_compare_with_context,
-
-        NULL
-#else
-        fc_solve_state_compare
-#endif
-#endif
-    );
 #ifdef FCS_RCS_STATES
     instance->hash.instance = instance;
 #endif
@@ -524,21 +541,10 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #ifdef INDIRECT_STACK_STATES
 /* Initialize the data structure that will manage the stack
    collection */
-#if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-    fc_solve_hash_init(instance->meta_alloc, &(instance->stacks_hash),
-#ifdef FCS_INLINED_HASH_COMPARISON
-        FCS_INLINED_HASH__COLUMNS
-#else
-#ifdef FCS_WITH_CONTEXT_VARIABLE
-        cmp_stacks_w_context, NULL
-#else
-        fc_solve_stack_compare_for_comparison
-#endif
-#endif
-    );
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     instance->stacks_tree =
         fcs_libavl2_stacks_tree_create(cmp_stacks_w_context, NULL, NULL);
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     instance->stacks_tree = rbinit(cmp_stacks_w_context, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
@@ -684,6 +690,14 @@ static inline void recycle_ht(fcs_hard_thread *const hard_thread)
 static inline void recycle_inst(fcs_instance *const instance)
 {
     fc_solve_finish_instance(instance);
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_recycle(&(instance->hash));
+#endif
+#ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
+    fc_solve_hash_recycle(&(instance->stacks_hash));
+#endif
+#endif
 #ifdef FCS_WITH_MOVES
     instance_free_solution_moves(instance);
 #endif
@@ -3573,6 +3587,14 @@ static MYINLINE void user_free_resources(fcs_user *const user)
         {
             fc_solve_finish_instance(instance);
         }
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
+        fc_solve_hash_free(&(instance->hash));
+#endif
+#ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
+        fc_solve_hash_free(&(instance->stacks_hash));
+#endif
+#endif
         free_instance(instance);
 #ifdef FCS_WITH_FLARES
         flare->name[0] = '\0';
