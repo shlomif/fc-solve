@@ -74,14 +74,18 @@ static inline void apply_preset_by_name(
 }
 #endif
 
-/*
-    This function allocates a Freecell Solver instance struct and set the
-    default values in it. After the call to this function, the program can
-    set parameters in it which are different from the default.
+static const fcs_stats initial_stats = {.num_checked_states = 0,
+#ifndef FCS_DISABLE_NUM_STORED_STATES
+    .num_states_in_collection = 0
+#endif
+};
 
-    Afterwards fc_solve_init_instance() should be called in order
-    to really prepare it for solving.
-  */
+// This function allocates a Freecell Solver instance struct and set the
+// default values in it. After the call to this function, the program can
+// set parameters in it which are different from the default.
+//
+// Afterwards fc_solve_init_instance() should be called in order to really
+// prepare it for solving.
 static inline void alloc_instance(
     fcs_instance *const instance, meta_allocator *const meta_alloc)
 {
@@ -3005,7 +3009,7 @@ static int get_flare_move_count(
 #endif
 
 static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
-    fcs_user *const user, const fc_solve_solve_process_ret_t ret
+    fcs_user *const user GCC_UNUSED, const fc_solve_solve_process_ret_t ret
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     ,
     const bool process_ret
@@ -3096,7 +3100,7 @@ static inline fc_solve_solve_process_ret_t start_flare(
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
 static inline bool set_upper_limit(
-    fcs_user *const user, fcs_instance_item *const instance_item,
+    fcs_user *const user, fcs_instance_item *const instance_item GCC_UNUSED,
     fcs_instance *const instance, const fcs_int_limit_t current_iterations_limit
 #ifdef FCS_WITH_FLARES
     ,

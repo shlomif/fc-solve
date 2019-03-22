@@ -103,12 +103,6 @@ typedef struct
 #endif
 } fcs_stats;
 
-static const fcs_stats initial_stats = {.num_checked_states = 0,
-#ifndef FCS_DISABLE_NUM_STORED_STATES
-    .num_states_in_collection = 0
-#endif
-};
-
 #ifndef FCS_DISABLE_SIMPLE_SIMON
 #define FCS_SS_POS_BY_RANK_WIDTH (FCS_RANK_KING + 1)
 #define FCS_SS_POS_BY_RANK_LEN (FCS_SS_POS_BY_RANK_WIDTH * 4)
