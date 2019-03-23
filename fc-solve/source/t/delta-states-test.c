@@ -501,7 +501,7 @@ static void main_tests(void)
 
 int main(void)
 {
-    plan_tests(24);
+    plan(24);
     main_tests();
     return exit_status();
 }

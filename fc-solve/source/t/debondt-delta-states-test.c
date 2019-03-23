@@ -134,7 +134,7 @@ static void main_tests(void)
 
 int main(void)
 {
-    plan_tests(2);
+    plan(2);
     main_tests();
     return exit_status();
 }

@@ -8,9 +8,16 @@ d="$1"
 shift
 url="$1"
 shift
+branch="$1"
+shift
+
+if test -n "$branch"
+then
+    branch="-b $branch"
+fi
 
 clone_dir='mygit'
-"$vcs_tool" clone "$url" "$clone_dir"
+"$vcs_tool" clone $branch "$url" "$clone_dir"
 (cd "$clone_dir/$d"
 
 ( mkdir b && cd b && cmake .. && make && sudo make install ) || exit -1

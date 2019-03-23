@@ -65,7 +65,7 @@ static int main_tests(void)
 
 int main(void)
 {
-    plan_tests(6);
+    plan(6);
     main_tests();
     return exit_status();
 }

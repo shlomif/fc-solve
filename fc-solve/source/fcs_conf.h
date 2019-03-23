@@ -54,10 +54,6 @@ extern "C" {
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
-#ifdef _WIN32
-#define plan_tests(...) plan(__VA_ARGS__)
-#endif
-
 #ifdef _POSIX_C_SOURCE
 #if _POSIX_C_SOURCE > 200809L
 #define HAVE_GETLINE 1
