@@ -12,8 +12,88 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 </p>
 </define-tag>
 
-<emscripten_common incs="require([\"web-fc-solve-ui\"], function (web_fc_solve_ui)" subject="Solver" />
+<define-tag emscripten_common>
+<preserve incs subject />
+<set-var %attributes />
 
+<js_script>
+$(function() { $('.enable_js').addClass('ok'); })
+</js_script>
+
+<h2 id="ui"><get-var subject /></h2>
+
+<desc />
+
+<p>
+<a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>
+</p>
+
+<div class="disabled">
+<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten">
+<!--
+  <progress value="0" max="100" id="progress"></progress>
+-->
+</div>
+</div>
+
+<js_script src="$(ROOT)/js/yui-breakout.js"></js_script>
+<js_script>
+function highlight_in_board(start,end) {
+    const el = document.getElementById("stdin");
+    el.focus();
+    el.setSelectionRange(start,end);
+    return;
+}
+requirejs.config({
+    baseUrl: '$(ROOT)/js',
+    });
+    <get-var incs /> {
+    require(['solitaire', 'iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell) {
+
+    $(function() {
+        const controls = $('.phoenix');
+        if (window.location.search.length) {
+            controls.phoenix('remove');
+        } else {
+            controls.phoenix();
+        }
+        $( "#fc_solve_tabs" ).tabs({
+            activate: function () {
+                web_fc_solve_ui.set_up_handlers();
+
+                return;
+            },
+            beforeActivate: function( event, ui) {
+                var mynew = ui.newPanel;
+                var old = ui.oldPanel;
+
+                var common_old = old.find('.fcs_common');
+                var old_text = common_old.find('textarea').val();
+
+                var common_html = common_old.html();
+
+                common_old.html('');
+
+                var common_new = mynew.find('.fcs_common');
+
+                common_new.html(common_html);
+                common_new.find('textarea').val(old_text);
+
+                return;
+            }
+        });
+    });
+
+    web_fc_solve_ui.set_up();
+
+    });
+});
+</js_script>
+
+<restore incs subject />
+</define-tag>
+<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell',], function (web_fc_solve_ui, solver)" subject="Solver" />
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>

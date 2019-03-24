@@ -11,6 +11,7 @@
 <js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
 <js_script src="$(ROOT)/js/jquery.phoenix.js"></js_script>
 <js_requirejs />
+<js_script src="$(ROOT)/js/yui-debug.js"></js_script>
 <define-tag expanded_scripts>
 </define-tag>
 <define-tag production_scripts>

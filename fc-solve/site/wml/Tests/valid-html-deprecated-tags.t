@@ -7,6 +7,7 @@ use Test::HTML::Recursive::DeprecatedTags;
 
 Test::HTML::Recursive::DeprecatedTags->new(
     {
-        targets => ['./dest'],
+        filename_filter => sub { return shift !~ qr#yui-unpack#; },
+        targets         => ['./dest'],
     }
 )->run;

@@ -35,10 +35,9 @@ Test::HTML::Tidy::Recursive::XML->new(
     {
         filename_filter => sub {
             my $fn = shift;
-            return not(
-                exists $whitelist{$fn}
+            return not( exists $whitelist{$fn}
                 or $fn =~
-                m#\A \Q$T2_POST_DEST\E (?: MathVentures | js/jquery-ui/ ) #x,
+m#\A \Q$T2_POST_DEST\E (?: MathVentures | js/( jquery-ui | yui-unpack )/ ) #x
             );
         },
         targets => [$T2_POST_DEST],

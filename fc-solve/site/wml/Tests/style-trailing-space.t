@@ -32,6 +32,8 @@ my $finder = Test::TrailingSpace->new(
             lib/transcrypt_module/src
                 |
             dest(?:-prod)?/(?:
+                (?: js/yui-unpack/? .*? )
+                    |
                 (?:.*\.(?:epub|rtf|pdf)\z)
                     |
                 (?:js/(?:(?:$lib)|$bigint))

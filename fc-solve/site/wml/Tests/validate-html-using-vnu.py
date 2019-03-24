@@ -2,6 +2,7 @@
 
 import re
 import unittest
+
 import vnu_validator
 
 
@@ -20,7 +21,8 @@ class MyTests(vnu_validator.VnuTest):
 
         def _skip_cb(path):
             return False
-        return self.vnu_test_dir('./dest', _xhtml_cb, _create_cb('jquery-ui'))
+        return self.vnu_test_dir('./dest', _xhtml_cb,
+                                 _create_cb('jquery-ui|yui-unpack'))
 
 
 if __name__ == '__main__':

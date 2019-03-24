@@ -70,9 +70,11 @@ DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text 
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
 DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
-BASE_BROWSERIFY_JS = big-integer.js qunit.js
+BASE_BROWSERIFY_JS = big-integer.js flatted.js qunit.js
 dest_jsify = $(addprefix $(DEST_JS_DIR)/,$(1))
 DEST_BROWSERIFY_JS = $(call dest_jsify,$(BASE_BROWSERIFY_JS))
+BASE_Solitairey_JS = application.js auto-stack-clear.js auto-turnover.js autoplay.js freecell.js iphone.js solitaire.js solver-freecell.js statistics.js yui-breakout.js yui-debug.js
+DEST_Solitairey_JS = $(call dest_jsify,$(BASE_Solitairey_JS))
 
 CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
 
@@ -114,6 +116,7 @@ dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
 dummy: $(FIND_INDEX__PYJS__TARGETS)
 
 dummy: $(DEST_BROWSERIFY_JS)
+dummy: $(DEST_Solitairey_JS)
 
 OUT_PREF = lib/out-babel/js
 out_pref_jsify = $(addprefix $(OUT_PREF)/,$(1))
@@ -122,7 +125,10 @@ OUT_BROWSERIFY_JS = $(call out_pref_jsify,$(BASE_BROWSERIFY_JS))
 $(DEST_BROWSERIFY_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
 	$(MULTI_YUI) -o $@ $<
 
-$(OUT_PREF)/big-integer.js: %:
+$(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: lib/repos/Solitairey/src/js/%
+	$(MULTI_YUI) -o $@ $<
+
+$(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js: %:
 	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
 
 $(OUT_PREF)/qunit.js: %: lib/jquery/qunit/dist/qunit.js
@@ -393,7 +399,7 @@ $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
 	cp -f $< $@
 
 upload: all
-	$(RSYNC) -a $(D)/ $(UPLOAD_URL)
+	$(RSYNC) -a -l $(D)/ $(UPLOAD_URL)
 
 # upload_temp: all
 #	$(RSYNC) $(TEMP_UPLOAD_URL)
@@ -427,3 +433,13 @@ fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps
 	@$(PROCESS_ALL_INCLUDES) $(HTMLS)
 
 DBTOEPUB := ZIPOPT="-X" $(DBTOEPUB)
+
+$(DEST_JS_DIR)/yui-unpack: lib/repos/Solitairey/ext/yui-unpack
+	rsync -a $</ $@
+	rm -fr $@/yui/{api,docs,releasenotes,tests}
+
+$(D)/js-fc-solve/text/js:
+	ln -sf ../../js $@
+
+dummy: $(D)/js-fc-solve/text/js
+dummy: $(DEST_JS_DIR)/yui-unpack
