@@ -39,6 +39,16 @@ if ( not -e "lib/jquery/qunit/" )
         "git clone",
     );
 }
+if ( not -e "lib/repos/Solitairey" )
+{
+    _exec(
+        [
+"cd lib/repos && git clone -b fc-solve--deal-and-sol--preview https://github.com/shlomif/Solitairey.git"
+
+        ],
+        "git clone",
+    );
+}
 _exec( [ $^X, 'bin/my-cookiecutter.pl' ], 'cookiecutter failed.' );
 require HTML::Latemp::DocBook::GenMake;
 HTML::Latemp::DocBook::GenMake->new(

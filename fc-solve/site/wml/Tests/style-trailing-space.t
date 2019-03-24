@@ -18,6 +18,8 @@ my $finder = Test::TrailingSpace->new(
             |
         (?:lib/jquery/qunit/)
             |
+        (?: lib/repos/Solitairey )
+            |
         (?:lib/out-babel/js/$bigint)
             |
         (?:
@@ -45,7 +47,7 @@ my $finder = Test::TrailingSpace->new(
         |
     (?:$lib\z)
         |
-    (?:\.(?:diff|jpg|patch|png|wasm|woff|xcf|xz|zip)\z)
+    (?:\.(?:diff|gif|jar|jpg|patch|png|ttf|wasm|woff|xcf|xz|zip)\z)
     #x,
     }
 );
