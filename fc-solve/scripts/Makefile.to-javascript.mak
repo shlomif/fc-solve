@@ -97,10 +97,11 @@ NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" 
 OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
+# OPT_FLAGS = -g
 
 CFLAGS = $(OPT_FLAGS) -I __DESTDIR/fc-solve/include -I ./include -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.6.5 -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
-# ASSERT_FLAGS = -s ASSERTIONS=1
+ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
 
 EMCC_CFLAGS = -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXTRA_EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(CFLAGS) $(ASSERT_FLAGS)
