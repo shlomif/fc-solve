@@ -95,7 +95,7 @@ requirejs.config({
 
 <restore incs subject />
 </define-tag>
-<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire','iphone', 'auto-stack-clear', 'auto-turnover',], function (web_fc_solve_ui, solver, solitaire, iphone, auto_stack, auto_turn)" subject="Solver" />
+<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire','iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver, solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
 ;;; <emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
