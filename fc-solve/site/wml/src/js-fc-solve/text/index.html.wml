@@ -95,8 +95,8 @@ requirejs.config({
 
 <restore incs subject />
 </define-tag>
-;;; <emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell',], function (web_fc_solve_ui, solver)" subject="Solver" />
-<emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
+<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell',], function (web_fc_solve_ui, solver)" subject="Solver" />
+;;; <emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>

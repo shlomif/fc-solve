@@ -132,7 +132,7 @@ $(ROOT)/%0
 <when>
 <js_script src="$(ROOT)/js/common-methods.js"></js_script>
 </when>
-<js_script src="$(ROOT)/js/jq.js"></js_script>
+<js_script src="$(ROOT)/js/<if "$(PRODUCTION)" "jq.js" "jquery-dev.js" />"></js_script>
 <js_script src="$(ROOT)/js/toggler.js"></js_script>
 <js_script src="$(ROOT)/js/toggle_sect.js"></js_script>
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="<rss_feed />" />
