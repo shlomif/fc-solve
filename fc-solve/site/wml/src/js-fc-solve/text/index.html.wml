@@ -37,7 +37,7 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 </div>
 
-<js_script src="$(ROOT)/js/yui-breakout.js"></js_script>
+;;; <js_script src="$(ROOT)/js/yui-breakout.js"></js_script>
 <js_script>
 function highlight_in_board(start,end) {
     const el = document.getElementById("stdin");
@@ -49,7 +49,9 @@ requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
     <get-var incs /> {
+<when>
     require(['solitaire', 'iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell) {
+    </when>
 
     $(function() {
         const controls = $('.phoenix');
@@ -83,7 +85,7 @@ requirejs.config({
                 return;
             }
         });
-    });
+    // });
 
     web_fc_solve_ui.set_up();
 
@@ -93,7 +95,8 @@ requirejs.config({
 
 <restore incs subject />
 </define-tag>
-<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell',], function (web_fc_solve_ui, solver)" subject="Solver" />
+;;; <emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell',], function (web_fc_solve_ui, solver)" subject="Solver" />
+<emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>
