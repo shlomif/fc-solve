@@ -1335,6 +1335,7 @@ transcrypt
 ==== In: dest/js-fc-solve/text/index.html
 
 Der
+Redeal
 js
 
 ==== In: dest/links.html
