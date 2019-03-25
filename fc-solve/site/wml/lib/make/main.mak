@@ -76,7 +76,8 @@ DEST_BROWSERIFY_JS = $(call dest_jsify,$(BASE_BROWSERIFY_JS))
 BASE_Solitairey_JS = application.js auto-stack-clear.js auto-turnover.js autoplay.js freecell.js iphone.js solitaire.js solver-freecell.js statistics.js yui-breakout.js yui-debug.js
 DEST_Solitairey_JS = $(call dest_jsify,$(BASE_Solitairey_JS))
 
-CSS_TARGETS = $(D)/style.css $(D)/print.css $(D)/jqui-override.css $(D)/web-fc-solve.css
+CSS_TARGETS = \
+			  $(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
 

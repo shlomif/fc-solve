@@ -12,6 +12,7 @@
 <js_script src="$(ROOT)/js/jquery.phoenix.js"></js_script>
 <js_requirejs />
 <js_script src="$(ROOT)/js/yui-debug.js"></js_script>
+<js_script src="$(ROOT)/js/yui-breakout.js"></js_script>
 <define-tag expanded_scripts>
 </define-tag>
 <define-tag production_scripts>
@@ -22,6 +23,7 @@
 
 <if "$(PRODUCTION)" "<production_scripts />" "<expanded_scripts />" />
 <link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
+<link rel="stylesheet" type="text/css" href="$(ROOT)/solitairey-cards.css" />
 </page_extra_head_elements>
 
 <define-tag emscripten_common>

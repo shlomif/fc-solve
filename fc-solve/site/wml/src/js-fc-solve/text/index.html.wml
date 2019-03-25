@@ -37,7 +37,6 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 </div>
 
-<js_script src="$(ROOT)/js/yui-breakout.js"></js_script>
 <js_script>
 function highlight_in_board(start,end) {
     const el = document.getElementById("stdin");
