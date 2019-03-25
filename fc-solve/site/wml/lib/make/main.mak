@@ -439,8 +439,30 @@ $(DEST_JS_DIR)/yui-unpack: lib/repos/Solitairey/ext/yui-unpack
 	rsync -a $</ $@
 	rm -fr $@/yui/{api,docs,releasenotes,tests}
 
+$(D)/js-fc-solve/text/ChromeWebStore_Badge_v2_206x58.png: lib/repos/Solitairey/ChromeWebStore_Badge_v2_206x58.png
+	cp -f $< $@
+
+$(D)/js-fc-solve/text/loading.gif: lib/repos/Solitairey/loading.gif
+	cp -f $< $@
+
+$(D)/green.jpg: lib/repos/Solitairey/green.jpg
+	cp -f $< $@
+
+$(D)/layouts: lib/repos/Solitairey/layouts
+	rsync -a $</ $@
+
+$(D)/dondorf: lib/repos/Solitairey/dondorf
+	rsync -a $</ $@
+
+$(D)/js-fc-solve/text/dondorf:
+	ln -sf ../../dondorf $@
+
+$(D)/js-fc-solve/text/layouts:
+	ln -sf ../../layouts $@
+
 $(D)/js-fc-solve/text/js:
 	ln -sf ../../js $@
 
-dummy: $(D)/js-fc-solve/text/js
+dummy: $(D)/js-fc-solve/text/dondorf $(D)/js-fc-solve/text/layouts $(D)/js-fc-solve/text/js $(D)/dondorf $(D)/layouts $(D)/green.jpg $(D)/js-fc-solve/text/loading.gif $(D)/js-fc-solve/text/ChromeWebStore_Badge_v2_206x58.png
+
 dummy: $(DEST_JS_DIR)/yui-unpack
