@@ -97,6 +97,19 @@ requirejs.config({
 </define-tag>
 <emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire','iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver, solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
 ;;; <emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
+<img src="loading.gif" class="loading hidden" alt="Loading" />
+<button id="redeal">Redeal</button>
+<span style="color:white;">Deal Number:</span> <input id="deal_num_shlomify" size="30" name="deal_num_shlomify" readonly="readonly"/>
+	<div id="game-chooser">
+        <button id="close-chooser">Return to game</button>
+	</div>
+	<img src="loading.gif" class="loading hidden" alt="Loading" />
+	<div class="chromestore hidden">
+		<a class="hide">[Hide]</a>
+        <a href="https://chrome.google.com/webstore/detail/dofbnmhnoodmmlhflbcihicmbnhhinhp">
+            <img alt="Chrome Web Store" src="ChromeWebStore_Badge_v2_206x58.png" />
+        </a>
+	</div>
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>
