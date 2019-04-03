@@ -321,3 +321,11 @@ and, as a result, king cards degenerate to zero bits as well.
 So we get:
 
 log2(3)*(52-4-4) = log2(3) * 44 = 69.7383500317309 bits (bytes: 9)
+
+Moreover note that for the cards of rank 2, there is only one optimal
+option which we can infer from the rest of the cards, so they can degenerate
+to 0 bits each:
+
+log2(3)*(52-4-4-4) = log2(3) * 40 = 63.3985000288463 bits (bytes: 8)
+
+Which fits inside a 64-bit machine word.
