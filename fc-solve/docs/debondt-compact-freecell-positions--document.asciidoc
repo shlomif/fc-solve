@@ -313,3 +313,11 @@ so we can shave off 8 + 4 bits for a total of 92 bits or 11½ octets.
 
 One option would be to pack two such encodings into three consecutive 64-bit
 quadwords.
+
+One can notice that we can merge/unify option 1 and option 2 because we can
+determine if there are any cards on top of the card based on the other cards,
+and, as a result, king cards degenerate to zero bits as well.
+
+So we get:
+
+log2(3)*(52-4-4) = log2(3) * 44 = 69.7383500317309 bits (bytes: 9)
