@@ -52,27 +52,29 @@ A process' output:
 
 The process will output a file with the following:
 
-    [% initial state %]
+----------------------------------------------------------------------
+[% initial state %]
 
-    [% Count of states in FCC. %]
+[% Count of states in FCC. %]
 
-    Consumed States:
+Consumed States:
 
-    [% FOREACH consumed_state in consumed_states %]
-        consumed_state
-    [% END FOREACH %]
+[% FOREACH consumed_state in consumed_states %]
+    consumed_state
+[% END FOREACH %]
 
-    Reachable (but non-consumed) Initial States:
+Reachable (but non-consumed) Initial States:
 
-    [% FOREACH state in reachable_states %]
-        state
-    [% END FOREACH %]
+[% FOREACH state in reachable_states %]
+    state
+[% END FOREACH %]
 
-    Derived States: [Separate file - written as we go.]
+Derived States: [Separate file - written as we go.]
 
-    [% FOREACH d in derived_states %]
-        [% d.fingerprint_of_dest_fcc %] [% d.state %] [% count_of_moves %] [% d.moves_to_states %]
-    [% END FOREACH %]
+[% FOREACH d in derived_states %]
+    [% d.fingerprint_of_dest_fcc %] [% d.state %] [% count_of_moves %] [% d.moves_to_states %]
+[% END FOREACH %]
+----------------------------------------------------------------------
 
 After the process ends all the outputs will be merged and the new derived
 states will be calculated for the new fingerprints and the statistics will
