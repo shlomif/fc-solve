@@ -51,12 +51,12 @@ more than one 1-card sequence. In this case we need to multiply by
 https://en.wikipedia.org/wiki/Combination options where the k is the number
 of freecells and n is the total number of 1-card sequences.
 
-Back to the thought process, one can notice that if 3H is on 4C then
-3D cannot also be on 4C. So, for the two 3H/3D cards we have these options:
+Back to the thought process, one can notice that if 3♥ is on 4♣ then
+3♦ cannot also be on 4♣. So, for the two 3♥/3♦ cards we have these options:
 
 .Colour Pair Configs
 |===
-|Opt Index|3H|3D
+|Opt Index|3♥|3♦
 
 |0
 |Parentless
@@ -64,27 +64,27 @@ Back to the thought process, one can notice that if 3H is on 4C then
 
 |1
 |Parentless
-|On 4C
+|On 4♣
 
 |2
 |Parentless
-|On 4S
+|On 4♠
 
 |3
-|On 4C
+|On 4♣
 |Parentless
 
 |4
-|On 4S
+|On 4♠
 |Parentless
 
 |5
-|On 4C
-|On 4S
+|On 4♣
+|On 4♠
 
 |6
-|On 4S
-|On 4C
+|On 4♠
+|On 4♣
 |===
 
 For a total of 7 states instead of 9.
