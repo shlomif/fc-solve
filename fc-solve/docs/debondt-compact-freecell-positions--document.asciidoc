@@ -44,6 +44,57 @@ to 0 bits each:
 log2(3)*(52-4-4-4) = log2(3) * 40 = 63.3985000288463 bits (bytes: 8)
 
 Which fits inside a 64-bit machine word.
+
+*Correction*: one edge case for merging the in-the-freecells / bottommost-card
+cases is when all the stacks and all the freecells are occupied and there is
+more than one 1-card sequence. In this case we need to multiply by
+https://en.wikipedia.org/wiki/Combination options where the k is the number
+of freecells and n is the total number of 1-card sequences.
+
+Back to the thought process, one can notice that if 3H is on 4C then
+3D cannot also be on 4C. So, for the two 3H/3D cards we have these options:
+
+.Colour Pair Configs
+|===
+|Opt Index|3H|3D
+
+|0
+|Parentless
+|Parentless
+
+|1
+|Parentless
+|On 4C
+
+|2
+|Parentless
+|On 4S
+
+|3
+|On 4C
+|Parentless
+
+|4
+|On 4S
+|Parentless
+
+|5
+|On 4C
+|On 4S
+
+|6
+|On 4S
+|On 4C
+|===
+
+For a total of 7 states instead of 9.
+
+So we get:
+
+    log2(7)*((52-4-4-4)/2) = log2(7) * 20 = 56.1470984411521 bits (bytes: 8)
+
+This may need to be multiplied by the Combinations number mentioned above.
+
 [id="spec"]
 The spec
 --------
