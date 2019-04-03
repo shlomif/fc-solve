@@ -14,6 +14,7 @@ then
 fi
 
 export DEAL_IDX=384243
+export DEAL_IDX=24
 PATH="$FCS_PATH:$PATH"
 
 export SCRIPTS_DIR="$(rel2abs "$FCS_SRC_PATH/../scripts/")"

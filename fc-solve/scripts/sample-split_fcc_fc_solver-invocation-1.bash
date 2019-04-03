@@ -16,11 +16,7 @@ fi
 init_board="${INIT_BOARD_FN:-./SPLIT_FCC/${idx}.init.board}"
 #if ! test -e "$init_board" ; then
 if true; then
-    (
-        echo 'Foundations: H-A C-0 D-0 S-0'
-        echo "Freecells:"
-        perl -plE 's/^/: /; s/ AH *\z//' < "$board"
-    ) > "$init_board"
+    perl -I "$FCS_SRC_PATH/t/lib" "$FCS_SRC_PATH/scripts/horne-autoplay-board.pl" "$board" > "$init_board"
 fi
 input="${INIT_INPUT_TXTISH:-${idx}.input.txtish}"
 # if ! test -e "$input" ; then
