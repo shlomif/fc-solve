@@ -306,3 +306,7 @@ states:
 4. On a parent of either Diamonds or Spades.
 
 So we need at most 2 bits for each card, so 52*2 = 104 bits and 13 octets.
+
+We can improve on that by noting that a King card is only at #1 or #2 (thus
+requiring only one bit) while an Ace card requires 0 bits due to https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1300[Horne automove]
+so we can shave off 8 + 4 bits for a total of 92 bits or 11½ octets.
