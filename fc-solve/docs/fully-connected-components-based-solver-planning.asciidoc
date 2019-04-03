@@ -30,6 +30,7 @@ of irreversible moves.
 Represnting a Fully-connected Component:
 ----------------------------------------
 
+----------------------------------------
 typedef struct
 {
     /* The minimal state in the fully-connected component, according to
@@ -47,10 +48,12 @@ typedef struct
     */
     MOVE_STACK_T moves_to_min_by_absolute_depth;
 } fcs_fully_connected_component_t;
+----------------------------------------
 
 The solver's state:
 -------------------
 
+----------------------------------------
 struct
 {
     struct prev_depth_FCCs
@@ -68,9 +71,11 @@ struct
         LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
     };
 } fcs_fcc_solver_state_t;
+----------------------------------------
 
 The algorithm:
 
+----------------------------------------
 #. FOREACH <prev_depth_FCCs.to_scan_queue >
 For each of these startpoints:
 
@@ -109,6 +114,7 @@ For each of these startpoints:
 #. next_depth_FCCs.DoesMinByAbsoluteDepthExists = new empty one ;
 next_depth_FCCs.queue = new empty one ;
 next_depth_FCCs.Cache = new empty one ;
+----------------------------------------
 
 Addendum: Handling Horne's Prune
 --------------------------------
@@ -121,6 +127,7 @@ FCCs-by-depth.
 
 As a result, the new state looks like so:
 
+----------------------------------------
 struct FCC
 {
     /* These two gets recycled (and their memory reclaimed by the heap) when we ascend
@@ -131,22 +138,22 @@ struct FCC
 
 /* Optionally exists: no need to reset when we ascend to a new depth. */
 LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache;
+----------------------------------------
 
 BrFS function prototype:
 ------------------------
 
 We need to perform a Breadth-first-search (BrFS) on the FCCs with two variations:
 
-<QUOTE>
-#. Perform a BrFS from min_by_absolute_depth to find all the next FCC
+1. Perform a BrFS from min_by_absolute_depth to find all the next FCC
 startpoints (the positions in the graph that followed an irreversible move).
 
-    #. Perform a BrFS scan to find the new FCC min_by_sorting (the scan will
-    be only on reversible moves).
-</QUOTE>
+2. Perform a BrFS scan to find the new FCC min_by_sorting (the scan will
+be only on reversible moves).
 
 As a result, the new BrFS function prototype will look like this:
 
+----------------------------------------
 int
 perform_FCC_brfs(
     /* The first state in the game, from which all states are encoded. */
@@ -172,3 +179,4 @@ perform_FCC_brfs(
     /* [Input/Output]: The LRU */
     LRU_Map{any_state_in_the_FCCs => Bool Exists} Cache,
 );
+----------------------------------------
