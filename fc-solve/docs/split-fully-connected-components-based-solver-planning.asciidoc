@@ -1,7 +1,7 @@
 Specification for a split solver based on FCCs (= Fully connected components):
 ==============================================================================
 
-First of all see the file fully-connected-components-based-solver-planning.txt
+First of all see the file link:fully-connected-components-based-solver-planning.txt[FCC]
 in this directory, for more information about the fully connected components
 analysis based on non-reversible moves.
 
@@ -22,7 +22,7 @@ process.
 
 In any case, the fingerprint will be identified by a binary vector of those
 52 ternary digits, and the next fingerprints of a derived state will be
-calculated from the original based on non-reversable move.
+calculated from the original based on non-reversible move.
 
 The process of the solver:
 --------------------------
@@ -99,8 +99,8 @@ containing:
 This is sorted by the count of the moves (and then by
 the lexical order of the states within.).
 
-The solver will write to [path to output dir]/$INT.temp and then rename it on
-top of [path to output dir]/$INT for each of the states.
+The solver will write to +[path to output dir]/$INT.temp+ and then rename it
+to +[path to output dir]/$INT+ for each of the states.
 
 Technical note: split_fcc_fc_solver reads the file line by line, puts all
 the states in memory, and records the number of moves, and the offset to the
