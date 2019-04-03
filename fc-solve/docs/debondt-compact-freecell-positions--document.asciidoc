@@ -4,6 +4,46 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2018-09-05
 :Revision: $Id$
 
+[id="split-FCC-improvement"]
+Update: The split-FCC improvement
+----------------------------------
+
+First of all see link:split-fully-connected-components-based-solver-planning.asciidoc[the split fully connect components ("FCC") spec]. Thereby we keep a fingerprint of
+the game state using 52 enums of three states (= { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 } ) each.
+
+Now, if card is at ORIG_POS or IN_FOUNDATIONS then its deBondt encoding is
+already known. If it is at ABOVE_PARENT_CARD_OR_EMPTY_SPACE then it can be of 4
+different states:
+
+1. In a Freecell.
+2. The lowest card of the stack.
+3. On a parent of either Hearts or Clubs.
+4. On a parent of either Diamonds or Spades.
+
+So we need at most 2 bits for each card, so 52*2 = 104 bits and 13 octets.
+
+We can improve on that by noting that a King card is only at #1 or #2 (thus
+requiring only one bit) while an Ace card requires 0 bits due to https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1300[Horne automove]
+so we can shave off 8 + 4 bits for a total of 92 bits or 11½ octets.
+
+One option would be to pack two such encodings into three consecutive 64-bit
+quadwords.
+
+One can notice that we can merge/unify option 1 and option 2 because we can
+determine if there are any cards on top of the card based on the other cards,
+and, as a result, king cards degenerate to zero bits as well.
+
+So we get:
+
+log2(3)*(52-4-4) = log2(3) * 44 = 69.7383500317309 bits (bytes: 9)
+
+Moreover note that for the cards of rank 2, there is only one optimal
+option which we can infer from the rest of the cards, so they can degenerate
+to 0 bits each:
+
+log2(3)*(52-4-4-4) = log2(3) * 40 = 63.3985000288463 bits (bytes: 8)
+
+Which fits inside a 64-bit machine word.
 [id="spec"]
 The spec
 --------
@@ -288,44 +328,3 @@ Furthermore we can do even better if you are prepared to accept symmetric equiva
 Not sure if this is of any interest to you but I enjoyed thinking about it.
 
 Ian
-
-[id="split-FCC-improvement"]
-The split-FCC improvement
--------------------------
-
-First of all see link:split-fully-connected-components-based-solver-planning.asciidoc[the split fully connect components spec]. Thereby we keep a fingerprint of
-the game state using 52 { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 } enums.
-
-Now if card is at ORIG_POS or IN_FOUNDATIONS then its deBondt encoding is already
-known. If it is at ABOVE_PARENT_CARD_OR_EMPTY_SPACE then it can be of 4 different
-states:
-
-1. In a Freecell.
-2. The lowest card of the stack.
-3. On a parent of either Hearts or Clubs.
-4. On a parent of either Diamonds or Spades.
-
-So we need at most 2 bits for each card, so 52*2 = 104 bits and 13 octets.
-
-We can improve on that by noting that a King card is only at #1 or #2 (thus
-requiring only one bit) while an Ace card requires 0 bits due to https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1300[Horne automove]
-so we can shave off 8 + 4 bits for a total of 92 bits or 11½ octets.
-
-One option would be to pack two such encodings into three consecutive 64-bit
-quadwords.
-
-One can notice that we can merge/unify option 1 and option 2 because we can
-determine if there are any cards on top of the card based on the other cards,
-and, as a result, king cards degenerate to zero bits as well.
-
-So we get:
-
-log2(3)*(52-4-4) = log2(3) * 44 = 69.7383500317309 bits (bytes: 9)
-
-Moreover note that for the cards of rank 2, there is only one optimal
-option which we can infer from the rest of the cards, so they can degenerate
-to 0 bits each:
-
-log2(3)*(52-4-4-4) = log2(3) * 40 = 63.3985000288463 bits (bytes: 8)
-
-Which fits inside a 64-bit machine word.
