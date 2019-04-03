@@ -19,6 +19,7 @@ use Games::Solitaire::Verify::VariantsMap ();
 use Games::Solitaire::Verify::Solution    ();
 use Games::Solitaire::Verify::State       ();
 use Games::Solitaire::Verify::Move        ();
+use FC_Solve::HorneAutomovePrune          ();
 
 use Getopt::Long qw(GetOptionsFromArray);
 
@@ -183,112 +184,6 @@ sub _out_move
     return;
 }
 
-sub _perform_and_output_move
-{
-    my ( $running_state, $move_s, $out_running_state, $out_move ) = @_;
-    $out_move->($move_s);
-    $running_state->verify_and_perform_move(
-        Games::Solitaire::Verify::Move->new(
-            {
-                fcs_string => $move_s,
-                game       => $running_state->_variant(),
-            },
-        )
-    );
-    $out_running_state->($running_state);
-
-    return;
-}
-
-my $calc_foundation_to_put_card_on = sub {
-    my $running_state = shift;
-    my $card          = shift;
-
-DECKS_LOOP:
-    for my $deck ( 0 .. $running_state->num_decks() - 1 )
-    {
-        if ( $running_state->get_foundation_value( $card->suit(), $deck ) ==
-            $card->rank() - 1 )
-        {
-            for my $other_deck_idx (
-                0 .. ( ( $running_state->num_decks() << 2 ) - 1 ) )
-            {
-                if (
-                    $running_state->get_foundation_value(
-                        $card->get_suits_seq->[ $other_deck_idx % 4 ],
-                        ( $other_deck_idx >> 2 ),
-                    ) < $card->rank() - 2 - (
-                        (
-                            $card->color_for_suit(
-                                $card->get_suits_seq->[ $other_deck_idx % 4 ]
-                            ) eq $card->color()
-                        ) ? 1 : 0
-                    )
-                    )
-                {
-                    next DECKS_LOOP;
-                }
-            }
-            return [ $card->suit(), $deck ];
-        }
-    }
-    return;
-};
-
-sub _check_for_prune_move
-{
-    my ( $running_state, $card, $prune_move, $out_running_state, $out_move ) =
-        @_;
-
-    if ( defined($card) )
-    {
-        my $f = $calc_foundation_to_put_card_on->( $running_state, $card );
-
-        if ( defined($f) )
-        {
-            _perform_and_output_move( $running_state, $prune_move,
-                $out_running_state, $out_move );
-            return 1;
-        }
-    }
-
-    return 0;
-}
-
-sub _prune_all
-{
-    my ( $running_state, $out_running_state, $out_move ) = @_;
-PRUNE:
-    while (1)
-    {
-        my $num_moved = 0;
-        foreach my $idx ( 0 .. ( $running_state->num_columns() - 1 ) )
-        {
-            my $col = $running_state->get_column($idx);
-
-            $num_moved += _check_for_prune_move(
-                $running_state,
-                scalar( $col->len() ? $col->top() : undef() ),
-                "Move a card from stack $idx to the foundations",
-                $out_running_state,
-                $out_move,
-            );
-        }
-
-        foreach my $idx ( 0 .. ( $running_state->num_freecells() - 1 ) )
-        {
-            $num_moved += _check_for_prune_move(
-                $running_state,
-                $running_state->get_freecell($idx),
-                "Move a card from freecell $idx to the foundations",
-                $out_running_state,
-                $out_move,
-            );
-        }
-        last PRUNE if $num_moved == 0;
-    }
-}
-
 sub run
 {
     my $self = shift;
@@ -394,10 +289,11 @@ MOVES:
             die "Unrecognized Move line '$move_line'.";
         }
 
-        _perform_and_output_move( $running_state,
+        FC_Solve::HorneAutomovePrune::_perform_and_output_move( $running_state,
             $dest_move, \&_out_running_state, \&_out_move );
 
-        _prune_all( $running_state, \&_out_running_state, \&_out_move );
+        FC_Solve::HorneAutomovePrune::_prune_all( $running_state,
+            \&_out_running_state, \&_out_move );
 
         my $new_state = $self->_read_next_state($fh);
 
