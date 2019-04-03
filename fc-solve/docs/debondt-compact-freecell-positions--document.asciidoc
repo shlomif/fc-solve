@@ -290,8 +290,8 @@ Not sure if this is of any interest to you but I enjoyed thinking about it.
 Ian
 
 [id="split-FCC-improvement"]
-The split-FCC improvemet
-------------------------
+The split-FCC improvement
+-------------------------
 
 First of all see link:split-fully-connected-components-based-solver-planning.txt[the split fully connect components spec]. Thereby we keep a fingerprint of
 the game state using 52 { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 } enums.
