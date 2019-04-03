@@ -9,7 +9,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -18,6 +18,11 @@ my $FCS_SRC_PATH = path( $ENV{FCS_SRC_PATH} );
 sub src_file
 {
     return $FCS_SRC_PATH->child( @{ shift @_ } );
+}
+
+sub src_script
+{
+    return src_file( [ 'scripts', shift ] );
 }
 my $DATA_DIR    = src_file( [qw(t data)] );
 my $BOARDS_DIR  = $DATA_DIR->child('sample-boards');
