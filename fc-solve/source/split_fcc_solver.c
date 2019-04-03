@@ -576,12 +576,14 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 #endif
 
     dbm__spawn_threads(instance, num_threads, threads);
+#if 0
     if (!instance->common.queue_solution_was_found)
     {
         mark_and_sweep_old_states(instance,
             fc_solve_dbm_store_get_dict(instance->coll.cache_store.store),
             instance->curr_depth);
     }
+#endif
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
