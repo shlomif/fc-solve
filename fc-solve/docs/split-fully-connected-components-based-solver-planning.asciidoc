@@ -1,7 +1,7 @@
 Specification for a split solver based on FCCs (= Fully connected components):
 ==============================================================================
 
-First of all see the file link:fully-connected-components-based-solver-planning.txt[FCC]
+First of all see the file link:fully-connected-components-based-solver-planning.asciidoc[FCC]
 in this directory, for more information about the fully connected components
 analysis based on non-reversible moves.
 
