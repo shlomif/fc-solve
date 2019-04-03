@@ -3,8 +3,7 @@ Irreversible moves:
 
 1. Moving a card from a freecell/column to the foundations.
 
-2. Moving a card from an incompatible parent (by initial layout) to a different
-freecell/column.
+2. Moving a card from lying on top of an incompatible parent (where it resided starting from the initial layout) to a different freecell/column.
 
 Reversible moves:
 -----------------
