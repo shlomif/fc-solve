@@ -30,7 +30,7 @@ sub _process_cmd_line
     {
         if ( $argv[$idx] eq '--read-from-file' )
         {
-            $idx++;
+            ++$idx;
             my $s        = $argv[$idx];
             my $num_skip = 0;
 
@@ -60,7 +60,7 @@ sub _process_cmd_line
         }
         elsif ( ( $argv[$idx] eq '-l' ) || ( $argv[$idx] eq '--load-config' ) )
         {
-            $idx++;
+            ++$idx;
             my $preset_name = $argv[$idx];
             open my $in, '<', "$ENV{FCS_PATH}/Presets/presetrc"
                 or die "Cannot open presetrc file - $!";
@@ -106,7 +106,7 @@ sub _process_cmd_line
     }
     continue
     {
-        $idx++;
+        ++$idx;
     }
 
     return \@out;

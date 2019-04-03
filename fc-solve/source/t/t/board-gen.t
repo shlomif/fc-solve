@@ -8,7 +8,7 @@ use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
 
 use FC_Solve::Paths
-    qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf /;
+    qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf src_file /;
 use FC_Solve::Trim qw/trim_trail_ws/;
 
 sub _test_out
@@ -727,7 +727,7 @@ sub _test_autoplay
 
     my $got = trim_trail_ws(
         scalar
-`$^X $ENV{FCS_SRC_PATH}/scripts/horne-autoplay-board.pl @$cmd_line_args`
+`$^X @{[src_file([qw(scripts horne-autoplay-board.pl)])]} @$cmd_line_args`
     );
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );

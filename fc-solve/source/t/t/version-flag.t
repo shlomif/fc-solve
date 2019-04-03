@@ -6,16 +6,14 @@ use autodie;
 
 use Test::More;
 use String::ShellQuote qw/ shell_quote /;
-use FC_Solve::Paths qw( $FC_SOLVE_EXE is_break );
+use FC_Solve::Paths qw( $FC_SOLVE_EXE is_break src_file );
 if ( is_break() )
 {
     plan skip_all => "Does not work with BREAK_BACK_COMPAT";
 }
 plan tests => 2;
 {
-    open my $good_ver_fh, "<", "$ENV{FCS_SRC_PATH}/ver.txt";
-    my $good_ver = <$good_ver_fh>;
-    close($good_ver_fh);
+    my $good_ver = src_file( ["ver.txt"] )->slurp_utf8;
     chomp($good_ver);
 
     my $got_output = `$FC_SOLVE_EXE --version`;

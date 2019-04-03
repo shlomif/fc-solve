@@ -7,8 +7,9 @@ use Test::More tests => 1;
 
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
+use FC_Solve::Paths qw( src_file );
 
-my $data = path( $ENV{FCS_SRC_PATH} )->visit(
+my $data = src_file( [] )->visit(
     sub {
         my ( $path, $state ) = @_;
         if ( $path->is_file and $path->basename =~ m#\.sh\z# )

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 3;
-use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol );
+use FC_Solve::Paths qw( bin_board data_file samp_board samp_sol src_file );
 use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(
@@ -26,7 +26,7 @@ vtest(
         id   => "375783-dbm-sol",
         deal => 375_783,
         complete_command =>
-"$^X $ENV{FCS_SRC_PATH}/scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
+"$^X @{[src_file([qw(scripts convert-dbm-fc-solver-solution-to-fc-solve-solution.pl)])]} --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
     },
 "Verifying the output of scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl",
 );

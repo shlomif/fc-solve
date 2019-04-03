@@ -7,7 +7,7 @@ use warnings;
 use Config;
 use Inline;
 
-use FC_Solve::Paths qw( $IS_WIN );
+use FC_Solve::Paths qw( $IS_WIN bin_file src_file );
 
 sub import
 {
@@ -31,8 +31,9 @@ sub import
         C    => $src,
         name => $pkg,
         NAME => $pkg,
-        INC =>
-"-I$ENV{FCS_PATH}/include -I$ENV{FCS_SRC_PATH}/include -I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}",
+        INC  => join( " ",
+            map { "-I$_" }
+            map { bin_file($_), src_file($_) } ( ["include"], [] ) ),
         CCFLAGS           => $ccflags,
         CLEAN_AFTER_BUILD => 0,
         LIBS              => "-L$ENV{FCS_PATH} $libs",
