@@ -168,6 +168,38 @@ LINES:
     );
 }
 
+sub _out_running_state
+{
+    my $running_state = shift;
+    print $running_state->to_string();
+    print "\n\n====================\n\n";
+    return;
+}
+
+sub _out_move
+{
+    my $move_s = shift;
+    print "$move_s\n\n";
+    return;
+}
+
+sub _perform_and_output_move
+{
+    my ( $running_state, $move_s, $out_running_state, $out_move ) = @_;
+    $out_move->($move_s);
+    $running_state->verify_and_perform_move(
+        Games::Solitaire::Verify::Move->new(
+            {
+                fcs_string => $move_s,
+                game       => $running_state->_variant(),
+            },
+        )
+    );
+    $out_running_state->($running_state);
+
+    return;
+}
+
 sub run
 {
     my $self = shift;
@@ -217,29 +249,6 @@ LINES_PREFIX:
 
     print "-=-=-=-=-=-=-=-=-=-=-=-\n\n";
 
-    my $out_running_state = sub {
-        print $running_state->to_string();
-        print "\n\n====================\n\n";
-    };
-
-    my $perform_and_output_move = sub {
-        my ($move_s) = @_;
-
-        print "$move_s\n\n";
-
-        $running_state->verify_and_perform_move(
-            Games::Solitaire::Verify::Move->new(
-                {
-                    fcs_string => $move_s,
-                    game       => $running_state->_variant(),
-                },
-            )
-        );
-        $out_running_state->();
-
-        return;
-    };
-
     my $calc_foundation_to_put_card_on = sub {
         my $card = shift;
 
@@ -275,7 +284,7 @@ LINES_PREFIX:
         return;
     };
 
-    $out_running_state->();
+    _out_running_state($running_state);
 MOVES:
     while ( my $move_line = <$fh> )
     {
@@ -331,22 +340,13 @@ MOVES:
             die "Unrecognized Move line '$move_line'.";
         }
 
-        $perform_and_output_move->($dest_move);
-
-        # Now do the horne's prune.
-        my $num_moved = 1;    # Always iterate at least once.
-
-        my $perform_prune_move = sub {
-            my $prune_move = shift;
-
-            $num_moved++;
-            $perform_and_output_move->($prune_move);
-
-            return;
-        };
+        _perform_and_output_move( $running_state,
+            $dest_move, \&_out_running_state, \&_out_move );
 
         my $check_for_prune_move = sub {
-            my ( $card, $prune_move ) = @_;
+            my ( $running_state, $card, $prune_move, $out_running_state,
+                $out_move )
+                = @_;
 
             if ( defined($card) )
             {
@@ -354,34 +354,50 @@ MOVES:
 
                 if ( defined($f) )
                 {
-                    $perform_prune_move->($prune_move);
+                    _perform_and_output_move(
+                        $running_state,     $prune_move,
+                        $out_running_state, $out_move
+                    );
+                    return 1;
                 }
             }
 
-            return;
+            return 0;
         };
 
-        while ($num_moved)
-        {
-            $num_moved = 0;
-            foreach my $idx (@cols_iter)
+        my $prune_all = sub {
+            my ( $running_state, $out_running_state, $out_move ) = @_;
+        PRUNE:
+            while (1)
             {
-                my $col = $running_state->get_column($idx);
+                my $num_moved = 0;
+                foreach my $idx (@cols_iter)
+                {
+                    my $col = $running_state->get_column($idx);
 
-                $check_for_prune_move->(
-                    scalar( $col->len() ? $col->top() : undef() ),
-                    "Move a card from stack $idx to the foundations",
-                );
-            }
+                    $num_moved += $check_for_prune_move->(
+                        $running_state,
+                        scalar( $col->len() ? $col->top() : undef() ),
+                        "Move a card from stack $idx to the foundations",
+                        $out_running_state,
+                        $out_move,
+                    );
+                }
 
-            foreach my $idx (@fc_iter)
-            {
-                $check_for_prune_move->(
-                    $running_state->get_freecell($idx),
-                    "Move a card from freecell $idx to the foundations",
-                );
+                foreach my $idx (@fc_iter)
+                {
+                    $num_moved += $check_for_prune_move->(
+                        $running_state,
+                        $running_state->get_freecell($idx),
+                        "Move a card from freecell $idx to the foundations",
+                        $out_running_state,
+                        $out_move,
+                    );
+                }
+                last PRUNE if $num_moved == 0;
             }
-        }
+        };
+        $prune_all->( $running_state, \&_out_running_state, \&_out_move );
 
         my $new_state = $self->_read_next_state($fh);
 
