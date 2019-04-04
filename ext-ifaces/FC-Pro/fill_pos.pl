@@ -51,7 +51,7 @@ while (<>)
             . card_to_num( $cards[$i] ) . ";\n";
     }
 
-    $stack++;
+    ++$stack;
 }
 
 push @freecells, ( (0) x ( 8 - scalar(@freecells) ) );

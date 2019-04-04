@@ -10,9 +10,8 @@ my $depth_count = 0;
 while ( my $line = <ARGV> )
 {
     chomp($line);
-    if ( $line =~ m{\ADepth == (\d+)\z} )
+    if ( my ($new_depth) = $line =~ m{\ADepth == (\d+)\z} )
     {
-        my $new_depth = $1;
         if ( defined($depth) )
         {
             print "$depth " . ( $depth_sum / $depth_count ) . "\n";
@@ -20,10 +19,10 @@ while ( my $line = <ARGV> )
         }
         $depth = $new_depth;
     }
-    elsif ( $line =~ m{\Aboard\[\d+\]\.iters == (\d+)\z} )
+    elsif ( my ($diff) = $line =~ m{\Aboard\[\d+\]\.iters == (\d+)\z} )
     {
-        $depth_count++;
-        $depth_sum += $1;
+        ++$depth_count;
+        $depth_sum += $diff;
     }
 }
 print "$depth " . ( $depth_sum / $depth_count ) . "\n";

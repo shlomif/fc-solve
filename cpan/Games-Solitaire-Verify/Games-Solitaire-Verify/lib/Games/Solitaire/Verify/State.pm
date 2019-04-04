@@ -390,7 +390,7 @@ sub num_empty_columns
     {
         if ( !$self->get_column($idx)->len() )
         {
-            $count++;
+            ++$count;
         }
     }
     return $count;

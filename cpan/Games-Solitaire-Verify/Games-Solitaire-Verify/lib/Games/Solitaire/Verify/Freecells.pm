@@ -235,7 +235,7 @@ sub num_empty
     {
         if ( !defined( $self->cell($fc_idx) ) )
         {
-            $count++;
+            ++$count;
         }
     }
     return $count;

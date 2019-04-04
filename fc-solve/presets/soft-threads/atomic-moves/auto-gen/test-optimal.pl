@@ -18,11 +18,11 @@ my $scans_data =
 
 my $seq = sequence(32000);
 
-for ( my $limit = 200 ; $limit < 1000 ; $limit++ )
+for my $limit ( 200 .. 999 )
 {
     my ( $max, $max_ind );
     $max = -1;
-    for ( my $split_at = 0 ; $split_at <= $limit ; $split_at++ )
+    for my $split_at ( 0 .. $limit )
     {
         my $num = sum( ( $scans_data->slice("0,:") > $split_at ) &
                 ( $scans_data->slice("1,:") > ( $limit - $split_at ) ) );

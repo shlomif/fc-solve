@@ -315,7 +315,7 @@ MOVES:
         my $perform_prune_move = sub {
             my $prune_move = shift;
 
-            $num_moved++;
+            ++$num_moved;
 
             $running_state->verify_and_perform_move(
                 Games::Solitaire::Verify::Move->new(

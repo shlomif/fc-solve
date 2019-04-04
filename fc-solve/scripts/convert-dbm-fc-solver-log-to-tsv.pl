@@ -106,7 +106,7 @@ m{\AReached (\d+) ; States-in-collection: (\d+) ; Time: (\d+\.\d+)\z}
 
     my $queue_l = <>;
     chomp($queue_l);
-    $line_idx++;
+    ++$line_idx;
 
     $in_queue = $in_collection - $reached;
 
@@ -156,7 +156,7 @@ m{\AReached (\d+) ; States-in-collection: (\d+) ; Time: (\d+\.\d+)\z}
 }
 continue
 {
-    $line_idx++;
+    ++$line_idx;
     if ( defined($reached) )
     {
         $last_reached = $reached;

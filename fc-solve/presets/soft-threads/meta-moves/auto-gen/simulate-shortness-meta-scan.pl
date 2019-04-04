@@ -25,12 +25,11 @@ my @final_quotas;
 
 my $input_obj = FC_Solve::TimePresets->new;
 
-my $scan_index = 0;
-
 my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
 my @results;
-foreach my $scan ( @{ $input_obj->selected_scans() } )
+my $selected_scans = $input_obj->selected_scans();
+while ( my ( $scan_index, $scan ) = each(@$selected_scans) )
 {
     my $scan_id  = $scan->id();
     my $cmd_line = $scan->cmd_line();
@@ -46,10 +45,6 @@ foreach my $scan ( @{ $input_obj->selected_scans() } )
         min( $sorted->at( int( ( $sorted->dims() )[0] * 0.9 ) ), 10_000 );
 
     push @results, { cmd_line => $cmd_line, id => $scan_id, quota => $quota };
-}
-continue
-{
-    $scan_index++;
 }
 
 # Flair is our temporary name for these independently evaluated instances

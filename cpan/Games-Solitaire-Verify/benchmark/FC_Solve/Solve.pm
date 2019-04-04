@@ -132,7 +132,7 @@ void fc_solve_init(AV * args)
     const int argc = av_len(args) + 1;
     char * argv[argc+1];
 
-    for (int i = 0 ; i < argc ; i++)
+    for (int i = 0 ; i < argc ; ++i)
     {
         SV ** sv = av_fetch(args, i, 0);
         if (!sv)

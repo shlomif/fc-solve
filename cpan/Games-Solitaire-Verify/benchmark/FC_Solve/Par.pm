@@ -35,7 +35,7 @@ my @game_params;
             {
                 $e = $LAST_INDEX;
             }
-            $next_i++;
+            ++$next_i;
 
             $self->send_command( calc => "$s-$e" );
         }

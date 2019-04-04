@@ -34,12 +34,12 @@ sub gen_progress_charts
     my $try2 = $args->{try2} // 0;
 
     my @funcs;
-    my $idx = 0;
-    foreach my $deal ( @{ _calc_deal_nums() } )
+    my $_calc_deal_nums = _calc_deal_nums;
+    while ( my ( $idx, $deal ) = each(@$_calc_deal_nums) )
     {
         my $data_id  = "queue-items-$deal-data";
         my $chart_id = "queue-items-$deal-chart";
-        my $func_id  = "my_chart_" . ( $idx++ );
+        my $func_id  = "my_chart_$idx";
         push @funcs, $func_id;
         print qq#<h4 id="queue-items-$deal">Deal @{[format_num($deal)]}</h4>\n#;
         print <<"EOF";

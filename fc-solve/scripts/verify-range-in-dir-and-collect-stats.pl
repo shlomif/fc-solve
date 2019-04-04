@@ -244,9 +244,9 @@ sub run
         my $record = $stats{ $solved ? 'solved' : 'unsolved' };
 
         # Collect the statistics
-        foreach my $key ( keys(%current_data) )
+        while ( my ( $key, $val ) = each(%current_data) )
         {
-            $record->{$key}->{ $current_data{$key} }++;
+            ++$record->{$key}->{$val};
         }
     }
 

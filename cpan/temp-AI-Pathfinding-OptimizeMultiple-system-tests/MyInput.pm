@@ -104,14 +104,12 @@ sub _get_scans_data_helper
     my $scans_data      = $self->_gen_initial_scans_tensor();
     my $scans_lens_data = $self->_gen_initial_scans_tensor( [3] );
 
-    my $scan_idx = 0;
-
     my $data_dir = ".data-proc";
     my $lens_dir = ".data-len-proc";
 
     mkpath( $data_dir, $lens_dir );
 
-    foreach my $scan (@$selected_scans)
+    while ( my ( $scan_idx, $scan ) = each( @{$selected_scans} ) )
     {
         {
             my $dest_path = $data_dir . "/" . $scan->id();
@@ -185,10 +183,6 @@ sub _get_scans_data_helper
                     ( ( $self->num_boards() - 1 ) + ( $start_board - 1 ) ) )
             )->xchg( 1, 2 );
         }
-    }
-    continue
-    {
-        $scan_idx++;
     }
 
     return { 'scans' => $scans_data, 'with_lens' => $scans_lens_data };

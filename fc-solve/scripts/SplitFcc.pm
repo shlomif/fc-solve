@@ -159,7 +159,7 @@ EOF
     }
     continue
     {
-        $idx++;
+        ++$idx;
     }
 
     while (

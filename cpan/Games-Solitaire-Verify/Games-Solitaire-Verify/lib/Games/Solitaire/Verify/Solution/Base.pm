@@ -38,7 +38,7 @@ sub _l
     my $s = shift;
 
     # We use this instead of the accessor for speed.
-    $s->{_ln}++;
+    ++$s->{_ln};
 
     return shift( @{ $s->{_i} } );
 }

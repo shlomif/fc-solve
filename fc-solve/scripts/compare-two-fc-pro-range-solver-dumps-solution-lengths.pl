@@ -115,7 +115,7 @@ for my $i ( keys @$new_iters )
             my $delta = $bef - $aft;
             if ($should_histogram)
             {
-                $histogram{$delta}++;
+                ++$histogram{$delta};
             }
             else
             {

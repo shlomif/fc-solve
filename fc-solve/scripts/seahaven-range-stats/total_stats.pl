@@ -74,7 +74,7 @@ while ( !eof($in) )
         my $bucket = 0;
         while ( $limits[$bucket] < $num_iters )
         {
-            $bucket++;
+            ++$bucket;
         }
         push @{ $which->{'stats'}->[$bucket] }, $num;
         $which->{'sum'}         += $num_iters;

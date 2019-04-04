@@ -79,7 +79,7 @@ sub addmove
             append_file $eachfile, "push: $tmp\n";
         }
     }
-    $moves++;
+    ++$moves;
     ( $deck, $over, $spades, $hearts, $diamonds, $clubs, @stacks ) =
         split ' ', $layout;
 }

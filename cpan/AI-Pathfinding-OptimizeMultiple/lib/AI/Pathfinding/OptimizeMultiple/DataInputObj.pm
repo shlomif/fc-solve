@@ -109,8 +109,6 @@ sub _get_scans_data_helper
     my $scans_data      = {};
     my $scans_lens_data = {};
 
-    my $scan_idx = 0;
-
     my $data_dir = ".data-proc";
     my $lens_dir = ".data-len-proc";
 
@@ -189,10 +187,6 @@ sub _get_scans_data_helper
                 )->xchg( 1, 2 );
             }
         }
-    }
-    continue
-    {
-        $scan_idx++;
     }
 
     return { 'scans' => $scans_data, 'with_lens' => $scans_lens_data };

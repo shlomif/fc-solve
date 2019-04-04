@@ -129,17 +129,17 @@ sub test_freecell_deal
         my $ret = '';
         while ( my $line = <$dump_fh> )
         {
-            $line_idx++;
+            ++$line_idx;
             if ( $line =~ /\AFoundations: / )
             {
                 $ret .= $line;
                 $line = <$dump_fh>;
-                $line_idx++;
+                ++$line_idx;
                 while ( $line =~ /\S/ )
                 {
                     $ret .= $line;
                     $line = <$dump_fh>;
-                    $line_idx++;
+                    ++$line_idx;
                 }
                 return $ret;
             }
@@ -277,7 +277,7 @@ READ_STATE:
             die
 "State was wrongly encoded+decoded: Deal=<<$deal_idx>>\nState=<<\n$state\n>> ; Got_state=<<\n$got_state\n>> ; expected_str=<<\n$expected_str\n>>!";
         }
-        $count++;
+        ++$count;
         printf "\r%-70s",
             "Deal: $deal_idx ; Processed: $count ; MaxBits: $max_num_bits";
     }
