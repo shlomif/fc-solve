@@ -1,29 +1,20 @@
 #!/usr/bin/perl
 
-# This program converts the solution output of dbm_fc_solver
-# (and depth_dbm_fc_solver) to something that can be used as input for
-# verify-solitaire-solution. It accepts the same command line arguments
-# as verify-solitaire-solution so you should use it something like that:
+# Autopmove / autoplay / prune a deal. It accepts the same command line
+# arguments as verify-solitaire-solution so you should use it something like that:
 #
-# perl scripts/convert-dbm-fc-solver-solution-to-fc-solve-solution.pl \
-#  --freecells-num 2 -
+# perl scripts/horne-autoplay-board.pl --freecells-num 2 -
 #
 use strict;
 use warnings;
+use autodie;
 
-package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
+package Games::Solitaire::Verify::App::HorneAutomove;
 
 use parent 'Games::Solitaire::Verify::App::CmdLine';
 
 use Games::Solitaire::Verify::State              ();
 use Games::Solitaire::Verify::HorneAutomovePrune ();
-
-sub _out_running_state
-{
-    my $running_state = shift;
-    print $running_state->to_string();
-    return;
-}
 
 sub run
 {
@@ -40,27 +31,21 @@ sub run
     }
     else
     {
-        open $fh, "<", $filename
-            or die "Cannot open '$filename' - $!";
+        open $fh, "<", $filename;
     }
+    my $s = do { local $/; <$fh> };
+    close($fh);
+    $s =~ s/^(\w)/: $1/gms;
+    $s = "Freecells:\n$s" if ( $s !~ /^Freecells/ms );
+    $s = "Foundations: H-0 C-0 D-0 S-0\n$s" if ( $s !~ /^Found/ms );
 
-    my $initial_state = Games::Solitaire::Verify::State->new(
+    my $running_state = Games::Solitaire::Verify::State->new(
         {
             variant        => "custom",
             variant_params => $self->_variant_params(),
-            string         => do
-            {
-                local $/;
-                my $s = <$fh>;
-                $s =~ s/^(\w)/: $1/gms;
-                $s = "Freecells:\n$s" if ( $s !~ /^Freecells/ms );
-                $s = "Foundations: H-0 C-0 D-0 S-0\n$s" if ( $s !~ /^Found/ms );
-                $s;
-            },
+            string         => $s,
         },
     );
-
-    my $running_state = $initial_state->clone();
 
     Games::Solitaire::Verify::HorneAutomovePrune::do_prune(
         {
@@ -69,16 +54,14 @@ sub run
             output_move  => sub { },
         }
     );
-    _out_running_state($running_state);
+    print $running_state->to_string();
 
-    close($fh);
     return;
 }
 
 package main;
 
-Games::Solitaire::Verify::App::From_DBM_FC_Solver->new( { argv => [@ARGV] } )
-    ->run();
+Games::Solitaire::Verify::App::HorneAutomove->new( { argv => [@ARGV] } )->run();
 
 __END__
 
