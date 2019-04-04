@@ -3,9 +3,9 @@ package FC_Solve::HorneAutomovePrune;
 use strict;
 use warnings;
 
-my $calc_foundation_to_put_card_on = sub {
-    my $running_state = shift;
-    my $card          = shift;
+sub _calc_foundation_to_put_card_on
+{
+    my ( $running_state, $card ) = @_;
 
 DECKS_LOOP:
     for my $deck ( 0 .. $running_state->num_decks() - 1 )
@@ -36,7 +36,7 @@ DECKS_LOOP:
         }
     }
     return;
-};
+}
 
 sub perform_and_output_move
 {
@@ -66,7 +66,7 @@ sub _check_for_prune_move
 
     if ( defined($card) )
     {
-        my $f = $calc_foundation_to_put_card_on->( $running_state, $card );
+        my $f = _calc_foundation_to_put_card_on( $running_state, $card );
 
         if ( defined($f) )
         {
