@@ -178,9 +178,14 @@ MOVES:
             die "Unrecognized Move line '$move_line'.";
         }
 
-        FC_Solve::HorneAutomovePrune::_perform_and_output_move( $running_state,
-            $dest_move, \&_out_running_state, \&_out_move );
-
+        FC_Solve::HorneAutomovePrune::perform_and_output_move(
+            {
+                state        => $running_state,
+                move_string  => $dest_move,
+                output_state => \&_out_running_state,
+                output_move  => \&_out_move,
+            }
+        );
         FC_Solve::HorneAutomovePrune::do_prune(
             {
                 state        => $running_state,

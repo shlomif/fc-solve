@@ -38,9 +38,13 @@ DECKS_LOOP:
     return;
 };
 
-sub _perform_and_output_move
+sub perform_and_output_move
 {
-    my ( $running_state, $move_s, $out_running_state, $out_move ) = @_;
+    my ($args)            = @_;
+    my $running_state     = $args->{state};
+    my $out_running_state = $args->{output_state};
+    my $out_move          = $args->{output_move};
+    my $move_s            = $args->{move_string};
     $out_move->($move_s);
     $running_state->verify_and_perform_move(
         Games::Solitaire::Verify::Move->new(
@@ -66,8 +70,14 @@ sub _check_for_prune_move
 
         if ( defined($f) )
         {
-            _perform_and_output_move( $running_state, $prune_move,
-                $out_running_state, $out_move );
+            perform_and_output_move(
+                {
+                    state        => $running_state,
+                    move_string  => $prune_move,
+                    output_state => $out_running_state,
+                    output_move  => $out_move
+                }
+            );
             return 1;
         }
     }
