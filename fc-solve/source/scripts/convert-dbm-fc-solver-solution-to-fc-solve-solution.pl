@@ -181,8 +181,13 @@ MOVES:
         FC_Solve::HorneAutomovePrune::_perform_and_output_move( $running_state,
             $dest_move, \&_out_running_state, \&_out_move );
 
-        FC_Solve::HorneAutomovePrune::_prune_all( $running_state,
-            \&_out_running_state, \&_out_move );
+        FC_Solve::HorneAutomovePrune::do_prune(
+            {
+                state        => $running_state,
+                output_state => \&_out_running_state,
+                output_move  => \&_out_move,
+            }
+        );
 
         my $new_state = $self->_read_next_state($fh);
 

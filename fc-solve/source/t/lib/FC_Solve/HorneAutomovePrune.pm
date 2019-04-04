@@ -75,9 +75,12 @@ sub _check_for_prune_move
     return 0;
 }
 
-sub _prune_all
+sub do_prune
 {
-    my ( $running_state, $out_running_state, $out_move ) = @_;
+    my ($args)            = @_;
+    my $running_state     = $args->{state};
+    my $out_running_state = $args->{output_state};
+    my $out_move          = $args->{output_move};
 PRUNE:
     while (1)
     {

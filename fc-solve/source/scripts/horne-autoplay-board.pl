@@ -62,8 +62,13 @@ sub run
 
     my $running_state = $initial_state->clone();
 
-    FC_Solve::HorneAutomovePrune::_prune_all( $running_state,
-        sub { }, sub { }, );
+    FC_Solve::HorneAutomovePrune::do_prune(
+        {
+            state        => $running_state,
+            output_state => sub { },
+            output_move  => sub { },
+        }
+    );
     _out_running_state($running_state);
 
     close($fh);
