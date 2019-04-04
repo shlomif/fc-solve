@@ -1,5 +1,8 @@
 Revision history for Games-Solitaire-Verify
 
+0.2000  2019-04-04
+        - Add lib/Games/Solitaire/Verify/HorneAutomovePrune.pm .
+
 0.1900  2018-08-02
         - Add verify_contents() to ::State and check for initial board sanity
         on the solution.
