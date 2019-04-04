@@ -15,8 +15,8 @@ package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
 use parent 'Games::Solitaire::Verify::App::CmdLine';
 
-use Games::Solitaire::Verify::State ();
-use FC_Solve::HorneAutomovePrune    ();
+use Games::Solitaire::Verify::State              ();
+use Games::Solitaire::Verify::HorneAutomovePrune ();
 
 sub _out_running_state
 {
@@ -62,7 +62,7 @@ sub run
 
     my $running_state = $initial_state->clone();
 
-    FC_Solve::HorneAutomovePrune::do_prune(
+    Games::Solitaire::Verify::HorneAutomovePrune::do_prune(
         {
             state        => $running_state,
             output_state => sub { },

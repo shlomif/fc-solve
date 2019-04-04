@@ -15,8 +15,8 @@ package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
 use parent 'Games::Solitaire::Verify::App::CmdLine';
 
-use Games::Solitaire::Verify::State ();
-use FC_Solve::HorneAutomovePrune    ();
+use Games::Solitaire::Verify::State              ();
+use Games::Solitaire::Verify::HorneAutomovePrune ();
 
 sub _read_next_state
 {
@@ -178,7 +178,7 @@ MOVES:
             die "Unrecognized Move line '$move_line'.";
         }
 
-        FC_Solve::HorneAutomovePrune::perform_and_output_move(
+        Games::Solitaire::Verify::HorneAutomovePrune::perform_and_output_move(
             {
                 state        => $running_state,
                 move_string  => $dest_move,
@@ -186,7 +186,7 @@ MOVES:
                 output_move  => \&_out_move,
             }
         );
-        FC_Solve::HorneAutomovePrune::do_prune(
+        Games::Solitaire::Verify::HorneAutomovePrune::do_prune(
             {
                 state        => $running_state,
                 output_state => \&_out_running_state,
