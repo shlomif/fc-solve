@@ -61,7 +61,7 @@ sub run
 
 package main;
 
-Games::Solitaire::Verify::App::HorneAutomove->new( { argv => [@ARGV] } )->run();
+Games::Solitaire::Verify::App::HorneAutomove->new( { argv => \@ARGV } )->run();
 
 __END__
 

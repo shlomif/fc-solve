@@ -34,15 +34,10 @@ sub read
 {
     my ( $self, $len ) = @_;
 
-    my $idx = 0;
     my $ret = 0;
-    while ( $idx < $len )
+    for my $idx ( 0 .. $len - 1 )
     {
         $ret |= ( vec( $self->bits(), $self->_next_idx(), 1 ) << $idx );
-    }
-    continue
-    {
-        $idx++;
     }
 
     return $ret;

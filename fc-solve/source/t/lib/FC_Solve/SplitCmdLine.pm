@@ -13,7 +13,7 @@ SV * _internal_parse_args(char * input) {
     AV *const results = (AV *)sv_2mortal((SV *)newAV());
     fcs_args_man args = fc_solve_args_man_chop(input);
 
-    for ( int i=0 ; i < args.argc ; i++)
+    for ( int i=0 ; i < args.argc ; ++i)
     {
         av_push(results, newSVpv(args.argv[i], 0));
     }

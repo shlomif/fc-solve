@@ -314,7 +314,7 @@ MOVES:
 
 package main;
 
-Games::Solitaire::Verify::App::From_DBM_FC_Solver->new( { argv => [@ARGV] } )
+Games::Solitaire::Verify::App::From_DBM_FC_Solver->new( { argv => \@ARGV } )
     ->run();
 
 __END__

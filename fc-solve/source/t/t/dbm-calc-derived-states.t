@@ -56,7 +56,7 @@ AV* get_derived_states_list(char * init_state_s, int perform_horne_prune) {
     AV *const results = (AV *)sv_2mortal((SV *)newAV());
 
     var_AUTO(iter, derived_states);
-    for (int i=0 ; i < count; i++, iter++)
+    for (int i=0 ; i < count; ++i, ++iter)
     {
         SV *const obj_ref = newSViv(0);
         SV *const obj = newSVrv(obj_ref, "DerivedState");

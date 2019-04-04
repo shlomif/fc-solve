@@ -42,7 +42,7 @@ AV * find_fcc_start_points(char * init_state_s, SV * moves_prefix) {
     );
     AV *const results = (AV *)sv_2mortal((SV *)newAV());
 
-    for (var_AUTO(iter, fcc_start_points) ; iter->count ; iter++)
+    for (var_AUTO(iter, fcc_start_points) ; iter->count ; ++iter)
     {
         SV *const obj_ref = newSViv(0);
         SV *const obj = newSVrv(obj_ref, "FccStartPoint");
@@ -104,7 +104,7 @@ static string_list_t av_to_char_p_p(AV * av)
     string_list_t ret;
     Newx(ret, (sizeof(ret[0]) * (len+1)), char *);
 
-    for (int i = 0; i < len ; i++)
+    for (int i = 0; i < len ; ++i)
     {
         SV * * item = av_fetch(av, i, false);
 
@@ -121,7 +121,7 @@ static void free_char_p_p(string_list_t p)
     while ((*p_iter))
     {
         Safefree(*p_iter);
-        p_iter++;
+        ++p_iter;
     }
     Safefree(p);
 }

@@ -71,12 +71,12 @@ sub _calc_flares
 
             if ( $arg eq '-nf' )
             {
-                $idx++;
+                ++$idx;
                 last PARSE_FLARE_ARGV;
             }
             elsif ( $arg eq '--flare-name' )
             {
-                $idx++;
+                ++$idx;
                 $flare_name = $argv->[$idx];
             }
             elsif ( $arg eq '--flares-plan' )
@@ -91,7 +91,7 @@ sub _calc_flares
         }
         continue
         {
-            $idx++;
+            ++$idx;
         }
 
         return {
