@@ -27,7 +27,7 @@ static help_screen help_screens[] = {
     {"configs",
         "These configurations are usually faster than the unmodified run:\n"
         "\n"
-        "    fc-solve -l cookie-monster\n"
+        "    fc-solve -l looking-glass\n"
         "    fc-solve -l one-big-family\n"
         "\n"
         "Or if you want an accurate verdict:\n"
@@ -42,13 +42,10 @@ static help_screen help_screens[] = {
                 "\n"
                 "See http://fc-solve.shlomifish.org/docs/distro/USAGE.html .\n"
                 "\n"
-                "(The listing here suffered from lack of maintenance and so "
-                "was removed.\n"
-                "\n"
                 "Freecell Solver was written by Shlomi Fish.\n"
-                "Homepage: http://fc-solve.shlomifish.org/\n"
+                "Homepage: https://fc-solve.shlomifish.org/\n"
                 "Send comments and suggestions to "
-                "http://www.shlomifish.org/me/contact-me/\n"},
+                "https://www.shlomifish.org/me/contact-me/\n"},
     {"real-help", "The environment variable FREECELL_SOLVER_DEFAULT_HELP sets "
                   "the default help\n"
                   "screen. The name of the help screen is the same name as its "
@@ -91,7 +88,7 @@ static help_screen help_screens[] = {
         "- To turn --help into something more useful, type\n"
         "  \"fc-solve --help-real-help\"\n"
         "\n"
-        "Contact Shlomi Fish, http://www.shlomifish.org/ for more "
+        "Contact Shlomi Fish, https://www.shlomifish.org/ for more "
         "information.\n"},
     {NULL, NULL}};
 
@@ -263,7 +260,6 @@ typedef enum
 #if defined(FCS_COMPILE_DEBUG_FUNCTIONS) &&                                    \
     !defined(FCS_WITHOUT_EXPORTED_RESUME_SOLUTION) &&                          \
     !defined(FCS_WITHOUT_MAX_NUM_STATES)
-//#if 0
 #include "fcs_user_internal.h"
 static inline int catch_more_bugs_solve_board(
     void *const inst, const char *const user_state)
