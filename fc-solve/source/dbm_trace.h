@@ -7,18 +7,9 @@
  *
  * Copyright (c) 2012 Shlomi Fish
  */
-/*
- * dbm_trace.h - dbm-solvers trace macros.
- */
-
+// dbm_trace.h - dbm-solvers trace macros.
 #pragma once
 
-#define T
-
-#ifdef T
 #define TRACE(my_format, ...)                                                  \
     fprintf(out_fh, my_format, __VA_ARGS__);                                   \
     fflush(out_fh)
-#else
-#define TRACE(a, ...)
-#endif

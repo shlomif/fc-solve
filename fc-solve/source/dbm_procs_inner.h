@@ -22,9 +22,7 @@ static inline main_thread_item *dbm__calc_threads(
     fcs_state_keyval_pair *const init_state, const size_t num_threads,
     void (*init_thread_cb)(dbm_solver_thread *))
 {
-#ifdef T
     FILE *const out_fh = instance->common.out_fh;
-#endif
     const_AUTO(local_variant, instance->common.variant);
     main_thread_item *const threads = SMALLOC(threads, num_threads);
     TRACE("%s\n", "instance_run_all_threads start");
@@ -49,9 +47,7 @@ static inline void dbm__free_threads(dbm_solver_instance *const instance,
     const size_t num_threads, main_thread_item *const threads,
     void (*free_thread_cb)(dbm_solver_thread *))
 {
-#ifdef T
     FILE *const out_fh = instance->common.out_fh;
-#endif
     for (size_t i = 0; i < num_threads; i++)
     {
         fc_solve_delta_stater_release(&(threads[i].thread.delta_stater));

@@ -14,9 +14,7 @@
 static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
     const size_t num_threads, main_thread_item *const threads)
 {
-#ifdef T
     FILE *const out_fh = instance->common.out_fh;
-#endif
     TRACE("Running threads for curr_depth=%d\n", instance->curr_depth);
     if (num_threads == 1)
     {
