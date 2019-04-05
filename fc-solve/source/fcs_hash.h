@@ -7,10 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-/*
- * fcs_hash.h - header file of Freecell Solver's internal hash implementation.
- */
-
+// fcs_hash.h - header file of Freecell Solver's internal hash implementation.
 #pragma once
 
 #ifdef __cplusplus

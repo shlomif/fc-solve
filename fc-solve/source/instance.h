@@ -114,10 +114,8 @@ typedef struct
 
 typedef int8_t fcs__positions_by_rank[FCS_BOTH__POS_BY_RANK__SIZE];
 
-/*
- * This is a linked list item that is used to implement a queue for the BFS
- * scan.
- * */
+// This is a linked list item that is used to implement a queue for the BFS
+// scan.
 typedef struct fcs_states_linked_list_item_struct
 {
     fcs_collectible_state *s;
@@ -242,10 +240,7 @@ struct fcs_cache_key_info_struct
 {
     const fcs_collectible_state *val_ptr;
     fcs_state key;
-    /* lower_pri and higher_pri form a doubly linked list.
-     *
-     * pri == priority.
-     * */
+    // lower_pri and higher_pri form a doubly linked list. pri == priority.
     struct fcs_cache_key_info_struct *lower_pri, *higher_pri;
 };
 
@@ -301,21 +296,15 @@ struct fc_solve_hard_thread_struct
      * */
     fcs_int_limit_t ht__max_num_checked_states;
 
-    /*
-     * The index for the soft-thread that is currently processed
-     * */
+    // The index for the soft-thread that is currently processed
     uint_fast32_t st_idx;
-    /*
-     * This is the mechanism used to allocate memory for stacks, states
-     * and move stacks.
-     * */
+    // This is the mechanism used to allocate memory for stacks, states
+    // and move stacks.
     compact_allocator allocator;
 
 #ifdef FCS_WITH_MOVES
-    /*
-     * This is a move stack that is used and re-used by the
-     * moves functions of this hard thread
-     * */
+    // This is a move stack that is used and re-used by the
+    // moves functions of this hard thread
     fcs_move_stack reusable_move_stack;
 #endif
 
@@ -336,11 +325,9 @@ struct fc_solve_hard_thread_struct
     bool allocated_from_list;
     fastest_type_for_num_soft_threads__unsigned num_soft_threads;
 
-    /*
-     * A counter that determines how many of the soft threads that belong
-     * to this hard thread have already finished. If it becomes
-     * num_soft_threads this thread is skipped.
-     * */
+    // A counter that determines how many of the soft threads that belong
+    // to this hard thread have already finished. If it becomes
+    // num_soft_threads this thread is skipped.
     fastest_type_for_num_soft_threads__unsigned num_soft_threads_finished;
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
@@ -396,10 +383,8 @@ struct fc_solve_soft_thread_struct
 {
     fcs_hard_thread *hard_thread;
 
-    /*
-     * The ID of the soft thread inside the instance.
-     * Used for the state-specific flags.
-     * */
+    // The ID of the soft thread inside the instance. Used for the
+    // state-specific flags.
     fastest_type_for_num_soft_threads__unsigned id;
 
     // The moves' order indicates which move funcs to run.
@@ -409,16 +394,13 @@ struct fc_solve_soft_thread_struct
         fcs_by_depth_moves_order *by_depth_moves;
     } by_depth_moves_order;
 
-    /* The super-method type - can be  */
     fcs_super_method_type super_method_type;
 
     struct
     {
         struct
         {
-            /*
-             * The (temporary) max depth of the Soft-DFS scans)
-             * */
+            // The (temporary) max depth of the Soft-DFS scans)
             ssize_t dfs_max_depth;
 
             /*
@@ -511,9 +493,7 @@ struct fc_solve_soft_thread_struct
     // read by the move functions in freecell.c .
     fcs_game_limit num_vacant_stacks, num_vacant_freecells;
 
-    /*
-     * The number of iterations with which to process this scan
-     * */
+    // The number of iterations with which to process this scan
     fcs_int_limit_t checked_states_step;
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
@@ -522,11 +502,9 @@ struct fc_solve_soft_thread_struct
 #endif
 
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-    /*
-     * Whether pruning should be done.
-     * This variable is temporary - there should be a better pruning
-     * abstraction with several optional prunes.
-     * */
+    // Whether pruning should be done.
+    // This variable is temporary - there should be a better pruning
+    // abstraction with several optional prunes.
     bool enable_pruning;
 #endif
 
@@ -540,12 +518,10 @@ struct fc_solve_soft_thread_struct
      * Differentiates between SOFT_DFS and RANDOM_DFS.
      * */
     bool master_to_randomize;
-    bool is_befs
+    bool is_befs;
 #ifdef FCS_WITH_MOVES
-        ,
-        is_optimize_scan
+    bool is_optimize_scan;
 #endif
-        ;
 };
 
 struct fc_solve_instance_struct
@@ -580,11 +556,8 @@ struct fc_solve_instance_struct
 #endif
 #endif
     fcs_seq_cards_power_type initial_cards_under_sequences_value;
-/*
- * tree is the balanced binary tree that is used to store and index
- * the checked states.
- *
- * */
+// tree is the balanced binary tree that is used to store and index
+// the checked states.
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     struct rbtree *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
@@ -595,25 +568,18 @@ struct fc_solve_instance_struct
     GTree *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
     dict_t *tree;
-#endif
-
-/*
- * hash is the hash table that is used to store the previous
- * states of the scan.
- * */
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     GHashTable *hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     hash_table hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fcs_states_google_hash_handle hash;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
+    DB *db;
 #endif
 
 #if defined(INDIRECT_STACK_STATES)
-/*
- * The storage mechanism for the stacks assuming INDIRECT_STACK_STATES is
- * used.
- * */
+// The storage mechanism for the stacks
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     hash_table stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
@@ -634,13 +600,6 @@ struct fc_solve_instance_struct
 #endif
 
     fcs_collectible_state *list_of_vacant_states;
-/*
- * Storing using Berkeley DB is not operational for some reason so
- * pay no attention to it for the while
- * */
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
-    DB *db;
-#endif
 
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
     bool FCS_RUNTIME_CALC_REAL_DEPTH;
@@ -659,11 +618,8 @@ struct fc_solve_instance_struct
         FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET;
 #endif
 
-/*
- * This is the number of states in the state collection.
- *
- * It gives a rough estimate of the memory occupied by the instance.
- * */
+// This is the number of states in the state collection.
+// It gives a rough estimate of the memory occupied by the instance.
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     fcs_int_limit_t active_num_states_in_collection;
@@ -679,15 +635,11 @@ struct fc_solve_instance_struct
 #else
     uint_fast32_t num_hard_threads;
     struct fc_solve_hard_thread_struct *hard_threads;
-    /*
-     * An iterator over the hard threads.
-     * */
+    // An iterator over the hard threads.
     fcs_hard_thread *current_hard_thread;
 
 #ifdef FCS_WITH_MOVES
-    /*
-     * This is the hard-thread used for the optimization scan.
-     * */
+    // This is the hard-thread used for the optimization scan.
     struct fc_solve_hard_thread_struct *optimization_thread;
 #endif
 #endif
@@ -753,41 +705,31 @@ struct fc_solve_instance_struct
      * */
     fcs_collectible_state *final_state;
 
-    /*
-     * A move stack that contains the moves leading to the solution.
-     *
-     * It is created only after the solution was found by swallowing
-     * all the stacks of each depth.
-     * */
+    // A move stack that contains the moves leading to the solution.
+    //
+    // It is created only after the solution was found by swallowing
+    // all the stacks of each depth.
     fcs_move_stack solution_moves;
 #endif
 
-    /*
-     * The meta allocator - see meta_alloc.h.
-     * */
+    // The meta allocator - see meta_alloc.h.
     meta_allocator *meta_alloc;
 
 #if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
-    /*
-     * The soft_thread that solved the state.
-     *
-     * Needed to trace the patsolve solutions.
-     * */
+    // The soft_thread that solved the state.
+    //
+    // Needed to trace the patsolve solutions.
     fcs_soft_thread *solving_soft_thread;
 #endif
 #ifndef FCS_DISABLE_PATSOLVE
-    /*
-     * This is intended to be used by the patsolve scan which is
-     * sensitive to the ordering of the columns/stacks. This is an ugly hack
-     * but hopefully it will work.
-     * */
+    // This is intended to be used by the patsolve scan which is
+    // sensitive to the ordering of the columns/stacks. This is an ugly hack
+    // but hopefully it will work.
     fcs_state_keyval_pair *initial_non_canonized_state;
 #endif
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    /*
-     * Whether or not this is a Simple Simon-like game.
-     * */
+    // Whether or not this is a Simple Simon-like game.
     bool is_simple_simon;
 #endif
 };
@@ -802,9 +744,7 @@ struct fc_solve_instance_struct
 #define BRFS_VAR(soft_thread, var)                                             \
     (soft_thread)->method_specific.befs.meth.brfs.var
 
-/*
- * An enum that specifies the meaning of each BeFS weight.
- * */
+// An enum that specifies the meaning of each BeFS weight.
 #define FCS_BEFS_WEIGHT_CARDS_OUT 0
 #define FCS_BEFS_WEIGHT_MAX_SEQUENCE_MOVE 1
 #define FCS_BEFS_WEIGHT_CARDS_UNDER_SEQUENCES 2
