@@ -14,6 +14,9 @@ class FC_Solve:
             ("dll" if (platform.system() == 'Windows') else "so"))
         self.ffi.cdef('''
 void * freecell_solver_user_alloc();
+typedef  struct{ char s[20];}fcs_move_t;
+int freecell_solver_user_get_moves_left (void * user);
+int freecell_solver_user_get_next_move (void * user, fcs_move_t * move);
 void freecell_solver_user_free(void * instance);
 double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
 typedef char * freecell_solver_str_t;
@@ -54,6 +57,14 @@ int freecell_solver_user_resume_solution(void * user);
 void freecell_solver_user_recycle(void *api_instance);
 ''')
         self.user = self.lib.freecell_solver_user_alloc()
+
+    def get_next_move(self):
+        move = self.ffi.new('fcs_move_t *')
+        ret = self.lib.freecell_solver_user_get_moves_left(self.user)
+        if ret == 0:
+            return None
+        ret = self.lib.freecell_solver_user_get_next_move(self.user, move)
+        return (move if ret == 0 else None)
 
     def input_cmd_line__generic(self, cmd_line_args):
         last_arg = self.ffi.new('int *')

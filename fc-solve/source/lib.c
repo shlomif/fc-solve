@@ -3316,7 +3316,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
                 resume_instance(instance);
 #endif
-            run_loop = (ret == FCS_STATE_IS_NOT_SOLVEABLE);
+            run_loop = (ret == FCS_STATE_IS_NOT_SOLVEABLE ||
+                        ret == FCS_STATE_SUSPEND_PROCESS);
             flare->instance_is_ready = false;
         }
 #ifdef FCS_WITH_NI
@@ -3427,9 +3428,9 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         (user->current_instance < end_of_instances_list) &&
 #endif
         run_loop);
-    if ((user->ret_code = ret) == FCS_STATE_INVALID_STATE)
+    if (ret == FCS_STATE_INVALID_STATE)
     {
-        return FCS_STATE_INVALID_STATE;
+        return user->ret_code = FCS_STATE_INVALID_STATE;
     }
 
 #ifdef FCS_WITH_NI
@@ -3438,12 +3439,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
     const_AUTO(r, ret);
 #endif
-    return eval_resume_ret_code(user, r
+    return (user->ret_code = eval_resume_ret_code(user, r
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-        ,
-        process_ret
+                ,
+                process_ret
 #endif
-    );
+                ));
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION

@@ -103,6 +103,7 @@ SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
 option (FCS_ENABLE_RCS_STATES "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 option (FCS_ENABLE_DBM_SOLVER "Whether to build the DBM solver")
 SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
+SET (FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING "0" CACHE STRING "0 for optimal perf - possible 1 for debugging.")
 SET (FCS_DBM_FREECELLS_NUM 2 CACHE STRING "Number of Freecells for the DBM* solvers")
 SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")

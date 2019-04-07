@@ -59,6 +59,7 @@ my %TRUE_BOOL_OPTS = (
 );
 
 my %INT_OPTS = (
+    'enable-inc-solving'    => 'FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING',
     'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
     'max-rank'              => 'FCS_MAX_RANK',
     'nfc'                   => 'FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY',
@@ -105,6 +106,7 @@ for my $k (@STR_OPTS__KEYS)
     $STR_OPTS{$k}{'prefix'} //= '';
 }
 
+$int_opts__values{'enable-inc-solving'} = 1;
 $int_opts__values{'max-bench-threads-num'} = 4;
 $STR_OPTS{'prefix'}{value}                 = '/usr';
 $STR_OPTS{'rcs-cache-storage'}{value}      = 'KAZ_TREE';
@@ -152,7 +154,7 @@ sub _set_to_google_hash
 my %themes = (
     tt    => [qw(-r --notest-suite --static)],
     bench => [
-        qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1)
+        qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1 --enable-inc-solving=0)
     ],
     fc_bench => [qw( -l bench --fc-only --without-fc-pro --nobuild-docs )],
     mem_reduction_settings => [

@@ -257,7 +257,9 @@ typedef enum
     ERROR = -1,
 } exit_code_type;
 
-#if defined(FCS_COMPILE_DEBUG_FUNCTIONS) &&                                    \
+// #define FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING 1
+#if FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING &&                                 \
+    defined(FCS_COMPILE_DEBUG_FUNCTIONS) &&                                    \
     !defined(FCS_WITHOUT_EXPORTED_RESUME_SOLUTION) &&                          \
     !defined(FCS_WITHOUT_MAX_NUM_STATES)
 #include "fcs_user_internal.h"
