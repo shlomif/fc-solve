@@ -20,7 +20,8 @@ class MyTests(unittest.TestCase):
         # TEST*$input_cmd_line
         fcs.input_cmd_line("ve", ['-l', 'video-editing'])
 
-        limit = 100
+        step = 100
+        limit = step
         fcs.limit_iterations(limit)
         # MS deal No. 24
         ret = fcs.solve_board(
@@ -34,8 +35,8 @@ AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D"""
         )
 
-        while ret == 5:
-            limit += 100
+        while fcs.is_SUSPEND(ret):
+            limit += step
             fcs.limit_iterations(limit)
             ret = fcs.resume_solution()
 
@@ -101,7 +102,7 @@ AH 5S 6S AD 8H JD
 
         iters_count_ok = 1
 
-        while (ret == 5):
+        while fcs.is_SUSPEND(ret):
             if (fcs.get_num_times() != limit):
                 iters_count_ok = 0
 
@@ -234,7 +235,7 @@ AC 4C 8S 2D QC JS
 
         iters_count_ok = 1
 
-        while (ret == 5 and limit < hard_limit):
+        while (fcs.is_SUSPEND(ret) and limit < hard_limit):
             if (fcs.get_num_times() != limit):
                 iters_count_ok = 0
 

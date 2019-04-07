@@ -6,6 +6,7 @@ from cffi import FFI
 class FC_Solve:
     # TEST:$num_befs_weights=5;
     NUM_BEFS_WEIGHTS = 5
+    FCS_STATE_SUSPEND_PROCESS = 5
 
     def __init__(self):
         self.ffi = FFI()
@@ -58,13 +59,18 @@ void freecell_solver_user_recycle(void *api_instance);
 ''')
         self.user = self.lib.freecell_solver_user_alloc()
 
+    def is_SUSPEND(self, ret_code):
+        """docstring for is_SUSPEND"""
+        return ret_code == self.FCS_STATE_SUSPEND_PROCESS
+
     def get_next_move(self):
         move = self.ffi.new('fcs_move_t *')
-        ret = self.lib.freecell_solver_user_get_moves_left(self.user)
-        if ret == 0:
+        num_moves = self.lib.freecell_solver_user_get_moves_left(self.user)
+        if not num_moves:
             return None
         ret = self.lib.freecell_solver_user_get_next_move(self.user, move)
-        return (move if ret == 0 else None)
+        SUCCESS = 0
+        return (move if ret == SUCCESS else None)
 
     def input_cmd_line__generic(self, cmd_line_args):
         last_arg = self.ffi.new('int *')
