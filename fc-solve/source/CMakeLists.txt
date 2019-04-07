@@ -1197,11 +1197,13 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
         dbm_calc_derived_test.c
         )
     TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
-    ADD_LIBRARY(fcs_fcc_brfs_test
-        SHARED
-        ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
-        )
-    TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
+    IF ()
+        ADD_LIBRARY(fcs_fcc_brfs_test
+            SHARED
+            ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
+            )
+        TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
+    ENDIF ()
 ENDIF ()
 
 INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}/include" "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
