@@ -1250,11 +1250,13 @@ int128-optimisation
 io
 kde
 libGMP
+libtap
 macOS
 obf
 pysol-cards
 show_bug
 solution_moves
+sp
 transpose-freecell-board
 userland
 usleep
