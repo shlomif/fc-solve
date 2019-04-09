@@ -1,6 +1,7 @@
 @import url(https://fonts.googleapis.com/css?family=Questrial);
 
-html, .solitairey_body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
+@if false {
+html, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
     position: relative;
     margin: 0;
     border: 0;
@@ -10,7 +11,7 @@ html, .solitairey_body, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 html {
     z-index: -100;
 }
-
+}
 .solitairey_body {
     background-attachment: fixed;
     background-image: url(green.jpg);
@@ -21,6 +22,7 @@ html {
     //z-index: -99;
     //overflow: hidden;
     height: 1000px;
+    margin: 50px;
 }
 
 ul {
