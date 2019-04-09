@@ -343,40 +343,6 @@ a.solve_online_button {
     }
 }
 
-#dynamic_output {
-    background-color: #eee;
-    overflow: scroll;
-    height: 50em;
-
-    ol {
-        list-style-type: none;
-    }
-
-    .move.unexpanded {
-        .inner_moves {
-            display: none;
-        }
-    }
-
-    .move.expanded {
-        .inner_moves {
-            margin-top: 1em;
-            margin-bottom: 1em;
-            margin-left: 0;
-            padding-left: 2em;
-            border-left: 3pt black solid;
-        }
-    }
-
-    .state pre {
-        background-color: #c5e1c6;
-    }
-
-    .move {
-        margin-left: 1em;
-    }
-}
-
 .link_to_online_solver strong {
     font-size: 120%;
 }
