@@ -47,10 +47,9 @@ function highlight_in_board(start,end) {
 requirejs.config({
     baseUrl: '$(ROOT)/js',
     });
+require(['./solver-freecell'], function (solver) {
+    console.log("loaded solver-freecell");
     <get-var incs /> {
-<when>
-    require(['solitaire', 'iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell) {
-    </when>
 
     $(function() {
         const controls = $('.phoenix');
@@ -84,33 +83,19 @@ requirejs.config({
                 return;
             }
         });
-    // });
+        $( "#output_tabs" ).tabs();
+    });
 
     web_fc_solve_ui.set_up();
 
-    });
+});
 });
 </js_script>
 
 <restore incs subject />
 </define-tag>
-<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire','iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver, solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
+<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire','iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
 ;;; <emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
-<div class="solitairey_body" id="solitairey_body">
-<img src="loading.gif" class="loading hidden" alt="Loading" />
-<button id="redeal">Redeal</button>
-<span style="color:white;">Deal Number:</span> <input id="deal_num_shlomify" size="30" name="deal_num_shlomify" readonly="readonly"/>
-	<div id="game-chooser">
-        <button id="close-chooser">Return to game</button>
-	</div>
-	<img src="loading.gif" class="loading hidden" alt="Loading" />
-	<div class="chromestore hidden">
-		<a class="hide">[Hide]</a>
-        <a href="https://chrome.google.com/webstore/detail/dofbnmhnoodmmlhflbcihicmbnhhinhp">
-            <img alt="Chrome Web Store" src="ChromeWebStore_Badge_v2_206x58.png" />
-        </a>
-	</div>
-</div>
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>
@@ -187,6 +172,29 @@ print FreecellSolver::ExtractGames->new->calc_html;
 
 <label for="output">Output:</label><br />
 
+<div id="output_tabs" class="fc_solve_tabs">
+<ul>
+<li><a href="#output_tabs__animated">Animated</a></li>
+<li><a href="#output_tabs__text">Text</a></li>
+</ul>
+<div id="output_tabs__animated" class="tab">
+<div class="solitairey_body" id="solitairey_body">
+<img src="loading.gif" class="loading hidden" alt="Loading" />
+<button id="redeal">Redeal</button>
+<span style="color:white;">Deal Number:</span> <input id="deal_num_shlomify" size="30" name="deal_num_shlomify" readonly="readonly"/>
+	<div id="game-chooser">
+        <button id="close-chooser">Return to game</button>
+	</div>
+	<img src="loading.gif" class="loading hidden" alt="Loading" />
+	<div class="chromestore hidden">
+		<a class="hide">[Hide]</a>
+        <a href="https://chrome.google.com/webstore/detail/dofbnmhnoodmmlhflbcihicmbnhhinhp">
+            <img alt="Chrome Web Store" src="ChromeWebStore_Badge_v2_206x58.png" />
+        </a>
+	</div>
+</div>
+</div>
+<div id="output_tabs__text" class="tab">
 <div class="output_form">
 <div id="dynamic_output"></div>
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
@@ -208,6 +216,8 @@ print FreecellSolver::ExtractGames->new->calc_html;
 </fieldset>
 <br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
+</div>
+</div>
 </div>
 </div>
 <br />
