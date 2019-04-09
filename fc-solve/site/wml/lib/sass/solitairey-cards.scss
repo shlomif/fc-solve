@@ -11,6 +11,41 @@ html, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
 html {
     z-index: -100;
 }
+
+ul {
+    list-style-type: none;
+}
+
+a {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+p {
+    margin-bottom: 1em;
+}
+button {
+    font-size: 18px;
+    margin-right: 27px;
+    background-color: #eec;
+    background-image: -webkit-linear-gradient(white, #EEC);
+    background-image: -moz-linear-gradient(white, #EEC);
+    background-image: -ms-linear-gradient(white, #EEC);
+    padding: 6px 17px;
+    border-radius: 5px;
+    box-shadow: inset 0 0 3px 1px #fff;
+    border: #000 solid 1px;
+    text-shadow: 1px 1px 1px white;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #a1a172;
+        background-image: -webkit-linear-gradient(#EEC, #a1a172);
+        background-image: -moz-linear-gradient(#EEC, #a1a172);
+        background-image: -ms-linear-gradient(#EEC, #a1a172);
+        box-shadow: none;
+    }
+}
 }
 .solitairey_body {
     background-attachment: fixed;
@@ -23,16 +58,6 @@ html {
     //overflow: hidden;
     height: 1000px;
     margin: 50px;
-}
-
-ul {
-    list-style-type: none;
-}
-
-a {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
 }
 
 .loading {
@@ -121,10 +146,6 @@ a {
     li.end a {
         padding-right: 12px;
     }
-}
-
-p {
-    margin-bottom: 1em;
 }
 
 #game-chooser {
@@ -456,29 +477,6 @@ p {
 
 .yukon .layout, .russian-solitaire .layout {
     background-image: url(layouts/mini/yukon.png);
-}
-
-button {
-    font-size: 18px;
-    margin-right: 27px;
-    background-color: #eec;
-    background-image: -webkit-linear-gradient(white, #EEC);
-    background-image: -moz-linear-gradient(white, #EEC);
-    background-image: -ms-linear-gradient(white, #EEC);
-    padding: 6px 17px;
-    border-radius: 5px;
-    box-shadow: inset 0 0 3px 1px #fff;
-    border: #000 solid 1px;
-    text-shadow: 1px 1px 1px white;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #a1a172;
-        background-image: -webkit-linear-gradient(#EEC, #a1a172);
-        background-image: -moz-linear-gradient(#EEC, #a1a172);
-        background-image: -ms-linear-gradient(#EEC, #a1a172);
-        box-shadow: none;
-    }
 }
 
 .replay_options {
