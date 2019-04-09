@@ -1,51 +1,62 @@
 @import url(https://fonts.googleapis.com/css?family=Questrial);
 
 @if false {
-html, div, ul, li, p, img, h1, h2, h3, h4, h5, h6 {
-    position: relative;
-    margin: 0;
-    border: 0;
-    padding: 0;
-}
-
-html {
-    z-index: -100;
-}
-
-ul {
-    list-style-type: none;
-}
-
-a {
-    color: #000;
-    text-decoration: none;
-    cursor: pointer;
-}
-p {
-    margin-bottom: 1em;
-}
-button {
-    font-size: 18px;
-    margin-right: 27px;
-    background-color: #eec;
-    background-image: -webkit-linear-gradient(white, #EEC);
-    background-image: -moz-linear-gradient(white, #EEC);
-    background-image: -ms-linear-gradient(white, #EEC);
-    padding: 6px 17px;
-    border-radius: 5px;
-    box-shadow: inset 0 0 3px 1px #fff;
-    border: #000 solid 1px;
-    text-shadow: 1px 1px 1px white;
-    cursor: pointer;
-
-    &:hover {
-        background-color: #a1a172;
-        background-image: -webkit-linear-gradient(#EEC, #a1a172);
-        background-image: -moz-linear-gradient(#EEC, #a1a172);
-        background-image: -ms-linear-gradient(#EEC, #a1a172);
-        box-shadow: none;
+    html,
+    div,
+    ul,
+    li,
+    p,
+    img,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        position: relative;
+        margin: 0;
+        border: 0;
+        padding: 0;
     }
-}
+
+    html {
+        z-index: -100;
+    }
+
+    ul {
+        list-style-type: none;
+    }
+
+    a {
+        color: #000;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    p {
+        margin-bottom: 1em;
+    }
+    button {
+        font-size: 18px;
+        margin-right: 27px;
+        background-color: #eec;
+        background-image: -webkit-linear-gradient(white, #eec);
+        background-image: -moz-linear-gradient(white, #eec);
+        background-image: -ms-linear-gradient(white, #eec);
+        padding: 6px 17px;
+        border-radius: 5px;
+        box-shadow: inset 0 0 3px 1px #fff;
+        border: #000 solid 1px;
+        text-shadow: 1px 1px 1px white;
+        cursor: pointer;
+
+        &:hover {
+            background-color: #a1a172;
+            background-image: -webkit-linear-gradient(#eec, #a1a172);
+            background-image: -moz-linear-gradient(#eec, #a1a172);
+            background-image: -ms-linear-gradient(#eec, #a1a172);
+            box-shadow: none;
+        }
+    }
 }
 .solitairey_body {
     background-attachment: fixed;
@@ -177,7 +188,8 @@ button {
     display: none;
 }
 
-#game-chooser-contents, #description {
+#game-chooser-contents,
+#description {
     display: inline-block;
 }
 
@@ -201,10 +213,10 @@ button {
         width: 250px;
         height: 150px;
         margin: 10px;
-        background-color: #EEC;
-        background-image: -webkit-linear-gradient(#EEC, #a1a172);
-        background-image: -moz-linear-gradient(#EEC, #a1a172);
-        background-image: -ms-linear-gradient(#EEC, #a1a172);
+        background-color: #eec;
+        background-image: -webkit-linear-gradient(#eec, #a1a172);
+        background-image: -moz-linear-gradient(#eec, #a1a172);
+        background-image: -ms-linear-gradient(#eec, #a1a172);
         overflow: hidden;
         cursor: pointer;
 
@@ -237,7 +249,7 @@ button {
 }
 
 #win_display {
-    background-color: #EEC;
+    background-color: #eec;
     width: 35em;
     height: 15em;
     margin: 0 auto;
@@ -475,7 +487,8 @@ button {
     background-image: url(layouts/mini/will-o-the-wisp.png);
 }
 
-.yukon .layout, .russian-solitaire .layout {
+.yukon .layout,
+.russian-solitaire .layout {
     background-image: url(layouts/mini/yukon.png);
 }
 
@@ -485,7 +498,10 @@ button {
 }
 
 .description {
-    blockquote, h3, p, button {
+    blockquote,
+    h3,
+    p,
+    button {
         display: none;
     }
 }
@@ -502,7 +518,7 @@ button {
         padding: 0 7px 5px 0;
 
         &:hover {
-            color: #EEC;
+            color: #eec;
         }
     }
 
