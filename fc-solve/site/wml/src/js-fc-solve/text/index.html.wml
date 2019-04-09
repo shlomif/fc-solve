@@ -178,6 +178,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <li><a href="#output_tabs__text">Text</a></li>
 </ul>
 <div id="output_tabs__animated" class="tab">
+<div class="solitairey_body_margin">
 <div class="solitairey_body" id="solitairey_body">
 <img src="loading.gif" class="loading hidden" alt="Loading" />
 <button id="redeal">Redeal</button>
@@ -192,6 +193,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
             <img alt="Chrome Web Store" src="ChromeWebStore_Badge_v2_206x58.png" />
         </a>
 	</div>
+</div>
 </div>
 </div>
 <div id="output_tabs__text" class="tab">

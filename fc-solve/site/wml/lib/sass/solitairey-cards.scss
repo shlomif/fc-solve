@@ -58,6 +58,10 @@
         }
     }
 }
+.solitairey_body_margin {
+    padding: 50px;
+}
+
 .solitairey_body {
     background-attachment: fixed;
     background-image: url(green.jpg);
@@ -68,7 +72,7 @@
     //z-index: -99;
     //overflow: hidden;
     height: 1000px;
-    margin: 50px;
+    margin: 0px;
 }
 
 .loading {
@@ -84,11 +88,13 @@
 
 .card {
     position: absolute;
+    // position: relative;
     border-radius: 7px;
 }
 
 .stack {
-    position: absolute;
+    // position: absolute;
+    position: relative;
     border-radius: 7px;
     z-index: -10;
 }
