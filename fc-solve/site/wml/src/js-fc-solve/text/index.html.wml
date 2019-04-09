@@ -172,7 +172,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 
 <label for="output">Output:</label><br />
 
-<div id="output_tabs" class="fc_solve_tabs">
+<div id="output_tabs" class="output_tabs">
 <ul>
 <li><a href="#output_tabs__animated">Animated</a></li>
 <li><a href="#output_tabs__text">Text</a></li>

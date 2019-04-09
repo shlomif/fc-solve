@@ -18,8 +18,9 @@ html {
     background-size: 100% 100%;
     -moz-background-size: 100% 100%;
     font-family: helvetica, verdana, sans;
-    z-index: -99;
-    overflow: hidden;
+    //z-index: -99;
+    //overflow: hidden;
+    height: 1000px;
 }
 
 ul {
