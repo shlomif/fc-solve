@@ -12,6 +12,7 @@ const _my_module = Module()({});
 const FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
 const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
 w.FC_Solve_init_wrappers_with_module(_my_module);
+let graphics: any = null;
 
 function _increment_move_indices(move_s) {
     return move_s.replace(
@@ -30,6 +31,7 @@ class FC_Solve_UI {
     private _was_iterations_count_exceeded = false;
     private _is_expanded = false;
     private _pristine_outputs = null;
+    private _board_parse_result: BoardParseResult = null;
     constructor() {}
     public toggle_expand() {
         const that = this;
@@ -71,6 +73,7 @@ class FC_Solve_UI {
             that._instance.get_num_freecells(),
             board_string,
         );
+        that._board_parse_result = validate;
 
         if (!validate.is_valid) {
             let err_s: string = "";
@@ -197,6 +200,10 @@ class FC_Solve_UI {
             html += "<ol>\n";
 
             const inst = that._instance;
+            graphics.startSolution({
+                instance: inst,
+                board: that._board_parse_result,
+            });
             const seq = inst.proto_states_and_moves_seq;
 
             function _filt(str) {
@@ -524,7 +531,7 @@ export function set_up_handlers(): void {
     return;
 }
 
-export function set_up() {
+export function set_up(graphics_) {
     restore_bookmark();
     set_up_handlers();
     $("#one_based").click(on_toggle_one_based);
@@ -533,4 +540,5 @@ export function set_up() {
     $('input[name="unicode_suits"]').change(() => {
         fcs_ui.update_output();
     });
+    graphics = graphics_;
 }

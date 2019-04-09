@@ -86,7 +86,7 @@ require(['./solver-freecell'], function (solver) {
         $( "#output_tabs" ).tabs();
     });
 
-    web_fc_solve_ui.set_up();
+    web_fc_solve_ui.set_up(solver);
 
 });
 });
