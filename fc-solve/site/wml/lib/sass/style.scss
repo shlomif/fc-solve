@@ -29,7 +29,7 @@ body {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(5, 2fr);
-    position: relative;
+    // position: relative;
 }
 
 @mixin side-width {
