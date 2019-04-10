@@ -13,7 +13,7 @@ D = dest
 
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
-# TEMP_UPLOAD_URL = /var/www/html/shlomif/fc-solve-temp/
+TEMP_UPLOAD_URL_LOCAL = /var/www/html/shlomif/fc-solve-temp/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
@@ -401,6 +401,7 @@ $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
 
 upload: all
 	$(RSYNC) -a -l $(D)/ $(UPLOAD_URL)
+	$(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 
 # upload_temp: all
 #	$(RSYNC) $(TEMP_UPLOAD_URL)
