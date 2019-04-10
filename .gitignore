@@ -122,6 +122,7 @@
 /fc-solve/site/wml/lib/make/shlomif_common.mak
 /fc-solve/site/wml/lib/out-babel/js/*.js
 /fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
+/fc-solve/site/wml/lib/repos/Solitairey/
 /fc-solve/site/wml/lib/sgml/
 /fc-solve/site/wml/lib/transcrypt_module/dist/
 /fc-solve/site/wml/lib/transcrypt_module/fc_solve_find_index_s2ints.js
