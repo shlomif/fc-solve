@@ -245,7 +245,6 @@ $(STAMP2): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA__ASMJS)
 clean_js:
 	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
 
-
 $(DEST_LIBFREECELL_SOLVER_JS): $(STAMP1)
 	cp -f $(LIBFREECELL_SOLVER_JS) $@
 
@@ -322,7 +321,6 @@ $(patsubst %,$(OUT_PREF)/%,$(JSES_js_basenames)): $(OUT_PREF)/%.js: $(BABEL_SRC_
 
 $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 	$(MULTI_YUI) -o $@ $<
-
 
 JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js
 
