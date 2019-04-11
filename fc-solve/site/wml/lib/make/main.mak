@@ -75,8 +75,10 @@ DEST_QSTRING_JS = dest/js/jquery.querystring.js
 BASE_BROWSERIFY_JS = big-integer.js flatted.js qunit.js
 dest_jsify = $(addprefix $(DEST_JS_DIR)/,$(1))
 DEST_BROWSERIFY_JS = $(call dest_jsify,$(BASE_BROWSERIFY_JS))
-BASE_Solitairey_JS = application.js auto-stack-clear.js auto-turnover.js autoplay.js freecell.js iphone.js solitaire.js solver-freecell.js statistics.js yui-breakout.js yui-debug.js
+BASE_Solitairey_JS = application.js auto-stack-clear.js auto-turnover.js autoplay.js freecell.js iphone.js solitaire.js solver-freecell.js statistics.js yui-breakout.js
 DEST_Solitairey_JS = $(call dest_jsify,$(BASE_Solitairey_JS))
+BASE_yui_Solitairey_JS = yui-debug.js
+DEST_yui_Solitairey_JS = $(call dest_jsify,$(BASE_yui_Solitairey_JS))
 
 CSS_TARGETS = \
 			  $(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
@@ -120,12 +122,16 @@ dummy: $(FIND_INDEX__PYJS__TARGETS)
 
 dummy: $(DEST_BROWSERIFY_JS)
 dummy: $(DEST_Solitairey_JS)
+dummy: $(DEST_yui_Solitairey_JS)
 
 OUT_PREF = lib/out-babel/js
 out_pref_jsify = $(addprefix $(OUT_PREF)/,$(1))
 OUT_BROWSERIFY_JS = $(call out_pref_jsify,$(BASE_BROWSERIFY_JS))
 
 $(DEST_BROWSERIFY_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
+	$(MULTI_YUI) -o $@ $<
+
+$(DEST_yui_Solitairey_JS): $(DEST_JS_DIR)/%: lib/repos/Solitairey/ext/yui-debug/%
 	$(MULTI_YUI) -o $@ $<
 
 $(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: lib/repos/Solitairey/src/js/%
