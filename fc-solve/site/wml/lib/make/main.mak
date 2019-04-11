@@ -22,10 +22,12 @@ ifeq ($(PROD),1)
 	D = dest-prod
 	WML_FLAGS += -DPRODUCTION=1
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
+	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
 	MULTI_YUI = ./bin/Run-YUI-Compressor
 else
 	MULTI_YUI = ./bin/cat-o
 
+	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug
 endif
 
 DEST_JS_DIR = $(D)/js
@@ -402,6 +404,9 @@ $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
 upload: all
 	$(RSYNC) -a -l $(D)/ $(UPLOAD_URL)
 	$(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
+
+upload_beta: all
+	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
 
 # upload_temp: all
 #	$(RSYNC) $(TEMP_UPLOAD_URL)
