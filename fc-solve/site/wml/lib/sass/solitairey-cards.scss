@@ -71,7 +71,7 @@
     font-family: helvetica, verdana, sans;
     //z-index: -99;
     //overflow: hidden;
-    height: 1000px;
+    height: 800px;
     margin: 0px;
     position: relative;
 }
@@ -312,55 +312,43 @@
 }
 
 .indicator {
-    float: left;
+    padding-right: 2em;
+    // float: left;
 }
 
 .controls {
-    float: right;
-    height: 20px;
-    margin: -2px 50px 0 0;
+    // float: right;
+    // height: 20px;
+    // margin: -2px 50px 0 0;
     cursor: pointer;
 
-    > div {
-        margin-right: 15px;
-        float: left;
+    @if false {
+        > div {
+            margin-right: 15px;
+            float: left;
+        }
     }
+    display: table-row;
 }
 
-.play {
-    height: 0px;
-    width: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid #ddd;
-
-    &:hover {
-        border-left-color: #32c700;
+button.play,
+button.pause,
+button.rewind,
+button.fastforward {
+    display: table-cell;
+    font-family: Arial;
+    font-size: 14px;
+    width: 3em;
+    @if false {
+        top: 0;
+        height: 0px;
+        width: 0;
+        border-top: 10px solid transparent;
+        border-bottom: 10px solid transparent;
+        border-right: 15px solid #ddd;
     }
-}
 
-.pause {
-    top: 0;
-    width: 4px;
-    height: 20px;
-    border-color: #ddd;
-    border-left: 5px solid;
-    border-right: 5px solid;
-
-    &:hover {
-        border-color: #32c700;
-    }
-}
-
-.rewind {
-    top: 0;
-    height: 0px;
-    width: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-right: 15px solid #ddd;
-
-    &:after {
+    @if false {
         position: absolute;
         top: -10px;
         left: -3px;
@@ -373,35 +361,10 @@
     &:hover {
         border-right-color: #32c700;
 
-        &:after {
-            background: #32c700;
-        }
-    }
-}
-
-.fastforward {
-    top: 0;
-    height: 0px;
-    width: 0;
-    border-top: 10px solid transparent;
-    border-bottom: 10px solid transparent;
-    border-left: 15px solid #ddd;
-
-    &:after {
-        position: absolute;
-        top: -10px;
-        right: -3px;
-        height: 20px;
-        width: 4px;
-        background: #ddd;
-        content: "";
-    }
-
-    &:hover {
-        border-left-color: #32c700;
-
-        &:after {
-            background: #32c700;
+        @if false {
+            &:after {
+                background: #32c700;
+            }
         }
     }
 }
