@@ -8,6 +8,8 @@ rebuild()
         bash -x bin/install-npm-deps.sh
         ./gen-helpers
         gmake fastrender
+        gmake PROD=1 fastrender
+        gmake PROD=1 all
         gmake test
     )
 }

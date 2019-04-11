@@ -313,7 +313,7 @@ JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/li
 
 all: $(JS_DEST_FILES__NODE)
 
-$(JS_DEST_FILES__NODE): lib/for-node/%.js: dest/%.js
+$(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
 	cp -f $< $@
 
 all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
