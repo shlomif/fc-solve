@@ -11,13 +11,13 @@
     "@types/qunit": "^2.5.4",
     "amdefine": "^1.0.1",
     "babel-cli": "^6.26.0",
+    "babel-eslint": "^10.0.1",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-2": "^6.24.1",
     "big-integer": "^1.6.43",
     "browserify": "^16.2.3",
     "camel-case": "^3.0.0",
     "coffeescript": "^2.4.1",
-    "eslint": "^5.16.0",
     "eslint-config-google": "^0.11.0",
     "flatted": "^2.0.0",
     "html-minifier": "^3.5.21",
@@ -36,7 +36,9 @@
     "uglify-es": "^3.3.9",
     "yarn": "^1.15.2"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "eslint": "^5.16.0"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
