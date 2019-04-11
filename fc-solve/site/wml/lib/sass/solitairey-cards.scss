@@ -340,6 +340,7 @@ button.fastforward {
     font-size: 14px;
     height: 25px;
     width: 50px;
+    text-align: center;
     @if false {
         top: 0;
         height: 0px;
@@ -359,12 +360,14 @@ button.fastforward {
         content: "";
     }
 
-    &:hover {
-        border-right-color: #32c700;
+    @if false {
+        &:hover {
+            border-right-color: #32c700;
 
-        @if false {
-            &:after {
-                background: #32c700;
+            @if false {
+                &:after {
+                    background: #32c700;
+                }
             }
         }
     }
