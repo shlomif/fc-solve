@@ -21,6 +21,7 @@
     "eslint-config-google": "^0.11.0",
     "flatted": "^2.0.0",
     "html-minifier": "^3.5.21",
+    "lodash-cli": "^4.17.5",
     "node-qunit": "^1.0.0",
     "prettier": "^1.17.0",
     "qunit": "^2.9.2",
