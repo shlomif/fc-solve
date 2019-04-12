@@ -14,7 +14,7 @@ detected by using an old kpat with the new libfreecell-solver.
 
 3. Better "void * user" recycling.
 
-3. Code cleanups.
+4. Code cleanups.
 
 Version 5.4.0: (18-Mar-2019)
 ----------------------------
