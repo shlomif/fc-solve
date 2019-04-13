@@ -6,7 +6,7 @@ textarea.emscripten {
     border-radius: 5pt;
 
     &:hover {
-        border-color: #8A8;
+        border-color: #8a8;
     }
 }
 
@@ -16,8 +16,8 @@ textarea.emscripten {
 
 #fc_solve_output {
     border: green 3pt solid;
-    padding: .5em;
-    background-color: #B0CFE1;
+    padding: 0.5em;
+    background-color: #b0cfe1;
     overflow: scroll;
     height: 50em;
     width: 70em;
@@ -30,10 +30,11 @@ textarea.emscripten {
     font-size: 130%;
 }
 
-#capitalize_cards , #run_do_solve {
+#capitalize_cards,
+#run_do_solve {
     font-size: 130%;
-    margin-bottom: .5em;
-    margin-top: .5em;
+    margin-bottom: 0.5em;
+    margin-top: 0.5em;
 }
 
 #preset {
@@ -55,7 +56,8 @@ textarea.emscripten {
         color: green;
     }
 
-    &.exceeded, &.impossible {
+    &.exceeded,
+    &.impossible {
         color: purple;
     }
 
@@ -64,21 +66,22 @@ textarea.emscripten {
     }
 }
 
-#status_wrap , #board_parse__wrap {
+#status_wrap,
+#board_parse__wrap {
     clear: none;
     float: left;
     border: orange 1pt solid;
     margin: 1em;
-    padding: .5em;
+    padding: 0.5em;
 }
 
 .fc_solve_tabs {
     float: left;
     width: 50%;
     * {
-    margin-right: auto;
-    clear: none;
-}
+        margin-right: auto;
+        clear: none;
+    }
 }
 
 .fc_solve_tabs .tab {
@@ -96,7 +99,8 @@ textarea.emscripten {
     }
 }
 
-#about_sect, .instructions_link {
+#about_sect,
+.instructions_link {
     font-size: 120%;
 }
 
@@ -121,12 +125,13 @@ textarea.emscripten {
     margin-left: 0;
 
     > li {
-        margin-bottom: .5em;
+        margin-bottom: 0.5em;
     }
 }
 
 .output_form {
-    #output, .controls {
+    #output,
+    .controls {
         float: left;
         vertical-align: top;
         margin-bottom: 2em;

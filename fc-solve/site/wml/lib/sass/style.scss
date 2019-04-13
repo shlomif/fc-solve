@@ -51,9 +51,10 @@ body {
     @include cell;
     @include side-width;
     grid-row: 2;
-    background-color: #C5CAE2;
+    background-color: #c5cae2;
 }
-#navbar_wrapper, #show_navbar {
+#navbar_wrapper,
+#show_navbar {
     // padding: 1em;
 
     &.novis {
@@ -79,7 +80,8 @@ body {
         // margin-top: 0;
     }
 
-    .news * , .wrap-me * {
+    .news *,
+    .wrap-me * {
         @include wrap;
     }
     * {
@@ -117,7 +119,7 @@ ul {
 .navbar {
     height: 100%;
     padding: 1em;
-    margin-bottom:0;
+    margin-bottom: 0;
 }
 
 .navbar .center {
@@ -132,14 +134,15 @@ ul {
 }
 
 h2 {
-    background-color: #FFEE77;
+    background-color: #ffee77;
 }
 
 h3 {
-    background-color: #77D077;
+    background-color: #77d077;
 }
 
-h2, h3 {
+h2,
+h3 {
     border-radius: 0 5px 5px 5px;
     clear: right;
 }
@@ -155,7 +158,9 @@ h2, h3 {
     background-color: transparent;
 }
 
-h2, h3, h4 {
+h2,
+h3,
+h4 {
     padding-left: 4pt;
     padding-right: 4pt;
     padding-top: 1pt;
@@ -163,7 +168,8 @@ h2, h3, h4 {
 }
 
 .main {
-    p, table {
+    p,
+    table {
         margin-left: 17pt;
         margin-right: 17pt;
     }
@@ -178,7 +184,9 @@ p.desc {
 }
 
 .main {
-    ol, ul, dl {
+    ol,
+    ul,
+    dl {
         padding-left: 1em;
         padding-right: 1em;
         margin-left: 1.5em;
@@ -209,37 +217,44 @@ footer {
     font-weight: bold;
 
     li {
-        margin-top: .5em;
+        margin-top: 0.5em;
     }
 }
 
-ul.old_vers , ul.game_variants {
+ul.old_vers,
+ul.game_variants {
     vertical-align: top;
     columns: 3;
 
     li:first-child {
-        &, & > p {
+        &,
+        & > p {
             margin-top: 0;
         }
     }
 
-    li, li > p {
+    li,
+    li > p {
         vertical-align: top;
     }
 }
 
-table.downloads, .fcs_depth_dbm_deals {
+table.downloads,
+.fcs_depth_dbm_deals {
     border: #444 medium solid;
 }
 
 .downloads {
-    td, th {
+    td,
+    th {
         text-align: left;
     }
 }
 
-.downloads, .fcs_depth_dbm_deals {
-    td, th {
+.downloads,
+.fcs_depth_dbm_deals {
+    td,
+    th {
         vertical-align: top;
         padding: 0.35em;
         border: #666 thin solid;
@@ -259,8 +274,8 @@ table.downloads, .fcs_depth_dbm_deals {
 
 .stop {
     border: solid medium #880000;
-    padding: .5em;
-    background-color: #FFD2D2;
+    padding: 0.5em;
+    background-color: #ffd2d2;
     clear: right;
 
     img.sign {
@@ -278,8 +293,8 @@ table.downloads, .fcs_depth_dbm_deals {
     border-color: black;
     border-style: double;
     border-width: medium;
-    padding: .5em;
-    background-color: #98FB98;
+    padding: 0.5em;
+    background-color: #98fb98;
     margin-top: 1em;
     overflow: hidden;
 
@@ -293,14 +308,14 @@ p.desc {
 }
 
 $horiz_padding: 30px;
-$vert_padding: .7em;
+$vert_padding: 0.7em;
 
 a.solve_online_button {
     margin-bottom: 1em;
     margin-left: 1em;
     text-align: center;
     font-family: "Audiowide", arial, sans-serif;
-    background-color: #5DEA17;
+    background-color: #5dea17;
     border: green 2pt solid;
     border-radius: 20px;
     float: right;
@@ -322,14 +337,14 @@ a.solve_online_button {
     }
 
     &:hover {
-        background-color: #A1EB7C;
+        background-color: #a1eb7c;
         color: #444;
         text-decoration: none;
     }
 }
 
 #dynamic_output {
-    background-color: #EEE;
+    background-color: #eee;
     overflow: scroll;
     height: 50em;
 
@@ -354,7 +369,7 @@ a.solve_online_button {
     }
 
     .state pre {
-        background-color: #C5E1C6;
+        background-color: #c5e1c6;
     }
 
     .move {
@@ -373,7 +388,8 @@ a.solve_online_button {
 
     /* Google original is: */
     /* src: local("Audiowide"), local("Audiowide-Regular"), url(http://themes.googleusercontent.com/static/fonts/audiowide/v1/8XtYtNKEyyZh481XVWfVOj8E0i7KZn-EPnyo3HZu7kw.woff) format("woff") */
-    src: local("Audiowide"), local("Audiowide-Regular"), url(css/fonts/audiowide-v1.woff) format("woff");
+    src: local("Audiowide"), local("Audiowide-Regular"),
+        url(css/fonts/audiowide-v1.woff) format("woff");
 }
 
 .demo-container {
@@ -385,7 +401,7 @@ a.solve_online_button {
     border: 1px solid #ddd;
     background: #fff;
     background: linear-gradient(#f6f6f6 0, #fff 50px);
-    box-shadow: 0 3px 10px rgba(0, 0, 0, .15);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
 }
 
 .demo-placeholder {
@@ -398,8 +414,8 @@ a.solve_online_button {
 .icon {
     width: 80%;
     height: auto;
-    border:0;
-    margin-bottom:0.5em;
+    border: 0;
+    margin-bottom: 0.5em;
     padding: 0.5em;
     &:hover {
         background-color: PaleGreen;
@@ -416,7 +432,7 @@ a.solve_online_button {
     }
 }
 
-@media(max-width: 900px) {
+@media (max-width: 900px) {
     #navbar_wrapper {
         @include body-background;
         border: 2px black solid;
@@ -424,7 +440,8 @@ a.solve_online_button {
     }
 }
 
-.invisible , .invisible a {
+.invisible,
+.invisible a {
     position: absolute;
     left: -10000px;
     top: auto;
