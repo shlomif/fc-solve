@@ -24,8 +24,12 @@ export function populate_input_with_numbered_deal(): void {
         alert("Wrong input - please enter a positive integer.");
         return;
     }
-
+    const MAX = 8589934591;
     const previous_deal_idx = parseInt(input_s, 10);
+    if (input_s.length > 10 || previous_deal_idx > MAX) {
+        alert("Wrong input - deal number must be in the range 1 to " + MAX);
+        return;
+    }
 
     $("#stdin").val(
         "# MS Freecell Deal #" +
