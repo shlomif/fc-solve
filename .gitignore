@@ -28,6 +28,7 @@
 /fc-solve/site/wml/Makefile
 /fc-solve/site/wml/Tests/case-insense-file-collision.t
 /fc-solve/site/wml/Tests/data/cache/spelling-timestamp.json
+/fc-solve/site/wml/Tests/scss.t
 /fc-solve/site/wml/Tests/spell-check-is-sorted.t
 /fc-solve/site/wml/Tests/tidyall.t
 /fc-solve/site/wml/bin/Run-YUI-Compressor
