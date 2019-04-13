@@ -170,7 +170,27 @@ print FreecellSolver::ExtractGames->new->calc_html;
 </p>
 </div>
 
+<define-tag output__out>
+<preserve sel />
+<set-var %attributes />
+<input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label><br />
+<restore sel />
+</define-tag>
+<define-tag output_controls>
+<div class="out_controls">
 
+<input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
+<fieldset>
+<legend>Cards display</legend>
+<output__out id_base="ascii" value="0" title="ASCII" sel="true" />
+<output__out id_base="unisuits" value="1" title="Unicode Suits" />
+<output__out id_base="unicards" value="2" title="Unicode Cards" />
+</fieldset>
+<br />
+<button id="clear_output" title="Clear the Output Box">Clear Output</button>
+</div>
+
+</define-tag> ;;; output_controls
 <label for="output">Output:</label><br />
 
 <div id="output_tabs" class="output_tabs">
@@ -205,27 +225,11 @@ print FreecellSolver::ExtractGames->new->calc_html;
 </div>
 <div id="output_tabs__text" class="tab">
 <div class="output_form">
+<output_controls />
+
 <div id="dynamic_output"></div>
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
 
-<div class="controls">
-
-<input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
-<fieldset>
-<legend>Cards display</legend>
-<define-tag opt>
-<preserve sel />
-<set-var %attributes />
-<input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label><br />
-<restore sel />
-</define-tag>
-<opt id_base="ascii" value="0" title="ASCII" sel="true" />
-<opt id_base="unisuits" value="1" title="Unicode Suits" />
-<opt id_base="unicards" value="2" title="Unicode Cards" />
-</fieldset>
-<br />
-<button id="clear_output" title="Clear the Output Box">Clear Output</button>
-</div>
 </div>
 </div>
 </div>

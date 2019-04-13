@@ -1,3 +1,8 @@
+@mixin common-top {
+    margin-top: 4em;
+    clear: left;
+}
+
 textarea.emscripten {
     font-family: monospace;
     width: 60%;
@@ -131,14 +136,14 @@ textarea.emscripten {
 
 .output_form {
     #output,
-    .controls {
+    .out_controls {
         // float: left;
         vertical-align: top;
         margin-bottom: 2em;
     }
 
-    .controls {
-        margin-top: 1em;
+    .out_controls {
+        @include common-top;
         margin-left: 2em;
     }
 
@@ -190,8 +195,7 @@ textarea.emscripten {
     }
 
     ol {
-        margin-top: 4em;
-        clear: left;
+        @include common-top;
         list-style-type: none;
     }
 
