@@ -21,7 +21,7 @@
     "eslint-config-google": "^0.11.0",
     "html-minifier": "^3.5.21",
     "node-qunit": "^1.0.0",
-    "prettier": "^1.16.4",
+    "prettier": "^1.17.0",
     "qunit": "^2.9.2",
     "qunit-cli": "^0.2.0",
     "requirejs": "^2.3.6",
