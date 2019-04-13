@@ -27,7 +27,7 @@ ifeq ($(PROD),1)
 else
 	MULTI_YUI = ./bin/cat-o
 
-	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug
+	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
 endif
 
 DEST_JS_DIR = $(D)/js
