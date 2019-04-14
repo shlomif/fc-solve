@@ -336,7 +336,11 @@ class FC_Solve_UI {
         const ctl = $("#fc_solve_status");
         ctl.removeClass();
         ctl.addClass(myclass);
-        ctl.html(base_ui.escapeHtml(mylabel));
+        const extra_html =
+            myclass === "solved"
+                ? ' <a class="view_sol" href="#output_label">Go to the solution ⇓</a>'
+                : "";
+        ctl.html(base_ui.escapeHtml(mylabel) + extra_html);
 
         const is_exceed = myclass === "exceeded";
 

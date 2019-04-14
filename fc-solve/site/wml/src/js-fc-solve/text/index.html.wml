@@ -194,7 +194,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 </define-tag> ;;; output_controls
 
 
-<label for="output">Output:</label><br />
+<label id="output_label" for="output">Output:</label><br />
 
 <div id="output_tabs" class="output_tabs">
 <ul>
