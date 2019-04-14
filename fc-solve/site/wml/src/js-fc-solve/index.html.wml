@@ -12,10 +12,11 @@ and whitelisted.
 
 </h2_section>
 
-<h2_section id="text-based" title="Text-based version">
+<h2_section id="text-based" title="Solver">
 
 <p>
-A rudimentary and functional version of the text-based solver allowing to
+A functional version of the solver with both an animated, graphical,
+solution display and text output, allowing to
 solve any arbitrary Freecell deal online.
 </p>
 
@@ -23,7 +24,7 @@ solve any arbitrary Freecell deal online.
 
 <li>
 <p>
-<a href="text/"><strong>Text-based solver</strong></a>
+<a href="text/"><strong>Solver</strong></a>
 </p>
 </li>
 
@@ -52,9 +53,9 @@ Find the deal number of a Freecell deal based on its initial layout.
 <h2_section id="rich-webui-based" title="Rich Web-UI">
 
 <p>
-We are working on a Rich Web User-interface version based on
-<a href="https://github.com/shlomif/Solitairey/branches">Solitairey</a>. However, it is not
-ready yet.
+The Rich Web User-interface version based on
+<a href="https://github.com/shlomif/Solitairey/branches">Solitairey</a>
+is now live at <a href="text/">solver page</a>.
 </p>
 
 </h2_section>
