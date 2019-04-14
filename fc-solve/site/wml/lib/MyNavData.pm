@@ -41,8 +41,10 @@ my $tree_contents = {
             'url'   => "js-fc-solve/",
             'subs'  => [
                 {
-                    'text' => "Text-Based",
+                    'text' => "Solver",
                     'url'  => "js-fc-solve/text/",
+                    'title' =>
+                        "An online solver with graphical and text previews",
                 },
                 {
                     'text' => "Find a deal’s number",

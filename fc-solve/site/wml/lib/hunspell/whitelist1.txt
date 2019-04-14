@@ -1329,6 +1329,7 @@ transpose-freecell-board
 
 JdeH
 Transcrypt
+YUI
 doconix
 transcrypt
 
@@ -1336,6 +1337,7 @@ transcrypt
 
 Der
 Redeal
+YUI
 js
 
 ==== In: dest/links.html

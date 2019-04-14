@@ -1,7 +1,7 @@
 #include "template5.wml"
 #include "Inc/js_fc_solve.wml"
 
-<latemp_subject "Online Freecell solver (text based)" />
+<latemp_subject "Online Freecell solver" />
 
 <define-tag desc>
 <p>
@@ -29,7 +29,7 @@ $(function() { $('.enable_js').addClass('ok'); })
 </p>
 
 <div class="disabled">
-<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten" id="status">Downloading…</div>
 <div class="emscripten">
 <!--
   <progress value="0" max="100" id="progress"></progress>
@@ -170,27 +170,30 @@ print FreecellSolver::ExtractGames->new->calc_html;
 </p>
 </div>
 
-<define-tag output__out>
+<define-tag output_opt>
 <preserve sel />
 <set-var %attributes />
 <input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label><br />
 <restore sel />
 </define-tag>
+
 <define-tag output_controls>
 <div class="out_controls">
 
 <input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
 <fieldset>
 <legend>Cards display</legend>
-<output__out id_base="ascii" value="0" title="ASCII" sel="true" />
-<output__out id_base="unisuits" value="1" title="Unicode Suits" />
-<output__out id_base="unicards" value="2" title="Unicode Cards" />
+<output_opt id_base="ascii" value="0" title="ASCII" sel="true" />
+<output_opt id_base="unisuits" value="1" title="Unicode Suits" />
+<output_opt id_base="unicards" value="2" title="Unicode Cards" />
 </fieldset>
 <br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
 
 </define-tag> ;;; output_controls
+
+
 <label for="output">Output:</label><br />
 
 <div id="output_tabs" class="output_tabs">
@@ -249,7 +252,8 @@ layouts (compatible with
 Windows FreeCell</a>, FreeCell Pro and compatible
 Freecell implementations) can be input using the
 <a href="#deal_number">deal number feature</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
-run the solver, and assuming it was successful, you will be able to read
+run the solver, and assuming it was successful, you will be able to preview
+an <a href="#solitairey_body">animated solution</a> or read
 and/or copy the output from <a href="#output">the output box</a>.
 </p>
 
