@@ -55,7 +55,7 @@ WML_FLAGS += --passoption=2,-X3074 \
 	--passoption=7,--skip=imgsize,summary \
 
 WML_RENDER = LATEMP_WML_FLAGS="$(LATEMP_WML_FLAGS)" $1 bin/render $(D)
-T2_INCLUDE_WML_RENDER = $(call WML_RENDER,UNCOND=1) "${@:$(D)/%=%}"
+SRC_INCLUDE_WML_RENDER = $(call WML_RENDER,UNCOND=1) "${@:$(D)/%=%}"
 
 JS_MEM_BASE = libfreecell-solver.wasm
 JS_MEM_BASE__ASMJS = libfreecell-solver-asm.js.mem
@@ -197,7 +197,8 @@ $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
 
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
-	$(call DEF_WML_PATH) (cd src && wml -o "$$fn" $(WML_FLAGS) -DLATEMP_FILENAME="$(patsubst src/%.wml,%,$<)" $(patsubst src/%,%,$<)) && $(PROCESS_ALL_INCLUDES) '$@'
+	$(call SRC_INCLUDE_WML_RENDER) && $(PROCESS_ALL_INCLUDES) '$@'
+
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@

@@ -96,6 +96,18 @@ $text =~
 s!^((?:T2_DOCS|T2_DIRS) = )([^\n]*)!my ($prefix, $files) = ($1,$2); $prefix . ($files =~ s# +ipp\.\S*##gr)!ems;
 _f()->print($text);
 
+my $r_fh = path("$DIR/rules.mak");
+$text = $r_fh->slurp_utf8;
+$text =~
+s#^(\$\(SRC_DOCS_DEST\)[^\n]+\n\t)[^\n]+#${1}\$(call SRC_INCLUDE_WML_RENDER)#ms
+    or die "Cannot subt";
+{
+    my $needle = 'cp -f $< $@';
+    $text =~ s#^\t\Q$needle\E$#\t\$(call COPY)#gms;
+}
+
+$r_fh->spew_utf8($text);
+
 write_on_change(
     path("lib/h_sections.wml"),
     \(
