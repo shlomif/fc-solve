@@ -3,10 +3,10 @@
 <set-var %attributes />
 <tr>
 <td>
-<a href="$(ROOT)/docs/distro/<get-var fn />.html"><get-var fn /></a>
+<a href="$(PATH_TO_ROOT)docs/distro/<get-var fn />.html"><get-var fn /></a>
 </td>
 <td>
-<a href="$(ROOT)/<get-var fn />">Plaintext</a>
+<a href="$(PATH_TO_ROOT)<get-var fn />">Plaintext</a>
 </td>
 <td>
 <ifeq "<get-var desc />" "" "<get-var fn />" "<get-var desc />" />
@@ -32,10 +32,10 @@
 <set-var fn="HACKING" />
 <tr>
 <td>
-<a href="$(ROOT)/docs/distro/<get-var fn />.html">CONTRIBUTING</a>
+<a href="$(PATH_TO_ROOT)docs/distro/<get-var fn />.html">CONTRIBUTING</a>
 </td>
 <td>
-<a href="$(ROOT)/<get-var fn />">Plaintext</a>
+<a href="$(PATH_TO_ROOT)<get-var fn />">Plaintext</a>
 </td>
 <td>
 Some guidelines for how to contribute. Note <a href="http://paulgraham.com/gba.html">this</a> regarding the "HACKING" in the filename.

@@ -60,7 +60,7 @@ Cathedral and the Bazaar"</a> document. What I did very much the
 same, (mostly without thinking too much about it), what I did differently, and what happened. Slightly out-of-date.
 </p>
 
-<h3 class="plain"><a href="$(ROOT)/book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
+<h3 class="plain"><a href="$(PATH_TO_ROOT)book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
 
 <p>
 A book I'd like to write and publish online about the evolution of the code

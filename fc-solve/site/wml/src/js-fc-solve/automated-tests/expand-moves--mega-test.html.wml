@@ -3,14 +3,14 @@
 <latemp_subject "Online Freecell solver (Automated tests)" />
 
 <page_extra_head_elements>
-<js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/jquery.querystring.js"></js_script>
 <jquery_ui_head_elements />
-<js_script src="$(ROOT)/js/libfreecell-solver.min.js"></js_script>
-<js_script src="$(ROOT)/js/web-fc-solve--expand-moves.js"></js_script>
-<js_script src="$(ROOT)/js/web-fc-solve.js"></js_script>
-<link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
-<js_script src="$(ROOT)/js/jquery.ajaxQueue.min.js"></js_script>
-<js_script src="$(ROOT)/js/web-fc-solve--expand-moves--mega-test.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/libfreecell-solver.min.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/web-fc-solve--expand-moves.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/web-fc-solve.js"></js_script>
+<link rel="stylesheet" type="text/css" href="$(PATH_TO_ROOT)web-fc-solve.css" />
+<js_script src="$(PATH_TO_ROOT)js/jquery.ajaxQueue.min.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/web-fc-solve--expand-moves--mega-test.js"></js_script>
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>

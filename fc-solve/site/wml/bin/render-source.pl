@@ -30,7 +30,6 @@ my @WML_FLAGS = (
 
 my $T2_SRC_DIR = 'src';
 my $T2_DEST    = shift @ARGV;
-my (@dests)    = @ARGV;
 
 chdir($T2_SRC_DIR);
 
@@ -38,10 +37,9 @@ my $obj = TheWML::Frontends::Wml::Runner->new;
 
 sub is_newer
 {
-    my $file1 = shift;
-    my $file2 = shift;
-    my @stat1 = stat($file1);
-    my @stat2 = stat($file2);
+    my ( $fn1, $fn2 ) = @_;
+    my @stat1 = stat($fn1);
+    my @stat2 = stat($fn2);
     if ( !@stat2 )
     {
         return 1;
@@ -50,21 +48,28 @@ sub is_newer
 }
 
 my @queue;
-foreach my $lfn (@dests)
+foreach my $lfn (@ARGV)
 {
     my $dest     = "$T2_DEST/$lfn";
     my $abs_dest = "$PWD/$dest";
     my $src      = "$lfn.wml";
     if ( $UNCOND or is_newer( $src, $abs_dest ) )
     {
-        push @queue, [ [ $abs_dest, "-DLATEMP_FILENAME=$lfn", $src, ], $dest ];
+        push @queue,
+            [
+            $abs_dest,
+            "-DPATH_TO_ROOT="
+                . ( "../" x ( scalar( () = $lfn =~ m#/#g ) - 0 ) ),
+            "-DLATEMP_FILENAME=$lfn",
+            $src,
+            ];
     }
 }
 my @FLAGS = ( @WML_FLAGS, '-o', );
 my $proc  = sub {
     $obj->run_with_ARGV(
         {
-            ARGV => [ @FLAGS, @{ shift(@_)->[0] } ],
+            ARGV => [ @FLAGS, @{ shift(@_) } ],
         }
     ) and die "$!";
     return;

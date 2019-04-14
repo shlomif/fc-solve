@@ -4,13 +4,13 @@
 <latemp_subject "Report: The solvability statistics of the Freecell Pro 4-Freecells Deals" />
 
 <page_extra_head_elements>
-<js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/jquery.flot.js"></js_script>
 <js_requirejs />
 </page_extra_head_elements>
 
 <js_script>
 requirejs.config({
-    baseUrl: '$(ROOT)/js',
+    baseUrl: '$(PATH_TO_ROOT)js',
     });
 require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
 </js_script>
@@ -206,13 +206,13 @@ repository containing the same lists of impossible deals</a>
 
 <li>
 <p>
-<a href="$(ROOT)/charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
+<a href="$(PATH_TO_ROOT)charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
 </p>
 </li>
 
 <li>
 <p>
-<a href="$(ROOT)/faq.html#what_are_ms_deals">Explanation of what are
+<a href="$(PATH_TO_ROOT)faq.html#what_are_ms_deals">Explanation of what are
 the Microsoft deals</a> - entry in the Freecell Solver FAQ.
 </p>
 </li>

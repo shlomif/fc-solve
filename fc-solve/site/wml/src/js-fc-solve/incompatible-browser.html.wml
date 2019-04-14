@@ -6,7 +6,7 @@
 Your browser does not support the necessary
 HTML 5/JavaScript extensions required by the WWW-based Freecell Solver. Please
 use one of the following browsers instead, or instead
-<a href="$(ROOT)/download.html">download and install</a> the standalone
+<a href="$(PATH_TO_ROOT)download.html">download and install</a> the standalone
 native executable, or a graphical interface for it.
 </p>
 

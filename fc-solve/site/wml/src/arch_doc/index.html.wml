@@ -7,7 +7,7 @@
 
 <p>
 This is the
-<a href="$(ROOT)">Freecell
+<a href="$(PATH_TO_ROOT)">Freecell
 Solver</a>
 architecture document. Its source is written in <a
 href="http://www.docbook.org/">DocBook/XML</a> and from there converted

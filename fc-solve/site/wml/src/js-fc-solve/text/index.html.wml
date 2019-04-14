@@ -45,7 +45,7 @@ function highlight_in_board(start,end) {
     return;
 }
 requirejs.config({
-    baseUrl: '$(ROOT)/js',
+    baseUrl: '$(PATH_TO_ROOT)js',
     });
 require(['./solver-freecell'], function (solver) {
     console.log("loaded solver-freecell");
@@ -131,7 +131,7 @@ require(['./solver-freecell'], function (solver) {
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-Input a card patience/solitaire layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
+Input a card patience/solitaire layout in the <a href="$(PATH_TO_ROOT)docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
@@ -166,7 +166,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <textarea class="emscripten phoenix" id="string_params" cols="50" rows="15"></textarea>
 <p>
 (Format as a preset file, with backslashes at the end of lines. See the
-<a href="$(ROOT)/docs/">online documentation</a> for information regarding syntax.)
+<a href="$(PATH_TO_ROOT)docs/">online documentation</a> for information regarding syntax.)
 </p>
 </div>
 

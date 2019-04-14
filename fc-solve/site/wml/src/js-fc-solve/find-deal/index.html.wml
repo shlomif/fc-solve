@@ -26,7 +26,7 @@ card solitaire game. <span class="enable_js">Please enable
 <div id="fc_solve_tabs__ms" class="tab">
 
 <p class="first">
-Input a Freecell layout in the <a href="$(ROOT)/docs/distro/README.html">fc-solve format</a>:<br />
+Input a Freecell layout in the <a href="$(PATH_TO_ROOT)docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">

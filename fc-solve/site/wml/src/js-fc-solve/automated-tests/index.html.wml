@@ -3,11 +3,11 @@
 <latemp_subject "Online Freecell solver (Automated tests)" />
 
 <page_extra_head_elements>
-<link rel="stylesheet" type="text/css" href="$(ROOT)/css/qunit.css" />
-<js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
+<link rel="stylesheet" type="text/css" href="$(PATH_TO_ROOT)css/qunit.css" />
+<js_script src="$(PATH_TO_ROOT)js/jquery.querystring.js"></js_script>
 <jquery_ui_head_elements />
 <js_requirejs />
-<link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
+<link rel="stylesheet" type="text/css" href="$(PATH_TO_ROOT)web-fc-solve.css" />
 </page_extra_head_elements>
 
 <h2 id="about">About</h2>
@@ -20,7 +20,7 @@
 <div id="qunit-fixture">test markup, will be hidden</div>
 <js_script>
 requirejs.config({
-    baseUrl: '$(ROOT)/js',
+    baseUrl: '$(PATH_TO_ROOT)js',
     });
 require(["auto-tests-driver"], function (foo) {foo();});
 </js_script>

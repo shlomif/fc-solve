@@ -4,16 +4,16 @@
     try {
         var a = new Float64Array(1);
         return; //no need
-    } catch(e) { window.location.replace("$(ROOT)/js-fc-solve/incompatible-browser.html"); }
+    } catch(e) { window.location.replace("$(PATH_TO_ROOT)js-fc-solve/incompatible-browser.html"); }
 })();
 </js_script>
 <jquery_ui_head_elements />
-<js_script src="$(ROOT)/js/jquery.querystring.js"></js_script>
-<js_script src="$(ROOT)/js/jquery.phoenix.js"></js_script>
-<js_script src="$(ROOT)/js/lodash.custom.min.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/jquery.querystring.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/jquery.phoenix.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/lodash.custom.min.js"></js_script>
 <js_requirejs />
-<js_script src="$(ROOT)/js/yui-debug.js"></js_script>
-<js_script src="$(ROOT)/js/yui-breakout.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/yui-debug.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/yui-breakout.js"></js_script>
 <define-tag expanded_scripts>
 </define-tag>
 <define-tag production_scripts>
@@ -23,8 +23,8 @@
 </define-tag>
 
 <if "$(PRODUCTION)" "<production_scripts />" "<expanded_scripts />" />
-<link rel="stylesheet" type="text/css" href="$(ROOT)/web-fc-solve.css" />
-<link rel="stylesheet" type="text/css" href="$(ROOT)/solitairey-cards.css" />
+<link rel="stylesheet" type="text/css" href="$(PATH_TO_ROOT)web-fc-solve.css" />
+<link rel="stylesheet" type="text/css" href="$(PATH_TO_ROOT)solitairey-cards.css" />
 </page_extra_head_elements>
 
 <define-tag emscripten_common>
@@ -60,7 +60,7 @@ function highlight_in_board(start,end) {
     return;
 }
 requirejs.config({
-    baseUrl: '$(ROOT)/js',
+    baseUrl: '$(PATH_TO_ROOT)js',
     });
     <get-var incs /> {
     $(function() {

@@ -2,6 +2,7 @@
 <set-var latemp_server=fc-solve />
 <set-var host="<latemp_default_val "<get-var latemp_server />" "$(LATEMP_SERVER)" />" />
 <set-var filename="<latemp_default_val "<get-var latemp_filename />" "$(LATEMP_FILENAME)" />" />
+
 <define-tag inc_cache>
 <preserve id />
 <set-var %attributes />
@@ -12,10 +13,11 @@
 <: our $latemp_filename = qq#<get-var filename />#; :>
 <set-var latemp_navmenu_object_class="HTML::Widgets::NavMenu::JQueryTreeView" />
 <set-var latemp_with_favicon="<latemp_mynot "$(PRINTABLE)" />" />
-<set-var latemp_html_standard="xhtml1.1" />
-<set-var latemp_with_breadcrumbs_trail="" />
-<set-var latemp_with_head_meta_tags="1" />
+<set-var latemp_favicon_url="$(PATH_TO_ROOT)favicon.ico" />
 <set-var latemp_with_xml_declaration="1" />
+<set-var latemp_with_breadcrumbs_trail="" />
+<set-var latemp_html_standard="xhtml1.1" />
+<set-var latemp_with_head_meta_tags="1" />
 <define-tag latemp_get_breadcrumbs_trail_unconditionally>
 <inc_cache id="breadcrumbs-trail" />
 </define-tag>
@@ -43,4 +45,8 @@
 <define-tag latemp_init_h_w_navmenu>
 ;;; Disable the navmenu.
 ;;; Keep this tag empty.
+</define-tag>
+<define-tag latemp_html_head_stylesheets>
+<link rel="stylesheet" href="<latemp_default_val "<get-var latemp_screen_stylesheet_url />" "$(PATH_TO_ROOT)style.css" />" type="text/css" media="screen" title="Normal" />
+<link rel="stylesheet" href="<latemp_default_val "<get-var latemp_print_stylesheet_url />" "$(PATH_TO_ROOT)print.css" />" type="text/css" media="print" />
 </define-tag>

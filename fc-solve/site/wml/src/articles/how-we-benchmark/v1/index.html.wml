@@ -177,7 +177,7 @@ Code for Speed</i></a> - an earlier wikibook written by me.
 <preserve year />
 <set-var %attributes />
 
-<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" class="bless" src="$(ROOT)/images/somerights20.png"/></a></p>
+<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" class="bless" src="$(PATH_TO_ROOT)images/somerights20.png"/></a></p>
 
 <p>
 This document is Copyright by Shlomi Fish, <get-var year />, and is available

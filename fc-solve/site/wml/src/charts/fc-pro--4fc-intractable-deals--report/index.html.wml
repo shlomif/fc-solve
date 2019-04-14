@@ -4,13 +4,13 @@
 <latemp_subject "Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals" />
 
 <page_extra_head_elements>
-<js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+<js_script src="$(PATH_TO_ROOT)js/jquery.flot.js"></js_script>
 <js_requirejs />
 </page_extra_head_elements>
 
 <js_script>
 requirejs.config({
-    baseUrl: '$(ROOT)/js',
+    baseUrl: '$(PATH_TO_ROOT)js',
     });
 require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
 </js_script>

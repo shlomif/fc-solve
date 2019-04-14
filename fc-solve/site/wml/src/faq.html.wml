@@ -36,7 +36,7 @@ not be solved by it. Freecell Solver is one such program, and it is
 under the permissive and common
 <a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
 provided free-of-charge for download or use online, and sports a large number
-of features. (See <a href="$(ROOT)/features.html">its features list</a>.)
+of features. (See <a href="$(PATH_TO_ROOT)features.html">its features list</a>.)
 </p>
 
 <p>
@@ -69,7 +69,7 @@ In some countries, "Solitaire" can also refer to
 </p>
 
 <p>
-You can find <a href="$(ROOT)/links.html#other_solvers">a list of solvers</a>
+You can find <a href="$(PATH_TO_ROOT)links.html#other_solvers">a list of solvers</a>
 for various variants of patience games in our links page.
 </p>
 
@@ -227,7 +227,7 @@ install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
 </p>
 
 <p>
-Note that the <a href="$(ROOT)/js-fc-solve/">web-based solver</a> also has an
+Note that the <a href="$(PATH_TO_ROOT)js-fc-solve/">web-based solver</a> also has an
 option to expand such moves and one can use it in most modern JavaScript-enabled
 browsers without having to install any additional software on your computer.
 </p>
@@ -348,11 +348,11 @@ can be devised).
 
 <p>
 You can try inspecting the code of Freecell Solver or one of the
-<a href="$(ROOT)/links.html#other_solvers">other solvers</a> for insights, but
+<a href="$(PATH_TO_ROOT)links.html#other_solvers">other solvers</a> for insights, but
 note that their code (and especially Freecell Solver’s) may be somewhat
 complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
-<a href="$(ROOT)/docs/">Freecell Solver documentation</a> as well as the
+<a href="$(PATH_TO_ROOT)docs/">Freecell Solver documentation</a> as well as the
 <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">archives of
 the fc-solve-discuss mailing list</a> for some insights and ideas.
 </p>
@@ -612,7 +612,7 @@ idiomatic JavaScript.
 The default Freecell Solver heuristic may have a small number of deals that
 are reported as unsolvable despite being solvable. However, you can use scans
 based on atomic moves to rectify that. See <kbd>fc-solve --help-configs</kbd>
-and the <a href="$(ROOT)/docs/distro/USAGE.html">USAGE.html</a> file for
+and the <a href="$(PATH_TO_ROOT)docs/distro/USAGE.html">USAGE.html</a> file for
 more information.
 </p>
 
@@ -724,8 +724,8 @@ does it use?</h3>
 <p>
 The exact algorithm used by “fc-solve” can be configured using the various
 command line arguments it accepts, which are documented in the
-<a href="$(ROOT)/docs/distro/README.html">README</a> and
-<a href="$(ROOT)/docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
+<a href="$(PATH_TO_ROOT)docs/distro/README.html">README</a> and
+<a href="$(PATH_TO_ROOT)docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
 “-l” flag can load some predefined configurations, which are essentially a
 sequence of command line arguments loaded from a file.
 </p>
@@ -835,7 +835,7 @@ Or arranged with the piles in each text line:
 </pre>
 
 <p>
-Here is a <a href="$(ROOT)/images/pysol-freecell-ms11982.png">screenshot
+Here is a <a href="$(PATH_TO_ROOT)images/pysol-freecell-ms11982.png">screenshot
 of that deal in PySol</a>.
 </p>
 
@@ -1011,7 +1011,7 @@ and provided free-of-charge for download or use online. You can find the
 latest development sources in
 <a href="https://github.com/shlomif/fc-solve">its GitHub repository</a>
 and call also download release source archive files from
-<a href="$(ROOT)/download.html">the download page</a>. Share and enjoy!
+<a href="$(PATH_TO_ROOT)download.html">the download page</a>. Share and enjoy!
 </p>
 
 <p>
@@ -1033,7 +1033,7 @@ consumption and it seems unlikely that there were memory leaks in the code.
 </p>
 
 <p>
-We have been able to complete a <a href="$(ROOT)/charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
+We have been able to complete a <a href="$(PATH_TO_ROOT)charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
 milliard range</a> using an AWS node with only 256 GB of RAM and about
 40-50 GB of hard disk (though we could probably use less or make use
 of <a href="https://github.com/s3fs-fuse/s3fs-fuse">s3fs-fuse</a> or similar

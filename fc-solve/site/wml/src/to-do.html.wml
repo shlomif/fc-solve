@@ -453,7 +453,7 @@ Java is the de-facto technology for making programs run inside a browser.
 
 <li>
 <p>
-We now provide a browser-side JavaScript <a href="$(ROOT)/js-fc-solve/">port</a>
+We now provide a browser-side JavaScript <a href="$(PATH_TO_ROOT)js-fc-solve/">port</a>
 of Freecell Solver courtesy of the Emscripten compiler, which has proven useful
 for some people.
 </p>
@@ -467,7 +467,7 @@ Java fell out of fashion as a technology for browser-side applets.
 
 <li>
 <p>
-There are some <a href="$(ROOT)/links.html#other_solvers">other solvers</a>
+There are some <a href="$(PATH_TO_ROOT)links.html#other_solvers">other solvers</a>
 that were written in Java from the ground up in case there's interest in that.
 </p>
 </li>

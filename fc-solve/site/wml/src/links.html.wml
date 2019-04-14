@@ -194,7 +194,7 @@ high-level, dynamic programming language. It is often considered a "scripting
 language", but can be easily used for writing large-scale and production code.
 Perl proved useful for writing a lot of code to automate many tasks in the
 development of Freecell Solver. Lately, it was also utilised as the foundation
-for its test suite, especially in writing <a href="$(ROOT)/verify-code/">the
+for its test suite, especially in writing <a href="$(PATH_TO_ROOT)verify-code/">the
 solutions' verification code</a>.
 </p>
 </li>
@@ -215,7 +215,7 @@ markup language (with open-source converters) that allows to write plain-text
 and convert it to XHTML, to
 <a href="http://www.docbook.org/">DocBook/XML</a>, and subsequently
 to other formats such as PDFs, or UNIX man pages. We use it for
-<a href="$(ROOT)/docs/#distributed-docs">the distributed documentation</a>.
+<a href="$(PATH_TO_ROOT)docs/#distributed-docs">the distributed documentation</a>.
 </p>
 </li>
 
@@ -756,7 +756,7 @@ were removed from the navigation menu.
 
 <li>
 <p>
-<a href="$(ROOT)/pysol/">PySol Integration</a>.
+<a href="$(PATH_TO_ROOT)pysol/">PySol Integration</a>.
 </p>
 </li>
 
@@ -770,14 +770,14 @@ out-of-date.
 
 <li>
 <p>
-<a href="$(ROOT)/current-status.html">What is the <b>Status</b> of Freecell
+<a href="$(PATH_TO_ROOT)current-status.html">What is the <b>Status</b> of Freecell
 Solver</a> - Freecell Solver is actively maintained again.
 </p>
 </li>
 
 <li>
 <p>
-<a href="$(ROOT)/book.html">The Book</a> - a book about Freecell Solver was
+<a href="$(PATH_TO_ROOT)book.html">The Book</a> - a book about Freecell Solver was
 originally planned, but this is no longer actively pursued.
 </p>
 </li>

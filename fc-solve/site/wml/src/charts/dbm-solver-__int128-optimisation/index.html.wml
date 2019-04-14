@@ -7,9 +7,9 @@
 <head>
     <title>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</title>
     <meta charset="utf-8" />
-    <link href="$(ROOT)/css/flot/examples/examples.css" rel="stylesheet" type="text/css" />
-    <js_script src="$(ROOT)/js/jq.js"></js_script>
-    <js_script src="$(ROOT)/js/jquery.flot.js"></js_script>
+    <link href="$(PATH_TO_ROOT)css/flot/examples/examples.css" rel="stylesheet" type="text/css" />
+    <js_script src="$(PATH_TO_ROOT)js/jq.js"></js_script>
+    <js_script src="$(PATH_TO_ROOT)js/jquery.flot.js"></js_script>
     <js_requirejs />
 </head>
 <body>
@@ -1103,7 +1103,7 @@ OldIterations	OldTimeSinceStart	NewTimeSinceStart
     </div>
 <js_script>
 requirejs.config({
-    baseUrl: '$(ROOT)/js',
+    baseUrl: '$(PATH_TO_ROOT)js',
     });
 require(["chart-using-flot--int128-opt"], function (chart) { });
 </js_script>
