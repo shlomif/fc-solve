@@ -106,7 +106,7 @@ for my $k (@STR_OPTS__KEYS)
     $STR_OPTS{$k}{'prefix'} //= '';
 }
 
-$int_opts__values{'enable-inc-solving'} = 1;
+$int_opts__values{'enable-inc-solving'}    = 1;
 $int_opts__values{'max-bench-threads-num'} = 4;
 $STR_OPTS{'prefix'}{value}                 = '/usr';
 $STR_OPTS{'rcs-cache-storage'}{value}      = 'KAZ_TREE';
@@ -228,7 +228,7 @@ if ( defined $SEED )
     exec( "bash", $FN );
 }
 
-my $HOME = $ENV{HOME};
+my $HOME = $ENV{HOME} // $ENV{userprofile} // "";
 
 foreach my $rec (
     { id => "c2",  a => "core2", },
