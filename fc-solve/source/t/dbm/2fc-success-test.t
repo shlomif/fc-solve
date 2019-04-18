@@ -13,7 +13,7 @@ use FC_Solve::Paths qw/ samp_board samp_sol /;
 
     my $tempdir = Path::Tiny->tempdir;
     my $got_text =
-`./dbm_fc_solver --offload-dir-path $tempdir --num-threads 1 @{[samp_board('24-mid.board')]}`
+`./dbm-fc-solver --offload-dir-path $tempdir --num-threads 1 @{[samp_board('24-mid.board')]}`
         =~ s/[ \t]+\n/\n/gr;
 
     foreach my $text ( $got_text, $expected_text )

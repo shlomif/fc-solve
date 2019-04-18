@@ -37,7 +37,7 @@ sub validate_and_transform
 my $arr = [
     'dbm_fc_solver_1' => {
         dbm  => 1,
-        prog => "dbm_fc_solver",
+        prog => "dbm-fc-solver",
         argv => [
             '--offload-dir-path',
             { type => 'tempdir', },
@@ -46,7 +46,7 @@ my $arr = [
                 arg  => '2freecells-24-mid-with-colons.board'
             }
         ],
-        msg => qq{dbm_fc_solver from 24-mid-with-colons.},
+        msg => qq{dbm-fc-solver from 24-mid-with-colons.},
     },
     'empty_board' => {
         prog => "fc-solve",

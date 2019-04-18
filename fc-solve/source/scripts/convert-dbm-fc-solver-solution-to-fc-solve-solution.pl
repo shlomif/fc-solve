@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 
-# This program converts the solution output of dbm_fc_solver
-# (and depth_dbm_fc_solver) to something that can be used as input for
+# This program converts the solution output of dbm-fc-solver
+# (and depth-dbm-fc-solver) to something that can be used as input for
 # verify-solitaire-solution. It accepts the same command line arguments
 # as verify-solitaire-solution so you should use it something like that:
 #

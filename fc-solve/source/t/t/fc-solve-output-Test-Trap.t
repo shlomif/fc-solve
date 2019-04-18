@@ -192,7 +192,7 @@ SKIP:
         trap
         {
             $status = system(
-                bin_exe_raw( ['depth_dbm_fc_solver'] ),
+                bin_exe_raw( ['depth-dbm-fc-solver'] ),
                 "--offload-dir-path",
                 ( tempdir( CLEANUP => 1 ) . '/' ),
                 bin_board('empty.board'),
@@ -203,14 +203,14 @@ SKIP:
 
         # TEST
         is( $out, '',
-            "No output for depth_dbm_fc_solver on empty and invalid board",
+            "No output for depth-dbm-fc-solver on empty and invalid board",
         );
 
         # TEST
         like(
             $trap->stderr(),
             qr/\AInvalid input board/,
-            "Correct stderr for depth_dbm_fc_solver on empty and invalid board",
+            "Correct stderr for depth-dbm-fc-solver on empty and invalid board",
         );
 
         # TEST
@@ -229,7 +229,7 @@ SKIP:
         trap
         {
             $status = system(
-                bin_exe_raw( ['depth_dbm_fc_solver'] ),
+                bin_exe_raw( ['depth-dbm-fc-solver'] ),
                 '--num-threads',
                 3,
                 '--batch-size',
@@ -260,7 +260,7 @@ SKIP:
         }
 
         # TEST:$solver=2;
-        foreach my $solver ( 'depth_dbm_fc_solver', 'dbm_fc_solver' )
+        foreach my $solver ( 'depth-dbm-fc-solver', 'dbm-fc-solver' )
         {
             my $status;
             trap

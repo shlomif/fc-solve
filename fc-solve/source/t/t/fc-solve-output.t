@@ -37,7 +37,7 @@ sub trap_dbm
 
     open my $fc_solve_output,
         shell_quote(
-        bin_exe_raw( ['dbm_fc_solver'] ),
+        bin_exe_raw( ['dbm-fc-solver'] ),
         "--offload-dir-path", tempdir( CLEANUP => 1 ),
         "--num-threads", 1, $args->{board_fn}
         )
@@ -59,14 +59,14 @@ sub trap_depth_dbm
 
     open my $fc_solve_output,
         shell_quote(
-        bin_exe_raw( ['depth_dbm_fc_solver'] ), "--offload-dir-path",
+        bin_exe_raw( ['depth-dbm-fc-solver'] ), "--offload-dir-path",
         ( tempdir( CLEANUP => 1 ) . '/' ), "--num-threads",
         1,                  "--iters-delta-limit",
         $args->{max_iters}, $args->{board_fn}
         )
         . " |"
         or Carp::confess
-        "Error! Could not open the depth_dbm_fc_solver pipline!";
+        "Error! Could not open the depth-dbm-fc-solver pipline!";
 
     my @lines = <$fc_solve_output>;
 
@@ -447,7 +447,7 @@ EOF
                        index( $output_text, $needle ) >= 0
                     or index( $output_text, $needle_non_debondt ) >= 0
             ),
-            "dbm_fc_solver invocation contains the solution's output."
+            "dbm-fc-solver invocation contains the solution's output."
         );
     }
 }
@@ -473,7 +473,7 @@ SKIP:
         like(
             $output_text,
             qr/^Mark\+Sweep Progress - 100000/ms,
-            "depth_dbm_fc_solver bug with infinite run is fixed."
+            "depth-dbm-fc-solver bug with infinite run is fixed."
         );
     }
 }
