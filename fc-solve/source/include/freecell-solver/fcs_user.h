@@ -17,7 +17,6 @@
 #include "freecell-solver/fcs_limit.h"
 #include "freecell-solver/fcs_pats_xy_param.h"
 #include "freecell-solver/fcs_back_compat.h"
-#include "freecell-solver/fcs_conf.h"
 
 #ifdef __cplusplus
 extern "C" {
