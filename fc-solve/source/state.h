@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 #include <ctype.h>
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 
 #ifdef FCS_WITH_MOVES
 #include "freecell-solver/fcs_move.h"
@@ -233,7 +233,7 @@ struct fcs_state_extra_info_struct
     /*
      * The iteration in which this state was marked as visited
      * */
-    fcs_int_limit_t visited_iter;
+    fcs_iters_int visited_iter;
 #endif
 
     /*

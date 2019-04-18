@@ -11,7 +11,7 @@
 // This is compiled into a shared library and then loaded by Inline::C,
 // ctypes, etc.
 #include <assert.h>
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 #undef FCS_RCS_STATES
 #include "delta_states_any.h"
 #include "dbm_calc_derived.h"
@@ -127,7 +127,7 @@ DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     *ret_state_s = SMALLOC(*ret_state_s, 1000);
     FCS__RENDER_STATE(*ret_state_s, &(init_state.s), &locs);
 
-    return prune_ret;
+    return (int)prune_ret;
 }
 
 DLLEXPORT void fc_solve_user_INTERNAL_perform_horne_prune__free_ret_state_s(

@@ -12,7 +12,7 @@
 #include <stdio.h>
 
 #include <tap.h>
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 #include "bit_rw.h"
 
 static int main_tests(void)

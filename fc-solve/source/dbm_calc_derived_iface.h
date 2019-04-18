@@ -25,8 +25,8 @@ typedef struct
 {
     char *state_string;
     uint8_t move;
-    int core_irreversible_moves_count;
-    int num_non_reversible_moves_including_prune;
+    size_t core_irreversible_moves_count;
+    size_t num_non_reversible_moves_including_prune;
     fcs_which_moves_bitmask which_irreversible_moves_bitmask;
 } fcs_derived_state_debug;
 

@@ -63,7 +63,7 @@ typedef struct
     fcs_dbm_collection_by_depth coll;
     fcs_lock global_lock;
     const char *offload_dir_path;
-    int curr_depth;
+    size_t curr_depth;
     dbm_instance_common_elems common;
     meta_allocator fcc_meta_alloc;
     FccEntryPointList fcc_entry_points;
@@ -119,7 +119,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
     instance->moves_base64_encoding_buffer = NULL;
     instance->moves_base64_encoding_buffer_max_len = 0;
     {
-        int curr_depth = 0;
+        size_t curr_depth = 0;
         {
             for (size_t i = 0;
                  i < COUNT(fingerprint_which_irreversible_moves_bitmask->s);
@@ -403,7 +403,7 @@ static inline void instance_alloc_num_moves(
 
 static inline void instance_check_key(
     dbm_solver_thread *const thread, dbm_solver_instance *const instance,
-    const int key_depth, fcs_encoded_state_buffer *const key,
+    const size_t key_depth, fcs_encoded_state_buffer *const key,
     fcs_dbm_record *const parent, const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES

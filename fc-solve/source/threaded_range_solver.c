@@ -17,6 +17,7 @@
 #include <pthread.h>
 #include "range_solvers.h"
 #include "try_param.h"
+#include "print_time.h"
 
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
@@ -40,7 +41,7 @@ static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
 static char **context_argv;
 static int arg = 1, context_argc;
 #endif
-static long long total_num_iters = 0;
+static fcs_iters_int total_num_iters = 0;
 
 static void *worker_thread(void *const void_arg)
 {

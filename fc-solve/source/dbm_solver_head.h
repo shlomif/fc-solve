@@ -22,7 +22,7 @@ extern "C" {
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 #undef FCS_RCS_STATES
 
 #include "lock.h"

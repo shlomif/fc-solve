@@ -21,6 +21,7 @@
 #include <sys/wait.h>
 #include "range_solvers.h"
 #include "try_param.h"
+#include "print_time.h"
 
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
@@ -37,7 +38,8 @@ static void print_help(void)
 }
 #endif
 
-static long long total_num_iters = 0, total_num_finished_boards = 0;
+static fcs_iters_int total_num_iters = 0;
+static long long total_num_finished_boards = 0;
 
 #define READ_FD 0
 #define WRITE_FD 1
@@ -53,7 +55,8 @@ typedef struct
 
 typedef struct
 {
-    long long num_iters, num_finished_boards;
+    fcs_iters_int num_iters;
+    long long num_finished_boards;
 } response_type;
 
 static inline void write_request(const long long end_board,

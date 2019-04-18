@@ -29,7 +29,7 @@ help_err(const char *const msg, ...)
 #endif
 
 static inline bool range_solvers__solve(void *const instance,
-    const long long board_num, long long *const total_num_iters_temp)
+    const long long board_num, fcs_iters_int *const total_num_iters_temp)
 {
     fcs_state_string state_string;
     get_board(board_num, state_string);

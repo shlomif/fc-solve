@@ -143,7 +143,7 @@ typedef struct
 
 static inline void instance_check_key(
     dbm_solver_thread *const thread, dbm_solver_instance *const instance,
-    const int key_depth, fcs_encoded_state_buffer *const key,
+    const size_t key_depth, fcs_encoded_state_buffer *const key,
     fcs_dbm_record *const parent, const uint8_t move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
@@ -283,14 +283,15 @@ static void calc_trace(fcs_dbm_record *const ptr_initial_record,
 
 static inline void mark_and_sweep_old_states(
     dbm_solver_instance *const instance, dict_t *const kaz_tree,
-    const int curr_depth)
+    const size_t curr_depth)
 {
     /* Now that we are about to ascend to a new depth, let's
      * mark-and-sweep
      * the old states, some of which are no longer of interest.
      * */
     FILE *const out_fh = instance->common.out_fh;
-    TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
+    TRACE("Start mark-and-sweep cleanup for curr_depth=%lu\n",
+        (unsigned long)curr_depth);
     const_AUTO(tree_recycle_bin,
         ((struct rb_node **)(&(instance->common.tree_recycle_bin))));
 
@@ -333,7 +334,8 @@ static inline void mark_and_sweep_old_states(
 #endif
         }
     }
-    TRACE("Finish mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
+    TRACE("Finish mark-and-sweep cleanup for curr_depth=%lu\n",
+        (unsigned long)curr_depth);
 }
 
 #ifdef FCS_DBM_SINGLE_THREAD

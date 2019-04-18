@@ -22,7 +22,7 @@
 #include <unistd.h>
 #endif
 
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 #include "alloc_wrap.h"
 #include "count.h"
 #include "freecell-solver/fcs_dllexport.h"

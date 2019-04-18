@@ -455,7 +455,7 @@ static inline bool fcs__should_state_be_pruned(
         (instance->effective_max_num_checked_states -                          \
             (instance->i__stats.num_checked_states)))
 #endif
-static inline fcs_int_limit_t calc_ht_max_num_states(
+static inline fcs_iters_int calc_ht_max_num_states(
     const fcs_instance *const instance GCC_UNUSED,
     const fcs_hard_thread *const hard_thread)
 {

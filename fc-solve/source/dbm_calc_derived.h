@@ -32,10 +32,10 @@ typedef struct fcs_derived_state_struct
     fcs_encoded_state_buffer key;
     fcs_dbm_record *parent;
     struct fcs_derived_state_struct *next;
-    int core_irreversible_moves_count;
+    size_t core_irreversible_moves_count;
     fcs_which_moves_bitmask which_irreversible_moves_bitmask;
     fcs_fcc_move move;
-    int num_non_reversible_moves_including_prune;
+    size_t num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 } fcs_derived_state;
 
@@ -202,15 +202,15 @@ static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
 #define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
 /* Returns the number of amortized irreversible moves performed. */
-static inline int horne_prune(const fcs_dbm_variant_type local_variant,
+static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr,
     fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
     fcs_fcc_moves_seq *const moves_seq,
     fcs_fcc_moves_seq_allocator *const allocator)
 {
     fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
-    int count_moves_so_far = 0;
-    int count_additional_irrev_moves = 0;
+    size_t count_moves_so_far = 0;
+    size_t count_additional_irrev_moves = 0;
     FCS_ON_NOT_FC_ONLY(
         const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
 
@@ -301,16 +301,16 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
          * to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
          *
          * */
-        const int count = moves_seq->count;
-        for (int pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
+        const size_t count = moves_seq->count;
+        for (size_t pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
              pos += FCS_FCC_NUM_MOVES_IN_ITEM)
         {
             iter = &((*iter)->next);
         }
 
-        int pos = count;
+        size_t pos = count;
 
-        for (int pos_moves_so_far = 0; pos_moves_so_far < count_moves_so_far;
+        for (size_t pos_moves_so_far = 0; pos_moves_so_far < count_moves_so_far;
              pos_moves_so_far++)
         {
             if (pos % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
@@ -330,7 +330,8 @@ static inline int horne_prune(const fcs_dbm_variant_type local_variant,
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
-static inline int horne_prune__simple(const fcs_dbm_variant_type local_variant,
+static inline size_t horne_prune__simple(
+    const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr)
 {
     fcs_which_moves_bitmask no_use = {{'\0'}};

@@ -11,7 +11,7 @@
 // it cluttered.
 #pragma once
 
-#include "config.h"
+#include "freecell-solver/config.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

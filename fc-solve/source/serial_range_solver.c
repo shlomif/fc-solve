@@ -19,11 +19,12 @@
 #include "trace_mem.h"
 #include "try_param.h"
 #include "range_solvers.h"
+#include "print_time.h"
 
 static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long start_board, long long end_board, const long long stop_at)
 {
-    long long total_num_iters = 0;
+    fcs_iters_int total_num_iters = 0;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool was_total_iterations_limit_per_board_set = false;
 #endif

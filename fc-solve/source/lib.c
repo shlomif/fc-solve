@@ -266,7 +266,7 @@ static inline void compile_prelude(fcs_hard_thread *const hard_thread)
 #endif
 
 static inline void set_next_soft_thread(fcs_hard_thread *const hard_thread,
-    const uint_fast32_t scan_idx, const fcs_int_limit_t quota,
+    const uint_fast32_t scan_idx, const fcs_iters_int quota,
     uint_fast32_t *const st_idx_ptr)
 {
     (*st_idx_ptr) = scan_idx;
@@ -465,7 +465,7 @@ static inline void set_next_prelude_item(fcs_hard_thread *const hard_thread,
     const fc_solve_prelude_item next_item =
         prelude[HT_FIELD(hard_thread, prelude_idx)++];
     set_next_soft_thread(hard_thread, next_item.scan_idx,
-        (fcs_int_limit_t)next_item.quota, st_idx_ptr);
+        (fcs_iters_int)next_item.quota, st_idx_ptr);
 }
 
 static inline void update_initial_cards_val(fcs_instance *const instance)
@@ -1108,10 +1108,10 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
         the_moves_list = curr_by_depth_unit->move_funcs;                       \
     }
 
-    fcs_int_limit_t *const instance_num_checked_states_ptr =
+    fcs_iters_int *const instance_num_checked_states_ptr =
         &(instance->i__stats.num_checked_states);
 #ifndef FCS_SINGLE_HARD_THREAD
-    fcs_int_limit_t *const hard_thread_num_checked_states_ptr =
+    fcs_iters_int *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
     const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
@@ -1203,16 +1203,16 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 if (debug_iter_output_func)
                 {
                     debug_iter_output_func(debug_iter_output_context,
-                        *(instance_num_checked_states_ptr), (int)DEPTH(),
-                        (void *)instance, &pass,
+                        (fcs_int_limit_t) * (instance_num_checked_states_ptr),
+                        (int)DEPTH(), (void *)instance, &pass,
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
-                        ((DEPTH() == 0)
-                                ? 0
-                                : FCS_S_VISITED_ITER(DFS_VAR(
-                                      soft_thread, soft_dfs_info)[DEPTH() - 1]
-                                                         .state))
+                        ((DEPTH() == 0) ? 0
+                                        : (fcs_int_limit_t)FCS_S_VISITED_ITER(
+                                              DFS_VAR(soft_thread,
+                                                  soft_dfs_info)[DEPTH() - 1]
+                                                  .state))
 #endif
                     );
                 }
@@ -2027,7 +2027,7 @@ typedef struct
     // The global (sequence-wide) limit of the iterations. Used
     // by limit_iterations() and friends
     fcs_int_limit_t current_iterations_limit;
-    fcs_int_limit_t effective_current_iterations_limit;
+    fcs_iters_int effective_current_iterations_limit;
     fcs_int_limit_t current_soft_iterations_limit;
 #endif
     fcs_stats iterations_board_started_at;
@@ -2154,7 +2154,7 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
 #define FLARE_INLINE inline
 #endif
 
-static inline fcs_int_limit_t get_num_times_long(fcs_user *const user)
+static inline fcs_iters_int get_num_times_long(fcs_user *const user)
 {
     return user->iterations_board_started_at.num_checked_states +
            OBJ_STATS(user).num_checked_states -
@@ -2465,8 +2465,8 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
     }
     else
     {
-        user->current_iterations_limit =
-            user->effective_current_iterations_limit = max_iters;
+        user->current_iterations_limit = max_iters;
+        user->effective_current_iterations_limit = (fcs_iters_int)max_iters;
     }
 }
 
@@ -3137,9 +3137,12 @@ static inline bool set_upper_limit(
         current_iterations_limit
 #ifdef FCS_WITH_FLARES
 #define PARAMETERIZED_FIXED_LIMIT(increment)                                   \
-    (user->iterations_board_started_at.num_checked_states + increment)
+    (user->iterations_board_started_at.num_checked_states +                    \
+        (fcs_iters_int)increment)
 #define PARAMETERIZED_LIMIT(increment)                                         \
-    (((increment) < 0) ? (-1) : PARAMETERIZED_FIXED_LIMIT(increment))
+    (((increment) < 0)                                                         \
+            ? (-1)                                                             \
+            : (fcs_int_limit_t)PARAMETERIZED_FIXED_LIMIT(increment))
         ,
         PARAMETERIZED_LIMIT(iters_quota)
 #endif
@@ -3159,11 +3162,12 @@ static inline bool set_upper_limit(
     instance->effective_max_num_checked_states =
         ((mymin < 0)
                 ? FCS_INT_LIMIT_MAX
-                : (instance->i__stats.num_checked_states + mymin -
+                : (instance->i__stats.num_checked_states +
+                      (fcs_iters_int)mymin -
                       user->iterations_board_started_at.num_checked_states));
     return ((user->current_soft_iterations_limit >= 0) &&
             ((user->current_soft_iterations_limit <
-                user->effective_current_iterations_limit)));
+                (fcs_int_limit_t)user->effective_current_iterations_limit)));
 }
 #endif
 
@@ -3183,8 +3187,8 @@ static inline void flare__update_stats(
 #ifdef FCS_WITH_FLARES
     if (iters_quota >= 0)
     {
-        current_plan_item->remaining_quota =
-            normalize_iters_quota(iters_quota - delta);
+        current_plan_item->remaining_quota = normalize_iters_quota(
+            (flare_iters_quota)iters_quota - (flare_iters_quota)delta);
     }
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
@@ -3378,7 +3382,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             // and return now.
             if (((current_iterations_limit >= 0) &&
                     (user->iterations_board_started_at.num_checked_states >=
-                        current_iterations_limit))
+                        (fcs_iters_int)current_iterations_limit))
 #ifndef FCS_DISABLE_NUM_STORED_STATES
                 || (instance->i__stats.num_states_in_collection >=
                        instance->effective_max_num_states_in_collection)
@@ -3896,7 +3900,7 @@ freecell_solver_user_set_game(void *const api_instance, const int freecells_num,
 }
 #endif
 
-fcs_int_limit_t DLLEXPORT __attribute__((pure))
+fcs_iters_int DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_num_times_long(void *api_instance)
 {
     fcs_user *const user = (fcs_user *)api_instance;
@@ -4315,7 +4319,8 @@ int DLLEXPORT freecell_solver_user_next_soft_thread(void *const api_instance)
 extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
     void *const api_instance, const int checked_states_step)
 {
-    api_soft_thread(api_instance)->checked_states_step = checked_states_step;
+    api_soft_thread(api_instance)->checked_states_step =
+        (fcs_iters_int)checked_states_step;
 }
 
 #if (!(defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_BREAK_BACKWARD_COMPAT_1)))

@@ -507,7 +507,7 @@ ENDIF ()
 SHLOMIF_FINALIZE_FLAGS()
 
 IF ("$ENV{FCS_CLANG}")
-    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-comma -Wno-disabled-macro-expansion")
+    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-comma -Wno-disabled-macro-expansion -Wno-extra-semi-stmt")
     # ADD_DEFINITIONS("-Weverything")
 ENDIF ()
 
@@ -811,7 +811,7 @@ ENDWHILE ()
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
-    ${CMAKE_CURRENT_BINARY_DIR}/config.h
+    ${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/config.h
     )
 
 CONFIGURE_FILE(
@@ -869,6 +869,7 @@ INSTALL(
 SET (dest "include/freecell-solver")
 INSTALL(
     FILES
+        "include/freecell-solver/fcs_conf.h"
         "include/freecell-solver/fcs_cl.h"
         "include/freecell-solver/fcs_dllexport.h"
         "include/freecell-solver/fcs_enums.h"
@@ -882,6 +883,7 @@ INSTALL(
 
 INSTALL(
     FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/config.h"
         "${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/fcs_back_compat.h"
     DESTINATION
         "${dest}"

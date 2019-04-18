@@ -12,6 +12,12 @@
 #pragma once
 
 #include <stdint.h>
+#include "freecell-solver/fcs_conf.h"
 
 typedef intptr_t fcs_int_limit_t;
 #define FCS_INT_LIMIT_MAX INTPTR_MAX
+#ifdef FCS_BREAK_BACKWARD_COMPAT_1
+typedef unsigned long long fcs_iters_int;
+#else
+typedef fcs_int_limit_t fcs_iters_int;
+#endif

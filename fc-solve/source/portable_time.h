@@ -30,6 +30,7 @@ typedef struct
 #define FCS_TIME_GET_SEC(pt) ((long long)((pt).tv.tv_sec))
 #define FCS_TIME_GET_USEC(pt) ((long long)((pt).tv.tv_usec))
 #define FCS_LL_FMT "%lld"
+#define FCS_ULL_FMT "%llu"
 #define FCS_LL6_FMT "%.6lld"
 #define FCS_LL9_FMT "%09lld"
 #else
@@ -45,6 +46,7 @@ typedef struct
 #define FCS_TIME_GET_SEC(pt) ((long long)((pt).tb.time))
 #define FCS_TIME_GET_USEC(pt) ((long long)(((pt).tb.millitm) * 1000))
 #define FCS_LL_FMT "%I64d"
+#define FCS_ULL_FMT "%I64u"
 #define FCS_LL6_FMT "%.6I64d"
 #define FCS_LL9_FMT "%09I64d"
 #endif
@@ -83,22 +85,6 @@ static inline void fc_solve_print_reached_no_iters(const long long board_num)
     const_AUTO(mytime, fcs_get_time());
     printf("Reached " FCS_B_AT_FMT "\n", board_num, FCS_TIME_GET_SEC(mytime),
         FCS_TIME_GET_USEC(mytime));
-}
-
-static inline void fc_solve_print_reached(
-    const long long board_num, const long long total_num_iters)
-{
-    const_AUTO(mytime, fcs_get_time());
-    printf("Reached " FCS_B_AT_FMT " (total_num_iters=" FCS_LL_FMT ")\n",
-        board_num, FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime),
-        total_num_iters);
-}
-
-static inline void fc_solve_print_finished(const long long total_num_iters)
-{
-    const_AUTO(mytime, fcs_get_time());
-    printf(("Finished at " FCS_T_FMT " (total_num_iters=" FCS_LL_FMT ")\n"),
-        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime), total_num_iters);
 }
 
 #ifdef __cplusplus

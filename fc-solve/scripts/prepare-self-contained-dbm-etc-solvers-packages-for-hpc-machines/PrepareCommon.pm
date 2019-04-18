@@ -67,10 +67,10 @@ sub src_filenames
         'fcc_brfs_test.h',
         'fcs-libavl/rb.c',
         'fcs-libavl/rb.h',
-        'fcs_conf.h',
         'fcs_err.h',
         'game_type_limit.h',
         'generic_tree.h',
+        'include/freecell-solver/fcs_conf.h',
         'include/freecell-solver/fcs_dllexport.h',
         'include/freecell-solver/fcs_enums.h',
         'include/freecell-solver/fcs_limit.h',
@@ -156,7 +156,7 @@ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
             );
     }
 
-    foreach my $fn ('config.h')
+    foreach my $fn ('include/freecell-solver/config.h')
     {
         io("./$fn") > io("$dest_dir/$fn");
     }

@@ -97,7 +97,7 @@ typedef struct
 
 typedef struct
 {
-    fcs_int_limit_t num_checked_states;
+    fcs_iters_int num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     fcs_int_limit_t num_states_in_collection;
 #endif
@@ -288,13 +288,13 @@ struct fc_solve_hard_thread_struct
      *
      * Thus, the soft thread switching should be done based on this variable
      * */
-    fcs_int_limit_t ht__num_checked_states;
+    fcs_iters_int ht__num_checked_states;
 
 #endif
     /*
      * The maximal limit for num_checked_states.
      * */
-    fcs_int_limit_t ht__max_num_checked_states;
+    fcs_iters_int ht__max_num_checked_states;
 
     // The index for the soft-thread that is currently processed
     uint_fast32_t st_idx;
@@ -494,7 +494,7 @@ struct fc_solve_soft_thread_struct
     fcs_game_limit num_vacant_stacks, num_vacant_freecells;
 
     // The number of iterations with which to process this scan
-    fcs_int_limit_t checked_states_step;
+    fcs_iters_int checked_states_step;
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     // A string that serves as an identification for the user.
@@ -547,7 +547,7 @@ struct fc_solve_instance_struct
      *
      * Normally should be used instead.
      * */
-    fcs_int_limit_t effective_max_num_checked_states;
+    fcs_iters_int effective_max_num_checked_states;
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
     fcs_int_limit_t effective_max_num_states_in_collection;

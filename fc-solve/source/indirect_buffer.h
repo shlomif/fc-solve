@@ -9,7 +9,7 @@
  */
 // indirect_buffer.h - declare the dll_ind_buf type.
 #pragma once
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 #include <stdint.h>
 
 #ifdef INDIRECT_STACK_STATES

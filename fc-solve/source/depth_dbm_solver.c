@@ -33,7 +33,7 @@ typedef struct
     fcs_dbm_collection_by_depth colls_by_depth[MAX_FCC_DEPTH];
     fcs_condvar monitor;
     const char *offload_dir_path;
-    int curr_depth;
+    size_t curr_depth;
     dbm_instance_common_elems common;
     fcs_batch_size max_batch_size;
 } dbm_solver_instance;
@@ -240,7 +240,7 @@ thread_end:
 
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
-    dbm_solver_instance *const instance, const int key_depth,
+    dbm_solver_instance *const instance, const size_t key_depth,
     fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask

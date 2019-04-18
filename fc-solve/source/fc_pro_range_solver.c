@@ -15,6 +15,7 @@
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
 #include "try_param.h"
+#include "print_time.h"
 
 static inline void fc_pro_get_board(const long long deal_idx,
     fcs_state_string state_string,
@@ -32,7 +33,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     long long start_board, long long end_board, const long long stop_at)
 {
     const char *variant = "freecell";
-    long long total_num_iters = 0;
+    fcs_iters_int total_num_iters = 0;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool was_total_iterations_limit_per_board_set = false;
 #endif

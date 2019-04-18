@@ -10,7 +10,7 @@
 // generic_tree.h - provide a unified interface to either kaz_tree.h
 // or fcs-libavl/rb.h .
 #pragma once
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 
 #ifdef FCS_DBM_USE_LIBAVL
 

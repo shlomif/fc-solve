@@ -17,6 +17,7 @@
 #include "freecell-solver/fcs_limit.h"
 #include "freecell-solver/fcs_pats_xy_param.h"
 #include "freecell-solver/fcs_back_compat.h"
+#include "freecell-solver/fcs_conf.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -93,7 +94,7 @@ DLLEXPORT extern int freecell_solver_user_get_current_depth(
 DLLEXPORT extern void freecell_solver_user_set_solving_method(
     void *const user_instance, const int method);
 
-DLLEXPORT extern fcs_int_limit_t freecell_solver_user_get_num_times_long(
+DLLEXPORT extern fcs_iters_int freecell_solver_user_get_num_times_long(
     void *user_instance);
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1

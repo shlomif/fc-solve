@@ -73,7 +73,7 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
-    dbm_solver_instance *const instance, const int key_depth GCC_UNUSED,
+    dbm_solver_instance *const instance, const size_t key_depth GCC_UNUSED,
     fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const uint8_t move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask

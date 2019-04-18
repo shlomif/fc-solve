@@ -8,7 +8,7 @@
  * Copyright (c) 2016 Shlomi Fish
  */
 #pragma once
-#include "fcs_conf.h"
+#include "freecell-solver/fcs_conf.h"
 #include "output_to_file.h"
 #include "iter_handler_base.h"
 
