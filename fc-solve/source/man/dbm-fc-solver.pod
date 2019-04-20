@@ -1,0 +1,27 @@
+=head1 NAME
+
+depth-dbm-fc-solver, dbm-fc-solver - memory efficient solving of difficult
+to verdict Freecell deals.
+
+=head1 SYNOPSIS
+
+depth-dbm-fc-solver B<--offload-dir-path> offload/ B<--num-threads> 1 /path/to/freecell.board
+
+=head1 DESCRIPTION
+
+B<depth-dbm-fc-solver> is a command line application
+that tries to verdict a single Freecell deal as solvable or impossible.
+
+=head1 OPTIONS
+
+=head1 SEE ALSO
+
+B<fc-solve>(6)
+
+L<https://fc-solve.shlomifish.org/faq.html> .
+
+=head1 AUTHOR
+
+Shlomi Fish, L<http://www.shlomifish.org/> .
+
+=cut
