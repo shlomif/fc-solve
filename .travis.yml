@@ -35,7 +35,9 @@ language: c
 python:
     - '3.6'
 before_install:
-    - sudo ln -s /usr/bin/make /usr/bin/gmake
+    - mkdir -p ~/bin
+    - ln -s /usr/bin/make ~/bin/gmake
+    - PATH="$PATH:$HOME/bin"
     - eval "$(GIMME_GO_VERSION=1.11 gimme)"
     - go get -u github.com/tdewolff/minify/cmd/minify
       # - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
@@ -55,7 +57,7 @@ before_install:
     - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
     - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
 install:
-    - sudo -H `which python3` -m pip install cffi cookiecutter pycotap pysol_cards random2 six vnu_validator Zenfilter
+    - `which python3` -m pip install --user --upgrade cffi cookiecutter pycotap pysol_cards random2 six vnu_validator Zenfilter
       # For G-S-V dzil
     - cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
       # For the website
@@ -69,7 +71,7 @@ perl:
 script:
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - bash fc-solve/scripts/run-ci-tests.bash
-sudo: required
+sudo: false
 cache:
     ccache: true
     directories:
