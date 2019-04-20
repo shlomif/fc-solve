@@ -9,6 +9,7 @@ addons:
             - docbook-xsl
             - docbook-xsl-ns
             - gperf
+            - libc6-dbg
             - libdb5.3-dev
             - libgd-dev
             - libgmp-dev
@@ -23,6 +24,7 @@ addons:
             - python3-pip
             - python3-setuptools
             - silversearcher-ag
+            - valgrind
             - wml
             - xsltproc
 os: linux
@@ -34,8 +36,8 @@ language: c
 python:
     - '3.6'
 before_install:
-    - sudo apt-get -qq update
-    - sudo apt-get install -y valgrind
+    # - sudo apt-get -qq update
+    # - sudo apt-get install -y valgrind
     - mkdir -p ~/bin
     - ln -s /usr/bin/make ~/bin/gmake
     - export PATH="$PATH:$HOME/bin"
