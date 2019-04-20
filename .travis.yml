@@ -37,7 +37,7 @@ python:
 before_install:
     - mkdir -p ~/bin
     - ln -s /usr/bin/make ~/bin/gmake
-    - PATH="$PATH:$HOME/bin"
+    - export PATH="$PATH:$HOME/bin"
     - eval "$(GIMME_GO_VERSION=1.11 gimme)"
     - go get -u github.com/tdewolff/minify/cmd/minify
       # - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
