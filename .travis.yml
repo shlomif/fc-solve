@@ -1,5 +1,6 @@
 addons:
     apt:
+        update: true
         packages:
             - asciidoc
             - cmake
@@ -27,7 +28,6 @@ addons:
             - valgrind
             - wml
             - xsltproc
-        update: true
 os: linux
 # dist: trusty
 dist: xenial
