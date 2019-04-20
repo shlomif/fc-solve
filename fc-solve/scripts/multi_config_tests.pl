@@ -220,6 +220,10 @@ sub run_tests
         $run->( "SKIPPING shuffled index $idx.", ["true"] );
         return;
     }
+    if ( $idx < ( $ENV{MIN} // 0 ) )
+    {
+        return;
+    }
     my $tatzer_args       = $args->{'tatzer_args'};
     my $cmake_args        = $args->{'cmake_args'};
     my $prepare_dist_args = $args->{'prepare_dist_args'};
