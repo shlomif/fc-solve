@@ -70,7 +70,7 @@ perl:
     - "5.24"
 script:
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
-    - bash fc-solve/scripts/run-ci-tests.bash
+    - MIN=22 bash fc-solve/scripts/run-ci-tests.bash
 sudo: false
 cache:
     ccache: true
