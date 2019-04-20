@@ -23,7 +23,6 @@ addons:
             - python3-pip
             - python3-setuptools
             - silversearcher-ag
-            - valgrind
             - wml
             - xsltproc
 os: linux
@@ -35,6 +34,8 @@ language: c
 python:
     - '3.6'
 before_install:
+    - sudo apt-get -qq update
+    - sudo apt-get install -y valgrind
     - mkdir -p ~/bin
     - ln -s /usr/bin/make ~/bin/gmake
     - export PATH="$PATH:$HOME/bin"
@@ -71,7 +72,7 @@ perl:
 script:
     - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
     - MIN=22 bash fc-solve/scripts/run-ci-tests.bash
-sudo: false
+sudo: required
 cache:
     ccache: true
     directories:
