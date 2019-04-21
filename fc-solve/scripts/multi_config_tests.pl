@@ -357,14 +357,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                 $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
                 if ( not $args->{do_not_test} )
                 {
-                    $run->(
-                        "test",
-                        [
-                            "bash",
-                            "-c",
-qq#$^X "$CWD/run-tests.pl" --glob="valgrind--dbm_fc*.t" || (find .. -name 'valgrind*.log' | xargs cat; exit 1)#
-                        ]
-                    );
+                    $run->( "test", [ $^X, "$CWD/run-tests.pl" ] );
                 }
 
             }
@@ -546,26 +539,22 @@ use List::Util qw/ shuffle /;
 
 # say Data::Dumper->new( [ \%skip_indices ] )->Dump;
 
-if ($FALSE)
-{
-    _chdir_run(
-        '../../',
-        sub {
-            run_cmd( "root tests",
-                { cmd => [ qw(prove), glob('root-tests/t/*.t') ] } );
-        }
-    );
+_chdir_run(
+    '../../',
+    sub {
+        run_cmd( "root tests",
+            { cmd => [ qw(prove), glob('root-tests/t/*.t') ] } );
+    }
+);
 
-    _chdir_run(
-        '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
-        sub {
-            run_cmd(
-                "Games-Solitaire-Verify dzil",
-                { cmd => [qw(dzil test --all)] }
-            );
-        }
-    );
-}
+_chdir_run(
+    '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
+    sub {
+        run_cmd( "Games-Solitaire-Verify dzil",
+            { cmd => [qw(dzil test --all)] } );
+    }
+);
+
 while ( my ( $idx, $run ) = each @tests )
 {
     run_tests( $TEST_BASE_IDX + $idx, @$run );
