@@ -4,13 +4,13 @@ rebuild()
     (
         set -x
         set -e
-        git clean -dxf .
-        bash -x bin/install-npm-deps.sh
-        ./gen-helpers
-        gmake fastrender
-        gmake PROD=1 fastrender
-        gmake PROD=1 all
-        gmake test
+        time git clean -dxf .
+        time bash -x bin/install-npm-deps.sh
+        time ./gen-helpers
+        time gmake fastrender
+        time gmake PROD=1 fastrender
+        time gmake PROD=1 all
+        time gmake test
     )
 }
 rebuild
