@@ -35,6 +35,7 @@ LINES:
 while ( my $l = <> )
 {
     chomp($l);
+    $l =~ s#[^\t]*\t##;
     if ( my ( $func, $stage ) =
         $l =~
 m{\A(instance_run_all_threads|instance_run_solver_thread|handle_and_destroy_instance_solution) (start|end)\z}
