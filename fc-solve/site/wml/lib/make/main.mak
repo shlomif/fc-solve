@@ -84,40 +84,23 @@ BASE_yui_Solitairey_JS = yui-debug.js
 DEST_yui_Solitairey_JS = $(call dest_jsify,$(BASE_yui_Solitairey_JS))
 
 CSS_TARGETS = \
-			  $(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
+			$(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
 
-FIND_INDEX__PYJS__SRC_BN = fc_solve_find_index_s2ints.py
-FIND_INDEX__PYJS__pivot =  dist/fc_solve_find_index_s2ints.js
-
-FIND_INDEX__PYJS__DEST_DIR = $(DEST_JS_DIR)
-FIND_INDEX__PYJS__DEST = $(FIND_INDEX__PYJS__DEST_DIR)/$(FIND_INDEX__PYJS__pivot)
-FIND_INDEX__PYJS__DEST2_DIR = $(D)/js-fc-solve/automated-tests
-FIND_INDEX__PYJS__DEST2 = $(FIND_INDEX__PYJS__DEST2_DIR)/$(FIND_INDEX__PYJS__pivot)
-FIND_INDEX__PYJS__TGT_DIR = lib/transcrypt_module
-FIND_INDEX__PYJS__PY = $(FIND_INDEX__PYJS__TGT_DIR)/src/$(FIND_INDEX__PYJS__SRC_BN)
-PIV = $(FIND_INDEX__PYJS__TGT_DIR)/dist
-FIND_INDEX__PYJS__TGT = $(FIND_INDEX__PYJS__TGT_DIR)/$(FIND_INDEX__PYJS__pivot)
-
-FIND_INDEX__PYJS__NODE_DIR = lib/for-node/js
-FIND_INDEX__PYJS__NODE = $(FIND_INDEX__PYJS__NODE_DIR)/$(FIND_INDEX__PYJS__pivot)
 ifeq ($(SKIP_EMCC),1)
-	FIND_INDEX__PYJS__TARGETS =
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS =
 	LIBFREECELL_SOLVER_JS__TARGETS =
 else
-	# FIND_INDEX__PYJS__TARGETS = $(FIND_INDEX__PYJS__TGT) $(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__DEST2) $(FIND_INDEX__PYJS__NODE)
-	FIND_INDEX__PYJS__TARGETS =
 	LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js lib/for-node/js/libfreecell-solver-asm.js
 	LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM) $(DEST_LIBFREECELL_SOLVER_ASMJS_JS) $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS)
 endif
 
 include lib/make/deps.mak
 
-real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
-real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(FIND_INDEX__PYJS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
+real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
 
 OUT_PREF = lib/out-babel/js
 out_pref_jsify = $(addprefix $(OUT_PREF)/,$(1))
@@ -144,21 +127,6 @@ $(OUT_PREF)/qunit.js: %: lib/jquery/qunit/dist/qunit.js
 	cp -f $< $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
-
-$(FIND_INDEX__PYJS__TGT): $(BASE_FC_SOLVE_SOURCE_DIR)/board_gen/$(FIND_INDEX__PYJS__SRC_BN)
-	cat $< lib/js-epilogue.py > $(FIND_INDEX__PYJS__PY)
-	cd $(FIND_INDEX__PYJS__TGT_DIR) && python3 build.py
-	perl -i -lpe 's:(MAX_SHIFTREDUCE_LOOPS\s*=\s*1000)(;):$${1}00$${2}:g' $(PIV)/*.js
-	perl -i -lne 'print unless /String.prototype.strip = / .. /^\s*\}/' $(PIV)/*.js
-	$(STRIP_TRAIL_SPACE) $$(find $(FIND_INDEX__PYJS__TGT_DIR) -regextype egrep -regex '.*\.(js|html)')
-	touch $@
-
-$(FIND_INDEX__PYJS__DEST) $(FIND_INDEX__PYJS__DEST2): %: $(FIND_INDEX__PYJS__TGT)
-	mkdir -p $$(dirname "$@")
-	$(MULTI_YUI) -o $@ $<
-
-$(FIND_INDEX__PYJS__NODE): $(FIND_INDEX__PYJS__TGT)
-	cp -f $< $@
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
@@ -242,7 +210,7 @@ $(DEST_LIBFREECELL_SOLVER_JS): $(WASM_STAMP)
 	cp -f $(LIBFREECELL_SOLVER_JS) $@
 
 $(DEST_LIBFREECELL_SOLVER_ASMJS_JS): $(ASMJS_STAMP)
-	cp -f  $(LIBFREECELL_SOLVER_ASMJS_JS) $@
+	cp -f $(LIBFREECELL_SOLVER_ASMJS_JS) $@
 
 $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
@@ -274,7 +242,7 @@ real_all: $(DEST_WEB_RAW_JS) $(Phoenix_JS_DEST)
 $(DEST_WEB_RAW_JS): $(DEST_JS_DIR)/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
 
-WEB_FCS_UI_JS_SOURCES =  $(call dest_jsify,web-fc-solve-ui.js)
+WEB_FCS_UI_JS_SOURCES = $(call dest_jsify,web-fc-solve-ui.js)
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
@@ -336,7 +304,7 @@ TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-f
 ts_chart_common1 = ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts
 
 $(TS_CHART_DEST) $(TS_CHART2_DEST): $(D)/%.js: src/%.ts
-	tsc --module amd --out $@  $(ts_chart_common1) $<
+	tsc --module amd --out $@ $(ts_chart_common1) $<
 	$(MULTI_YUI) -o $@ $@
 
 $(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
