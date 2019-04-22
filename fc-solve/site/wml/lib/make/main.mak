@@ -1,4 +1,4 @@
-all: dummy
+all: real_all
 
 include lib/make/shlomif_common.mak
 include lib/make/rules.mak
@@ -68,7 +68,8 @@ LIBFREECELL_SOLVER_ASMJS_JS = $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/libfreecell-sol
 DEST_LIBFREECELL_SOLVER_JS = $(DEST_JS_DIR)/libfreecell-solver.min.js
 DEST_LIBFREECELL_SOLVER_ASMJS_JS = $(DEST_JS_DIR)/libfreecell-solver-asm.js
 DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(DEST_JS_DIR)/libfreecell-solver.js
-DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(D)/js-fc-solve/text $(D)/js-fc-solve/automated-tests lib/for-node/js/ .
+Solver_Dest_Dir := $(D)/js-fc-solve/text
+DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(Solver_Dest_Dir) $(D)/js-fc-solve/automated-tests lib/for-node/js/ .
 DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
 DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
 DEST_QSTRING_JS = dest/js/jquery.querystring.js
@@ -114,16 +115,9 @@ endif
 
 include lib/make/deps.mak
 
-dummy : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS)  $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
-dummy: $(LIBFREECELL_SOLVER_JS__TARGETS)
-
-dummy: $(FIND_INDEX__PYJS__TARGETS)
-
-dummy: $(DEST_BROWSERIFY_JS)
-dummy: $(DEST_Solitairey_JS)
-dummy: $(DEST_yui_Solitairey_JS)
-dummy: $(DEST_lodash_Solitairey_JS)
+real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(FIND_INDEX__PYJS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
 
 OUT_PREF = lib/out-babel/js
 out_pref_jsify = $(addprefix $(OUT_PREF)/,$(1))
@@ -275,15 +269,13 @@ Phoenix_JS = $(BABEL_SRC_DIR)/$(Phoenix_JS_BASE)
 $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE)
 	coffee --compile -o $(BABEL_SRC_DIR) $<
 
-dummy: $(Phoenix_JS_DEST)
-
 $(Phoenix_JS_DEST): $(Phoenix_JS)
 	cp -f $< $@
 
 $(Phoenix_JS): $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE)
 	$(MULTI_YUI) -o $@ $<
 
-dummy: $(DEST_WEB_RAW_JS)
+real_all: $(DEST_WEB_RAW_JS) $(Phoenix_JS_DEST)
 
 $(DEST_WEB_RAW_JS): $(DEST_JS_DIR)/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
@@ -319,8 +311,6 @@ JSES_js_basenames = jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.j
 DEST_BABEL_JSES = $(call dest_jsify,$(JSES_js_basenames) $(TYPESCRIPT_basenames))
 OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
-all: $(OUT_BABEL_JSES) $(DEST_BABEL_JSES)
-
 $(patsubst %,$(OUT_PREF)/%,$(JSES_js_basenames)): $(OUT_PREF)/%.js: $(BABEL_SRC_DIR)/%.js
 	babel -o $@ $<
 
@@ -329,12 +319,8 @@ $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 
 JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js
 
-all: $(JS_DEST_FILES__NODE)
-
 $(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
 	cp -f $< $@
-
-all: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
 TYPESCRIPT_COMMON_DEPS = src/js/web-fc-solve.ts src/js/web-fcs-tests-strings.ts
 
@@ -352,8 +338,6 @@ $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts $(TYPESCRIPT_COMMON_
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
-
-# all: $(TS_CHART_DEST) $(TS_CHART2_DEST)
 
 ts_chart_common1 = ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.ts
 
@@ -373,7 +357,7 @@ $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
 
-$(D)/js-fc-solve/text/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.asciidoc
+$(Solver_Dest_Dir)/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.asciidoc
 
 $(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro--4fc-deals-solvability--report/index.html: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
 
@@ -390,7 +374,7 @@ $(T2_SVGS__svgz): %.svgz: %.min.svg
 min_svgs: $(T2_SVGS__MIN) $(T2_SVGS__svgz)
 
 all_deps: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
-all: all_deps min_svgs
+real_all: all_deps min_svgs
 
 .PHONY:
 
@@ -435,7 +419,7 @@ edit:
 
 include lib/make/docbook/sf-docbook-common.mak
 
-dummy: docbook_targets
+real_all: docbook_targets
 
 $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
 	cp -f $< $@
@@ -454,10 +438,10 @@ $(DEST_JS_DIR)/yui-unpack: lib/repos/Solitairey/ext/yui-unpack
 	rsync -a $</ $@
 	rm -fr $@/yui/{api,docs,releasenotes,tests}
 
-$(D)/js-fc-solve/text/ChromeWebStore_Badge_v2_206x58.png: lib/repos/Solitairey/ChromeWebStore_Badge_v2_206x58.png
+$(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png: lib/repos/Solitairey/ChromeWebStore_Badge_v2_206x58.png
 	cp -f $< $@
 
-$(D)/js-fc-solve/text/loading.gif: lib/repos/Solitairey/loading.gif
+$(Solver_Dest_Dir)/loading.gif: lib/repos/Solitairey/loading.gif
 	cp -f $< $@
 
 $(D)/green.jpg: lib/repos/Solitairey/green.jpg
@@ -469,15 +453,10 @@ $(D)/layouts: lib/repos/Solitairey/layouts
 $(D)/dondorf: lib/repos/Solitairey/dondorf
 	rsync -a $</ $@
 
-$(D)/js-fc-solve/text/dondorf:
-	ln -sf ../../dondorf $@
+$(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/js: %:
+	ln -sf ../../$(notdir $@) $@
 
-$(D)/js-fc-solve/text/layouts:
-	ln -sf ../../layouts $@
-
-$(D)/js-fc-solve/text/js:
-	ln -sf ../../js $@
-
-dummy: $(D)/js-fc-solve/text/dondorf $(D)/js-fc-solve/text/layouts $(D)/js-fc-solve/text/js $(D)/dondorf $(D)/layouts $(D)/green.jpg $(D)/js-fc-solve/text/loading.gif $(D)/js-fc-solve/text/ChromeWebStore_Badge_v2_206x58.png
-
-dummy: $(DEST_JS_DIR)/yui-unpack
+real_all: \
+	$(D)/dondorf $(D)/green.jpg $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/js $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/loading.gif $(D)/layouts
+real_all: \
+	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
