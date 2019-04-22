@@ -19,13 +19,9 @@ use Term::ANSIColor qw(colored);
 use parent 'Games::Solitaire::Verify::Base';
 
 my @fields = qw(
-    die
     exit
-    leaveby
-    return
     stderr
     stdout
-    wantarray
     warn
 );
 
