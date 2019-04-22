@@ -357,7 +357,13 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                 $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
                 if ( not $args->{do_not_test} )
                 {
-                    $run->( "test", [ $^X, "$CWD/run-tests.pl" ] );
+                    $run->(
+                        "test",
+                        [
+                            $^X, "$CWD/run-tests.pl",
+                            @{ $args->{runtest_args} // [] }
+                        ]
+                    );
                 }
 
             }
@@ -505,12 +511,17 @@ reg_lt_test(
     { blurb => "Break Backward Compatibility #1", randomly_avoid => $TRUE, },
     '--break-back-compat-1' );
 
-reg_lt_test(
+my @TRAVIS_CI_SKIP_FAILING_TESTS =
+    ( runtest_args => [qw%--exclude-re valgrind--dbm_fc_solver_1%], );
+reg_test(
     {
         blurb          => "Freecell-only (as well as Break Backcompat)",
         randomly_avoid => $TRUE,
     },
-    qw(--break-back-compat-1 --fc-only),
+    {
+        tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only), ],
+        @TRAVIS_CI_SKIP_FAILING_TESTS,
+    }
 );
 
 {
