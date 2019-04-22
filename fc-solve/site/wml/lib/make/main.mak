@@ -346,7 +346,7 @@ FC_PRO_4FC_TSVS = $(patsubst %.dump.txt,$(D)/%.tsv,$(FC_PRO_4FC_DUMPS))
 FC_PRO_4FC_FILTERED_TSVS = $(patsubst %.dump.txt,$(D)/%.filtered.tsv,$(FC_PRO_4FC_DUMPS))
 
 $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
-	perl ../../scripts/convert-dbm-fc-solver-log-to-tsv.pl <(< "$<" perl -lapE 's#[^\t]*\t##') | perl -lanE 'print join"\t",@F[0,2]' > "$@"
+	< "$<" perl -lapE 's#[^\t]*\t##' | perl ../../scripts/convert-dbm-fc-solver-log-to-reduced-tsv.pl - > "$@"
 
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
