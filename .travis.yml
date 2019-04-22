@@ -25,6 +25,7 @@ addons:
             - python3-pip
             - python3-setuptools
             - silversearcher-ag
+            - strip-nondeterminism
             - valgrind
             - wml
             - xsltproc
