@@ -23,7 +23,7 @@ ifeq ($(PROD),1)
 	WML_FLAGS += -DPRODUCTION=1
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
 	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
-	MULTI_YUI = ./bin/Run-YUI-Compressor
+	MULTI_YUI = uglifyjs --compress
 else
 	MULTI_YUI = ./bin/cat-o
 
