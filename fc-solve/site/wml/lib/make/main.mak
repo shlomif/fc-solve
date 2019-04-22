@@ -126,13 +126,15 @@ OUT_BROWSERIFY_JS = $(call out_pref_jsify,$(BASE_BROWSERIFY_JS))
 $(DEST_BROWSERIFY_JS): $(DEST_JS_DIR)/%: $(OUT_PREF)/%
 	$(MULTI_YUI) -o $@ $<
 
-$(DEST_lodash_Solitairey_JS): $(DEST_JS_DIR)/%: lib/repos/Solitairey/ext/lodash/%
+SOLITAIREY_REPO := lib/repos/Solitairey
+
+$(DEST_lodash_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/ext/lodash/%
 	$(MULTI_YUI) -o $@ $<
 
-$(DEST_yui_Solitairey_JS): $(DEST_JS_DIR)/%: lib/repos/Solitairey/ext/yui-debug/%
+$(DEST_yui_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/ext/yui-debug/%
 	$(MULTI_YUI) -o $@ $<
 
-$(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: lib/repos/Solitairey/src/js/%
+$(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/src/js/%
 	$(MULTI_YUI) -o $@ $<
 
 $(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js: %:
@@ -434,23 +436,17 @@ fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps
 
 DBTOEPUB := ZIPOPT="-X" $(DBTOEPUB)
 
-$(DEST_JS_DIR)/yui-unpack: lib/repos/Solitairey/ext/yui-unpack
+$(DEST_JS_DIR)/yui-unpack: $(SOLITAIREY_REPO)/ext/yui-unpack
 	rsync -a $</ $@
 	rm -fr $@/yui/{api,docs,releasenotes,tests}
 
-$(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png: lib/repos/Solitairey/ChromeWebStore_Badge_v2_206x58.png
+$(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/loading.gif: $(Solver_Dest_Dir)/%: $(SOLITAIREY_REPO)/%
 	cp -f $< $@
 
-$(Solver_Dest_Dir)/loading.gif: lib/repos/Solitairey/loading.gif
+$(D)/green.jpg: $(SOLITAIREY_REPO)/green.jpg
 	cp -f $< $@
 
-$(D)/green.jpg: lib/repos/Solitairey/green.jpg
-	cp -f $< $@
-
-$(D)/layouts: lib/repos/Solitairey/layouts
-	rsync -a $</ $@
-
-$(D)/dondorf: lib/repos/Solitairey/dondorf
+$(D)/layouts $(D)/dondorf: $(D)/%: $(SOLITAIREY_REPO)/%
 	rsync -a $</ $@
 
 $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/js: %:
@@ -458,5 +454,6 @@ $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/js: %:
 
 real_all: \
 	$(D)/dondorf $(D)/green.jpg $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/js $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/loading.gif $(D)/layouts
+
 real_all: \
 	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
