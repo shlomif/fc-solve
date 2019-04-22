@@ -16,7 +16,7 @@ ifeq ($(CMAKE_DIR),)
 	CMAKE_DIR := .
 endif
 
-DATA_DESTDIR = __DESTDIR
+DATA_DESTDIR ?= __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
 RESULT_JS_LIB = libfreecell-solver$(LIBSUF).js
 RESULT_HTML = fc-solve-test.html
@@ -99,7 +99,7 @@ OPT_FLAGS = -O3
 # OPT_FLAGS =
 # OPT_FLAGS = -g
 
-CFLAGS = $(OPT_FLAGS) -I __DESTDIR/fc-solve/include -I ./include -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.6.5 -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+CFLAGS = $(OPT_FLAGS) -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.6.5 -I $(CMAKE_DIR) -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
 ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
