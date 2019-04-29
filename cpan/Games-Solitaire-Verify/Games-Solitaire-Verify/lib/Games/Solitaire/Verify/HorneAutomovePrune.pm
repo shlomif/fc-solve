@@ -124,6 +124,17 @@ PRUNE:
 
 1;
 
+__END__
+
+=head1 NAME
+
+Games::Solitaire::Verify::HorneAutomovePrune - perform Horne Autoplay
+on a Freecell layout
+
+=head1 DESCRIPTION
+
+See L<https://groups.yahoo.com/neo/groups/fc-solve-discuss/search/messages?query=horne%20autoplay> .
+
 =head1 SUBROUTINES
 
 =head2 do_prune({%args})
