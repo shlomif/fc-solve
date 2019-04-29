@@ -8,7 +8,7 @@ use 5.008;
 =head1 NAME
 
 Games::Solitaire::Verify::Solution - verify an entire solution
-of Freecell Solver (or a similar solve)
+of Freecell Solver (or a similar solver)
 
 =cut
 
