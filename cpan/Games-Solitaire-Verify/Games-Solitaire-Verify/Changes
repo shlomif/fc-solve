@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2100  2019-04-29
+        - Add lib/Games/Solitaire/Verify/Golf.pm and
+        lib/Games/Solitaire/Verify/App/Golf.pm .
+
 0.2000  2019-04-04
         - Add lib/Games/Solitaire/Verify/HorneAutomovePrune.pm .
 
