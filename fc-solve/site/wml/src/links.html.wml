@@ -4,6 +4,10 @@
 
 <h2_section id="resources" title="Resources">
 
+<define-tag Solitairey>
+<a href="https://foss-card-games.github.io/Solitairey/">Solitairey</a>
+</define-tag>
+
 <p class="desc">
 Freecell Solver Resources on the Net.
 </p>
@@ -584,7 +588,7 @@ Open source under the restrictive GPLv3 licence.
 
 <li>
 <p>
-<b>Solitairey online patience game</b> - contains
+<Solitairey /> - contains
 a Freecell solver written in JavaScript. The
 <a href="https://github.com/shlomif/Solitairey/branches">source code</a> for it is
 available on GitHub, under the open source FreeBSD licence.
@@ -845,7 +849,7 @@ only fair that we will link back to him.
 
 <li>
 <p>
-<b>Solitairey</b> - play Freecell and other
+<Solitairey /> - play Freecell and other
 Patience games online. The
 <a href="https://github.com/shlomif/Solitairey/branches">source code</a> is
 available on GitHub.
