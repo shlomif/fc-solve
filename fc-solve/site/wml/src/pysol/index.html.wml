@@ -1,4 +1,4 @@
-#include "template5.wml"
+#include "template.wml"
 
 <latemp_subject "Freecell Solver PySol Integration"  />
 

@@ -1,4 +1,4 @@
-#include "template5.wml"
+#include "template.wml"
 <latemp_subject "Freecell Solver's Features List" />
 
 <h2_section id="usability-opts" title="Usability Options">

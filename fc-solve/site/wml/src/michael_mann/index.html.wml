@@ -1,4 +1,4 @@
-#include "template5.wml"
+#include "template.wml"
 <latemp_subject "Michael Mann’s Freecell Solver Work" />
 
 <h2_section id="about" title="About">
