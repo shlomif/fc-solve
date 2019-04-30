@@ -63,23 +63,23 @@ repository</a> and other goodies.
 to provide links back to the Subversion repository's URLs</a>
 </p>
 </li>
-</define-tag>
-
-<li>
-<p>
-<a href="https://github.com/shlomif/fc-solve">Project Page on GitHub</a> -
-contains the canonical Git repository of Freecell Solver (forks and
-pull requests are welcome!), as well as an issue tracker (which is less
-preferable than the <a href="#bitbucket_proj">Bitbucket one</a>, a wiki,
-and some graphs.
-</p>
-</li>
 
 <li id="bitbucket_proj">
 <p>
 <a href="http://bitbucket.org/shlomif/fc-solve">Project Page on Bitbucket</a> -
 contains a mirror of the version control repository, a bug/issue tracker,
 and other resources.
+</p>
+</li>
+
+</define-tag>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve">Project Page on GitHub</a> -
+contains the canonical Git repository of Freecell Solver (forks and
+pull requests are welcome!), as well as an issue tracker, a wiki,
+and some graphs.
 </p>
 </li>
 
@@ -241,7 +241,7 @@ of maintenance.
 <li>
 <p>
 <a href="http://python.net/crew/theller/ctypes/">ctypes</a> - an advanced
-foreign function interface (FFI) for Python. Used for automated testing.
+foreign function interface (FFI) for Python. Was used for automated testing.
 </p>
 </li>
 
@@ -280,6 +280,13 @@ free-of-charge for public GitHub/Bitbucket/GitLab/etc. projects.
 <p>
 <a href="https://github.com/kripken/emscripten">Emscripten</a> - an LLVM
 to JavaScript compiler.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://pypi.org/project/cffi/">Python cffi</a> - a foreign
+function interface for Python. Replaced ctypes.
 </p>
 </li>
 </ul>
