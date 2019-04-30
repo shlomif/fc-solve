@@ -267,7 +267,7 @@ TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--in
 
 TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
-TYPESCRIPT_COMMON_DEFS_FILES = src/js/jq_qs.d.ts
+TYPESCRIPT_COMMON_DEFS_FILES = src/ts/jq_qs.d.ts
 
 JSES_js_basenames = jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve--expand-moves--mega-test.js
 DEST_BABEL_JSES = $(call dest_jsify,$(JSES_js_basenames) $(TYPESCRIPT_basenames))
@@ -284,18 +284,18 @@ JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/li
 $(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
 	cp -f $< $@
 
-TYPESCRIPT_COMMON_DEPS = src/js/web-fc-solve.ts src/js/web-fcs-tests-strings.ts
+TYPESCRIPT_COMMON_DEPS = src/ts/web-fc-solve.ts src/ts/web-fcs-tests-strings.ts
 
-src/js/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/texts-lists.txt
+src/ts/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/texts-lists.txt
 	perl $<
 
 # run_tsc = tsc --target es6 --moduleResolution node --module $1 --outDir $$(dirname $@) $<
 run_tsc = tsc --project lib/typescript/$1/tsconfig.json
 
-$(TYPESCRIPT_DEST_FILES): $(OUT_PREF)/%.js: src/js/%.ts $(TYPESCRIPT_COMMON_DEPS)
+$(TYPESCRIPT_DEST_FILES): $(OUT_PREF)/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	$(call run_tsc,www)
 
-$(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/%.js: src/%.ts $(TYPESCRIPT_COMMON_DEPS)
+$(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/js/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	$(call run_tsc,cmdline)
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
@@ -307,7 +307,7 @@ $(TS_CHART_DEST) $(TS_CHART2_DEST): $(D)/%.js: src/%.ts
 	tsc --module amd --out $@ $(ts_chart_common1) $<
 	$(MULTI_YUI) -o $@ $@
 
-$(TEST_FCS_VALID_DEST): $(patsubst $(D)/%.js,src/%.ts,$(FCS_VALID_DEST))
+$(TEST_FCS_VALID_DEST): $(patsubst $(D)/js/%.js,src/ts/%.ts,$(FCS_VALID_DEST))
 
 FC_PRO_4FC_DUMPS = $(filter charts/fc-pro--4fc-intractable-deals--report/data/%.dump.txt,$(SRC_IMAGES))
 FC_PRO_4FC_TSVS = $(patsubst %.dump.txt,$(D)/%.tsv,$(FC_PRO_4FC_DUMPS))
@@ -377,7 +377,7 @@ clean:
 
 # A temporary target to edit the active files.
 edit:
-	gvim -o src/js/fcs-validate.ts src/js/web-fc-solve-tests--fcs-validate.ts
+	gvim -o src/ts/fcs-validate.ts src/ts/web-fc-solve-tests--fcs-validate.ts
 
 include lib/make/docbook/sf-docbook-common.mak
 

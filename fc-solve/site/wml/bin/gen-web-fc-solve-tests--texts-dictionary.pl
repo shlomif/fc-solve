@@ -17,5 +17,5 @@ my $TEXTS = Dir::Manifest->new(
     }
 )->texts_dictionary( { slurp_opts => {} } );
 
-path("src/js/web-fcs-tests-strings.ts")->spew_utf8( "export const dict = ",
+path("src/ts/web-fcs-tests-strings.ts")->spew_utf8( "export const dict = ",
     JSON::MaybeXS->new->ascii->canonical(1)->encode($TEXTS), ";" );
