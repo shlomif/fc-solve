@@ -100,11 +100,11 @@ class FC_Solve_UI {
                         }
                         ul +=
                             base_ui.escapeHtml(text) +
-                            '<button class="loc" onclick="javascript:highlight_in_board(' +
+                            '<button class="loc">Show Location (<span class="start">' +
                             base_ui.escapeHtml(loc.start.toString()) +
-                            "," +
+                            '</span>-<span class="end">' +
                             base_ui.escapeHtml(loc.end.toString()) +
-                            ')">Show Location</button>';
+                            "</span>)</button>";
                         ul += "</p></li>";
                     }
                     if (ul.length > 0) {
@@ -151,9 +151,22 @@ class FC_Solve_UI {
                 err_s += es;
             }
             if (err_s.length > 0) {
-                err_s = "<ul>" + err_s + "</ul>";
+                err_s = '<ul class="err_s">' + err_s + "</ul>";
             }
             parse_error_control.html(err_s);
+            $(".err_s button.loc").click(function() {
+                const button = $(this);
+                function _n(cl) {
+                    return parseInt(button.find(cl).text(), 10);
+                }
+                const start = _n(".start");
+                const end = _n(".end");
+
+                const el = document.getElementById("stdin") as HTMLInputElement;
+                el.focus();
+                el.setSelectionRange(start, end);
+                return;
+            });
             // Disabling for now because the error messages are too cryptic
             // TODO : restore after improving.
             if (ENABLE_VALIDATION) {

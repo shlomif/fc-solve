@@ -44,7 +44,7 @@ $(function() { $('.enable_js').addClass('ok'); })
 </p>
 
 <div class="disabled">
-<div class="emscripten" id="status">Downloading...</div>
+<div class="emscripten" id="status">Downloading…</div>
 <div class="emscripten">
 <!--
   <progress value="0" max="100" id="progress"></progress>
@@ -53,12 +53,6 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 
 <js_script>
-function highlight_in_board(start,end) {
-    const el = document.getElementById("stdin");
-    el.focus();
-    el.setSelectionRange(start,end);
-    return;
-}
 requirejs.config({
     baseUrl: '$(PATH_TO_ROOT)js',
     });
