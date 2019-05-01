@@ -19,12 +19,13 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <js_script>
 <set_up_requirejs />
 require(['./solver-freecell'], function (solver) {
+<when>
     console.log("loaded solver-freecell");
+</when>
     <get-var incs /> {
     <set_up_tabs />
     web_fc_solve_ui.set_up(solver);
     $( "#output_tabs" ).tabs();
-
 });
 });
 </js_script>

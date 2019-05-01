@@ -100,8 +100,6 @@ $(function() { $('.enable_js').addClass('ok'); })
     <get-var incs /> {
     <set_up_tabs />
     web_fc_solve_ui.set_up();
-
-    return;
 });
 </js_script>
 
