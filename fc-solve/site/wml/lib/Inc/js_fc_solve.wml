@@ -1,3 +1,39 @@
+<define-tag set_up_tabs>
+    $(function() {
+        const controls = $('.phoenix');
+        if (window.location.search.length) {
+            controls.phoenix('remove');
+        } else {
+            controls.phoenix();
+        }
+        $( "#fc_solve_tabs" ).tabs({
+            activate: function () {
+                web_fc_solve_ui.set_up_handlers();
+
+                return;
+            },
+            beforeActivate: function( event, ui) {
+                var mynew = ui.newPanel;
+                var old = ui.oldPanel;
+
+                var common_old = old.find('.fcs_common');
+                var old_text = common_old.find('textarea').val();
+
+                var common_html = common_old.html();
+
+                common_old.html('');
+
+                var common_new = mynew.find('.fcs_common');
+
+                common_new.html(common_html);
+                common_new.find('textarea').val(old_text);
+
+                return;
+            }
+        });
+        return;
+    });
+</define-tag>
 <page_extra_head_elements>
 <js_script>
 (function() {
@@ -57,41 +93,8 @@ requirejs.config({
     baseUrl: '$(PATH_TO_ROOT)js',
     });
     <get-var incs /> {
-    $(function() {
-        const controls = $('.phoenix');
-        if (window.location.search.length) {
-            controls.phoenix('remove');
-        } else {
-            controls.phoenix();
-        }
-        $( "#fc_solve_tabs" ).tabs({
-            activate: function () {
-                web_fc_solve_ui.set_up_handlers();
 
-                return;
-            },
-            beforeActivate: function( event, ui) {
-                var mynew = ui.newPanel;
-                var old = ui.oldPanel;
-
-                var common_old = old.find('.fcs_common');
-                var old_text = common_old.find('textarea').val();
-
-                var common_html = common_old.html();
-
-                common_old.html('');
-
-                var common_new = mynew.find('.fcs_common');
-
-                common_new.html(common_html);
-                common_new.find('textarea').val(old_text);
-
-                return;
-            }
-        });
-        return;
-    });
-
+<set_up_tabs />
     web_fc_solve_ui.set_up();
 
     return;

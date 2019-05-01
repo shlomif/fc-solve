@@ -38,55 +38,15 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 
 <js_script>
-function highlight_in_board(start,end) {
-    const el = document.getElementById("stdin");
-    el.focus();
-    el.setSelectionRange(start,end);
-    return;
-}
 requirejs.config({
     baseUrl: '$(PATH_TO_ROOT)js',
     });
 require(['./solver-freecell'], function (solver) {
     console.log("loaded solver-freecell");
     <get-var incs /> {
-
-    $(function() {
-        const controls = $('.phoenix');
-        if (window.location.search.length) {
-            controls.phoenix('remove');
-        } else {
-            controls.phoenix();
-        }
-        $( "#fc_solve_tabs" ).tabs({
-            activate: function () {
-                web_fc_solve_ui.set_up_handlers();
-
-                return;
-            },
-            beforeActivate: function( event, ui) {
-                var mynew = ui.newPanel;
-                var old = ui.oldPanel;
-
-                var common_old = old.find('.fcs_common');
-                var old_text = common_old.find('textarea').val();
-
-                var common_html = common_old.html();
-
-                common_old.html('');
-
-                var common_new = mynew.find('.fcs_common');
-
-                common_new.html(common_html);
-                common_new.find('textarea').val(old_text);
-
-                return;
-            }
-        });
-        $( "#output_tabs" ).tabs();
-    });
-
+    <set_up_tabs />
     web_fc_solve_ui.set_up(solver);
+    $( "#output_tabs" ).tabs();
 
 });
 });
