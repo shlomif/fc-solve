@@ -63,9 +63,7 @@
 <link rel="stylesheet" type="text/css" href="$(PATH_TO_ROOT)solitairey-cards.css" />
 </page_extra_head_elements>
 
-<define-tag emscripten_common>
-<preserve incs subject />
-<set-var %attributes />
+<define-tag emscripten_common__header>
 
 <js_script>
 $(function() { $('.enable_js').addClass('ok'); })
@@ -88,13 +86,18 @@ $(function() { $('.enable_js').addClass('ok'); })
 </div>
 </div>
 
+
+</define-tag>
+<define-tag emscripten_common>
+<preserve incs subject />
+<set-var %attributes />
+<emscripten_common__header />
 <js_script>
 requirejs.config({
     baseUrl: '$(PATH_TO_ROOT)js',
     });
     <get-var incs /> {
-
-<set_up_tabs />
+    <set_up_tabs />
     web_fc_solve_ui.set_up();
 
     return;
