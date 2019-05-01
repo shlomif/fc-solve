@@ -3,11 +3,6 @@
 CURRENT TASKS:
 
 LONG TERM:
-    - Prepare the solver with the GUI.
-        * Added [Sat 2013-01-12]
-    - Play with using http://twitter.github.com/bootstrap/ for the site.
-        * in a separate git branch
-        * Added [Sat 2013-01-12]
 
 COMPLETED TASKS:
     - Write better documentation of the boards/layouts format with examples.
@@ -158,6 +153,13 @@ COMPLETED TASKS:
     - Convert the long strings in lib/babel/js/web-fc-solve-tests.js
         * To separate files with some JS/JSON code generation.
         @ DONE [Wed 2018-10-03]
+    - Prepare the solver with the GUI.
+        * Added [Sat 2013-01-12]
+        @ DONE [Wed 2019-05-01]
+    - Play with using http://twitter.github.com/bootstrap/ for the site.
+        * in a separate git branch
+        * Added [Sat 2013-01-12]
+        @ DONE [Wed 2019-05-01]
 
 
 
