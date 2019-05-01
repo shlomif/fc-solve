@@ -1,3 +1,8 @@
+<define-tag set_up_requirejs>
+requirejs.config({
+    baseUrl: '$(PATH_TO_ROOT)js',
+    });
+</define-tag>
 <define-tag set_up_tabs>
     $(function() {
         const controls = $('.phoenix');
@@ -85,17 +90,13 @@ $(function() { $('.enable_js').addClass('ok'); })
 -->
 </div>
 </div>
-
-
 </define-tag>
 <define-tag emscripten_common>
 <preserve incs subject />
 <set-var %attributes />
 <emscripten_common__header />
 <js_script>
-requirejs.config({
-    baseUrl: '$(PATH_TO_ROOT)js',
-    });
+<set_up_requirejs />
     <get-var incs /> {
     <set_up_tabs />
     web_fc_solve_ui.set_up();

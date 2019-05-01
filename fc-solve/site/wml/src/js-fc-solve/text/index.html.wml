@@ -17,9 +17,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <set-var %attributes />
 <emscripten_common__header />
 <js_script>
-requirejs.config({
-    baseUrl: '$(PATH_TO_ROOT)js',
-    });
+<set_up_requirejs />
 require(['./solver-freecell'], function (solver) {
     console.log("loaded solver-freecell");
     <get-var incs /> {
@@ -34,8 +32,6 @@ require(['./solver-freecell'], function (solver) {
 <restore incs subject />
 </define-tag>
 <emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
-;;; <emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire','iphone', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, iphone, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
-;;; <emscripten_common incs="require([\"web-fc-solve-ui\", ], function (web_fc_solve_ui)" subject="Solver" />
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>
