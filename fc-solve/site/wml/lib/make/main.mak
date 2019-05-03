@@ -400,6 +400,11 @@ $(DEST_JS_DIR)/yui-unpack: $(SOLITAIREY_REPO)/ext/yui-unpack
 	rsync -a $</ $@
 	rm -fr $@/yui/{api,docs,releasenotes,tests}
 
+src/js/jq.js: node_modules/jquery/dist/jquery.min.js
+	$(call COPY)
+
+real_all: src/js/jq.js
+
 $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/loading.gif: $(Solver_Dest_Dir)/%: $(SOLITAIREY_REPO)/%
 	cp -f $< $@
 
