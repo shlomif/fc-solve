@@ -12,14 +12,14 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     if ($g)
     {
         %*ENV{"FCS_GCC"}=1;
-        $seed = $rb ?? 26 !! 1;
+        $seed = $rb ?? 1 !! 1;
     }
     else
     {
         %*ENV{"CC"}=run('which', 'clang', :out).out.slurp.chomp;
         %*ENV{"CXX"}=run('which', 'clang++', :out).out.slurp.chomp;
         %*ENV{"FCS_CLANG"}=1;
-        $seed = $rb ?? 24 !! 1;
+        $seed = $rb ?? 1 !! 1;
     }
     %*ENV{"HARNESS_BREAK"}="1";
     my $SLIGHTLY-WRONG-GCC-FLAG-SEE-man-gcc = "-frandom-seed=24";
@@ -29,6 +29,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     $cmd ~= " && perl ../source/run-tests.pl" if $t;
     if $rb
     {
+        %*ENV{"REPRODUCIBLE_BUILDS"}="1";
         $cmd = Q:qq (bash -c ". ~/.bashrc && Theme fcs && _reprb_diff_builds");
     }
     while True
