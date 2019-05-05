@@ -25,11 +25,14 @@ static void __attribute__((noreturn)) print_help(void)
                    "summary of their results to STDOUT\n");
     exit(-1);
 }
-
-static long *mydeals = NULL;
+typedef struct
+{
+    long start, end;
+} deals_range;
+static deals_range *mydeals = NULL;
 static size_t num_deals = 0, max_num_deals = 0;
 
-static inline void append(const long idx)
+static inline void append(const long start, const long end)
 {
     if (num_deals == max_num_deals)
     {
@@ -40,7 +43,7 @@ static inline void append(const long idx)
                 "Number of deals exceeded %ld!\n", (long)max_num_deals);
         }
     }
-    mydeals[num_deals++] = idx;
+    mydeals[num_deals++] = (deals_range){.start = start, .end = end};
 }
 
 int main(int argc, char *argv[])
@@ -62,10 +65,7 @@ int main(int argc, char *argv[])
                 fc_solve_err("seq without args!\n");
             }
             const long end = atol(argv[arg++]);
-            for (long deal = start; deal <= end; ++deal)
-            {
-                append(deal);
-            }
+            append(start, end);
         }
         else if (!strcmp(argv[arg], "slurp"))
         {
@@ -83,14 +83,15 @@ int main(int argc, char *argv[])
                 long deal;
                 if (fscanf(f, "%ld", &deal) == 1)
                 {
-                    append(deal);
+                    append(deal, deal);
                 }
             }
             fclose(f);
         }
         else
         {
-            append(atol(argv[arg++]));
+            const long deal = atol(argv[arg++]);
+            append(deal, deal);
         }
     }
 
@@ -123,53 +124,58 @@ int main(int argc, char *argv[])
 
     for (size_t deal_idx = 0; deal_idx < num_deals; ++deal_idx)
     {
-        const_AUTO(board_num, mydeals[deal_idx]);
-        if (variant_is_freecell)
+        const_AUTO(board_range, mydeals[deal_idx]);
+        for (long board_num = board_range.start; board_num <= board_range.end;
+             ++board_num)
         {
-            get_board_l(board_num, buffer);
-        }
-        else
-        {
-            char command[1000];
-            sprintf(command, "make_pysol_freecell_board.py -F -t %ld %s",
-                board_num, variant);
+            if (variant_is_freecell)
+            {
+                get_board_l(board_num, buffer);
+            }
+            else
+            {
+                char command[1000];
+                sprintf(command, "make_pysol_freecell_board.py -F -t %ld %s",
+                    board_num, variant);
 
-            FILE *const from_make_pysol = popen(command, "r");
-            fread(
-                buffer, sizeof(buffer[0]), COUNT(buffer) - 1, from_make_pysol);
-            pclose(from_make_pysol);
-        }
-        LAST(buffer) = '\0';
+                FILE *const from_make_pysol = popen(command, "r");
+                fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
+                    from_make_pysol);
+                pclose(from_make_pysol);
+            }
+            LAST(buffer) = '\0';
 
-        long num_moves;
-        const char *verdict;
-        switch (freecell_solver_user_solve_board(instance, buffer))
-        {
-        case FCS_STATE_SUSPEND_PROCESS:
-            num_moves = -1;
-            verdict = "Intractable";
-            break;
+            long num_moves;
+            const char *verdict;
+            switch (freecell_solver_user_solve_board(instance, buffer))
+            {
+            case FCS_STATE_SUSPEND_PROCESS:
+                num_moves = -1;
+                verdict = "Intractable";
+                break;
 
-        case FCS_STATE_IS_NOT_SOLVEABLE:
-            num_moves = -1;
-            verdict = "Unsolved";
-            break;
+            case FCS_STATE_IS_NOT_SOLVEABLE:
+                num_moves = -1;
+                verdict = "Unsolved";
+                break;
 
-        default:
+            default:
 #ifdef FCS_WITH_MOVES
-            num_moves = freecell_solver_user_get_moves_left(instance);
+                num_moves = freecell_solver_user_get_moves_left(instance);
 #else
-            num_moves = -1;
+                num_moves = -1;
 #endif
-            verdict = "Solved";
-            break;
-        }
-        printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num,
-            verdict, (long)freecell_solver_user_get_num_times_long(instance),
-            num_moves);
-        fflush(stdout);
+                verdict = "Solved";
+                break;
+            }
+            printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num,
+                verdict,
+                (long)freecell_solver_user_get_num_times_long(instance),
+                num_moves);
+            fflush(stdout);
 
-        freecell_solver_user_recycle(instance);
+            freecell_solver_user_recycle(instance);
+        }
     }
 
     freecell_solver_user_free(instance);
