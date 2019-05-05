@@ -32,6 +32,7 @@ typedef struct
 static deals_range *mydeals = NULL;
 static size_t num_deals = 0, max_num_deals = 0;
 
+static inline bool is_valid(const deals_range r) { return (r.start <= r.end); }
 static inline void append(const long start, const long end)
 {
     if (num_deals == max_num_deals)
@@ -43,7 +44,17 @@ static inline void append(const long start, const long end)
                 "Number of deals exceeded %ld!\n", (long)max_num_deals);
         }
     }
-    mydeals[num_deals++] = (deals_range){.start = start, .end = end};
+    const deals_range new_r = (deals_range){.start = start, .end = end};
+    if ((num_deals == 0) ||
+        (!(is_valid(new_r) && is_valid(mydeals[num_deals - 1]) &&
+            (start == mydeals[num_deals - 1].end + 1))))
+    {
+        mydeals[num_deals++] = new_r;
+    }
+    else
+    {
+        mydeals[num_deals - 1].end = end;
+    }
 }
 
 int main(int argc, char *argv[])
