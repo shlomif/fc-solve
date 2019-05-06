@@ -16,5 +16,13 @@ env = Environment(
         loader=FileSystemLoader(['./src', './lib'])
         )
 for line in open('lib/make/jinja.txt', 'rt'):
-    template = env.get_template(line.strip()+'.jinja')
-    open('dest/'+line, 'wt').write(template.render())
+    fn = line.strip()
+    template = env.get_template(fn+'.jinja')
+    open('dest/'+fn, 'wt').write(
+        template.render(
+            common_keywords="Freecell, Freecell Solver, solvers, " +
+            "AI, artificial intelligence, solitaire, Simple Simon, " +
+            "Baker's Game, Seahaven Towers, Shlomi Fish, games",
+            desc="Freecell Solver " +
+            "- a Program and a Library written in ANSI C for" +
+            " Solving Games of Freecell and similar Solitaire Variants"))
