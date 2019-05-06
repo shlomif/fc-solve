@@ -25,4 +25,5 @@ s&\A#include "template.wml"(?:#include[^\n]*\n|\n)*<latemp_subject "([^"]*)" />\
 {% block body %}
 \n\n&;
 
+s/\$\(PATH_TO_ROOT\)/{{ base_path }}/g;
 $_ .= "\n{% endblock %}\n";
