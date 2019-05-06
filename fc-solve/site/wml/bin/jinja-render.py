@@ -9,6 +9,8 @@
 """
 
 """
+import re
+
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
@@ -19,6 +21,16 @@ for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
     template = env.get_template(fn+'.jinja')
     base_path = "../"*len([x for x in fn if x == '/'])
+    try_online_wrapper = ""
+    if not re.match("^js-fc-solve/", fn):
+        try_online_wrapper = """
+<div class="try_online_wrapper"><a class="solve_online_button"
+id="try_online_link" href="{}js-fc-solve/text/"><span
+class="try_main">Try</span><br/>
+<span class="try_main">Online</span><br/>
+<br/>
+<span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a></div>
+""".format(base_path)
     open('dest/'+fn, 'wt').write(
         template.render(
             base_path=base_path,
@@ -30,6 +42,7 @@ for line in open('lib/make/jinja.txt', 'rt'):
             " Solving Games of Freecell and similar Solitaire Variants",
             filename=fn,
             host='fc-solve',
+            try_online_wrapper=try_online_wrapper,
             solitairey='<a href="https://foss-card-games.github.io/' +
             'Solitairey/">Solitairey</a>',
             presentation_url="http://www.shlomifish.org/" +

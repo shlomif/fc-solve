@@ -1,12 +1,13 @@
-#include "template.wml"
+{% extends "template.jinja" %}
+{% block title %}Incompatible browser with the online fc-solve{% endblock %}
+{% block body %}
 
-<latemp_subject "Incompatible browser with the online fc-solve" />
 
 <p>
 Your browser does not support the necessary
 HTML 5/JavaScript extensions required by the WWW-based Freecell Solver. Please
 use one of the following browsers instead, or instead
-<a href="$(PATH_TO_ROOT)download.html">download and install</a> the standalone
+<a href="{{ base_path }}download.html">download and install</a> the standalone
 native executable, or a graphical interface for it.
 </p>
 
@@ -31,3 +32,5 @@ browser from Microsoft for
 and it will only run on Windows 7 and above, but it appears to work well
 enough. Older versions of Internet Explorer are unfortunately not supported.
 </p>
+
+{% endblock %}
