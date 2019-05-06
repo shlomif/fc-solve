@@ -49,6 +49,9 @@ if ( not -e "lib/repos/Solitairey" )
         "git clone",
     );
 }
+_exec( [ $^X, 'bin/gen-web-fc-solve-tests--texts-dictionary.pl' ],
+    'tests-strings' )
+    if not -e 'src/ts/web-fcs-tests-strings.ts';
 _exec( [ $^X, 'bin/my-cookiecutter.pl' ], 'cookiecutter failed.' );
 require HTML::Latemp::DocBook::GenMake;
 HTML::Latemp::DocBook::GenMake->new(
