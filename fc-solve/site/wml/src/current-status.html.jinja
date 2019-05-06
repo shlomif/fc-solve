@@ -1,6 +1,9 @@
-#include "template.wml"
+{% extends "_template.jinja" %}
+{% block title %}
+"What's the Status of Freecell Solver? Is it Dead?"
+{% endblock %}
+{% block body %}
 
-<latemp_subject "What's the Status of Freecell Solver? Is it Dead?" />
 
 <h2 id="update">Update</h2>
 
@@ -46,3 +49,5 @@ library. It <a href="getting-credit.html">can also serve as a good
 students' project to get academic credit for</a>, and Shlomi is willing to
 provide any reasonable mental aid for that.
 </p>
+
+{% endblock %}

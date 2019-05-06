@@ -64,6 +64,7 @@ require IO::All;
 IO::All->import('io');
 
 my $DIR = "lib/make/";
+my @jinja;
 
 my $generator = HTML::Latemp::GenMakeHelpers->new(
     'hosts' => [
@@ -79,6 +80,17 @@ my $generator = HTML::Latemp::GenMakeHelpers->new(
         },
     ],
     out_dir => $DIR,
+    filename_lists_post_filter => sub {
+        my ($args) = @_;
+        my $filenames = $args->{filenames};
+        return [
+            grep {
+                s#\.jinja\z##
+                    ? do { push @jinja, $_; '' }
+                    : 1
+            } @$filenames
+        ];
+    },
 );
 
 eval { $generator->process_all(); };
@@ -177,4 +189,5 @@ $render->spew_utf8(
     "use lib \"" . (`wml-params-conf --show-privlib` =~ s%[\n\r]+\z%%r) . "\";\n";
     #emrs
 );
+path("$DIR/jinja.txt")->spew_raw( join "\n", @jinja, "" );
 $render->chmod(0755);

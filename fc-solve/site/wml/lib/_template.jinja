@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
+<head>
+<title>{% block title %}{% endblock %}</title>
+<meta charset="utf-8"/>
+<meta name="author" content=""/>
+<meta name="description" content="{{ desc }}"/>
+<meta name="keywords" content="Perl, Perl 5, perl, begin, beginners, tutorials, tutorial, introductory, books, beginner, start, learn, learning, introduction, newbie, newbies, newcomer, newcomers{{ more_keywords }}"/>
+<link rel="stylesheet" href="{{ base_path }}style.css" type="text/css" media=
+"screen" title="Normal" />
+<link rel="stylesheet" href="{{ base_path }}print.css" type="text/css" media=
+"print" />
+<link rel="shortcut icon" href="{{ base_path }}favicon.ico" type=
+"image/x-icon" />
+{{ nav_links }}
+<script src="{{ base_path }}js/jq.js"></script>
+</head>
+
+<body{{ body_params }}>
+
+<header id="header">
+<div class="site-name" id="js-site-name">
+<h1><a href="{{ base_path }}">Perl Beginners' Site</a></h1>
+</div>
+<div class="site-slogan" id="js-site-slogan">Perl - because programming should be fun.</div>
+</header>
+
+<div class="nav-main">
+<h3 class="hide">Breadcrumbs Trail</h3>
+<p class="breadcrumbs">{{ leading_path_string }}</p>
+<h3 class="hide">Global Navigation</h3>
+<ul class="about-links">
+<li><a href="{{ base_path }}about.html">About Us</a></li>
+<li><a href="{{ base_path }}contact/">Contact</a></li>
+</ul>
+</div>
+<div id="page-container">
+<h3 class="hide">Main Navigation</h3>
+<div id="left-sidebar">
+{{ nav_menu_html }}
+<object data=
+"https://duckduckgo.com/search.html?width=100&amp;site=perl-begin.org&amp;prefill=Search%20DuckDuckGo"
+type="text/html"
+style="overflow:hidden;margin:0;padding:0;width:160px;height:40px"
+></object></div>
+<h3 class="hide">Content</h3>
+<main id="content">
+<h1>>{{ self.title() }}</h1>
+<div class="full_width_notice"><b><a href="{{ base_path }}learn/">Learn Perl
+Now!</a></b><br />
+And <a href="{{ base_path }}learn/get-a-job/">get a job</a> doing Perl.</div>
+<p><a href=
+    "http://www.addtoany.com/share_save?linkurl={{ share_link }}&amp;linkname=">
+<img src="{{ base_path }}images/share_save_171_16.png" width="171" height="16"
+class="bless" alt="Share/Bookmark" /></a></p>
+</main>
+</div>
+<h3 class="hide">Footer</h3>
+<footer id="footer">This work is <b>licensed</b> under the <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (or
+at your option any later version).<br />
+<b>Webmaster:</b> <a href="http://www.shlomifish.org/">Shlomi
+Fish</a> (<a href="mailto:shlomif@shlomifish.org">Email -
+shlomif@shlomifish.org</a>)<br />
+<b>Original Design:</b> <a href=
+"http://www.oswd.org/design/preview/id/2933">GoFlexiblePro</a> |
+Author: <a href="mailto:gw@actamail.com">G. Wolfgang</a> | <a href=
+"http://validator.w3.org/check?uri=referer" title=
+"Validate code as W3C XHTML 1.1 Strict Compliant">W3C XHTML 1.1</a>
+| <a href="http://jigsaw.w3.org/css-validator/" title=
+"Validate Style Sheet as W3C CSS 2.0 Compliant">W3C CSS
+2.0</a><br />
+<b>Hosted by:</b> <a href="http://hexten.net/">Hexten.net</a>.
+<script src="{{ base_path }}js/selfl.js"></script></footer>
+	</body>
+</html>
