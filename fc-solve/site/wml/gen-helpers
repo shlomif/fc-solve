@@ -79,7 +79,7 @@ my $generator = HTML::Latemp::GenMakeHelpers->new(
             'dest_dir'   => q/$(D)/,
         },
     ],
-    out_dir => $DIR,
+    out_dir                    => $DIR,
     filename_lists_post_filter => sub {
         my ($args) = @_;
         my $filenames = $args->{filenames};
@@ -184,6 +184,11 @@ foreach my $p ( ['PROD=1'], [] )
 {
     _exec( [ 'gmake', @$p, 'make-dirs', 'sects_cache' ], "sects_cache" );
 }
+
+require FreecellSolver::Site::News;
+
+my $news = FreecellSolver::Site::News->new();
+path("lib/front-page-news.htmlish")->spew_utf8( $news->render_front_page() );
 my $render = path('bin/render');
 $render->spew_utf8(
     path('bin/render-source.pl')->slurp_utf8() =~ s#^(?:use lib[^\n]+\n)+#

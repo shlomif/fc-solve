@@ -76,7 +76,7 @@ sub _init
 {
     my $self = shift;
 
-    $self->dir("../lib/feeds/fc-solve.blogspot/");
+    $self->dir( path(__FILE__)->parent(3) . "/feeds/fc-solve.blogspot/" );
     $self->num_on_front(7);
 
     $self->items( $self->calc_items() );

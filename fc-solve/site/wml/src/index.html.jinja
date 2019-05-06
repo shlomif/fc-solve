@@ -1,15 +1,17 @@
-#include "template.wml"
+{% set more_keywords = "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" %}
+{% extends "template.jinja" %}
+{% block title %}Freecell Solver{% endblock %}
+{% block body %}
 
-<latemp_subject "Freecell Solver" />
-<latemp_more_keywords "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" />
+
 
 <ul class="emphasis">
-<li><a href="$(PATH_TO_ROOT)js-fc-solve/text/">Try Freecell Solver Online!</a></li>
-<li><a href="$(PATH_TO_ROOT)download.html">Download Freecell Solver</a></li>
-<li><a href="$(PATH_TO_ROOT)links.html#other_solvers">Other Solvers</a></li>
+<li><a href="{{ base_path }}js-fc-solve/text/">Try Freecell Solver Online!</a></li>
+<li><a href="{{ base_path }}download.html">Download Freecell Solver</a></li>
+<li><a href="{{ base_path }}links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
-<h2_section id="about" title="About">
+{% call h2_section(id="about",title="About") %}
 <p>
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
@@ -21,9 +23,9 @@ Simon</a> boards. Freecell Solver is
 <a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free
 and open source software</a> freely available under the
 <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat License</a>.
-It can be <a href="$(PATH_TO_ROOT)js-fc-solve/text/">used online</a> (which
+It can be <a href="{{ base_path }}js-fc-solve/text/">used online</a> (which
 requires a modern enough web browser with JavaScript support),
-or <a href="$(PATH_TO_ROOT)download.html">downloaded</a> either as
+or <a href="{{ base_path }}download.html">downloaded</a> either as
 Microsoft Windows 32-bit binaries, or as the C source distribution.
 </p>
 
@@ -38,22 +40,16 @@ Solitaire implementations. A more detailed list of features can be found
 in the <a href="features.html"><b>Features List</b></a>.
 </p>
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="news" title="News">
-<:{
+{% call h2_section(id="news",title="News") %}
 
-    require FreecellSolver::Site::News;
-
-    my $news = FreecellSolver::Site::News->new();
-    use Text::WrapAsUtf8 qw/ print_utf8 /;
-    print_utf8 ( $news->render_front_page() );
-}:>
+{{ front_page_news }}
 
 <h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
-</h2_section>
+{% endcall %}
 
-<h2_section id="links" title="Links">
+{% call h2_section(id="links",title="Links") %}
 
 <ul>
 
@@ -122,7 +118,7 @@ Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 
 <li>
 <p>
-<a href="<get-var presentation_url />">A Presentation about Freecell Solver</a>
+<a href="{{ presentation_url }}">A Presentation about Freecell Solver</a>
 </p>
 </li>
 
@@ -130,4 +126,6 @@ Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 
 <h3 class="plain"><a href="links.html">More Links</a></h3>
 
-</h2_section>
+{% endcall %}
+
+{% endblock %}

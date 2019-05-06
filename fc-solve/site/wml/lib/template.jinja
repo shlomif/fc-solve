@@ -14,7 +14,7 @@
 <meta charset="utf-8"/>
 <meta name="author" content="Shlomi Fish"/>
 <meta name="description" content="{{ desc }}"/>
-<meta name="keywords" content="{{ common_keywords }}{{ more_keywords }}"/>
+<meta name="keywords" content="{{ common_keywords }}{% if more_keywords %}, {% endif %}{{ more_keywords }}"/>
 <link rel="stylesheet" href="{{ base_path }}style.css" type="text/css" media=
 "screen" title="Normal"/>
 <link rel="stylesheet" href="{{ base_path }}print.css" type="text/css" media=
