@@ -1,0 +1,8 @@
+{% macro js_requirejs() %}
+{% if production %}
+<script src="{{ base_path }}js/require.js"></script>
+{% else %}
+<script src="{{ base_path }}js/require--debug.js"></script>
+{% endif %}
+{% endmacro %}
+{% block body %}{% endblock %}

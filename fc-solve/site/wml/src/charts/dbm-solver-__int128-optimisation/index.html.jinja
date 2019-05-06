@@ -1,16 +1,15 @@
-#include "prelude.wml"
-<set-var latemp_html_standard="xhtml5" />
-#include "Inc/html5-shims.wml"
+{% extends "prelude.jinja" %}
+{% block body %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 <head>
     <title>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</title>
     <meta charset="utf-8" />
-    <link href="$(PATH_TO_ROOT)css/flot/examples/examples.css" rel="stylesheet" type="text/css" />
-    <js_script src="$(PATH_TO_ROOT)js/jq.js"></js_script>
-    <js_script src="$(PATH_TO_ROOT)js/jquery.flot.js"></js_script>
-    <js_requirejs />
+    <link href="{{ base_path }}css/flot/examples/examples.css" rel="stylesheet" type="text/css" />
+    <script src="{{ base_path }}js/jq.js"></script>
+    <script src="{{ base_path }}js/jquery.flot.js"></script>
+        {{ js_requirejs() }}
 </head>
 <body>
     <h1>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</h1>
@@ -1101,11 +1100,12 @@ OldIterations	OldTimeSinceStart	NewTimeSinceStart
 106175321	1510.94977021217	1052.10817599297
 </textarea>
     </div>
-<js_script>
+<script>
 requirejs.config({
-    baseUrl: '$(PATH_TO_ROOT)js',
+    baseUrl: '{{ base_path }}js',
     });
 require(["chart-using-flot--int128-opt"], function (chart) { });
-</js_script>
+</script>
 </body>
 </html>
+{% endblock %}
