@@ -1,9 +1,9 @@
-#include "template.wml"
-<latemp_subject "Freecell Solver's Code of Conduct and Diversity Statement" />
+{% extends "template.jinja" %}
+{% block title %}Freecell Solver's Code of Conduct and Diversity Statement{% endblock %}
+{% block body %}
 
-<define-tag diversity_statement>
-<preserve short_desc proj_name />
-<set-var %attributes />
+
+{% macro diversity_statement(short_desc,proj_name,server_country) %}
 <div class="diversity" id="diversity_statement">
 
 <h2 id="diversity">Diversity Statement</h2>
@@ -49,7 +49,7 @@ for people of all viewpoints and persuasions to come together, work on a
 project together and learn from each other. We believe in the broad spectrum
 of human experience. We believe that amazing things come when people from
 different worlds and world-views approach each other to create a conversation.
-Or a <get-var short_desc />.
+Or a {{ short_desc }}.
 </p>
 
 <p>
@@ -58,13 +58,13 @@ haiku, from the artist who's been doing this for decades to the person who just
 picked up a sketchbook last week. We support maximum freedom of creative
 expression, within the few restrictions we need to keep in order to ensure
 others can enjoy the fruits of our labor. In order to keep the licence of
-<get-var proj_name /> free you must ensure that any contribution you make to the
-<get-var proj_name /> project could be done legally and it is free from any
+{{ proj_name }} free you must ensure that any contribution you make to the
+{{ proj_name }} project could be done legally and it is free from any
 strings  attached especially by your employer or by your government. You
 should never upload files to either the version control server or the
 bug tracking system that cannot be legally redistributed from our
-server which is currently located in <get-var country />, or that requires a license
-incompatible with <get-var proj_name />'s Open Source license.
+server which is currently located in {{ country }}, or that requires a license
+incompatible with {{ proj_name }}'s Open Source license.
 </p>
 
 <p>
@@ -82,7 +82,7 @@ we get it wrong, we'll listen carefully and respectfully to you when you point
 it out to us, and we'll do our best to make good on our mistakes.
 </p>
 <p>
-We use our <get-var short_desc /> ourselves. We build it as we would like to
+We use our {{ short_desc }} ourselves. We build it as we would like to
 have a really good one but we also build it for the beginners and for people
 who are too busy to get involved in the development itself.
 </p>
@@ -90,17 +90,13 @@ who are too busy to get involved in the development itself.
 Come code with us.
 </p>
 </div>
-<restore short_desc proj_name />
-</define-tag>
+{% endmacro %}
 
-<diversity_statement
-    short_desc="Solitaire solving framework"
-    proj_name="Freecell Solver"
-    server_country="Germany"
-    />
+{{ diversity_statement(short_desc="Solitaire solving framework",proj_name="Freecell Solver",server_country="Germany") }}
 
-# TODO : Add later.
-<define-tag code_of_conduct>
+{# TODO : Add later.
+#}
+{% macro code_of_conduct() %}
 <div class="conduct" id="class_of_conduct">
 <h2>Code of Conduct</h2>
 <p>
@@ -128,4 +124,6 @@ as they are choosing Padre.
 </p>
 
 </div>
-</define-tag>
+{% endmacro %}
+
+{% endblock %}
