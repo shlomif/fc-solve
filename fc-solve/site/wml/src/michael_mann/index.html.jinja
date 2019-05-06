@@ -1,15 +1,17 @@
-#include "template.wml"
-<latemp_subject "Michael Mann’s Freecell Solver Work" />
+{% extends "template.jinja" %}
+{% block title %}Michael Mann’s Freecell Solver Work{% endblock %}
+{% block body %}
 
-<h2_section id="about" title="About">
+
+{% call h2_section(id="about",title="About") %}
 <p>
 Michael Mann converted an old version of Freecell Solver to C++ and
 added <a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>-generated
 documentation to it.
 </p>
-</h2_section>
+{% endcall %}
 
-<h2_section id="resources" title="Resources">
+{% call h2_section(id="resources",title="Resources") %}
 <ul>
 
 <li>
@@ -26,4 +28,6 @@ documentation to it.
 
 </ul>
 
-</h2_section>
+{% endcall %}
+
+{% endblock %}
