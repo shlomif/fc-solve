@@ -20,7 +20,7 @@ s/\$\(ROOT\)\//[% base_path %]/g;
 s&<(h[1-9]_section) ([^>]*)>&my ($t, $x)=($1,$2);my @x=$x=~/([^\s=]+=\"[^"]+\")/g; "{% call $t(".join(",",@x).") %}"&egms;
 s&</(h[1-9]_section)>&{% endcall %}&g;
 
-s&\A#include "template.wml"(?:#include[^\n]*\n|\n)*<latemp_subject "([^"]*)" />\n+&{% extends "template.jinja" %}
+s&\A#include "template.wml"(?:#include[^\n]*\n|\n)*<latemp_subject\s+"([^"]*)"\s*/>\n+&{% extends "template.jinja" %}
 {% block title %}${1}{% endblock %}
 {% block body %}
 \n\n&;

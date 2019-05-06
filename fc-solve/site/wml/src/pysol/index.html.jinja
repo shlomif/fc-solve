@@ -1,6 +1,7 @@
-#include "template.wml"
+{% extends "template.jinja" %}
+{% block title %}Freecell Solver PySol Integration{% endblock %}
+{% block body %}
 
-<latemp_subject "Freecell Solver PySol Integration"  />
 
 <h2 id="note">Recent Note (09-July-2009)</h2>
 
@@ -27,7 +28,7 @@ an excellent cross-platform Solitaire Suite written in Python.
 <table class="downloads">
 <tr>
 <td>
-<linktofile "FreecellSolver-0.2.0.tar.gz" />
+<a href="FreecellSolver-0.2.0.tar.gz">FreecellSolver-0.2.0.tar.gz</a>
 </td>
 <td>
 Python bindings for Freecell Solver. Can be built as an RPM. Requires
@@ -36,7 +37,7 @@ Freecell Solver.
 </tr>
 <tr>
 <td>
-<linktofile "pysol-4.82-fcs-patch-0.2.0.diff" />
+<a href="pysol-4.82-fcs-patch-0.2.0.diff">pysol-4.82-fcs-patch-0.2.0.diff</a>
 </td>
 <td>
 Patch for PySol 4.82 to enable Freecell Solver integration. PySol will use
@@ -67,3 +68,5 @@ a time. Plus, Simple Simon cannot work because Freecell Solver
 also moves non-homogeneous sequences as one, so it was not enabled at the
 moment.
 </p>
+
+{% endblock %}
