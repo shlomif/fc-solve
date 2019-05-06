@@ -12,7 +12,7 @@
 <link rel="stylesheet" href="{{ base_path }}print.css" type="text/css" media=
 "print"/>
 <link rel="shortcut icon" href="{{ base_path }}favicon.ico" type="image/x-icon"/>
-<link rel="next" href="./"/>
+(((((include "cache/combined/{{ host }}/{{ filename }}/html_head_nav_links")))))
 <script src="{{ base_path }}js/jquery-dev.js"></script>
 <script src="{{ base_path }}js/toggler.js"></script>
 <script src="{{ base_path }}js/toggle_sect.js"></script>
@@ -40,10 +40,9 @@ NavBar ⬈</button>
 {% block body %}{% endblock %}
 <br />
 <br />
-<p class="share"><a href=
-"http://www.addtoany.com/share_save?linkurl=http%3A%2F%2Ffc-solve.shlomifish.org%2Fcurrent-status.html&amp;linkname=">
-<img src="./images/share_save_171_16.png" width="171" height="16"
-class="bless" alt="Share/Bookmark" /></a><br /></p>
+<p class="share">
+    <a href="http://www.addtoany.com/share_save?linkurl=(((((chomp_inc='cache/combined/{{ host }}/{{ filename }}/page_url')))))&amp;linkname="><img src="{{ base_path or "." }}/images/share_save_171_16.png" width="171" height="16" class="bless" alt="Share/Bookmark" /></a><br />
+</p>
 </main>
 <div id="navbar_wrapper">
 <nav class="navbar" id="navbar">
@@ -54,77 +53,7 @@ menu</a></p>
 "images/fc-solve-logo.min.svg" alt="fc-solve icon: H C D S" class=
 "icon" /></a></div>
 <div id="nav_menu">
-<ul>
-<li class="open"><a href="./">Home</a></li>
-<li class="open"><a href="download.html">Downloads</a><br />
-<ul>
-<li class="open"><a href="don_woods.html">Don Woods'
-Solver</a></li>
-<li class="open"><a href="verify-code/" title=
-"Code to Verify the Solutions of Games">Verification</a></li>
-</ul>
-</li>
-<li class="open"><a href="js-fc-solve/" title=
-"Try Freecell Solver in your browser!">Online (WWW) Demos</a><br />
-<ul>
-<li class="open"><a href="js-fc-solve/text/" title=
-"An online solver with graphical and text previews">Solver</a></li>
-<li class="open"><a href="js-fc-solve/find-deal/">Find a deal’s
-number</a></li>
-</ul>
-</li>
-<li class="open"><a href="faq.html" title=
-"Frequently Asked Questions List">FAQ</a></li>
-<li class="open"><a href="docs/">Documents</a><br />
-<ul>
-<li class="open"><a href="arch_doc/" title=
-"Architecture Document">Arch Doc</a></li>
-<li class="open"><a href="michael_mann/" title=
-"Hypertext Cross-Reference">Old Doxygen</a></li>
-</ul>
-</li>
-<li class="open"><a href="links.html">Links</a><br />
-<ul>
-<li class="open"><a href="links.html#other_solvers">Other
-Solvers</a></li>
-<li class="open"><a href="links.html#front_ends">Front
-Ends</a></li>
-</ul>
-</li>
-<li class="open"><a href="features.html" title=
-"A List of Freecell Solver Features">Features</a></li>
-<li class="open"><a href="contribute/" title=
-"Information about contributing to Freecell Solver">Contribute</a><br />
-
-<ul>
-<li class="open"><a href="to-do.html" title=
-"A List of Major Tasks that can be Performed by Interesetd Developers">
-To Do List</a></li>
-<li class="open"><a href="code-of-conduct/" title=
-"Code of Conduct and Diversity Statement">Code of Conduct</a></li>
-<li class="open"><a href="getting-credit.html" title=
-"Getting or Giving Academic Credit for Working on Freecell Solver">Give
-or Get Academic Credit</a></li>
-</ul>
-</li>
-<li class="open"><a href="support.html" title=
-"Report bugs, get help, and get other support">Support</a></li>
-</ul>
-<ul>
-<li class="open"><a href="articles/">Articles and Reports</a><br />
-<ul>
-<li class="open"><a href="articles/how-we-benchmark/v1/">How We
-Benchmark Freecell Solver</a></li>
-<li class="open"><a href=
-"charts/fc-pro--4fc-deals-solvability--report/" title=
-"Report: The solvability statistics of the Freecell Pro 4-Freecells Deals">
-4FC Deals Solvability Statistics</a></li>
-</ul>
-</li>
-</ul>
-<ul>
-<li class="open"><a href="old-news/">Old News Items</a></li>
-</ul>
+(((((include "cache/combined/{{ host }}/{{ filename }}/main_nav_menu_html")))))
 </div>
 <p><a href="https://www.mozilla.org/en-US/firefox/new/" class=
 "bless"><img class="bless" alt="Get Firefox!" title=

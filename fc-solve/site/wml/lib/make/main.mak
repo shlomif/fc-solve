@@ -158,11 +158,12 @@ $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 
 PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
 
+jinja_rend := bin/jinja-render.py
 jinja_bases := $(shell cat lib/make/jinja.txt)
 dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
 
-$(dest_jinjas): lib/_template.jinja
-	python3 bin/jinja-render.py
+$(dest_jinjas): $(jinja_rend) lib/template.jinja
+	python3 $(jinja_rend)
 	$(PROCESS_ALL_INCLUDES) $(dest_jinjas)
 
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
@@ -352,7 +353,7 @@ ALL_HTACCESSES = $(D)/.htaccess $(D)/js-fc-solve/automated-tests/.htaccess $(D)/
 GEN_SECT_NAV_MENUS = ./bin/gen-sect-nav-menus.pl
 T2_CACHE_ALL_STAMP = lib/cache/STAMP.one
 $(T2_CACHE_ALL_STAMP): $(GEN_SECT_NAV_MENUS) $(FACTOIDS_NAV_JSON) $(ALL_SUBSECTS_DEPS)
-	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS)
+	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS) $(jinja_bases)
 	touch $@
 
 make-dirs: $(D) $(SUBDIRS)

@@ -25,4 +25,8 @@ for line in open('lib/make/jinja.txt', 'rt'):
             "Baker's Game, Seahaven Towers, Shlomi Fish, games",
             desc="Freecell Solver " +
             "- a Program and a Library written in ANSI C for" +
-            " Solving Games of Freecell and similar Solitaire Variants"))
+            " Solving Games of Freecell and similar Solitaire Variants",
+            filename=fn,
+            host='fc-solve',
+            base_path="../"*len([x for x in fn if x == '/'])
+            ))

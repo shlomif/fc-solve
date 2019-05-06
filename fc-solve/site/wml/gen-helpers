@@ -178,6 +178,7 @@ EOF
     )
 );
 io()->file('Makefile')->print("include $DIR/main.mak\n");
+path("$DIR/jinja.txt")->spew_raw( join "\n", @jinja, "" );
 
 foreach my $p ( ['PROD=1'], [] )
 {
@@ -189,5 +190,4 @@ $render->spew_utf8(
     "use lib \"" . (`wml-params-conf --show-privlib` =~ s%[\n\r]+\z%%r) . "\";\n";
     #emrs
 );
-path("$DIR/jinja.txt")->spew_raw( join "\n", @jinja, "" );
 $render->chmod(0755);
