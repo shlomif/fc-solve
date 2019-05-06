@@ -1,9 +1,11 @@
+{% extends "prelude.jinja" %}
 {% macro h2_section(id,title) %}
 <section class="h2">
     <header><h2 id="{{ id }}">{{ title }}</h2></header>
     {{ caller() }}
 </section>
 {% endmacro %}
+{% block prelude_body %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
@@ -106,3 +108,4 @@ Fish</a> (Email: <a href=
 </footer>
 </body>
 </html>
+{% endblock %}
