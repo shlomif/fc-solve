@@ -1,15 +1,16 @@
-#include "template.wml"
+{% extends "template.jinja" %}
+{% block title %}Contribute to Freecell Solver{% endblock %}
+{% block body %}
 
-<latemp_subject "Contribute to Freecell Solver" />
 
-<h2_section id="about" title="About">
+{% call h2_section(id="about",title="About") %}
 <p>
 This page is intended to provide information about how to <b>contribute</b>
 to Freecell Solver.
 </p>
-</h2_section>
+{% endcall %}
 
-<h2_section id="vcs-version" title="Latest Version from Git (= the Version Control System)">
+{% call h2_section(id="vcs-version",title="Latest Version from Git (= the Version Control System)") %}
 
 <ul>
 <li>
@@ -23,9 +24,9 @@ up-and-running.
 </li>
 </ul>
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="coding-conventions" title="Coding Conventions">
+{% call h2_section(id="coding-conventions",title="Coding Conventions") %}
 
 <p>
 One can read the
@@ -34,4 +35,6 @@ conventions</a> and contribution guidelines. Please follow them when sending
 a patch or pull-request.
 </p>
 
-</h2_section>
+{% endcall %}
+
+{% endblock %}
