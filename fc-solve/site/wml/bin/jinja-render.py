@@ -18,6 +18,7 @@ env = Environment(
         loader=FileSystemLoader(['./src', './lib'])
         )
 news1 = open('lib/front-page-news.htmlish', 'rt').read()
+old_news = open('lib/old-news.htmlish', 'rt').read()
 for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
     template = env.get_template(fn+'.jinja')
@@ -37,6 +38,7 @@ class="try_main">Try</span><br/>
             template.render(
                 production=production,
                 front_page_news=news1,
+                old_news=old_news,
                 base_path=base_path,
                 common_keywords="Freecell, Freecell Solver, solvers, " +
                 "AI, artificial intelligence, solitaire, Simple Simon, " +
