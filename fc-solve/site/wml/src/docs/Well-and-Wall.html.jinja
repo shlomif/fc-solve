@@ -1,6 +1,7 @@
-#include "template.wml"
+{% extends "template.jinja" %}
+{% block title %}Freecell Solver - “The Well and the Wall”{% endblock %}
+{% block body %}
 
-<latemp_subject "Freecell Solver - “The Well and the Wall”" />
 
 <h2 id="prologue">Prologue</h2>
 
@@ -480,3 +481,5 @@ screenplay.
 </ol>
 </li>
 </ul>
+
+{% endblock %}
