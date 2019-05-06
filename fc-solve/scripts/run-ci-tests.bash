@@ -22,5 +22,14 @@ which dbtoepub
 export DBTOEPUB="/usr/bin/ruby $(which dbtoepub)"
 export AVOID_NUM=4
 export DOCBOOK5_XSL_STYLESHEETS_PATH=/usr/share/xml/docbook/stylesheet/docbook-xsl-ns
+# For https://reproducible-builds.org/ and better caching.
+enable_reproducible_builds()
+{
+    export REPRODUCIBLE_BUILDS=1
+    slightly_wrong_gcc_flag_see_man_gcc="-frandom-seed=1977";
+    export CFLAGS="$slightly_wrong_gcc_flag_see_man_gcc"
+}
+
+enable_reproducible_builds
 cd fc-solve/source
 perl ../scripts/multi_config_tests.pl 2>&1 | zenfilter --count-step=500 --last=500 --filter='^Running:\s*\{' --suppress-last-on="All tests successful\\.\\n*\\Z"
