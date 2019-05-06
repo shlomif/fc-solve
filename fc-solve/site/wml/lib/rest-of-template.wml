@@ -36,7 +36,7 @@ Please consider
 
 <latemp_top_left_corner_logo>
 <div class="center">
-<a href="$(PATH_TO_ROOT)"
+<a href="<or "$(PATH_TO_ROOT)" "." />"
     title="Freecell Solver’s Homepage"><img
     src="$(PATH_TO_ROOT)images/fc-solve-logo.min.svg"
     alt="fc-solve icon: H C D S"
