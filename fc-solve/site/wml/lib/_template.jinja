@@ -23,40 +23,27 @@
 
 <body{{ body_params }}>
 
-<header id="header">
-<div class="site-name" id="js-site-name">
-<h1><a href="{{ base_path }}">Perl Beginners' Site</a></h1>
-</div>
-<div class="site-slogan" id="js-site-slogan">Perl - because programming should be fun.</div>
+<div class="header" id="header"></div>
+<div id="faux">
+<p class="invisible"><a href="#main">Go to main content</a></p>
+<p class="invisible"><a href="#navbar">Go to the navigation</a></p>
+<div id="container-all"><button id="show_navbar" class="on">Hide
+NavBar ⬈</button>
+<main id="main">
+<header>
+<h1>{{ self.title() }}</h1>
+<div class="try_online_wrapper"><a class="solve_online_button" id="try_online_link" href="{{ base_path }}js-fc-solve/text/"><span class="try_main">Try</span><br/>
+<span class="try_main">Online</span><br/>
+<br/>
+<span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a></div>
 </header>
-
-<div class="nav-main">
-<h3 class="hide">Breadcrumbs Trail</h3>
-<p class="breadcrumbs">{{ leading_path_string }}</p>
-<h3 class="hide">Global Navigation</h3>
-<ul class="about-links">
-<li><a href="{{ base_path }}about.html">About Us</a></li>
-<li><a href="{{ base_path }}contact/">Contact</a></li>
-</ul>
-</div>
-<div id="page-container">
-<h3 class="hide">Main Navigation</h3>
-<div id="left-sidebar">
-{{ nav_menu_html }}
-<object data=
-"https://duckduckgo.com/search.html?width=100&amp;site=perl-begin.org&amp;prefill=Search%20DuckDuckGo"
-type="text/html"
-style="overflow:hidden;margin:0;padding:0;width:160px;height:40px"
-></object></div>
-<h3 class="hide">Content</h3>
-<main id="content">
-<h1>>{{ self.title() }}</h1>
 {% block body %}{% endblock %}
 <p><a href=
     "http://www.addtoany.com/share_save?linkurl={{ share_link }}&amp;linkname=">
 <img src="{{ base_path }}images/share_save_171_16.png" width="171" height="16"
 class="bless" alt="Share/Bookmark"/></a></p>
 </main>
+</div>
 </div>
 <h3 class="hide">Footer</h3>
 <footer id="footer">This work is <b>licensed</b> under the <a rel="license" href="http://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0 Unported License</a> (or
