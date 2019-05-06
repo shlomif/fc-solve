@@ -108,6 +108,7 @@
 /fc-solve/site/wml/lib/for-node/js/dist/fc_solve_find_index_s2ints.js
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver.wasm
+/fc-solve/site/wml/lib/front-page-news.htmlish
 /fc-solve/site/wml/lib/h_sections.wml
 /fc-solve/site/wml/lib/jquery/jquery-phoenix/
 /fc-solve/site/wml/lib/jquery/qunit/
@@ -118,8 +119,10 @@
 /fc-solve/site/wml/lib/make/docbook/sf-homepage-docbook-gen.tt
 /fc-solve/site/wml/lib/make/docbook/sf-homepage-docbooks-generated.mak
 /fc-solve/site/wml/lib/make/include.mak
+/fc-solve/site/wml/lib/make/jinja.txt
 /fc-solve/site/wml/lib/make/rules.mak
 /fc-solve/site/wml/lib/make/shlomif_common.mak
+/fc-solve/site/wml/lib/old-news.htmlish
 /fc-solve/site/wml/lib/out-babel/js/*.js
 /fc-solve/site/wml/lib/pyjs/find-index-s2ints/output/
 /fc-solve/site/wml/lib/repos/Solitairey/
