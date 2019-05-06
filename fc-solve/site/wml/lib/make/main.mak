@@ -161,10 +161,11 @@ PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
 jinja_rend := bin/jinja-render.py
 jinja_bases := $(shell cat lib/make/jinja.txt)
 dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
+prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
 
 $(dest_jinjas): $(jinja_rend) lib/template.jinja
 	python3 $(jinja_rend)
-	$(PROCESS_ALL_INCLUDES) $(dest_jinjas)
+	$(PROCESS_ALL_INCLUDES) $(dest_jinjas) $(prod_dest_jinjas)
 
 $(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
 	$(call SRC_INCLUDE_WML_RENDER) && $(PROCESS_ALL_INCLUDES) '$@'

@@ -31,21 +31,23 @@ class="try_main">Try</span><br/>
 <br/>
 <span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a></div>
 """.format(base_path)
-    open('dest/'+fn, 'wt').write(
-        template.render(
-            base_path=base_path,
-            common_keywords="Freecell, Freecell Solver, solvers, " +
-            "AI, artificial intelligence, solitaire, Simple Simon, " +
-            "Baker's Game, Seahaven Towers, Shlomi Fish, games",
-            desc="Freecell Solver " +
-            "- a Program and a Library written in ANSI C for" +
-            " Solving Games of Freecell and similar Solitaire Variants",
-            filename=fn,
-            host='fc-solve',
-            try_online_wrapper=try_online_wrapper,
-            solitairey='<a href="https://foss-card-games.github.io/' +
-            'Solitairey/">Solitairey</a>',
-            presentation_url="http://www.shlomifish.org/" +
-            "lecture/Freecell-Solver/",
-            doxygen_url=base_path + "michael_mann/",
-            ))
+    for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
+        open(dest+'/'+fn, 'wt').write(
+            template.render(
+                production=production,
+                base_path=base_path,
+                common_keywords="Freecell, Freecell Solver, solvers, " +
+                "AI, artificial intelligence, solitaire, Simple Simon, " +
+                "Baker's Game, Seahaven Towers, Shlomi Fish, games",
+                desc="Freecell Solver " +
+                "- a Program and a Library written in ANSI C for" +
+                " Solving Games of Freecell and similar Solitaire Variants",
+                filename=fn,
+                host='fc-solve',
+                try_online_wrapper=try_online_wrapper,
+                solitairey='<a href="https://foss-card-games.github.io/' +
+                'Solitairey/">Solitairey</a>',
+                presentation_url="http://www.shlomifish.org/" +
+                "lecture/Freecell-Solver/",
+                doxygen_url=base_path + "michael_mann/",
+                ))
