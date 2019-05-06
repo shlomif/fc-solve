@@ -17,6 +17,8 @@ qr#(?:perl_for_newbies_entry|modern_perl_entry|beginning_perl_entry|cpan_dist|pd
 s#<($re)>#[%- WRAPPER $1 -%]#g;
 s#</$re>#[%- END -%]#g;
 s/\$\(ROOT\)\//[% base_path %]/g;
+s&<(h[1-9]_section) ([^>]*)>&my @x=$2=~/([^\s=]+=\"[^"]+\")/g; "{% call $1(".join(",",@x).") %}"&egms;
+s&</(h[1-9]_section)>&{% endcall %}&g;
 
 s&\A#include "template.wml"(?:#include[^\n]*\n|\n)*<latemp_subject "([^"]*)" />\n+&{% extends "template.jinja" %}
 {% block title %}${1}{% endblock %}
