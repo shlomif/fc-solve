@@ -158,9 +158,15 @@ $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 
 PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
 
-$(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
+jinja_bases := $(shell cat lib/make/jinja.txt)
+dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
+
+$(dest_jinjas): lib/_template.jinja
 	python3 bin/jinja-render.py
-	$(call SRC_INCLUDE_WML_RENDER) && $(PROCESS_ALL_INCLUDES) '$@' `< lib/make/jinja.txt perl -lpE 's#^#dest/#'`
+	$(PROCESS_ALL_INCLUDES) $(dest_jinjas)
+
+$(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
+	$(call SRC_INCLUDE_WML_RENDER) && $(PROCESS_ALL_INCLUDES) '$@'
 
 
 $(IMAGES): $(D)/% : src/%
@@ -422,4 +428,4 @@ real_all: \
 	$(D)/dondorf $(D)/green.jpg $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/js $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/loading.gif $(D)/layouts
 
 real_all: \
-	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
+	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(dest_jinjas)
