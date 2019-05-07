@@ -182,7 +182,8 @@ path("$DIR/jinja.txt")->spew_raw( join "\n", @jinja, "" );
 
 foreach my $p ( ['PROD=1'], [] )
 {
-    _exec( [ 'gmake', @$p, 'make-dirs', 'sects_cache' ], "sects_cache" );
+    _exec( [ 'gmake', @$p,   'make-dirs', 'sects_cache' ], "sects_cache" );
+    _exec( [ 'gmake', '-j8', @$p,         'chart-tsvs' ],  "TSVs" );
 }
 
 require FreecellSolver::Site::News;
@@ -198,7 +199,7 @@ $render->spew_utf8(
 );
 $render->chmod(0755);
 use FreecellSolver::GenDealsCharts1;
-open my $out, '>', 'lib/4fc-deals-charts.htmlish';
+open my $out,  '>', 'lib/4fc-deals-charts.htmlish';
 open my $out2, '>', 'lib/4fc-deals-charts2.htmlish';
 select $out;
 
