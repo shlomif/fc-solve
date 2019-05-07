@@ -24,6 +24,8 @@ s&\A#include "template.wml"(?:#include[^\n]*\n|\n)*<latemp_subject\s+"([^"]*)"\s
 {% block title %}${1}{% endblock %}
 {% block body %}
 \n\n&;
+s&^#include "Inc/db_formats.wml"$&{% import "Inc/db_formats.jinja" as docbook %}&gms;
+s&<docbook_formats docbase="([^"]+)" source_href="([^"]+)" */>&{{ docbook.docbook_formats(docbase="$1", source_href="$2") }}&g;
 
 s/\$\(PATH_TO_ROOT\)/{{ base_path }}/g;
 $_ .= "\n{% endblock %}\n";
