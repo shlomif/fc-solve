@@ -1,18 +1,22 @@
-#include "template.wml"
-#include "Inc/js_fc_solve.wml"
+{% extends "template.jinja" %}
+{% import "Inc/js_fc_solve.jinja" as jsfcs %}
+{% block title %}Freecell Deal Finder{% endblock %}
+{% block page_extra_head_elements %}
+{{ jsfcs.page_extra_head_elements(base_path) }}
+{% endblock %}
+{% block body %}
 
-<latemp_subject "Freecell Deal Finder" />
 
-<define-tag desc>
+{% macro gen_desc() %}
 <p>
 Find the deal number of a Microsoft
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> deal, a kind of
 card solitaire game. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
-</define-tag>
+{% endmacro %}
 
-<emscripten_common incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)" subject="Deal Finder" />
+{{ jsfcs.emscripten_common(base_path=base_path, incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)",subject="Deal Finder",desc=gen_desc()) }}
 
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
@@ -26,16 +30,16 @@ card solitaire game. <span class="enable_js">Please enable
 <div id="fc_solve_tabs__ms" class="tab">
 
 <p class="first">
-Input a Freecell layout in the <a href="$(PATH_TO_ROOT)docs/distro/README.html">fc-solve format</a>:<br />
+Input a Freecell layout in the <a href="{{ base_path }}docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
 
-<stdin_and_buttons main_id="run_do_solve" main_text="Find!"/>
+{{ jsfcs.stdin_and_buttons(main_id="run_do_solve",main_text="Find!")}}
 
-</div> ;;; end of fcs_common
+</div>
 
-</div> ;;; end of fc_solve_tabs__any_board
+</div>
 
 <div id="fc_solve_tabs__numbered_deal" class="tab">
 
@@ -48,7 +52,7 @@ Input a Freecell layout in the <a href="$(PATH_TO_ROOT)docs/distro/README.html">
 <div class="fcs_common">
 </div>
 
-</div> ;;; end of fc_solve_tabs__numbered_deal
+</div>
 
 </div>
 
@@ -58,7 +62,7 @@ Input a Freecell layout in the <a href="$(PATH_TO_ROOT)docs/distro/README.html">
 
 </p>
 
-<fc_solve_bookmark__form />
+{{ jsfcs.fc_solve_bookmark__form() }}
 
 <h2 id="how_to_use">How to Use</h2>
 
@@ -78,7 +82,7 @@ Enjoy!
 
 <h2 id="technology">Technology</h2>
 
-<fc_solve_jsfcs__credits__common />
+{{ jsfcs.fc_solve_jsfcs__credits__common()}}
 <li>
 <p>
 <a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
@@ -129,3 +133,5 @@ and he is maintaining it.
 </li>
 
 </ul>
+
+{% endblock %}
