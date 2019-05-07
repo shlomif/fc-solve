@@ -2,7 +2,8 @@
 
 ## Dependencies:
 
-1. [Latemp](https://bitbucket.org/shlomif/latemp) and
+1. [Latemp](https://github.com/thewml/latemp) , python3
+and [Jinja2](http://jinja.pocoo.org/),
 [Website Meta Language](https://bitbucket.org/shlomif/website-meta-language) .
 2. [Emscripten](https://kripken.github.io/emscripten-site/)
 3. [CMake](https://cmake.org/)
