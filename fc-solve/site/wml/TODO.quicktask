@@ -28,7 +28,7 @@ COMPLETED TASKS:
         * In order to facilitate debugging and sharing.
         * DONE [Wed 2013-01-16]
     - Mention the JS/jQuery/CSS libraries that we are using
-        * On src/js-fc-solve/text/index.html.wml
+        * On src/js-fc-solve/text/index.html.jinja
         * Added [Sat 2013-01-12]
         * DONE [Wed 2013-01-16]
 
