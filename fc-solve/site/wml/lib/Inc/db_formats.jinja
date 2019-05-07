@@ -1,0 +1,41 @@
+{% macro h2_section(id,title) %}
+<section class="h2">
+    <header><h2 id="{{ id }}">{{ title }}</h2></header>
+    {{ caller() }}
+</section>
+{% endmacro %}
+{% macro docbook_formats(docbase,source_href) %}
+
+{% call h2_section(id="formats",title="Formats") %}
+
+<ul>
+
+<li>
+<a href="{{ docbase }}/">HTML (read online)</a>
+</li>
+
+<li>
+<a href="{{ docbase }}.raw.html">HTML on one page</a>
+</li>
+
+<li>
+<a href="{{ docbase }}.pdf">Acrobat Reader (PDF)</a>
+</li>
+
+<li>
+<a href="{{ docbase }}.epub">EPUB</a>
+</li>
+
+<li>
+<a href="{{ docbase }}.rtf">Microsoft Word RTF</a>
+</li>
+
+<li>
+<a href="{{ source_href }}">The Original DocBook</a>
+</li>
+
+</ul>
+
+{% endcall %}
+
+{% endmacro %}
