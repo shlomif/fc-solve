@@ -7,10 +7,11 @@ rebuild()
         time git clean -dxf .
         time bash -x bin/install-npm-deps.sh
         time ./gen-helpers
-        time gmake fastrender
-        time gmake PROD=1 fastrender
-        time gmake PROD=1 all
-        time gmake test
+        time gmake serial_run
+        time gmake -j8 fastrender
+        time gmake -j8 PROD=1 fastrender
+        time gmake -j8 PROD=1 all
+        time gmake -j8 test
     )
 }
 rebuild
