@@ -1,0 +1,29 @@
+{% extends "template.jinja" %}
+{% block title %}Online Freecell solver (Automated tests){% endblock %}
+{% block page_extra_head_elements %}
+<link rel="stylesheet" type="text/css" href="{{ base_path }}css/qunit.css" />
+<script src="{{ base_path }}js/jquery.querystring.js"></script>
+{{ jquery_ui_head_elements() }}
+{{ js_requirejs() }}
+<link rel="stylesheet" type="text/css" href="{{ base_path }}web-fc-solve.css" />
+{% endblock %}
+{% block body %}
+
+
+
+<h2 id="about">About</h2>
+
+
+<h1 id="qunit-header">QUnit example</h1>
+<div id="qunit-testrunner-toolbar"></div>
+<h2 id="qunit-userAgent">User Agent</h2>
+<ol id="qunit-tests"></ol>
+<div id="qunit-fixture">test markup, will be hidden</div>
+<script>
+requirejs.config({
+    baseUrl: '{{ base_path }}js',
+    });
+require(["auto-tests-driver"], function (foo) {foo();});
+</script>
+
+{% endblock %}
