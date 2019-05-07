@@ -46,6 +46,8 @@
 /fc-solve/site/wml/bin/translate-Vered-XML
 /fc-solve/site/wml/dest
 /fc-solve/site/wml/dest-prod
+/fc-solve/site/wml/lib/4fc-deals-charts.htmlish
+/fc-solve/site/wml/lib/4fc-deals-charts2.htmlish
 /fc-solve/site/wml/lib/HTML/Latemp/DocBook/DocsList.pm
 /fc-solve/site/wml/lib/HTML/Latemp/DocBook/EndFormats.pm
 /fc-solve/site/wml/lib/HTML/Latemp/DocBook/GenMake.pm
