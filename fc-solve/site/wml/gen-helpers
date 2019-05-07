@@ -197,3 +197,11 @@ $render->spew_utf8(
     #emrs
 );
 $render->chmod(0755);
+use FreecellSolver::GenDealsCharts1;
+open my $out, '>', 'lib/4fc-deals-charts.htmlish';
+select $out;
+
+chdir("src");
+FreecellSolver::GenDealsCharts1->gen_summary_table( { try2 => 1 } );
+FreecellSolver::GenDealsCharts1->gen_progress_charts( { try2 => 1 } );
+select STDOUT;

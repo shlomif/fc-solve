@@ -1,25 +1,23 @@
-#include "template.wml"
-#include "xhtml/1.x/std/toc.wml"
+{% extends "template.jinja" %}
+{% block title %}Report: The solvability statistics of the Freecell Pro 4-Freecells Deals{% endblock %}
+{% block body %}
 
-<latemp_subject "Report: The solvability statistics of the Freecell Pro 4-Freecells Deals" />
 
-<page_extra_head_elements>
-<js_script src="$(PATH_TO_ROOT)js/jquery.flot.js"></js_script>
-<js_requirejs />
-</page_extra_head_elements>
+{% block page_extra_head_elements %}
+<script src="{{ base_path }}js/jquery.flot.js"></script>
+{{ js_requirejs() }}
+{% endblock %}
 
-<js_script>
+<script>
 requirejs.config({
-    baseUrl: '$(PATH_TO_ROOT)js',
+    baseUrl: '{{ base_path }}js',
     });
 require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
-</js_script>
-
-<h2* id="toc">Table of contents</h2*>
+</script>
 
 <toc />
 
-<h2_section id="intro" title="Introduction">
+{% call h2_section(id="intro",title="Introduction") %}
 
 <p>
 <b>Publishing Date:</b> 12 December 2016.
@@ -70,9 +68,9 @@ to be impossible as well, thus yielding no remaining intractable deals in
 the FreeCell Pro range.
 </p>
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="conclusions" title="Conclusions">
+{% call h2_section(id="conclusions",title="Conclusions") %}
 
 <p>
 Out of the 8.6 milliard Freecell Pro deals, there are 102,075 ones that
@@ -90,7 +88,7 @@ These deals are: 14720822, 647519280, 3015622123, 5705339228, 7273316239 and
 
 </p>
 
-<h3_section id="reflections" title="Some Reflections">
+{% call h3_section(id="reflections",title="Some Reflections") %}
 
 <p>
 One surprising fact is that solving 4-freecells deals was
@@ -103,13 +101,13 @@ magnitude. Perhaps this can be explained by the fact that many more deals
 are winnable using 4 freecells.
 </p>
 
-</h3_section>
+{% endcall %}
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="charts" title="Charts">
+{% call h2_section(id="charts",title="Charts") %}
 
-<h3_section id="queue-items" title="Queue Items Per Iterations for Each of the Deals">
+{% call h3_section(id="queue-items",title="Queue Items Per Iterations for Each of the Deals") %}
 
 <p>
 <b>Note:</b> the depth_dbm_fc_solver uses a variation on
@@ -119,22 +117,17 @@ count of states. The x-axis - "Iterations" roughly corresponds to time while
 the y-axis, corresponds to the number of states in the queue.
 </p>
 
-<h4_section id="iters-summary-table" title="Iterations Summary Table">
+{% call h4_section(id="iters-summary-table",title="Iterations Summary Table") %}
 
-<:
-{
-use FreecellSolver::GenDealsCharts1;
-FreecellSolver::GenDealsCharts1->gen_summary_table({try2 => 1});
-FreecellSolver::GenDealsCharts1->gen_progress_charts({try2 => 1});
-}
-:>
-</h4_section>
+{{ charts1 }}
 
-</h3_section>
+{% endcall %}
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="future_directions" title="Future Directions">
+{% endcall %}
+
+{% call h2_section(id="future_directions",title="Future Directions") %}
 
 <p>
 The version of the depth_dbm_fc_solver that was used for solving the intractable
@@ -172,9 +165,9 @@ solvers just move cards on top of each others and into empty slots using
 reversible moves. We wish to investigate some potential prunes to detect such
 terminal positions and avoid traversing them further.
 </p>
-</h2_section>
+{% endcall %}
 
-<h2_section id="links" title="Links and References">
+{% call h2_section(id="links",title="Links and References") %}
 
 <ul>
 
@@ -206,17 +199,19 @@ repository containing the same lists of impossible deals</a>
 
 <li>
 <p>
-<a href="$(PATH_TO_ROOT)charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
+<a href="{{ base_path }}charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
 </p>
 </li>
 
 <li>
 <p>
-<a href="$(PATH_TO_ROOT)faq.html#what_are_ms_deals">Explanation of what are
+<a href="{{ base_path }}faq.html#what_are_ms_deals">Explanation of what are
 the Microsoft deals</a> - entry in the Freecell Solver FAQ.
 </p>
 </li>
 
 </ul>
 
-</h2_section>
+{% endcall %}
+
+{% endblock %}

@@ -20,6 +20,7 @@ env = Environment(
         )
 news1 = open('lib/front-page-news.htmlish', 'rt').read()
 old_news = open('lib/old-news.htmlish', 'rt').read()
+charts1 = open('lib/4fc-deals-charts.htmlish', 'rt').read()
 tocs = []
 for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
@@ -40,6 +41,7 @@ class="try_main">Try</span><br/>
                 production=production,
                 front_page_news=news1,
                 old_news=old_news,
+                charts1=charts1,
                 base_path=base_path,
                 common_keywords="Freecell, Freecell Solver, solvers, " +
                 "AI, artificial intelligence, solitaire, Simple Simon, " +
