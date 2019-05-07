@@ -312,7 +312,7 @@ $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
 	perl ../../scripts/convert-dbm-fc-solver-log-to-reduced-tsv.pl "$<" > "$@"
 
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
-	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] % 1_000_000 == 0))' < "$<" > "$@"
+	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] eq "0") or ($$F[0] =~ /000000\z/))' < "$<" > "$@"
 
 $(Solver_Dest_Dir)/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.asciidoc
 
