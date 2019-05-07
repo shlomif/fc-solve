@@ -198,6 +198,9 @@ $render->spew_utf8(
     #emrs
 );
 $render->chmod(0755);
+use FreecellSolver::ExtractGames;
+path("lib/games.htmlish")
+    ->spew_utf8( FreecellSolver::ExtractGames->new->calc_html );
 use FreecellSolver::GenDealsCharts1;
 open my $out,  '>', 'lib/4fc-deals-charts.htmlish';
 open my $out2, '>', 'lib/4fc-deals-charts2.htmlish';

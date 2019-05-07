@@ -1,38 +1,37 @@
-#include "template.wml"
-#include "Inc/js_fc_solve.wml"
+{% extends "template.jinja" %}
+{% import "Inc/js_fc_solve.jinja" as jsfcs %}
+{% block title %}Online Freecell solver{% endblock %}
+{% block page_extra_head_elements %}
+{{ jsfcs.page_extra_head_elements(base_path) }}
+{% endblock %}
+{% block body %}
 
-<latemp_subject "Online Freecell solver" />
 
-<define-tag desc>
+
+{% macro gen_desc() %}
 <p>
 An online solver for
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
 card solitaire game, and <a href="#other_games">several related solitaire games</a>. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
-</define-tag>
+{% endmacro %}
 
-<define-tag emscripten_common>
-<preserve incs subject />
-<set-var %attributes />
-<emscripten_common__header />
-<js_script>
-<set_up_requirejs />
+{% macro emscripten_common(incs, subject) %}
+{{ jsfcs.emscripten_common__header(base_path, subject, gen_desc()) }}
+<script>
+{{ jsfcs.set_up_requirejs(base_path)}}
 require(['./solver-freecell'], function (solver) {
-<when>
-    console.log("loaded solver-freecell");
-</when>
-    <get-var incs /> {
-    <set_up_tabs />
+    {{ incs }} {
+    {{ jsfcs.set_up_tabs()}}
     web_fc_solve_ui.set_up(solver);
     $( "#output_tabs" ).tabs();
 });
 });
-</js_script>
+</script>
 
-<restore incs subject />
-</define-tag>
-<emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell)" subject="Solver" />
+{% endmacro %}
+{{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell)" , subject="Solver" ) }}
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>
@@ -50,7 +49,7 @@ require(['./solver-freecell'], function (solver) {
 
 <div class="fcs_common">
 
-<stdin_and_buttons main_id="run_do_solve" main_text="Solve!"/>
+{{ jsfcs.stdin_and_buttons(main_id="run_do_solve",main_text="Solve!")}}
 <br />
 <label for="preset">Solving method:</label>
 <select id="preset" class="phoenix">
@@ -60,20 +59,20 @@ require(['./solver-freecell'], function (solver) {
 <option value="default">Default</option>
 </select>
 
-</div> ;;; end of fcs_common
+</div>
 
-</div> ;;; end of fc_solve_tabs__numbered_deal
+</div>
 
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-Input a card patience/solitaire layout in the <a href="$(PATH_TO_ROOT)docs/distro/README.html">fc-solve format</a>:<br />
+Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
 </div>
 
-</div> ;;; end of fc_solve_tabs__any_board
+</div>
 
 </div>
 
@@ -93,41 +92,35 @@ Input a card patience/solitaire layout in the <a href="$(PATH_TO_ROOT)docs/distr
 </div>
 
 <div id="fcs_advanced">
-<:{
-use FreecellSolver::ExtractGames;
-print FreecellSolver::ExtractGames->new->calc_html;
-}:>
+{{ games1 }}
 <br />
 <label for="string_params">String Parameters:</label><br />
 <textarea class="emscripten phoenix" id="string_params" cols="50" rows="15"></textarea>
 <p>
 (Format as a preset file, with backslashes at the end of lines. See the
-<a href="$(PATH_TO_ROOT)docs/">online documentation</a> for information regarding syntax.)
+<a href="{{ base_path }}docs/">online documentation</a> for information regarding syntax.)
 </p>
 </div>
 
-<define-tag output_opt>
-<preserve sel />
-<set-var %attributes />
-<input name="unicode_suits" id="unicode_suits__<get-var id_base />" type="radio" title="<get-var title />" class="phoenix" value="<get-var value />" <when <get-var sel /> > checked="checked"</when> /><label for="unicode_suits__<get-var id_base />"><get-var title /></label><br />
-<restore sel />
-</define-tag>
+{% macro output_opt(id_base, value, title, sel=false) %}
+<input name="unicode_suits" id="unicode_suits__{{ id_base }}" type="radio" title="{{ title }}" class="phoenix" value="{{ value }}" {%if sel %} checked="checked"{%endif%}/><label for="unicode_suits__{{ id_base }}">{{ title }}</label><br />
+{% endmacro %}
 
-<define-tag output_controls>
+{% macro output_controls() %}
 <div class="out_controls">
 
 <input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
 <fieldset>
 <legend>Cards display</legend>
-<output_opt id_base="ascii" value="0" title="ASCII" sel="true" />
-<output_opt id_base="unisuits" value="1" title="Unicode Suits" />
-<output_opt id_base="unicards" value="2" title="Unicode Cards" />
+{{ output_opt(id_base="ascii",value="0",title="ASCII",sel="true") }}
+{{ output_opt(id_base="unisuits",value="1",title="Unicode Suits") }}
+{{ output_opt(id_base="unicards",value="2",title="Unicode Cards") }}
 </fieldset>
 <br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
 
-</define-tag> ;;; output_controls
+{% endmacro %}
 
 
 <label id="output_label" for="output">Output:</label><br />
@@ -141,7 +134,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 <div class="solitairey_body_margin">
 <div class="solitairey_body" id="solitairey_body">
 
-<when>
+{% if false %}
 
 <img src="loading.gif" class="loading hidden" alt="Loading" />
 <button id="redeal">Redeal</button>
@@ -157,14 +150,14 @@ print FreecellSolver::ExtractGames->new->calc_html;
         </a>
 	</div>
 
-</when>
+{% endif %}
 
 </div>
 </div>
 </div>
 <div id="output_tabs__text" class="tab">
 <div class="output_form">
-<output_controls />
+{{ output_controls() }}
 
 <div id="dynamic_output"></div>
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
@@ -174,7 +167,7 @@ print FreecellSolver::ExtractGames->new->calc_html;
 </div>
 <br />
 
-<fc_solve_bookmark__form />
+{{ jsfcs.fc_solve_bookmark__form() }}
 
 <h2 id="how_to_use">How to Use</h2>
 
@@ -205,7 +198,7 @@ Select the game from <a href="#game_type_label">the drop-down</a>.
 
 <h2 id="technology">Technology</h2>
 
-<fc_solve_jsfcs__credits__common />
+{{ jsfcs.fc_solve_jsfcs__credits__common()}}
 
 <li>
 <p>
@@ -275,3 +268,5 @@ unsolvable deals.
 </li>
 
 </ul>
+
+{% endblock %}
