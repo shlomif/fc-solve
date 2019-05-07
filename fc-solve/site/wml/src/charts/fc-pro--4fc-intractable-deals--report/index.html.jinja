@@ -1,21 +1,18 @@
-#include "template.wml"
-#include "xhtml/1.x/std/toc.wml"
+{% extends "template.jinja" %}
+{% block title %}Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals{% endblock %}
+{% block page_extra_head_elements %}
+<script src="{{ base_path }}js/jquery.flot.js"></script>
+{{ js_requirejs() }}
+{% endblock %}
+{% block body %}
 
-<latemp_subject "Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals" />
 
-<page_extra_head_elements>
-<js_script src="$(PATH_TO_ROOT)js/jquery.flot.js"></js_script>
-<js_requirejs />
-</page_extra_head_elements>
-
-<js_script>
+<script>
 requirejs.config({
-    baseUrl: '$(PATH_TO_ROOT)js',
+    baseUrl: '{{ base_path }}js',
     });
 require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
-</js_script>
-
-<h2* id="toc">Table of contents</h2*>
+</script>
 
 <toc />
 
@@ -94,13 +91,7 @@ the y-axis, corresponds to the number of states in the queue.
 
 <h4 id="iters-summary-table">Iterations Summary Table</h4>
 
-<:
-{
-use FreecellSolver::GenDealsCharts1;
-FreecellSolver::GenDealsCharts1->gen_summary_table;
-FreecellSolver::GenDealsCharts1->gen_progress_charts;
-}
-:>
+{{ charts2 }}
 
 <h2 id="links">Links and References</h2>
 
@@ -131,3 +122,5 @@ Google Drive.
 </p>
 </li>
 </ul>
+
+{% endblock %}
