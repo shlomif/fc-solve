@@ -307,7 +307,7 @@ $(TYPESCRIPT_DEST_FILES): $(OUT_PREF)/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/js/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	$(call run_tsc,cmdline)
 
-serial_run: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
+serial_run: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(LIBFREECELL_SOLVER_JS) $(ASMJS_STAMP)
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
@@ -350,7 +350,8 @@ $(T2_SVGS__svgz): %.svgz: %.min.svg
 
 min_svgs: $(T2_SVGS__MIN) $(T2_SVGS__svgz)
 
-all_deps: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
+all_deps: $(FC_pro_all_TSVS)
+
 real_all: all_deps min_svgs
 
 .PHONY: chart-tsvs
@@ -404,7 +405,7 @@ $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xm
 $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
 	cp -f $< $@
 
-fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps
+fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps $(dest_jinjas)
 	@echo $(MAKE) fastrender
 	@$(call WML_RENDER,) $(SRC_DOCS)
 	@$(PROCESS_ALL_INCLUDES) $(HTMLS)

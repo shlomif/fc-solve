@@ -10,7 +10,8 @@ rebuild()
         time gmake serial_run
         time gmake -j1 fastrender
         time gmake -j1 PROD=1 fastrender
-        time gmake -j1 PROD=1 all
+        time gmake -j4 PROD=1 all
+        time gmake -j4 all
         time gmake -j1 test
     )
 }
