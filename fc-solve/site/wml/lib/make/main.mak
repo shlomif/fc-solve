@@ -332,9 +332,11 @@ $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
 
 $(Solver_Dest_Dir)/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.asciidoc
 
-chart-tsvs: $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
+FC_pro_all_TSVS := $(FC_PRO_4FC_FILTERED_TSVS) $(FC_PRO_4FC_TSVS)
 
-$(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro--4fc-deals-solvability--report/index.html: chart-tsvs
+chart-tsvs: $(FC_pro_all_TSVS)
+
+$(D)/charts/fc-pro--4fc-intractable-deals--report/index.html $(D)/charts/fc-pro--4fc-deals-solvability--report/index.html: $(FC_pro_all_TSVS)
 
 T2_SVGS__BASE := $(filter %.svg,$(IMAGES))
 T2_SVGS__MIN := $(T2_SVGS__BASE:%.svg=%.min.svg)
@@ -351,7 +353,7 @@ min_svgs: $(T2_SVGS__MIN) $(T2_SVGS__svgz)
 all_deps: $(FC_PRO_4FC_TSVS) $(FC_PRO_4FC_FILTERED_TSVS)
 real_all: all_deps min_svgs
 
-.PHONY:
+.PHONY: chart-tsvs
 
 ALL_HTACCESSES = $(D)/.htaccess $(D)/js-fc-solve/automated-tests/.htaccess $(D)/michael_mann/.htaccess
 

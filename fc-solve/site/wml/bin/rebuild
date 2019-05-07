@@ -8,10 +8,10 @@ rebuild()
         time bash -x bin/install-npm-deps.sh
         time ./gen-helpers
         time gmake serial_run
-        time gmake -j8 fastrender
-        time gmake -j8 PROD=1 fastrender
-        time gmake -j8 PROD=1 all
-        time gmake -j8 test
+        time gmake -j1 fastrender
+        time gmake -j1 PROD=1 fastrender
+        time gmake -j1 PROD=1 all
+        time gmake -j1 test
     )
 }
 rebuild
