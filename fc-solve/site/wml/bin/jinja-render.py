@@ -59,6 +59,7 @@ class="try_main">Try</span><br/>
                 presentation_url="http://www.shlomifish.org/" +
                 "lecture/Freecell-Solver/",
                 doxygen_url=base_path + "michael_mann/",
+                arch_doc_url=base_path + "arch_doc/",
                 )
         out_fn = dest+'/'+fn
         if re.search('<toc */ *>', text):
