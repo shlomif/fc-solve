@@ -1,8 +1,9 @@
-#include "template.wml"
+{% extends "template.jinja" %}
+{% block title %}Online Demos of Freecell Solver{% endblock %}
+{% block body %}
 
-<latemp_subject "Online Demos of Freecell Solver" />
 
-<h2_section id="about" title="About">
+{% call h2_section(id="about",title="About") %}
 
 <p>
 These are online demos of Freecell Solver that you can run in the convenience
@@ -10,9 +11,9 @@ of your own browser. They require JavaScript to be available, enabled,
 and whitelisted.
 </p>
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="text-based" title="Solver">
+{% call h2_section(id="text-based",title="Solver") %}
 
 <p>
 A functional version of the solver with both an animated, graphical,
@@ -30,9 +31,9 @@ solve any arbitrary Freecell deal online.
 
 </ul>
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="find-deal" title="Freecell Deal Index Finder">
+{% call h2_section(id="find-deal",title="Freecell Deal Index Finder") %}
 
 <p>
 Find the deal number of a Freecell deal based on its initial layout.
@@ -48,9 +49,9 @@ Find the deal number of a Freecell deal based on its initial layout.
 
 </ul>
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="rich-webui-based" title="Rich Web-UI">
+{% call h2_section(id="rich-webui-based",title="Rich Web-UI") %}
 
 <p>
 The Rich Web User-interface version based on
@@ -58,4 +59,6 @@ The Rich Web User-interface version based on
 is now live at <a href="text/">solver page</a>.
 </p>
 
-</h2_section>
+{% endcall %}
+
+{% endblock %}
