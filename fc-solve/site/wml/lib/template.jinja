@@ -1,4 +1,9 @@
 {% extends "prelude.jinja" %}
+{% macro jquery_ui_head_elements() %}
+<script src="{{ base_path }}js/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" type="text/css" href="{{ base_path }}js/jquery-ui/jquery-ui.min.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="{{ base_path }}jqui-override.css" media="screen" />
+{% endmacro %}
 {% macro h2_section(id,title) %}
 <section class="h2">
     <header><h2 id="{{ id }}">{{ title }}</h2></header>
