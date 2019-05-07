@@ -11,6 +11,12 @@
     {{ caller() }}
 </section>
 {% endmacro %}
+{% macro h4_section(id,title) %}
+<section class="h4">
+    <header><h4 id="{{ id }}">{{ title }}</h4></header>
+    {{ caller() }}
+</section>
+{% endmacro %}
 {% block prelude_body %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>

@@ -1,10 +1,9 @@
-#include "template.wml"
+{% extends "template.jinja" %}
+{% block title %}Freecell Solver's Future Directions{% endblock %}
+{% block body %}
 
-#include "xhtml/1.x/std/toc.wml"
 
-<latemp_subject "Freecell Solver's Future Directions" />
-
-<h2_section id="about" title="About">
+{% call h2_section(id="about",title="About") %}
 <p>
 While Freecell Solver is a fairly usable package that satisfies the needs of
 a large part of the users, it is by no means complete. This page hopes to
@@ -19,14 +18,13 @@ Note that it is possible to work on Freecell Solver if
 credit</a>.
 </p>
 
-</h2_section>
+{% endcall %}
 
-<h2*>Table of Contents</h2*>
 <toc />
 
-<h2_section id="future-tasks" title="Tasks to be Considered in the Future">
+{% call h2_section(id="future-tasks",title="Tasks to be Considered in the Future") %}
 
-<h3_section id="patsolve_logic" title="Derived State Ordering and Incorporating Patsolve's Logic">
+{% call h3_section(id="patsolve_logic",title="Derived State Ordering and Incorporating Patsolve's Logic") %}
 
 <p>
 From any given position Freecell Solver reaches it uses some move
@@ -49,9 +47,9 @@ generic way to order derived positions, implementing all of the random, mine,
 and Tom's back-ends, and an ability to implement more in the future.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="orig_calc_states" title="States Calculated from the Original">
+{% call h3_section(id="orig_calc_states",title="States Calculated from the Original") %}
 
 <p>
 In the variants of Solitaire supported by Freecell Solver, during the game,
@@ -108,9 +106,9 @@ This suggested feature was inspired by a similar technique used by
 <b>Note:</b> this was <a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/docs/debondt-compact-freecell-positions--document.asciidoc">implemented</a> in dbm_fc_solver, and depth_dbm_fc_solver, but not in libfreecell-solver yet.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="failed_allocs" title="Safety from Failed Memory Allocations">
+{% call h3_section(id="failed_allocs",title="Safety from Failed Memory Allocations") %}
 
 <p>
 Freecell Solver uses many calls to the memory allocations, but does not check
@@ -134,9 +132,9 @@ This will involve a great deal of extra code and complexity, but will make
 Freecell Solver more secure and fail-proof.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="generalising" title="Generalising Freecell Solver to non-card Games">
+{% call h3_section(id="generalising",title="Generalising Freecell Solver to non-card Games") %}
 
 <p>
 This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
@@ -171,11 +169,11 @@ for single-card-deal Klondike in kpat that can solve on average 50% of the
 games. (I don't think it is a back-tracking heuristic, though).
 </p>
 
-</h3_section>
+{% endcall %}
 
-</h2_section>
+{% endcall %}
 
-<h2_section id="finale" title="Finale">
+{% call h2_section(id="finale",title="Finale") %}
 
 <p>
 If all or most of these changes take effect, Freecell Solver will become much
@@ -205,13 +203,13 @@ has reached a similar state. So people, hack on! (On Freecell Solver or
 something else.)
 </p>
 
-</h2_section>
+{% endcall %}
 
 <hr />
 
-<h2_section id="completed" title="Completed Tasks">
+{% call h2_section(id="completed",title="Completed Tasks") %}
 
-<h3_section id="identifier_prefix" title="Shortening the Identifier Prefix">
+{% call h3_section(id="identifier_prefix",title="Shortening the Identifier Prefix") %}
 
 <p>
 At the moment, the global Freecell Solver identifiers use the
@@ -227,9 +225,9 @@ be named <code>freecell_solver_user_</code>. This is not an issue because they
 are not used internally.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="automated_test_suite" title="Writing an Automated Testing Framework">
+{% call h3_section(id="automated_test_suite",title="Writing an Automated Testing Framework") %}
 
 <p>
 Freecell Solver at the moment has very little if any automatic tests that were
@@ -276,9 +274,9 @@ written in other languages or frameworks, because they are better than no
 tests at all, and can easily be re-implemented should the need arise.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="scons" title="Converting the Install Procedure to SCons">
+{% call h3_section(id="scons",title="Converting the Install Procedure to SCons") %}
 
 <p>
 At the moment, Freecell Solver uses
@@ -303,9 +301,9 @@ build-system to use <a href="http://www.cmake.org/">CMake</a> instead, and
 we are happy with this choice.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="pysol_integration" title="PySol Integration">
+{% call h3_section(id="pysol_integration",title="PySol Integration") %}
 
 <p>
 PySol by Markus Oberhumer is by far the most feature-rich and complete
@@ -346,9 +344,9 @@ PySolFC instead on the PySol homepage, and I have been happy with it as well.
 Thanks to the PySolFC developers for making it happen.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="cmd_line_prefix_tree" title="Command Line Prefix Tree Handling">
+{% call h3_section(id="cmd_line_prefix_tree",title="Command Line Prefix Tree Handling") %}
 
 <p>
 At the moment, each flag in the command line is checked by comparing for
@@ -371,9 +369,9 @@ for this purpose.
 <b>Note:</b> already implemented in freecell-solver-2.12.0.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="rcs_state_storage" title="RCS-like State Storage">
+{% call h3_section(id="rcs_state_storage",title="RCS-like State Storage") %}
 
 <p>
 <a href="http://dmoz.org/Computers/Software/Configuration_Management/Tools/Revision_Control_System/">RCS</a>
@@ -418,9 +416,9 @@ older storage method that stores the position's layout itself in memory is
 still available as a compile-time option and will continue to be maintained.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="java" title="Porting to Java">
+{% call h3_section(id="java",title="Porting to Java") %}
 
 <p>
 Imagine being able to browse to a web-site which will present you with
@@ -447,13 +445,13 @@ compiler gcc can compile code to its virtual machine. However, at the moment,
 Java is the de-facto technology for making programs run inside a browser.
 </p>
 
-<h4_section id="java__note" title="Note">
+{% call h4_section(id="java__note",title="Note") %}
 
 <ol>
 
 <li>
 <p>
-We now provide a browser-side JavaScript <a href="$(PATH_TO_ROOT)js-fc-solve/">port</a>
+We now provide a browser-side JavaScript <a href="{{ base_path }}js-fc-solve/">port</a>
 of Freecell Solver courtesy of the Emscripten compiler, which has proven useful
 for some people.
 </p>
@@ -467,7 +465,7 @@ Java fell out of fashion as a technology for browser-side applets.
 
 <li>
 <p>
-There are some <a href="$(PATH_TO_ROOT)links.html#other_solvers">other solvers</a>
+There are some <a href="{{ base_path }}links.html#other_solvers">other solvers</a>
 that were written in Java from the ground up in case there's interest in that.
 </p>
 </li>
@@ -484,11 +482,11 @@ to Java instead of JavaScript.
 As a result of all these points, we mark this task as done.
 </p>
 
-</h4_section>
+{% endcall %}
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="state_lookups" title="State Lookups">
+{% call h3_section(id="state_lookups",title="State Lookups") %}
 
 <p>
 Currently, in order to find a suitable meta-move, Freecell Solver performs
@@ -511,9 +509,9 @@ It should be implemented in other move functions as well, while possibly
 extending the functionality scope.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="multi_threading" title="Multi-Threading">
+{% call h3_section(id="multi_threading",title="Multi-Threading") %}
 
 <p>
 Freecell Solver can run several scans on the same states collection. However,
@@ -556,9 +554,9 @@ within a single hard-thread that are arbitrated by the program.
 due to excessive locking. See <a href="https://www.shlomifish.org/philosophy/books-recommends/#algorithm_design_manual">this book</a> for more info.
 </p>
 
-</h3_section>
+{% endcall %}
 
-<h3_section id="client_server_multi_tasking" title="A Client/Server Multi-tasking Architecture">
+{% call h3_section(id="client_server_multi_tasking",title="A Client/Server Multi-tasking Architecture") %}
 
 <p>
 Yet another speculative feature that was inspired by a talk I had with
@@ -595,6 +593,8 @@ Again, this is something I'm planning to do, after I implement multi-threading, 
 <b>Rejected:</b> for similar reasons.
 </p>
 
-</h3_section>
+{% endcall %}
 
-</h2_section>
+{% endcall %}
+
+{% endblock %}
