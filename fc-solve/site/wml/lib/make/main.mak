@@ -20,7 +20,6 @@ UPLOAD_URL = $(TEMP_UPLOAD_URL)
 ifeq ($(PROD),1)
 
 	D = dest-prod
-	WML_FLAGS += -DPRODUCTION=1
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
 	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
 	MULTI_YUI = uglifyjs --compress
@@ -45,17 +44,6 @@ DOCS_AUX = $(patsubst %,$(DOCS_AUX_DIR)/%,$(DOCS_AUX_PROTO))
 DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
-
-LATEMP_WML_FLAGS += $(COMMON_PREPROC_FLAGS)
-
-WML_FLAGS += --passoption=2,-X3074 \
-			 -DLATEMP_THEME=sf.org1 \
-	$(LATEMP_WML_FLAGS) --passoption=2,-I../lib/ --passoption=3,-I../lib/ \
-	-I $${HOME}/apps/wml \
-	--passoption=7,--skip=imgsize,summary \
-
-WML_RENDER = LATEMP_WML_FLAGS="$(LATEMP_WML_FLAGS)" $1 bin/render $(D)
-SRC_INCLUDE_WML_RENDER = $(call WML_RENDER,UNCOND=1) "${@:$(D)/%=%}"
 
 JS_MEM_BASE = libfreecell-solver.wasm
 JS_MEM_BASE__ASMJS = libfreecell-solver-asm.js.mem
@@ -166,10 +154,6 @@ prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
 $(dest_jinjas): $(jinja_rend) lib/template.jinja
 	python3 $(jinja_rend)
 	$(PROCESS_ALL_INCLUDES) $(dest_jinjas) $(prod_dest_jinjas)
-
-$(HTMLS): $(D)/% : src/%.wml src/.wmlrc lib/template.wml
-	$(call SRC_INCLUDE_WML_RENDER) && $(PROCESS_ALL_INCLUDES) '$@'
-
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
@@ -405,10 +389,7 @@ $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xm
 $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
 	cp -f $< $@
 
-fastrender: $(SRC_DOCS:%=$(SRC_SRC_DIR)/%.wml) all_deps $(dest_jinjas)
-	@echo $(MAKE) fastrender
-	@$(call WML_RENDER,) $(SRC_DOCS)
-	@$(PROCESS_ALL_INCLUDES) $(HTMLS)
+fastrender: all_deps $(dest_jinjas)
 
 DBTOEPUB := ZIPOPT="-X" $(DBTOEPUB)
 

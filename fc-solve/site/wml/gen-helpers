@@ -123,60 +123,6 @@ s#^(\$\(SRC_DOCS_DEST\)[^\n]+\n\t)[^\n]+#${1}\$(call SRC_INCLUDE_WML_RENDER)#ms
 
 $r_fh->spew_utf8($text);
 
-write_on_change(
-    path("lib/h_sections.wml"),
-    \(
-        join "\n",
-        map {
-            my $n = $_;
-
-            # my $tag = "wml_toc_h$n";
-            my $tag = "h$n";
-            <<"EOF"
-<define-tag h${n}_section endtag="required" whitespace="delete">
-
-<set-var h_tag="$tag"  />
-<set-var h_class="h$n" />
-<preserve _wml_id_h$n id href title />
-<set-var %attributes />
-
-<:
-
-0 and die qq|
-%attributes
-
-<get-var h_tag />
-
-<get-var id />
-
-ENDU
-|
-:>
-
-<set-var _wml_id_h$n=<get-var id /> />
-<section class="<get-var h_class />">
-
-<header><$tag id="<get-var _wml_id_h$n />">
-<when <get-var href />>
-<a href="<get-var href />"><get-var title /></a>
-</when>
-<when <not <get-var href /> />>
-<get-var title />
-</when>
-</$tag>
-</header>
-
-%body
-
-</section>
-
-<restore _wml_id_h$n id href title />
-
-</define-tag>
-EOF
-        } 2 .. 6
-    )
-);
 io()->file('Makefile')->print("include $DIR/main.mak\n");
 path("$DIR/jinja.txt")->spew_raw( join "\n", @jinja, "" );
 
@@ -191,13 +137,6 @@ require FreecellSolver::Site::News;
 my $news = FreecellSolver::Site::News->new();
 path("lib/front-page-news.htmlish")->spew_utf8( $news->render_front_page() );
 path("lib/old-news.htmlish")->spew_utf8( $news->render_old() );
-my $render = path('bin/render');
-$render->spew_utf8(
-    path('bin/render-source.pl')->slurp_utf8() =~ s#^(?:use lib[^\n]+\n)+#
-    "use lib \"" . (`wml-params-conf --show-privlib` =~ s%[\n\r]+\z%%r) . "\";\n";
-    #emrs
-);
-$render->chmod(0755);
 use FreecellSolver::ExtractGames;
 path("lib/games.htmlish")
     ->spew_utf8( FreecellSolver::ExtractGames->new->calc_html );
