@@ -153,7 +153,7 @@ prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
 
 $(dest_jinjas): $(jinja_rend) lib/template.jinja
 	python3 $(jinja_rend)
-	$(PROCESS_ALL_INCLUDES) $(dest_jinjas) $(prod_dest_jinjas)
+	@$(PROCESS_ALL_INCLUDES) $(dest_jinjas) $(prod_dest_jinjas)
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
