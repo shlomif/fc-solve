@@ -5,9 +5,7 @@
 {% block page_extra_head_elements %}
 <script src="{{ base_path }}js/jquery.querystring.js"></script>
 {{ jquery_ui_head_elements() }}
-<script src="{{ base_path }}js/libfreecell-solver.min.js"></script>
-<script src="{{ base_path }}js/web-fc-solve--expand-moves.js"></script>
-<script src="{{ base_path }}js/web-fc-solve.js"></script>
+{{ js_requirejs() }}
 <link rel="stylesheet" type="text/css" href="{{ base_path }}web-fc-solve.css" />
 <script src="{{ base_path }}js/jquery.ajaxQueue.min.js"></script>
 <script src="{{ base_path }}js/web-fc-solve--expand-moves--mega-test.js"></script>
@@ -19,9 +17,12 @@
 <h2 id="deal_idx_update" style="color: red">Not started</h2>
 
 <script>
-  $(document).ready(function () {
+requirejs.config({
+    baseUrl: '{{ base_path }}js',
+    });
+require(["auto-tests-driver", "web-fc-solve", "libfcs-wrap"], function (foo, w, Module) {
       try {
-          test_js_fc_solve_class();
+          test_js_fc_solve_class(w, Module);
       }
       catch (err) {
           alert(err);

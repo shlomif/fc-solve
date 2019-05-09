@@ -1,7 +1,8 @@
 package Games::FC_Solve::AJAX::Service;
-use Dancer ':syntax';
 
-use Dancer::Plugin::REST;
+use Dancer2;
+
+use Dancer2::Plugin::REST;
 
 prepare_serializer_for_format;
 our $VERSION = '0.1';
@@ -30,4 +31,4 @@ qx(pi-make-microsoft-freecell-board -t "$idx" | fc-solve -l "$preset" -sam -p -t
     };
 };
 
-true;
+dance;
