@@ -19,7 +19,6 @@ endif
 DATA_DESTDIR ?= __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
 RESULT_JS_LIB = libfreecell-solver$(LIBSUF).js
-RESULT_HTML = fc-solve-test.html
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 
@@ -64,7 +63,7 @@ LLVM_BITCODE_FILES = $(patsubst %.c,%.bc,$(C_FILES))
 LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
 LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.bc,$(CMAKE_C_FILES))
 
-all: $(RESULT_NODE_JS_EXE) $(RESULT_JS_LIB)
+all: $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
 	fc_solve__hll_ms_rand__init \
@@ -122,9 +121,6 @@ $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 
 LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
 
-$(RESULT_HTML): $(LLVM_AND_FILES_TARGETS)
-	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
-
 $(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS)
 	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
@@ -137,7 +133,7 @@ $(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS)
 	mv -f temp.$@ $@
 
 clean:
-	rm -f $(LLVM_BITCODE_FILES) $(RESULT_HTML) $(RESULT_NODE_JS_EXE)
+	rm -f $(LLVM_BITCODE_FILES) $(RESULT_NODE_JS_EXE)
 
 %.show:
 	@echo "$* = $($*)"
