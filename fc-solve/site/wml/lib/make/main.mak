@@ -256,13 +256,13 @@ TYPINGS =
 TEST_FCS_VALID_BASENAME := web-fc-solve-tests--fcs-validate.js
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/$(TEST_FCS_VALID_BASENAME)
 
-TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-chart--base.js fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal-ui.js french-cards.js prange.js s2ints_js.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js
+TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-chart--base.js fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal-ui.js french-cards.js prange.js s2ints_js.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js
 
 TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_COMMON_DEFS_FILES = src/ts/jq_qs.d.ts
 
-JSES_js_basenames = jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js web-fc-solve--expand-moves--mega-test.js
+JSES_js_basenames = jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js
 DEST_BABEL_JSES = $(call dest_jsify,$(JSES_js_basenames) $(TYPESCRIPT_basenames))
 OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 

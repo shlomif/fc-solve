@@ -8,7 +8,6 @@
 {{ js_requirejs() }}
 <link rel="stylesheet" type="text/css" href="{{ base_path }}web-fc-solve.css" />
 <script src="{{ base_path }}js/jquery.ajaxQueue.min.js"></script>
-<script src="{{ base_path }}js/web-fc-solve--expand-moves--mega-test.js"></script>
 {% endblock %}
 
 {% block body %}
@@ -20,9 +19,9 @@
 requirejs.config({
     baseUrl: '{{ base_path }}js',
     });
-require(["auto-tests-driver", "web-fc-solve", "libfcs-wrap"], function (foo, w, Module) {
+require(["web-fc-solve--expand-moves--mega-test"], function (t) {
       try {
-          test_js_fc_solve_class(w, Module);
+          t.test_js_fc_solve_class(jQuery.ajaxQueue);
       }
       catch (err) {
           alert(err);
