@@ -1,10 +1,15 @@
-use Test::More tests => 2;
+use Test::More tests => 1;
 use strict;
 use warnings;
 
 # the order is important
+use Plack::Test;
+use HTTP::Request::Common;
 use Games::FC_Solve::AJAX::Service;
-use Dancer::Test;
 
-route_exists [ GET => '/' ], 'a route handler is defined for /';
-response_status_is [ 'GET' => '/' ], 200, 'response status is 200 for /';
+my $app  = Games::FC_Solve::AJAX::Service->to_app;
+my $test = Plack::Test->create($app);
+my $res  = $test->request( GET '/' );
+
+# TEST
+is $res->code, 200, 'response status is 200 for /';

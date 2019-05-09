@@ -31,4 +31,10 @@ qx(pi-make-microsoft-freecell-board -t "$idx" | fc-solve -l "$preset" -sam -p -t
     };
 };
 
-dance;
+__END__
+
+=head1 NAME
+
+Games::FC_Solve::AJAX::Service - serve fc-solve solutions.
+
+=cut
