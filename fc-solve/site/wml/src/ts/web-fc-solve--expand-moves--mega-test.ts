@@ -2,11 +2,11 @@ import * as w from "./web-fc-solve";
 import * as Module from "./libfcs-wrap";
 "use strict";
 
-const impossible_deal = 11982;
-const last_deal = 32000;
-const preset = "as";
+const impossible_deal: number = 11982;
+const last_deal: number = 32000;
+const preset: string = "as";
 
-function test_idx(ajaxQueue, idx) {
+function test_idx(ajaxQueue, idx: number): void {
     $("#deal_idx_update").html("Reached deal idx=" + idx);
 
     if (idx > last_deal) {
@@ -24,7 +24,7 @@ function test_idx(ajaxQueue, idx) {
                 ".json",
             dataType: "json",
         }).done((data) => {
-            let success = false;
+            let success: boolean = false;
 
             const instance = new w.FC_Solve({
                 cmd_line_preset: preset,
@@ -33,7 +33,9 @@ function test_idx(ajaxQueue, idx) {
                 },
             });
 
-            let solve_err_code = instance.do_solve(w.deal_ms_fc_board(idx));
+            let solve_err_code: number = instance.do_solve(
+                w.deal_ms_fc_board(idx),
+            );
 
             while (solve_err_code === w.FCS_STATE_SUSPEND_PROCESS) {
                 solve_err_code = instance.resume_solution();
