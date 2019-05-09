@@ -177,7 +177,7 @@ $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_CACHE):
 	( cd $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR) && cmake -DCMAKE_INSTALL_PREFIX=/fc-solve $(FC_SOLVE_SOURCE_DIR) && make -j4 generate_c_files)
 
 $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA): $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_CACHE)
-	( cd $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR) && make -j4 && make -j4 install DESTDIR=$(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) )
+	( cd $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR)/Presets && make -j4 install DESTDIR=$(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) )
 	# We need that to make sure the timestamps are correct because apparently
 	# the make install process updates the timestamps of CMakeCache.txt and
 	# the Makefile there.
