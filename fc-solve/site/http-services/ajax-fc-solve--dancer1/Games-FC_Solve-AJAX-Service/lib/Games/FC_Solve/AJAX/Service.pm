@@ -8,7 +8,7 @@ prepare_serializer_for_format;
 our $VERSION = '0.1';
 
 get '/' => sub {
-    template 'index';
+    return "See perldoc " . __PACKAGE__;
 };
 
 get '/run-fc-solve/idx=:idx/preset=:preset.:format' => sub {
