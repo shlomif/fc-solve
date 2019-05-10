@@ -12,7 +12,13 @@ function _find_max_step(n: number): number {
     return x;
 }
 
-function _render_move(my_move): string {
+interface Expander_Move {
+    src: number;
+    dest: number;
+    t: "s2f" | "s2s" | "f2s";
+}
+
+function _render_move(my_move: Expander_Move): string {
     const src = my_move.src.toString();
     const dest = my_move.dest.toString();
     if (my_move.t === "s2f") {
@@ -23,7 +29,6 @@ function _render_move(my_move): string {
         return "Move a card from freecell " + src + " to stack " + dest;
     }
 }
-
 class Expander {
     public modified_state = { f: [], c: [] };
     public empty_fc_indexes: number[] = [];
@@ -191,7 +196,7 @@ class Expander {
         }
         return;
     }
-    private add_move(my_move) {
+    private add_move(my_move: Expander_Move) {
         const expander = this;
         expander.output_state_promise(expander);
 
@@ -207,7 +212,7 @@ class Expander {
 
         return;
     }
-    private perform_move(my_move) {
+    private perform_move(my_move: Expander_Move) {
         const expander = this;
         const src = my_move.src;
         const dest = my_move.dest;
@@ -246,7 +251,7 @@ export function fc_solve_expand_move(
     num_stacks: number,
     num_freecells: number,
     initial_src_state_str: string,
-    initial_move,
+    initial_move: { str: string },
     initial_dest_state_str: string,
 ) {
     const matched = initial_move.str.match(
