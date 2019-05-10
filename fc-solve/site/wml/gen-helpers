@@ -43,7 +43,7 @@ if ( not -e "lib/repos/Solitairey" )
 {
     _exec(
         [
-"cd lib/repos && git clone -b fc-solve--deal-and-sol--preview https://github.com/shlomif/Solitairey.git"
+"cd lib/repos && git clone https://github.com/shlomif/Solitairey.git"
 
         ],
         "git clone",

@@ -118,9 +118,9 @@ STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
-SASS_CMD = sass --style $(SASS_STYLE)
+SASS_CMD = sass -I lib/repos/Solitairey/ --style $(SASS_STYLE)
 
-SASS_HEADERS = lib/sass/common-style.scss
+SASS_HEADERS = lib/sass/common-style.scss lib/repos/Solitairey/solitairey-cards--common.scss
 
 $(CSS_TARGETS): $(D)/%.css: lib/sass/%.scss $(SASS_HEADERS)
 	$(SASS_CMD) $< $@

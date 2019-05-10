@@ -363,7 +363,6 @@ class Freecells {
     }
 }
 
-// TODO : Merge common functionality with ColumnParseResult into a base class.
 class FreecellsParseResult extends BaseResult {
     public freecells: Freecells;
 
