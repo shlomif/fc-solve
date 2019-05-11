@@ -1044,6 +1044,36 @@ static inline ssize_t get_depth(const moves_by_depth_unit *curr_by_depth_unit)
     return curr_by_depth_unit->max_depth;
 }
 
+static inline bool was_pruned(const bool enable_pruning,
+    fcs_collectible_state *ptr_state, fcs_soft_thread *const soft_thread,
+    fcs_soft_dfs_stack_item *the_soft_dfs_info, fcs_kv_state *pass,
+    fcs_derived_states_list *derived_list, fcs_moves_order *the_moves_list)
+{
+    if (!fcs__should_state_be_pruned(enable_pruning, ptr_state))
+    {
+        return false;
+    }
+    fcs_collectible_state *const derived =
+        fc_solve_sfs_raymond_prune(soft_thread, *pass);
+    if (!derived)
+    {
+        return false;
+    }
+    the_soft_dfs_info->move_func_list_idx = the_moves_list->num;
+    fc_solve_derived_states_list_add_state(derived_list, derived, 0);
+    if (the_soft_dfs_info->derived_states_random_indexes_max_size < 1)
+    {
+        the_soft_dfs_info->derived_states_random_indexes_max_size = 1;
+        the_soft_dfs_info->derived_states_random_indexes =
+            SREALLOC(the_soft_dfs_info->derived_states_random_indexes,
+                the_soft_dfs_info->derived_states_random_indexes_max_size);
+    }
+
+    the_soft_dfs_info->derived_states_random_indexes[0].rating_with_index__idx =
+        0;
+    return true;
+}
+
 // dfs_solve() is the event loop of the Random-DFS scan. DFS, which is
 // recursive in nature, is handled here without procedural recursion by using
 // some dedicated stacks for the traversal.
@@ -1204,38 +1234,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     );
                 }
 #endif
-                /* Perform the pruning. */
-                bool was_pruned = false;
-                if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
-                {
-                    fcs_collectible_state *const derived =
-                        fc_solve_sfs_raymond_prune(soft_thread, pass);
-                    if (derived)
-                    {
-                        was_pruned = true;
-                        the_soft_dfs_info->move_func_list_idx =
-                            the_moves_list.num;
-                        fc_solve_derived_states_list_add_state(
-                            &derived_list, derived, 0);
-                        if (the_soft_dfs_info
-                                ->derived_states_random_indexes_max_size < 1)
-                        {
-                            the_soft_dfs_info
-                                ->derived_states_random_indexes_max_size = 1;
-                            the_soft_dfs_info
-                                ->derived_states_random_indexes = SREALLOC(
-                                the_soft_dfs_info
-                                    ->derived_states_random_indexes,
-                                the_soft_dfs_info
-                                    ->derived_states_random_indexes_max_size);
-                        }
-
-                        the_soft_dfs_info->derived_states_random_indexes[0]
-                            .rating_with_index__idx = 0;
-                    }
-                }
-
-                if (!was_pruned)
+                if (!was_pruned(enable_pruning, PTR_STATE, soft_thread,
+                        the_soft_dfs_info, &pass, &derived_list,
+                        &the_moves_list))
                 {
                     const fcs_game_limit num_vacant_freecells =
                         count_num_vacant_freecells(
