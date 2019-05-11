@@ -32,6 +32,7 @@ sub gen_progress_charts
 
     $args //= +{};
     my $try2 = $args->{try2} // 0;
+    my $fh   = $args->{fh};
 
     my @funcs;
     my $_calc_deal_nums = _calc_deal_nums;
@@ -41,25 +42,30 @@ sub gen_progress_charts
         my $chart_id = "queue-items-$deal-chart";
         my $func_id  = "my_chart_$idx";
         push @funcs, $func_id;
-        print qq#<h4 id="queue-items-$deal">Deal @{[format_num($deal)]}</h4>\n#;
-        print <<"EOF";
+        $fh->print(
+            qq#<h4 id="queue-items-$deal">Deal @{[format_num($deal)]}</h4>\n#);
+        $fh->print( <<"EOF");
     <div class="demo-container">
         <div id="$chart_id" class="demo-placeholder"></div>
     </div>
     <script>function $func_id(chart_data) { chart_data("#$data_id", "#$chart_id"); }</script>
     <br />
 EOF
-        print
-qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_data">\n#;
+        $fh->print(
+qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_data">\n#
+        );
 
 # print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal" . ($deal eq '6825625742' ? ".filtered" : '') . ".tsv")->all;
-        print io->file(
-            "../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
-                . ( ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : '' )
-                . ".filtered.tsv" )->all =~ s%^[^\t\n]+\t%%gmrs;
-        print qq#</textarea>\n<br />\n#;
+        $fh->print(
+            io->file(
+"../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
+                    . ( ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : '' )
+                    . ".filtered.tsv"
+            )->all =~ s%^[^\t\n]+\t%%gmrs
+        );
+        $fh->print(qq#</textarea>\n<br />\n#);
     }
-    print <<"EOF";
+    $fh->print( <<"EOF");
 <script>
 function _fcs_chart_all(chart_data) {
     var funcs = [@{[join",",@funcs]}];
@@ -88,8 +94,9 @@ sub gen_summary_table
 
     $args //= +{};
     my $try2 = $args->{try2} // 0;
+    my $fh   = $args->{fh};
 
-    print <<'EOF';
+    $fh->print( <<'EOF');
 <table class="fcs_depth_dbm_deals">
 <tr>
 <th>Deal No.</th>
@@ -98,19 +105,22 @@ sub gen_summary_table
 EOF
     foreach my $deal ( @{ _calc_deal_nums() } )
     {
-        print "<tr><td>"
-            . format_num($deal)
-            . "</td><td>"
-            . format_num(
-            io->file(
+        $fh->print(
+                  "<tr><td>"
+                . format_num($deal)
+                . "</td><td>"
+                . format_num(
+                io->file(
 "../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
-                    . ( ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : '' )
-                    . ".tsv"
-            )->tail(1) =~ s#\t.*##mrs
-            ) . "</td></tr>\n";
+                        . (
+                        ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : ''
+                        )
+                        . ".tsv"
+                )->tail(1) =~ s#\t.*##mrs
+                )
+                . "</td></tr>\n"
+        );
     }
-    print <<'EOF';
-</table>
-EOF
+    $fh->print("</table>\n");
 }
 1;
