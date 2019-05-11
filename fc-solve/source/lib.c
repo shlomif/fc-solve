@@ -1039,6 +1039,11 @@ static void increase_dfs_max_depth(fcs_soft_thread *const soft_thread)
     DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
 }
 
+static inline ssize_t get_depth(const moves_by_depth_unit *curr_by_depth_unit)
+{
+    return curr_by_depth_unit->max_depth;
+}
+
 // dfs_solve() is the event loop of the Random-DFS scan. DFS, which is
 // recursive in nature, is handled here without procedural recursion by using
 // some dedicated stacks for the traversal.
@@ -1093,18 +1098,13 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     calculate_real_depth(calc_real_depth, PTR_STATE);
     const_AUTO(
         by_depth_units, DFS_VAR(soft_thread, moves_by_depth).by_depth_units);
-
-#define THE_MOVE_FUNCS_LIST the_moves_list
     TRACE0("Before depth loop");
-
-#define GET_DEPTH(ptr) ((ptr)->max_depth)
-
 #define RECALC_BY_DEPTH_LIMITS()                                               \
     {                                                                          \
-        by_depth_max_depth = GET_DEPTH(curr_by_depth_unit);                    \
+        by_depth_max_depth = get_depth(curr_by_depth_unit);                    \
         by_depth_min_depth = (curr_by_depth_unit == by_depth_units)            \
                                  ? 0                                           \
-                                 : GET_DEPTH(curr_by_depth_unit - 1);          \
+                                 : get_depth(curr_by_depth_unit - 1);          \
         the_moves_list = curr_by_depth_unit->move_funcs;                       \
     }
 
@@ -1121,28 +1121,22 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 #endif
 
     const moves_by_depth_unit *curr_by_depth_unit = by_depth_units;
-    for (; (DEPTH() >= GET_DEPTH(curr_by_depth_unit)); ++curr_by_depth_unit)
+    for (; (DEPTH() >= get_depth(curr_by_depth_unit)); ++curr_by_depth_unit)
     {
     }
     RECALC_BY_DEPTH_LIMITS();
 
-    /*
-        The main loop.
-        We exit out of it when DEPTH() is decremented below zero.
-    */
+    // The main loop. We exit out of it when DEPTH() is decremented below zero.
     while (1)
     {
     main_loop:
-        /*
-            Increase the "maximal" depth if it is about to be exceeded.
-        */
+        // Increase the "maximal" depth if it is about to be exceeded.
         if (unlikely(DEPTH() + 1 >= dfs_max_depth))
         {
             increase_dfs_max_depth(soft_thread);
 
-            /* Because the address of DFS_VAR(soft_thread, soft_dfs_info) may
-             * be changed
-             * */
+            // Because the address of DFS_VAR(soft_thread, soft_dfs_info) may
+            // be changed
             the_soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]);
             dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
             /* This too has to be re-synced */
@@ -1154,11 +1148,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
         if (the_soft_dfs_info->current_state_index == derived_list.num_states)
         {
             /* Check if we already tried all the tests here. */
-            if (the_soft_dfs_info->move_func_list_idx ==
-                THE_MOVE_FUNCS_LIST.num)
+            if (the_soft_dfs_info->move_func_list_idx == the_moves_list.num)
             {
                 /* Backtrack to the previous depth. */
-
                 if (is_a_complete_scan)
                 {
                     FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_ALL_TESTS_DONE;
@@ -1227,7 +1219,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     {
                         was_pruned = true;
                         the_soft_dfs_info->move_func_list_idx =
-                            THE_MOVE_FUNCS_LIST.num;
+                            the_moves_list.num;
                         fc_solve_derived_states_list_add_state(
                             &derived_list, derived, 0);
                         if (the_soft_dfs_info
@@ -1292,26 +1284,24 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
             TRACE0("After iter_handler");
             const_AUTO(orig_idx, the_soft_dfs_info->move_func_list_idx);
             const fcs_state_weighting *const weighting =
-                &(THE_MOVE_FUNCS_LIST.groups[orig_idx].weighting);
+                &(the_moves_list.groups[orig_idx].weighting);
 
-            if (the_soft_dfs_info->move_func_list_idx < THE_MOVE_FUNCS_LIST.num)
+            if (the_soft_dfs_info->move_func_list_idx < the_moves_list.num)
             {
                 /* Always do the first test */
                 local_shuffling_type =
-                    THE_MOVE_FUNCS_LIST
-                        .groups[the_soft_dfs_info->move_func_list_idx]
+                    the_moves_list.groups[the_soft_dfs_info->move_func_list_idx]
                         .shuffling_type;
 
                 do
                 {
-                    THE_MOVE_FUNCS_LIST
-                        .groups[the_soft_dfs_info->move_func_list_idx]
+                    the_moves_list.groups[the_soft_dfs_info->move_func_list_idx]
                         .move_funcs[the_soft_dfs_info->move_func_idx]
                         .f(soft_thread, pass, &derived_list);
 
                     /* Move the counter to the next test */
                     if ((++the_soft_dfs_info->move_func_idx) ==
-                        THE_MOVE_FUNCS_LIST
+                        the_moves_list
                             .groups[the_soft_dfs_info->move_func_list_idx]
                             .num)
                     {
@@ -1369,7 +1359,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 break;
 
                 case FCS_WEIGHTING:
-                    if (orig_idx < THE_MOVE_FUNCS_LIST.num)
+                    if (orig_idx < the_moves_list.num)
                     {
                         fcs_derived_states_list_item *const derived_states =
                             derived_list.states;
