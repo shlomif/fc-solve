@@ -44,12 +44,7 @@ static inline void fc_solve__assign_dest_stack_and_col_ptr(
 static inline void fc_solve__calc_positions_by_rank_data(
     fcs_soft_thread *const soft_thread GCC_UNUSED,
     const fcs_state *const ptr_state_key,
-    fcs__positions_by_rank positions_by_rank
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-    ,
-    const bool is_simple_simon
-#endif
-)
+    fcs__positions_by_rank positions_by_rank)
 {
 #ifndef HARD_CODED_ALL
     var_AUTO(instance, fcs_st_instance(soft_thread));
@@ -59,7 +54,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
     memset(positions_by_rank, -1, sizeof(fcs__positions_by_rank));
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    if (is_simple_simon)
+    if (instance->is_simple_simon)
     {
 #define FCS_POS_IDX(rank, suit) ((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank))
         fcs_pos_by_rank *const p_by_r = (fcs_pos_by_rank *)positions_by_rank;

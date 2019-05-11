@@ -331,9 +331,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-    const bool is_simple_simon = instance->is_simple_simon;
-#endif
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
@@ -491,12 +488,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         soft_thread->num_vacant_freecells = num_vacant_freecells;
         soft_thread->num_vacant_stacks = num_vacant_stacks;
         fc_solve__calc_positions_by_rank_data(
-            soft_thread, &FCS_SCANS_the_state, befs_positions_by_rank
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-            ,
-            is_simple_simon
-#endif
-        );
+            soft_thread, &FCS_SCANS_the_state, befs_positions_by_rank);
 
         TRACE0("perform_tests");
         /*

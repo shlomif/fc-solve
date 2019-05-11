@@ -1054,11 +1054,6 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
     ssize_t by_depth_max_depth, by_depth_min_depth;
-
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-    const bool is_simple_simon = instance->is_simple_simon;
-#endif
-
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
@@ -1270,14 +1265,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     soft_thread->num_vacant_stacks =
                         the_soft_dfs_info->num_vacant_stacks =
                             num_vacant_stacks;
-                    fc_solve__calc_positions_by_rank_data(
-                        soft_thread, &FCS_SCANS_the_state,
-                        (the_soft_dfs_info->positions_by_rank)
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-                            ,
-                        is_simple_simon
-#endif
-                    );
+                    fc_solve__calc_positions_by_rank_data(soft_thread,
+                        &FCS_SCANS_the_state,
+                        (the_soft_dfs_info->positions_by_rank));
                 }
             }
 
