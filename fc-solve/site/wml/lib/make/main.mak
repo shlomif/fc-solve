@@ -108,11 +108,8 @@ $(DEST_yui_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/ext/yui-debug/%
 $(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/src/js/%
 	$(MULTI_YUI) -o $@ $<
 
-$(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js: %:
+$(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js $(OUT_PREF)/qunit.js: %:
 	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
-
-$(OUT_PREF)/qunit.js: %: lib/jquery/qunit/dist/qunit.js
-	cp -f $< $@
 
 STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
