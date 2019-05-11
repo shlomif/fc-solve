@@ -211,24 +211,21 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
         ASSIGN_ERR_STR(error_string, "%s", "Could not read preset.");
         return FCS_CMD_LINE_ERROR_IN_ARG;
     }
-    else
-    {
-        int last_arg = 0;
+    int last_arg = 0;
 
-        const int ret =
-            freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-                instance, preset_args.argc,
-                (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
-                known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
-                &(last_arg),
-                ((file_nesting_count < 0) ? file_nesting_count
-                                          : (file_nesting_count - 1)),
-                dir[0] ? dir : opened_files_dir);
+    const int ret =
+        freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+            instance, preset_args.argc,
+            (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
+            known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
+            &(last_arg),
+            ((file_nesting_count < 0) ? file_nesting_count
+                                      : (file_nesting_count - 1)),
+            dir[0] ? dir : opened_files_dir);
 
-        fc_solve_args_man_free(&preset_args);
+    fc_solve_args_man_free(&preset_args);
 
-        return ret;
-    }
+    return ret;
 }
 
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
@@ -660,9 +657,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 else
                 {
-                    /*
-                     * Initialize f to NULL so it will be initialized
-                     * */
+                    // Initialize f to NULL so it will be initialized
                     f = NULL;
                 }
 
