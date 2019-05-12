@@ -15,6 +15,15 @@ static fcs_card make_card(fcs_card rank, fcs_card suit)
     return fcs_make_card(rank, suit);
 }
 
+/* TEST:$test_bitcount=2;
+ * */
+static void test_bitcount(const fcs_column_encoding_composite *const enc,
+    const size_t bytes, const size_t bits, const char *const msg)
+{
+    cmp_ok(enc->end - enc->enc, "==", bytes, "%s - bytes", msg);
+    cmp_ok(enc->bit_in_char_idx, "==", bits, "%s - bits", msg);
+}
+
 static void main_tests(void)
 {
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
@@ -113,13 +122,8 @@ static void main_tests(void)
                                  ),
                 "fc_solve_get_column_encoding_composite() test 1 - byte 0");
 
-            /* TEST
-             */
-            ok(enc.end == enc.enc, "Only 7 bits.");
-
-            /* TEST
-             * */
-            ok(enc.bit_in_char_idx == 7, "Only 7 bits (2).");
+            // TEST*$test_bitcount
+            test_bitcount(&enc, 0, 7, "Only 7 bits.");
         }
 #define SUIT_DS 1
         {
