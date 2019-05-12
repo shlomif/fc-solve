@@ -138,13 +138,8 @@ static void main_tests(void)
                                  ),
                 "fc_solve_get_column_encoding_composite() test 2 - byte 0");
 
-            /* TEST
-             */
-            ok(enc.end == enc.enc + 1, "8 bits.");
-
-            /* TEST
-             * */
-            ok(enc.bit_in_char_idx == 0, "8 bits (2).");
+            // TEST*$test_bitcount
+            test_bitcount(&enc, 1, 0, "8 bits.");
         }
 
         {
