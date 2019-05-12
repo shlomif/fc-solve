@@ -164,13 +164,8 @@ static void main_tests(void)
                    ),
                 "fc_solve_get_column_encoding_composite() col 5 - byte 1");
 
-            /* TEST
-             */
-            ok(enc.end == enc.enc + 1, "3+4+7 bits.");
-
-            /* TEST
-             * */
-            ok(enc.bit_in_char_idx == (3 + 4 + 6 - 8), "3+4+7 bits (2).");
+            // TEST*$test_bitcount
+            test_bitcount(&enc, 1, 3 + 4 + 6 - 8, "3+4+6 bits.");
         }
 
 #if MAX_NUM_FREECELLS > 0
