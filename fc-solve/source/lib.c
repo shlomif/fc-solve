@@ -2799,10 +2799,7 @@ static inline bool duplicate_string_while_adding_a_trailing_newline(
     char *const s, const char *const orig_str)
 {
     const size_t len = strlen(orig_str);
-    /*
-     * If orig_str is the empty string then there is no
-     * penultimate character.
-     * */
+    // If orig_str is the empty string then there is no penultimate character.
     if (len)
     {
         if (len >= MAX_STATE_STRING_COPY_LEN - MY_MARGIN)
@@ -2813,8 +2810,8 @@ static inline bool duplicate_string_while_adding_a_trailing_newline(
         char *s_end = s + len - 1;
         if ((*s_end) != TRAILING_CHAR)
         {
-            *(++s_end) = TRAILING_CHAR;
-            *(++s_end) = '\0';
+            s_end[1] = TRAILING_CHAR;
+            s_end[2] = '\0';
         }
     }
     else
@@ -3718,6 +3715,10 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         {
             typeof(soft_thread->pats_scan) pats_scan = soft_thread->pats_scan =
                 SMALLOC1(soft_thread->pats_scan);
+            if (!pats_scan)
+            {
+                break;
+            }
             fc_solve_pats__init_soft_thread(
                 pats_scan, fcs_st_instance(soft_thread));
 
@@ -3947,6 +3948,10 @@ DLLEXPORT char *freecell_solver_user_move_to_string(
     const fcs_move_t move GCC_UNUSED, const int standard_notation GCC_UNUSED)
 {
     char *const ret = SMALLOC(ret, 256);
+    if (!ret)
+    {
+        return NULL;
+    }
 #ifdef FCS_WITH_MOVES
     fc_solve_move_to_string_w_state(
         ret, NULL, move, (standard_notation == 2) ? 1 : standard_notation);
