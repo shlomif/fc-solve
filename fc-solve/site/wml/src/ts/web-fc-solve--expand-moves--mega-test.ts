@@ -1,5 +1,5 @@
 import * as w from "./web-fc-solve";
-import * as Module from "./libfcs-wrap";
+const Module = require("./libfcs-wrap");
 "use strict";
 
 const impossible_deal: number = 11982;

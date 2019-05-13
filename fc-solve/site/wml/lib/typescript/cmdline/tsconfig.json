@@ -5,6 +5,9 @@
       "moduleResolution": "node",
       "noImplicitReturns": true,
       "outDir": "../../../lib/for-node/js",
+      "paths": {
+          "qunit": ["../../../node_modules/@types/qunit"]
+      },
       "target":"es6"
   },
   "include": ["../../../src/ts/**/*.ts"]

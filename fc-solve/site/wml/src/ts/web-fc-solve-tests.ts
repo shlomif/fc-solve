@@ -9,6 +9,7 @@ import * as Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 import * as test_strings from "./web-fcs-tests-strings";
 import { perl_range } from "./prange";
+import { QUnit } from "qunit";
 
 const FC_Solve = w.FC_Solve;
 const FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
@@ -61,11 +62,11 @@ const solution_for_board_without_trailing_newline =
     test_strings.dict.solution_for_board_without_trailing_newline;
 const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
-const my_func = (QUnit, _my_mod, my_callback) => () => {
+const my_func = (qunit: q.QUnit, _my_mod, my_callback: ()=>void) => () => {
     FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
     const deal_ms_fc_board = w.deal_ms_fc_board;
 
-    QUnit.module("FC_Solve.Algorithmic", () => {
+    qunit.module("FC_Solve.Algorithmic", () => {
         function test_for_equal(
             assert,
             instance: w.FC_Solve,
@@ -97,7 +98,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             return success;
         }
 
-        QUnit.test("perl_range", (assert) => {
+        qunit.test("perl_range", (assert) => {
             assert.expect(7);
 
             function t(start, end, want, msg) {
@@ -113,7 +114,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             t(4, 3, [], "reverse range");
         });
 
-        QUnit.test("FC_Solve main test", (assert) => {
+        qunit.test("FC_Solve main test", (assert) => {
             assert.expect(3);
 
             // TEST
@@ -141,7 +142,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test("FC_Solve unicoded solution", (assert) => {
+        qunit.test("FC_Solve unicoded solution", (assert) => {
             assert.expect(2);
 
             const instance: w.FC_Solve = new FC_Solve({
@@ -166,7 +167,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test("FC_Solve unicode cards solution", (assert) => {
+        qunit.test("FC_Solve unicode cards solution", (assert) => {
             assert.expect(2);
 
             const instance: w.FC_Solve = new FC_Solve({
@@ -191,7 +192,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test(
+        qunit.test(
             "FC_Solve arbitrary parameters " + "- Solve Simple Simon.",
             (assert) => {
                 assert.expect(2);
@@ -221,7 +222,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             },
         );
 
-        QUnit.test(
+        qunit.test(
             "FC_Solve solve board without a trailing newline",
             (assert) => {
                 assert.expect(3);
@@ -252,7 +253,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             },
         );
 
-        QUnit.test("FC_Solve Expanded Moves test", (assert) => {
+        qunit.test("FC_Solve Expanded Moves test", (assert) => {
             assert.expect(4);
 
             // TEST
@@ -312,7 +313,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             assert.ok(success, "do_solve expanded moves was successful.");
         });
 
-        QUnit.test("FC_Solve get_num_stacks #1", (assert) => {
+        qunit.test("FC_Solve get_num_stacks #1", (assert) => {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
@@ -330,7 +331,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test("FC_Solve get_num_stacks simple_simon", (assert) => {
+        qunit.test("FC_Solve get_num_stacks simple_simon", (assert) => {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
@@ -349,7 +350,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test(
+        qunit.test(
             "FC_Solve get_num_stacks command line settings",
             (assert) => {
                 assert.expect(1);
@@ -372,7 +373,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             },
         );
 
-        QUnit.test("FC_Solve get_num_freecells #1", (assert) => {
+        qunit.test("FC_Solve get_num_freecells #1", (assert) => {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
@@ -390,7 +391,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test("FC_Solve get_num_freecells #1", (assert) => {
+        qunit.test("FC_Solve get_num_freecells #1", (assert) => {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
@@ -410,7 +411,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test("FC_Solve deal_ms_fc_board", (assert) => {
+        qunit.test("FC_Solve deal_ms_fc_board", (assert) => {
             assert.expect(2);
 
             // TEST
@@ -444,7 +445,7 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
             );
         });
 
-        QUnit.test("FC_Solve custom baker's game preset twice", (assert) => {
+        qunit.test("FC_Solve custom baker's game preset twice", (assert) => {
             // This is microsoft deal #10 which is
             // impossible to solve
             // in Baker's Game.
@@ -490,11 +491,11 @@ const my_func = (QUnit, _my_mod, my_callback) => () => {
     return;
 };
 
-export function test_js_fc_solve_class(QUnit, my_callback) {
+export function test_js_fc_solve_class(qunit: q.QUnit, my_callback : () => void) {
     // var _my_mod = Module({});
     const _my_mod = [null];
     _my_mod[0] = Module()({
-        onRuntimeInitialized: my_func(QUnit, _my_mod, my_callback),
+        onRuntimeInitialized: my_func(qunit, _my_mod, my_callback),
     });
     return;
 }

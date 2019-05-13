@@ -1,6 +1,6 @@
 import * as s2i from "./s2ints_js";
 import * as base_ui from "./fcs-base-ui";
-import * as Module from "./libfcs-wrap";
+const Module = require("./libfcs-wrap");
 import * as w from "./web-fc-solve";
 
 const _my_module = Module()({});
