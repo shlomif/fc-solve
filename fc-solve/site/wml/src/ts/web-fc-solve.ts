@@ -1,4 +1,4 @@
-import * as bigInt from "big-integer";
+import bigInt from "big-integer";
 import * as validate from "./fcs-validate";
 import * as expand from "./web-fc-solve--expand-moves";
 import { perl_range } from "./prange";

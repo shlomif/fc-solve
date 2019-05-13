@@ -5,11 +5,10 @@
 };*/
 // import * as s2i from "./dist/fc_solve_find_index_s2ints.js";
 import * as s2i from "./s2ints_js";
-import * as Module from "./libfcs-wrap";
+const Module = require("./libfcs-wrap");
 import * as w from "./web-fc-solve";
 import * as test_strings from "./web-fcs-tests-strings";
 import { perl_range } from "./prange";
-import { QUnit } from "qunit";
 
 const FC_Solve = w.FC_Solve;
 const FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
@@ -62,7 +61,7 @@ const solution_for_board_without_trailing_newline =
     test_strings.dict.solution_for_board_without_trailing_newline;
 const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
-const my_func = (qunit: q.QUnit, _my_mod, my_callback: ()=>void) => () => {
+const my_func = (qunit: QUnit, _my_mod, my_callback: () => void) => () => {
     FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
     const deal_ms_fc_board = w.deal_ms_fc_board;
 
@@ -491,7 +490,7 @@ const my_func = (qunit: q.QUnit, _my_mod, my_callback: ()=>void) => () => {
     return;
 };
 
-export function test_js_fc_solve_class(qunit: q.QUnit, my_callback : () => void) {
+export function test_js_fc_solve_class(qunit: QUnit, my_callback: () => void) {
     // var _my_mod = Module({});
     const _my_mod = [null];
     _my_mod[0] = Module()({

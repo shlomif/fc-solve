@@ -1,5 +1,5 @@
 import * as base_ui from "./fcs-base-ui";
-import * as Module from "./libfcs-wrap";
+const Module = require("./libfcs-wrap");
 import * as w from "./web-fc-solve";
 import {
     BoardParseResult,
