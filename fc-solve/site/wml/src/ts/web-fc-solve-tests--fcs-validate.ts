@@ -11,10 +11,10 @@ import {
     suits__str_to_int,
 } from "./fcs-validate";
 
-export function test_fcs_validate(QUnit: any) {
-    QUnit.module("FC_Solve.JavaScript.InputValidation");
+export function test_fcs_validate(qunit: QUnit) {
+    qunit.module("FC_Solve.JavaScript.InputValidation");
 
-    QUnit.test("verify_state Card class tests", (a: Assert) => {
+    qunit.test("verify_state Card class tests", (a: Assert) => {
         a.expect(9);
 
         {
@@ -56,7 +56,7 @@ export function test_fcs_validate(QUnit: any) {
             a.equal(c.toString(), "AC", "Card(AC).toString() works.");
         }
     });
-    QUnit.test("verify_state Column class tests", (a: Assert) => {
+    qunit.test("verify_state Column class tests", (a: Assert) => {
         a.expect(20);
 
         {
@@ -212,7 +212,7 @@ export function test_fcs_validate(QUnit: any) {
             );
         }
     });
-    QUnit.test("verify_state Freecells class tests", (a: Assert) => {
+    qunit.test("verify_state Freecells class tests", (a: Assert) => {
         a.expect(5);
 
         const start_char_idx = 10;
@@ -253,7 +253,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test("verify_state Freecells 2 out of 4", (a: Assert) => {
+    qunit.test("verify_state Freecells 2 out of 4", (a: Assert) => {
         a.expect(5);
 
         const start_char_idx = 10;
@@ -294,7 +294,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test("verify_state Freecells ; empty FC", (a: Assert) => {
+    qunit.test("verify_state Freecells ; empty FC", (a: Assert) => {
         a.expect(5);
 
         const start_char_idx = 39;
@@ -335,7 +335,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test("verify_state Freecells ; two Empty FC", (a: Assert) => {
+    qunit.test("verify_state Freecells ; two Empty FC", (a: Assert) => {
         a.expect(5);
 
         const start_char_idx = 39;
@@ -376,7 +376,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test("verify_state Freecells ; Trailing Empty FC", (a: Assert) => {
+    qunit.test("verify_state Freecells ; Trailing Empty FC", (a: Assert) => {
         a.expect(5);
         const start_char_idx = 39;
         const str = "Freecells: - - 6D 9H -";
@@ -419,7 +419,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test("verify_state Freecells with trailing newline", (a: Assert) => {
+    qunit.test("verify_state Freecells with trailing newline", (a: Assert) => {
         a.expect(5);
         const start_char_idx = 200;
         const str = "Freecells: - JC  - 9H\n";
@@ -460,7 +460,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test("verify_state Freecells - With a comment", (a: Assert) => {
+    qunit.test("verify_state Freecells - With a comment", (a: Assert) => {
         a.expect(5);
         const start_char_idx = 200;
         const str = "Freecells: - JC  - 9H  # A comment";
@@ -501,7 +501,7 @@ export function test_fcs_validate(QUnit: any) {
         );
     });
 
-    QUnit.test(
+    qunit.test(
         "verify_state Freecells With a comment and a newline",
         (a: Assert) => {
             a.expect(5);
@@ -545,7 +545,7 @@ export function test_fcs_validate(QUnit: any) {
         },
     );
 
-    QUnit.test("freecells wrong prefix", (a: Assert) => {
+    qunit.test("freecells wrong prefix", (a: Assert) => {
         a.expect(3);
         const start_char_idx = 10;
         const str = "F-Junk: 5C 2H 3D 9H";
@@ -570,7 +570,7 @@ export function test_fcs_validate(QUnit: any) {
         // TEST
         a.ok(result.error.match(/^Wrong line prefix/), "err-str");
     });
-    QUnit.test("verify_state Foundations class tests", (a: Assert) => {
+    qunit.test("verify_state Foundations class tests", (a: Assert) => {
         a.expect(22);
         {
             const f = new Foundations();
@@ -738,7 +738,7 @@ export function test_fcs_validate(QUnit: any) {
             );
         }
     });
-    QUnit.test("verify_state BoardParseResult tests #1", (a: Assert) => {
+    qunit.test("verify_state BoardParseResult tests #1", (a: Assert) => {
         a.expect(5);
         const ms_deal_24 =
             ": 4C 2C 9C 8C QS 4S 2H\n" +
@@ -778,7 +778,7 @@ export function test_fcs_validate(QUnit: any) {
             "column 7 was parsed fine.",
         );
     });
-    QUnit.test("verify_state BoardParseResult nonsense line", (a: Assert) => {
+    qunit.test("verify_state BoardParseResult nonsense line", (a: Assert) => {
         a.expect(6);
         const col1_s = ": 4C 2C 9C 8C QS 4S 2H\n";
         const col2_s = "NONSENSE:: 5H QH 3C AC 3H 4H QD\n";
@@ -824,7 +824,7 @@ export function test_fcs_validate(QUnit: any) {
             "Location end is correct.",
         );
     });
-    QUnit.test("verify_state BoardParseResult - Freecells", (a: Assert) => {
+    qunit.test("verify_state BoardParseResult - Freecells", (a: Assert) => {
         a.expect(11);
         {
             const ms_deal_24_w_Freecells =
@@ -910,7 +910,7 @@ export function test_fcs_validate(QUnit: any) {
             );
         }
     });
-    QUnit.test("verify_state BoardParseResuls too many cards", (a: Assert) => {
+    qunit.test("verify_state BoardParseResuls too many cards", (a: Assert) => {
         a.expect(9);
         {
             const ms_deal_24_with_extra_8S_instead_of_3D =
@@ -979,7 +979,7 @@ export function test_fcs_validate(QUnit: any) {
         }
     });
 
-    QUnit.test(
+    qunit.test(
         "verify_state BoardParseResult too many cards founds",
         (a: Assert) => {
             a.expect(4);
@@ -1028,7 +1028,7 @@ export function test_fcs_validate(QUnit: any) {
         },
     );
 
-    QUnit.test(
+    qunit.test(
         "verify_state BoardParseResult too many cards freecells",
         (a: Assert) => {
             a.expect(4);
@@ -1075,7 +1075,7 @@ export function test_fcs_validate(QUnit: any) {
             }
         },
     );
-    QUnit.test(
+    qunit.test(
         "verify_state BoardParseResult line prefix variants",
         (a: Assert) => {
             const foundations_prefixes = [
@@ -1166,7 +1166,7 @@ export function test_fcs_validate(QUnit: any) {
             }
         },
     );
-    QUnit.test("verify_state BoardParseResult empty column", (a: Assert) => {
+    qunit.test("verify_state BoardParseResult empty column", (a: Assert) => {
         a.expect(3);
         const deal = `# MS Freecell Deal #10016
 Freecells: TH 4H JH 8H
@@ -1194,7 +1194,7 @@ Freecells: TH 4H JH 8H
             "final column was parsed fine.",
         );
     });
-    QUnit.test("verify_state BoardParseResult empty freecells", (a: Assert) => {
+    qunit.test("verify_state BoardParseResult empty freecells", (a: Assert) => {
         a.expect(3);
         const deal = `# MS Freecell Deal #10016
 Freecells:
@@ -1222,7 +1222,7 @@ Freecells:
             "final column was parsed fine.",
         );
     });
-    QUnit.test(
+    qunit.test(
         "verify_state BoardParseResult empty foundations",
         (a: Assert) => {
             a.expect(3);
@@ -1253,7 +1253,7 @@ Foundations:
             );
         },
     );
-    QUnit.test("convert cards to uppercase", (a: Assert) => {
+    qunit.test("convert cards to uppercase", (a: Assert) => {
         a.expect(1);
         const want_deal = `# MS Freecell Deal #10016
 Foundations: H-A   # a comment
@@ -1286,7 +1286,7 @@ Freecells: Qs
             "capitalize_cards works test",
         );
     });
-    QUnit.test(
+    qunit.test(
         "verify_state BoardParseResult lowercase letter error",
         (a: Assert) => {
             a.expect(3);
@@ -1317,7 +1317,7 @@ Foundations:
             a.deepEqual(error.problem_strings, ["qs"], "Error of right type.");
         },
     );
-    QUnit.test(
+    qunit.test(
         "verify_state BoardParseResult '10' string error",
         (a: Assert) => {
             a.expect(2);
