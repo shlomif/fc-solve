@@ -3961,6 +3961,10 @@ DLLEXPORT char *freecell_solver_user_move_to_string_w_state(
     const int standard_notation GCC_UNUSED)
 {
     char *ret = SMALLOC(ret, 256);
+    if (!ret)
+    {
+        return NULL;
+    }
 #ifdef FCS_WITH_MOVES
     freecell_solver_user_stringify_move_w_state(
         api_instance, ret, move, standard_notation);

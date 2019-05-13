@@ -51,10 +51,9 @@ void fc_solve_compact_allocator_extend(compact_allocator *const allocator)
 
 void fc_solve_meta_compact_allocator_finish(meta_allocator *const meta_alloc)
 {
-    char *iter, *iter_next;
-    for (iter = meta_alloc->recycle_bin,
-        iter_next = iter ? OLD_LIST_NEXT(iter) : NULL;
-         iter_next; iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
+    char *iter = meta_alloc->recycle_bin;
+    char *iter_next = iter ? OLD_LIST_NEXT(iter) : NULL;
+    for (; iter_next; iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
     {
         free(iter);
     }
