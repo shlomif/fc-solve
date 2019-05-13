@@ -54,11 +54,10 @@ extern "C" {
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
-#ifdef _POSIX_C_SOURCE
-#if _POSIX_C_SOURCE > 200809L
+#ifndef _POSIX_C_SOURCE
+#define _POSIX_C_SOURCE 200809L
+#endif
 #define HAVE_GETLINE 1
-#endif
-#endif
 
 #if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&    \
      defined(HARD_CODED_NUM_DECKS))

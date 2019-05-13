@@ -51,9 +51,7 @@ static inline void add_to_last_arg(
 static inline void push_args_last_arg(args_man_wrapper *const manager)
 {
     const size_t len = (size_t)(manager->last_arg_ptr - manager->last_arg);
-    char *const new_arg = SMALLOC(new_arg, len + 1);
-    strncpy(new_arg, manager->last_arg, len);
-    new_arg[len] = '\0';
+    char *const new_arg = strndup(manager->last_arg, len);
 
     manager->args_man.argv[(manager->args_man.argc)++] = new_arg;
 
