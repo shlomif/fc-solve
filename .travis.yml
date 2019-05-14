@@ -78,6 +78,7 @@ sudo: required
 cache:
     ccache: true
     directories:
+        - $HOME/fc-solve-tests-reruns-cache
         - $HOME/perl_modules
         - $HOME/fc-solve/fc-solve/source/avl-2.0.3
 # services:

@@ -29,7 +29,7 @@ enable_reproducible_builds()
     slightly_wrong_gcc_flag_see_man_gcc="-frandom-seed=1977";
     export CFLAGS="$slightly_wrong_gcc_flag_see_man_gcc"
 }
-
 enable_reproducible_builds
+export FC_SOLVE__TESTS_RERUNS_CACHE_DATA_DIR="$HOME/fc-solve-tests-reruns-cache"
 cd fc-solve/source
 perl ../scripts/multi_config_tests.pl 2>&1 | zenfilter --count-step=500 --last=500 --filter='^Running:\s*\{' --suppress-last-on="All tests successful\\.\\n*\\Z"

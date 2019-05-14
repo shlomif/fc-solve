@@ -9,6 +9,7 @@ use Getopt::Long qw/ GetOptions /;
 use Env::Path ();
 use Path::Tiny qw/ path /;
 use File::Basename qw/ basename /;
+use CHI ();
 
 my $bindir     = path(__FILE__)->parent;
 my $abs_bindir = $bindir->absolute;
@@ -16,6 +17,43 @@ my $abs_bindir = $bindir->absolute;
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
 my $num_jobs  = $ENV{TEST_JOBS};
+my $KEY       = 'FC_SOLVE__TESTS_RERUNS_CACHE_DATA_DIR';
+my $cache     = CHI->new(
+    driver => 'File',
+    root_dir =>
+        ( $ENV{$KEY} || ( ( $ENV{TMPDIR} || '/tmp' ) . '/fc-solve1temp' ) )
+);
+require lib;
+lib->import("$abs_bindir/t/lib");
+require FC_Solve::Test::Valgrind::Data;
+my %binaries;
+my %progs =
+    map { $_ => +{ binaries => {}, } }
+    map { $_->{args}->{prog} // die %{ $_->{args} } }
+    values %{ FC_Solve::Test::Valgrind::Data->get_hash };
+
+use Digest::SHA ();
+my $rerun = 0;
+foreach my $prog ( keys %progs )
+{
+    say $prog;
+    die if !-e $prog;
+    foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
+    {
+        say "bin $prog $bin";
+        $progs{$prog}{binaries}{$bin} //= (
+            $binaries{$bin} //= do
+            {
+                Digest::SHA->new(256)->addfile($bin)->b64digest;
+            }
+        );
+    }
+    my $val = $cache->get( $progs{$prog} );
+    if ( !$val )
+    {
+        ++$rerun;
+    }
+}
 
 sub _is_parallized
 {
@@ -42,6 +80,13 @@ sub run_tests
 
     # Workaround for Windows spawning-SNAFU.
     my $exit_code = system(@cmd);
+    if ( !$exit_code and $rerun > 0 )
+    {
+        foreach my $prog ( keys %progs )
+        {
+            $cache->set( $progs{$prog}, 1, '100 days' );
+        }
+    }
     exit( $exit_success ? 0 : $exit_code ? (-1) : 0 );
 }
 
@@ -189,9 +234,13 @@ sub myglob
         @tests = grep { !/build-process/ } @tests;
     }
 
-    if ( $ENV{FCS_TEST_WITHOUT_VALGRIND} )
+    if ( $ENV{FCS_TEST_WITHOUT_VALGRIND} or ( $rerun == 0 ) )
     {
         @tests = grep { !/valgrind/ } @tests;
+    }
+    if ( $rerun == 0 )
+    {
+        @tests = grep { !/(?:cmpdigest|verify)--/ } @tests;
     }
 
     print STDERR <<"EOF";
