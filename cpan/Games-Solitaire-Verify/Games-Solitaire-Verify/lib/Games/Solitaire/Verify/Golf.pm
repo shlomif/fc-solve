@@ -199,6 +199,7 @@ sub process_solution
     {
         die "First line is '$l' instead of 'Solved!'";
     }
+    my $CHECK_EMPTY = ( $self->_is_golf or $self->_variant eq "black_hole" );
 
     # As many moves as the number of cards.
 MOVES:
@@ -312,7 +313,7 @@ MOVES:
         }
 
         $self->_set_found($card);
-        if ( $self->_is_golf or $self->_variant eq "black_hole" )
+        if ($CHECK_EMPTY)
         {
             if ( all { $_->len == 0 } @{ $self->_columns } )
             {
