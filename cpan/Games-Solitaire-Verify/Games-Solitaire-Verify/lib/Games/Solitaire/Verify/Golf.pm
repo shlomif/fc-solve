@@ -199,7 +199,8 @@ sub process_solution
     {
         die "First line is '$l' instead of 'Solved!'";
     }
-    my $CHECK_EMPTY = ( $self->_is_golf or $self->_variant eq "black_hole" );
+    my $IS_GOLF     = $self->_is_golf;
+    my $CHECK_EMPTY = ( $IS_GOLF or $self->_variant eq "black_hole" );
 
     # As many moves as the number of cards.
 MOVES:
@@ -208,7 +209,7 @@ MOVES:
         my ( $move_line, $move_line_idx ) = $get_line->();
 
         my $card;
-        if (    $self->_is_golf
+        if (    $IS_GOLF
             and $move_line =~ m/\ADeal talon\z/ )
         {
             if ( !@{ $self->_talon } )
@@ -290,7 +291,7 @@ MOVES:
                 if (
                     not( $delta == 1 or $delta == ( $MAX_RANK - 1 ) )
                     or (
-                            $self->_is_golf
+                            $IS_GOLF
                         and ( !$self->_wrap_ranks )
                         and (
                             (
