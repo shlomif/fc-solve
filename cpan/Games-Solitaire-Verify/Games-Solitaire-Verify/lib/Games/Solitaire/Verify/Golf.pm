@@ -47,7 +47,7 @@ Process the solution with the line iterator. Throws an exception if there is an 
 =cut
 
 use Carp ();
-use List::Util qw/ all /;
+use List::Util qw/ sum /;
 
 use Games::Solitaire::Verify::Card      ();
 use Games::Solitaire::Verify::Column    ();
@@ -174,8 +174,9 @@ sub _set_found
 sub process_solution
 {
     my ( $self, $next_line_iter ) = @_;
-    my $NUM_COLUMNS = @{ $self->_columns };
-    my $line_num    = 0;
+    my $NUM_COLUMNS     = @{ $self->_columns };
+    my $line_num        = 0;
+    my $remaining_cards = sum( map { $_->len } @{ $self->_columns } );
 
     my $get_line = sub {
         my $ret = $next_line_iter->();
@@ -311,12 +312,13 @@ MOVES:
                 }
             }
             $card = $col->pop;
+            --$remaining_cards;
         }
 
         $self->_set_found($card);
         if ($CHECK_EMPTY)
         {
-            if ( all { $_->len == 0 } @{ $self->_columns } )
+            if ( $remaining_cards == 0 )
             {
                 last MOVES;
             }
