@@ -27,7 +27,6 @@ addons:
             - silversearcher-ag
             - strip-nondeterminism
             - valgrind
-            - wml
             - xsltproc
 os: linux
 # dist: trusty
@@ -54,7 +53,6 @@ before_install:
     - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
     # - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'libtap' 'https://github.com/shlomif/libtap-prev.git'
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' '.' 'https://github.com/shlomif/libtap.git' "cmake"
-    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'src' 'https://github.com/thewml/website-meta-language.git'
     - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
     - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
     - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
