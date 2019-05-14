@@ -5,7 +5,7 @@
 };*/
 // import * as s2i from "./dist/fc_solve_find_index_s2ints.js";
 import * as s2i from "./s2ints_js";
-const Module = require("./libfcs-wrap");
+import Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 import * as test_strings from "./web-fcs-tests-strings";
 import { perl_range } from "./prange";
