@@ -1,2 +1,4 @@
 3.all_in_a_row.board
 3.all_in_a_row.sol
+6.black_hole.board
+6.black_hole.sol
