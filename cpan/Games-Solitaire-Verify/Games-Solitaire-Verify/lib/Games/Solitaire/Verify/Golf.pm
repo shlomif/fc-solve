@@ -174,9 +174,10 @@ sub _set_found
 sub process_solution
 {
     my ( $self, $next_line_iter ) = @_;
-    my $NUM_COLUMNS     = @{ $self->_columns };
+    my $columns         = $self->_columns;
+    my $NUM_COLUMNS     = @$columns;
     my $line_num        = 0;
-    my $remaining_cards = sum( map { $_->len } @{ $self->_columns } );
+    my $remaining_cards = sum( map { $_->len } @$columns );
 
     my $get_line = sub {
         my $ret = $next_line_iter->();
@@ -272,7 +273,7 @@ MOVES:
         }
         else
         {
-            my $col                = $self->_columns->[$col_idx];
+            my $col                = $columns->[$col_idx];
             my $top_card           = $col->top();
             my $top_card_moved_str = $top_card->to_string();
 
@@ -305,9 +306,8 @@ MOVES:
                     )
                     )
                 {
-                    die "Cannot put "
-                        . $top_card->to_string()
-                        . " in the foundations that contain "
+                    die
+"Cannot put $top_card_moved_str in the foundations that contain "
                         . $found_card->to_string();
                 }
             }
