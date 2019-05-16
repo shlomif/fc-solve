@@ -1300,6 +1300,7 @@ iterations's
 
 dnf
 freecell-solver-bin
+pkg
 
 ==== In: dest/faq.html
 
