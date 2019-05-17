@@ -1,11 +1,11 @@
 {% extends "template.jinja" %}
 {% block title %}Online Freecell solver (Automated tests){% endblock %}
 {% block page_extra_head_elements %}
-<link rel="stylesheet" type="text/css" href="{{ base_path }}css/qunit.css" />
+<link rel="stylesheet" href="{{ base_path }}css/qunit.css" />
 <script src="{{ base_path }}js/jquery.querystring.js"></script>
 {{ jquery_ui_head_elements() }}
 {{ js_requirejs() }}
-<link rel="stylesheet" type="text/css" href="{{ base_path }}web-fc-solve.css" />
+<link rel="stylesheet" href="{{ base_path }}web-fc-solve.css" />
 {% endblock %}
 {% block body %}
 
