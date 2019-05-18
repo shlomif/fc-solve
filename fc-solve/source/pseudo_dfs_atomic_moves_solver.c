@@ -305,7 +305,7 @@ int main(int argc GCC_UNUSED, char *argv[])
     FILE *const fh = fopen(filename, "r");
     if (!fh)
     {
-        fc_solve_err("Could not open file '%s' for input.\n", filename);
+        exit_error("Could not open file '%s' for input.\n", filename);
     }
     const fcs_user_state_str user_state = read_state(fh);
     fcs_state_keyval_pair init_state_pair;

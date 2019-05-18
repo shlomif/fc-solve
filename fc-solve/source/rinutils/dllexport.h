@@ -9,18 +9,14 @@
  */
 #pragma once
 
-#include <stdio.h>
-#include <stdarg.h>
-#include <stdlib.h>
-
-static inline __attribute__((noreturn))
-__attribute__((format(printf, 1, 2))) void
-fc_solve_err(const char *msg, ...)
-{
-    va_list ap;
-
-    va_start(ap, msg);
-    vfprintf(stderr, msg, ap);
-    va_end(ap);
-    exit(-1);
-}
+#ifdef __EMSCRIPTEN__
+#include "emscripten.h"
+#define DLLEXPORT EMSCRIPTEN_KEEPALIVE
+#define DLLLOCAL __attribute__((visibility("hidden")))
+#elif defined(__GNUC__)
+#define DLLEXPORT __attribute__((visibility("default")))
+#define DLLLOCAL __attribute__((visibility("hidden")))
+#else
+#define DLLEXPORT
+#define DLLLOCAL
+#endif

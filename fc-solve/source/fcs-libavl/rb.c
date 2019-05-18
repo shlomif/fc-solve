@@ -27,9 +27,7 @@
 #include <stdbool.h>
 
 #include "rb.h"
-
-
-#include "alloc_wrap.h"
+#include "rinutils/alloc_wrap.h"
 
 #ifdef WITH_AVL_BALANCE_FIELD
 static inline signed char rb_get_color(struct rb_node *const node)

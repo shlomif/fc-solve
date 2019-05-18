@@ -28,8 +28,7 @@ static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
             if (pthread_create(&(threads[i].id), NULL,
                     instance_run_solver_thread, &(threads[i].arg)))
             {
-                fc_solve_err(
-                    "Worker Thread No. %zu Initialization failed!\n", i);
+                exit_error("Worker Thread No. %zu Initialization failed!\n", i);
             }
         }
 

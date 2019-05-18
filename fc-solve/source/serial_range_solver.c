@@ -111,7 +111,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             break;
 
         default:
-            fc_solve_err("%s", "Unknown ret code!");
+            exit_error("%s", "Unknown ret code!");
         }
 
         if (solutions_directory)
@@ -121,7 +121,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             FILE *const output_fh = fopen(solution_fn, "wt");
             if (!output_fh)
             {
-                fc_solve_err("Could not open output file '%s' for writing!",
+                exit_error("Could not open output file '%s' for writing!",
                     solution_fn);
             }
             fc_solve_output_result_to_file(

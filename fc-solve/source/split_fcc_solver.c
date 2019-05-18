@@ -16,6 +16,7 @@
 #include <sys/tree.h>
 #include <assert.h>
 #include "depth_multi_queue.h"
+#include "portable_time.h"
 
 typedef struct
 {
@@ -632,14 +633,14 @@ int main(int argc, char *argv[])
 
     if (arg != argc)
     {
-        fc_solve_err("%s\n", "Junk at the end of the parameters");
+        exit_error("%s\n", "Junk at the end of the parameters");
     }
 
     if (!(filename && fingerprint_input_location_path &&
             mod_base64_fcc_fingerprint && path_to_output_dir &&
             inp.offload_dir_path))
     {
-        fc_solve_err("One or more of these parameters was not specified: %s\n",
+        exit_error("One or more of these parameters was not specified: %s\n",
             "--board, --fingerprint, --input, --output, --offload-dir-path");
     }
     fcs_state_keyval_pair init_state;
@@ -658,7 +659,7 @@ int main(int argc, char *argv[])
         if (fingerprint_data_len !=
             sizeof(fingerprint_which_irreversible_moves_bitmask))
         {
-            fc_solve_err("%s\n", "--fingerprint is invalid length.");
+            exit_error("%s\n", "--fingerprint is invalid length.");
         }
     }
 
@@ -681,7 +682,7 @@ int main(int argc, char *argv[])
     FILE *fingerprint_fh = fopen(fingerprint_input_location_path, "rt");
     if (!fingerprint_fh)
     {
-        fc_solve_err("Cannot open '%s' for reading. Exiting.",
+        exit_error("Cannot open '%s' for reading. Exiting.",
             fingerprint_input_location_path);
     }
 

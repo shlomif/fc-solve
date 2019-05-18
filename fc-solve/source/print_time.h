@@ -14,7 +14,6 @@
 extern "C" {
 #endif
 
-#include "typeof_wrap.h"
 #include <stdio.h>
 #include "portable_time.h"
 

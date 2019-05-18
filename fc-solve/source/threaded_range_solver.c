@@ -129,7 +129,7 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
             pthread_create(&workers[idx], NULL, worker_thread, &num_iters[idx]);
         if (check)
         {
-            fc_solve_err(
+            exit_error(
                 "Worker Thread No. %lu Initialization failed with error %d!\n",
                 (unsigned long)idx, check);
         }

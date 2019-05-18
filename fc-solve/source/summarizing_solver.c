@@ -41,8 +41,7 @@ static inline void append(const long start, const long end)
         mydeals = SREALLOC(mydeals, max_num_deals += 1000);
         if (!mydeals)
         {
-            fc_solve_err(
-                "Number of deals exceeded %ld!\n", (long)max_num_deals);
+            exit_error("Number of deals exceeded %ld!\n", (long)max_num_deals);
         }
     }
     const deals_range new_r = (deals_range){.start = start, .end = end};
@@ -69,12 +68,12 @@ int main(int argc, char *argv[])
         {
             if (++arg >= argc)
             {
-                fc_solve_err("seq without args!\n");
+                exit_error("seq without args!\n");
             }
             const long start = atol(argv[arg]);
             if (++arg >= argc)
             {
-                fc_solve_err("seq without args!\n");
+                exit_error("seq without args!\n");
             }
             const long end = atol(argv[arg++]);
             append(start, end);
@@ -83,12 +82,12 @@ int main(int argc, char *argv[])
         {
             if (++arg >= argc)
             {
-                fc_solve_err("slurp without arg!\n");
+                exit_error("slurp without arg!\n");
             }
             FILE *const f = fopen(argv[arg++], "rt");
             if (!f)
             {
-                fc_solve_err("Cannot slurp file!\n");
+                exit_error("Cannot slurp file!\n");
             }
             while (!feof(f))
             {
@@ -109,7 +108,7 @@ int main(int argc, char *argv[])
 
     if (arg == argc)
     {
-        fc_solve_err("No double dash (\"--\") after deals indexes!\n");
+        exit_error("No double dash (\"--\") after deals indexes!\n");
     }
 
     for (++arg; arg < argc; ++arg)

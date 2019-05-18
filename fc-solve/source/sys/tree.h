@@ -28,7 +28,7 @@
  */
 #pragma once
 
-#include "unused.h"
+#include "rinutils/unused.h"
 #ifndef _WIN32
 #include <sys/cdefs.h>
 #endif

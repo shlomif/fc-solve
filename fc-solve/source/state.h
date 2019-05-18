@@ -16,6 +16,7 @@ extern "C" {
 
 #include <ctype.h>
 #include "freecell-solver/fcs_conf.h"
+#include "freecell-solver/fcs_limit.h"
 
 #ifdef FCS_WITH_MOVES
 #include "freecell-solver/fcs_move.h"

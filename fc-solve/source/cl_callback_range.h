@@ -25,7 +25,7 @@ static int cmd_line_callback(void *const instance, const int argc GCC_UNUSED,
     if (!cmd_line_cb__handle_common(
             arg_str, instance, (fc_solve_display_information_context *)context))
     {
-        fc_solve_err("Unknown option %s!\n", arg_str);
+        exit_error("Unknown option %s!\n", arg_str);
     }
     *num_to_skip = 1;
     return FCS_CMD_LINE_SKIP;

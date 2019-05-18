@@ -315,7 +315,7 @@ int main(int argc, char *argv[])
             max_batch_size = (fcs_batch_size)atol(param);
             if (max_batch_size < 1)
             {
-                fc_solve_err("--batch-size must be at least 1.\n");
+                exit_error("--batch-size must be at least 1.\n");
             }
         }
         else if ((param = TRY_PARAM("-o")))
@@ -330,11 +330,11 @@ int main(int argc, char *argv[])
 
     if (real_arg < argc - 1)
     {
-        fc_solve_err("%s\n", "Junk arguments!");
+        exit_error("%s\n", "Junk arguments!");
     }
     if (real_arg == argc)
     {
-        fc_solve_err("%s\n", "No board specified.");
+        exit_error("%s\n", "No board specified.");
     }
 
 #ifndef FCS_DBM_SINGLE_THREAD

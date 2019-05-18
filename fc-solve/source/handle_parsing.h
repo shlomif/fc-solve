@@ -52,7 +52,7 @@ static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
     case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
         if (only_recognized)
         {
-            fc_solve_err("Unknown option: %s\n", argv[*arg_ptr]);
+            exit_error("Unknown option: %s\n", argv[*arg_ptr]);
         }
         break;
     case FCS_CMD_LINE_PARAM_WITH_NO_ARG:

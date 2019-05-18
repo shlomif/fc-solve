@@ -15,6 +15,7 @@
 #include "dbm_move_to_string.h"
 #include "render_state.h"
 #include "try_param.h"
+#include "portable_time.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -426,7 +427,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     {
         if ((inp->pre_cache_max_count = atol(param)) < 1000)
         {
-            fc_solve_err("--pre-cache-max-count must be at least 1,000.\n");
+            exit_error("--pre-cache-max-count must be at least 1,000.\n");
         }
         return true;
     }
@@ -442,7 +443,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
         }
         else
         {
-            fc_solve_err("Unknown game '%s'. Aborting\n", param);
+            exit_error("Unknown game '%s'. Aborting\n", param);
         }
         return true;
     }
@@ -455,7 +456,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     {
         if ((inp->num_threads = (size_t)atoi(param)) < 1)
         {
-            fc_solve_err("--num-threads must be at least 1.\n");
+            exit_error("--num-threads must be at least 1.\n");
         }
         return true;
     }
@@ -473,7 +474,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     {
         if ((inp->caches_delta = atol(param)) < 1000)
         {
-            fc_solve_err("--caches-delta must be at least 1,000.\n");
+            exit_error("--caches-delta must be at least 1,000.\n");
         }
         return true;
     }

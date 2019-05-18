@@ -121,23 +121,23 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else
         {
-            fc_solve_err("Unknown argument - '%s'!\n", argv[arg]);
+            exit_error("Unknown argument - '%s'!\n", argv[arg]);
         }
     }
 
     if (!scan1_to)
     {
-        fc_solve_err("--scan1-to not specified!\n");
+        exit_error("--scan1-to not specified!\n");
     }
 
     if (!scan2_to)
     {
-        fc_solve_err("--scan2-to not specified!\n");
+        exit_error("--scan2-to not specified!\n");
     }
 
     if (!output_filename)
     {
-        fc_solve_err("output filename not specified");
+        exit_error("output filename not specified");
     }
 
     fc_solve_print_started_at();

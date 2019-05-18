@@ -250,8 +250,8 @@ static bool populate_instance_with_intermediate_input_line(
         unsigned int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
-            fc_solve_err("Error in reading state in line %ld of the "
-                         "--intermediate-input",
+            exit_error("Error in reading state in line %ld of the "
+                       "--intermediate-input",
                 line_num);
         }
 #ifdef FCS_DEBONDT_DELTA_STATES
@@ -309,9 +309,9 @@ static bool populate_instance_with_intermediate_input_line(
             src -= 8;
             if (src >= 4)
             {
-                fc_solve_err("Error in reading state in line %ld of the "
-                             "--intermediate-input - source cannot be a "
-                             "foundation.",
+                exit_error("Error in reading state in line %ld of the "
+                           "--intermediate-input - source cannot be a "
+                           "foundation.",
                     line_num);
             }
 #if MAX_NUM_FREECELLS > 0
@@ -378,9 +378,9 @@ static bool populate_instance_with_intermediate_input_line(
     if (memcmp(&running_key, &final_stack_encoded_state, sizeof(running_key)) !=
         0)
     {
-        fc_solve_err("Error in reading state in line %ld of the "
-                     "--intermediate-input - final state does not match "
-                     "that with all states applied.\n",
+        exit_error("Error in reading state in line %ld of the "
+                   "--intermediate-input - final state does not match "
+                   "that with all states applied.\n",
             line_num);
     }
     fcs_offloading_queue__insert(
@@ -405,7 +405,7 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            fc_solve_err("Worker Thread No. %zu Initialization failed!\n", i);
+            exit_error("Worker Thread No. %zu Initialization failed!\n", i);
         }
     }
 
@@ -559,11 +559,11 @@ int main(int argc, char *argv[])
 
     if (arg < argc - 1)
     {
-        fc_solve_err("%s\n", "Junk arguments!");
+        exit_error("%s\n", "Junk arguments!");
     }
     if (arg == argc)
     {
-        fc_solve_err("%s\n", "No board specified.");
+        exit_error("%s\n", "No board specified.");
     }
 #ifndef FCS_DBM_SINGLE_THREAD
     const_AUTO(num_threads, inp.num_threads);
@@ -584,7 +584,7 @@ int main(int argc, char *argv[])
         intermediate_in_fh = fopen(intermediate_input_filename, "rt");
         if (!intermediate_in_fh)
         {
-            fc_solve_err(
+            exit_error(
                 "Could not open file '%s' as --intermediate-input-filename.\n",
                 intermediate_input_filename);
         }

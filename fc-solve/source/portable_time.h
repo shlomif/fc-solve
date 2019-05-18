@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#include "typeof_wrap.h"
+#include "rinutils/typeof_wrap.h"
 #include <stdio.h>
 
 #ifndef WIN32

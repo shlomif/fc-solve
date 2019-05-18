@@ -36,7 +36,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store, const char *const path,
 
     if ((ret = db_create(&(db->dbp), NULL, 0)) != 0)
     {
-        fc_solve_err("db_create: %s\n", db_strerror(ret));
+        exit_error("db_create: %s\n", db_strerror(ret));
     }
 
     if ((ret = db->dbp->open(
@@ -138,7 +138,7 @@ extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
     int ret;
     if ((ret = db->dbp->close(db->dbp, 0)) != 0)
     {
-        fc_solve_err("DB close failed with ret=%d\n", ret);
+        exit_error("DB close failed with ret=%d\n", ret);
     }
     free(db);
 }

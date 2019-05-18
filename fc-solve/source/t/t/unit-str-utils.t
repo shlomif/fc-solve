@@ -7,7 +7,7 @@ package FC_Solve::StrUtils;
 
 use FC_Solve::InlineWrap (
     C => <<"EOF",
-#include "str_utils.h"
+#include "rinutils/str_utils.h"
 
 int c_string_starts_with( char * str, char * prefix, int end) {
     return string_starts_with(str, prefix, str+end);

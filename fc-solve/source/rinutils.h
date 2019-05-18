@@ -22,14 +22,12 @@
 #include <unistd.h>
 #endif
 
-#include "alloc_wrap.h"
-#include "count.h"
-#include "freecell-solver/fcs_dllexport.h"
-#include "fcs_err.h"
-#include "freecell-solver/fcs_limit.h"
-#include "likely.h"
-#include "min_and_max.h"
-#include "portable_time.h"
-#include "str_utils.h"
-#include "typeof_wrap.h"
-#include "unused.h"
+#include "rinutils/alloc_wrap.h"
+#include "rinutils/count.h"
+#include "rinutils/dllexport.h"
+#include "rinutils/exit_error.h"
+#include "rinutils/likely.h"
+#include "rinutils/min_and_max.h"
+#include "rinutils/str_utils.h"
+#include "rinutils/typeof_wrap.h"
+#include "rinutils/unused.h"

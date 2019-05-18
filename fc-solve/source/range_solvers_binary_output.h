@@ -89,7 +89,7 @@ static void read_int_wrapper(FILE *const in, long long *const var)
 {
     if (read_int(in, var))
     {
-        fc_solve_err(
+        exit_error(
             "%s", "Output file is too short to deduce the configuration!\n");
     }
 }
@@ -109,7 +109,7 @@ static inline void bin_init(fcs_binary_output *const bin,
         {
             if (!(bin->fh = fopen(bin->filename, "wb")))
             {
-                fc_solve_err(
+                exit_error(
                     "Could not open \"%s\" for writing!\n", bin->filename);
             }
 
@@ -131,19 +131,19 @@ static inline void bin_init(fcs_binary_output *const bin,
             const long file_len = ftell(in);
             if (file_len % 4 != 0)
             {
-                fc_solve_err(
+                exit_error(
                     "%s", "Output file has an invalid length. Terminating.\n");
             }
             *start_board_ptr += (file_len - 12) / 4;
             if (*start_board_ptr >= *end_board_ptr)
             {
-                fc_solve_err("%s",
+                exit_error("%s",
                     "Output file was already finished being generated.\n");
             }
             fclose(in);
             if (!(bin->fh = fopen(bin->filename, "ab")))
             {
-                fc_solve_err(
+                exit_error(
                     "Could not open \"%s\" for writing!\n", bin->filename);
             }
         }

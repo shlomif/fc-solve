@@ -10,7 +10,7 @@
 #pragma once
 
 #include <string.h>
-#include "fcs_err.h"
+#include "rinutils/exit_error.h"
 
 static const char *try_argv_param(
     const int argc, char **const argv, int *const arg, const char *const flag)
@@ -19,7 +19,7 @@ static const char *try_argv_param(
     {
         if (++(*arg) == argc)
         {
-            fc_solve_err("%s came without an argument!\n", flag);
+            exit_error("%s came without an argument!\n", flag);
         }
         return argv[*arg];
     }
