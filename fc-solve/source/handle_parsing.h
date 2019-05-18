@@ -15,7 +15,7 @@
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 #include "freecell-solver/fcs_cl.h"
 #else

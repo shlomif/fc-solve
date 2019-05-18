@@ -42,7 +42,7 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #define DICT_IMPLEMENTATION
 #include "kaz_tree.h"

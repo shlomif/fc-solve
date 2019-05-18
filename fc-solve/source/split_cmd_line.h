@@ -11,7 +11,7 @@
 // to a subset of Bourne shell's semantics. Useful for reading command
 // line arguments from files.
 #pragma once
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #define FC_SOLVE__ARGS_MAN_GROW_BY 32
 

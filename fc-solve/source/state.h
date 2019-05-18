@@ -24,7 +24,7 @@ extern "C" {
 
 #include "freecell-solver/fcs_enums.h"
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #include "game_type_limit.h"
 
 #include "internal_move_struct.h"

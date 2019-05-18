@@ -197,6 +197,12 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
+SET (rinutils "rinutils")
+IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils}")
+    EXECUTE_PROCESS(COMMAND "git" "clone" "https://github.com/shlomif/rinutils.git" "${rinutils}"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+ENDIF ()
 
 SET (_gen_c_files )
 MACRO(add_gen_c)
@@ -534,6 +540,7 @@ ENDIF ()
 IF (FCS_MAX_NUM_SCANS_BUCKETS)
     ADD_DEFINITIONS("-DFCS_MAX_NUM_SCANS_BUCKETS=${FCS_MAX_NUM_SCANS_BUCKETS}")
 ENDIF ()
+INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils}/rinutils/include")
 
 # So it can find the includes when building fcs-libavl/rb.h.
 INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/include" ${CMAKE_CURRENT_SOURCE_DIR})

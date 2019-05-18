@@ -10,7 +10,7 @@
 #pragma once
 
 #include "freecell-solver/fcs_cl.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
 #include "range_solvers_gen_ms_boards.h"

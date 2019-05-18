@@ -28,7 +28,7 @@ extern "C" {
 #include <pthread/rwlock_fcfs.h>
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef FCS_DBM_SINGLE_THREAD
 

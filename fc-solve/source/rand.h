@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 typedef long fcs_rand_gen;
 

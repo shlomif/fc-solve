@@ -38,11 +38,21 @@ sub src_filenames
     };
 
     return [
+        (
+            map { "rinutils/rinutils/include/rinutils/$_" } 'alloc_wrap.h',
+            'count.h',
+            'exit_error.h',
+            'likely.h',
+            'min_and_max.h',
+            'rinutils.h',
+            'str_utils.h',
+            'dllexport.h',
+            'typeof_wrap.h',
+            'unused.h',
+        ),
         $self->main_base . '.c',
-        'rinutils/alloc_wrap.h',
         'bit_rw.h',
         'card.c',
-        'rinutils/count.h',
         'dbm_cache.h',
         'dbm_calc_derived.h',
         'dbm_calc_derived_iface.h',
@@ -67,8 +77,6 @@ sub src_filenames
         'fcc_brfs_test.h',
         'fcs-libavl/rb.c',
         'fcs-libavl/rb.h',
-        'rinutils/exit_error.h',
-        'rinutils/dllexport.h',
         'game_type_limit.h',
         'generic_tree.h',
         'include/freecell-solver/fcs_conf.h',
@@ -81,24 +89,18 @@ sub src_filenames
         'is_parent.c',
         'is_parent.h',
         'kaz_tree.h',
-        'rinutils/likely.h',
         'lock.h',
         'meta_alloc.c',
         'meta_alloc.h',
-        'rinutils/min_and_max.h',
         'offloading_queue.h',
         'portable_time.h',
         'rank2str.h',
         'read_state.h',
         'render_state.h',
-        'rinutils.h',
         'state.c',
         'state.h',
-        'rinutils/str_utils.h',
         $on_fcc->( [ 'sys/tree.h', ] ),
         'try_param.h',
-        'rinutils/typeof_wrap.h',
-        'rinutils/unused.h',
         'var_base_int.h',
         'var_base_reader.h',
         'var_base_writer.h',
@@ -135,7 +137,7 @@ sub run
     path("$dest_dir/fcs-libavl")->mkpath;
     path("$dest_dir/include/freecell-solver")->mkpath;
     path("$dest_dir/pthread")->mkpath;
-    path("$dest_dir/rinutils")->mkpath;
+    path("$dest_dir/rinutils/rinutils/include/rinutils")->mkpath;
     if ( $self->fcc_solver )
     {
         path("$dest_dir/sys")->mkpath;
@@ -245,7 +247,7 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
-CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I. -I./fcs-libavl
+CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))

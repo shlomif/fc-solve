@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 typedef uint32_t microsoft_rand_uint;
 

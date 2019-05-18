@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #include "freecell-solver/fcs_enums.h"
 #include "freecell-solver/fcs_user.h"
 

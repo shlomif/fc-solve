@@ -13,7 +13,7 @@ extern "C" {
 #endif
 
 #include "freecell-solver/fcs_conf.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef CARD_DEBUG_PRES
 #define CARD_ZERO() "*"

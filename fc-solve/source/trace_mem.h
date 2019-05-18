@@ -14,7 +14,7 @@
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef FCS_TRACE_MEM
 static int rss_found = 0;

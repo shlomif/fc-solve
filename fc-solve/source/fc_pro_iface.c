@@ -9,7 +9,7 @@
  */
 #include <assert.h>
 #include "fc_pro_iface_pos.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #define MOVES_PROCESSED_GROW_BY 32
 static inline void moves_processed_add_new_move(

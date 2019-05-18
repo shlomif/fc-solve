@@ -16,7 +16,7 @@ extern "C" {
 #endif
 
 #include "fcs_conf.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
 

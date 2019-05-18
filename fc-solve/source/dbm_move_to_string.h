@@ -10,7 +10,7 @@
 // dbm_move_to_string.h - the move_to_string function.
 #pragma once
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef __cplusplus
 extern "C" {

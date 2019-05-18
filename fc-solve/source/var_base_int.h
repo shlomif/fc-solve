@@ -10,7 +10,7 @@
 // var_base_int.h - abstract/wrap either mpz_t or the faster unsigned __int128.
 #pragma once
 #include "freecell-solver/fcs_conf.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef FCS_USE_INT128_FOR_VAR_BASE
 

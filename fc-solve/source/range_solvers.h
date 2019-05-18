@@ -9,7 +9,7 @@
  */
 // range_solvers.h - common routines for the range solvers.
 #pragma once
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #include "portable_time.h"
 #include "freecell-solver/fcs_conf.h"
 #include "freecell-solver/fcs_cl.h"

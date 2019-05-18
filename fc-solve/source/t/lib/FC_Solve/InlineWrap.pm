@@ -33,7 +33,8 @@ sub import
         NAME => $pkg,
         INC  => join( " ",
             map { "-I$_" }
-            map { bin_file($_), src_file($_) } ( ["include"], [] ) ),
+                map { bin_file($_), src_file($_) }
+                ( ["include"], ["rinutils/rinutils/include"], [] ) ),
         CCFLAGS           => $ccflags,
         CLEAN_AFTER_BUILD => 0,
         LIBS              => "-L$ENV{FCS_PATH} $libs",

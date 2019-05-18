@@ -8,8 +8,7 @@
 #pragma once
 
 #include <stdint.h>
-
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 /* We modified the encoding table to have '_' instead of '/',
  * which interferes with UNIX paths.

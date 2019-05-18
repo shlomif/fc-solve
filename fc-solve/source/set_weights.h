@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #include "freecell-solver/fcs_user.h"
 
 static inline void fc_solve_set_weights(freecell_solver_str_t start_num,

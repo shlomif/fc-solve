@@ -9,7 +9,7 @@
  */
 // measure_depth_dep_tests_order_performance.c - measure the relative
 // depth-dependent performance of two scans.
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 #include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "try_param.h"

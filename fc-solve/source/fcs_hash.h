@@ -15,7 +15,7 @@ extern "C" {
 #endif
 
 #include "meta_alloc.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 enum FCS_INLINED_HASH_DATA_TYPE
