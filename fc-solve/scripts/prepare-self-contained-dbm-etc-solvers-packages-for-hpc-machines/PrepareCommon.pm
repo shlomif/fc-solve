@@ -135,6 +135,7 @@ sub run
     path("$dest_dir/fcs-libavl")->mkpath;
     path("$dest_dir/include/freecell-solver")->mkpath;
     path("$dest_dir/pthread")->mkpath;
+    path("$dest_dir/rinutils")->mkpath;
     if ( $self->fcc_solver )
     {
         path("$dest_dir/sys")->mkpath;
