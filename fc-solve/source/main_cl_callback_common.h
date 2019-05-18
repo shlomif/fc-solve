@@ -11,8 +11,9 @@
 
 #include <signal.h>
 
-#include "freecell-solver/fcs_cl.h"
 #include "rinutils.h"
+#include "freecell-solver/fcs_conf.h"
+#include "freecell-solver/fcs_cl.h"
 #include "output_to_file.h"
 #include "handle_parsing.h"
 #include "read_state.h"

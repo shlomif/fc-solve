@@ -10,8 +10,7 @@
 // A test for the bit reader and writer.
 #include <string.h>
 #include <stdio.h>
-
-#include "tap.h"
+#include <tap.h>
 #include "freecell-solver/fcs_conf.h"
 #include "bit_rw.h"
 
