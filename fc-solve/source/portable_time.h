@@ -60,7 +60,6 @@ static inline rinutils_portable_time rinutils_get_time(void)
     return ret;
 }
 #define RIN_TIME_FMT RIN_LL_FMT "." RIN_LL6_FMT
-#define FCS_B_AT_FMT "Board No. " RIN_LL_FMT " at " RIN_TIME_FMT
 
 #ifdef __cplusplus
 };

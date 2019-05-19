@@ -18,6 +18,8 @@ extern "C" {
 #include "portable_time.h"
 #include "freecell-solver/fcs_limit.h"
 
+#define FCS_B_AT_FMT "Board No. " RIN_LL_FMT " at " RIN_TIME_FMT
+
 static inline void fc_solve_print_intractable(const long long board_num)
 {
     const_AUTO(mytime, rinutils_get_time());
