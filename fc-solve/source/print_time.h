@@ -16,7 +16,33 @@ extern "C" {
 
 #include <stdio.h>
 #include "portable_time.h"
+#include "freecell-solver/fcs_limit.h"
 
+static inline void fc_solve_print_intractable(const long long board_num)
+{
+    const_AUTO(mytime, rinutils_get_time());
+    printf("Intractable " FCS_B_AT_FMT "\n", board_num,
+        RIN_TIME__GET_BOTH(mytime));
+}
+
+static inline void fc_solve_print_unsolved(const long long board_num)
+{
+    const_AUTO(mytime, rinutils_get_time());
+    printf(
+        "Unsolved " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
+}
+
+static inline void fc_solve_print_started_at(void)
+{
+    const_AUTO(mytime, rinutils_get_time());
+    printf("Started at " RIN_TIME_FMT "\n", RIN_TIME__GET_BOTH(mytime));
+}
+
+static inline void fc_solve_print_reached_no_iters(const long long board_num)
+{
+    const_AUTO(mytime, rinutils_get_time());
+    printf("Reached " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
+}
 static inline void fc_solve_print_reached(
     const long long board_num, const fcs_iters_int total_num_iters)
 {

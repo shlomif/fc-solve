@@ -10,7 +10,7 @@
 // range_solvers.h - common routines for the range solvers.
 #pragma once
 #include "rinutils/rinutils.h"
-#include "portable_time.h"
+#include "print_time.h"
 #include "freecell-solver/fcs_conf.h"
 #include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"

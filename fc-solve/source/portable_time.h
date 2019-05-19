@@ -61,31 +61,6 @@ static inline rinutils_portable_time rinutils_get_time(void)
 }
 #define RIN_TIME_FMT RIN_LL_FMT "." RIN_LL6_FMT
 #define FCS_B_AT_FMT "Board No. " RIN_LL_FMT " at " RIN_TIME_FMT
-static inline void fc_solve_print_intractable(const long long board_num)
-{
-    const_AUTO(mytime, rinutils_get_time());
-    printf("Intractable " FCS_B_AT_FMT "\n", board_num,
-        RIN_TIME__GET_BOTH(mytime));
-}
-
-static inline void fc_solve_print_unsolved(const long long board_num)
-{
-    const_AUTO(mytime, rinutils_get_time());
-    printf(
-        "Unsolved " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
-}
-
-static inline void fc_solve_print_started_at(void)
-{
-    const_AUTO(mytime, rinutils_get_time());
-    printf("Started at " RIN_TIME_FMT "\n", RIN_TIME__GET_BOTH(mytime));
-}
-
-static inline void fc_solve_print_reached_no_iters(const long long board_num)
-{
-    const_AUTO(mytime, rinutils_get_time());
-    printf("Reached " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
-}
 
 #ifdef __cplusplus
 };
