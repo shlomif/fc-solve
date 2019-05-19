@@ -197,8 +197,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
 #define FPRINTF_TIME(label, field)                                             \
     fprintf(output_fh, "board[%ld].%s = " FCS_T_FMT "\n", (long)board_num,     \
-        label, FCS_TIME_GET_SEC(curr_result->field),                           \
-        FCS_TIME_GET_USEC(curr_result->field));
+        label, RIN_TIME__GET_BOTH(curr_result->field));
 
             FPRINTF_TIME("start", start_time);
             FPRINTF_TIME("end", end_time);

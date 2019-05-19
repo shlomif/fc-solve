@@ -51,6 +51,8 @@ typedef struct
 #define FCS_LL9_FMT "%09I64d"
 #endif
 
+#define RIN_TIME__GET_BOTH(pt) FCS_TIME_GET_SEC(pt), FCS_TIME_GET_USEC(pt)
+
 static inline fcs_portable_time fcs_get_time(void)
 {
     fcs_portable_time ret;
@@ -63,28 +65,26 @@ static inline void fc_solve_print_intractable(const long long board_num)
 {
     const_AUTO(mytime, fcs_get_time());
     printf("Intractable " FCS_B_AT_FMT "\n", board_num,
-        FCS_TIME_GET_SEC(mytime), FCS_TIME_GET_USEC(mytime));
+        RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_unsolved(const long long board_num)
 {
     const_AUTO(mytime, fcs_get_time());
-    printf("Unsolved " FCS_B_AT_FMT "\n", board_num, FCS_TIME_GET_SEC(mytime),
-        FCS_TIME_GET_USEC(mytime));
+    printf(
+        "Unsolved " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_started_at(void)
 {
     const_AUTO(mytime, fcs_get_time());
-    printf("Started at " FCS_T_FMT "\n", FCS_TIME_GET_SEC(mytime),
-        FCS_TIME_GET_USEC(mytime));
+    printf("Started at " FCS_T_FMT "\n", RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_reached_no_iters(const long long board_num)
 {
     const_AUTO(mytime, fcs_get_time());
-    printf("Reached " FCS_B_AT_FMT "\n", board_num, FCS_TIME_GET_SEC(mytime),
-        FCS_TIME_GET_USEC(mytime));
+    printf("Reached " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
 }
 
 #ifdef __cplusplus
