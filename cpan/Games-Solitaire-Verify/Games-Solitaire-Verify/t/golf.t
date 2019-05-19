@@ -18,6 +18,14 @@ my $mani = Dir::Manifest->new(
     }
 );
 
+sub _sol_iter
+{
+    my ($fn) = @_;
+    my $fh = $mani->get_obj($fn)->fh->openr;
+
+    return sub { my $l = <$fh>; chomp $l; return $l; };
+}
+
 {
     my $verifier = Games::Solitaire::Verify::Golf->new(
         {
@@ -26,8 +34,7 @@ my $mani = Dir::Manifest->new(
         }
     );
 
-    my $fh = $mani->get_obj("3.all_in_a_row.sol")->fh->openr;
-    $verifier->process_solution( sub { my $l = <$fh>; chomp $l; return $l; } );
+    $verifier->process_solution( _sol_iter("3.all_in_a_row.sol") );
 
     # TEST
     pass("No error on verifying pysol fc 3 sol");
@@ -41,8 +48,7 @@ my $mani = Dir::Manifest->new(
         }
     );
 
-    my $fh = $mani->get_obj("6.black_hole.sol")->fh->openr;
-    $verifier->process_solution( sub { my $l = <$fh>; chomp $l; return $l; } );
+    $verifier->process_solution( _sol_iter("6.black_hole.sol") );
 
     # TEST
     pass("No error on verifying black_hole pysol fc 6 sol");
@@ -58,8 +64,7 @@ my $mani = Dir::Manifest->new(
         }
     );
 
-    my $fh = $mani->get_obj("5.golf.sol")->fh->openr;
-    $verifier->process_solution( sub { my $l = <$fh>; chomp $l; return $l; } );
+    $verifier->process_solution( _sol_iter("5.golf.sol") );
 
     # TEST
     pass("No error on verifying golf pysol fc 5 sol");
