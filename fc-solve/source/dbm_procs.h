@@ -218,7 +218,7 @@ static void instance_print_stats(dbm_solver_instance *const instance)
     const_AUTO(mytime, fcs_get_time());
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
-        ("Reached %ld ; States-in-collection: %ld ; Time: " FCS_T_FMT "\n"
+        ("Reached %ld ; States-in-collection: %ld ; Time: " RIN_TIME_FMT "\n"
          ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n"),
         instance->common.count_num_processed,
         instance->common.num_states_in_collection, RIN_TIME__GET_BOTH(mytime),
@@ -327,7 +327,7 @@ static inline void mark_and_sweep_old_states(
         {
 #ifdef WIN32
             fprintf(out_fh,
-                "Mark+Sweep Progress - " FCS_LL_FMT "/" FCS_LL_FMT "\n",
+                "Mark+Sweep Progress - " RIN_LL_FMT "/" RIN_LL_FMT "\n",
                 (long long)idx, (long long)items_count);
 #else
             fprintf(

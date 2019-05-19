@@ -104,7 +104,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
         case FCS_STATE_WAS_SOLVED:
 #ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
-            printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
+            printf("Solved Board No. " RIN_LL_FMT "\n", board_num);
 #endif
             print_int(&binary_output,
                 (int)freecell_solver_user_get_num_times_long(instance));
@@ -116,7 +116,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
         if (solutions_directory)
         {
-            sprintf(solution_fn, "%s" FCS_LL9_FMT ".sol", solutions_directory,
+            sprintf(solution_fn, "%s" RIN_LL9_FMT ".sol", solutions_directory,
                 board_num);
             FILE *const output_fh = fopen(solution_fn, "wt");
             if (!output_fh)

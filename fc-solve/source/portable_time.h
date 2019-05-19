@@ -26,13 +26,13 @@ typedef struct
     struct timezone tz;
 } fcs_portable_time;
 
-#define FCS_GET_TIME(pt) gettimeofday(&((pt).tv), &((pt).tz))
-#define FCS_TIME_GET_SEC(pt) ((long long)((pt).tv.tv_sec))
-#define FCS_TIME_GET_USEC(pt) ((long long)((pt).tv.tv_usec))
-#define FCS_LL_FMT "%lld"
-#define FCS_ULL_FMT "%llu"
-#define FCS_LL6_FMT "%.6lld"
-#define FCS_LL9_FMT "%09lld"
+#define RIN_GET_TIME(pt) gettimeofday(&((pt).tv), &((pt).tz))
+#define RIN_TIME_GET_SEC(pt) ((long long)((pt).tv.tv_sec))
+#define RIN_TIME_GET_USEC(pt) ((long long)((pt).tv.tv_usec))
+#define RIN_LL_FMT "%lld"
+#define RIN_ULL_FMT "%llu"
+#define RIN_LL6_FMT "%.6lld"
+#define RIN_LL9_FMT "%09lld"
 #else
 #include <sys/types.h>
 #include <sys/timeb.h>
@@ -42,25 +42,25 @@ typedef struct
     struct _timeb tb;
 } fcs_portable_time;
 
-#define FCS_GET_TIME(pt) _ftime(&((pt).tb))
-#define FCS_TIME_GET_SEC(pt) ((long long)((pt).tb.time))
-#define FCS_TIME_GET_USEC(pt) ((long long)(((pt).tb.millitm) * 1000))
-#define FCS_LL_FMT "%I64d"
-#define FCS_ULL_FMT "%I64u"
-#define FCS_LL6_FMT "%.6I64d"
-#define FCS_LL9_FMT "%09I64d"
+#define RIN_GET_TIME(pt) _ftime(&((pt).tb))
+#define RIN_TIME_GET_SEC(pt) ((long long)((pt).tb.time))
+#define RIN_TIME_GET_USEC(pt) ((long long)(((pt).tb.millitm) * 1000))
+#define RIN_LL_FMT "%I64d"
+#define RIN_ULL_FMT "%I64u"
+#define RIN_LL6_FMT "%.6I64d"
+#define RIN_LL9_FMT "%09I64d"
 #endif
 
-#define RIN_TIME__GET_BOTH(pt) FCS_TIME_GET_SEC(pt), FCS_TIME_GET_USEC(pt)
+#define RIN_TIME__GET_BOTH(pt) RIN_TIME_GET_SEC(pt), RIN_TIME_GET_USEC(pt)
 
 static inline fcs_portable_time fcs_get_time(void)
 {
     fcs_portable_time ret;
-    FCS_GET_TIME(ret);
+    RIN_GET_TIME(ret);
     return ret;
 }
-#define FCS_T_FMT FCS_LL_FMT "." FCS_LL6_FMT
-#define FCS_B_AT_FMT "Board No. " FCS_LL_FMT " at " FCS_T_FMT
+#define RIN_TIME_FMT RIN_LL_FMT "." RIN_LL6_FMT
+#define FCS_B_AT_FMT "Board No. " RIN_LL_FMT " at " RIN_TIME_FMT
 static inline void fc_solve_print_intractable(const long long board_num)
 {
     const_AUTO(mytime, fcs_get_time());
@@ -78,7 +78,7 @@ static inline void fc_solve_print_unsolved(const long long board_num)
 static inline void fc_solve_print_started_at(void)
 {
     const_AUTO(mytime, fcs_get_time());
-    printf("Started at " FCS_T_FMT "\n", RIN_TIME__GET_BOTH(mytime));
+    printf("Started at " RIN_TIME_FMT "\n", RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_reached_no_iters(const long long board_num)

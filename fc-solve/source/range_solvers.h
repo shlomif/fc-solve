@@ -51,7 +51,7 @@ static inline bool range_solvers__solve(void *const instance,
         break;
 #ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
     case FCS_STATE_WAS_SOLVED:
-        printf("Solved Board No. " FCS_LL_FMT "\n", board_num);
+        printf("Solved Board No. " RIN_LL_FMT "\n", board_num);
         break;
 #endif
     }

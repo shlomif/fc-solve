@@ -21,7 +21,7 @@ static inline void fc_solve_print_reached(
     const long long board_num, const fcs_iters_int total_num_iters)
 {
     const_AUTO(mytime, fcs_get_time());
-    printf("Reached " FCS_B_AT_FMT " (total_num_iters=" FCS_ULL_FMT ")\n",
+    printf("Reached " FCS_B_AT_FMT " (total_num_iters=" RIN_ULL_FMT ")\n",
         board_num, RIN_TIME__GET_BOTH(mytime),
         (unsigned long long)total_num_iters);
 }
@@ -29,7 +29,7 @@ static inline void fc_solve_print_reached(
 static inline void fc_solve_print_finished(const fcs_iters_int total_num_iters)
 {
     const_AUTO(mytime, fcs_get_time());
-    printf(("Finished at " FCS_T_FMT " (total_num_iters=" FCS_ULL_FMT ")\n"),
+    printf(("Finished at " RIN_TIME_FMT " (total_num_iters=" RIN_ULL_FMT ")\n"),
         RIN_TIME__GET_BOTH(mytime), (unsigned long long)total_num_iters);
 }
 

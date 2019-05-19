@@ -196,7 +196,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                 (long)curr_result->num_iters);
 
 #define FPRINTF_TIME(label, field)                                             \
-    fprintf(output_fh, "board[%ld].%s = " FCS_T_FMT "\n", (long)board_num,     \
+    fprintf(output_fh, "board[%ld].%s = " RIN_TIME_FMT "\n", (long)board_num,  \
         label, RIN_TIME__GET_BOTH(curr_result->field));
 
             FPRINTF_TIME("start", start_time);

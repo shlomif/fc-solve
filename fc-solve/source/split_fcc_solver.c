@@ -537,7 +537,7 @@ static inline void instance_check_key(
                 &unused_output_len);
             /* Output the exit point. */
             fprintf(instance->fcc_exit_points_out_fh,
-                "%s %s " FCS_LL_FMT " %s\n", fingerprint_base64, state_base64,
+                "%s %s " RIN_LL_FMT " %s\n", fingerprint_base64, state_base64,
                 (long long)added_moves_to_output,
                 instance->moves_base64_encoding_buffer);
 #ifdef DEBUG_OUT

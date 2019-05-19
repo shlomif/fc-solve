@@ -112,7 +112,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             char command[1000];
 
             sprintf(command,
-                "make_pysol_freecell_board.py -F -t " FCS_LL_FMT "%s",
+                "make_pysol_freecell_board.py -F -t " RIN_LL_FMT "%s",
                 board_num, variant);
 
             FILE *const from_make_pysol = popen(command, "r");
