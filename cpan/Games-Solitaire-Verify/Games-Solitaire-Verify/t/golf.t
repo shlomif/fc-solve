@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 2;
+use Test::More tests => 3;
 use Path::Tiny qw/ cwd path /;
 use Dir::Manifest                  ();
 use Games::Solitaire::Verify::Golf ();
@@ -46,4 +46,21 @@ my $mani = Dir::Manifest->new(
 
     # TEST
     pass("No error on verifying black_hole pysol fc 6 sol");
+}
+
+{
+    my $verifier = Games::Solitaire::Verify::Golf->new(
+        {
+            variant         => "golf",
+            board_string    => $mani->text("5.golf.board"),
+            queens_on_kings => 0,
+            wrap_ranks      => 0,
+        }
+    );
+
+    my $fh = $mani->get_obj("5.golf.sol")->fh->openr;
+    $verifier->process_solution( sub { my $l = <$fh>; chomp $l; return $l; } );
+
+    # TEST
+    pass("No error on verifying golf pysol fc 5 sol");
 }
