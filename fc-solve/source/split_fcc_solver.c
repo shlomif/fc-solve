@@ -16,7 +16,7 @@
 #include <sys/tree.h>
 #include <assert.h>
 #include "depth_multi_queue.h"
-#include "portable_time.h"
+#include "rinutils/portable_time.h"
 
 typedef struct
 {
