@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 3;
+use Test::More tests => 4;
 use Path::Tiny qw/ cwd path /;
 use Dir::Manifest                  ();
 use Games::Solitaire::Verify::Golf ();
@@ -68,4 +68,19 @@ sub _sol_iter
 
     # TEST
     pass("No error on verifying golf pysol fc 5 sol");
+}
+
+{
+    my $verifier = Games::Solitaire::Verify::Golf->new(
+        {
+            variant      => "golf",
+            board_string => $mani->text("4.golf.board"),
+            wrap_ranks   => 1,
+        }
+    );
+
+    $verifier->process_solution( _sol_iter("4.golf-wrap-ranks.sol") );
+
+    # TEST
+    pass("No error on verifying golf wrap ranks pysol fc 4 sol");
 }
