@@ -215,7 +215,7 @@ static inline bool instance_check_multiple_keys(
 
 static void instance_print_stats(dbm_solver_instance *const instance)
 {
-    const_AUTO(mytime, fcs_get_time());
+    const_AUTO(mytime, rinutils_get_time());
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
         ("Reached %ld ; States-in-collection: %ld ; Time: " RIN_TIME_FMT "\n"

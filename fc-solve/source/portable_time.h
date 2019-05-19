@@ -24,7 +24,7 @@ typedef struct
 {
     struct timeval tv;
     struct timezone tz;
-} fcs_portable_time;
+} rinutils_portable_time;
 
 #define RIN_GET_TIME(pt) gettimeofday(&((pt).tv), &((pt).tz))
 #define RIN_TIME_GET_SEC(pt) ((long long)((pt).tv.tv_sec))
@@ -40,7 +40,7 @@ typedef struct
 typedef struct
 {
     struct _timeb tb;
-} fcs_portable_time;
+} rinutils_portable_time;
 
 #define RIN_GET_TIME(pt) _ftime(&((pt).tb))
 #define RIN_TIME_GET_SEC(pt) ((long long)((pt).tb.time))
@@ -53,9 +53,9 @@ typedef struct
 
 #define RIN_TIME__GET_BOTH(pt) RIN_TIME_GET_SEC(pt), RIN_TIME_GET_USEC(pt)
 
-static inline fcs_portable_time fcs_get_time(void)
+static inline rinutils_portable_time rinutils_get_time(void)
 {
-    fcs_portable_time ret;
+    rinutils_portable_time ret;
     RIN_GET_TIME(ret);
     return ret;
 }
@@ -63,27 +63,27 @@ static inline fcs_portable_time fcs_get_time(void)
 #define FCS_B_AT_FMT "Board No. " RIN_LL_FMT " at " RIN_TIME_FMT
 static inline void fc_solve_print_intractable(const long long board_num)
 {
-    const_AUTO(mytime, fcs_get_time());
+    const_AUTO(mytime, rinutils_get_time());
     printf("Intractable " FCS_B_AT_FMT "\n", board_num,
         RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_unsolved(const long long board_num)
 {
-    const_AUTO(mytime, fcs_get_time());
+    const_AUTO(mytime, rinutils_get_time());
     printf(
         "Unsolved " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_started_at(void)
 {
-    const_AUTO(mytime, fcs_get_time());
+    const_AUTO(mytime, rinutils_get_time());
     printf("Started at " RIN_TIME_FMT "\n", RIN_TIME__GET_BOTH(mytime));
 }
 
 static inline void fc_solve_print_reached_no_iters(const long long board_num)
 {
-    const_AUTO(mytime, fcs_get_time());
+    const_AUTO(mytime, rinutils_get_time());
     printf("Reached " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
 }
 

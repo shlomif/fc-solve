@@ -40,7 +40,7 @@ static void print_help(void)
 
 typedef struct
 {
-    fcs_portable_time start_time, end_time;
+    rinutils_portable_time start_time, end_time;
     fcs_iters_int num_iters;
     int verdict;
 } result;
@@ -172,10 +172,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, iters_limit);
 #endif
-            curr_result->start_time = fcs_get_time();
+            curr_result->start_time = rinutils_get_time();
             curr_result->verdict =
                 freecell_solver_user_solve_board(instance, state_string);
-            curr_result->end_time = fcs_get_time();
+            curr_result->end_time = rinutils_get_time();
             curr_result->num_iters =
                 freecell_solver_user_get_num_times_long(instance);
 
