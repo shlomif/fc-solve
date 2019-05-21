@@ -1,12 +1,11 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2011 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2011 Shlomi Fish
+
 // A test for the delta states routines.
 #include "delta_states_test_common.h"
 
@@ -15,8 +14,7 @@ static fcs_card make_card(fcs_card rank, fcs_card suit)
     return fcs_make_card(rank, suit);
 }
 
-/* TEST:$test_bitcount=2;
- * */
+// TEST:$test_bitcount=2;
 static void test_bitcount(const fcs_column_encoding_composite *const enc,
     const size_t bytes, const size_t bits, const char *const msg)
 {
@@ -40,34 +38,29 @@ static void main_tests(void)
 
         col = fcs_state_get_col(s.s, 0);
 
-        /* TEST
-         * */
+        // TEST
         ok(fc_solve_get_column_orig_num_cards(&delta, col) == 0,
             "Empty column has zero orig cards.");
 
         fcs_col_push_card(col, make_card(13, 0));
-        /* TEST
-         * */
+        // TEST
         ok(fc_solve_get_column_orig_num_cards(&delta, col) == 0,
             "Column with a single card has zero orig cards.");
 
         fcs_col_push_card(col, make_card(12, 1));
-        /* TEST
-         * */
+        // TEST
         ok(fc_solve_get_column_orig_num_cards(&delta, col) == 0,
             "Column with a seq of 2 cards has zero orig cards.");
 
-        /* A non-matching card. */
+        // A non-matching card.
         fcs_col_push_card(col, make_card(4, 1));
-        /* TEST
-         * */
+        // TEST
         ok(fc_solve_get_column_orig_num_cards(&delta, col) == 3,
             "3 original cards.");
 
-        /* A matching card. */
+        // A matching card.
         fcs_col_push_card(col, make_card(3, 2));
-        /* TEST
-         * */
+        // TEST
         ok(fc_solve_get_column_orig_num_cards(&delta, col) == 3,
             "3 original cards, with one card on top.");
     }
@@ -115,8 +108,7 @@ static void main_tests(void)
             fcs_column_encoding_composite enc;
             fc_solve_get_column_encoding_composite(&delta, 0, &enc);
 
-            /* TEST
-             * */
+            // TEST
             ok(enc.enc[0] == (6             /* 3 bits of orig len. */
                                  | (0 << 3) /*  4 bits of derived len. */
                                  ),
@@ -130,8 +122,7 @@ static void main_tests(void)
             fcs_column_encoding_composite enc;
             fc_solve_get_column_encoding_composite(&delta, 1, &enc);
 
-            /* TEST
-             * */
+            // TEST
             ok(enc.enc[0] == (3             /* 3 bits of orig len. */
                                  | (1 << 3) /*  4 bits of derived len. */
                                  | (SUIT_DS << (3 + 4)) /* 1 bit of suit. */
@@ -149,8 +140,7 @@ static void main_tests(void)
             fc_solve_get_column_encoding_composite(&delta, 5, &enc);
 
             card_9S = make_card(9, 3);
-            /* TEST
-             * */
+            // TEST
             ok(enc.enc[0] ==
                     (0             /* 3 bits of orig len. */
                         | (1 << 3) /*  4 bits of derived len. */
@@ -158,8 +148,7 @@ static void main_tests(void)
                         ),
                 "fc_solve_get_column_encoding_composite() col 5 - byte 0");
 
-            /* TEST
-             * */
+            // TEST
             ok((enc.enc[1] == (card_9S >> 1) /* Remaining 5 bits of card. */
                    ),
                 "fc_solve_get_column_encoding_composite() col 5 - byte 1");
@@ -179,28 +168,24 @@ static void main_tests(void)
 
             fc_solve_get_freecells_encoding(&delta, &bit_w);
 
-            /* TEST
-             * */
+            // TEST
             ok((fcs_card)fc_solve_bit_reader_read(&bit_r, 6) ==
                     make_card(8, 2), /* 8D */
                 "First freecell is 8D.");
 
-            /* TEST
-             * */
+            // TEST
             ok((fcs_card)fc_solve_bit_reader_read(&bit_r, 6) ==
                     make_card(12, 2), /* QD */
                 "Second freecell is QD.");
 
-            /* TEST
-             * */
+            // TEST
             ok(bit_r.current == bit_w.current &&
                     (bit_r.bit_in_char_idx == bit_w.bit_in_char_idx),
                 "Reached the end of the encoding.");
         }
 #endif
 
-        /* TEST
-         * */
+        // TEST
         test_encode_and_decode(local_variant, &delta, &derived_state,
             ("Foundations: H-0 C-2 D-A S-0\n"
              "Freecells:  8D  QD\n"
@@ -216,10 +201,9 @@ static void main_tests(void)
         fc_solve_delta_stater_release(&delta);
     }
 
-    /* More encode_composite tests - this time from the output of:
-     * pi-make-microsoft-freecell-board -t 24 | \
-     *      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
-     */
+    // More encode_composite tests - this time from the output of:
+    // pi-make-microsoft-freecell-board -t 24 |
+    //      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
     {
         fcs_state_keyval_pair init_state, derived_state;
 
@@ -260,8 +244,7 @@ static void main_tests(void)
             &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
             derived_indirect_stacks_buffer);
 
-        /* TEST
-         * */
+        // TEST
         test_encode_and_decode(local_variant, &delta, &derived_state,
             ("Foundations: H-0 C-0 D-0 S-4\n"
              "Freecells:  TD  KS\n"
@@ -288,8 +271,7 @@ static void main_tests(void)
             &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
             derived_indirect_stacks_buffer);
 
-        /* TEST
-         * */
+        // TEST
         test_encode_and_decode(local_variant, &delta, &derived_state,
             ("Foundations: H-0 C-0 D-0 S-2\n"
              "Freecells:  4C  TD\n"
@@ -330,8 +312,7 @@ static void main_tests(void)
              ": 2H\n"));
 
         trim_trailing_whitespace(s);
-        /* TEST
-         * */
+        // TEST
         ok(!strcmp(s, ("Foundations: H-0 C-0 D-0 S-4\n"
                        "Freecells:  TD  KS\n"
                        ":\n"
@@ -347,9 +328,8 @@ static void main_tests(void)
         free(s);
     }
 
-    /* Make sure encode_composite avoids permutations of empty columns
-     * and completely-non-original states.
-     */
+    // Make sure encode_composite avoids permutations of empty columns
+    // and completely-non-original states.
     {
         fcs_delta_stater delta;
         fcs_state_keyval_pair init_state, derived_state;
@@ -411,8 +391,7 @@ static void main_tests(void)
         fcs_init_and_encode_state(
             &delta, local_variant, &derived_state, &second_enc_state);
 
-        /* TEST
-         * */
+        // TEST
         ok((!memcmp(
                first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))),
             "Make sure encode_composite avoids permutations of empty columns "
@@ -420,11 +399,8 @@ static void main_tests(void)
 
         fc_solve_delta_stater_release(&delta);
     }
-    /* Make sure encode_composite avoids permutations of empty columns
-     * and completely-non-original states.
-     *
-     * Another edge-case.
-     */
+    // Make sure encode_composite avoids permutations of empty columns
+    // and completely-non-original states. Another edge-case.
     {
         fcs_delta_stater delta;
         fcs_state_keyval_pair init_state, derived_state;
@@ -483,8 +459,7 @@ static void main_tests(void)
         fcs_init_and_encode_state(
             &delta, local_variant, &derived_state, &second_enc_state);
 
-        /* TEST
-         * */
+        // TEST
         ok((!memcmp(
                &first_enc_state, &second_enc_state, sizeof(first_enc_state))),
             "encode_composite unique encoding No. 2");
