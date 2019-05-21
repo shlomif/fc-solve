@@ -166,6 +166,12 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(fcs_soft_thread *,
 #endif
     fcs_kv_state *FCS__pass_moves(fcs_move_stack *));
 
+#ifdef FCS_WITH_MOVES
+#define FCS_SET_final_state() instance->final_state = PTR_STATE
+#else
+#define FCS_SET_final_state()
+#endif
+
 #ifdef __cplusplus
 }
 #endif

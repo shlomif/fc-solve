@@ -13,7 +13,6 @@
 #include "scans.h"
 #include "meta_alloc.h"
 #include "move_stack_compact_alloc.h"
-#include "instance.h"
 
 #undef DEBUG
 
@@ -612,9 +611,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
     error_code = FCS_STATE_IS_NOT_SOLVEABLE;
 my_return_label:
-#ifdef FCS_WITH_MOVES
-    instance->final_state = PTR_STATE;
-#endif
+    FCS_SET_final_state();
     /* Free the memory that was allocated by the
      * derived states list */
     if (derived.states != NULL)

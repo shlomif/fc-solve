@@ -1248,9 +1248,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
                                  (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
                     {
-#ifdef FCS_WITH_MOVES
-                        instance->final_state = PTR_STATE;
-#endif
+                        FCS_SET_final_state();
                         BUMP_NUM_CHECKED_STATES();
                         TRACE0("Returning FCS_STATE_WAS_SOLVED");
                         return FCS_STATE_WAS_SOLVED;
@@ -1455,9 +1453,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     the_soft_dfs_info->derived_states_list = derived_list;
                     TRACE0("Returning FCS_STATE_SUSPEND_PROCESS (inside "
                            "current_state_index)");
-#ifdef FCS_WITH_MOVES
-                    instance->final_state = PTR_STATE;
-#endif
+                    FCS_SET_final_state();
                     return FCS_STATE_SUSPEND_PROCESS;
                 }
                 goto main_loop;
