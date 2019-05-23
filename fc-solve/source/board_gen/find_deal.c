@@ -14,7 +14,7 @@ long long DLLEXPORT __attribute__((pure)) fc_solve_find_deal_in_range(
 {
     for (long long deal_idx = start; deal_idx <= end; ++deal_idx)
     {
-        long long seedx = microsoft_rand__calc_init_seedx(deal_idx);
+        microsoft_rand seedx = microsoft_rand__calc_init_seedx(deal_idx);
         const uint_fast32_t *ptr = ints;
         for (uint_fast32_t n = 4 * 13; n > 1; --n, ++ptr)
         {

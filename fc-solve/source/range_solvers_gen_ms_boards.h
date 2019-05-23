@@ -61,7 +61,7 @@ static inline void get_board_l(
 // #define FCS_DEAL_ONLY_UP_TO_2G
 #ifdef FCS_DEAL_ONLY_UP_TO_2G
 #else
-    long long seedx = microsoft_rand__calc_init_seedx(deal_idx);
+    microsoft_rand seedx = microsoft_rand__calc_init_seedx(deal_idx);
 #endif
     strcpy(ret, "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"

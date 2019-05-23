@@ -20,7 +20,7 @@ extern "C" {
 
 typedef uint32_t microsoft_rand_uint;
 
-typedef long long microsoft_rand;
+typedef unsigned long long microsoft_rand;
 
 static inline microsoft_rand_uint microsoft_rand_rand(
     microsoft_rand *const my_rand)
