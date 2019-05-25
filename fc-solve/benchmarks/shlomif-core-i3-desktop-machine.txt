@@ -1668,3 +1668,41 @@ Finished at 1528824800.544410 (total_num_iters=5948108)
 </DUMP>
 
     ( DUMPS-1528824796-p/dump004 )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit bc743e9d30d9a5e75796ab556f9fc629fdf2ae69
+(commit Date:   Sat May 25 16:35:13 2019 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+gcc-8.3.1-0.20190517.1.mga7
+tcmalloc from mageia.
+With strip.
+
+2.95781707763672s
+
+    Highlight: xxHash-0.7.0's XXH3
+
+<DUMP>
+Started at 1558788986.935696
+Reached Board No. 4000 at 1558788987.293328
+Reached Board No. 8000 at 1558788987.643669
+Reached Board No. 12000 at 1558788988.001898
+Reached Board No. 16000 at 1558788988.458833
+Unsolved Board No. 11982 at 1558788988.627253
+Reached Board No. 20000 at 1558788988.849039
+Reached Board No. 24000 at 1558788989.173243
+Reached Board No. 28000 at 1558788989.515773
+Reached Board No. 32000 at 1558788989.889027
+Finished at 1558788989.893513 (total_num_iters=5886704)
+</DUMP>
+
+    ( DUMPS-1558788985-t/dump004 )
+
