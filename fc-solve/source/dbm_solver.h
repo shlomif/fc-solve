@@ -87,11 +87,11 @@ typedef struct
     fcs_lock storage_lock;
     long queue_num_extracted_and_processed;
     fcs_encoded_state_buffer first_key;
-    long num_states_in_collection, max_num_states_in_collection;
+    unsigned long num_states_in_collection, max_num_states_in_collection;
     FILE *out_fh;
     fcs_dbm_variant_type variant;
     unsigned long count_num_processed;
-    long count_of_items_in_queue;
+    unsigned long count_of_items_in_queue;
     unsigned long max_count_num_processed;
     bool queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -118,7 +118,7 @@ static inline void fcs_dbm__found_solution(
 
 static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
     const unsigned long iters_delta_limit,
-    const long max_num_states_in_collection,
+    const unsigned long max_num_states_in_collection,
     const fcs_dbm_variant_type local_variant, FILE *const out_fh)
 {
     common->variant = local_variant;
@@ -128,9 +128,7 @@ static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
     common->queue_num_extracted_and_processed = 0;
     common->num_states_in_collection = 0;
     common->count_num_processed = 0;
-    common->max_num_states_in_collection =
-        ((max_num_states_in_collection < 0) ? LONG_MAX
-                                            : max_num_states_in_collection);
+    common->max_num_states_in_collection = max_num_states_in_collection;
     common->max_count_num_processed = iters_delta_limit;
     common->count_of_items_in_queue = 0;
     common->tree_recycle_bin = NULL;

@@ -218,8 +218,8 @@ static void instance_print_stats(dbm_solver_instance *const instance)
     const_AUTO(mytime, rinutils_get_time());
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
-        ("Reached %lu ; States-in-collection: %ld ; Time: " RIN_TIME_FMT "\n"
-         ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%lu\n"),
+        ("Reached %lu ; States-in-collection: %lu ; Time: " RIN_TIME_FMT "\n"
+         ">>>Queue Stats: inserted=%lu items_in_queue=%lu extracted=%lu\n"),
         instance->common.count_num_processed,
         instance->common.num_states_in_collection, RIN_TIME__GET_BOTH(mytime),
         instance->common.num_states_in_collection,
@@ -404,8 +404,8 @@ typedef struct
 {
     fcs_dbm_variant_type local_variant;
     const char *offload_dir_path, *dbm_store_path;
-    unsigned long iters_delta_limit;
-    long pre_cache_max_count, caches_delta, max_num_states_in_collection;
+    unsigned long iters_delta_limit, max_num_states_in_collection;
+    long pre_cache_max_count, caches_delta;
     size_t num_threads;
 } fcs_dbm_common_input;
 
@@ -415,7 +415,7 @@ static const fcs_dbm_common_input fcs_dbm_common_input_init = {
     .dbm_store_path = "./fc_solve_dbm_store",
     .pre_cache_max_count = 1000000,
     .iters_delta_limit = ULONG_MAX,
-    .max_num_states_in_collection = -1,
+    .max_num_states_in_collection = ULONG_MAX,
     .caches_delta = 1000000,
     .num_threads = 2};
 

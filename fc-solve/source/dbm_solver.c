@@ -31,7 +31,7 @@ typedef struct
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input *const inp,
     const unsigned long iters_delta_limit,
-    const long max_num_states_in_collection, FILE *const out_fh)
+    const unsigned long max_num_states_in_collection, FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE

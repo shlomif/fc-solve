@@ -90,7 +90,7 @@ static inline void instance__inspect_new_state(
     if (++instance->count_num_processed % 1000000 == 0)
     {
         printf("Reached iteration %llu\n",
-            (long long)instance->count_num_processed);
+            (unsigned long long)instance->count_num_processed);
         fflush(stdout);
     }
 
