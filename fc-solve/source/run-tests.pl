@@ -11,8 +11,9 @@ use Path::Tiny qw/ path /;
 use File::Basename qw/ basename /;
 use CHI ();
 
-my $bindir     = path(__FILE__)->parent;
-my $abs_bindir = $bindir->absolute;
+my $glob_was_set = 0;
+my $bindir       = path(__FILE__)->parent;
+my $abs_bindir   = $bindir->absolute;
 
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
@@ -80,7 +81,7 @@ sub run_tests
 
     # Workaround for Windows spawning-SNAFU.
     my $exit_code = system(@cmd);
-    if ( !$exit_code and $rerun > 0 )
+    if ( !$exit_code and $rerun > 0 and ( !$glob_was_set ) )
     {
         foreach my $prog ( keys %progs )
         {
@@ -98,10 +99,11 @@ GetOptions(
     '--exclude-re=s' => \$exclude_re_s,
     '--execute|e=s'  => \@execute,
     '--exit0!'       => \$exit_success,
-    '--glob=s'       => \$tests_glob,
+    '--glob=s'       => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
     '--prove!'       => \$use_prove,
     '--jobs|j=n'     => \$num_jobs,
 ) or die "Wrong opts - $!";
+$glob_was_set ||= $exclude_re_s;
 
 sub myglob
 {
