@@ -90,7 +90,8 @@ typedef struct
     long num_states_in_collection, max_num_states_in_collection;
     FILE *out_fh;
     fcs_dbm_variant_type variant;
-    long count_num_processed, count_of_items_in_queue, max_count_num_processed;
+    long count_num_processed, count_of_items_in_queue;
+    unsigned long max_count_num_processed;
     bool queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;
 #ifdef FCS_DBM_WITHOUT_CACHES
@@ -115,7 +116,8 @@ static inline void fcs_dbm__found_solution(
 }
 
 static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
-    const long iters_delta_limit, const long max_num_states_in_collection,
+    const unsigned long iters_delta_limit,
+    const long max_num_states_in_collection,
     const fcs_dbm_variant_type local_variant, FILE *const out_fh)
 {
     common->variant = local_variant;
@@ -128,15 +130,7 @@ static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
     common->max_num_states_in_collection =
         ((max_num_states_in_collection < 0) ? LONG_MAX
                                             : max_num_states_in_collection);
-    if (iters_delta_limit >= 0)
-    {
-        common->max_count_num_processed =
-            common->count_num_processed + iters_delta_limit;
-    }
-    else
-    {
-        common->max_count_num_processed = LONG_MAX;
-    }
+    common->max_count_num_processed = iters_delta_limit;
     common->count_of_items_in_queue = 0;
     common->tree_recycle_bin = NULL;
     fcs_lock_init(&common->storage_lock);

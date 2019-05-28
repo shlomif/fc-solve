@@ -404,8 +404,8 @@ typedef struct
 {
     fcs_dbm_variant_type local_variant;
     const char *offload_dir_path, *dbm_store_path;
-    long pre_cache_max_count, iters_delta_limit, caches_delta,
-        max_num_states_in_collection;
+    unsigned long iters_delta_limit;
+    long pre_cache_max_count, caches_delta, max_num_states_in_collection;
     size_t num_threads;
 } fcs_dbm_common_input;
 
@@ -414,7 +414,7 @@ static const fcs_dbm_common_input fcs_dbm_common_input_init = {
     .offload_dir_path = NULL,
     .dbm_store_path = "./fc_solve_dbm_store",
     .pre_cache_max_count = 1000000,
-    .iters_delta_limit = -1,
+    .iters_delta_limit = ULONG_MAX,
     .max_num_states_in_collection = -1,
     .caches_delta = 1000000,
     .num_threads = 2};

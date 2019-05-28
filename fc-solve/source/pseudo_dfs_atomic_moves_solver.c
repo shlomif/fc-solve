@@ -72,7 +72,8 @@ typedef struct
     /* The stack */
     ssize_t stack_depth, max_stack_depth;
     pseudo_dfs_stack_item *stack;
-    long count_num_processed, max_count_num_processed;
+    long count_num_processed;
+    unsigned long max_count_num_processed;
     bool solution_was_found;
     enum TERMINATE_REASON should_terminate;
     compact_allocator derived_list_allocator;

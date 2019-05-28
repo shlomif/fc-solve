@@ -29,7 +29,8 @@ typedef struct
 
 #include "dbm_procs.h"
 static inline void instance_init(dbm_solver_instance *const instance,
-    const fcs_dbm_common_input *const inp, const long iters_delta_limit,
+    const fcs_dbm_common_input *const inp,
+    const unsigned long iters_delta_limit,
     const long max_num_states_in_collection, FILE *const out_fh)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
@@ -508,7 +509,7 @@ static bool handle_and_destroy_instance_solution(
         }
         else if (instance->common.should_terminate == MAX_ITERS_TERMINATE)
         {
-            fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n",
+            fprintf(out_fh, "Reached Max-or-more iterations of %lu.\n",
                 instance->common.max_count_num_processed);
         }
     }
@@ -655,7 +656,7 @@ int main(int argc, char *argv[])
                              MAX_ITERS_TERMINATE)
                     {
                         fprintf(out_fh,
-                            "Reached Max-or-more iterations of %ld "
+                            "Reached Max-or-more iterations of %lu "
                             "in intermediate-input line No. %ld.\n",
                             limit_instance.common.max_count_num_processed,
                             line_num);

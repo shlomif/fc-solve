@@ -70,7 +70,7 @@ static bool handle_and_destroy_instance_solution(
         fflush(out_fh);
         if (instance->common.should_terminate == MAX_ITERS_TERMINATE)
         {
-            fprintf(out_fh, "Reached Max-or-more iterations of %ld.\n",
+            fprintf(out_fh, "Reached Max-or-more iterations of %lu.\n",
                 instance->common.max_count_num_processed);
         }
     }
