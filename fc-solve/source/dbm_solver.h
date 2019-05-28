@@ -90,7 +90,8 @@ typedef struct
     long num_states_in_collection, max_num_states_in_collection;
     FILE *out_fh;
     fcs_dbm_variant_type variant;
-    long count_num_processed, count_of_items_in_queue;
+    unsigned long count_num_processed;
+    long count_of_items_in_queue;
     unsigned long max_count_num_processed;
     bool queue_solution_was_found;
     enum TERMINATE_REASON should_terminate;

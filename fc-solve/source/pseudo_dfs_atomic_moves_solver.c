@@ -72,7 +72,7 @@ typedef struct
     /* The stack */
     ssize_t stack_depth, max_stack_depth;
     pseudo_dfs_stack_item *stack;
-    long count_num_processed;
+    unsigned long count_num_processed;
     unsigned long max_count_num_processed;
     bool solution_was_found;
     enum TERMINATE_REASON should_terminate;
@@ -89,7 +89,7 @@ static inline void instance__inspect_new_state(
 {
     if (++instance->count_num_processed % 1000000 == 0)
     {
-        printf("Reached iteration %lld\n",
+        printf("Reached iteration %llu\n",
             (long long)instance->count_num_processed);
         fflush(stdout);
     }
@@ -321,8 +321,8 @@ int main(int argc GCC_UNUSED, char *argv[])
     FILE *const last_line_fh = popen(("tail -1 " LOG_FILENAME), "r");
     if (last_line_fh)
     {
-        long count_num_processed;
-        if (fscanf(last_line_fh, "At %ld iterations Coords=[",
+        unsigned long count_num_processed;
+        if (fscanf(last_line_fh, "At %lu iterations Coords=[",
                 &count_num_processed) == 1)
         {
             instance__load_coords_from_fh(&instance, last_line_fh);

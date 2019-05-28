@@ -218,8 +218,8 @@ static void instance_print_stats(dbm_solver_instance *const instance)
     const_AUTO(mytime, rinutils_get_time());
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
-        ("Reached %ld ; States-in-collection: %ld ; Time: " RIN_TIME_FMT "\n"
-         ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n"),
+        ("Reached %lu ; States-in-collection: %ld ; Time: " RIN_TIME_FMT "\n"
+         ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%lu\n"),
         instance->common.count_num_processed,
         instance->common.num_states_in_collection, RIN_TIME__GET_BOTH(mytime),
         instance->common.num_states_in_collection,
