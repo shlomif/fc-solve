@@ -45,7 +45,7 @@ typedef struct
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
     compact_allocator states_values_to_keys_allocator;
-    long count_elements_in_cache, max_num_elements_in_cache;
+    unsigned long count_elements_in_cache, max_num_elements_in_cache;
 
     fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)

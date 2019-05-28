@@ -64,7 +64,7 @@ static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
     to_insert->parent = *parent;
 
     fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
-    pre_cache->count_elements++;
+    ++pre_cache->count_elements;
 }
 
 static inline bool pre_cache_does_key_exist(
@@ -384,8 +384,9 @@ static inline void fcs_dbm__cache_store__init(
     fcs_dbm__cache_store__common *const cache_store,
     dbm_instance_common_elems *const common,
     meta_allocator *const meta_alloc GCC_UNUSED,
-    const char *const dbm_store_path, const long pre_cache_max_count GCC_UNUSED,
-    const long caches_delta GCC_UNUSED)
+    const char *const dbm_store_path,
+    const unsigned long pre_cache_max_count GCC_UNUSED,
+    const unsigned long caches_delta GCC_UNUSED)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -405,7 +406,7 @@ typedef struct
     fcs_dbm_variant_type local_variant;
     const char *offload_dir_path, *dbm_store_path;
     unsigned long iters_delta_limit, max_num_states_in_collection;
-    long pre_cache_max_count, caches_delta;
+    unsigned long pre_cache_max_count, caches_delta;
     size_t num_threads;
 } fcs_dbm_common_input;
 

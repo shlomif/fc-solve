@@ -40,7 +40,7 @@ typedef struct
 {
     Pvoid_t states_values_to_keys_map;
     compact_allocator states_values_to_keys_allocator;
-    long count_elements_in_cache, max_num_elements_in_cache;
+    unsigned long count_elements_in_cache, max_num_elements_in_cache;
     fcs_pdfs_cache_key_info *lowest_pri, *highest_pri;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
     fcs_pdfs_cache_key_info *recycle_bin;

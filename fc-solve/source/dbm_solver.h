@@ -38,7 +38,7 @@ typedef struct
     dict_t *kaz_tree;
     compact_allocator kv_allocator;
     pre_cache_key_val_pair *kv_recycle_bin;
-    long count_elements;
+    unsigned long count_elements;
     void *tree_recycle_bin;
 } fcs_pre_cache;
 #endif
@@ -85,7 +85,7 @@ enum TERMINATE_REASON
 typedef struct
 {
     fcs_lock storage_lock;
-    long queue_num_extracted_and_processed;
+    unsigned long queue_num_extracted_and_processed;
     fcs_encoded_state_buffer first_key;
     unsigned long num_states_in_collection, max_num_states_in_collection;
     FILE *out_fh;
@@ -148,7 +148,7 @@ typedef struct
 #endif
 
     /* The queue */
-    long pre_cache_max_count;
+    unsigned long pre_cache_max_count;
 } fcs_dbm__cache_store__common;
 
 #ifdef __cplusplus

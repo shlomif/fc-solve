@@ -68,7 +68,7 @@ typedef struct
     store_type store;
     fcs_pseudo_dfs_lru_cache cache;
 
-    long pre_cache_max_count;
+    unsigned long pre_cache_max_count;
     /* The stack */
     ssize_t stack_depth, max_stack_depth;
     pseudo_dfs_stack_item *stack;
