@@ -226,7 +226,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 static bool populate_instance_with_intermediate_input_line(
     dbm_solver_instance *const instance, fcs_delta_stater *const delta,
     fcs_state_keyval_pair *const init_state_ptr, char *const line,
-    const long line_num, fcs_encoded_state_buffer *const parent_state_enc)
+    const unsigned long line_num,
+    fcs_encoded_state_buffer *const parent_state_enc)
 {
     fcs_encoded_state_buffer final_stack_encoded_state;
     fcs_encoded_state_buffer running_key;
@@ -526,7 +527,7 @@ static bool handle_and_destroy_instance_solution(
 
 int main(int argc, char *argv[])
 {
-    long start_line = 1;
+    unsigned long start_line = 1;
     const char *out_filename = NULL, *intermediate_input_filename = NULL;
     FILE *intermediate_in_fh = NULL;
     bool skip_queue_output = false;
@@ -600,7 +601,7 @@ int main(int argc, char *argv[])
         size_t line_size = 16000;
         char *line = SMALLOC(line, line_size);
 #endif
-        long line_num = 0;
+        unsigned long line_num = 0;
         bool queue_solution_was_found = false;
         dbm_solver_instance queue_instance;
         dbm_solver_instance limit_instance;
@@ -657,7 +658,7 @@ int main(int argc, char *argv[])
                     {
                         fprintf(out_fh,
                             "Reached Max-or-more iterations of %lu "
-                            "in intermediate-input line No. %ld.\n",
+                            "in intermediate-input line No. %lu.\n",
                             limit_instance.common.max_count_num_processed,
                             line_num);
                     }
@@ -666,7 +667,7 @@ int main(int argc, char *argv[])
                     {
                         fprintf(out_fh,
                             "Pruning due to unsolvability in "
-                            "intermediate-input line No. %ld\n",
+                            "intermediate-input line No. %lu\n",
                             line_num);
                         skip_queue_output = true;
                     }

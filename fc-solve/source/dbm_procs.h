@@ -327,8 +327,8 @@ static inline void mark_and_sweep_old_states(
         {
 #ifdef WIN32
             fprintf(out_fh,
-                "Mark+Sweep Progress - " RIN_LL_FMT "/" RIN_LL_FMT "\n",
-                (long long)idx, (long long)items_count);
+                "Mark+Sweep Progress - " RIN_ULL_FMT "/" RIN_ULL_FMT "\n",
+                (unsigned long long)idx, (unsigned long long)items_count);
 #else
             fprintf(
                 out_fh, "Mark+Sweep Progress - %zu/%zu\n", idx, items_count);
