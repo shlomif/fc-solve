@@ -41,25 +41,26 @@ extern "C" dict_t fc_solve_kaz_tree_create(
     return (dict_t)(ret);
 }
 const auto siz = sizeof(fcs_dbm_record);
+const auto ksiz = sizeof(fcs_encoded_state_buffer);
 extern "C" dict_ret_key_t fc_solve_kaz_tree_alloc_insert(
     dict_t v, dict_key_t key_proto)
 {
     apr_hash_t *h = (apr_hash_t *)v;
-    void *exist_key = apr_hash_get(h, key_proto, siz);
+    void *exist_key = apr_hash_get(h, key_proto, ksiz);
     if (exist_key)
     {
         return exist_key;
     }
     void *key = apr_palloc(apr_hash_pool_get(h), siz);
     memcpy(key, key_proto, siz);
-    apr_hash_set(h, key, siz, key);
+    apr_hash_set(h, key, ksiz, key);
     return NULL;
 }
 extern "C" dict_key_t fc_solve_kaz_tree_lookup_value(
     dict_t dict, cdict_key_t key)
 {
     apr_hash_t *h = (apr_hash_t *)dict;
-    return apr_hash_get(h, key, siz);
+    return apr_hash_get(h, key, ksiz);
 }
 extern "C" void fc_solve_kaz_tree_destroy(dict_t dict)
 {
