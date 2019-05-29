@@ -77,28 +77,23 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     to_check->key = *key;
     to_check->parent = parent->parent;
 #endif
-    bool ret = (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+    const bool ret =
+        (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
-#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     if (!ret)
     {
+#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
         fcs_compact_alloc_release(&(db->allocator));
-    }
 #endif
-    if (ret)
-    {
-        if (should_modify_parent && parent)
-        {
-            fcs_dbm_record_increment_refcount(parent);
-        }
-
-        return ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
-            db->kaz_tree, to_check)));
-    }
-    else
-    {
         return NULL;
     }
+    if (should_modify_parent && parent)
+    {
+        fcs_dbm_record_increment_refcount(parent);
+    }
+
+    return ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
+        db->kaz_tree, to_check)));
 }
 
 bool fc_solve_dbm_store_lookup_parent(
@@ -112,26 +107,22 @@ bool fc_solve_dbm_store_lookup_parent(
     {
         return false;
     }
+#ifdef FCS_DBM_RECORD_POINTER_REPR
+    fcs_dbm_record *const p =
+        fcs_dbm_record_get_parent_ptr((fcs_dbm_record *)existing);
+
+    if (p)
+    {
+        *(fcs_encoded_state_buffer *)parent = p->key;
+    }
     else
     {
-#ifdef FCS_DBM_RECORD_POINTER_REPR
-        fcs_dbm_record *const p =
-            fcs_dbm_record_get_parent_ptr((fcs_dbm_record *)existing);
-
-        if (p)
-        {
-            *(fcs_encoded_state_buffer *)parent = p->key;
-        }
-        else
-        {
-            fcs_init_encoded_state((fcs_encoded_state_buffer *)parent);
-        }
-#else
-        *(fcs_encoded_state_buffer *)parent =
-            ((fcs_dbm_record *)existing)->parent;
-#endif
-        return true;
+        fcs_init_encoded_state((fcs_encoded_state_buffer *)parent);
     }
+#else
+    *(fcs_encoded_state_buffer *)parent = ((fcs_dbm_record *)existing)->parent;
+#endif
+    return true;
 }
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
