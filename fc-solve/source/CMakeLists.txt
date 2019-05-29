@@ -695,8 +695,17 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     SET (DBM_DEFINITIONS )
 
     IF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
-        SET (BIN_TREE_MODULE "fcs-libavl/rb.c")
-        ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1")
+        IF (TRUE)
+    FIND_PACKAGE (PkgConfig REQUIRED)
+            pkg_check_modules(APR REQUIRED apr-1)
+    include_directories (${APR_INCLUDE_DIRS})
+    link_directories (${APR_LIBRARY_DIRS})
+    add_definitions (${APR_CFLAGS_OTHER})
+            SET (BIN_TREE_MODULE "dbm_google_hash.cpp")
+        else()
+            SET (BIN_TREE_MODULE "fcs-libavl/rb.c")
+            ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1")
+        endif()
         LIST (APPEND DBM_DEFINITIONS "FCS_LIBAVL_STORE_WHOLE_KEYS=1"
             "FCS_DBM_RECORD_POINTER_REPR=1")
     ELSE ()
@@ -740,7 +749,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     INCLUDE_DIRECTORIES(BEFORE "${CMAKE_CURRENT_SOURCE_DIR}/fcs-libavl")
 
     FOREACH (TGT ${dbm_solvers})
-        TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB})
+        TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB} ${APR_LIBRARIES})
         SET_TARGET_PROPERTIES("${TGT}"
             PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
         )

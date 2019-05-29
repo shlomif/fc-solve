@@ -12,6 +12,10 @@
 #pragma once
 #include "freecell-solver/fcs_conf.h"
 
+#if 1
+#include "dbm_google_hash.h"
+#else
+
 #ifdef FCS_DBM_USE_LIBAVL
 
 #include "rb.h"
@@ -34,4 +38,5 @@ static inline void fc_solve_kaz_tree_delete_by_value(
         kaz_tree, fc_solve_kaz_tree_lookup(kaz_tree, value));
 }
 
+#endif
 #endif

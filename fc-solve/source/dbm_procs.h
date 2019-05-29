@@ -286,6 +286,7 @@ static inline void mark_and_sweep_old_states(
     dbm_solver_instance *const instance, dict_t *const kaz_tree,
     const size_t curr_depth)
 {
+#ifndef FCS_NO_DBM_AVL
     /* Now that we are about to ascend to a new depth, let's
      * mark-and-sweep
      * the old states, some of which are no longer of interest.
@@ -337,6 +338,7 @@ static inline void mark_and_sweep_old_states(
     }
     TRACE("Finish mark-and-sweep cleanup for curr_depth=%lu\n",
         (unsigned long)curr_depth);
+#endif
 }
 
 #ifdef FCS_DBM_SINGLE_THREAD
