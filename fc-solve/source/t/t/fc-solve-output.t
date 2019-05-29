@@ -10,7 +10,7 @@ use String::ShellQuote qw/ shell_quote /;
 use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
 use FC_Solve::Paths
-    qw/ $IS_WIN bin_board bin_exe_raw is_without_dbm normalize_lf samp_board /;
+    qw/ $IS_WIN bin_board bin_exe_raw is_dbm_apr is_without_dbm normalize_lf samp_board /;
 
 sub _get
 {
@@ -455,7 +455,7 @@ EOF
 {
 SKIP:
     {
-        if ( is_without_dbm() || $IS_WIN )
+        if ( is_dbm_apr() || is_without_dbm() || $IS_WIN )
         {
             Test::More::skip( "without the dbm fc_solvers or win32", 1 );
         }

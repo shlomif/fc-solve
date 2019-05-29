@@ -9,7 +9,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file src_script);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_dbm_apr is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -67,6 +67,7 @@ my $NO_FLARES   = _is_tag('no_flares');
 my $NO_PATSOLVE = _is_tag('no_pats');
 my $NO_VALGRIND = _is_tag('no_valg');
 my $NO_DBM      = _is_tag('no_dbm');
+my $DBM_APR     = _is_tag('dbm_apr');
 
 # A file in the output/binaries directory where fc-solve was compiled.
 sub bin_file
@@ -124,6 +125,11 @@ sub is_without_patsolve
 sub is_without_valgrind
 {
     return $NO_VALGRIND;
+}
+
+sub is_dbm_apr
+{
+    return $DBM_APR;
 }
 
 # Returns a board from the sample-boards directory.
