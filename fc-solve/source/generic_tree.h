@@ -12,7 +12,7 @@
 #pragma once
 #include "freecell-solver/fcs_conf.h"
 
-#if 1
+#ifdef FCS_DBM_USE_HASH
 #include "dbm_hashtable.h"
 #else
 

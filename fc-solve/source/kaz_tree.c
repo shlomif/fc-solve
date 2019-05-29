@@ -285,7 +285,7 @@ static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
 dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void *context)
 #else
 dict_t *fc_solve_kaz_tree_create(
-    dict_comp_t comp, void *context, meta_allocator *meta_alloc, void *)
+    dict_comp_t comp, void *context, meta_allocator *meta_alloc, void *vunused)
 #endif
 {
     dict_t *dict = (dict_t *)SMALLOC1(dict);

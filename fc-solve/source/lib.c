@@ -357,7 +357,7 @@ static inline void init_instance(fcs_instance *const instance)
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     cache->kaz_tree = fc_solve_kaz_tree_create(
-        fc_solve_compare_lru_cache_keys, NULL, instance->meta_alloc);
+        fc_solve_compare_lru_cache_keys, NULL, instance->meta_alloc, NULL);
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
