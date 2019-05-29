@@ -10,6 +10,7 @@ addons:
             - docbook-xsl
             - docbook-xsl-ns
             - gperf
+            - libapr1-dev
             - libc6-dbg
             - libdb5.3-dev
             - libgd-dev
