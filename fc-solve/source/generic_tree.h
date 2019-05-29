@@ -13,7 +13,7 @@
 #include "freecell-solver/fcs_conf.h"
 
 #if 1
-#include "dbm_google_hash.h"
+#include "dbm_hashtable.h"
 #else
 
 #ifdef FCS_DBM_USE_LIBAVL

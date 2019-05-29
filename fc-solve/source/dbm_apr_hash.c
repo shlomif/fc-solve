@@ -9,41 +9,20 @@
  */
 // google_hash.cpp - module file for Google's dense_hash_map as adapted
 // for Freecell Solver.
-#include <algorithm>
-#include "dbm_google_hash.h"
+#include "dbm_hashtable.h"
 
 #include <apr_hash.h>
-typedef unsigned long int ub4; /* unsigned 4-byte quantities */
-typedef unsigned char ub1;
-
-static inline ub4 perl_hash_function(register const ub1 *s_ptr, /* the key */
-    register const ub4 length /* the length of the key */
-)
-{
-    register ub4 hash_value_int = 0;
-    register const ub1 *s_end = s_ptr + length;
-
-    while (s_ptr < s_end)
-    {
-        hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-    }
-    hash_value_int += (hash_value_int >> 5);
-
-    return hash_value_int;
-}
-
-extern "C" dict_t fc_solve_kaz_tree_create(
-    dict_comp_t cmp, void *baton, meta_allocator *, void *)
+dict_t fc_solve_kaz_tree_create(
+    dict_comp_t cmp, void *baton, meta_allocator *munused, void *vunused)
 {
     apr_pool_t *pool;
     apr_pool_create(&pool, NULL);
     apr_hash_t *ret = apr_hash_make(pool);
     return (dict_t)(ret);
 }
-const auto siz = sizeof(fcs_dbm_record);
-const auto ksiz = sizeof(fcs_encoded_state_buffer);
-extern "C" dict_ret_key_t fc_solve_kaz_tree_alloc_insert(
-    dict_t v, dict_key_t key_proto)
+const size_t siz = sizeof(fcs_dbm_record);
+const size_t ksiz = sizeof(fcs_encoded_state_buffer);
+dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t v, dict_key_t key_proto)
 {
     apr_hash_t *h = (apr_hash_t *)v;
     void *exist_key = apr_hash_get(h, key_proto, ksiz);
@@ -56,13 +35,12 @@ extern "C" dict_ret_key_t fc_solve_kaz_tree_alloc_insert(
     apr_hash_set(h, key, ksiz, key);
     return NULL;
 }
-extern "C" dict_key_t fc_solve_kaz_tree_lookup_value(
-    dict_t dict, cdict_key_t key)
+dict_key_t fc_solve_kaz_tree_lookup_value(dict_t dict, cdict_key_t key)
 {
     apr_hash_t *h = (apr_hash_t *)dict;
     return apr_hash_get(h, key, ksiz);
 }
-extern "C" void fc_solve_kaz_tree_destroy(dict_t dict)
+void fc_solve_kaz_tree_destroy(dict_t dict)
 {
     apr_hash_t *h = (apr_hash_t *)dict;
     apr_pool_destroy(apr_hash_pool_get(h));
