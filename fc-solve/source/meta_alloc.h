@@ -16,11 +16,18 @@
 extern "C" {
 #endif
 
+#ifdef FCS_DBM_USE_APR
+#include <apr_hash.h>
+#endif
+
 #include "state.h"
 
 typedef struct
 {
     char *recycle_bin;
+#ifdef FCS_DBM_USE_APR
+    apr_pool_t *apr_pool;
+#endif
 } meta_allocator;
 
 typedef struct
@@ -46,6 +53,9 @@ static inline void fc_solve_meta_compact_allocator_init(
     meta_allocator *const meta)
 {
     meta->recycle_bin = NULL;
+#ifdef FCS_DBM_USE_APR
+    meta->apr_pool = NULL;
+#endif
 }
 
 extern void fc_solve_meta_compact_allocator_finish(meta_allocator *);

@@ -59,6 +59,13 @@ void fc_solve_meta_compact_allocator_finish(meta_allocator *const meta_alloc)
     }
     free(iter);
     meta_alloc->recycle_bin = NULL;
+#ifdef FCS_DBM_USE_APR
+    if (meta_alloc->apr_pool)
+    {
+        apr_pool_destroy(meta_alloc->apr_pool);
+        meta_alloc->apr_pool = NULL;
+    }
+#endif
 }
 
 void fc_solve_compact_allocator_finish(compact_allocator *const allocator)

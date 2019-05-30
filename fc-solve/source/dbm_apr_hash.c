@@ -12,12 +12,14 @@
 #include "dbm_hashtable.h"
 
 #include <apr_hash.h>
-dict_t fc_solve_kaz_tree_create(
-    dict_comp_t cmp, void *baton, meta_allocator *munused, void *vunused)
+dict_t fc_solve_kaz_tree_create(dict_comp_t cmp, void *baton,
+    meta_allocator *const meta_alloc, void *vunused)
 {
-    apr_pool_t *pool;
-    apr_pool_create(&pool, NULL);
-    apr_hash_t *ret = apr_hash_make(pool);
+    if (!meta_alloc->apr_pool)
+    {
+        apr_pool_create(&meta_alloc->apr_pool, NULL);
+    }
+    apr_hash_t *ret = apr_hash_make(meta_alloc->apr_pool);
     return (dict_t)(ret);
 }
 const size_t siz = sizeof(fcs_dbm_record);
@@ -40,8 +42,4 @@ dict_key_t fc_solve_kaz_tree_lookup_value(dict_t dict, cdict_key_t key)
     apr_hash_t *h = (apr_hash_t *)dict;
     return apr_hash_get(h, key, ksiz);
 }
-void fc_solve_kaz_tree_destroy(dict_t dict)
-{
-    apr_hash_t *h = (apr_hash_t *)dict;
-    apr_pool_destroy(apr_hash_pool_get(h));
-}
+void fc_solve_kaz_tree_destroy(dict_t dict) {}
