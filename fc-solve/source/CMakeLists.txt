@@ -695,8 +695,8 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
 
     SET (DBM_DEFINITIONS )
 
-    IF (FCS_DBM_TREE_BACKEND STREQUAL "libavl2")
-        IF (TRUE)
+    IF (("${FCS_DBM_TREE_BACKEND}" STREQUAL "libavl2") OR ("${FCS_DBM_TREE_BACKEND}" STREQUAL "apr_hash"))
+        IF ("${FCS_DBM_TREE_BACKEND}" STREQUAL "apr_hash")
             FIND_PACKAGE (PkgConfig REQUIRED)
             pkg_check_modules(APR REQUIRED apr-1)
             include_directories (${APR_INCLUDE_DIRS})
