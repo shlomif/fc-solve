@@ -338,7 +338,7 @@ sub _composite_get_cols_and_indexes
                 last MOVE_EMPTIES_LOOP;
             }
 
-            @cols_indexes[ $non_orig_idx,  $empty_idx ] =
+            @cols_indexes[ $non_orig_idx, $empty_idx ] =
                 @cols_indexes[ $empty_idx, $non_orig_idx ];
             ++$non_orig_idx;
             --$empty_idx;

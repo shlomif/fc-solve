@@ -17,7 +17,7 @@ closedir($dh);
 
 @files = grep { ( $_ ne "index.html" ) && ( $_ ne "CVS" ) } @files;
 @files = sort { $a cmp $b } @files;
-@files = map { $_ . ( ( -d "$dir_name/$_" ) ? "/" : "" ) } @files;
+@files = map  { $_ . ( ( -d "$dir_name/$_" ) ? "/" : "" ) } @files;
 
 open my $out, '>', $filename;
 print {$out} <<"EOF" ;
