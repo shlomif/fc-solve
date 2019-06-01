@@ -12,6 +12,13 @@
 #include "dbm_hashtable.h"
 
 #include <apr_hash.h>
+#include "wrap_xxhash.h"
+
+static unsigned int hashfunc(const char *key, apr_ssize_t *klen)
+{
+    return DO_XXH(key, *klen);
+}
+
 dict_t fc_solve_kaz_tree_create(dict_comp_t cmp, void *baton,
     meta_allocator *const meta_alloc, void *vunused)
 {
@@ -19,7 +26,7 @@ dict_t fc_solve_kaz_tree_create(dict_comp_t cmp, void *baton,
     {
         apr_pool_create(&meta_alloc->apr_pool, NULL);
     }
-    apr_hash_t *ret = apr_hash_make(meta_alloc->apr_pool);
+    apr_hash_t *ret = apr_hash_make_custom(meta_alloc->apr_pool, hashfunc);
     return (dict_t)(ret);
 }
 const size_t siz = sizeof(fcs_dbm_record);
