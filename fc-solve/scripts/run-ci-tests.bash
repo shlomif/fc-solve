@@ -20,7 +20,7 @@ cd "$a"
 export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 SKIP_SPELL_CHECK=1
 which dbtoepub
 export DBTOEPUB="/usr/bin/ruby $(which dbtoepub)"
-export AVOID_NUM=4
+export AVOID_NUM=5
 export DOCBOOK5_XSL_STYLESHEETS_PATH=/usr/share/xml/docbook/stylesheet/docbook-xsl-ns
 # For https://reproducible-builds.org/ and better caching.
 enable_reproducible_builds()

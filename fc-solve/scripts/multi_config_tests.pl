@@ -503,6 +503,8 @@ reg_tatzer_test(
 reg_lt_test( { blurb => "No FCS_SINGLE_HARD_THREAD", randomly_avoid => $TRUE, },
     '--nosingle-ht' );
 
+reg_lt_test( { blurb => "dbm apr_hash", randomly_avoid => $TRUE, },
+    '--dbmtree=apr_hash' );
 reg_lt_test(
     { blurb => "Break Backward Compatibility #1", randomly_avoid => $TRUE, },
     '--break-back-compat-1' );
