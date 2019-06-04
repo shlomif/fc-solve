@@ -79,6 +79,6 @@ cache:
     directories:
         - $HOME/fc-solve-tests-reruns-cache
         - $HOME/perl_modules
-        - $HOME/fc-solve/fc-solve/source/avl-2.0.3
+        - fc-solve/source/avl-2.0.3
 # services:
 #     - docker
