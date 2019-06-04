@@ -7,7 +7,7 @@ rebuild()
         time git clean -dxf .
         time bash -x bin/install-npm-deps.sh
         time ./gen-helpers
-        time gmake serial_run
+        time gmake -j4 serial_run
         time gmake -j1 fastrender
         time gmake -j1 PROD=1 fastrender
         time gmake -j4 PROD=1 all

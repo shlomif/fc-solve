@@ -288,7 +288,13 @@ $(TYPESCRIPT_DEST_FILES): $(OUT_PREF)/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS
 $(TYPESCRIPT_DEST_FILES__NODE): lib/for-node/js/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	$(call run_tsc,cmdline)
 
-serial_run: $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(LIBFREECELL_SOLVER_JS) $(ASMJS_STAMP)
+tsc_www:
+	$(call run_tsc,www)
+
+tsc_cmdline:
+	$(call run_tsc,cmdline)
+
+serial_run: tsc_www tsc_cmdline $(LIBFREECELL_SOLVER_JS) $(ASMJS_STAMP)
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
