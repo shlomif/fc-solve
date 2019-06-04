@@ -380,7 +380,7 @@ if ( $ENV{FC_SOLVE_GIT_CHECKOUT} )
 }
 elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
 {
-    if ( !-d $AVLV )
+    if ( !( -d $AVLV and -f "$AVLV/prb.h" ) )
     {
         my $AVLT = "$AVLV.tar.gz";
         run_cmd(
