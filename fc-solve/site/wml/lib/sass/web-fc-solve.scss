@@ -223,3 +223,10 @@ textarea.emscripten {
         margin-left: 1em;
     }
 }
+
+$mgn: 1em;
+#output_label {
+    display: block;
+    margin-bottom: 0.75em;
+    margin-top: $mgn;
+}
