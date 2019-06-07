@@ -219,8 +219,8 @@ static inline void fcs_offloading_queue_page__bump(off_q_page *const page)
     fcs_offloading_queue_page__start_after(page, page);
 }
 
-static const size_t data_len =
-    sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE;
+#define FCS_OFFLOADING_Q_DATA_SIZE                                             \
+    (sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE)
 static inline void fcs_offloading_queue_page__read_next_from_disk(
     off_q_page *const page, const char *const offload_dir_path)
 {
@@ -230,7 +230,8 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
         page, page_filename, offload_dir_path);
 #ifdef RINUTILS__IS_UNIX
     const int f = open(page_filename, O_RDONLY);
-    myassert(data_len == read(f, page->data, data_len));
+    myassert(FCS_OFFLOADING_Q_DATA_SIZE ==
+             read(f, page->data, FCS_OFFLOADING_Q_DATA_SIZE));
     close(f);
 #else
     FILE *const f = fopen(page_filename, "rb");
@@ -255,7 +256,8 @@ static inline void fcs_offloading_queue_page__offload(
         page, page_filename, offload_dir_path);
 #ifdef RINUTILS__IS_UNIX
     const int f = creat(page_filename, 0644);
-    myassert(write(f, page->data, data_len) == data_len);
+    myassert(write(f, page->data, FCS_OFFLOADING_Q_DATA_SIZE) ==
+             FCS_OFFLOADING_Q_DATA_SIZE);
     close(f);
 #else
     FILE *const f = fopen(page_filename, "wb");
