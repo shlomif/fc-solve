@@ -18,8 +18,8 @@ static fcs_card make_card(fcs_card rank, fcs_card suit)
 static void test_bitcount(const fcs_column_encoding_composite *const enc,
     const size_t bytes, const size_t bits, const char *const msg)
 {
-    cmp_ok(enc->end - enc->enc, "==", bytes, "%s - bytes", msg);
-    cmp_ok(enc->bit_in_char_idx, "==", bits, "%s - bits", msg);
+    cmp_ok((int)(enc->end - enc->enc), "==", (int)bytes, "%s - bytes", msg);
+    cmp_ok((int)enc->bit_in_char_idx, "==", (int)bits, "%s - bits", msg);
 }
 
 static void main_tests(void)

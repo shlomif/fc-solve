@@ -34,7 +34,7 @@ static inline bool range_solvers__solve(void *const instance,
     const long long board_num, fcs_iters_int *const total_num_iters_temp)
 {
     fcs_state_string state_string;
-    get_board(board_num, state_string);
+    get_board((unsigned long long)board_num, state_string);
 
     switch (freecell_solver_user_solve_board(instance, state_string))
     {

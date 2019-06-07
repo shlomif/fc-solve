@@ -160,7 +160,7 @@ static inline void instance__inspect_new_state(
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state,
-    const long max_num_elements_in_cache)
+    const unsigned long max_num_elements_in_cache)
 {
     instance->local_variant = local_variant;
     fc_solve_delta_stater_init(&(instance->delta_stater), local_variant,
@@ -251,7 +251,7 @@ static inline void instance__print_coords_to_log(
     const fcs_dbm_variant_type local_variant = instance->local_variant;
 #endif
     fprintf(
-        log_fh, "At %ld iterations Coords=[", instance->count_num_processed);
+        log_fh, "At %lu iterations Coords=[", instance->count_num_processed);
 
     const pseudo_dfs_stack_item *stack_item = instance->stack;
     const pseudo_dfs_stack_item *const end_stack_item =

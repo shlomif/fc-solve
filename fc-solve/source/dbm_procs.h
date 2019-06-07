@@ -283,8 +283,8 @@ static void calc_trace(fcs_dbm_record *const ptr_initial_record,
 }
 
 static inline void mark_and_sweep_old_states(
-    dbm_solver_instance *const instance, dict_t *const kaz_tree,
-    const size_t curr_depth)
+    dbm_solver_instance *const instance GCC_UNUSED,
+    dict_t *const kaz_tree GCC_UNUSED, const size_t curr_depth GCC_UNUSED)
 {
 #ifndef FCS_NO_DBM_AVL
     /* Now that we are about to ascend to a new depth, let's
@@ -428,7 +428,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     const char *param;
     if ((param = TRY_PARAM("--pre-cache-max-count")))
     {
-        if ((inp->pre_cache_max_count = atol(param)) < 1000)
+        if ((inp->pre_cache_max_count = (unsigned long)atol(param)) < 1000)
         {
             exit_error("--pre-cache-max-count must be at least 1,000.\n");
         }
@@ -465,17 +465,17 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     }
     else if ((param = TRY_PARAM("--max-num-states")))
     {
-        inp->max_num_states_in_collection = atol(param);
+        inp->max_num_states_in_collection = (unsigned long)atol(param);
         return true;
     }
     else if ((param = TRY_PARAM("--iters-delta-limit")))
     {
-        inp->iters_delta_limit = atol(param);
+        inp->iters_delta_limit = (unsigned long)atol(param);
         return true;
     }
     else if ((param = TRY_PARAM("--caches-delta")))
     {
-        if ((inp->caches_delta = atol(param)) < 1000)
+        if ((inp->caches_delta = (unsigned long)atol(param)) < 1000)
         {
             exit_error("--caches-delta must be at least 1,000.\n");
         }

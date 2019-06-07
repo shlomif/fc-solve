@@ -81,7 +81,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     for (long long board_num = start_board; board_num <= end_board; ++board_num)
     {
         fcs_state_string state_string;
-        get_board(board_num, state_string);
+        get_board((unsigned long long)board_num, state_string);
 
         const int ret =
             freecell_solver_user_solve_board(instance, state_string);

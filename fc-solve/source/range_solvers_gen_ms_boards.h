@@ -44,16 +44,17 @@ static inline void card_to_string(char *const s, const CARD card)
  * routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board_l(const long long deal_idx, char *const ret);
+void DLLEXPORT fc_solve_get_board_l(
+    const unsigned long long deal_idx, char *const ret);
 
 extern void DLLEXPORT fc_solve_get_board_l(
 #else
 static inline void get_board_l(
 #endif
 #ifdef FCS_DEAL_ONLY_UP_TO_2G
-    long long seedx
+    const unsigned long long seedx
 #else
-    const long long deal_idx
+    const unsigned long long deal_idx
 #endif
     ,
     char *const ret)
@@ -61,7 +62,8 @@ static inline void get_board_l(
 // #define FCS_DEAL_ONLY_UP_TO_2G
 #ifdef FCS_DEAL_ONLY_UP_TO_2G
 #else
-    microsoft_rand seedx = microsoft_rand__calc_init_seedx(deal_idx);
+    microsoft_rand seedx =
+        microsoft_rand__calc_init_seedx((microsoft_rand)deal_idx);
 #endif
     strcpy(ret, "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
@@ -100,9 +102,9 @@ static inline void get_board_l(
 }
 
 #ifndef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-static inline void get_board(long deal_idx, char *ret)
+static inline void get_board(unsigned long deal_idx, char *ret)
 {
-    get_board_l((long long)deal_idx, ret);
+    get_board_l(deal_idx, ret);
 }
 #endif
 

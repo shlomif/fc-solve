@@ -46,7 +46,7 @@ static inline microsoft_rand_uint microsoft_rand_randp(
 }
 
 static inline microsoft_rand_uint microsoft_rand__game_num_rand(
-    microsoft_rand *const seedx_ptr, const long long gnGameNumber)
+    microsoft_rand *const seedx_ptr, const microsoft_rand gnGameNumber)
 {
     if (gnGameNumber < 0x100000000LL)
     {

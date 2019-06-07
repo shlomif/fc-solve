@@ -141,7 +141,7 @@ int main(int argc, char *argv[])
         {
             if (variant_is_freecell)
             {
-                get_board_l(board_num, buffer);
+                get_board_l((unsigned long long)board_num, buffer);
             }
             else
             {
@@ -150,8 +150,11 @@ int main(int argc, char *argv[])
                     board_num, variant);
 
                 FILE *const from_make_pysol = popen(command, "r");
-                fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
-                    from_make_pysol);
+                if (fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
+                        from_make_pysol) <= 0)
+                {
+                    abort();
+                }
                 pclose(from_make_pysol);
             }
             LAST(buffer) = '\0';

@@ -19,6 +19,16 @@ extern "C" {
 #include <fcntl.h>
 #endif
 
+#ifdef NDEBUG
+#define myassert(x)                                                            \
+    if (!(x))                                                                  \
+    {                                                                          \
+        abort();                                                               \
+    }
+#else
+#define myassert(x) assert(x)
+#endif
+
 typedef const unsigned char *offloading_queue_item;
 
 typedef struct
@@ -209,6 +219,8 @@ static inline void fcs_offloading_queue_page__bump(off_q_page *const page)
     fcs_offloading_queue_page__start_after(page, page);
 }
 
+static const size_t data_len =
+    sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE;
 static inline void fcs_offloading_queue_page__read_next_from_disk(
     off_q_page *const page, const char *const offload_dir_path)
 {
@@ -218,7 +230,7 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
         page, page_filename, offload_dir_path);
 #ifdef RINUTILS__IS_UNIX
     const int f = open(page_filename, O_RDONLY);
-    read(f, page->data, sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
+    myassert(data_len == read(f, page->data, data_len));
     close(f);
 #else
     FILE *const f = fopen(page_filename, "rb");
@@ -243,7 +255,7 @@ static inline void fcs_offloading_queue_page__offload(
         page, page_filename, offload_dir_path);
 #ifdef RINUTILS__IS_UNIX
     const int f = creat(page_filename, 0644);
-    write(f, page->data, sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE);
+    myassert(write(f, page->data, data_len) == data_len);
     close(f);
 #else
     FILE *const f = fopen(page_filename, "wb");

@@ -218,6 +218,8 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
 #define state_key (&(state->s))
     switch (fcs_move_get_type(move))
     {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
     case FCS_MOVE_TYPE_STACK_TO_STACK:
         if ((standard_notation == FC_SOLVE__STANDARD_NOTATION_EXTENDED) &&
             /* More than one card was moved */
@@ -243,6 +245,7 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
         }
         break;
 
+#pragma GCC diagnostic pop
     case FCS_MOVE_TYPE_FREECELL_TO_STACK:
         if (standard_notation)
         {

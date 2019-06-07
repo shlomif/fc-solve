@@ -256,7 +256,7 @@ static bool populate_instance_with_intermediate_input_line(
         unsigned int hex_digits;
         if (sscanf(s_ptr, "%2X", &hex_digits) != 1)
         {
-            exit_error("Error in reading state in line %ld of the "
+            exit_error("Error in reading state in line %lu of the "
                        "--intermediate-input",
                 line_num);
         }
@@ -315,7 +315,7 @@ static bool populate_instance_with_intermediate_input_line(
             src -= 8;
             if (src >= 4)
             {
-                exit_error("Error in reading state in line %ld of the "
+                exit_error("Error in reading state in line %lu of the "
                            "--intermediate-input - source cannot be a "
                            "foundation.",
                     line_num);
@@ -384,7 +384,7 @@ static bool populate_instance_with_intermediate_input_line(
     if (memcmp(&running_key, &final_stack_encoded_state, sizeof(running_key)) !=
         0)
     {
-        exit_error("Error in reading state in line %ld of the "
+        exit_error("Error in reading state in line %lu of the "
                    "--intermediate-input - final state does not match "
                    "that with all states applied.\n",
             line_num);
@@ -550,7 +550,7 @@ int main(int argc, char *argv[])
         }
         else if ((param = TRY_P("--start-line")))
         {
-            start_line = atol(param);
+            start_line = (unsigned long)atol(param);
         }
         else if ((param = TRY_P("-o")))
         {
@@ -613,8 +613,9 @@ int main(int argc, char *argv[])
         dbm_solver_instance queue_instance;
         dbm_solver_instance limit_instance;
 
-        instance_init(&queue_instance, &inp, -1, -1, out_fh);
-        instance_init(&limit_instance, &inp, inp.iters_delta_limit, -1, out_fh);
+        instance_init(&queue_instance, &inp, ULONG_MAX, ULONG_MAX, out_fh);
+        instance_init(
+            &limit_instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh);
 
         bool found_line;
         do
@@ -723,7 +724,8 @@ int main(int argc, char *argv[])
     else
     {
         dbm_solver_instance instance;
-        instance_init(&instance, &inp, inp.iters_delta_limit, -1, out_fh);
+        instance_init(
+            &instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh);
         fcs_encoded_state_buffer *key_ptr;
 #define KEY_PTR() (key_ptr)
         fcs_encoded_state_buffer parent_state_enc;

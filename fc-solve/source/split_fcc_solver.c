@@ -14,7 +14,6 @@
 // in the Freecell Solver git repository.
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
-#include <assert.h>
 #include "depth_multi_queue.h"
 #include "rinutils/portable_time.h"
 
@@ -227,7 +226,10 @@ static void *instance_run_solver_thread(void *const void_arg)
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
                     &(thread->state_depth), (offloading_queue_item *)(&token)))
             {
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wnull-dereference"
                 physical_item.key = token->key;
+#pragma GCC diagnostic pop
                 item = &physical_item;
                 instance_increment(instance);
             }
@@ -477,9 +479,12 @@ static inline void instance_check_key(
                 fseek(instance->fingerprint_fh, location_in_file, SEEK_SET);
 
 #ifdef HAVE_GETLINE
-                getline(&(instance->fingerprint_line),
-                    &(instance->fingerprint_line_size),
-                    instance->fingerprint_fh);
+                if (getline(&(instance->fingerprint_line),
+                        &(instance->fingerprint_line_size),
+                        instance->fingerprint_fh) <= 0)
+                {
+                    abort();
+                }
 #else
                 fgets(instance->fingerprint_line,
                     (int)instance->fingerprint_line_size,

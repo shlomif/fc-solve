@@ -81,8 +81,12 @@ static inline void write_request(const long long end_board,
         }
         req.quota_end = (*next_board_num_ptr) - 1;
     }
-
-    write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req));
+    const_AUTO(
+        ret, write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req)));
+    if (ret != sizeof(req))
+    {
+        exit(-1);
+    }
 }
 
 static inline void transaction(const fcs_worker *const worker,
@@ -157,8 +161,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             close(w.child_to_parent_pipe[READ_FD]);
             /* I'm one of the slaves */
             request_type req;
-            while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)),
-                req.board_num != -1)
+            while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)) ==
+                       sizeof(req) &&
+                   req.board_num != -1)
             {
                 response_type response = {
                     .num_iters = 0,
@@ -170,8 +175,11 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                         instance, req.board_num, &response.num_iters);
                     freecell_solver_user_recycle(instance);
                 }
-                write(w.child_to_parent_pipe[WRITE_FD], &response,
-                    sizeof(response));
+                if (sizeof(response) != write(w.child_to_parent_pipe[WRITE_FD],
+                                            &response, sizeof(response)))
+                {
+                    abort();
+                }
             }
             /* Cleanup */
             freecell_solver_user_free(instance);

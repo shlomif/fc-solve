@@ -158,16 +158,12 @@ static inline __attribute__((format(printf, 1, 2))) char *calc_errstr_s(
     const char *const format, ...)
 {
     va_list my_va_list;
-
     va_start(my_va_list, format);
-
     char *errstr;
-
-    vasprintf(&errstr, format, my_va_list);
-
+    const_AUTO(ret, vasprintf(&errstr, format, my_va_list));
     va_end(my_va_list);
 
-    return errstr;
+    return ((ret < 0) ? NULL : errstr);
 }
 
 #define ASSIGN_ERR_STR(error_string, format, ...)                              \

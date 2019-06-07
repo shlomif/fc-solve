@@ -1581,8 +1581,9 @@ static inline fc_solve_solve_process_ret_t do_patsolve(
     const_AUTO(start_from, pats_scan->num_checked_states);
 
     pats_scan->max_num_checked_states =
-        start_from + (HT_FIELD(hard_thread, ht__max_num_checked_states) -
-                         NUM_CHECKED_STATES);
+        start_from +
+        ((unsigned long)HT_FIELD(hard_thread, ht__max_num_checked_states) -
+            (unsigned long)NUM_CHECKED_STATES);
     pats_scan->status = FCS_PATS__NOSOL;
     fc_solve_pats__do_it(pats_scan);
 
