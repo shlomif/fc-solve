@@ -9,7 +9,7 @@ use String::ShellQuote qw/shell_quote/;
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file is_break is_dbm_apr is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file src_script);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -45,6 +45,11 @@ my $FC_SOLVE__RAW__RAW = "$FCS_PATH/fc-solve";
 our $FC_SOLVE__RAW = _correct_path($FC_SOLVE__RAW__RAW) . $EXE_SUF;
 our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW__RAW) );
 my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
+
+sub exe_fn
+{
+    return shift . $EXE_SUF;
+}
 
 sub _board_gen
 {
