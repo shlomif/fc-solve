@@ -27,12 +27,13 @@ my $cache     = CHI->new(
 require lib;
 lib->import("$abs_bindir/t/lib");
 require FC_Solve::Test::Valgrind::Data;
-require FC_Solve::Paths;
+require FC_Solve::Paths::Base;
 my %binaries;
 my %progs =
     map { $_ => +{ binaries => {}, } }
-    map { FC_Solve::Paths::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } ) }
-    values %{ FC_Solve::Test::Valgrind::Data->get_hash };
+    map {
+    FC_Solve::Paths::Base::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } )
+    } values %{ FC_Solve::Test::Valgrind::Data->get_hash };
 
 use Digest::SHA ();
 my $rerun = 0;
