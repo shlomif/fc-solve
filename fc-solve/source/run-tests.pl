@@ -37,24 +37,31 @@ my %progs =
 
 use Digest::SHA ();
 my $rerun = 0;
-foreach my $prog ( keys %progs )
+if ($FC_Solve::Paths::Base::IS_WIN)
 {
-    say $prog;
-    die if !-e $prog;
-    foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
+    ++$rerun;
+}
+else
+{
+    foreach my $prog ( keys %progs )
     {
-        say "bin $prog $bin";
-        $progs{$prog}{binaries}{$bin} //= (
-            $binaries{$bin} //= do
-            {
-                Digest::SHA->new(256)->addfile($bin)->b64digest;
-            }
-        );
-    }
-    my $val = $cache->get( $progs{$prog} );
-    if ( !$val )
-    {
-        ++$rerun;
+        say $prog;
+        die if !-e $prog;
+        foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
+        {
+            say "bin $prog $bin";
+            $progs{$prog}{binaries}{$bin} //= (
+                $binaries{$bin} //= do
+                {
+                    Digest::SHA->new(256)->addfile($bin)->b64digest;
+                }
+            );
+        }
+        my $val = $cache->get( $progs{$prog} );
+        if ( !$val )
+        {
+            ++$rerun;
+        }
     }
 }
 
