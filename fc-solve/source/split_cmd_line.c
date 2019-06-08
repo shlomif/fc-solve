@@ -11,6 +11,7 @@
 // to a subset of Bourne shell's semantics. Useful for reading command
 // line arguments from files.
 #include "split_cmd_line.h"
+#include "freecell-solver/config.h"
 
 typedef struct
 {
@@ -48,6 +49,19 @@ static inline void add_to_last_arg(
     }
 }
 
+// Windows...
+#ifndef HAVE_STRNDUP
+static inline char *strndup(const char *s, const size_t n)
+{
+    char *ret = malloc(n + 1);
+    if (ret)
+    {
+        strncpy(ret, s, n + 1);
+        ret[n] = '\0';
+    }
+    return ret;
+}
+#endif
 static inline void push_args_last_arg(args_man_wrapper *const manager)
 {
     const size_t len = (size_t)(manager->last_arg_ptr - manager->last_arg);
