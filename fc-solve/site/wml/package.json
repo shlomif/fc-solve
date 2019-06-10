@@ -14,8 +14,6 @@
     "@types/qunit": "^2.9.0",
     "amdefine": "^1.0.1",
     "babel-eslint": "^10.0.1",
-    "babel-preset-env": "^1.7.0",
-    "babel-preset-stage-2": "^6.24.1",
     "big-integer": "^1.6.43",
     "braces": "^2.3.2",
     "browserify": "^16.2.3",
