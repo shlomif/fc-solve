@@ -422,3 +422,6 @@ real_all: \
 
 real_all: \
 	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(dest_jinjas)
+
+browser-tests: all
+	qunit-puppeteer 'https://www.shlomifish.org/fc-solve-temp/js-fc-solve/automated-tests/'
