@@ -18,36 +18,53 @@ static unsigned hashfunc(const char *key, apr_ssize_t *klen)
 {
     return (unsigned)DO_XXH(key, (size_t)*klen);
 }
+typedef struct
+{
+    apr_hash_t *h;
+    void **common_recycle_bin;
+} dbm;
 
 dict_t fc_solve_kaz_tree_create(dict_comp_t cmp GCC_UNUSED,
     void *baton GCC_UNUSED, meta_allocator *const meta_alloc,
-    void *vunused GCC_UNUSED)
+    void **common_recycle_bin)
 {
     if (!meta_alloc->apr_pool)
     {
         apr_pool_create(&meta_alloc->apr_pool, NULL);
     }
     apr_hash_t *ret = apr_hash_make_custom(meta_alloc->apr_pool, hashfunc);
-    return (dict_t)(ret);
+    dbm *r = SMALLOC1(r);
+    r->h = ret;
+    r->common_recycle_bin = common_recycle_bin;
+    return (dict_t)(r);
 }
 static const size_t RECORD_SIZE = sizeof(fcs_dbm_record);
 static const size_t KEY_SIZE = sizeof(fcs_encoded_state_buffer);
 dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t v, dict_key_t key_proto)
 {
-    apr_hash_t *h = (apr_hash_t *)v;
+    dbm *d = (dbm *)v;
+    apr_hash_t *h = d->h;
     void *exist_key = apr_hash_get(h, key_proto, KEY_SIZE);
     if (exist_key)
     {
         return exist_key;
     }
-    void *key = apr_palloc(apr_hash_pool_get(h), RECORD_SIZE);
+    void *key;
+    if ((key = *(d->common_recycle_bin)))
+    {
+        d->common_recycle_bin = *(void **)key;
+    }
+    else
+    {
+        key = apr_palloc(apr_hash_pool_get(h), RECORD_SIZE);
+    }
     memcpy(key, key_proto, RECORD_SIZE);
     apr_hash_set(h, key, KEY_SIZE, key);
     return NULL;
 }
 dict_key_t fc_solve_kaz_tree_lookup_value(dict_t dict, cdict_key_t key)
 {
-    apr_hash_t *h = (apr_hash_t *)dict;
+    apr_hash_t *h = ((dbm *)dict)->h;
     return apr_hash_get(h, key, KEY_SIZE);
 }
-void fc_solve_kaz_tree_destroy(dict_t dict GCC_UNUSED) {}
+void fc_solve_kaz_tree_destroy(dict_t dict) { free((dbm *)dict); }

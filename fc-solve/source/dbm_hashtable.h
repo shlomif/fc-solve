@@ -37,7 +37,7 @@ typedef dict_key_t dict_ret_key_t;
 
 extern void fc_solve_kaz_tree_destroy(dict_t);
 extern dict_t fc_solve_kaz_tree_create(
-    dict_comp_t, void *, meta_allocator *, void *);
+    dict_comp_t, void *, meta_allocator *, void **);
 extern dict_key_t fc_solve_kaz_tree_lookup_value(dict_t dict, cdict_key_t key);
 extern void fc_solve_kaz_tree_delete_by_value(
     dict_t *const kaz_tree, dict_key_t value);
