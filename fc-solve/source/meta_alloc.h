@@ -39,7 +39,33 @@ typedef struct
     meta_allocator *meta;
 } compact_allocator;
 
-extern void fc_solve_compact_allocator_extend(compact_allocator *);
+#define OLD_LIST_NEXT(ptr) (*((char **)(ptr)))
+#define OLD_LIST_DATA(ptr) ((char *)(&(((char **)(ptr))[1])))
+#define FCS_METAALLOC_ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))
+static inline char *meta_request_new_buffer(meta_allocator *const meta_alloc)
+{
+    char *const ret = meta_alloc->recycle_bin;
+    if (ret)
+    {
+        meta_alloc->recycle_bin = OLD_LIST_NEXT(ret);
+        return ret;
+    }
+    else
+    {
+        return malloc(FCS_METAALLOC_ALLOCED_SIZE);
+    }
+}
+static inline void fc_solve_compact_allocator_extend(
+    compact_allocator *const allocator)
+{
+    char *const new_data = meta_request_new_buffer(allocator->meta);
+
+    OLD_LIST_NEXT(new_data) = allocator->old_list;
+    allocator->old_list = new_data;
+
+    allocator->ptr = allocator->rollback_ptr = OLD_LIST_DATA(new_data);
+    allocator->max_ptr = new_data + FCS_METAALLOC_ALLOCED_SIZE;
+}
 
 /* To be called after the meta_alloc was set. */
 static inline void fc_solve_compact_allocator_init_helper(
