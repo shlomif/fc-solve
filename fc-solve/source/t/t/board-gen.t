@@ -87,11 +87,11 @@ my $MAKE_MS_EXE =
     # TEST
     is( $trap->stdout, "", "empty stdout" );
 
+    my $NEEDLE =
+"Deal No. \"$i\" is out of the valid range ( 1 - @{[(Math::BigInt->new(1) << 33)-1]} )!";
+
     # TEST
-    is(
-        $trap->stderr,
-"Deal No. \"$i\" is out of the valid range ( 1 - @{[(Math::BigInt->new(1) << 33)-1]} )!\n",
-        "empty stdout"
+    like( $trap->stderr, qr#\A\Q$NEEDLE\E\r?\n#, "valid error on out of range",
     );
 }
 
