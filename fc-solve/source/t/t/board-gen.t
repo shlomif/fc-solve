@@ -3,13 +3,16 @@
 use strict;
 use warnings;
 
-use Test::More tests => 39;
+use Test::More tests => 42;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
+use Test::Trap
+    qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 use FC_Solve::Paths
     qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf src_script /;
 use FC_Solve::Trim qw/trim_trail_ws/;
+use Math::BigInt lib => 'GMP';
 
 sub _test_out
 {
@@ -69,6 +72,28 @@ sub _test_gen_multi
 
 my $MAKE_MS_EXE =
     bin_exe_raw( [ 'board_gen', 'pi-make-microsoft-freecell-board' ] );
+
+{
+    my $i = ( Math::BigInt->new(1) << 39 ) + 3;
+    my $status;
+    trap
+    {
+        $status = system( $MAKE_MS_EXE, "-t", $i );
+    };
+
+    # TEST
+    ok( $status != 0, "error" );
+
+    # TEST
+    is( $trap->stdout, "", "empty stdout" );
+
+    # TEST
+    is(
+        $trap->stderr,
+"Deal No. \"$i\" is out of the valid range ( 1 - @{[(Math::BigInt->new(1) << 33)-1]} )!\n",
+        "empty stdout"
+    );
+}
 
 sub _test_ms
 {

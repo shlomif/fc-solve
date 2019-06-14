@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+#include <rinutils/portable_time.h>
 #include "range_solvers_gen_ms_boards.h"
 
 int main(int argc, char *argv[])
@@ -32,8 +33,20 @@ int main(int argc, char *argv[])
         print_ts = true;
         ++arg;
     }
+    const char *const deal_s = argv[arg];
+
     const unsigned long long gamenumber =
-        ((arg < argc) ? (unsigned long long)atoll(argv[arg++]) : 1);
+        ((arg < argc) ? (unsigned long long)atoll(deal_s) : 1);
+    const unsigned long long MAX = ((1ULL << 33) - 1);
+    const unsigned long long MIN = 1;
+    if (gamenumber < MIN || gamenumber > MAX)
+    {
+        fprintf(stderr,
+            "Deal No. \"%s\" is out of the valid range ( " RIN_ULL_FMT
+            " - " RIN_ULL_FMT " )!\n",
+            deal_s, MIN, MAX);
+        return -1;
+    }
 
     fcs_state_string s;
     get_board_l(gamenumber, s);
