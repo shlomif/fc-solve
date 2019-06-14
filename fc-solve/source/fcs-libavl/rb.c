@@ -93,7 +93,9 @@ rb_create (rb_comparison_func *compare, void *param,
 #define SET_TREE_AVL_ROOT(tree, val) rb_set_link(&(tree->rb_proto_root), 0, val)
   SET_TREE_AVL_ROOT(tree, NULL);
   tree->rb_compare = compare;
+#ifdef AVL_with_rb_param
   tree->rb_param = param;
+#endif
   fc_solve_compact_allocator_init(&(tree->dict_allocator), meta_alloc);
   tree->rb_recycle_bin = (struct rb_node * *)common_recycle_bin;
   tree->rb_count = 0;
@@ -112,7 +114,11 @@ rb_find (const struct rb_table *tree, const void *item)
   assert (tree != NULL && item != NULL);
   for (p = TREE_AVL_ROOT(tree); p != NULL; )
     {
-      int cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param);
+      int cmp = tree->rb_compare (item, NODE_DATA_PTR(p)
+#ifdef AVL_with_rb_param
+          , tree->rb_param
+#endif
+          );
 
       if (cmp < 0)
         p = rb_process_link(p->rb_mylink[0]);
@@ -148,7 +154,11 @@ rb_probe (struct rb_table *tree, void *item)
       p != NULL;
       p = rb_process_link(p->rb_mylink[da[k - 1]]))
     {
-      int cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param);
+      int cmp = tree->rb_compare (item, NODE_DATA_PTR(p)
+#ifdef AVL_with_rb_param
+                    , tree->rb_param
+#endif
+        );
       if (cmp == 0)
         return NODE_DATA_PTR(p);
 
@@ -301,7 +311,12 @@ rb_delete (struct rb_table *tree, const void *item)
   k = 0;
   p = (struct rb_node *) &tree->rb_proto_root;
   for (cmp = -1; cmp != 0;
-       cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param))
+       cmp = tree->rb_compare (item, NODE_DATA_PTR(p)
+#ifdef AVL_with_rb_param
+
+           , tree->rb_param
+#endif
+           ))
     {
       bool dir = cmp > 0;
 
@@ -504,7 +519,9 @@ trav_refresh (struct rb_traverser *trav)
   if (trav->rb_node != NULL)
     {
       rb_comparison_func *cmp = trav->rb_table->rb_compare;
+#ifdef AVL_with_rb_param
       void *param = trav->rb_table->rb_param;
+#endif
       struct rb_node *node = trav->rb_node;
       struct rb_node *i;
 
@@ -515,7 +532,11 @@ trav_refresh (struct rb_traverser *trav)
           assert (i != NULL);
 
           trav->rb_stack[trav->rb_height++] = i;
-          i = rb_process_link(i->rb_mylink[cmp (NODE_DATA_PTR(node), NODE_DATA_PTR(i), param) > 0]);
+          i = rb_process_link(i->rb_mylink[cmp (NODE_DATA_PTR(node), NODE_DATA_PTR(i)
+#ifdef AVL_with_rb_param
+                  , param
+#endif
+                  ) > 0]);
         }
     }
 }
@@ -601,7 +622,11 @@ rb_t_find (struct rb_traverser *trav, struct rb_table *tree, void *item)
   trav->rb_generation = tree->rb_generation;
   for (p = TREE_AVL_ROOT(tree); p != NULL; p = q)
     {
-      int cmp = tree->rb_compare (item, NODE_DATA_PTR(p), tree->rb_param);
+      int cmp = tree->rb_compare (item, NODE_DATA_PTR(p)
+#ifdef AVL_with_rb_param
+          , tree->rb_param
+#endif
+          );
 
       if (cmp < 0)
         q = rb_process_link(p->rb_mylink[0]);
@@ -941,7 +966,13 @@ rb_destroy (struct rb_table *tree, rb_item_func *destroy)
       {
         q = rb_process_link(p->rb_mylink[1]);
         if (NODE_DATA_PTR(p) != NULL)
-          destroy (NODE_DATA_PTR(p), tree->rb_param);
+          destroy (NODE_DATA_PTR(p),
+#ifdef AVL_with_rb_param
+              tree->rb_param
+#else
+              NULL
+#endif
+              );
 #if 0
         tree->rb_alloc->libavl_free (tree->rb_alloc, p);
 #endif

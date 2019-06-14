@@ -46,7 +46,7 @@ static int main_tests(void)
             rec_a.key.s[pos_idx] = '\x01';
 #endif
 
-            if (!(compare_records(&rec_a, &rec_b, NULL) > 0))
+            if (!(compare_records__noctx(&rec_a, &rec_b) > 0))
             {
                 diag("compare_records(rec_a, rec_b) returned a wrong value for "
                      "position %zu.\n",
@@ -54,7 +54,7 @@ static int main_tests(void)
                 all_good = false;
                 break;
             }
-            if (!(compare_records(&rec_b, &rec_a, NULL) < 0))
+            if (!(compare_records__noctx(&rec_b, &rec_a) < 0))
             {
                 diag("compare_records(rec_b, rec_a) returned a wrong value for "
                      "position %zu.\n",

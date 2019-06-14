@@ -43,14 +43,22 @@ static int compare_records(
     }
 }
 #else
-static int compare_records(const void *const void_a, const void *const void_b,
-    void *const context GCC_UNUSED)
+static inline int compare_records__noctx(
+    const void *const void_a, const void *const void_b)
 {
 #define GET_PARAM(p) (((const fcs_dbm_record *)(p))->key)
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
+
+#ifdef AVL_with_rb_param
+static int compare_records(const void *const void_a, const void *const void_b,
+    void *const context GCC_UNUSED)
+{
+    return compare_records__noctx(void_a, void_b);
+}
+#endif
 #endif
 
 #ifdef __cplusplus

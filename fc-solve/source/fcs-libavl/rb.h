@@ -20,6 +20,7 @@
    02110-1301 USA.
 */
 #pragma once
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -30,8 +31,12 @@
 #endif
 
 /* Function types. */
+#ifdef AVL_with_rb_param
 typedef int rb_comparison_func (const void *rb_a, const void *rb_b,
                                  void *rb_param);
+#else
+typedef int rb_comparison_func (const void *rb_a, const void *rb_b);
+#endif
 typedef void rb_item_func (void *rb_item, void *rb_param);
 typedef void *rb_copy_func (void *rb_item, void *rb_param);
 
@@ -93,7 +98,9 @@ struct rb_table
   {
     struct rb_node rb_proto_root;          /* Tree's root. */
     rb_comparison_func *rb_compare;   /* Comparison function. */
+#ifdef AVL_with_rb_param
     void *rb_param;                    /* Extra argument to |rb_compare|. */
+#endif
     compact_allocator dict_allocator;
     struct rb_node * * rb_recycle_bin;
     size_t rb_count;                   /* Number of items in tree. */
@@ -146,12 +153,12 @@ void *rb_t_prev (struct rb_traverser *);
 void *rb_t_cur (struct rb_traverser *);
 void *rb_t_replace (struct rb_traverser *, void *);
 
-static inline int rb_get_decommissioned_flag(struct rb_node *const node)
+static inline bool rb_get_decommissioned_flag(struct rb_node *const node)
 {
-    return ((int)(node->rb_mylink[1] & 0x1));
+    return ((bool)(node->rb_mylink[1] & 0x1));
 }
 
-static inline void rb_set_decommissioned_flag(struct rb_node *const node, const int decommissioned_flag)
+static inline void rb_set_decommissioned_flag(struct rb_node *const node, const bool decommissioned_flag)
 {
     node->rb_mylink[1] &= (~0x1UL);
     node->rb_mylink[1] |= (decommissioned_flag ? 0x1UL : 0x0UL);

@@ -25,14 +25,22 @@ extern "C" {
 #include "dbm_calc_derived_iface.h"
 #include "dbm_lru_cache.h"
 
-static int fc_solve_compare_lru_cache_keys(const void *const void_a,
-    const void *const void_b, void *context GCC_UNUSED)
+static inline int fc_solve_compare_lru_cache_keys__noctx(
+    const void *const void_a, const void *const void_b)
 {
 #define GET_PARAM(p) ((((const fcs_cache_key_info *)(p))->key))
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
+
+#ifdef AVL_with_rb_param
+static int fc_solve_compare_lru_cache_keys(const void *const void_a,
+    const void *const void_b, void *context GCC_UNUSED)
+{
+    return fc_solve_compare_lru_cache_keys__noctx(void_a, void_b);
+}
+#endif
 
 static inline void cache_destroy_key(fcs_cache_key_info *cache_key)
 {
@@ -60,8 +68,9 @@ static inline void cache_init(fcs_lru_cache *const cache,
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     cache->tree_recycle_bin = NULL;
-    cache->kaz_tree = fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys,
-        NULL, meta_alloc, &(cache->tree_recycle_bin));
+    cache->kaz_tree =
+        fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys__noctx, NULL,
+            meta_alloc, &(cache->tree_recycle_bin));
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
