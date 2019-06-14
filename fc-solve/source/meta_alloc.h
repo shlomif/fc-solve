@@ -41,7 +41,7 @@ typedef struct
 
 #define OLD_LIST_NEXT(ptr) (*((char **)(ptr)))
 #define OLD_LIST_DATA(ptr) ((char *)(&(((char **)(ptr))[1])))
-#define FCS_METAALLOC_ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (256 + 128))
+#define FCS_METAALLOC_ALLOCED_SIZE (FCS_IA_PACK_SIZE * 1024 - (128))
 static inline char *meta_request_new_buffer(meta_allocator *const meta_alloc)
 {
     char *const ret = meta_alloc->recycle_bin;
