@@ -56,6 +56,16 @@ extern "C" {
 fcs_delta_stater global_delta_stater;
 #endif
 
+#ifdef FCS_DBM_USE_APR
+#include "apr_general.h"
+#else
+#define apr_initialize()                                                       \
+    {                                                                          \
+    }
+#define apr_terminate()                                                        \
+    {                                                                          \
+    }
+#endif
 #ifdef __cplusplus
 }
 #endif

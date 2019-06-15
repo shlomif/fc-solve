@@ -19,9 +19,6 @@
 
 #include "dbm_solver_head.h"
 
-#ifdef FCS_DBM_USE_APR
-#include "apr_general.h"
-#endif
 typedef struct
 {
     fcs_dbm__cache_store__common cache_store;
@@ -300,9 +297,7 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 
 int main(int argc, char *argv[])
 {
-#ifdef FCS_DBM_USE_APR
     apr_initialize();
-#endif
     const char *out_filename = NULL;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
     fcs_dbm_common_input inp = fcs_dbm_common_input_init;
@@ -392,9 +387,6 @@ int main(int argc, char *argv[])
     {
         fclose(out_fh);
     }
-
-#ifdef FCS_DBM_USE_APR
     apr_terminate();
-#endif
     return 0;
 }

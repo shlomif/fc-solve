@@ -14,10 +14,6 @@
 
 #include "dbm_solver_head.h"
 
-#ifdef FCS_DBM_USE_APR
-#include "apr_general.h"
-#endif
-
 typedef struct
 {
     fcs_dbm__cache_store__common cache_store;
@@ -531,9 +527,7 @@ static bool handle_and_destroy_instance_solution(
 
 int main(int argc, char *argv[])
 {
-#ifdef FCS_DBM_USE_APR
     apr_initialize();
-#endif
     unsigned long start_line = 1;
     const char *out_filename = NULL, *intermediate_input_filename = NULL;
     FILE *intermediate_in_fh = NULL;
@@ -761,8 +755,6 @@ int main(int argc, char *argv[])
         fclose(out_fh);
     }
 
-#ifdef FCS_DBM_USE_APR
     apr_terminate();
-#endif
     return 0;
 }

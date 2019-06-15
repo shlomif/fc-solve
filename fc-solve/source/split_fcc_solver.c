@@ -13,9 +13,6 @@
 // ../docs/split-fully-connected-components-based-solver-planning.txt
 // in the Freecell Solver git repository.
 #include "dbm_solver_head.h"
-#ifdef FCS_DBM_USE_APR
-#include "apr_general.h"
-#endif
 #include <sys/tree.h>
 #include "depth_multi_queue.h"
 #include "rinutils/portable_time.h"
@@ -598,9 +595,7 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 
 int main(int argc, char *argv[])
 {
-#ifdef FCS_DBM_USE_APR
     apr_initialize();
-#endif
     build_decoding_table();
 #ifdef DEBUG_OUT
     fcs_state_locs_struct locs;
@@ -803,10 +798,7 @@ int main(int argc, char *argv[])
     free(instance.moves_base64_encoding_buffer);
     free(instance.fingerprint_line);
     fc_solve_delta_stater_release(&delta);
-#ifdef FCS_DBM_USE_APR
     apr_terminate();
-#endif
-
     return 0;
 }
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
