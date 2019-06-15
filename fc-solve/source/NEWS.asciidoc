@@ -1,8 +1,38 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2019-03-18
+:Date: 2019-06-16
 :Revision: $Id$
+
+Version 5.8.0: (16-Jun-2019)
+----------------------------
+
+1. Install the depth/dbm fc-solvers by default. They have been
+"experimental" for too long.
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1626
+
+2. There is a compile time option to use https://apr.apache.org/[libapr]'s
+hash table as a backend for the DBM solvers. This is faster but consumes
+more RAM.
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1632
+
+3. Extracted some common headers into
+https://github.com/shlomif/rinutils[the "rinutils" library] which can be
+used by other projects.
+
+4. Bug fix: the board generation programs now avoid dealing out of range deals.
+
+5. Cache the CI valgrind/digest/verify test results for optimising test
+runs.
+
+6. Optimise the RAM consumption of summarizing_solver.c for sequences.
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1626
+
+7. Add support for https://github.com/Cyan4973/xxHash[xxHash] v0.7.0's
+xxh3 hash function for extra speed.
+https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1627 .
+
+8. Many small cleanups and refactorings.
 
 Version 5.6.0: (08-Apr-2019)
 ----------------------------
