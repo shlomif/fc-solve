@@ -1220,6 +1220,7 @@ onqtam
 ==== In: dest/docs/distro/NEWS.html
 
 --max-num-states
+0's
 2G
 ABI
 DD-MMM-YYYY
@@ -1241,6 +1242,7 @@ depth_dbm_solver
 fc-pro-range-solver
 fc-solve-multi
 fc-solve-temp
+fc-solvers
 freecell_solver_user_limit_iterations_long
 freecell_solver_user_soft_limit_iterations_long
 gen-multiple-pysol-layouts
@@ -1250,17 +1252,22 @@ int128-optimisation
 io
 kde
 libGMP
+libapr
 libtap
 macOS
 obf
 pysol-cards
+rinutils
 show_bug
 solution_moves
 sp
+summarizing_solver
 transpose-freecell-board
 userland
 usleep
+v0
 xxHash
+xxh3
 
 ==== In: dest/docs/distro/README.html
 
