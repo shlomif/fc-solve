@@ -25,7 +25,11 @@ extern "C" {
 #endif
 
 typedef void *dict_t;
+#ifdef AVL_with_rb_param
 typedef int (*dict_comp_t)(const void *, const void *, void *);
+#else
+typedef int (*dict_comp_t)(const void *, const void *);
+#endif
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
 typedef fcs_dbm_record dict_key_t;
 typedef dict_key_t *dict_ret_key_t;
