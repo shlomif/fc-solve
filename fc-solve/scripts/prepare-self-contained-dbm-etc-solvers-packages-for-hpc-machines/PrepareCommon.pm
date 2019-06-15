@@ -44,6 +44,7 @@ sub src_filenames
             'dllexport.h',
             'exit_error.h',
             'likely.h',
+            'longlong.h',
             'min_and_max.h',
             'portable_time.h',
             'rinutils.h',
