@@ -75,6 +75,7 @@ sub test_cmd
 
     my $orig_cwd = Path::Tiny->cwd->absolute;
 
+    $base = $base->absolute;
     chdir($base);
 
     mkdir("build");
@@ -94,14 +95,11 @@ sub test_cmd
     ok( scalar( -d $base ), "The directory was created again" );
 
     # TEST
-    ok(
-        scalar( -f path($base)->child("CMakeLists.txt") ),
-        "CMakeLists.txt exists",
-    );
+    ok( scalar( -f $base->child("CMakeLists.txt") ), "CMakeLists.txt exists", );
 
     # TEST
     ok(
-        scalar( -f path($base)->child("HACKING.asciidoc") ),
+        scalar( -f $base->child("HACKING.asciidoc") ),
         "HACKING.asciidoc exists",
     );
 
@@ -112,7 +110,7 @@ sub test_cmd
     $failing_asciidoc_dir->mkpath;
 
     my $asciidoc_bin = $failing_asciidoc_dir->child("asciidoc");
-    path($asciidoc_bin)->spew_utf8(<<"EOF");
+    $asciidoc_bin->spew_utf8(<<"EOF");
 #!$^X
 exit(-1);
 EOF
