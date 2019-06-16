@@ -1,11 +1,14 @@
 /* vim:syn=tt2
 */
-#include <tap.h>
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
 #include <string.h>
 
 #include "card.c"
 
-static int main_tests(void)
+static void main_tests(void **state)
 {
     char buffer[1024];
 
@@ -33,19 +36,19 @@ static int main_tests(void)
         );
         /* TEST */
         [%- SET num_tests = num_tests + 1 -%]
-        ok (!strcmp(buffer, [% card_string %]),
-            "fcs_make_card() - Trying to render " [% card_string %] " into a string");
+        assert_string_equal(buffer, [% card_string %]);
+        //    "fcs_make_card() - Trying to render " [% card_string %] " into a string");
     }
 [% END %]
 [% END %]
 [% END %]
-
-    return 0;
 }
 
 int main(void)
 {
-  plan([% num_tests %]);
-  main_tests();
-  return exit_status();
+  // plan([% num_tests %]);
+  const struct CMUnitTest tests[]={
+    cmocka_unit_test(main_tests),
+    };
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }

@@ -12,6 +12,7 @@ addons:
             - gperf
             - libapr1-dev
             - libc6-dbg
+            - libcmocka-dev
             - libdb5.3-dev
             - libgd-dev
             - libgmp-dev

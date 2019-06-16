@@ -178,6 +178,7 @@ sub myglob
 
         return $bindir->child( "t", "config", $basename )->absolute;
     };
+    local $ENV{CMOCKA_MESSAGE_OUTPUT} = 'TAP';
 
     local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
         $FC_Solve::Paths::Base::IS_WIN

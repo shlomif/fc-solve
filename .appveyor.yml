@@ -1,4 +1,6 @@
 ---
+environment:
+    MSYS_PACKAGES: mingw-w64-x86_64-cmocka mingw-w64-i686-cmocka
 # Shamelessly taken from https://github.com/plicease/Dist-Zilla-PluginBundle-Author-Plicease/blob/master/.appveyor.yml
 # Thanks!
 install:
