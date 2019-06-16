@@ -146,7 +146,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "-I${CMAKE_CURRENT_SOURCE_DIR}/.."
         "-I${CMAKE_CURRENT_SOURCE_DIR}/../fcs-libavl/"
         )
-    TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
+    TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka")
 
     GEN_INDIVIDUAL_TESTS(
         "generate_valgrind_tests"

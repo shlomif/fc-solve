@@ -12,11 +12,13 @@
  * A test for the DBM kaztree compare records.
  */
 
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
 #include <string.h>
 #include <stdio.h>
 #include <stdbool.h>
-
-#include <tap.h>
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS
@@ -24,7 +26,7 @@
 
 #include "dbm_kaztree_compare.h"
 
-static int main_tests(void)
+static void main_tests(void **state)
 {
     {
         bool all_good = true;
@@ -48,16 +50,18 @@ static int main_tests(void)
 
             if (!(compare_records__noctx(&rec_a, &rec_b) > 0))
             {
-                diag("compare_records(rec_a, rec_b) returned a wrong value for "
-                     "position %zu.\n",
+                fail_msg(
+                    "compare_records(rec_a, rec_b) returned a wrong value for "
+                    "position %zu.\n",
                     pos_idx);
                 all_good = false;
                 break;
             }
             if (!(compare_records__noctx(&rec_b, &rec_a) < 0))
             {
-                diag("compare_records(rec_b, rec_a) returned a wrong value for "
-                     "position %zu.\n",
+                fail_msg(
+                    "compare_records(rec_b, rec_a) returned a wrong value for "
+                    "position %zu.\n",
                     pos_idx);
                 all_good = false;
                 break;
@@ -66,14 +70,15 @@ static int main_tests(void)
 
         /* TEST
          * */
-        ok(all_good, "All compare_records were successful.");
+        assert_true(all_good); // "All compare_records were successful.");
     }
-    return 0;
 }
 
 int main(void)
 {
-    plan(1);
-    main_tests();
-    return exit_status();
+    // plan([% num_tests %]);
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(main_tests),
+    };
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
