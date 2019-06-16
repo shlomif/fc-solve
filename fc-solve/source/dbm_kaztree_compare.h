@@ -21,8 +21,8 @@ extern "C" {
 #include "delta_states.h"
 
 #if defined(FCS_DBM_RECORD_POINTER_REPR) && (!defined(FCS_DEBONDT_DELTA_STATES))
-static int compare_records(
-    const void *const void_a, const void *const void_b, void *const context)
+static int compare_records__noctx(
+    const void *const void_a, const void *const void_b)
 {
 #define GET_PARAM(p) (&(((const fcs_dbm_record *)(p))->key))
     const fcs_encoded_state_buffer *const a = GET_PARAM(void_a),
@@ -51,6 +51,7 @@ static inline int compare_records__noctx(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
+#endif
 
 #ifdef AVL_with_rb_param
 static int compare_records(const void *const void_a, const void *const void_b,
@@ -58,7 +59,6 @@ static int compare_records(const void *const void_a, const void *const void_b,
 {
     return compare_records__noctx(void_a, void_b);
 }
-#endif
 #endif
 
 #ifdef __cplusplus

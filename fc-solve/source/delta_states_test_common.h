@@ -9,8 +9,11 @@
  */
 // Common t/delta-states-test.c code.
 #pragma once
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
 #include <string.h>
-#include <tap.h>
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS
@@ -45,11 +48,14 @@ static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant,
     FCS__RENDER_STATE(as_str, &(new_derived_state.s), &locs);
     trim_trailing_whitespace(as_str);
 
-    const bool verdict = ok(!strcmp(as_str, expected_str), "%s", blurb);
+    assert_string_equal(as_str, expected_str); //, "%s", blurb);
+#if 0
     if (!verdict)
     {
-        diag("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n", as_str,
+        fail_msg("got == <<<\n%s\n>>> ; expected == <<<\n%s\n>>>\n", as_str,
             expected_str);
     }
     return verdict;
+#endif
+    return true;
 }

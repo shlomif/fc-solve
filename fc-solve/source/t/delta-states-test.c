@@ -18,11 +18,13 @@ static fcs_card make_card(fcs_card rank, fcs_card suit)
 static void test_bitcount(const fcs_column_encoding_composite *const enc,
     const size_t bytes, const size_t bits, const char *const msg)
 {
-    cmp_ok((int)(enc->end - enc->enc), "==", (int)bytes, "%s - bytes", msg);
-    cmp_ok((int)enc->bit_in_char_idx, "==", (int)bits, "%s - bits", msg);
+    assert_int_equal(
+        (int)(enc->end - enc->enc), (int)bytes); // "%s - bytes", msg);
+    assert_int_equal(
+        (int)enc->bit_in_char_idx, (int)bits); //, "%s - bits", msg);
 }
 
-static void main_tests(void)
+static void main_tests(void **state)
 {
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
@@ -39,30 +41,30 @@ static void main_tests(void)
         col = fcs_state_get_col(s.s, 0);
 
         // TEST
-        ok(fc_solve_get_column_orig_num_cards(&delta, col) == 0,
-            "Empty column has zero orig cards.");
+        assert_int_equal(fc_solve_get_column_orig_num_cards(&delta, col),
+            0); // "Empty column has zero orig cards."
 
         fcs_col_push_card(col, make_card(13, 0));
         // TEST
-        ok(fc_solve_get_column_orig_num_cards(&delta, col) == 0,
-            "Column with a single card has zero orig cards.");
+        assert_int_equal(fc_solve_get_column_orig_num_cards(&delta, col),
+            0); // "Column with a single card has zero orig cards."
 
         fcs_col_push_card(col, make_card(12, 1));
         // TEST
-        ok(fc_solve_get_column_orig_num_cards(&delta, col) == 0,
-            "Column with a seq of 2 cards has zero orig cards.");
+        assert_int_equal(fc_solve_get_column_orig_num_cards(&delta, col),
+            0); // "Column with a seq of 2 cards has zero orig cards."
 
         // A non-matching card.
         fcs_col_push_card(col, make_card(4, 1));
         // TEST
-        ok(fc_solve_get_column_orig_num_cards(&delta, col) == 3,
-            "3 original cards.");
+        assert_int_equal(fc_solve_get_column_orig_num_cards(&delta, col),
+            3); // "3 original cards."
 
         // A matching card.
         fcs_col_push_card(col, make_card(3, 2));
         // TEST
-        ok(fc_solve_get_column_orig_num_cards(&delta, col) == 3,
-            "3 original cards, with one card on top.");
+        assert_int_equal(fc_solve_get_column_orig_num_cards(&delta, col),
+            3); // "3 original cards, with one card on top."
     }
 
     {
@@ -109,10 +111,11 @@ static void main_tests(void)
             fc_solve_get_column_encoding_composite(&delta, 0, &enc);
 
             // TEST
-            ok(enc.enc[0] == (6             /* 3 bits of orig len. */
-                                 | (0 << 3) /*  4 bits of derived len. */
-                                 ),
-                "fc_solve_get_column_encoding_composite() test 1 - byte 0");
+            assert_int_equal(enc.enc[0],
+                (6 /* 3 bits of orig len. */ |
+                    (0 << 3) /*  4 bits of derived len. */)); // "fc_solve_get_column_encoding_composite()
+                                                              // test 1 - byte
+                                                              // 0"
 
             // TEST*$test_bitcount
             test_bitcount(&enc, 0, 7, "Only 7 bits.");
@@ -123,11 +126,12 @@ static void main_tests(void)
             fc_solve_get_column_encoding_composite(&delta, 1, &enc);
 
             // TEST
-            ok(enc.enc[0] == (3             /* 3 bits of orig len. */
-                                 | (1 << 3) /*  4 bits of derived len. */
-                                 | (SUIT_DS << (3 + 4)) /* 1 bit of suit. */
-                                 ),
-                "fc_solve_get_column_encoding_composite() test 2 - byte 0");
+            assert_int_equal(enc.enc[0],
+                (3 /* 3 bits of orig len. */ |
+                    (1 << 3) /*  4 bits of derived len. */ |
+                    (SUIT_DS
+                        << (3 + 4)) /* 1 bit of suit. */)); // "fc_solve_get_column_encoding_composite()
+                                                            // test 2 - byte 0"
 
             // TEST*$test_bitcount
             test_bitcount(&enc, 1, 0, "8 bits.");
@@ -141,17 +145,19 @@ static void main_tests(void)
 
             card_9S = make_card(9, 3);
             // TEST
-            ok(enc.enc[0] ==
-                    (0             /* 3 bits of orig len. */
-                        | (1 << 3) /*  4 bits of derived len. */
-                        | ((card_9S & 0x1) << (3 + 4)) /* 1 bit of init_card. */
-                        ),
-                "fc_solve_get_column_encoding_composite() col 5 - byte 0");
+            assert_int_equal(enc.enc[0],
+                (0 /* 3 bits of orig len. */ |
+                    (1 << 3) /*  4 bits of derived len. */ |
+                    ((card_9S & 0x1)
+                        << (3 + 4)) /* 1 bit of init_card. */)); // "fc_solve_get_column_encoding_composite()
+                                                                 // col 5 - byte
+                                                                 // 0"
 
             // TEST
-            ok((enc.enc[1] == (card_9S >> 1) /* Remaining 5 bits of card. */
-                   ),
-                "fc_solve_get_column_encoding_composite() col 5 - byte 1");
+            assert_int_equal(enc.enc[1],
+                (card_9S >>
+                    1) /* Remaining 5 bits of card. */); // "fc_solve_get_column_encoding_composite()
+                                                         // col 5 - byte 1"
 
             // TEST*$test_bitcount
             test_bitcount(&enc, 1, 3 + 4 + 6 - 8, "3+4+6 bits.");
@@ -169,19 +175,17 @@ static void main_tests(void)
             fc_solve_get_freecells_encoding(&delta, &bit_w);
 
             // TEST
-            ok((fcs_card)fc_solve_bit_reader_read(&bit_r, 6) ==
-                    make_card(8, 2), /* 8D */
-                "First freecell is 8D.");
+            assert_int_equal((fcs_card)fc_solve_bit_reader_read(&bit_r, 6),
+                make_card(8, 2) /* 8D */); // "First freecell is 8D."
 
             // TEST
-            ok((fcs_card)fc_solve_bit_reader_read(&bit_r, 6) ==
-                    make_card(12, 2), /* QD */
-                "Second freecell is QD.");
+            assert_int_equal((fcs_card)fc_solve_bit_reader_read(&bit_r, 6),
+                make_card(12, 2)); // "Second freecell is QD."
 
             // TEST
-            ok(bit_r.current == bit_w.current &&
-                    (bit_r.bit_in_char_idx == bit_w.bit_in_char_idx),
-                "Reached the end of the encoding.");
+            assert_true(bit_r.current == bit_w.current &&
+                        (bit_r.bit_in_char_idx == bit_w.bit_in_char_idx));
+            //                "Reached the end of the encoding.");
         }
 #endif
 
@@ -313,17 +317,17 @@ static void main_tests(void)
 
         trim_trailing_whitespace(s);
         // TEST
-        ok(!strcmp(s, ("Foundations: H-0 C-0 D-0 S-4\n"
-                       "Freecells:  TD  KS\n"
-                       ":\n"
-                       ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
-                       ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
-                       ": 2H\n"
-                       ": 2D KD QS JH TC 9D 8S\n"
-                       ": 7H JS KH TS KC 7C 6D 5C 4D\n"
-                       ": AH 5S 6S AD 8H JD\n"
-                       ": 2C\n")),
-            "Good string after encode_composite+decode.");
+        assert_string_equal(s, ("Foundations: H-0 C-0 D-0 S-4\n"
+                                "Freecells:  TD  KS\n"
+                                ":\n"
+                                ": 5H QH 3C AC 3H 4H QD JC TH 9C 8D 7S\n"
+                                ": QC 9S 6H 9H 8C 7D 6C 5D 4C 3D\n"
+                                ": 2H\n"
+                                ": 2D KD QS JH TC 9D 8S\n"
+                                ": 7H JS KH TS KC 7C 6D 5C 4D\n"
+                                ": AH 5S 6S AD 8H JD\n"
+                                ": 2C\n"));
+        // "Good string after encode_composite+decode.");
 
         free(s);
     }
@@ -392,11 +396,12 @@ static void main_tests(void)
             &delta, local_variant, &derived_state, &second_enc_state);
 
         // TEST
-        ok((!memcmp(
-               first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))),
+        assert_true((!memcmp(
+            first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))));
+        /*
             "Make sure encode_composite avoids permutations of empty columns "
             "and completely-non-original states.");
-
+*/
         fc_solve_delta_stater_release(&delta);
     }
     // Make sure encode_composite avoids permutations of empty columns
@@ -460,9 +465,9 @@ static void main_tests(void)
             &delta, local_variant, &derived_state, &second_enc_state);
 
         // TEST
-        ok((!memcmp(
-               &first_enc_state, &second_enc_state, sizeof(first_enc_state))),
-            "encode_composite unique encoding No. 2");
+        assert_true((!memcmp(
+            &first_enc_state, &second_enc_state, sizeof(first_enc_state))));
+        //            "encode_composite unique encoding No. 2");
 
         fc_solve_delta_stater_release(&delta);
     }
@@ -470,7 +475,9 @@ static void main_tests(void)
 
 int main(void)
 {
-    plan(24);
-    main_tests();
-    return exit_status();
+    // plan(24);
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(main_tests),
+    };
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

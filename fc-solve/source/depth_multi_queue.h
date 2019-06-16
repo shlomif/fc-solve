@@ -18,6 +18,7 @@
 extern "C" {
 #endif
 
+#include <assert.h>
 #include "offloading_queue.h"
 
 typedef struct

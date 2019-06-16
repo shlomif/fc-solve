@@ -10,7 +10,7 @@
 // A test for the Debondt delta states routines.
 #include "delta_states_test_common.h"
 
-static void main_tests(void)
+static void main_tests(void **state)
 {
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 
@@ -134,7 +134,9 @@ static void main_tests(void)
 
 int main(void)
 {
-    plan(2);
-    main_tests();
-    return exit_status();
+    // plan(2);
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(main_tests),
+    };
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
