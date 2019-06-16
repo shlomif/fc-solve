@@ -12,8 +12,10 @@ use File::Basename qw/ basename /;
 use CHI ();
 
 my $glob_was_set = 0;
+my $rerun        = 0;
 my $bindir       = path(__FILE__)->parent;
 my $abs_bindir   = $bindir->absolute;
+my %progs;
 
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
@@ -28,42 +30,6 @@ require lib;
 lib->import("$abs_bindir/t/lib");
 require FC_Solve::Test::Valgrind::Data;
 require FC_Solve::Paths::Base;
-my %binaries;
-my %progs =
-    map { $_ => +{ binaries => {}, } }
-    map {
-    FC_Solve::Paths::Base::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } )
-    } values %{ FC_Solve::Test::Valgrind::Data->get_hash };
-
-use Digest::SHA ();
-my $rerun = 0;
-if ($FC_Solve::Paths::Base::IS_WIN)
-{
-    ++$rerun;
-}
-else
-{
-    foreach my $prog ( keys %progs )
-    {
-        say $prog;
-        die if !-e $prog;
-        foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
-        {
-            say "bin $prog $bin";
-            $progs{$prog}{binaries}{$bin} //= (
-                $binaries{$bin} //= do
-                {
-                    Digest::SHA->new(256)->addfile($bin)->b64digest;
-                }
-            );
-        }
-        my $val = $cache->get( $progs{$prog} );
-        if ( !$val )
-        {
-            ++$rerun;
-        }
-    }
-}
 
 sub _is_parallized
 {
@@ -102,6 +68,7 @@ sub run_tests
 
 my $tests_glob = "*.{t.exe,py,t}";
 my $exclude_re_s;
+my $force_rebuild = delete( $ENV{REBUILD} );
 
 my @execute;
 GetOptions(
@@ -110,8 +77,44 @@ GetOptions(
     '--exit0!'       => \$exit_success,
     '--glob=s'       => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
     '--prove!'       => \$use_prove,
+    '--rebuild!'     => \$force_rebuild,
     '--jobs|j=n'     => \$num_jobs,
 ) or die "Wrong opts - $!";
+my %binaries;
+%progs =
+    map { $_ => +{ binaries => {}, } }
+    map {
+    FC_Solve::Paths::Base::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } )
+    } values %{ FC_Solve::Test::Valgrind::Data->get_hash };
+
+use Digest::SHA ();
+if ( $FC_Solve::Paths::Base::IS_WIN || $force_rebuild )
+{
+    ++$rerun;
+}
+else
+{
+    foreach my $prog ( keys %progs )
+    {
+        say $prog;
+        die if !-e $prog;
+        foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
+        {
+            say "bin $prog $bin";
+            $progs{$prog}{binaries}{$bin} //= (
+                $binaries{$bin} //= do
+                {
+                    Digest::SHA->new(256)->addfile($bin)->b64digest;
+                }
+            );
+        }
+        my $val = $cache->get( $progs{$prog} );
+        if ( !$val )
+        {
+            ++$rerun;
+        }
+    }
+}
 $glob_was_set ||= $exclude_re_s;
 
 sub myglob
@@ -155,11 +158,10 @@ sub myglob
         $abs_bindir->child( "t", "scripts" ),
     );
 
-    my $IS_WIN = ( $^O eq "MSWin32" );
     Env::Path->CPATH->Prepend( $abs_bindir, );
 
     Env::Path->LD_LIBRARY_PATH->Prepend($fcs_path);
-    if ($IS_WIN)
+    if ($FC_Solve::Paths::Base::IS_WIN)
     {
         # For the shared objects.
         Env::Path->PATH->Append($fcs_path);
@@ -178,7 +180,7 @@ sub myglob
     };
 
     local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
-        $IS_WIN
+        $FC_Solve::Paths::Base::IS_WIN
         ? "alternate-interpreters--mswin.yml"
         : "alternate-interpreters.yml"
     );
@@ -193,7 +195,7 @@ sub myglob
     );
 
     my $is_ninja = ( -e "build.ninja" );
-    my $MAKE     = $IS_WIN ? 'gmake' : 'make';
+    my $MAKE     = $FC_Solve::Paths::Base::IS_WIN ? 'gmake' : 'make';
     if ($is_ninja)
     {
         system( "ninja", "boards" );
