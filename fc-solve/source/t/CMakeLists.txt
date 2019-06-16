@@ -85,7 +85,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "${CMAKE_CURRENT_SOURCE_DIR}/bit-reader-and-writer-test.c"
     )
 
-    TARGET_LINK_LIBRARIES (${EXE_FILE} ${LIBTAP_LIB})
+    TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka")
 
     SET_SOURCE_FILES_PROPERTIES (
         "bit-reader-and-writer-test.c"

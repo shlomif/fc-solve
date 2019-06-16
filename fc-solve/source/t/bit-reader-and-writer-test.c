@@ -8,13 +8,16 @@
  * Copyright (c) 2011 Shlomi Fish
  */
 // A test for the bit reader and writer.
+#include <stdarg.h>
+#include <stddef.h>
+#include <setjmp.h>
+#include <cmocka.h>
 #include <string.h>
 #include <stdio.h>
-#include <tap.h>
 #include "freecell-solver/fcs_conf.h"
 #include "bit_rw.h"
 
-static int main_tests(void)
+static void main_tests(void **state)
 {
     {
         unsigned char buffer[10];
@@ -27,17 +30,18 @@ static int main_tests(void)
 
         /* TEST
          * */
-        ok(buffer[0] == (5 | (1 << 4)), "Write works.");
+        assert_int_equal(buffer[0], (5 | (1 << 4))); // "Write works."
 
         fc_solve_bit_writer_write(&writer, 4, (2 | (3 << 2)));
 
         /* TEST
          * */
-        ok(buffer[0] == (5 | (1 << 4) | (2 << 6)), "Extra write works.");
+        assert_int_equal(
+            buffer[0], (5 | (1 << 4) | (2 << 6))); // "Extra write works."
 
         /* TEST
          * */
-        ok(buffer[1] == 3, "Extra byte write works.");
+        assert_int_equal(buffer[1], 3); // "Extra byte write works."
 
         {
             fcs_bit_reader reader;
@@ -46,25 +50,27 @@ static int main_tests(void)
 
             /* TEST
              * */
-            ok(fc_solve_bit_reader_read(&reader, 4) == 5, "reader 1");
+            assert_int_equal(
+                fc_solve_bit_reader_read(&reader, 4), 5); // "reader 1"
 
             /* TEST
              * */
-            ok(fc_solve_bit_reader_read(&reader, 2) == 1, "reader 2");
+            assert_int_equal(
+                fc_solve_bit_reader_read(&reader, 2), 1); // "reader 2"
 
             /* TEST
              * */
-            ok(fc_solve_bit_reader_read(&reader, 4) == (2 | (3 << 2)),
-                "reader 3");
+            assert_int_equal(fc_solve_bit_reader_read(&reader, 4),
+                (2 | (3 << 2))); // "reader 3"
         }
     }
-
-    return 0;
 }
 
 int main(void)
 {
-    plan(6);
-    main_tests();
-    return exit_status();
+    // plan([% num_tests %]);
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(main_tests),
+    };
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }
