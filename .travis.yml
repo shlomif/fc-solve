@@ -39,36 +39,9 @@ language: c
 python:
     - '3.6'
 before_install:
-    - mkdir -p ~/bin
-    - ln -s /usr/bin/make ~/bin/gmake
-    - export PATH="$PATH:$HOME/bin"
-    - eval "$(GIMME_GO_VERSION=1.11 gimme)"
-    - go get -u github.com/tdewolff/minify/cmd/minify
-      # - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
-      # - sudo cpanm Text::Hunspell
-    - cpanm local::lib
-    - eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
-    # For the fc-solve docs
-    - gem install asciidoctor
-    # For wml
-    - cpanm --notest Bit::Vector Carp::Always Class::XSAccessor File::Which GD Getopt::Long IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
-    - cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
-    # - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'libtap' 'https://github.com/shlomif/libtap-prev.git'
-    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' '.' 'https://github.com/shlomif/libtap.git' "cmake"
-    - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
-    - ( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
-    - ( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
-    - ( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
+    - . fc-solve/scripts/ci-before-install.bash
 install:
-    - "python3 -m pip install --user --upgrade cffi cookiecutter pycotap pysol_cards random2 six vnu_validator Zenfilter"
-      # For G-S-V dzil
-    - cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Pod Test::Pod::Coverage
-      # For the website
-    - cpanm --quiet App::Deps::Verify App::XML::DocBook::Builder
-    - (cd fc-solve/site/wml/ && perl bin/my-cookiecutter.pl && deps-app plinst -i bin/common-required-deps.yml -i bin/required-modules.yml )
-    - cpanm --quiet --notest Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount Games::Solitaire::Verify::HorneAutomovePrune Task::FreecellSolver::Testing
-    - (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
-    - ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
+    - . fc-solve/scripts/ci-install-stage.bash
 perl:
     - "5.24"
 script:
