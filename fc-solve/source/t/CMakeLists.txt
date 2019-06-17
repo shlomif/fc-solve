@@ -55,7 +55,8 @@ IF (FCS_WITH_TEST_SUITE)
     ENDIF ()
 
     FIND_LIBRARY(LIBTAP_LIB tap)
-    IF (NOT LIBTAP_LIB)
+    # IF (NOT LIBTAP_LIB)
+    IF ()
         MESSAGE (FATAL_ERROR
 "You must install libtap ( http://www.shlomifish.org/open-source/projects/libtap/ ) and its development package or headers to run the test suite.
 If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUITE= flag."

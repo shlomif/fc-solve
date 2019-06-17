@@ -11,11 +11,12 @@ Summary: The Freecell Solver Executable
 BuildRequires: cmake
 BuildRequires: gmp-devel
 BuildRequires: gperf
-BuildRequires: perl(base)
+BuildRequires: perl(CHI)
 BuildRequires: perl(Carp)
 BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Dumper)
 BuildRequires: perl(Digest::SHA)
+BuildRequires: perl(base)
 BuildRequires: perl(Env::Path)
 BuildRequires: perl(File::Path)
 BuildRequires: perl(File::Spec)
