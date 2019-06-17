@@ -27,10 +27,11 @@ sub do_system
 
 my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
-my $SYS = "fedora:31";
+my $SYS       = "fedora:31";
+my $CONTAINER = "fcsfed";
 do_system( { cmd => [ 'docker', 'pull', $SYS ] } );
 do_system(
-    { cmd => [ 'docker', 'run', "-t", "-d", "--name", "fcsfed", $SYS, ] } );
+    { cmd => [ 'docker', 'run', "-t", "-d", "--name", $CONTAINER, $SYS, ] } );
 do_system( { cmd => [ 'docker', 'cp', "../..", "fcsfed:fc-solve", ] } );
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
@@ -42,8 +43,10 @@ make
 FCS_TEST_BUILD=1 perl ../fc-solve/fc-solve/source/run-tests.pl --glob='build*.t'
 EOSCRIPTTTTTTT
 
-# do_system( { cmd => [ 'docker', 'start', "fcsfed", ] } );
-do_system( { cmd => [ 'docker', 'exec', "fcsfed", 'bash', '-c', $script, ] } );
+do_system(
+    { cmd => [ 'docker', 'exec', $CONTAINER, 'bash', '-c', $script, ] } );
+do_system( { cmd => [ 'docker', 'stop', $CONTAINER, ] } );
+do_system( { cmd => [ 'docker', 'rm',   $CONTAINER, ] } );
 
 __END__
 
