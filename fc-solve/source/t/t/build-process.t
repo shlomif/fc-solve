@@ -8,6 +8,8 @@ use List::MoreUtils qw/ none /;
 use Env::Path ();
 use Path::Tiny qw/ path /;
 use Test::Differences qw/ eq_or_diff /;
+use Test::Trap
+    qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 # Remove FCS_TEST_BUILD so we won't run the tests with infinite recursion.
 if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
@@ -159,11 +161,21 @@ EOF
             "Archive does not contain libfreecell-solver.a"
         );
 
+        my $ret;
+
         # TEST
-        test_cmd(
-            "rpmbuild -tb $arc_name 2>/dev/null",
-            "rpmbuild -tb is successful."
-        );
+        trap
+        {
+            $ret = system("rpmbuild -tb $arc_name ");
+        };
+        if ( !is( $ret, 0, "rpmbuild -tb is successful." ) )
+        {
+            diag(     "stderr =<<<"
+                    . $trap->stderr
+                    . ">>>\n stdout=<<<"
+                    . $trap->stdout
+                    . ">>>\n" );
+        }
     }
 
     $failing_asciidoc_dir->remove_tree;

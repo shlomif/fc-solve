@@ -16,25 +16,21 @@ BuildRequires: perl(Carp)
 BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Dumper)
 BuildRequires: perl(Digest::SHA)
-BuildRequires: perl(base)
 BuildRequires: perl(Env::Path)
 BuildRequires: perl(File::Path)
 BuildRequires: perl(File::Spec)
 BuildRequires: perl(File::Which)
 BuildRequires: perl(Games::Solitaire::Verify)
 BuildRequires: perl(Games::Solitaire::Verify::Solution)
+BuildRequires: perl(IPC::Open2)
 BuildRequires: perl(Inline)
 BuildRequires: perl(Inline::C)
-BuildRequires: perl(IPC::Open2)
-BuildRequires: perl(lib)
 BuildRequires: perl(List::MoreUtils)
 BuildRequires: perl(Moo)
 BuildRequires: perl(MooX)
 BuildRequires: perl(MooX::late)
-BuildRequires: perl(parent)
 BuildRequires: perl(Path::Tiny)
 BuildRequires: perl(Storable)
-BuildRequires: perl(strict)
 BuildRequires: perl(String::ShellQuote)
 BuildRequires: perl(Template)
 BuildRequires: perl(Test::Data::Split)
@@ -45,14 +41,23 @@ BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::RunValgrind)
 BuildRequires: perl(Test::TrailingSpace)
 BuildRequires: perl(Test::Trap)
-BuildRequires: perl(warnings)
 BuildRequires: perl(YAML::XS)
+BuildRequires: perl(base)
+BuildRequires: perl(lib)
+BuildRequires: perl(parent)
+BuildRequires: perl(strict)
+BuildRequires: perl(warnings)
 BuildRequires: perl-devel >= 5.14.0
 BuildRequires: pkgconfig(cmocka)
-BuildRequires: python3-random2
+BuildRequires: python3-cffi
+BuildRequires: python3-pycotap
 BuildRequires: python3-pysol-cards
+BuildRequires: python3-random2
+BuildRequires: rpm-build
+BuildRequires: tar
 BuildRequires: the_silver_searcher
 BuildRequires: valgrind
+BuildRequires: xz
 
 %description
 The Freecell Solver package contains the fc-solve executable which is
@@ -94,11 +99,18 @@ Freecell Solver from within your programs.
 
 %check
 rm -f t/t/tidyall.t
-cd build
-perl ../run-tests.pl
+src="`pwd`"
+if test -d build
+then
+    cd build
+fi
+perl "$src"/run-tests.pl
 
 %install
-cd build
+if test -d build
+then
+    cd build
+fi
 %make_install
 find %{buildroot} -name *.a -delete
 
