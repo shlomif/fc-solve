@@ -51,7 +51,7 @@ IF (FCS_WITH_TEST_SUITE)
         RESULT_VARIABLE "RESULT"
     )
     IF (NOT RESULT EQUAL 0)
-        MESSAGE(FATAL_ERROR "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
+        MESSAGE(WARNING "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
     ENDIF ()
 
     FIND_LIBRARY(LIBTAP_LIB tap)
