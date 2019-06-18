@@ -84,28 +84,18 @@ export PERL_MM_USE_DEFAULT=1
 perl -Mlocal::lib -MCPAN -e 'install Task::FreecellSolver::Testing'
 ----------
 
-3. Install the development headers of
-libtap ( https://www.shlomifish.org/open-source/projects/libtap/ or perhaps
-https://github.com/mpapierski/libtap )
+3. Install the development distribution of cmocka ( https://cmocka.org/ ).
 +
-* On Mageia:
+* On Fedora/Mageia:
 +
 ----------------------
-urpmi libtap-devel
+urpmi 'pkgconfig(cmocka)'
 ----------------------
 +
 * On Debian:
 +
 ------------------------------
-tar -xvf /home/shlomif/Desktop/tap-1.01.tar.gz
-cd tap-1.01
-./configure --prefix="$HOME/apps/libtap"
-make CFLAGS+=-UHAVE_LIBPTHREAD
-make install
-# For gcc finding tap.h in the includes
-echo 'export CPATH="$HOME/apps/libtap/include:$CPATH"' >> ~/.bashrc
-# For CMake finding libtap.
-echo 'export CMAKE_PREFIX_PATH="$HOME/apps/libtap:$CMAKE_PREFIX_PATH"' >> ~/.bashrc
+apt-get install libcmocka-dev
 ------------------------------
 
 4. Check out the latest Freecell Solver sources:
