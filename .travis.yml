@@ -39,14 +39,13 @@ language: c
 python:
     - '3.6'
 before_install:
-    - . fc-solve/scripts/ci-before-install.bash
+    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-before-install.bash ; fi
 install:
-    - . fc-solve/scripts/ci-install-stage.bash
+    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; fi
 perl:
     - "5.24"
 script:
-    - export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml"
-    - bash fc-solve/scripts/run-ci-tests.bash
+    - if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl ../scripts/docker-test.pl ; fi
 sudo: required
 cache:
     ccache: true
@@ -54,5 +53,13 @@ cache:
         - $HOME/fc-solve-tests-reruns-cache
         - $HOME/perl_modules
         - fc-solve/source/avl-2.0.3
-# services:
-#     - docker
+matrix:
+    include:
+        - os: linux
+          env:
+              - WHAT=normal
+        - os: linux
+          env:
+              - WHAT=buildproc
+services:
+    - docker
