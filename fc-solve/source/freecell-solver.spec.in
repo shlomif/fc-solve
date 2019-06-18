@@ -8,6 +8,7 @@ Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{vers
 URL: http://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
+BuildRequires: asciidoctor
 BuildRequires: cmake
 BuildRequires: gmp-devel
 BuildRequires: gperf
