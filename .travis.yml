@@ -41,7 +41,7 @@ python:
 before_install:
     - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-before-install.bash ; fi
 install:
-    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; fi
+    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; elif test "$WHAT" = "buildproc"; then cpanm Path::Tiny ; fi
 perl:
     - "5.24"
 script:
