@@ -141,17 +141,20 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     {
         if (pipe(workers[idx].child_to_parent_pipe))
         {
-            exit_error("C->P Pipe for worker No. %zu failed! Exiting.\n", idx);
+            exit_error("C->P Pipe for worker No. %lu failed! Exiting.\n",
+                (unsigned long)idx);
         }
         if (pipe(workers[idx].parent_to_child_pipe))
         {
-            exit_error("P->C Pipe for worker No. %zu failed! Exiting.\n", idx);
+            exit_error("P->C Pipe for worker No. %lu failed! Exiting.\n",
+                (unsigned long)idx);
         }
 
         switch (fork())
         {
         case -1:
-            exit_error("Fork for worker No. %zu failed! Exiting.\n", idx);
+            exit_error("Fork for worker No. %lu failed! Exiting.\n",
+                (unsigned long)idx);
 
         case 0:
         {

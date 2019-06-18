@@ -7,6 +7,7 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
+#include <rinutils/longlong.h>
 #include "gen_ms_boards__find_deal.h"
 
 long long DLLEXPORT __attribute__((pure))
@@ -69,7 +70,7 @@ extern DLLEXPORT const char *fc_solve_user__find_deal__run(
     void *obj_ptr, const char *const start, const char *const end)
 {
     find_deal *obj = obj_ptr;
-    sprintf(obj->ret, "%lld",
+    sprintf(obj->ret, RIN_LL_FMT,
         fc_solve_find_deal_in_range((unsigned long long)atoll(start),
             (unsigned long long)atoll(end), obj->ints));
     return obj->ret;

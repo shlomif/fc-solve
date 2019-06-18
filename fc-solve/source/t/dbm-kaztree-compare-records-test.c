@@ -52,8 +52,8 @@ static void main_tests(void **state)
             {
                 fail_msg(
                     "compare_records(rec_a, rec_b) returned a wrong value for "
-                    "position %zu.\n",
-                    pos_idx);
+                    "position %u.\n",
+                    (unsigned)pos_idx);
                 all_good = false;
                 break;
             }
@@ -61,8 +61,8 @@ static void main_tests(void **state)
             {
                 fail_msg(
                     "compare_records(rec_b, rec_a) returned a wrong value for "
-                    "position %zu.\n",
-                    pos_idx);
+                    "position %u.\n",
+                    (unsigned)pos_idx);
                 all_good = false;
                 break;
             }

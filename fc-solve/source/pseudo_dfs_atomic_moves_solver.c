@@ -13,7 +13,7 @@
  */
 
 // #define FCS_LRU_KEY_IS_STATE
-
+#include <rinutils/longlong.h>
 #include "dbm_solver_head.h"
 #include "pseudo_dfs_cache.h"
 #include "render_state.h"
@@ -89,7 +89,7 @@ static inline void instance__inspect_new_state(
 {
     if (++instance->count_num_processed % 1000000 == 0)
     {
-        printf("Reached iteration %llu\n",
+        printf("Reached iteration " RIN_ULL_FMT "\n",
             (unsigned long long)instance->count_num_processed);
         fflush(stdout);
     }
@@ -106,7 +106,8 @@ static inline void instance__inspect_new_state(
     {
         instance->stack =
             SREALLOC(instance->stack, (size_t)(++(instance->max_stack_depth)));
-        printf("Increasing to %lld\n", (long long)instance->max_stack_depth);
+        printf("Increasing to " RIN_LL_FMT "\n",
+            (long long)instance->max_stack_depth);
         fflush(stdout);
         instance->stack[max_depth] = (pseudo_dfs_stack_item){
             .next_states = NULL, .max_count_next_states = 0};

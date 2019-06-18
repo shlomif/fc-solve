@@ -407,7 +407,8 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
         if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
                 &(threads[i].arg)))
         {
-            exit_error("Worker Thread No. %zu Initialization failed!\n", i);
+            exit_error("Worker Thread No. %lu Initialization failed!\n",
+                (unsigned long)i);
         }
     }
 
