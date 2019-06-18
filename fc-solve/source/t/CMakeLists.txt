@@ -7,7 +7,7 @@ MACRO(MY_ADD_EXE EXE_FILE C_FILE)
         ${C_FILE}
     )
 
-    TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka")
+    TARGET_LINK_LIBRARIES (${EXE_FILE} ${CMOCKA_LIBRARIES})
 
     SET_SOURCE_FILES_PROPERTIES (
         "${C_FILE}"
@@ -54,7 +54,11 @@ IF (FCS_WITH_TEST_SUITE)
         MESSAGE(WARNING "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
     ENDIF ()
 
-    FIND_LIBRARY(LIBTAP_LIB tap)
+    FIND_PACKAGE (PkgConfig REQUIRED)
+    pkg_check_modules(CMOCKA REQUIRED cmocka)
+    include_directories (${CMOCKA_INCLUDE_DIRS})
+    link_directories (${CMOCKA_LIBRARY_DIRS})
+    add_definitions (${CMOCKA_CFLAGS_OTHER})
     # IF (NOT LIBTAP_LIB)
     IF ()
         MESSAGE (FATAL_ERROR
@@ -86,7 +90,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "${CMAKE_CURRENT_SOURCE_DIR}/bit-reader-and-writer-test.c"
     )
 
-    TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka")
+    TARGET_LINK_LIBRARIES (${EXE_FILE} ${CMOCKA_LIBRARIES})
 
     SET_SOURCE_FILES_PROPERTIES (
         "bit-reader-and-writer-test.c"
@@ -103,7 +107,8 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
             "${CMAKE_CURRENT_SOURCE_DIR}/debondt-delta-states-test.c"
         )
 
-        TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka" ${LIBGMP_LIB})
+        TARGET_LINK_LIBRARIES (${EXE_FILE} ${CMOCKA_LIBRARIES}  ${LIBGMP_LIB})
+
 
         SET_SOURCE_FILES_PROPERTIES (
             "delta-states-test.c"
@@ -123,7 +128,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
             "${CMAKE_CURRENT_SOURCE_DIR}/../delta_states.c"
         )
 
-        TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka" ${LIBGMP_LIB})
+        TARGET_LINK_LIBRARIES (${EXE_FILE} ${CMOCKA_LIBRARIES} ${LIBGMP_LIB})
 
         SET_SOURCE_FILES_PROPERTIES (
             "delta-states-test.c"
@@ -147,7 +152,7 @@ If you're not interested in building it, run cmake with the -DFCS_WITH_TEST_SUIT
         "-I${CMAKE_CURRENT_SOURCE_DIR}/.."
         "-I${CMAKE_CURRENT_SOURCE_DIR}/../fcs-libavl/"
         )
-    TARGET_LINK_LIBRARIES (${EXE_FILE} "cmocka")
+    TARGET_LINK_LIBRARIES (${EXE_FILE} ${CMOCKA_LIBRARIES})
 
     GEN_INDIVIDUAL_TESTS(
         "generate_valgrind_tests"

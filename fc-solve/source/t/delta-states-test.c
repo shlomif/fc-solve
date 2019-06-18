@@ -130,8 +130,9 @@ static void main_tests(void **state)
                 (3 /* 3 bits of orig len. */ |
                     (1 << 3) /*  4 bits of derived len. */ |
                     (SUIT_DS
-                        << (3 + 4)) /* 1 bit of suit. */)); // "fc_solve_get_column_encoding_composite()
-                                                            // test 2 - byte 0"
+                        << (3 +
+                               4)) /* 1 bit of suit. */)); // "fc_solve_get_column_encoding_composite()
+                                                           // test 2 - byte 0"
 
             // TEST*$test_bitcount
             test_bitcount(&enc, 1, 0, "8 bits.");
@@ -149,9 +150,10 @@ static void main_tests(void **state)
                 (0 /* 3 bits of orig len. */ |
                     (1 << 3) /*  4 bits of derived len. */ |
                     ((card_9S & 0x1)
-                        << (3 + 4)) /* 1 bit of init_card. */)); // "fc_solve_get_column_encoding_composite()
-                                                                 // col 5 - byte
-                                                                 // 0"
+                        << (3 +
+                               4)) /* 1 bit of init_card. */)); // "fc_solve_get_column_encoding_composite()
+                                                                // col 5 - byte
+                                                                // 0"
 
             // TEST
             assert_int_equal(enc.enc[1],
