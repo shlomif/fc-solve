@@ -1151,6 +1151,7 @@ sublicense
 'ARGS
 'export
 'install
+'pkgconfig
 --max-bench-threads-num
 -MCPAN
 -Mlocal
@@ -1173,6 +1174,7 @@ NUM_THREADS
 PERL_MM_USE_DEFAULT
 bashrc
 caurea
+cmocka
 dc
 depth_run
 dest
@@ -1182,6 +1184,7 @@ endif
 extra_speed
 fc_bench
 jc
+libcmocka-dev
 libtap
 libtap-devel
 max
