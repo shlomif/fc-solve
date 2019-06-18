@@ -6,6 +6,7 @@ environment:
 install:
     - choco install ag
     - choco install strawberryperl
+    - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm ${MSYS_PACKAGES}"
     - if not exist C:\libtap mkdir C:\libtap
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
