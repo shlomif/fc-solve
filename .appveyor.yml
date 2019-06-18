@@ -40,6 +40,7 @@ test_script:
     - set CMAKE_LIBRARY_PATH=C:\libtap\lib
     - set LD_LIBRARY_PATH=C:\libtap\lib
     - set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig
+    - set PKG_CONFIG_PATH=c:/libtap/lib/pkgconfig/
     - dir c:\libtap /s
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
