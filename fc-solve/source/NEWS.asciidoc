@@ -10,21 +10,11 @@ Version 5.10.0: (18-Jun-2019)
 1. Convert the C tests to use https://cmocka.org/ instead of libtap,
 due to a more portable API, more features and easier packaging.
 
-2. Fixed freecell-solver.spec.in and now testing it on Fedora linux
+2. Fixed freecell-solver.spec.in and now testing it on Fedora Linux
 using Docker on Travis-CI.
 
 3. Add the +--rebuild+ flag to +run-tests.pl+ .
-"experimental" for too long.
-https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1626
 
-2. There is a compile time option to use https://apr.apache.org/[libapr]'s
-hash table as a backend for the DBM solvers. This is faster but consumes
-more RAM.
-https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1632
-
-3. Extracted some common headers into
-https://github.com/shlomif/rinutils[the "rinutils" library] which can be
-used by other projects.
 Version 5.8.0: (16-Jun-2019)
 ----------------------------
 
