@@ -39,8 +39,8 @@ test_script:
     - set LIBRARY_PATH=C:\libtap\lib
     - set CMAKE_LIBRARY_PATH=C:\libtap\lib
     - set LD_LIBRARY_PATH=C:\libtap\lib
-    - set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig
-    - set PKG_CONFIG_PATH=c:/libtap/lib/pkgconfig/
+    - set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig;
+    # - set PKG_CONFIG_PATH=c:/libtap/lib/pkgconfig/
     - dir c:\libtap /s
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
@@ -48,6 +48,7 @@ test_script:
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
+    - del c:\strawberry\perl\bin\pkg-config.*
     - perl ../scripts/Tatzer -G "MinGW Makefiles" -l x64t --dbm=none
     - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
