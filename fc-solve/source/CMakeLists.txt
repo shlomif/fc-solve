@@ -77,28 +77,30 @@ SET(CPACK_PACKAGE_EXECUTABLES
     "fc-solve" "Single-Game Solver"
 )
 
-### This is to set the RPATH correctly, so when installed under a prefix
-### the executables will find the libraries.
-###
-### See:
-###
-### http://www.cmake.org/Wiki/CMake_RPATH_handling
-###
-### (Taken from that wiki page)
+IF (NOT DISABLE_APPLYING_RPATH)
+    ### This is to set the RPATH correctly, so when installed under a prefix
+    ### the executables will find the libraries.
+    ###
+    ### See:
+    ###
+    ### http://www.cmake.org/Wiki/CMake_RPATH_handling
+    ###
+    ### (Taken from that wiki page)
 
-# use, i.e. don't skip the full RPATH for the build tree
-SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+    # use, i.e. don't skip the full RPATH for the build tree
+    SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
 
-# when building, don't use the install RPATH already
-# (but later on when installing)
-SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+    # when building, don't use the install RPATH already
+    # (but later on when installing)
+    SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
-# the RPATH to be used when installing
-SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+    # the RPATH to be used when installing
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
 
-# add the automatically determined parts of the RPATH
-# which point to directories outside the build tree to the install RPATH
-SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+    # add the automatically determined parts of the RPATH
+    # which point to directories outside the build tree to the install RPATH
+    SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ENDIF ()
 
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', or 'COMPACT_STATES'). No need to usually change.")
@@ -132,6 +134,7 @@ option (FCS_INLINED_HASH_COMPARISON "Use more compact tokens for moves internall
 option (FCS_AVOID_TCMALLOC "Avoid linking against Google's tcmalloc")
 option (FCS_BUILD_DOCS "Whether to build the documentation or not." ON)
 option (BUILD_STATIC_LIBRARY "Whether to build the static library (which takes more time)" ON)
+option (DISABLE_APPLYING_RPATH "Disable applying rpath")
 SET (CPU_ARCH "" CACHE STRING "A specific CPU architecture to pass to gcc")
 option (OPTIMIZATION_OMIT_FRAME_POINTER "Use -fomit-frame-pointer with gcc (not recommended for debugging)")
 SET (FCS_STATE_STORAGE_LIBAVL2_TREE_TYPE "avl" CACHE STRING "The libavl2 tree type used for the state storage. Ignored if not set to libavl2")
