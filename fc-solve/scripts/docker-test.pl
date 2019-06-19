@@ -32,15 +32,16 @@ my $CONTAINER = "fcsfed";
 do_system( { cmd => [ 'docker', 'pull', $SYS ] } );
 do_system(
     { cmd => [ 'docker', 'run', "-t", "-d", "--name", $CONTAINER, $SYS, ] } );
-do_system( { cmd => [ 'docker', 'cp', "../..", "fcsfed:fc-solve", ] } );
+do_system( { cmd => [ 'docker', 'cp', "../source",  "fcsfed:source", ] } );
+do_system( { cmd => [ 'docker', 'cp', "../scripts", "fcsfed:scripts", ] } );
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny @deps
 mkdir b
 cd b
-perl ../fc-solve/fc-solve/scripts/Tatzer
+perl ../scripts/Tatzer
 make
-FCS_TEST_BUILD=1 perl ../fc-solve/fc-solve/source/run-tests.pl --glob='build*.t'
+FCS_TEST_BUILD=1 perl ../source/run-tests.pl --glob='build*.t'
 EOSCRIPTTTTTTT
 
 do_system(
