@@ -21,6 +21,11 @@ from fc_solve_find_index_s2ints import CardRenderer
 from make_pysol_freecell_board import Game, RandomBase
 
 
+from trains import Task
+
+Task.init("fc-solve", "looking-glass preset training")
+
+
 class GenMulti:
     """docstring for GenMulti"""
     def __init__(self, argv):
