@@ -4,12 +4,11 @@ use strict;
 use warnings;
 
 use Test::More tests => 5;
-use Path::Tiny qw/ cwd path /;
+use Path::Tiny qw/ cwd /;
 use Dir::Manifest                  ();
 use Games::Solitaire::Verify::Golf ();
 
-my $data_dir  = cwd()->child( 't', 'data' );
-my $texts_dir = $data_dir->child('texts');
+my $texts_dir = cwd()->child( 't', 'data', 'texts' );
 
 my $mani = Dir::Manifest->new(
     {
