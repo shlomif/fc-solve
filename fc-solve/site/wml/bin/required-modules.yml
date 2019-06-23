@@ -5,6 +5,8 @@ required:
           url: "https://asciidoctor.org/"
         - exe: "docmake"
           url: "http://www.shlomifish.org/open-source/projects/docmake/"
+        - exe: "markdent-html"
+          url: "https://metacpan.org/pod/distribution/Markdent/bin/markdent-html"
         - exe: "minify"
           url: "https://github.com/tdewolff/minify/tree/master/cmd/minify"
         - exe: "python3"
@@ -26,6 +28,7 @@ required:
         Dir::Manifest: 0
         File::ReadBackwards: 0
         HTML::T5: 0
+        Markdent: 0.32
         Moo: 0
         MooX: 0
         MooX::late: 0

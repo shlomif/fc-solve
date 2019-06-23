@@ -1347,10 +1347,14 @@ transcrypt
 
 ==== In: dest/js-fc-solve/text/index.html
 
+10's
 Der
+Free_and_open-source_software
 Redeal
 YUI
+io
 js
+pysolfc
 
 ==== In: dest/links.html
 
