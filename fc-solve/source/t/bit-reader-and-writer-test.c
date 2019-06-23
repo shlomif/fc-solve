@@ -15,9 +15,10 @@
 #include <string.h>
 #include <stdio.h>
 #include "freecell-solver/fcs_conf.h"
+#include "rinutils/unused.h"
 #include "bit_rw.h"
 
-static void main_tests(void **state)
+static void main_tests(void **state GCC_UNUSED)
 {
     {
         unsigned char buffer[10];

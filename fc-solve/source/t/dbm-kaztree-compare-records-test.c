@@ -26,7 +26,7 @@
 
 #include "dbm_kaztree_compare.h"
 
-static void main_tests(void **state)
+static void main_tests(void **state GCC_UNUSED)
 {
     {
         bool all_good = true;

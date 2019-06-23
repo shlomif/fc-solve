@@ -10,7 +10,7 @@
 // A test for the Debondt delta states routines.
 #include "delta_states_test_common.h"
 
-static void main_tests(void **state)
+static void main_tests(void **state GCC_UNUSED)
 {
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
 

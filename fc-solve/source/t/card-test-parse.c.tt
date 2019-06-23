@@ -8,7 +8,7 @@
 
 #include "card.c"
 
-static void main_tests(void **state)
+static void main_tests(void **state GCC_UNUSED)
 {
 [%- SET num_tests = 0 -%]
 [% IF implicit_t %]

@@ -8,7 +8,7 @@
 
 #include "card.c"
 
-static void main_tests(void **state)
+static void main_tests(void **state GCC_UNUSED)
 {
     char buffer[1024];
 

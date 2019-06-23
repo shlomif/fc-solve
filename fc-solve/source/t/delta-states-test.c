@@ -8,6 +8,7 @@
 
 // A test for the delta states routines.
 #include "delta_states_test_common.h"
+#include "rinutils/unused.h"
 
 static fcs_card make_card(fcs_card rank, fcs_card suit)
 {
@@ -16,7 +17,7 @@ static fcs_card make_card(fcs_card rank, fcs_card suit)
 
 // TEST:$test_bitcount=2;
 static void test_bitcount(const fcs_column_encoding_composite *const enc,
-    const size_t bytes, const size_t bits, const char *const msg)
+    const size_t bytes, const size_t bits, const char *const msg GCC_UNUSED)
 {
     assert_int_equal(
         (int)(enc->end - enc->enc), (int)bytes); // "%s - bytes", msg);
@@ -24,7 +25,7 @@ static void test_bitcount(const fcs_column_encoding_composite *const enc,
         (int)enc->bit_in_char_idx, (int)bits); //, "%s - bits", msg);
 }
 
-static void main_tests(void **state)
+static void main_tests(void **state GCC_UNUSED)
 {
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
     {
