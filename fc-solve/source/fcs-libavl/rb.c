@@ -28,6 +28,7 @@
 
 #include "rb.h"
 #include "rinutils/alloc_wrap.h"
+#include "rinutils/unused.h"
 
 #ifdef WITH_AVL_BALANCE_FIELD
 static inline signed char rb_get_color(struct rb_node *const node)
@@ -78,7 +79,7 @@ static inline enum rb_color rb_set_color(struct rb_node *const node, const enum 
    and memory allocator |allocator|.
    Returns |NULL| if memory allocation failed. */
 struct rb_table *
-rb_create (rb_comparison_func *compare, void *param,
+rb_create (rb_comparison_func *compare, void *param GCC_UNUSED,
             meta_allocator *meta_alloc, void * * common_recycle_bin)
 {
   struct rb_table *tree;
