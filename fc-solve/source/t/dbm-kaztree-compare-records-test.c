@@ -11,14 +11,7 @@
 /*
  * A test for the DBM kaztree compare records.
  */
-
-#include <stdarg.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include <string.h>
-#include <stdio.h>
-#include <stdbool.h>
+#include "fcs_cmocka.h"
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS

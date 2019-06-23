@@ -9,11 +9,7 @@
  */
 // Common t/delta-states-test.c code.
 #pragma once
-#include <stdarg.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include <string.h>
+#include "fcs_cmocka.h"
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS

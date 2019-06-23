@@ -8,12 +8,7 @@
  * Copyright (c) 2011 Shlomi Fish
  */
 // A test for the bit reader and writer.
-#include <stdarg.h>
-#include <stddef.h>
-#include <setjmp.h>
-#include <cmocka.h>
-#include <string.h>
-#include <stdio.h>
+#include "fcs_cmocka.h"
 #include "freecell-solver/fcs_conf.h"
 #include "rinutils/unused.h"
 #include "bit_rw.h"
