@@ -31,7 +31,7 @@
 
 static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant,
     fcs_delta_stater *const delta, fcs_state_keyval_pair *const state,
-    const char *const expected_str, const char *const blurb)
+    const char *const expected_str, const char *const blurb GCC_UNUSED)
 {
     fcs_state_keyval_pair new_derived_state;
     fcs_encoded_state_buffer enc_state;
