@@ -69,7 +69,7 @@ void DLLEXPORT fc_solve_user__find_deal__fill(
 extern DLLEXPORT const char *fc_solve_user__find_deal__run(
     void *obj_ptr, const char *const start, const char *const end)
 {
-    find_deal *obj = obj_ptr;
+    find_deal *const obj = obj_ptr;
     sprintf(obj->ret, RIN_LL_FMT,
         fc_solve_find_deal_in_range((unsigned long long)atoll(start),
             (unsigned long long)atoll(end), obj->ints));
