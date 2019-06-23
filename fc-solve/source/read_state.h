@@ -32,8 +32,11 @@ static inline fcs_user_state_str read_state(FILE *f)
     memset(user_state.s, '\0', sizeof(user_state));
     if (f)
     {
-        my2assert(fread(user_state.s, sizeof(user_state.s[0]),
-                      USER_STATE_SIZE - 1, f) >= 0);
+        if (fread(user_state.s, sizeof(user_state.s[0]), USER_STATE_SIZE - 1,
+                f) == 0)
+        {
+            user_state.s[0] = 0;
+        }
         fclose(f);
     }
 

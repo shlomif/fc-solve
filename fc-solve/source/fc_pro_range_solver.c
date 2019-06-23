@@ -117,7 +117,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
             FILE *const from_make_pysol = popen(command, "r");
             if (fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
-                    from_make_pysol) < 0)
+                    from_make_pysol) == 0)
             {
                 abort();
             }
