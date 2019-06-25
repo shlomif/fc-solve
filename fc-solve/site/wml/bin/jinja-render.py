@@ -24,12 +24,16 @@ def _slurp(fn):
     return open(fn, 'rt').read()
 
 
-games1 = _slurp('lib/games.htmlish')
-news1 = _slurp('lib/front-page-news.htmlish')
-old_news = _slurp('lib/old-news.htmlish')
-charts1 = _slurp('lib/4fc-deals-charts.htmlish')
-charts2 = _slurp('lib/4fc-deals-charts2.htmlish')
-msfreecell_note = _slurp('lib/msfreecell-note.htmlish')
+def _htmlish(base):
+    return _slurp('lib/' + base + '.htmlish')
+
+
+games1 = _htmlish('games')
+news1 = _htmlish('front-page-news')
+old_news = _htmlish('old-news')
+charts1 = _htmlish('4fc-deals-charts')
+charts2 = _htmlish('4fc-deals-charts2')
+msfreecell_note = _htmlish('msfreecell-note')
 tocs = []
 for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
