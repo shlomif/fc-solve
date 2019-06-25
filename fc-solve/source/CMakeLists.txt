@@ -77,31 +77,6 @@ SET(CPACK_PACKAGE_EXECUTABLES
     "fc-solve" "Single-Game Solver"
 )
 
-IF (NOT DISABLE_APPLYING_RPATH)
-    ### This is to set the RPATH correctly, so when installed under a prefix
-    ### the executables will find the libraries.
-    ###
-    ### See:
-    ###
-    ### http://www.cmake.org/Wiki/CMake_RPATH_handling
-    ###
-    ### (Taken from that wiki page)
-
-    # use, i.e. don't skip the full RPATH for the build tree
-    SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
-
-    # when building, don't use the install RPATH already
-    # (but later on when installing)
-    SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
-
-    # the RPATH to be used when installing
-    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
-
-    # add the automatically determined parts of the RPATH
-    # which point to directories outside the build tree to the install RPATH
-    SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
-ENDIF ()
-
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
     "States Type ('INDIRECT_STACK_STATES', or 'COMPACT_STATES'). No need to usually change.")
 option (FCS_ENABLE_RCS_STATES "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
@@ -174,6 +149,30 @@ option (FCS_AVOID_INT128 "Avoid using GCC's __int128 extension (used for debuggi
 option (FCS_RANGE_SOLVERS_PRINT_SOLVED "Print solved boards.")
 option (FCS_DBM_SINGLE_THREAD "single threaded DBM solvers")
 
+IF (NOT DISABLE_APPLYING_RPATH)
+    ### This is to set the RPATH correctly, so when installed under a prefix
+    ### the executables will find the libraries.
+    ###
+    ### See:
+    ###
+    ### http://www.cmake.org/Wiki/CMake_RPATH_handling
+    ###
+    ### (Taken from that wiki page)
+
+    # use, i.e. don't skip the full RPATH for the build tree
+    SET(CMAKE_SKIP_BUILD_RPATH  FALSE)
+
+    # when building, don't use the install RPATH already
+    # (but later on when installing)
+    SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
+
+    # the RPATH to be used when installing
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX}")
+
+    # add the automatically determined parts of the RPATH
+    # which point to directories outside the build tree to the install RPATH
+    SET(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+ENDIF ()
 
 IF (NOT (STATES_TYPE MATCHES "^(INDIRECT_STACK_STATES|COMPACT_STATES)$"))
     MESSAGE(FATAL_ERROR "STATES_TYPE should be ('INDIRECT_STACK_STATES', or 'COMPACT_STATES')")
