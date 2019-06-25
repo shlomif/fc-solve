@@ -1,9 +1,11 @@
-CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
+PROJECT(freecell-solver
+    HOMEPAGE_URL "https://fc-solve.shlomifish.org/"
+    LANGUAGES C CXX
+    )
 INCLUDE ("${CMAKE_SOURCE_DIR}/cmake/shlomif_common_bootstrap.cmake")
 SHLOMIF_COMMON_SETUP("${private_mod_path}")
-
-CMAKE_POLICY(SET CMP0054 NEW)
 
 SET (PKGDATADIR_SUBDIR "freecell-solver")
 SET (RELATIVE_PKGDATADIR "${RELATIVE_DATADIR}/${PKGDATADIR_SUBDIR}")
