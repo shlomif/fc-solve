@@ -18,12 +18,18 @@ from jinja2 import FileSystemLoader
 env = Environment(
         loader=FileSystemLoader(['./src', './lib'])
         )
-games1 = open('lib/games.htmlish', 'rt').read()
-news1 = open('lib/front-page-news.htmlish', 'rt').read()
-old_news = open('lib/old-news.htmlish', 'rt').read()
-charts1 = open('lib/4fc-deals-charts.htmlish', 'rt').read()
-charts2 = open('lib/4fc-deals-charts2.htmlish', 'rt').read()
-msfreecell_note = open('lib/msfreecell-note.htmlish', 'rt').read()
+
+
+def _slurp(fn):
+    return open(fn, 'rt').read()
+
+
+games1 = _slurp('lib/games.htmlish')
+news1 = _slurp('lib/front-page-news.htmlish')
+old_news = _slurp('lib/old-news.htmlish')
+charts1 = _slurp('lib/4fc-deals-charts.htmlish')
+charts2 = _slurp('lib/4fc-deals-charts2.htmlish')
+msfreecell_note = _slurp('lib/msfreecell-note.htmlish')
 tocs = []
 for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
