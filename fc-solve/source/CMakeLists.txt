@@ -1,9 +1,6 @@
 CMAKE_MINIMUM_REQUIRED(VERSION 3.5)
 
-PROJECT(freecell-solver
-    HOMEPAGE_URL "https://fc-solve.shlomifish.org/"
-    LANGUAGES C CXX
-    )
+PROJECT(freecell-solver C CXX)
 INCLUDE ("${CMAKE_SOURCE_DIR}/cmake/shlomif_common_bootstrap.cmake")
 SHLOMIF_COMMON_SETUP("${private_mod_path}")
 
