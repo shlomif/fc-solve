@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use HTML::Latemp::GenMakeHelpers ();
 use Path::Tiny qw/ path /;
@@ -132,7 +133,6 @@ use FreecellSolver::GenDealsCharts1 ();
 open my $out,  '>', 'lib/4fc-deals-charts.htmlish';
 open my $out2, '>', 'lib/4fc-deals-charts2.htmlish';
 
-chdir("src");
 FreecellSolver::GenDealsCharts1->gen_summary_table( { fh => $out, try2 => 1 } );
 FreecellSolver::GenDealsCharts1->gen_progress_charts(
     { fh => $out, try2 => 1 } );

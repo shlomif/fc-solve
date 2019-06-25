@@ -2,6 +2,7 @@ package FreecellSolver::GenDealsCharts1;
 
 use strict;
 use warnings;
+use autodie;
 use IO::All qw/ io /;
 
 sub format_num
@@ -22,7 +23,7 @@ sub _calc_deal_nums
         sort     { $a <=> $b }
             grep { /\A[0-9]+\z/ }
             map  { s#.*/##mrs =~ s#\.dump\.txt\z##mrs } glob(
-            "charts/fc-pro--4fc-intractable-deals--report/data/*.dump.txt")
+            "src/charts/fc-pro--4fc-intractable-deals--report/data/*.dump.txt")
     ];
 }
 
@@ -58,7 +59,7 @@ qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_da
 # print io->file("../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal" . ($deal eq '6825625742' ? ".filtered" : '') . ".tsv")->all;
         $fh->print(
             io->file(
-"../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
+                "./dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
                     . ( ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : '' )
                     . ".filtered.tsv"
             )->all =~ s%^[^\t\n]+\t%%gmrs
@@ -111,7 +112,7 @@ EOF
                 . "</td><td>"
                 . format_num(
                 io->file(
-"../dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
+"./dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
                         . (
                         ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : ''
                         )
