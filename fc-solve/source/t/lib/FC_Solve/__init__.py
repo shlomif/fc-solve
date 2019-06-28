@@ -103,7 +103,7 @@ void freecell_solver_user_recycle(void *api_instance);
         # TEST:$set_befs=$set_befs+$input_cmd_line;
         self.input_cmd_line(name, ["-asw", weights_s])
 
-    def __destroy__(self):
+    def __del__(self):
         self.lib.freecell_solver_user_free(self.user)
         print("free()")
 
