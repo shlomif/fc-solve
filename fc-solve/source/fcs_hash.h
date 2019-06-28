@@ -49,7 +49,7 @@ typedef struct fc_solve_hash_symlink_item_struct hash_item;
 
 typedef struct
 {
-    hash_item *first_item;
+    hash_item first_item;
 } hash_table_entry;
 
 struct fc_solve_instance_struct;
@@ -174,23 +174,27 @@ static inline void fc_solve_hash_foreach(hash_table *const hash,
     var_AUTO(entries, hash->entries);
     for (size_t i = 0; i < size; ++i)
     {
-        hash_item **item = &(entries[i].first_item);
-        while ((*item) != NULL)
+        hash_item *const orig_item = &(entries[i].first_item);
+        hash_item *item = orig_item;
+        while ((item->key) != NULL)
         {
-            if (should_delete_ptr((*item)->key, context))
+            if (should_delete_ptr((item)->key, context))
             {
-                hash_item *const next_item = (*item)->next;
+                hash_item *const next_item = (item)->next;
                 /* Garbage collect (*item). */
-                (*item)->next = hash->list_of_vacant_items;
-                hash->list_of_vacant_items = (*item);
+                if (item != orig_item)
+                {
+                    (item)->next = hash->list_of_vacant_items;
+                    hash->list_of_vacant_items = (item);
+                }
                 /* Skip the item in the chain. */
-                (*item) = next_item;
+                (*item) = *next_item;
 
                 hash->num_elems--;
             }
             else
             {
-                item = &((*item)->next);
+                item = ((item)->next);
             }
         }
     }

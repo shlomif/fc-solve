@@ -40,25 +40,38 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
     /* Copy the items to the new hash while not allocating them again */
     for (size_t i = 0; i < old_size; i++)
     {
-        hash_item *item = entries[i].first_item;
+        hash_item *item = &entries[i].first_item;
         /* traverse the chain item by item */
-        while (item != NULL)
+        if (item->key != NULL)
         {
-            /* The place in the new hash table */
-            const size_t place = item->hash_value & new_size_bitmask;
+            do
+            {
+                /* The place in the new hash table */
+                const size_t place = item->hash_value & new_size_bitmask;
 
-            /* Store the next item in the linked list in a safe place,
-               so we can retrieve it after the assignment */
-            hash_item *const next_item = item->next;
-            /* It is placed in front of the first element in the chain,
-               so it should link to it */
-            item->next = new_entries[place].first_item;
+                /* Store the next item in the linked list in a safe place,
+                   so we can retrieve it after the assignment */
+                hash_item *const next_item = item->next;
+                /* It is placed in front of the first element in the chain,
+                   so it should link to it */
+                var_AUTO(p, &new_entries[place].first_item);
+                hash_item *destnew;
+                if (p->key)
+                {
+#define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
+                    destnew = ITEM_ALLOC();
+                    *destnew = *p;
+                }
+                else
+                {
+                    destnew = NULL;
+                }
+                *p = *item;
+                p->next = destnew;
 
-            /* Make it the first item in its chain */
-            new_entries[place].first_item = item;
-
-            /* Move to the next item this one. */
-            item = next_item;
+                /* Move to the next item this one. */
+                item = next_item;
+            } while (item);
         }
     };
 
@@ -93,9 +106,9 @@ static inline void *fc_solve_hash_insert(
 #endif
     typeof(hash->entries[0]) *const list =
         (hash->entries + (hash_value & (hash->size_bitmask)));
-    hash_item **item_placeholder;
+    hash_item *item_placeholder;
     /* If first_item is non-existent */
-    if (list->first_item == NULL)
+    if (list->first_item.key == NULL)
     {
         /* Allocate a first item with that key/val pair */
         item_placeholder = &(list->first_item);
@@ -103,7 +116,7 @@ static inline void *fc_solve_hash_insert(
     else
     {
         /* Initialize item to the chain's first_item */
-        hash_item *item = list->first_item;
+        hash_item *item = &list->first_item;
         hash_item *last_item = NULL;
 
 // MY_HASH_COMPARE_PROTO() returns -1/0/+1 depending on the compared
@@ -162,26 +175,14 @@ static inline void *fc_solve_hash_insert(
             item = item->next;
         }
 
-        item_placeholder = &(last_item->next);
+        item_placeholder = (last_item->next = ITEM_ALLOC());
     }
 
-#define ITEM_ALLOC() fcs_compact_alloc_ptr(&(hash->allocator), sizeof(*item))
 #ifdef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    hash_item *const item = ITEM_ALLOC();
 #else
-    hash_item *item;
-
-    if ((item = hash->list_of_vacant_items))
-    {
-        hash->list_of_vacant_items = item->next;
-    }
-    else
-    {
-        item = ITEM_ALLOC();
-    }
 #endif
 
-    *(*(item_placeholder) = item) = (typeof(*item)){
+    *(item_placeholder) = (typeof(*item_placeholder)){
         .key = key,
         .hash_value = hash_value,
         .next = NULL,
