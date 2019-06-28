@@ -64,6 +64,8 @@ class GenMulti:
             while move:
                 print([ord(move.s[x]) for x in range(4)])
                 move = obj.get_next_move()
+        obj.__destroy__()
+        obj = None
 
     def run(self):
         """docstring for run"""

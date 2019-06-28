@@ -104,7 +104,8 @@ void freecell_solver_user_recycle(void *api_instance);
         self.input_cmd_line(name, ["-asw", weights_s])
 
     def __destroy__(self):
-        self.ffi.freecell_solver_user_free(self.user)
+        self.lib.freecell_solver_user_free(self.user)
+        print("free()")
 
     def _get_plan_type(self, item_idx):
         return self.ffi.string(
