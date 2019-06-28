@@ -61,18 +61,21 @@ class GenMulti:
     def _out_deal(self, deal):
         board_s = self.game.calc_deal_string(deal, self.rend)
         sys.stdout.write(board_s)
-        obj = FC_Solve()
-        obj.input_cmd_line__generic(['-l', 'lg'])
-        obj.limit_iterations(100000)
+        obj = self.obj
         if obj.solve_board(board_s) == 0:
             move = obj.get_next_move()
             while move:
                 print([ord(move.s[x]) for x in range(4)])
                 move = obj.get_next_move()
+        obj.recycle()
 
     def run(self):
         """docstring for run"""
         idxs = self.idxs
+        obj = FC_Solve()
+        obj.input_cmd_line__generic(['-l', 'lg'])
+        obj.limit_iterations(100000)
+        self.obj = obj
         while len(idxs):
             i = idxs.pop(0)
             if i == 'seq':
