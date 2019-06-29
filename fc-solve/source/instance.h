@@ -353,8 +353,6 @@ typedef struct
     size_t derived_states_random_indexes_max_size;
     rating_with_index *derived_states_random_indexes;
     fcs__positions_by_rank positions_by_rank;
-    fcs_game_limit num_vacant_stacks;
-    fcs_game_limit num_vacant_freecells;
 } fcs_soft_dfs_stack_item;
 
 typedef struct

@@ -1192,10 +1192,10 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 derived_list = the_soft_dfs_info->derived_states_list;
                 PTR_STATE = the_soft_dfs_info->state;
                 FCS_ASSIGN_STATE_KEY();
-                soft_thread->num_vacant_freecells =
-                    the_soft_dfs_info->num_vacant_freecells;
-                soft_thread->num_vacant_stacks =
-                    the_soft_dfs_info->num_vacant_stacks;
+                soft_thread->num_vacant_freecells = count_num_vacant_freecells(
+                    LOCAL_FREECELLS_NUM, &FCS_SCANS_the_state);
+                soft_thread->num_vacant_stacks = count_num_vacant_stacks(
+                    LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
 
                 if (unlikely(DEPTH() < by_depth_min_depth))
                 {
@@ -1258,12 +1258,8 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                        their appropriate stacks, so they won't be calculated
                        over and over again.
                       */
-                    soft_thread->num_vacant_freecells =
-                        the_soft_dfs_info->num_vacant_freecells =
-                            num_vacant_freecells;
-                    soft_thread->num_vacant_stacks =
-                        the_soft_dfs_info->num_vacant_stacks =
-                            num_vacant_stacks;
+                    soft_thread->num_vacant_freecells = num_vacant_freecells;
+                    soft_thread->num_vacant_stacks = num_vacant_stacks;
                     fc_solve__calc_positions_by_rank_data(soft_thread,
                         &FCS_SCANS_the_state,
                         (the_soft_dfs_info->positions_by_rank));
