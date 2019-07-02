@@ -109,6 +109,8 @@ typedef struct
     size_t above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 } sequences_analysis;
 
+#include "simple_simon_rank_seqs.h"
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
     /*
@@ -123,20 +125,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     SIMPS_define_accessors();
 
     STACK_SOURCE_LOOP_START(13)
-    fcs_card card = fcs_col_get_card(col, cards_num - 1);
-
+    fcs_card *start_card_ptr = &fcs_col_get_card(col, cards_num - FCS_MAX_RANK);
+    size_t suit = 0;
     /* Check if the top 13 cards are a sequence */
-    int a;
-    for (a = 2; a <= FCS_MAX_RANK; a++)
+    for (; suit < FCS_NUM_SUITS; ++suit)
     {
-        const fcs_card above_card = fcs_col_get_card(col, cards_num - a);
-        if (!fcs_is_ss_true_parent(above_card, card))
+        if (!memcmp(start_card_ptr, simple_simon_rank_seqs[suit],
+                sizeof(simple_simon_rank_seqs[suit])))
         {
             break;
         }
-        card = above_card;
     }
-    if (a > FCS_MAX_RANK)
+    if (suit < FCS_NUM_SUITS)
     {
         /* We can move this sequence up there */
         sfs_check_state_begin();
@@ -145,12 +145,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
         var_AUTO(
             new_src_col, fcs_state_get_col(new_state_key, source_stack_idx));
-        for (a = 0; a < FCS_MAX_RANK; a++)
+        for (size_t a = 0; a < FCS_MAX_RANK; a++)
         {
             fcs_col_pop_top(new_src_col);
         }
 
-        const fcs_card suit = fcs_card_suit(card);
         fcs_set_foundation(new_state_key, suit, FCS_MAX_RANK);
 
         fcs_move_stack_non_seq_push(

@@ -71,6 +71,21 @@ foreach my $parent_suit (@SUITS)
     }
 }
 
+path('simple_simon_rank_seqs.h')->spew_utf8(
+    "#pragma once\n",
+"static const fcs_card simple_simon_rank_seqs[FCS_NUM_SUITS][FCS_MAX_RANK] = {",
+    join(
+        ',',
+        map {
+            my $s = $_;
+            "{"
+                . join( ",",
+                map { make_card( $_, $s ) } reverse( 1 .. $MAX_RANK ) )
+                . "}";
+        } @SUITS
+    ),
+    "};\n"
+);
 path('board_gen_lookup1.h')->spew_utf8(
     "#pragma once\n",
     'static const size_t offset_by_i[52] = {',
