@@ -31,12 +31,9 @@ static inline bool fcs_is_ss_suit_true(
     return (fcs_card_suit(parent) == fcs_card_suit(child));
 }
 
-static inline bool fcs_is_ss_true_parent(
-    const fcs_card parent, const fcs_card child)
-{
-    return (fcs_is_ss_false_parent(parent, child) &&
-            fcs_is_ss_suit_true(parent, child));
-}
+#include "fcs_is_ss_true_parent.h"
+#define fcs_is_ss_true_parent(parent, child)                                   \
+    fc_solve_is_ss_true_parent[parent][child]
 
 #define STACK_SOURCE_LOOP_START(min_num_cards)                                 \
     for (stack_i source_stack_idx = 0; source_stack_idx < LOCAL_STACKS_NUM;    \

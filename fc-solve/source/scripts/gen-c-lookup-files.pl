@@ -33,6 +33,8 @@ my $NUM_CHILD_CARDS  = 64;
 my $NUM_PARENT_CARDS = make_card( $MAX_RANK, $SUITS[-1] ) + 1;
 my @is_king          = ( ($false) x $NUM_PARENT_CARDS );
 my %lookup;
+my %fcs_is_ss_false_parent;
+my %fcs_is_ss_true_parent;
 my @state_pos = ( map { [ (0) x $NUM_SUITS ] } 0 .. $MAX_RANK );
 my @card_pos;
 my @positions_by_rank__lookup;
@@ -59,11 +61,21 @@ foreach my $parent_suit (@SUITS)
         if ( $parent_rank > 1 )
         {
             my $start = ( ( $parent_suit ^ 0x1 ) & ( ~0x2 ) );
-            foreach my $child_suit ( $start, $start + 2 )
+            foreach my $child_rank ( $parent_rank - 1 )
             {
-                foreach my $child_rank ( $parent_rank - 1 )
+                foreach my $child_suit ( $start, $start + 2 )
                 {
                     $lookup{ key( $parent,
+                            make_card( $child_rank, $child_suit ), ) } = $true;
+                }
+                foreach my $child_suit ($parent_suit)
+                {
+                    $fcs_is_ss_true_parent{ key( $parent,
+                            make_card( $child_rank, $child_suit ), ) } = $true;
+                }
+                foreach my $child_suit (@SUITS)
+                {
+                    $fcs_is_ss_false_parent{ key( $parent,
                             make_card( $child_rank, $child_suit ), ) } = $true;
                 }
             }
@@ -127,25 +139,36 @@ emit(
     [ q/<stdbool.h>/, ],
     [ map { $_ ? 'true' : 'false' } @is_king ],
 );
-emit(
-    qq#const bool fc_solve_is_parent_buf[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
-    'is_parent',
-    [ q/<stdbool.h>/, ],
-    [
-        map {
-            my $parent = $_;
-            '{' . join(
-                ',',
-                map {
-                    exists( $lookup{ key( $parent, $_ ) } )
-                        ? 'true'
-                        : 'false'
-                } ( 0 .. $NUM_CHILD_CARDS - 1 )
-                )
-                . '}'
-        } ( 0 .. $NUM_PARENT_CARDS - 1 )
-    ],
-);
+
+sub emit_lookup
+{
+    my ( $array_name, $basename, $lookup_ref ) = @_;
+    return emit(
+        qq#const bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
+        $basename,
+        [ q/<stdbool.h>/, ],
+        [
+            map {
+                my $parent = $_;
+                '{' . join(
+                    ',',
+                    map {
+                        exists( $lookup_ref->{ key( $parent, $_ ) } )
+                            ? 'true'
+                            : 'false'
+                    } ( 0 .. $NUM_CHILD_CARDS - 1 )
+                    )
+                    . '}'
+            } ( 0 .. $NUM_PARENT_CARDS - 1 )
+        ],
+    );
+}
+
+emit_lookup( 'fc_solve_is_parent_buf', 'is_parent', \%lookup );
+emit_lookup( 'fc_solve_is_ss_false_parent', 'fcs_is_ss_false_parent',
+    \%fcs_is_ss_false_parent );
+emit_lookup( 'fc_solve_is_ss_true_parent', 'fcs_is_ss_true_parent',
+    \%fcs_is_ss_true_parent );
 emit(
     qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
     'debondt__state_pos',
