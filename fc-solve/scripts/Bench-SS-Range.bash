@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo_renice bash ../scripts/run-variant-sequence.sh 1 1000
+sudo_renice bash ../scripts/run-variant-sequence.sh 1 10000
