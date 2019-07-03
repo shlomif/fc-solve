@@ -31,5 +31,5 @@ max_iters="${MAX_ITERS:-1500000}"
 
 export FREECELL_SOLVER_QUIET=1
 
-time ./fc-solve-multi --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" $(eval echo "$deals_dir"/{$start..$end}.board) \
- | tee -a total_dump.txt
+`which time` -a -o run-variant-sequence.time ./fc-solve-multi --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" $(eval echo "$deals_dir"/{$start..$end}.board) \
+ >> total_dump.txt
