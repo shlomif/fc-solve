@@ -115,12 +115,12 @@ path('board_gen_lookup1.h')->spew_utf8(
 
 sub emit
 {
-    my ( $args, $header_headers, $contents, $types ) = @_;
+    my ( $args, $contents, $types ) = @_;
 
-    my $bn        = $args->{basename};
-    my $DECL      = $args->{decl};
-    my $is_static = $args->{static};
-    $types //= '';
+    my $bn             = $args->{basename};
+    my $DECL           = $args->{decl};
+    my $is_static      = $args->{static};
+    my $header_headers = $args->{header_headers}, $types //= '';
 
     my $header_fn = "$bn.h";
 
@@ -154,8 +154,9 @@ emit(
     {
         basename => 'is_king',
         decl     => qq#const bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
+        header_headers => [ q/<stdbool.h>/, ],
+
     },
-    [ q/<stdbool.h>/, ],
     [ map { $_ ? 'true' : 'false' } @is_king ],
 );
 
@@ -167,9 +168,9 @@ sub emit_lookup
             basename => $basename,
             decl =>
 qq#const bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
-            static => $is_static,
+            header_headers => [ q/<stdbool.h>/, ],
+            static         => $is_static,
         },
-        [ q/<stdbool.h>/, ],
         [
             map {
                 my $parent = $_;
@@ -197,16 +198,16 @@ emit(
         basename => 'debondt__state_pos',
         decl =>
             qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
+        header_headers => [ q/<stddef.h>/, ],
     },
-    [ q/<stddef.h>/, ],
     [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
 );
 emit(
     {
-        basename => 'debondt__card_pos',
-        decl     => qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
+        basename       => 'debondt__card_pos',
+        decl           => qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
+        header_headers => [ q/<stddef.h>/, ],
     },
-    [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @card_pos ],
 );
 emit(
@@ -214,8 +215,8 @@ emit(
         basename => 'pos_by_rank__lookup',
         decl =>
 qq#const size_t positions_by_rank__lookup[@{[0+@positions_by_rank__lookup]}]#,
+        header_headers => [ q/<stddef.h>/, ],
     },
-    [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @positions_by_rank__lookup ],
 );
 emit(
@@ -223,8 +224,8 @@ emit(
         basename => 'pos_by_rank__freecell',
         decl =>
 qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
+        header_headers => [ q/<stddef.h>/, ],
     },
-    [ q/<stddef.h>/, ],
     [
         map {
             my $s = $_ || +{ start => 0, end => 0 };
@@ -240,10 +241,10 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
     my $TOP        = 2 * $MAX_RANK * 4 + 1;
     emit(
         {
-            basename => 'rate_state',
-            decl     => "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
+            basename       => 'rate_state',
+            decl           => "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
+            header_headers => [],
         },
-        [],
         [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
 "\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
     );
