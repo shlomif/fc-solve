@@ -115,12 +115,13 @@ path('board_gen_lookup1.h')->spew_utf8(
 
 sub emit
 {
-    my ( $args, $contents, $types ) = @_;
+    my ( $args, $types ) = @_;
 
     my $bn             = $args->{basename};
     my $DECL           = $args->{decl};
     my $is_static      = $args->{static};
     my $header_headers = $args->{header_headers}, $types //= '';
+    my $contents       = $args->{contents};
 
     my $header_fn = "$bn.h";
 
@@ -156,8 +157,9 @@ emit(
         decl     => qq#const bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
         header_headers => [ q/<stdbool.h>/, ],
 
+        contents => [ map { $_ ? 'true' : 'false' } @is_king ],
+
     },
-    [ map { $_ ? 'true' : 'false' } @is_king ],
 );
 
 sub emit_lookup
@@ -170,21 +172,22 @@ sub emit_lookup
 qq#const bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
             header_headers => [ q/<stdbool.h>/, ],
             static         => $is_static,
+            contents       => [
+                map {
+                    my $parent = $_;
+                    '{' . join(
+                        ',',
+                        map {
+                            exists( $lookup_ref->{ key( $parent, $_ ) } )
+                                ? 'true'
+                                : 'false'
+                        } ( 0 .. $NUM_CHILD_CARDS - 1 )
+                        )
+                        . '}'
+                } ( 0 .. $NUM_PARENT_CARDS - 1 )
+            ],
+
         },
-        [
-            map {
-                my $parent = $_;
-                '{' . join(
-                    ',',
-                    map {
-                        exists( $lookup_ref->{ key( $parent, $_ ) } )
-                            ? 'true'
-                            : 'false'
-                    } ( 0 .. $NUM_CHILD_CARDS - 1 )
-                    )
-                    . '}'
-            } ( 0 .. $NUM_PARENT_CARDS - 1 )
-        ],
     );
 }
 
@@ -199,16 +202,18 @@ emit(
         decl =>
             qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
         header_headers => [ q/<stddef.h>/, ],
+        contents       => [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
+
     },
-    [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
 );
 emit(
     {
         basename       => 'debondt__card_pos',
         decl           => qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
         header_headers => [ q/<stddef.h>/, ],
+        contents       => [ map { $_ || 0 } @card_pos ],
+
     },
-    [ map { $_ || 0 } @card_pos ],
 );
 emit(
     {
@@ -216,8 +221,9 @@ emit(
         decl =>
 qq#const size_t positions_by_rank__lookup[@{[0+@positions_by_rank__lookup]}]#,
         header_headers => [ q/<stddef.h>/, ],
+        contents       => [ map { $_ || 0 } @positions_by_rank__lookup ],
+
     },
-    [ map { $_ || 0 } @positions_by_rank__lookup ],
 );
 emit(
     {
@@ -225,13 +231,14 @@ emit(
         decl =>
 qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
         header_headers => [ q/<stddef.h>/, ],
+        contents       => [
+            map {
+                my $s = $_ || +{ start => 0, end => 0 };
+                "{.start = $s->{start}, .end = $s->{end}}";
+            } @pos_by_rank
+        ],
+
     },
-    [
-        map {
-            my $s = $_ || +{ start => 0, end => 0 };
-            "{.start = $s->{start}, .end = $s->{end}}";
-        } @pos_by_rank
-    ],
     "\ntypedef struct { size_t start, end; } pos_by_rank__freecell_t;\n",
 );
 {
@@ -244,8 +251,9 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
             basename       => 'rate_state',
             decl           => "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
             header_headers => [],
+            contents       => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
+
         },
-        [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
 "\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
     );
 }
