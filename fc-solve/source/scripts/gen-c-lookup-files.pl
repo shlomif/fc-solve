@@ -120,8 +120,9 @@ sub emit
     my $bn             = $args->{basename};
     my $DECL           = $args->{decl};
     my $is_static      = $args->{static};
-    my $header_headers = $args->{header_headers}, $types //= '';
+    my $header_headers = $args->{header_headers};
     my $contents       = $args->{contents};
+    $types //= '';
 
     my $header_fn = "$bn.h";
 
