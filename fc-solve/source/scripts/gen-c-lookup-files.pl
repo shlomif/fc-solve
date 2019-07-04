@@ -115,14 +115,14 @@ path('board_gen_lookup1.h')->spew_utf8(
 
 sub emit
 {
-    my ( $args, $types ) = @_;
+    my ( $args, ) = @_;
 
     my $bn             = $args->{basename};
     my $DECL           = $args->{decl};
     my $is_static      = $args->{static};
     my $header_headers = $args->{header_headers};
     my $contents       = $args->{contents};
-    $types //= '';
+    my $types          = $args->{typedefs} // '';
 
     my $header_fn = "$bn.h";
 
@@ -201,7 +201,6 @@ emit(
             qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
         header_headers => [ q/<stddef.h>/, ],
         contents       => [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
-
     },
 );
 emit(
@@ -210,7 +209,6 @@ emit(
         decl           => qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
         header_headers => [ q/<stddef.h>/, ],
         contents       => [ map { $_ || 0 } @card_pos ],
-
     },
 );
 emit(
@@ -220,7 +218,6 @@ emit(
 qq#const size_t positions_by_rank__lookup[@{[0+@positions_by_rank__lookup]}]#,
         header_headers => [ q/<stddef.h>/, ],
         contents       => [ map { $_ || 0 } @positions_by_rank__lookup ],
-
     },
 );
 emit(
@@ -235,9 +232,9 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
                 "{.start = $s->{start}, .end = $s->{end}}";
             } @pos_by_rank
         ],
-
+        typedefs =>
+"\ntypedef struct { size_t start, end; } pos_by_rank__freecell_t;\n",
     },
-    "\ntypedef struct { size_t start, end; } pos_by_rank__freecell_t;\n",
 );
 {
     my $TYPE_NAME  = 'fcs_seq_cards_power_type';
@@ -250,8 +247,8 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
             decl           => "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
             header_headers => [],
             contents       => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
-
-        },
+            typedefs =>
 "\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
+        },
     );
 }
