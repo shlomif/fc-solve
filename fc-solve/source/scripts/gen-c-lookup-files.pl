@@ -113,6 +113,16 @@ path('board_gen_lookup1.h')->spew_utf8(
     "};\n"
 );
 
+sub _perl2c_code
+{
+    my $val = shift;
+    return (
+        ( ref($val) eq "ARRAY" )
+        ? "{" . join( ',', map { _perl2c_code($_) } @$val ) . "}"
+        : $val
+    );
+}
+
 sub emit
 {
     my ( $args, ) = @_;
@@ -135,7 +145,7 @@ sub emit
                 . join( '', @$text ) );
 
     };
-    my $code = "$DECL = {" . join( ',', @$contents ) . "};\n";
+    my $code = "$DECL = " . _perl2c_code($contents) . ";\n";
     if ($is_static)
     {
         $out_header->( ["static $code"] );
@@ -173,15 +183,13 @@ qq#const bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
             contents       => [
                 map {
                     my $parent = $_;
-                    '{' . join(
-                        ',',
+                    [
                         map {
                             exists( $lookup_ref->{ key( $parent, $_ ) } )
                                 ? 'true'
                                 : 'false'
                         } ( 0 .. $NUM_CHILD_CARDS - 1 )
-                        )
-                        . '}'
+                    ]
                 } ( 0 .. $NUM_PARENT_CARDS - 1 )
             ],
 
@@ -200,7 +208,7 @@ emit(
         decl =>
             qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
         header_headers => [ q/<stddef.h>/, ],
-        contents       => [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
+        contents       => [ map { [@$_] } @state_pos ],
     },
 );
 emit(
