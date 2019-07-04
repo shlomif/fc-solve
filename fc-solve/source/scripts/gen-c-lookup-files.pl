@@ -160,7 +160,9 @@ sub emit
 }
 
 emit(
-    qq#const bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
+    {
+        decl => qq#const bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
+    },
     'is_king',
     [ q/<stdbool.h>/, ],
     [ map { $_ ? 'true' : 'false' } @is_king ],
@@ -200,25 +202,36 @@ emit_lookup( 'fc_solve_is_ss_false_parent', 'fcs_is_ss_false_parent',
 emit_lookup( 'fc_solve_is_ss_true_parent', 'fcs_is_ss_true_parent',
     \%fcs_is_ss_true_parent );
 emit(
-    qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
+    {
+        decl =>
+            qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
+    },
     'debondt__state_pos',
     [ q/<stddef.h>/, ],
     [ map { '{' . join( ',', @$_ ) . '}'; } @state_pos ],
 );
 emit(
-    qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
+    {
+        decl => qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
+    },
     'debondt__card_pos',
     [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @card_pos ],
 );
 emit(
+    {
+        decl =>
 qq#const size_t positions_by_rank__lookup[@{[0+@positions_by_rank__lookup]}]#,
+    },
     'pos_by_rank__lookup',
     [ q/<stddef.h>/, ],
     [ map { $_ || 0 } @positions_by_rank__lookup ],
 );
 emit(
+    {
+        decl =>
 qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
+    },
     'pos_by_rank__freecell',
     [ q/<stddef.h>/, ],
     [
@@ -235,7 +248,9 @@ qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
     my $POWER      = 1.3;
     my $TOP        = 2 * $MAX_RANK * 4 + 1;
     emit(
-        "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
+        {
+            decl => "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
+        },
         'rate_state',
         [],
         [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
