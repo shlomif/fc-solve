@@ -98,7 +98,7 @@ sub emit
     my ( $args, ) = @_;
 
     my $bn             = $args->{basename};
-    my $DECL           = $args->{decl};
+    my $DECL           = "const " . $args->{decl};
     my $is_static      = $args->{static};
     my $header_headers = $args->{header_headers};
     my $contents       = $args->{contents};
@@ -132,8 +132,7 @@ sub emit
 emit(
     {
         basename => 'simple_simon_rank_seqs',
-        decl =>
-"const fcs_card simple_simon_rank_seqs[FCS_NUM_SUITS][FCS_MAX_RANK]",
+        decl => "fcs_card simple_simon_rank_seqs[FCS_NUM_SUITS][FCS_MAX_RANK]",
         contents => [
             map {
                 my $s = $_;
@@ -146,8 +145,8 @@ emit(
 
 emit(
     {
-        basename => 'is_king',
-        decl     => qq#const bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
+        basename       => 'is_king',
+        decl           => qq#bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
         header_headers => [ q/<stdbool.h>/, ],
 
         contents => [ map { $_ ? 'true' : 'false' } @is_king ],
@@ -157,7 +156,7 @@ emit(
 emit(
     {
         basename       => 'board_gen_lookup1.h',
-        decl           => 'const size_t offset_by_i[52]',
+        decl           => 'size_t offset_by_i[52]',
         header_headers => [],
         contents       => [
             map {
@@ -178,8 +177,7 @@ sub emit_lookup
     return emit(
         {
             basename => $basename,
-            decl =>
-qq#const bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
+            decl => qq#bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
             header_headers => [ q/<stdbool.h>/, ],
             static         => $is_static,
             contents       => [
@@ -207,8 +205,7 @@ emit_lookup( 'fc_solve_is_ss_true_parent', 'fcs_is_ss_true_parent',
 emit(
     {
         basename => 'debondt__state_pos',
-        decl =>
-            qq#const size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
+        decl => qq#size_t fc_solve__state_pos[@{[$MAX_RANK+1]}][$NUM_SUITS]#,
         header_headers => [ q/<stddef.h>/, ],
         contents       => [ map { [@$_] } @state_pos ],
     },
@@ -221,7 +218,7 @@ sub _array
     my $contents = $args->{contents};
     my $len      = @$contents;
     return (
-        decl           => "const ${DECL}[$len]",
+        decl           => "${DECL}[$len]",
         contents       => $contents,
         header_headers => [ q/<stddef.h>/, ],
     );
@@ -275,7 +272,7 @@ emit(
     emit(
         {
             basename       => 'rate_state',
-            decl           => "const $TYPE_NAME ${ARRAY_NAME}[$TOP]",
+            decl           => "$TYPE_NAME ${ARRAY_NAME}[$TOP]",
             header_headers => [],
             contents       => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
             typedefs =>
