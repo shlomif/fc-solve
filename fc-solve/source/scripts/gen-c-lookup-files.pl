@@ -143,34 +143,6 @@ emit(
     }
 );
 
-emit(
-    {
-        basename       => 'is_king',
-        decl           => qq#bool fc_solve_is_king_buf[$NUM_PARENT_CARDS]#,
-        header_headers => [ q/<stdbool.h>/, ],
-
-        contents => [ map { $_ ? 'true' : 'false' } @is_king ],
-
-    },
-);
-emit(
-    {
-        basename       => 'board_gen_lookup1.h',
-        decl           => 'size_t offset_by_i[52]',
-        header_headers => [],
-        contents       => [
-            map {
-                my $i   = $_;
-                my $col = ( $i & ( 8 - 1 ) );
-                3 * ( $col * 7 -
-                        ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) +
-                        ( $i >> 3 ) )
-            } 0 .. ( 52 - 1 )
-        ],
-        static => $true,
-    }
-);
-
 sub emit_lookup
 {
     my ( $array_name, $basename, $lookup_ref, $is_static ) = @_;
@@ -283,3 +255,36 @@ emit(
         },
     );
 }
+emit(
+    {
+        basename => 'is_king',
+        _array(
+            {
+                decl     => qq#bool fc_solve_is_king_buf#,
+                contents => [ map { $_ ? 'true' : 'false' } @is_king ],
+            }
+        ),
+        header_headers => [ q/<stdbool.h>/, ],
+    },
+);
+emit(
+    {
+        basename => 'board_gen_lookup1.h',
+        _array(
+            {
+                decl     => 'size_t offset_by_i',
+                contents => [
+                    map {
+                        my $i   = $_;
+                        my $col = ( $i & ( 8 - 1 ) );
+                        3 * ( $col * 7 -
+                                ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) +
+                                ( $i >> 3 ) )
+                    } 0 .. ( 52 - 1 )
+                ],
+            }
+        ),
+        header_headers => [],
+        static         => $true,
+    }
+);
