@@ -271,10 +271,13 @@ emit(
     my $TOP        = 2 * $MAX_RANK * 4 + 1;
     emit(
         {
-            basename       => 'rate_state',
-            decl           => "$TYPE_NAME ${ARRAY_NAME}[$TOP]",
-            header_headers => [],
-            contents       => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
+            basename => 'rate_state',
+            _array(
+                {
+                    decl     => "$TYPE_NAME ${ARRAY_NAME}",
+                    contents => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
+                }
+            ),
             typedefs =>
 "\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
         },
