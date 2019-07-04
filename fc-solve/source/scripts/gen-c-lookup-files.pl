@@ -115,21 +115,47 @@ path('board_gen_lookup1.h')->spew_utf8(
 
 sub emit
 {
-    my ( $DECL, $bn, $header_headers, $contents, $types ) = @_;
+    my ( $args, $bn, $header_headers, $contents, $types ) = @_;
+
+    my $DECL;
+    my $is_static = $false;
+
+    if ( '' eq ref $args )
+    {
+        $DECL = $args;
+    }
+    else
+    {
+        $DECL      = $args->{decl};
+        $is_static = $args->{static};
+    }
     $types //= '';
 
     my $header_fn = "$bn.h";
 
-    path($header_fn)
-        ->spew_utf8( "#pragma once\n"
-            . join( '', map { qq{#include $_\n} } @$header_headers )
-            . $types
-            . "extern $DECL;\n" );
-    path("$bn.c")
-        ->spew_utf8( qq/#include "$header_fn"\n\n$DECL = {/
-            . join( ',', @$contents )
-            . "};\n" );
+    my $out_header = sub {
+        my $text = shift;
+        path($header_fn)
+            ->spew_utf8( "#pragma once\n"
+                . join( '', map { qq{#include $_\n} } @$header_headers )
+                . $types
+                . join( '', @$text ) );
 
+    };
+    if ($is_static)
+    {
+        $out_header->(
+            [ "static $DECL = {" . join( ',', @$contents ) . "};\n" ] );
+    }
+    else
+    {
+
+        $out_header->( ["extern $DECL;\n"] );
+        path("$bn.c")
+            ->spew_utf8( qq/#include "$header_fn"\n\n$DECL = {/
+                . join( ',', @$contents )
+                . "};\n" );
+    }
     return;
 }
 
