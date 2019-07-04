@@ -83,22 +83,6 @@ foreach my $parent_suit (@SUITS)
     }
 }
 
-path('simple_simon_rank_seqs.h')->spew_utf8(
-    "#pragma once\n",
-"static const fcs_card simple_simon_rank_seqs[FCS_NUM_SUITS][FCS_MAX_RANK] = {",
-    join(
-        ',',
-        map {
-            my $s = $_;
-            "{"
-                . join( ",",
-                map { make_card( $_, $s ) } reverse( 1 .. $MAX_RANK ) )
-                . "}";
-        } @SUITS
-    ),
-    "};\n"
-);
-
 sub _perl2c_code
 {
     my $val = shift;
@@ -144,6 +128,21 @@ sub emit
     }
     return;
 }
+
+emit(
+    {
+        basename => 'simple_simon_rank_seqs',
+        decl =>
+"const fcs_card simple_simon_rank_seqs[FCS_NUM_SUITS][FCS_MAX_RANK]",
+        contents => [
+            map {
+                my $s = $_;
+                [ map { make_card( $_, $s ) } reverse( 1 .. $MAX_RANK ) ]
+            } @SUITS
+        ],
+        static => $true,
+    }
+);
 
 emit(
     {
