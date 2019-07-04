@@ -134,19 +134,16 @@ sub emit
                 . join( '', @$text ) );
 
     };
+    my $code = "$DECL = {" . join( ',', @$contents ) . "};\n";
     if ($is_static)
     {
-        $out_header->(
-            [ "static $DECL = {" . join( ',', @$contents ) . "};\n" ] );
+        $out_header->( ["static $code"] );
     }
     else
     {
 
         $out_header->( ["extern $DECL;\n"] );
-        path("$bn.c")
-            ->spew_utf8( qq/#include "$header_fn"\n\n$DECL = {/
-                . join( ',', @$contents )
-                . "};\n" );
+        path("$bn.c")->spew_utf8(qq/#include "$header_fn"\n\n$code/);
     }
     return;
 }
