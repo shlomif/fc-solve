@@ -213,35 +213,56 @@ emit(
         contents       => [ map { [@$_] } @state_pos ],
     },
 );
+
+sub _array
+{
+    my ($args)   = @_;
+    my $DECL     = $args->{decl};
+    my $contents = $args->{contents};
+    my $len      = @$contents;
+    return (
+        decl           => "const ${DECL}[$len]",
+        contents       => $contents,
+        header_headers => [ q/<stddef.h>/, ],
+    );
+
+}
 emit(
     {
-        basename       => 'debondt__card_pos',
-        decl           => qq#const size_t fc_solve__card_pos[@{[0+@card_pos]}]#,
-        header_headers => [ q/<stddef.h>/, ],
-        contents       => [ map { $_ || 0 } @card_pos ],
+        basename => 'debondt__card_pos',
+        _array(
+            {
+                decl     => qq#size_t fc_solve__card_pos#,
+                contents => [ map { $_ || 0 } @card_pos ],
+            }
+        ),
     },
 );
 emit(
     {
         basename => 'pos_by_rank__lookup',
-        decl =>
-qq#const size_t positions_by_rank__lookup[@{[0+@positions_by_rank__lookup]}]#,
-        header_headers => [ q/<stddef.h>/, ],
-        contents       => [ map { $_ || 0 } @positions_by_rank__lookup ],
+        _array(
+            {
+                decl     => qq#size_t positions_by_rank__lookup#,
+                contents => [ map { $_ || 0 } @positions_by_rank__lookup ],
+            }
+        ),
     },
 );
 emit(
     {
         basename => 'pos_by_rank__freecell',
-        decl =>
-qq#const pos_by_rank__freecell_t pos_by_rank__freecell[@{[0+@pos_by_rank]}]#,
-        header_headers => [ q/<stddef.h>/, ],
-        contents       => [
-            map {
-                my $s = $_ || +{ start => 0, end => 0 };
-                "{.start = $s->{start}, .end = $s->{end}}";
-            } @pos_by_rank
-        ],
+        _array(
+            {
+                decl     => qq#pos_by_rank__freecell_t pos_by_rank__freecell#,
+                contents => [
+                    map {
+                        my $s = $_ || +{ start => 0, end => 0 };
+                        "{.start = $s->{start}, .end = $s->{end}}";
+                    } @pos_by_rank
+                ],
+            }
+        ),
         typedefs =>
 "\ntypedef struct { size_t start, end; } pos_by_rank__freecell_t;\n",
     },
