@@ -122,7 +122,6 @@ sub emit
     }
     else
     {
-
         $out_header->( ["extern $DECL;\n"] );
         path("$bn.c")->spew_utf8(qq/#include "$header_fn"\n\n$code/);
     }
@@ -164,7 +163,6 @@ sub emit_lookup
                     ]
                 } ( 0 .. $NUM_PARENT_CARDS - 1 )
             ],
-
         },
     );
 }
@@ -194,8 +192,8 @@ sub _array
         contents       => $contents,
         header_headers => [ q/<stddef.h>/, ],
     );
-
 }
+
 emit(
     {
         basename => 'debondt__card_pos',
@@ -218,6 +216,7 @@ emit(
         ),
     },
 );
+
 emit(
     {
         basename => 'pos_by_rank__freecell',
@@ -236,6 +235,7 @@ emit(
 "\ntypedef struct { size_t start, end; } pos_by_rank__freecell_t;\n",
     },
 );
+
 {
     my $TYPE_NAME  = 'fcs_seq_cards_power_type';
     my $ARRAY_NAME = 'fc_solve_seqs_over_cards_lookup';
@@ -255,6 +255,7 @@ emit(
         },
     );
 }
+
 emit(
     {
         basename => 'is_king',
@@ -267,9 +268,10 @@ emit(
         header_headers => [ q/<stdbool.h>/, ],
     },
 );
+
 emit(
     {
-        basename => 'board_gen_lookup1.h',
+        basename => 'board_gen_lookup1',
         _array(
             {
                 decl     => 'size_t offset_by_i',
