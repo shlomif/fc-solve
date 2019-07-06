@@ -3192,7 +3192,6 @@ static inline void flare__update_stats(
 static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
-    bool run_loop;
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool process_ret = false;
@@ -3203,7 +3202,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
     // I expect user->current_instance to be initialized with some value.
     do
     {
-        run_loop = true;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
         process_ret = false;
 #endif
@@ -3301,8 +3299,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
                 resume_instance(instance);
 #endif
-            run_loop = (ret == FCS_STATE_IS_NOT_SOLVEABLE ||
-                        ret == FCS_STATE_SUSPEND_PROCESS);
             flare->instance_is_ready = false;
         }
 #ifdef FCS_WITH_NI
@@ -3332,9 +3328,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
                 instance_item->minimal_flare = flare;
             }
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
-            run_loop = true;
 #else
-            break;
+            return SET_user_ret(user, FCS_STATE_WAS_SOLVED);
 #endif
         }
         else if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
@@ -3412,7 +3407,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #ifdef FCS_WITH_NI
         (user->current_instance < end_of_instances_list) &&
 #endif
-        run_loop);
+        true);
 
     return SET_user_ret(user, eval_resume_ret_code(user, ret
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
