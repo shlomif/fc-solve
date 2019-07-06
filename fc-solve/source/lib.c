@@ -2994,13 +2994,21 @@ static int get_flare_move_count(
 #endif
 
 static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
-    fcs_user *const user GCC_UNUSED, const fc_solve_solve_process_ret_t ret
+    fcs_user *const user GCC_UNUSED,
+    const fc_solve_solve_process_ret_t ret_proto
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     ,
     const bool process_ret
 #endif
 )
 {
+#ifdef FCS_WITH_NI
+    const_AUTO(
+        ret, (user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS
+                                                 : ret_proto));
+#else
+    const_AUTO(ret, ret_proto);
+#endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     if (ret == FCS_STATE_SUSPEND_PROCESS)
     {
@@ -3023,40 +3031,41 @@ static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
     return ret;
 }
 
-static inline fc_solve_solve_process_ret_t start_flare(
+static inline bool start_flare(
     fcs_user *const user, fcs_instance *const instance)
 {
-    if (!fc_solve_initial_user_state_to_c(user->state_string_copy,
+    if (unlikely(!fc_solve_initial_user_state_to_c(user->state_string_copy,
             &(user->state), INSTANCE_FREECELLS_NUM, INSTANCE_STACKS_NUM,
-            INSTANCE_DECKS_NUM, user->indirect_stacks_buffer))
+            INSTANCE_DECKS_NUM, user->indirect_stacks_buffer)))
     {
 #ifdef FCS_WITH_ERROR_STRS
         user->state_validity_ret = FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
 #endif
-        return FCS_STATE_INVALID_STATE;
+        return false;
     }
 
 #ifndef FCS_DISABLE_STATE_VALIDITY_CHECK
 #ifndef FCS_WITH_ERROR_STRS
     fcs_card state_validity_card;
 #endif
-    if (FCS_STATE_VALIDITY__OK !=
-        (
+    if (unlikely(
+            FCS_STATE_VALIDITY__OK !=
+            (
 #ifdef FCS_WITH_ERROR_STRS
-            user->state_validity_ret =
+                user->state_validity_ret =
 #endif
-                fc_solve_check_state_validity(
-                    &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                        PASS_STACKS(INSTANCE_STACKS_NUM)
-                            PASS_DECKS(INSTANCE_DECKS_NUM),
+                    fc_solve_check_state_validity(
+                        &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+                            PASS_STACKS(INSTANCE_STACKS_NUM)
+                                PASS_DECKS(INSTANCE_DECKS_NUM),
 #ifdef FCS_WITH_ERROR_STRS
-                    &(user->state_validity_card)
+                        &(user->state_validity_card)
 #else
-                &state_validity_card
+                    &state_validity_card
 #endif
-                        )))
+                            ))))
     {
-        return FCS_STATE_INVALID_STATE;
+        return false;
     }
 #endif
 #ifdef FCS_WITH_MOVES
@@ -3080,7 +3089,7 @@ static inline fc_solve_solve_process_ret_t start_flare(
         INSTANCE_FREECELLS_NUM) PASS_STACKS(INSTANCE_STACKS_NUM));
 #endif
     init_instance(instance);
-    return FCS_STATE_IS_NOT_SOLVEABLE;
+    return true;
 }
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -3246,11 +3255,11 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         user->init_num_checked_states = instance->i__stats;
         if (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
         {
-            ret = start_flare(user, instance);
-            if (ret == FCS_STATE_INVALID_STATE)
+            if (unlikely(!start_flare(user, instance)))
             {
-                break;
+                return user->ret_code = FCS_STATE_INVALID_STATE;
             }
+            ret = FCS_STATE_IS_NOT_SOLVEABLE;
             start_process_with_board(instance, &(user->state),
 #if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
                 &(user->initial_non_canonized_state)
@@ -3403,18 +3412,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         (user->current_instance < end_of_instances_list) &&
 #endif
         run_loop);
-    if (ret == FCS_STATE_INVALID_STATE)
-    {
-        return user->ret_code = FCS_STATE_INVALID_STATE;
-    }
 
-#ifdef FCS_WITH_NI
-    const_AUTO(r,
-        (user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS : ret));
-#else
-    const_AUTO(r, ret);
-#endif
-    return (user->ret_code = eval_resume_ret_code(user, r
+    return (user->ret_code = eval_resume_ret_code(user, ret
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
                 ,
                 process_ret
