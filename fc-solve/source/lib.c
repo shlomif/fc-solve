@@ -3239,9 +3239,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             {
                 SET_ACTIVE_FLARE(user, instance_item->minimal_flare);
                 user->init_num_checked_states = OBJ_STATS(user);
-
-                ret = FCS_STATE_WAS_SOLVED;
-                run_loop = false;
+                return SET_user_ret(user, FCS_STATE_WAS_SOLVED);
             }
             continue;
         }
