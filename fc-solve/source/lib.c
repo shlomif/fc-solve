@@ -2027,8 +2027,11 @@ typedef struct
 #ifdef FCS_WITH_MOVES
     fcs_state_locs_struct state_locs;
     fcs_state_locs_struct initial_state_locs;
-#endif
     fc_solve_solve_process_ret_t ret_code;
+#define SET_user_ret(user, val) ((user)->ret_code = (val))
+#else
+#define SET_user_ret(user, val) (val)
+#endif
 #ifdef FCS_WITH_NI
     bool all_instances_were_suspended;
 #endif
@@ -2266,7 +2269,7 @@ static FLARE_INLINE void user_next_flare(fcs_user *const user)
     calc_variant_suit_mask_and_desired_suit_value(instance);
 #endif
 
-    user->ret_code = flare->ret_code = FCS_STATE_NOT_BEGAN_YET;
+    SET_user_ret(user, flare->ret_code = FCS_STATE_NOT_BEGAN_YET);
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
     instance->debug_iter_output_func = ((
@@ -3257,7 +3260,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         {
             if (unlikely(!start_flare(user, instance)))
             {
-                return user->ret_code = FCS_STATE_INVALID_STATE;
+                return SET_user_ret(user, FCS_STATE_INVALID_STATE);
             }
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
             start_process_with_board(instance, &(user->state),
@@ -3413,12 +3416,12 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         run_loop);
 
-    return (user->ret_code = eval_resume_ret_code(user, ret
+    return SET_user_ret(user, eval_resume_ret_code(user, ret
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-                ,
-                process_ret
+                                  ,
+                                  process_ret
 #endif
-                ));
+                                  ));
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
