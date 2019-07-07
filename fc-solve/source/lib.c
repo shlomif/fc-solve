@@ -3252,7 +3252,13 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         fcs_instance *const instance = &(flare->obj);
         SET_ACTIVE_FLARE(user, flare);
         user->init_num_checked_states = instance->i__stats;
-        if (flare->ret_code == FCS_STATE_NOT_BEGAN_YET)
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+        const bool began_now = (flare->ret_code == FCS_STATE_NOT_BEGAN_YET);
+#else
+        const bool began_now = true;
+#endif
+
+        if (began_now)
         {
             if (unlikely(!start_flare(user, instance)))
             {
@@ -3284,9 +3290,13 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         );
 #endif
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
         const bool was_run_now =
-            ((flare->ret_code == FCS_STATE_SUSPEND_PROCESS) ||
-                (flare->ret_code == FCS_STATE_NOT_BEGAN_YET));
+            began_now || (flare->ret_code == FCS_STATE_SUSPEND_PROCESS);
+#else
+        const bool was_run_now = true;
+#endif
+        ;
         if (was_run_now)
         {
             ret = flare->ret_code =
