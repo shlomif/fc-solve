@@ -3258,7 +3258,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
             {
                 return SET_user_ret(user, FCS_STATE_INVALID_STATE);
             }
-            ret = FCS_STATE_IS_NOT_SOLVEABLE;
             start_process_with_board(instance, &(user->state),
 #if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
                 &(user->initial_non_canonized_state)
