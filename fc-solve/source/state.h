@@ -667,6 +667,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
 
 #define out (out_state->s)
 /* Handle the end of string - shouldn't happen */
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
 #define HANDLE_EOS()                                                           \
     {                                                                          \
         if ((*str) == '\0')                                                    \
@@ -674,8 +675,18 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             return false;                                                      \
         }                                                                      \
     }
+#else
+#define HANDLE_EOS()                                                           \
+    {                                                                          \
+        if ((*str) == '\0')                                                    \
+        {                                                                      \
+            goto end_of_loop;                                                  \
+        }                                                                      \
+    }
+#endif
 
-    for (size_t s = 0; s < STACKS_NUM__VAL; s++)
+    size_t s;
+    for (s = 0; s < STACKS_NUM__VAL; ++s)
     {
         /* Move to the next stack */
         if (!first_line)
@@ -827,9 +838,14 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             }
             fcs_col_push_card(col, my_card);
         }
+    end_of_loop:;
     }
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
     return true;
+#else
+    return s == STACKS_NUM__VAL;
+#endif
 }
 
 #undef out
