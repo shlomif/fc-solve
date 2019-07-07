@@ -35,7 +35,13 @@ foreach my $fn (@ARGV)
     {
         $output .= $fn . ':';
     }
-    $output .= +( get_time( $lines[-1] ) - get_time( $lines[0] ) ) . "\n";
+    $output .=
+        +( get_time( $lines[-1] ) - get_time( $lines[0] ) ) . '::'
+        . (
+          $lines[-1] =~ /total_num_iters=([0-9]+)/
+        ? $1
+        : ( die "no match total_num_iters" )
+        ) . "\n";
 }
 
 print $output;
