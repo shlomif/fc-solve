@@ -13,6 +13,7 @@
 #include "freecell-solver/fcs_user.h"
 #include "move_funcs_order.h"
 #include "fcs_user_internal.h"
+#include "strlcpy.h"
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 #include "fc_pro_iface_pos.h"
 #endif
@@ -2794,20 +2795,6 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
 }
 #endif
 
-#define MY_MARGIN 3
-static inline bool duplicate_string(char *const s, const char *const orig_str)
-{
-    const size_t len = strlen(orig_str);
-    // If orig_str is the empty string then there is no penultimate character.
-    if (len >= MAX_STATE_STRING_COPY_LEN - MY_MARGIN)
-    {
-        return false;
-    }
-    strcpy(s, orig_str);
-    return true;
-}
-#undef MY_MARGIN
-
 static inline void recycle_flare(flare_item *const flare)
 {
     if (!flare->instance_is_ready)
@@ -3433,10 +3420,8 @@ int DLLEXPORT freecell_solver_user_solve_board(
 {
     fcs_user *const user = (fcs_user *)api_instance;
 
-    if (!duplicate_string(user->state_string_copy, state_as_string))
-    {
-        return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
-    }
+    strlcpy(
+        user->state_string_copy, state_as_string, MAX_STATE_STRING_COPY_LEN);
 #ifdef FCS_WITH_NI
     user->current_instance = user->instances_list;
 #endif
