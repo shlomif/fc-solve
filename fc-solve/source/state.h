@@ -838,7 +838,9 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             }
             fcs_col_push_card(col, my_card);
         }
+#ifndef FCS_BREAK_BACKWARD_COMPAT_2
     end_of_loop:;
+#endif
     }
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_2

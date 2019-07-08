@@ -1904,7 +1904,7 @@ typedef struct
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     fc_solve_solve_process_ret_t ret_code;
 #define SET_flare_ret(flare, val) ((flare)->ret_code = (val))
-#else
+#elif defined(FCS_WITH_MOVES)
 #define SET_flare_ret(flare, val) (val)
 #endif
     /* Whether the instance is ready to be input with (i.e:
@@ -2274,7 +2274,9 @@ static FLARE_INLINE void user_next_flare(fcs_user *const user)
     calc_variant_suit_mask_and_desired_suit_value(instance);
 #endif
 
+#if defined(FCS_WITH_MOVES) || !defined(FCS_WITHOUT_MAX_NUM_STATES)
     SET_user_ret(user, SET_flare_ret(flare, FCS_STATE_NOT_BEGAN_YET));
+#endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
     instance->debug_iter_output_func = ((
@@ -2990,12 +2992,8 @@ static int get_flare_move_count(
 
 static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
     fcs_user *const user GCC_UNUSED,
-    const fc_solve_solve_process_ret_t ret_proto
-#ifndef FCS_WITHOUT_MAX_NUM_STATES
-    ,
-    const bool process_ret
-#endif
-)
+    const fc_solve_solve_process_ret_t ret_proto,
+    const bool process_ret GCC_UNUSED)
 {
 #ifdef FCS_WITH_NI
     const_AUTO(
@@ -3043,22 +3041,21 @@ static inline bool start_flare(
 #ifndef FCS_WITH_ERROR_STRS
     fcs_card state_validity_card;
 #endif
-    if (unlikely(
-            FCS_STATE_VALIDITY__OK !=
-            (
+    const state_validity_ret state_validity_ret =
 #ifdef FCS_WITH_ERROR_STRS
-                user->state_validity_ret =
+        user->state_validity_ret =
 #endif
-                    fc_solve_check_state_validity(
-                        &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
-                            PASS_STACKS(INSTANCE_STACKS_NUM)
-                                PASS_DECKS(INSTANCE_DECKS_NUM),
+            fc_solve_check_state_validity(
+                &(user->state)PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
+                    PASS_STACKS(INSTANCE_STACKS_NUM)
+                        PASS_DECKS(INSTANCE_DECKS_NUM),
 #ifdef FCS_WITH_ERROR_STRS
-                        &(user->state_validity_card)
+                &(user->state_validity_card)
 #else
-                    &state_validity_card
+            &state_validity_card
 #endif
-                            ))))
+            );
+    if (unlikely(FCS_STATE_VALIDITY__OK != state_validity_ret))
     {
         return false;
     }
@@ -3187,6 +3184,8 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool process_ret = false;
+#else
+    const bool process_ret = false;
 #endif
 #ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
@@ -3291,7 +3290,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         ;
         if (was_run_now)
         {
-            ret = SET_flare_ret(flare,
+            ret =
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
                 (instance->effective_max_num_checked_states >
                             instance->i__stats.num_checked_states
@@ -3300,7 +3299,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
                 resume_instance(instance)
 #endif
-            );
+                ;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+            SET_flare_ret(flare, ret);
+#endif
             flare->instance_is_ready = false;
         }
 #ifdef FCS_WITH_NI
@@ -3399,7 +3401,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
 #ifdef FCS_WITH_FLARES
             instance_item->all_plan_items_finished_so_far = false;
-#else
+#elif !defined(FCS_WITHOUT_MAX_NUM_STATES)
             SET_flare_ret(flare, FCS_STATE_IS_NOT_SOLVEABLE);
 #endif
         }
@@ -3411,12 +3413,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
         true);
 
-    return SET_user_ret(user, eval_resume_ret_code(user, ret
-#ifndef FCS_WITHOUT_MAX_NUM_STATES
-                                  ,
-                                  process_ret
-#endif
-                                  ));
+    return SET_user_ret(user, eval_resume_ret_code(user, ret, process_ret));
 }
 
 #ifndef FCS_WITHOUT_EXPORTED_RESUME_SOLUTION
