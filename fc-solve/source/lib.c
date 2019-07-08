@@ -33,7 +33,6 @@ static void verify_state_sanity(const fcs_state *const ptr_state)
 #ifndef FCS_SINGLE_HARD_THREAD
 static inline fcs_soft_thread *new_hard_thread(fcs_instance *const instance)
 {
-    fcs_hard_thread *ret;
     /* Make sure we are not exceeding the maximal number of soft threads
      * for an instance. */
     if (instance->next_soft_thread_id == MAX_NUM_SCANS)
@@ -52,9 +51,9 @@ static inline fcs_soft_thread *new_hard_thread(fcs_instance *const instance)
         ST_LOOP_START() { soft_thread->hard_thread = hard_thread; }
     }
 
-    fc_solve_instance__init_hard_thread(instance,
-        (ret = &(instance->hard_threads[instance->num_hard_threads])));
-
+    fcs_hard_thread *const ret =
+        &(instance->hard_threads[instance->num_hard_threads]);
+    fc_solve_instance__init_hard_thread(instance, ret);
     ++instance->num_hard_threads;
 
     return &(ret->soft_threads[0]);
@@ -3041,7 +3040,7 @@ static inline bool start_flare(
 #ifndef FCS_WITH_ERROR_STRS
     fcs_card state_validity_card;
 #endif
-    const state_validity_ret state_validity_ret =
+    const state_validity_ret state_validity =
 #ifdef FCS_WITH_ERROR_STRS
         user->state_validity_ret =
 #endif
@@ -3055,7 +3054,7 @@ static inline bool start_flare(
             &state_validity_card
 #endif
             );
-    if (unlikely(FCS_STATE_VALIDITY__OK != state_validity_ret))
+    if (unlikely(FCS_STATE_VALIDITY__OK != state_validity))
     {
         return false;
     }
