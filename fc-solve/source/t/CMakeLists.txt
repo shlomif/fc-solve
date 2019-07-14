@@ -85,12 +85,6 @@ IF (FCS_WITH_TEST_SUITE)
 
     TARGET_LINK_LIBRARIES (${EXE_FILE} ${CMOCKA_LIBRARIES})
 
-    SET_SOURCE_FILES_PROPERTIES (
-        "bit-reader-and-writer-test.c"
-        PROPERTIES
-            OBJECT_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/../bit_rw.h"
-    )
-
     IF ("${DEBONDT_DELTA_STATES}")
 
         SET (EXE_FILE "delta-states-debondt-test.t.exe")

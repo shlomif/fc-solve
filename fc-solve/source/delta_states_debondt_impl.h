@@ -530,7 +530,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
 static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type local_variant,
-    fcs_delta_stater *const delta_stater, const fcs_uchar *const enc_state,
+    fcs_delta_stater *const delta_stater, const rin_uchar *const enc_state,
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
     fc_solve_var_base_reader_start(

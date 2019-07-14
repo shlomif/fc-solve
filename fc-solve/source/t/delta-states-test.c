@@ -168,21 +168,21 @@ static void main_tests(void **state GCC_UNUSED)
 
 #if MAX_NUM_FREECELLS > 0
         {
-            fc_solve_bit_writer bit_w;
-            fcs_bit_reader bit_r;
-            fcs_uchar enc[10];
+            rin_bit_writer bit_w;
+            rin_bit_reader bit_r;
+            rin_uchar enc[10];
 
-            fc_solve_bit_writer_init(&bit_w, enc);
-            fc_solve_bit_reader_init(&bit_r, enc);
+            rin_bit_writer_init_and_clear(&bit_w, enc);
+            rin_bit_reader_init(&bit_r, enc);
 
             fc_solve_get_freecells_encoding(&delta, &bit_w);
 
             // TEST
-            assert_int_equal((fcs_card)fc_solve_bit_reader_read(&bit_r, 6),
+            assert_int_equal((fcs_card)rin_bit_reader_read(&bit_r, 6),
                 make_card(8, 2) /* 8D */); // "First freecell is 8D."
 
             // TEST
-            assert_int_equal((fcs_card)fc_solve_bit_reader_read(&bit_r, 6),
+            assert_int_equal((fcs_card)rin_bit_reader_read(&bit_r, 6),
                 make_card(12, 2)); // "Second freecell is QD."
 
             // TEST

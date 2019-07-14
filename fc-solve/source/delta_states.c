@@ -21,8 +21,8 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     const char *const init_state_s, const char *const derived_state_s)
 {
     fcs_state_keyval_pair init_state, derived_state, new_derived_state;
-    fcs_uchar enc_state[24];
-    fcs_bit_reader bit_r;
+    rin_uchar enc_state[24];
+    rin_bit_reader bit_r;
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 
@@ -46,11 +46,11 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
     fc_solve_state_init(
         &new_derived_state, STACKS_NUM, new_derived_indirect_stacks_buffer);
 
-    fc_solve_bit_writer bit_w;
-    fc_solve_bit_writer_init(&bit_w, enc_state);
+    rin_bit_writer bit_w;
+    rin_bit_writer_init_and_clear(&bit_w, enc_state);
     fc_solve_delta_stater_encode_composite(&delta, &bit_w);
 
-    fc_solve_bit_reader_init(&bit_r, enc_state);
+    rin_bit_reader_init(&bit_r, enc_state);
     fc_solve_delta_stater_decode(&delta, &bit_r, &(new_derived_state.s));
 
     char *new_derived_as_str = SMALLOC(new_derived_as_str, 1000);

@@ -24,7 +24,7 @@ DLLEXPORT char *fc_solve_user_INTERNAL_delta_states_enc_and_dec(
 {
     fcs_state_keyval_pair init_state, derived_state, new_derived_state;
     fcs_delta_stater delta;
-    fcs_uchar enc_state[24];
+    rin_uchar enc_state[24];
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
 

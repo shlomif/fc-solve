@@ -17,7 +17,7 @@
 extern "C" {
 #endif
 
-#include "bit_rw.h"
+#include "rinutils/bit_rw.h"
 #include "dbm_common.h"
 
 #ifdef FCS_DEBONDT_DELTA_STATES

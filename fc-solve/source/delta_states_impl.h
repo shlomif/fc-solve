@@ -79,8 +79,8 @@ typedef struct
         COL_TYPE_ENTIRELY_NON_ORIG,
         COL_TYPE_HAS_ORIG
     } type;
-    fcs_uchar enc[4];
-    fcs_uchar *end;
+    rin_uchar enc[4];
+    rin_uchar *end;
     size_t bit_in_char_idx;
 } fcs_column_encoding_composite;
 
@@ -105,24 +105,23 @@ static inline void fc_solve_get_column_encoding_composite(
     }
 
     /* Prepare the encoding. */
-    fc_solve_bit_writer bit_w;
-    fc_solve_bit_writer_init(&bit_w, ret->enc);
+    rin_bit_writer bit_w;
+    rin_bit_writer_init_and_clear(&bit_w, ret->enc);
 
-    fc_solve_bit_writer_write(
+    rin_bit_writer_write(
         &bit_w, self->bits_per_orig_cards_in_column, num_orig_cards);
 
-    fc_solve_bit_writer_write(&bit_w, 4, num_derived_cards);
+    rin_bit_writer_write(&bit_w, 4, num_derived_cards);
 
     if (fcs_card_is_valid(init_card))
     {
-        fc_solve_bit_writer_write(&bit_w, 6, fcs_card2char(init_card));
+        rin_bit_writer_write(&bit_w, 6, fcs_card2char(init_card));
     }
 
     for (stack_i i = col_len - num_cards_in_seq; i < col_len; ++i)
     {
 #define GET_SUIT_BIT(card) (((fcs_card_suit(card)) & 0x2) >> 1)
-        fc_solve_bit_writer_write(
-            &bit_w, 1, GET_SUIT_BIT(fcs_col_get_card(col, i)));
+        rin_bit_writer_write(&bit_w, 1, GET_SUIT_BIT(fcs_col_get_card(col, i)));
 #undef GET_SUIT_BIT
     }
 
@@ -137,7 +136,7 @@ static inline void fc_solve_get_column_encoding_composite(
 
 #if MAX_NUM_FREECELLS > 0
 static inline void fc_solve_get_freecells_encoding(
-    fcs_delta_stater *const self, fc_solve_bit_writer *const bit_w)
+    fcs_delta_stater *const self, rin_bit_writer *const bit_w)
 {
     const fcs_state *const derived = self->derived_state;
     const_SLOT(num_freecells, self);
@@ -160,7 +159,7 @@ static inline void fc_solve_get_freecells_encoding(
             }
         }
         const_AUTO(i_card, freecells[i]);
-        fc_solve_bit_writer_write(bit_w, 6,
+        rin_bit_writer_write(bit_w, 6,
             fcs_card2char((min_idx != i) ? ({
                 const_AUTO(min_card, freecells[min_idx]);
                 freecells[min_idx] = i_card;
@@ -215,7 +214,7 @@ static inline void fc_solve_delta__promote_empty_cols(const size_t num_columns,
 }
 
 static void fc_solve_delta_stater_encode_composite(
-    fcs_delta_stater *const self, fc_solve_bit_writer *const bit_w)
+    fcs_delta_stater *const self, rin_bit_writer *const bit_w)
 {
     int cols_indexes[MAX_NUM_STACKS];
     fcs_column_encoding_composite cols[MAX_NUM_STACKS];
@@ -282,19 +281,19 @@ static void fc_solve_delta_stater_encode_composite(
     {
         const fcs_column_encoding_composite *const col_enc =
             (cols + cols_indexes[i]);
-        const fcs_uchar *enc;
-        const fcs_uchar *const end = col_enc->end;
+        const rin_uchar *enc;
+        const rin_uchar *const end = col_enc->end;
         for (enc = col_enc->enc; enc < end; ++enc)
         {
-            fc_solve_bit_writer_write(bit_w, NUM_BITS_IN_BYTES, (*enc));
+            rin_bit_writer_write(bit_w, NUM_BITS_IN_BYTES, (*enc));
         }
-        fc_solve_bit_writer_write(bit_w, col_enc->bit_in_char_idx, (*enc));
+        rin_bit_writer_write(bit_w, col_enc->bit_in_char_idx, (*enc));
     }
 }
 
 /* ret must be an empty state. */
 static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
-    fcs_bit_reader *const bit_r, fcs_state *const ret)
+    rin_bit_reader *const bit_r, fcs_state *const ret)
 {
 #define PROCESS_CARD(card)                                                     \
     if (fcs_card_rank(card) < foundations[fcs_card_suit(card)])                \
@@ -312,7 +311,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     for (size_t i = 0; i < num_freecells; ++i)
     {
         const fcs_card card =
-            fcs_char2card((fcs_card)fc_solve_bit_reader_read(bit_r, 6));
+            fcs_char2card((fcs_card)rin_bit_reader_read(bit_r, 6));
         if (fcs_card_is_valid(card))
         {
             PROCESS_CARD(card);
@@ -328,7 +327,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     {
         const_AUTO(col, fcs_state_get_col(*ret, col_idx));
         const stack_i num_orig_cards =
-            fc_solve_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
+            rin_bit_reader_read(bit_r, bits_per_orig_cards_in_column);
         const_AUTO(orig_col, fcs_state_get_col(*init_state, col_idx));
 
         for (stack_i i = 0; i < num_orig_cards; ++i)
@@ -338,13 +337,13 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
             fcs_col_push_card(col, card);
         }
 
-        const stack_i num_derived_cards = fc_solve_bit_reader_read(bit_r, 4);
+        const stack_i num_derived_cards = rin_bit_reader_read(bit_r, 4);
         uint_fast16_t num_cards_in_seq = num_derived_cards;
 
         if ((num_orig_cards == 0) && num_derived_cards)
         {
             const fcs_card card =
-                fcs_char2card((fcs_card)fc_solve_bit_reader_read(bit_r, 6));
+                fcs_char2card((fcs_card)rin_bit_reader_read(bit_r, 6));
             PROCESS_CARD(card);
             fcs_col_push_card(col, card);
 
@@ -357,7 +356,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
             for (uint_fast16_t i = 0; i < num_cards_in_seq; ++i)
             {
-                const stack_i suit_bit = fc_solve_bit_reader_read(bit_r, 1);
+                const stack_i suit_bit = rin_bit_reader_read(bit_r, 1);
                 const fcs_card new_card =
                     fcs_make_card(fcs_card_rank(last_card) - 1,
                         (fcs_card)((((size_t)suit_bit) << 1U) |
@@ -381,11 +380,11 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
 
 static inline void fc_solve_delta_stater_decode_into_state_proto(
     const fcs_dbm_variant_type local_variant GCC_UNUSED,
-    fcs_delta_stater *const delta_stater, const fcs_uchar *const enc_state,
+    fcs_delta_stater *const delta_stater, const rin_uchar *const enc_state,
     fcs_state_keyval_pair *const ret IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-    fcs_bit_reader bit_r;
-    fc_solve_bit_reader_init(&bit_r, enc_state + 1);
+    rin_bit_reader bit_r;
+    rin_bit_reader_init(&bit_r, enc_state + 1);
     fc_solve_state_init(ret, STACKS_NUM, indirect_stacks_buffer);
     fc_solve_delta_stater_decode(delta_stater, &bit_r, &(ret->s));
 }
@@ -395,8 +394,8 @@ static inline void fc_solve_delta_stater_encode_into_buffer(
     const fcs_dbm_variant_type local_variant GCC_UNUSED,
     fcs_state_keyval_pair *const state, unsigned char *const out_enc_state)
 {
-    fc_solve_bit_writer bit_w;
-    fc_solve_bit_writer_init(&bit_w, out_enc_state + 1);
+    rin_bit_writer bit_w;
+    rin_bit_writer_init_and_clear(&bit_w, out_enc_state + 1);
     fc_solve_delta_stater_set_derived(delta_stater, &(state->s));
     fc_solve_delta_stater_encode_composite(delta_stater, &bit_w);
     out_enc_state[0] = (unsigned char)(bit_w.current - bit_w.start +

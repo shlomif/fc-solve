@@ -40,6 +40,7 @@ sub src_filenames
     return [
         (
             map { "rinutils/rinutils/include/rinutils/$_" } 'alloc_wrap.h',
+            'bit_rw.h',
             'count.h',
             'dllexport.h',
             'exit_error.h',
@@ -53,7 +54,6 @@ sub src_filenames
             'unused.h',
         ),
         $self->main_base . '.c',
-        'bit_rw.h',
         'card.c',
         'dbm_cache.h',
         'dbm_calc_derived.h',

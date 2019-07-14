@@ -11,24 +11,24 @@
 #include "fcs_cmocka.h"
 #include "freecell-solver/fcs_conf.h"
 #include "rinutils/unused.h"
-#include "bit_rw.h"
+#include "rinutils/bit_rw.h"
 
 static void main_tests(void **state GCC_UNUSED)
 {
     {
         unsigned char buffer[10];
-        fc_solve_bit_writer writer;
+        rin_bit_writer writer;
 
-        fc_solve_bit_writer_init(&writer, buffer);
+        rin_bit_writer_init_and_clear(&writer, buffer);
 
-        fc_solve_bit_writer_write(&writer, 4, 5);
-        fc_solve_bit_writer_write(&writer, 2, 1);
+        rin_bit_writer_write(&writer, 4, 5);
+        rin_bit_writer_write(&writer, 2, 1);
 
         /* TEST
          * */
         assert_int_equal(buffer[0], (5 | (1 << 4))); // "Write works."
 
-        fc_solve_bit_writer_write(&writer, 4, (2 | (3 << 2)));
+        rin_bit_writer_write(&writer, 4, (2 | (3 << 2)));
 
         /* TEST
          * */
@@ -40,23 +40,21 @@ static void main_tests(void **state GCC_UNUSED)
         assert_int_equal(buffer[1], 3); // "Extra byte write works."
 
         {
-            fcs_bit_reader reader;
+            rin_bit_reader reader;
 
-            fc_solve_bit_reader_init(&reader, buffer);
-
-            /* TEST
-             * */
-            assert_int_equal(
-                fc_solve_bit_reader_read(&reader, 4), 5); // "reader 1"
+            rin_bit_reader_init(&reader, buffer);
 
             /* TEST
              * */
-            assert_int_equal(
-                fc_solve_bit_reader_read(&reader, 2), 1); // "reader 2"
+            assert_int_equal(rin_bit_reader_read(&reader, 4), 5); // "reader 1"
 
             /* TEST
              * */
-            assert_int_equal(fc_solve_bit_reader_read(&reader, 4),
+            assert_int_equal(rin_bit_reader_read(&reader, 2), 1); // "reader 2"
+
+            /* TEST
+             * */
+            assert_int_equal(rin_bit_reader_read(&reader, 4),
                 (2 | (3 << 2))); // "reader 3"
         }
     }
