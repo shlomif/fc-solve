@@ -23,6 +23,7 @@
     "flatted": "^2.0.1",
     "html-minifier": "^3.5.21",
     "jquery": "^3.4.1",
+    "lodash": "^4.17.14",
     "node-qunit": "^1.0.0",
     "npm": "^6.10.1",
     "prettier": "^1.18.2",
@@ -39,7 +40,7 @@
     "tslint-plugin-prettier": "^2.0.1",
     "typescript": "^3.5.3",
     "uglify-es": "^3.3.9",
-    "yarn": "^1.16.0"
+    "yarn": "^1.17.3"
   },
   "devDependencies": {
     "eslint": "^5.16.0"
