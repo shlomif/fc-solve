@@ -11,7 +11,7 @@ class FC_Solve:
     def __init__(self):
         self.ffi = FFI()
         self.lib = self.ffi.dlopen(
-            "../libfreecell-solver." +
+            "libfreecell-solver." +
             ("dll" if (platform.system() == 'Windows') else "so"))
         self.ffi.cdef('''
 void * freecell_solver_user_alloc();

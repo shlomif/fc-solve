@@ -11,7 +11,6 @@
 """
 
 import argparse
-import os.path
 import sys
 
 from FC_Solve import FC_Solve
@@ -32,24 +31,15 @@ class GenMulti:
         parser = argparse.ArgumentParser(
             prog='PROG',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
-        parser.add_argument('--dir', type=str, required=True,
-                            help='output dir')
         parser.add_argument('--game', type=str, default='freecell',
                             help='The Solitaire variant')
-        parser.add_argument('--ms', action='store_true',
+        parser.add_argument('--ms', action='store_true', default=True,
                             help='MS/FC-Pro Deals')
-        parser.add_argument('--prefix', type=str, required=True,
-                            help='filename prefix')
-        parser.add_argument('--suffix', type=str, required=True,
-                            help='filename suffix')
-        parser.add_argument('idxs', nargs='+', default=[],
+        parser.add_argument('idxs', nargs='*', default=['seq', '1', '1000000'],
                             help='indexes')
         args = parser.parse_args(argv[1:])
-        self.dir_ = args.dir
         # Sanitize, see:
         # https://stackoverflow.com/questions/6803505
-        self.pre = os.path.basename(args.prefix)
-        self.suf = os.path.basename(args.suffix)
         self.game_variant = args.game
         self.which_deals = (RandomBase.DEALS_MS if args.ms
                             else RandomBase.DEALS_PYSOLFC)
