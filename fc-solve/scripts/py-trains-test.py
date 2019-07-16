@@ -7,6 +7,15 @@
 # Distributed under terms of the MIT license.
 
 """
+Run like:
+
+PYTHONPATH="`pwd`/t/lib" python3 ../scripts/py-trains-test.py
+
+from:
+
+~/progs/freecell/git/fc-solve/fc-solve/source
+
+or equivalent.
 
 """
 
