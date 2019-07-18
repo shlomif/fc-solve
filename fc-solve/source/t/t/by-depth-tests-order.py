@@ -14,7 +14,7 @@ class MyTests(unittest.TestCase):
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line(
+        fcs.input_cmd_line__test(
             "dto 1",
             ["-to", "0123456789", "-dto", "1,0132456789"]
         )
@@ -31,7 +31,7 @@ class MyTests(unittest.TestCase):
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line(
+        fcs.input_cmd_line__test(
             "dto 1",
             ["-to", "0123456789", "-dto", "1,0132456789", "-dto", "50,056234"]
         )

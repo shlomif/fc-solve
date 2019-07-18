@@ -18,7 +18,7 @@ class MyTests(unittest.TestCase):
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line("ve", ['-l', 'video-editing'])
+        fcs.input_cmd_line__test("ve", ['-l', 'video-editing'])
 
         step = 100
         limit = step
@@ -56,7 +56,7 @@ AH 5S 6S AD 8H JD
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line("sp", ['-l', 'sp'])
+        fcs.input_cmd_line__test("sp", ['-l', 'sp'])
 
         # MS deal No. 24
         ret = fcs.solve_board(
@@ -186,7 +186,7 @@ AH 5S 6S AD 8H JD
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line("bakers_game", ['-g', 'bakers_game'])
+        fcs.input_cmd_line__test("bakers_game", ['-g', 'bakers_game'])
 
         # MS-Freeceel board No. 10
         fcs.solve_board(
@@ -217,7 +217,7 @@ JH JD 3C KS 2C 8C
         hard_limit = 100000
         limit = step
         # TEST*$input_cmd_line
-        fcs.input_cmd_line("video-editing", ['-l', 'video-editing'])
+        fcs.input_cmd_line__test("video-editing", ['-l', 'video-editing'])
         fcs.limit_iterations(limit)
 
         # MS deal No. 124

@@ -72,7 +72,7 @@ void freecell_solver_user_recycle(void *api_instance);
         SUCCESS = 0
         return (move if ret == SUCCESS else None)
 
-    def input_cmd_line__generic(self, cmd_line_args):
+    def input_cmd_line(self, cmd_line_args):
         last_arg = self.ffi.new('int *')
         error_string = self.ffi.new('char * *')
         known_params = self.ffi.new('char * *')
@@ -96,21 +96,17 @@ void freecell_solver_user_recycle(void *api_instance);
             opened_files_dir
         )
 
-        return (last_arg[0], len(cmd_line_args))
+        return {'last_arg': last_arg[0],
+                'cmd_line_args_len': len(cmd_line_args)}
 
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
         # TEST:$set_befs=$set_befs+$input_cmd_line;
-        self.input_cmd_line(name, ["-asw", weights_s])
+        self.input_cmd_line__test(name, ["-asw", weights_s])
 
     def __del__(self):
         self.lib.freecell_solver_user_free(self.user)
         print("free()")
-
-    def _get_plan_type(self, item_idx):
-        return self.ffi.string(
-            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_type(
-                self.user, item_idx))
 
     def solve_board(self, board):
         return self.lib.freecell_solver_user_solve_board(
@@ -144,12 +140,17 @@ class FC_Solve_Suite(FC_Solve):
         FC_Solve.__init__(self)
         self.unittest = ut
 
+    def _get_plan_type(self, item_idx):
+        return self.ffi.string(
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_type(
+                self.user, item_idx))
+
     # TEST:$input_cmd_line=0;
-    def input_cmd_line(self, name, cmd_line_args):
-        ret = self.input_cmd_line__generic(cmd_line_args)
+    def input_cmd_line__test(self, name, cmd_line_args):
+        ret = self.input_cmd_line(cmd_line_args)
         # TEST:$input_cmd_line++;
         self._eq(
-            ret[0], ret[1],
+            ret['last_arg'], ret['cmd_line_args_len'],
             name + " - assign weights - processed two arguments")
 
     def _eq(self, x, y, blurb):

@@ -46,7 +46,7 @@ class MyTests(unittest.TestCase):
 
         name = "Two Run's"
         # TEST*$input_cmd_line
-        fcs.input_cmd_line(
+        fcs.input_cmd_line__test(
             "Input Flares",
             ["--flare-name", "dfs", "-nf",
              "--flare-name", "befs", "--method", "a-star"])
@@ -73,7 +73,7 @@ class MyTests(unittest.TestCase):
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line(
+        fcs.input_cmd_line__test(
             "Input Flares",
             ["--flare-name", "dfs", "-nf",
              "--flare-name", "befs", "--method", "a-star", "-nf",
@@ -113,7 +113,7 @@ class MyTests(unittest.TestCase):
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line(
+        fcs.input_cmd_line__test(
             "Input Flares",
             ["--flare-name", "dfs", "-nf",
              "--flare-name", "befs", "--method", "a-star", "-nf",
@@ -154,7 +154,7 @@ class MyTests(unittest.TestCase):
         fcs = FC_Solve_Suite(self)
 
         # TEST*$input_cmd_line
-        fcs.input_cmd_line(
+        fcs.input_cmd_line__test(
             "Input Flares",
             ["--flare-name", "dfs", "-nf",
              "--flare-name", "befs", "--method", "a-star", "-nf",

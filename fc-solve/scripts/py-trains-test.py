@@ -71,7 +71,7 @@ class GenMulti:
         """docstring for run"""
         idxs = self.idxs
         obj = FC_Solve()
-        obj.input_cmd_line__generic(['-l', 'lg'])
+        obj.input_cmd_line(['-l', 'lg'])
         obj.limit_iterations(100000)
         self.obj = obj
         while len(idxs):
