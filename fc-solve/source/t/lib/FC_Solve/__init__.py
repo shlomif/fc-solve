@@ -19,7 +19,6 @@ typedef  struct{ char s[20];}fcs_move_t;
 int freecell_solver_user_get_moves_left (void * user);
 int freecell_solver_user_get_next_move (void * user, fcs_move_t * move);
 void freecell_solver_user_free(void * instance);
-double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
 typedef char * freecell_solver_str_t;
 typedef int (*freecell_solver_user_cmd_line_known_commands_callback_t)(
     void *instance, int argc, freecell_solver_str_t argv[], int arg_index,
@@ -33,21 +32,6 @@ int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     int *last_arg, int file_nesting_count,
     freecell_solver_str_t opened_files_dir);
 int freecell_solver_user_set_flares_plan(void * instance, char * s);
-int freecell_solver_user_INTERNAL_compile_all_flares_plans(void * instance,
-char * * s);
-int fc_solve_user_INTERNAL_get_flares_plan_num_items(void * i);
-char * fc_solve_user_INTERNAL_get_flares_plan_item_type(void * i,
-int item_idx);
-int fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(void * i,
-int item_idx);
-int fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(void * i,
-int item_idx);
-int fc_solve_user_INTERNAL_compile_all_flares_plans(void * i,
-char **error_string);
-int fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-    void * api_instance);
-int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-    void * api_instance, int depth_idx);
 long freecell_solver_user_get_num_times_long(void * user);
 long freecell_solver_user_get_num_states_in_collection_long(void * user);
 void freecell_solver_user_limit_iterations_long(
@@ -138,6 +122,24 @@ void freecell_solver_user_recycle(void *api_instance);
 class FC_Solve_Suite(FC_Solve):
     def __init__(self, ut):
         FC_Solve.__init__(self)
+        self.ffi.cdef('''
+double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
+int freecell_solver_user_INTERNAL_compile_all_flares_plans(void * instance,
+char * * s);
+int fc_solve_user_INTERNAL_get_flares_plan_num_items(void * i);
+char * fc_solve_user_INTERNAL_get_flares_plan_item_type(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_compile_all_flares_plans(void * i,
+char **error_string);
+int fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+    void * api_instance);
+int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+    void * api_instance, int depth_idx);
+        ''')
         self.unittest = ut
 
     def _get_plan_type(self, item_idx):
