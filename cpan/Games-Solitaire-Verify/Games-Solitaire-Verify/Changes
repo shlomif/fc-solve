@@ -1,5 +1,8 @@
 Revision history for Games-Solitaire-Verify
 
+0.2202  2019-07-19
+        - Add --help flag.
+
 0.2201  2019-05-19
         - Add tests for some Golf variants.
 
