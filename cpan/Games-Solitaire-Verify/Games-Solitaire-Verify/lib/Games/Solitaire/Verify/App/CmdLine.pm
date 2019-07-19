@@ -8,9 +8,10 @@ use parent 'Games::Solitaire::Verify::Base';
 use Data::Dumper qw(Dumper);
 
 use Getopt::Long qw(GetOptionsFromArray);
+use Pod::Usage qw/ pod2usage /;
 
-use Games::Solitaire::Verify::VariantsMap;
-use Games::Solitaire::Verify::Solution;
+use Games::Solitaire::Verify::VariantsMap ();
+use Games::Solitaire::Verify::Solution    ();
 
 __PACKAGE__->mk_acc_ref(
     [
@@ -35,6 +36,9 @@ sub _init
 
     GetOptionsFromArray(
         $argv,
+        'help|h' => sub {
+            pod2usage(1);
+        },
         'g|game|variant=s' => sub {
             my ( undef, $game ) = @_;
 
