@@ -83,11 +83,6 @@ void freecell_solver_user_recycle(void *api_instance);
         return {'last_arg': last_arg[0],
                 'cmd_line_args_len': len(cmd_line_args)}
 
-    # TEST:$set_befs=0;
-    def _set_befs_weights(self, name, weights_s):
-        # TEST:$set_befs=$set_befs+$input_cmd_line;
-        self.input_cmd_line__test(name, ["-asw", weights_s])
-
     def __del__(self):
         self.lib.freecell_solver_user_free(self.user)
         print("free()")
@@ -252,6 +247,11 @@ int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
 
         self._eq(want_num, got_num, "%s - max_depth_of_depth_idx_is for %d." %
                  (name, depth_idx))
+
+    # TEST:$set_befs=0;
+    def _set_befs_weights(self, name, weights_s):
+        # TEST:$set_befs=$set_befs+$input_cmd_line;
+        self.input_cmd_line__test(name, ["-asw", weights_s])
 
     # TEST:$test_befs=0;
     def test_befs_weights(self, name, string, weights):
