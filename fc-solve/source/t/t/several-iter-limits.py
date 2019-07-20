@@ -5,7 +5,7 @@ import os
 import re
 import unittest
 
-from FC_Solve import FC_Solve_Suite
+from FC_Solve import FreecellSolverTestSuite
 
 
 class MyTests(unittest.TestCase):
@@ -15,7 +15,7 @@ class MyTests(unittest.TestCase):
     def test_resume_solution_with_flares_using_solve_ve(self):
         testname = "-l ve limiting - "
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test("ve", ['-l', 'video-editing'])
@@ -35,7 +35,7 @@ AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D"""
         )
 
-        while fcs.is_SUSPEND(ret):
+        while fcs.ret_code_is_suspend(ret):
             limit += step
             fcs.limit_iterations(limit)
             ret = fcs.resume_solution()
@@ -53,7 +53,7 @@ AH 5S 6S AD 8H JD
     def test_resume_solution_with_flares_using_solve(self):
         testname = "-l sp limiting - "
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test("sp", ['-l', 'sp'])
@@ -83,7 +83,7 @@ AH 5S 6S AD 8H JD
     def test_resume_solution(self):
         testname = "With RunIndef - "
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         limit = 10
         fcs.limit_iterations(limit)
@@ -102,7 +102,7 @@ AH 5S 6S AD 8H JD
 
         iters_count_ok = 1
 
-        while fcs.is_SUSPEND(ret):
+        while fcs.ret_code_is_suspend(ret):
             if (fcs.get_num_times() != limit):
                 iters_count_ok = 0
 
@@ -120,7 +120,7 @@ AH 5S 6S AD 8H JD
     def test_num_states_in_collection_after_recycle(self):
         testname = "NumStatesInCol-After-Recycle - "
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # MS-Freeceel board No. 24.
         fcs.solve_board(
@@ -183,7 +183,7 @@ AH 5S 6S AD 8H JD
         if re.search(r'\bfc_only\b', tags_str):
             return
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test("bakers_game", ['-g', 'bakers_game'])
@@ -211,7 +211,7 @@ JH JD 3C KS 2C 8C
     def test_resume_solution_with_flares(self):
         testname = "-l ve on iterative limiting - "
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         step = 1000
         hard_limit = 100000
@@ -235,7 +235,7 @@ AC 4C 8S 2D QC JS
 
         iters_count_ok = 1
 
-        while (fcs.is_SUSPEND(ret) and limit < hard_limit):
+        while (fcs.ret_code_is_suspend(ret) and limit < hard_limit):
             if (fcs.get_num_times() != limit):
                 iters_count_ok = 0
 

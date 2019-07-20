@@ -2,13 +2,13 @@
 
 import unittest
 
-from FC_Solve import FC_Solve_Suite
+from FC_Solve import FreecellSolverTestSuite
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 
 
 class MyTests(unittest.TestCase):
     def test_main(self):
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
         # TEST*$test_befs
         fcs.test_befs_weights(
             "Simple - all integers",

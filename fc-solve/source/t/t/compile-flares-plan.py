@@ -3,12 +3,12 @@
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 import unittest
 
-from FC_Solve import FC_Solve_Suite
+from FC_Solve import FreecellSolverTestSuite
 
 
 class MyTests(unittest.TestCase):
     def test_null_plan(self):
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         name = "null plan"
 
@@ -25,7 +25,7 @@ class MyTests(unittest.TestCase):
         fcs.flare_plan_item_is_checkpoint(name + " No. 1", 1)
 
     def test_empty_plan(self):
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         name = "empty string plan"
 
@@ -42,7 +42,7 @@ class MyTests(unittest.TestCase):
         fcs.flare_plan_item_is_checkpoint(name + " No. 1", 1)
 
     def test_two_runs(self):
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         name = "Two Run's"
         # TEST*$input_cmd_line
@@ -70,7 +70,7 @@ class MyTests(unittest.TestCase):
     def test_with_checkpoints(self):
         testname = "With checkpoints"
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test(
@@ -110,7 +110,7 @@ class MyTests(unittest.TestCase):
     def test_with_checkpoints_and_explicit_checkpoint(self):
         testname = "With checkpoints with explicit checkpoint at end."
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test(
@@ -151,7 +151,7 @@ class MyTests(unittest.TestCase):
     def test_with_run_indef(self):
         testname = "With RunIndef"
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test(

@@ -2,7 +2,7 @@
 
 import unittest
 
-from FC_Solve import FC_Solve_Suite
+from FC_Solve import FreecellSolverTestSuite
 
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 
@@ -11,7 +11,7 @@ class MyTests(unittest.TestCase):
     def test_1(self):
         testname = "test_1"
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test(
@@ -28,7 +28,7 @@ class MyTests(unittest.TestCase):
     def test_2(self):
         testname = "test_1"
 
-        fcs = FC_Solve_Suite(self)
+        fcs = FreecellSolverTestSuite(self)
 
         # TEST*$input_cmd_line
         fcs.input_cmd_line__test(

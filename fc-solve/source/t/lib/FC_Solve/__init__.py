@@ -3,7 +3,7 @@ import platform
 from cffi import FFI
 
 
-class FC_Solve:
+class FreecellSolver:
     # TEST:$num_befs_weights=5;
     NUM_BEFS_WEIGHTS = 5
     FCS_STATE_SUSPEND_PROCESS = 5
@@ -43,8 +43,8 @@ void freecell_solver_user_recycle(void *api_instance);
 ''')
         self.user = self.lib.freecell_solver_user_alloc()
 
-    def is_SUSPEND(self, ret_code):
-        """docstring for is_SUSPEND"""
+    def ret_code_is_suspend(self, ret_code):
+        """docstring for ret_code_is_suspend"""
         return ret_code == self.FCS_STATE_SUSPEND_PROCESS
 
     def get_next_move(self):
@@ -53,8 +53,8 @@ void freecell_solver_user_recycle(void *api_instance);
         if not num_moves:
             return None
         ret = self.lib.freecell_solver_user_get_next_move(self.user, move)
-        SUCCESS = 0
-        return (move if ret == SUCCESS else None)
+        success = 0
+        return (move if ret == success else None)
 
     def input_cmd_line(self, cmd_line_args):
         last_arg = self.ffi.new('int *')
@@ -114,9 +114,9 @@ void freecell_solver_user_recycle(void *api_instance);
         self.lib.freecell_solver_user_recycle(self.user)
 
 
-class FC_Solve_Suite(FC_Solve):
+class FreecellSolverTestSuite(FreecellSolver):
     def __init__(self, ut):
-        FC_Solve.__init__(self)
+        FreecellSolver.__init__(self)
         self.ffi.cdef('''
 double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
 int freecell_solver_user_INTERNAL_compile_all_flares_plans(void * instance,
