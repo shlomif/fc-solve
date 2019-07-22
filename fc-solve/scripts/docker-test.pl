@@ -37,6 +37,7 @@ do_system( { cmd => [ 'docker', 'cp', "../scripts", "fcsfed:scripts", ] } );
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny @deps
+sudo pip3 install freecell_solver
 mkdir b
 cd b
 perl ../scripts/Tatzer
