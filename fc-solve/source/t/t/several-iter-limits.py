@@ -139,7 +139,7 @@ AH 5S 6S AD 8H JD
         self._eq(fcs.get_num_times(), 137, testname + "Get num times is OK.")
 
         # TEST
-        self._eq(fcs.get_num_states_in_col(), 191,
+        self._eq(fcs.get_num_states_in_collection(), 191,
                  testname + "Num-states-in-collection is OK.")
 
         fcs.recycle()
@@ -149,7 +149,7 @@ AH 5S 6S AD 8H JD
                  testname + "Get num times immediately after recycle.")
 
         # TEST
-        self._eq(fcs.get_num_states_in_col(), 0, testname +
+        self._eq(fcs.get_num_states_in_collection(), 0, testname +
                  "Num-states-in-collection immediately after recycle.")
 
         # MS-Freeceel board No. 24.
@@ -170,7 +170,7 @@ AH 5S 6S AD 8H JD
                  "Get num times after recycle.")
 
         # TEST
-        self._eq(fcs.get_num_states_in_col(), 191,
+        self._eq(fcs.get_num_states_in_collection(), 191,
                  testname + "Num-states-in-collection after recycle.")
 
     def test_num_states_in_collection_after_unsolved(self):
@@ -205,7 +205,7 @@ JH JD 3C KS 2C 8C
         self._eq(fcs.get_num_times(), 3436, testname + "Get num times is OK.")
 
         # TEST
-        self._eq(fcs.get_num_states_in_col(), 3436,
+        self._eq(fcs.get_num_states_in_collection(), 3436,
                  testname + "Num-states-in-collection is OK.")
 
     def test_resume_solution_with_flares(self):

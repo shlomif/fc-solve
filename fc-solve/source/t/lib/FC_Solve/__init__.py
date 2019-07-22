@@ -113,7 +113,7 @@ void freecell_solver_user_recycle(void *api_instance);
         return self.lib.freecell_solver_user_get_num_times_long(
                 self.user)
 
-    def get_num_states_in_col(self):
+    def get_num_states_in_collection(self):
         return self.lib.freecell_solver_user_get_num_states_in_collection_long(
                 self.user)
 
