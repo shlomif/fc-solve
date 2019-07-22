@@ -51,7 +51,7 @@ sub run_tests
     my @cmd = ( ( $use_prove ? @{ _calc_prove() } : 'runprove' ), @$tests );
     @cmd = (
         ( $use_prove ? @{ _calc_prove() } : 'runprove' ),
-        '-v', grep { /\.py\z/ } @$tests
+        '-v', grep { /build-proc/ || /\.py\z/ } @$tests
     );
     if ( $ENV{RUN_TESTS_VERBOSE} )
     {
