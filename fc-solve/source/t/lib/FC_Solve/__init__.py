@@ -3,17 +3,21 @@ import platform
 from cffi import FFI
 
 
-class FreecellSolver:
+class FreecellSolver(object):
     # TEST:$num_befs_weights=5;
     NUM_BEFS_WEIGHTS = 5
     FCS_STATE_SUSPEND_PROCESS = 5
 
-    def __init__(self):
-        self.ffi = FFI()
-        self.lib = self.ffi.dlopen(
-            "libfreecell-solver." +
-            ("dll" if (platform.system() == 'Windows') else "so"))
-        self.ffi.cdef('''
+    def __init__(self, ffi=None, lib=None):
+        if ffi:
+            self.ffi = ffi
+            self.lib = lib
+        else:
+            self.ffi = FFI()
+            self.lib = self.ffi.dlopen(
+                "libfreecell-solver." +
+                ("dll" if (platform.system() == 'Windows') else "so"))
+            self.ffi.cdef('''
 void * freecell_solver_user_alloc();
 typedef  struct{ char s[20];}fcs_move_t;
 int freecell_solver_user_get_moves_left (void * user);
@@ -42,6 +46,9 @@ int freecell_solver_user_resume_solution(void * user);
 void freecell_solver_user_recycle(void *api_instance);
 ''')
         self.user = self.lib.freecell_solver_user_alloc()
+
+    def new_fcs_user_handle(self):
+        return self.__class__(ffi=self.ffi, lib=self.lib)
 
     def ret_code_is_suspend(self, ret_code):
         """docstring for ret_code_is_suspend"""
