@@ -49,6 +49,13 @@ sub run_tests
     my $tests = shift;
 
     my @cmd = ( ( $use_prove ? @{ _calc_prove() } : 'runprove' ), @$tests );
+    if (0)
+    {
+        @cmd = (
+            ( $use_prove ? @{ _calc_prove() } : 'runprove' ),
+            '-v', grep { /build-proc/ || /\.py\z/ } @$tests
+        );
+    }
     if ( $ENV{RUN_TESTS_VERBOSE} )
     {
         print "Running [@cmd]\n";
