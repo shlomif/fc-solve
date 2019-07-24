@@ -1076,18 +1076,18 @@ static inline bool was_pruned(const bool enable_pruning,
 static inline fcs_moves_group_kind dfs_run_moves(
     fcs_soft_thread *const soft_thread,
     fcs_soft_dfs_stack_item *const the_soft_dfs_info,
-    fcs_moves_group_kind local_shuffling_type, fcs_moves_order *the_moves_list,
-    fcs_kv_state pass, fcs_derived_states_list *derived_list)
+    const fcs_moves_group_kind init_shuffling_type,
+    fcs_moves_order *the_moves_list, fcs_kv_state pass,
+    fcs_derived_states_list *derived_list)
 {
-
     if (the_soft_dfs_info->move_func_list_idx >= the_moves_list->num)
     {
-        return local_shuffling_type;
+        return init_shuffling_type;
     }
     /* Always do the first test */
-    local_shuffling_type =
+    const_AUTO(local_shuffling_type,
         the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
-            .shuffling_type;
+            .shuffling_type);
 
     do
     {
