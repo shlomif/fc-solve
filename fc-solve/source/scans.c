@@ -315,6 +315,55 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
             &fcs_st_instance(soft_thread)->state_copy);
 }
 
+static inline void befs__insert_derived_states(
+    fcs_soft_thread *const soft_thread, fcs_hard_thread *const hard_thread,
+    fcs_instance *instance GCC_UNUSED, const bool is_befs,
+    fcs_derived_states_list derived, pri_queue *const pqueue,
+    fcs_states_linked_list_item **queue_last_item)
+{
+    fcs_derived_states_list_item *derived_iter, *derived_end;
+    for (derived_end = (derived_iter = derived.states) + derived.num_states;
+         derived_iter < derived_end; derived_iter++)
+    {
+        const_AUTO(scans_ptr_new_state, derived_iter->state_ptr);
+        if (is_befs)
+        {
+#ifdef FCS_RCS_STATES
+            fcs_kv_state new_pass = {.key = fc_solve_lookup_state_key_from_val(
+                                         instance, scans_ptr_new_state),
+                .val = scans_ptr_new_state};
+#else
+            fcs_kv_state new_pass =
+                FCS_STATE_keyval_pair_to_kv(scans_ptr_new_state);
+#endif
+            fc_solve_pq_push(pqueue, scans_ptr_new_state,
+                befs_rate_state(soft_thread, WEIGHTING(soft_thread),
+                    new_pass.key, BEFS_MAX_DEPTH - kv_calc_depth(&(new_pass))));
+        }
+        else
+        {
+            /* Enqueue the new state. */
+            fcs_states_linked_list_item *last_item_next;
+
+            if (my_brfs_recycle_bin)
+            {
+                last_item_next = my_brfs_recycle_bin;
+                my_brfs_recycle_bin = my_brfs_recycle_bin->next;
+            }
+            else
+            {
+                last_item_next = NEW_BRFS_QUEUE_ITEM();
+            }
+
+            queue_last_item[0]->next = last_item_next;
+
+            queue_last_item[0]->s = scans_ptr_new_state;
+            last_item_next->next = NULL;
+            queue_last_item[0] = last_item_next;
+        }
+    }
+}
+
 /*
  *  fc_solve_befs_or_bfs_do_solve() is the main event
  *  loop of the BeFS And BFS scans. It is quite simple as all it does is
@@ -506,55 +555,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_ALL_TESTS_DONE;
         }
 
-        /* Increase the number of iterations by one .
-         * */
         BUMP_NUM_CHECKED_STATES();
         TRACE0("Insert all states");
-        /* Insert all the derived states into the PQ or Queue */
-        fcs_derived_states_list_item *derived_iter, *derived_end;
-        for (derived_end = (derived_iter = derived.states) + derived.num_states;
-             derived_iter < derived_end; derived_iter++)
-        {
-            const_AUTO(scans_ptr_new_state, derived_iter->state_ptr);
-            if (is_befs)
-            {
-#ifdef FCS_RCS_STATES
-                fcs_kv_state new_pass = {
-                    .key = fc_solve_lookup_state_key_from_val(
-                        instance, scans_ptr_new_state),
-                    .val = scans_ptr_new_state};
-#else
-                fcs_kv_state new_pass =
-                    FCS_STATE_keyval_pair_to_kv(scans_ptr_new_state);
-#endif
-                fc_solve_pq_push(pqueue, scans_ptr_new_state,
-                    befs_rate_state(soft_thread, WEIGHTING(soft_thread),
-                        new_pass.key,
-                        BEFS_MAX_DEPTH - kv_calc_depth(&(new_pass))));
-            }
-            else
-            {
-                /* Enqueue the new state. */
-                fcs_states_linked_list_item *last_item_next;
-
-                if (my_brfs_recycle_bin)
-                {
-                    last_item_next = my_brfs_recycle_bin;
-                    my_brfs_recycle_bin = my_brfs_recycle_bin->next;
-                }
-                else
-                {
-                    last_item_next = NEW_BRFS_QUEUE_ITEM();
-                }
-
-                queue_last_item->next = last_item_next;
-
-                queue_last_item->s = scans_ptr_new_state;
-                last_item_next->next = NULL;
-                queue_last_item = last_item_next;
-            }
-        }
-
+        befs__insert_derived_states(soft_thread, hard_thread, instance, is_befs,
+            derived, pqueue, &queue_last_item);
 #ifdef FCS_WITH_MOVES
         if (is_optimize_scan)
         {
