@@ -1073,6 +1073,69 @@ static inline bool was_pruned(const bool enable_pruning,
     return true;
 }
 
+static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
+    fcs_instance *const instance GCC_UNUSED, const size_t num_states,
+    const fcs_moves_group_kind local_shuffling_type,
+    fcs_rand_gen *const rand_gen, rating_with_index *const rand_array,
+    const size_t orig_idx, fcs_moves_order *the_moves_list,
+    fcs_derived_states_list_item *const derived_states,
+    const fcs_state_weighting *const weighting)
+{
+    if (num_states <= 1)
+    {
+        return;
+    }
+    switch (local_shuffling_type)
+    {
+    case FCS_RAND:
+    {
+        for (size_t i = num_states - 1; i > 0; i--)
+        {
+            const typeof(i) j =
+                ((size_t)fc_solve_rand_get_random_number(rand_gen) % (i + 1));
+
+            const_AUTO(swap_save, rand_array[i]);
+            rand_array[i] = rand_array[j];
+            rand_array[j] = swap_save;
+        }
+    }
+    break;
+
+    case FCS_WEIGHTING:
+        if (orig_idx < the_moves_list->num)
+        {
+            for (size_t i = 0; i < num_states; i++)
+            {
+                rand_array[i].rating = befs_rate_state(soft_thread, weighting,
+#ifdef FCS_RCS_STATES
+                    fc_solve_lookup_state_key_from_val(
+                        instance, derived_states[i].state_ptr),
+#else
+                    &(derived_states[i].state_ptr->s),
+#endif
+                    BEFS_MAX_DEPTH - calc_depth(derived_states[i].state_ptr));
+            }
+
+            const_AUTO(end, rand_array + num_states);
+            // Insertion-sort rand_array
+            for (var_PTR(p, rand_array + 1); p < end; ++p)
+            {
+                var_AUTO(move, p);
+                while (move > rand_array && move->rating < move[-1].rating)
+                {
+                    const_AUTO(temp, *move);
+                    *move = move[-1];
+                    *(--move) = temp;
+                }
+            }
+        }
+        break;
+
+    case FCS_NO_SHUFFLING:
+        break;
+    }
+}
+
 // dfs_solve() is the event loop of the Random-DFS scan. DFS, which is
 // recursive in nature, is handled here without procedural recursion by using
 // some dedicated stacks for the traversal.
@@ -1323,64 +1386,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
              * state or less, because in that case, there is nothing
              * to reorder.
              * */
-            if (num_states > 1)
-            {
-                switch (local_shuffling_type)
-                {
-                case FCS_RAND:
-                {
-                    for (size_t i = num_states - 1; i > 0; i--)
-                    {
-                        const typeof(i) j =
-                            ((size_t)fc_solve_rand_get_random_number(rand_gen) %
-                                (i + 1));
-
-                        const_AUTO(swap_save, rand_array[i]);
-                        rand_array[i] = rand_array[j];
-                        rand_array[j] = swap_save;
-                    }
-                }
-                break;
-
-                case FCS_WEIGHTING:
-                    if (orig_idx < the_moves_list.num)
-                    {
-                        fcs_derived_states_list_item *const derived_states =
-                            derived_list.states;
-                        for (size_t i = 0; i < num_states; i++)
-                        {
-                            rand_array[i].rating = befs_rate_state(soft_thread,
-                                weighting,
-#ifdef FCS_RCS_STATES
-                                fc_solve_lookup_state_key_from_val(
-                                    instance, derived_states[i].state_ptr),
-#else
-                                &(derived_states[i].state_ptr->s),
-#endif
-                                BEFS_MAX_DEPTH -
-                                    calc_depth(derived_states[i].state_ptr));
-                        }
-
-                        const_AUTO(end, rand_array + num_states);
-                        // Insertion-sort rand_array
-                        for (var_PTR(p, rand_array + 1); p < end; ++p)
-                        {
-                            var_AUTO(move, p);
-                            while (move > rand_array &&
-                                   move->rating < move[-1].rating)
-                            {
-                                const_AUTO(temp, *move);
-                                *move = move[-1];
-                                *(--move) = temp;
-                            }
-                        }
-                    }
-                    break;
-
-                case FCS_NO_SHUFFLING:
-                    break;
-                }
-            }
+            dfs_shuffle_states(soft_thread, instance, num_states,
+                local_shuffling_type, rand_gen, rand_array, orig_idx,
+                &the_moves_list, derived_list.states, weighting);
             // We just performed a test, so the index of the first state that
             // ought to be checked in this depth is 0.
             the_soft_dfs_info->current_state_index = 0;
