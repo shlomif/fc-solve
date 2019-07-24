@@ -1073,6 +1073,41 @@ static inline bool was_pruned(const bool enable_pruning,
     return true;
 }
 
+static inline fcs_moves_group_kind dfs_run_moves(
+    fcs_soft_thread *const soft_thread,
+    fcs_soft_dfs_stack_item *const the_soft_dfs_info,
+    fcs_moves_group_kind local_shuffling_type, fcs_moves_order *the_moves_list,
+    fcs_kv_state pass, fcs_derived_states_list *derived_list)
+{
+
+    if (the_soft_dfs_info->move_func_list_idx >= the_moves_list->num)
+    {
+        return local_shuffling_type;
+    }
+    /* Always do the first test */
+    local_shuffling_type =
+        the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
+            .shuffling_type;
+
+    do
+    {
+        the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
+            .move_funcs[the_soft_dfs_info->move_func_idx]
+            .f(soft_thread, pass, derived_list);
+
+        /* Move the counter to the next test */
+        if ((++the_soft_dfs_info->move_func_idx) ==
+            the_moves_list->groups[the_soft_dfs_info->move_func_list_idx].num)
+        {
+            the_soft_dfs_info->move_func_list_idx++;
+            the_soft_dfs_info->move_func_idx = 0;
+            break;
+        }
+    } while ((local_shuffling_type != FCS_NO_SHUFFLING) ||
+             (derived_list->num_states == 0));
+    return local_shuffling_type;
+}
+
 static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
     fcs_instance *const instance GCC_UNUSED, const size_t num_states,
     const fcs_moves_group_kind local_shuffling_type,
@@ -1346,33 +1381,8 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
             const fcs_state_weighting *const weighting =
                 &(the_moves_list.groups[orig_idx].weighting);
 
-            if (the_soft_dfs_info->move_func_list_idx < the_moves_list.num)
-            {
-                /* Always do the first test */
-                local_shuffling_type =
-                    the_moves_list.groups[the_soft_dfs_info->move_func_list_idx]
-                        .shuffling_type;
-
-                do
-                {
-                    the_moves_list.groups[the_soft_dfs_info->move_func_list_idx]
-                        .move_funcs[the_soft_dfs_info->move_func_idx]
-                        .f(soft_thread, pass, &derived_list);
-
-                    /* Move the counter to the next test */
-                    if ((++the_soft_dfs_info->move_func_idx) ==
-                        the_moves_list
-                            .groups[the_soft_dfs_info->move_func_list_idx]
-                            .num)
-                    {
-                        the_soft_dfs_info->move_func_list_idx++;
-                        the_soft_dfs_info->move_func_idx = 0;
-                        break;
-                    }
-                } while ((local_shuffling_type != FCS_NO_SHUFFLING) ||
-                         (derived_list.num_states == 0));
-            }
-
+            local_shuffling_type = dfs_run_moves(soft_thread, the_soft_dfs_info,
+                local_shuffling_type, &the_moves_list, pass, &derived_list);
             const_AUTO(num_states, derived_list.num_states);
             if (num_states >
                 the_soft_dfs_info->derived_states_random_indexes_max_size)
