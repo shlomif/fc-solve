@@ -1081,6 +1081,19 @@ static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
     fcs_derived_states_list_item *const derived_states,
     const fcs_state_weighting *const weighting)
 {
+    for (size_t i = 0; i < num_states; ++i)
+    {
+        rand_array[i].rating_with_index__idx = (int)i;
+    }
+    /* If we just conducted the tests for a random group -
+     * randomize. Else - keep those indexes as the unity vector.
+     *
+     * Also, do not randomize if this is a pure soft-DFS scan.
+     *
+     * Also, do not randomize/sort if there's only one derived
+     * state or less, because in that case, there is nothing
+     * to reorder.
+     * */
     if (num_states <= 1)
     {
         return;
@@ -1370,24 +1383,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     the_soft_dfs_info->derived_states_random_indexes,
                     the_soft_dfs_info->derived_states_random_indexes_max_size);
             }
-            rating_with_index *const rand_array =
-                the_soft_dfs_info->derived_states_random_indexes;
-
-            for (size_t i = 0; i < num_states; ++i)
-            {
-                rand_array[i].rating_with_index__idx = (int)i;
-            }
-            /* If we just conducted the tests for a random group -
-             * randomize. Else - keep those indexes as the unity vector.
-             *
-             * Also, do not randomize if this is a pure soft-DFS scan.
-             *
-             * Also, do not randomize/sort if there's only one derived
-             * state or less, because in that case, there is nothing
-             * to reorder.
-             * */
             dfs_shuffle_states(soft_thread, instance, num_states,
-                local_shuffling_type, rand_gen, rand_array, orig_idx,
+                local_shuffling_type, rand_gen,
+                the_soft_dfs_info->derived_states_random_indexes, orig_idx,
                 &the_moves_list, derived_list.states, weighting);
             // We just performed a test, so the index of the first state that
             // ought to be checked in this depth is 0.
