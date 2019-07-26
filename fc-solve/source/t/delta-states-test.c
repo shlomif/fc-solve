@@ -27,7 +27,9 @@ static void test_bitcount(const fcs_column_encoding_composite *const enc,
 
 static void get_orig_cards_tests(void **state GCC_UNUSED)
 {
+#ifndef FCS_FREECELL_ONLY
     const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+#endif
     fcs_state_keyval_pair s;
     fcs_delta_stater delta;
 
