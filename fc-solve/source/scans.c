@@ -326,7 +326,11 @@ static inline void befs__insert_derived_states(
          derived_iter < derived_end; derived_iter++)
     {
         const_AUTO(scans_ptr_new_state, derived_iter->state_ptr);
+#ifdef FCS_WITH_MOVES
+
         if (is_befs)
+#endif
+
         {
 #ifdef FCS_RCS_STATES
             fcs_kv_state new_pass = {.key = fc_solve_lookup_state_key_from_val(
@@ -340,6 +344,7 @@ static inline void befs__insert_derived_states(
                 befs_rate_state(soft_thread, WEIGHTING(soft_thread),
                     new_pass.key, BEFS_MAX_DEPTH - kv_calc_depth(&(new_pass))));
         }
+#ifdef FCS_WITH_MOVES
         else
         {
             /* Enqueue the new state. */
@@ -361,6 +366,7 @@ static inline void befs__insert_derived_states(
             last_item_next->next = NULL;
             queue_last_item[0] = last_item_next;
         }
+#endif
     }
 }
 
@@ -414,20 +420,28 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fcs_iters_int *const hard_thread_num_checked_states_ptr =
         &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
-    const_SLOT(is_befs, soft_thread);
 #ifdef FCS_WITH_MOVES
+    const_SLOT(is_befs, soft_thread);
     const_SLOT(is_optimize_scan, soft_thread);
+#else
+    const bool is_befs = true;
 #endif
 
+#ifdef FCS_WITH_MOVES
     if (is_befs)
+#endif
+
     {
         pqueue = &(BEFS_VAR(soft_thread, pqueue));
     }
+#ifdef FCS_WITH_MOVES
     else
     {
         queue = my_brfs_queue;
         queue_last_item = my_brfs_queue_last_item;
     }
+#endif
+
     FC__STACKS__SET_PARAMS();
     const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -570,11 +584,14 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     next_state:
         TRACE0("Label next state");
         fcs_collectible_state *new_ptr_state;
+#ifdef FCS_WITH_MOVES
         if (is_befs)
+#endif
         {
             /* It is an BeFS scan */
             fc_solve_pq_pop(pqueue, &(new_ptr_state));
         }
+#ifdef FCS_WITH_MOVES
         else
         {
             const_AUTO(save_item, queue->next);
@@ -590,6 +607,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
                 new_ptr_state = NULL;
             }
         }
+#endif
         ASSIGN_ptr_state(new_ptr_state);
     }
 
@@ -601,10 +619,12 @@ my_return_label:
         free(derived.states);
     }
 
+#ifdef FCS_WITH_MOVES
     if (!is_befs)
     {
         my_brfs_queue_last_item = queue_last_item;
     }
+#endif
 
     return error_code;
 }
