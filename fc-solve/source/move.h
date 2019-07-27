@@ -362,6 +362,7 @@ typedef struct
 {
     size_t num_states;
     fcs_derived_states_list_item *states;
+    size_t max_num_states;
 } fcs_derived_states_list;
 
 extern void fc_solve_derived_states_list_add_state(
