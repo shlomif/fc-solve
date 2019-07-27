@@ -987,7 +987,10 @@ static inline void free_states(fcs_instance *const instance)
             {
                 free_states_handle_soft_dfs_soft_thread(soft_thread);
             }
-            else if (soft_thread->is_befs)
+            else
+#ifdef FCS_WITH_MOVES
+                if (soft_thread->is_befs)
+#endif
             {
                 pri_queue new_pq;
                 fc_solve_pq_init(&(new_pq));
@@ -3687,6 +3690,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
     switch (int_method)
     {
+#ifdef FCS_WITH_MOVES
     case FCS_METHOD_BFS:
         soft_thread->is_befs = false;
         break;
@@ -3694,6 +3698,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     case FCS_METHOD_A_STAR:
         soft_thread->is_befs = true;
         break;
+#endif
 
     case FCS_METHOD_RANDOM_DFS:
     case FCS_METHOD_SOFT_DFS:

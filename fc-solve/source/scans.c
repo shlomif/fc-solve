@@ -262,6 +262,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
         &(HT_FIELD(hard_thread, allocator)),                                   \
         sizeof(fcs_states_linked_list_item)));
 
+#ifdef FCS_WITH_MOVES
 static inline void fc_solve_initialize_bfs_queue(
     fcs_soft_thread *const soft_thread)
 {
@@ -274,20 +275,25 @@ static inline void fc_solve_initialize_bfs_queue(
     my_brfs_queue_last_item->next = NULL;
     my_brfs_recycle_bin = NULL;
 }
+#endif
 
 void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
 {
+#ifdef FCS_WITH_MOVES
     if (soft_thread->is_befs)
+#endif
     {
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
         /* Initialize the priotity queue of the BeFS scan */
         fc_solve_pq_init(&(BEFS_VAR(soft_thread, pqueue)));
         fc_solve_initialize_befs_rater(soft_thread, WEIGHTING(soft_thread));
     }
+#ifdef FCS_WITH_MOVES
     else
     {
         fc_solve_initialize_bfs_queue(soft_thread);
     }
+#endif
 
     if (!BEFS_M_VAR(soft_thread, moves_list))
     {
@@ -318,8 +324,12 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
 static inline void befs__insert_derived_states(
     fcs_soft_thread *const soft_thread, fcs_hard_thread *const hard_thread,
     fcs_instance *instance GCC_UNUSED, const bool is_befs,
-    fcs_derived_states_list derived, pri_queue *const pqueue,
-    fcs_states_linked_list_item **queue_last_item)
+    fcs_derived_states_list derived, pri_queue *const pqueue
+#ifdef FCS_WITH_MOVES
+    ,
+    fcs_states_linked_list_item **queue_last_item
+#endif
+)
 {
     fcs_derived_states_list_item *derived_iter, *derived_end;
     for (derived_end = (derived_iter = derived.states) + derived.num_states;
@@ -397,8 +407,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     const_SLOT(effective_max_num_states_in_collection, instance);
 #endif
 
-    fcs_states_linked_list_item *queue = NULL;
-    fcs_states_linked_list_item *queue_last_item = NULL;
     pri_queue *pqueue = NULL;
     fc_solve_solve_process_ret_t error_code;
     fcs_derived_states_list derived = {.num_states = 0, .states = NULL};
@@ -421,6 +429,8 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         &(HT_FIELD(hard_thread, ht__num_checked_states));
 #endif
 #ifdef FCS_WITH_MOVES
+    fcs_states_linked_list_item *queue = NULL;
+    fcs_states_linked_list_item *queue_last_item = NULL;
     const_SLOT(is_befs, soft_thread);
     const_SLOT(is_optimize_scan, soft_thread);
 #else
@@ -556,8 +566,13 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
         BUMP_NUM_CHECKED_STATES();
         TRACE0("Insert all states");
-        befs__insert_derived_states(soft_thread, hard_thread, instance, is_befs,
-            derived, pqueue, &queue_last_item);
+        befs__insert_derived_states(
+            soft_thread, hard_thread, instance, is_befs, derived, pqueue
+#ifdef FCS_WITH_MOVES
+            ,
+            &queue_last_item
+#endif
+        );
 #ifdef FCS_WITH_MOVES
         if (is_optimize_scan)
         {

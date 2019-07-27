@@ -447,6 +447,7 @@ struct fc_solve_soft_thread_struct
             fcs_move_func *moves_list, *moves_list_end;
             struct
             {
+#ifdef FCS_WITH_MOVES
                 struct
                 {
                     /*
@@ -467,6 +468,7 @@ struct fc_solve_soft_thread_struct
                      * */
                     fcs_states_linked_list_item *recycle_bin;
                 } brfs;
+#endif
                 struct
                 {
                     /*
@@ -516,8 +518,8 @@ struct fc_solve_soft_thread_struct
      * Differentiates between SOFT_DFS and RANDOM_DFS.
      * */
     bool master_to_randomize;
-    bool is_befs;
 #ifdef FCS_WITH_MOVES
+    bool is_befs;
     bool is_optimize_scan;
 #endif
 };
