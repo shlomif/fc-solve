@@ -364,15 +364,12 @@ static inline void befs__insert_derived_states(
     }
 }
 
-/*
- *  fc_solve_befs_or_bfs_do_solve() is the main event
- *  loop of the BeFS And BFS scans. It is quite simple as all it does is
- *  extract elements out of the queue or priority queue and run all the test
- *  of them.
- *
- *  It goes on in this fashion until the final state was reached or
- *  there are no more states in the queue.
- */
+// fc_solve_befs_or_bfs_do_solve() is the main event loop of the BeFS And
+// BFS scans. It is quite simple as all it does is extract elements out of
+// the queue or priority queue and run all the moves on them.
+//
+// It goes on in this fashion until the final state was reached or there are
+// no more states in the queue.
 fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fcs_soft_thread *const soft_thread)
 {
@@ -446,15 +443,12 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     while (PTR_STATE != NULL)
     {
         TRACE0("Start of loop");
-        /*
-         * If we do the pruning after checking for being visited, then
-         * there's a risk of inconsistent result when being interrupted
-         * because we check once for the pruned state (after the scan
-         * was suspended) and another time for the uninterrupted state.
-         *
-         * Therefore, we prune before checking for the visited flags.
-         * */
-        TRACE0("Pruning");
+        // If we do the pruning after checking for being visited, then
+        // there's a risk of inconsistent result when being interrupted
+        // because we check once for the pruned state (after the scan
+        // was suspended) and another time for the uninterrupted state.
+        //
+        // Therefore, we prune before checking for the visited flags.
         if (fcs__should_state_be_pruned(enable_pruning, PTR_STATE))
         {
             fcs_collectible_state *const after_pruning_state =
@@ -465,33 +459,26 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
             }
         }
 
-        {
-            register const int temp_visited = FCS_S_VISITED(PTR_STATE);
+        register const int temp_visited = FCS_S_VISITED(PTR_STATE);
 
-            /*
-             * If this is an optimization scan and the state being checked is
-             * not in the original solution path - move on to the next state
-             * */
-            /*
-             * It the state has already been visited - move on to the next
-             * state.
-             * */
-            if (
+        // If this is an optimization scan and the state being checked is
+        // not in the original solution path - move on to the next state
+        // If the state has already been visited - move on to the next
+        // state.
+        if (
 #ifdef FCS_WITH_MOVES
-                is_optimize_scan
-                    ? ((!(temp_visited & FCS_VISITED_IN_SOLUTION_PATH)) ||
-                          (temp_visited & FCS_VISITED_IN_OPTIMIZED_PATH))
-                    :
+            is_optimize_scan
+                ? ((!(temp_visited & FCS_VISITED_IN_SOLUTION_PATH)) ||
+                      (temp_visited & FCS_VISITED_IN_OPTIMIZED_PATH))
+                :
 #endif
-                    ((temp_visited & FCS_VISITED_DEAD_END) ||
-                        (is_scan_visited(PTR_STATE, soft_thread_id))))
-            {
-                goto next_state;
-            }
+                ((temp_visited & FCS_VISITED_DEAD_END) ||
+                    (is_scan_visited(PTR_STATE, soft_thread_id))))
+        {
+            goto next_state;
         }
 
         TRACE0("Counting cells");
-
         if (check_if_limits_exceeded())
         {
             BEFS_M_VAR(soft_thread, first_state_to_check) = PTR_STATE;
@@ -538,11 +525,9 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         fc_solve__calc_positions_by_rank_data(
             soft_thread, &FCS_SCANS_the_state, befs_positions_by_rank);
 
-        TRACE0("perform_tests");
-        /*
-         * Do all the tests at one go, because that is the way it should be
-         * done for BFS and BeFS.
-         */
+        TRACE0("perform_moves");
+        // Do all the tests at one go, because that is the way it should be
+        // done for BFS and BeFS.
         derived.num_states = 0;
         for (const fcs_move_func *move_func_ptr = moves_list;
              move_func_ptr < moves_list_end; move_func_ptr++)
@@ -584,40 +569,33 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
     next_state:
         TRACE0("Label next state");
-        /*
-            Extract the next item in the queue/priority queue.
-        */
+        fcs_collectible_state *new_ptr_state;
+        if (is_befs)
         {
-            fcs_collectible_state *new_ptr_state;
-            if (is_befs)
+            /* It is an BeFS scan */
+            fc_solve_pq_pop(pqueue, &(new_ptr_state));
+        }
+        else
+        {
+            const_AUTO(save_item, queue->next);
+            if (save_item != queue_last_item)
             {
-                /* It is an BeFS scan */
-                fc_solve_pq_pop(pqueue, &(new_ptr_state));
+                new_ptr_state = save_item->s;
+                queue->next = save_item->next;
+                save_item->next = my_brfs_recycle_bin;
+                my_brfs_recycle_bin = save_item;
             }
             else
             {
-                const_AUTO(save_item, queue->next);
-                if (save_item != queue_last_item)
-                {
-                    new_ptr_state = save_item->s;
-                    queue->next = save_item->next;
-                    save_item->next = my_brfs_recycle_bin;
-                    my_brfs_recycle_bin = save_item;
-                }
-                else
-                {
-                    new_ptr_state = NULL;
-                }
+                new_ptr_state = NULL;
             }
-            ASSIGN_ptr_state(new_ptr_state);
         }
+        ASSIGN_ptr_state(new_ptr_state);
     }
 
     error_code = FCS_STATE_IS_NOT_SOLVEABLE;
 my_return_label:
     FCS_SET_final_state();
-    /* Free the memory that was allocated by the
-     * derived states list */
     if (derived.states != NULL)
     {
         free(derived.states);
