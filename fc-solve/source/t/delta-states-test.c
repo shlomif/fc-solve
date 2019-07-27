@@ -338,79 +338,79 @@ static void main_tests(void **state GCC_UNUSED)
 
         free(s);
     }
+}
 
-    // Make sure encode_composite avoids permutations of empty columns
-    // and completely-non-original states.
-    {
-        fcs_delta_stater delta;
-        fcs_state_keyval_pair init_state, derived_state;
+// Make sure encode_composite avoids permutations of empty columns
+// and completely-non-original states.
+static void main_tests__delta1(void **state GCC_UNUSED)
+{
+    const fcs_dbm_variant_type local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+    fcs_delta_stater delta;
+    fcs_state_keyval_pair init_state, derived_state;
 
-        DECLARE_IND_BUF_T(indirect_stacks_buffer)
-        DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
+    DECLARE_IND_BUF_T(derived_indirect_stacks_buffer)
 
-        fc_solve_initial_user_state_to_c(("Foundations: H-K C-K D-J S-Q\n"
-                                          "Freecells:  KD\n"
-                                          "\n"
-                                          "\n"
-                                          "KS QD\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"),
-            &init_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
-            indirect_stacks_buffer);
+    fc_solve_initial_user_state_to_c(("Foundations: H-K C-K D-J S-Q\n"
+                                      "Freecells:  KD\n"
+                                      "\n"
+                                      "\n"
+                                      "KS QD\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"),
+        &init_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
+        indirect_stacks_buffer);
 
-        fc_solve_delta_stater_init(&delta, local_variant, &init_state.s,
-            STACKS_NUM,
-            FREECELLS_NUM PASS_ON_NOT_FC_ONLY(
-                FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
+    fc_solve_delta_stater_init(&delta, local_variant, &init_state.s, STACKS_NUM,
+        FREECELLS_NUM PASS_ON_NOT_FC_ONLY(FCS_SEQ_BUILT_BY_ALTERNATE_COLOR));
 
-        fc_solve_initial_user_state_to_c(("Foundations: H-K C-K D-J S-Q\n"
-                                          "Freecells:  KD\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "KS\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"),
-            &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
-            derived_indirect_stacks_buffer);
+    fc_solve_initial_user_state_to_c(("Foundations: H-K C-K D-J S-Q\n"
+                                      "Freecells:  KD\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "KS\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"),
+        &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
+        derived_indirect_stacks_buffer);
 
-        fcs_encoded_state_buffer first_enc_state;
+    fcs_encoded_state_buffer first_enc_state;
 
-        fcs_init_and_encode_state(
-            &delta, local_variant, &derived_state, &first_enc_state);
+    fcs_init_and_encode_state(
+        &delta, local_variant, &derived_state, &first_enc_state);
 
-        fc_solve_initial_user_state_to_c(("Foundations: H-K C-K D-J S-Q\n"
-                                          "Freecells:  KD\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "\n"
-                                          "KS\n"),
-            &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
-            derived_indirect_stacks_buffer);
+    fc_solve_initial_user_state_to_c(("Foundations: H-K C-K D-J S-Q\n"
+                                      "Freecells:  KD\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "\n"
+                                      "KS\n"),
+        &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
+        derived_indirect_stacks_buffer);
 
-        fcs_encoded_state_buffer second_enc_state;
+    fcs_encoded_state_buffer second_enc_state;
 
-        fcs_init_and_encode_state(
-            &delta, local_variant, &derived_state, &second_enc_state);
+    fcs_init_and_encode_state(
+        &delta, local_variant, &derived_state, &second_enc_state);
 
-        // TEST
-        assert_true((!memcmp(
-            first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))));
-        /*
-            "Make sure encode_composite avoids permutations of empty columns "
-            "and completely-non-original states.");
-*/
-        fc_solve_delta_stater_release(&delta);
-    }
+    // TEST
+    assert_true((!memcmp(
+        first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))));
+    /*
+       "Make sure encode_composite avoids permutations of empty columns "
+       "and completely-non-original states.");
+       */
+    fc_solve_delta_stater_release(&delta);
 }
 
 static void encode_composite__avoid_perm_empty_cols__tests(
@@ -490,6 +490,7 @@ int main(void)
         cmocka_unit_test(get_orig_cards_tests),
         cmocka_unit_test(delta_stater1_tests),
         cmocka_unit_test(encode_composite__avoid_perm_empty_cols__tests),
+        cmocka_unit_test(main_tests__delta1),
     };
     return cmocka_run_group_tests(tests, NULL, NULL);
 }
