@@ -365,9 +365,19 @@ typedef struct
     size_t max_num_states;
 } fcs_derived_states_list;
 
-extern void fc_solve_derived_states_list_add_state(
-    fcs_derived_states_list *, fcs_collectible_state *, int);
-
+#define DERIVED_STATES_LIST_GROW_BY 16
+static inline void fc_solve_derived_states_list_add_state(
+    fcs_derived_states_list *const list, fcs_collectible_state *const state,
+    const int context)
+{
+    if (list->num_states == list->max_num_states)
+    {
+        list->states = SREALLOC(
+            list->states, list->max_num_states += DERIVED_STATES_LIST_GROW_BY);
+    }
+    list->states[list->num_states++] = (fcs_derived_states_list_item){
+        .state_ptr = state, .context.i = context};
+}
 #ifdef __cplusplus
 }
 #endif
