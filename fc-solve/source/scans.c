@@ -427,8 +427,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     const_SLOT(debug_iter_output_context, instance);
 #endif
 
-    /* Continue as long as there are states in the queue or
-       priority queue. */
     int8_t *const befs_positions_by_rank =
         (BEFS_M_VAR(soft_thread, befs_positions_by_rank));
 
