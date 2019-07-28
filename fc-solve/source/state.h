@@ -978,6 +978,12 @@ static inline int fc_solve_stack_compare_for_comparison(
         using std::min;
 #endif
         const int min_len = min(s1[0], s2[0]);
+#ifdef FCS_FREECELL_ONLY
+        if (min_len)
+        {
+            return fc_solve_card_compare(s1[1], s2[1]);
+        }
+#else
         for (int a = 1; a <= min_len; a++)
         {
             const int ret = fc_solve_card_compare(s1[a], s2[a]);
@@ -986,6 +992,7 @@ static inline int fc_solve_stack_compare_for_comparison(
                 return ret;
             }
         }
+#endif
     }
     /*
      * The reason I do the stack length comparisons after the card-by-card
