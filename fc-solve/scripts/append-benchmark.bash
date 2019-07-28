@@ -1,6 +1,7 @@
 #!/bin/bash
-perl ../scripts/time-fcs.pl DUMPS-*/* | perl -lapE 's#:#\t#' |
+perl ../scripts/time-fcs.pl DUMPS-*/* | perl -lapE 's#:#\t#g' |
     sort -n -k 2 | head -1 |
+    perl -lapE 's/\t\t.*//' |
     {
         read fn t
         git show | head -1
