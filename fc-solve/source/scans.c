@@ -391,9 +391,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     const_SLOT(effective_max_num_states_in_collection, instance);
 #endif
 
-    fcs_states_linked_list_item *queue = NULL;
-    fcs_states_linked_list_item *queue_last_item = NULL;
-    pri_queue *pqueue = NULL;
     fc_solve_solve_process_ret_t error_code;
     fcs_derived_states_list derived = {
         .num_states = 0, .max_num_states = 0, .states = NULL};
@@ -420,15 +417,9 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     const_SLOT(is_optimize_scan, soft_thread);
 #endif
 
-    if (is_befs)
-    {
-        pqueue = &(BEFS_VAR(soft_thread, pqueue));
-    }
-    else
-    {
-        queue = my_brfs_queue;
-        queue_last_item = my_brfs_queue_last_item;
-    }
+    pri_queue *const pqueue = &(BEFS_VAR(soft_thread, pqueue));
+    fcs_states_linked_list_item *queue = my_brfs_queue;
+    fcs_states_linked_list_item *queue_last_item = my_brfs_queue_last_item;
     FC__STACKS__SET_PARAMS();
     const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -601,11 +592,7 @@ my_return_label:
     {
         free(derived.states);
     }
-
-    if (!is_befs)
-    {
-        my_brfs_queue_last_item = queue_last_item;
-    }
+    my_brfs_queue_last_item = queue_last_item;
 
     return error_code;
 }
