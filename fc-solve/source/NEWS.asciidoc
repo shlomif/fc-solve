@@ -4,6 +4,18 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2019-06-18
 :Revision: $Id$
 
+Version 5.12.0: (29-Jul-2019)
+-----------------------------
+
+1. Extracted https://pypi.org/project/freecell-solver/ - Python
+bindings to libfreecell-solver.
+
+2. Speed improvements.
+
+3. Code cleanups.
+
+4. Avoid some CMake warnings and other cleanups.
+
 Version 5.10.0: (18-Jun-2019)
 -----------------------------
 
