@@ -101,8 +101,13 @@ typedef struct
 {
     size_t num_separate_false_seqs;
     int seq_points[MAX_NUM_CARDS_IN_A_STACK];
+    // the stacks to move each false sequence of the junk to.
     size_t junk_move_to_stacks[MAX_NUM_STACKS];
+    // The number of stacks that are left unoccupied during and after the
+    // process of moving the junk sequences to different stacks.
     int after_junk_num_freestacks;
+    // above_num_true_seqs[] - the number of true sequences in each false
+    // sequence
     size_t above_num_true_seqs[MAX_NUM_CARDS_IN_A_STACK];
 } sequences_analysis;
 
@@ -110,15 +115,10 @@ typedef struct
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
-    /*
-     * cards_num - the number of cards in "stack"
-     * suit - the suit of the complete sequence
-     * a - the height of the card
-     * */
-    /*
-     * card - the current card (at height a)
-     * above_card - the card above it.
-     * */
+    // cards_num - the number of cards in "stack"
+    // suit - the suit of the complete sequence
+    // a - the height of the card
+    // card - the current card (at height a)
     SIMPS_define_accessors();
 
     STACK_SOURCE_LOOP_START(13)
@@ -194,7 +194,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
      * a - a temporary variable that designates a card height
      * h - the current height in stack
      * card - the current card (at height h)
-     * above_card - the card above it.
      * dest_card - the destination card on which to put the sequence
      * rank - the rank (i.e: A, 2 ,3 ... K) of the card, or
      * its previous one.
@@ -341,24 +340,18 @@ DECLARE_MOVE_FUNCTION(
     STACK_SOURCE_LOOP_END()
 }
 
-/*
- * above_c - the height of the card that is to be checked.
- * above_card - the card at height above_c+1
- * up_above_card - the card at height above_c
- *
- */
 static inline void generic_populate_seq_points(const fcs_cards_column dest_col,
     const int dc, sequences_analysis *const seqs, const int dest_cards_num)
 {
     size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
     seqs->above_num_true_seqs[num_separate_false_seqs] = 1;
     fcs_card above_card = fcs_col_get_card(dest_col, dest_cards_num - 1);
-    for (int above_c = dest_cards_num - 2; above_c > dc; above_c--)
+    for (int card_height = dest_cards_num - 2; card_height > dc; --card_height)
     {
-        const fcs_card up_above_card = fcs_col_get_card(dest_col, above_c);
+        const fcs_card up_above_card = fcs_col_get_card(dest_col, card_height);
         if (!fcs_is_ss_false_parent(up_above_card, above_card))
         {
-            seqs->seq_points[num_separate_false_seqs++] = above_c + 1;
+            seqs->seq_points[num_separate_false_seqs++] = card_height + 1;
             seqs->above_num_true_seqs[num_separate_false_seqs] = 1;
         }
         seqs->above_num_true_seqs[num_separate_false_seqs] +=
@@ -530,18 +523,10 @@ DECLARE_MOVE_FUNCTION(
      * dc - the index of the current card in "ds".
      * num_separate_false_seqs - this variable tells how many distinct false
      *      sequences exist above the true parent
-     * above_num_true_seqs[] - the number of true sequences in each false
-     *      sequence
      * seq_points[] - the separation points of the false sequences (i.e: where
      *      they begin and end)
      * stacks_map[] - a boolean map that indicates if one can place a card
      *      on this stack or is it already taken.
-     * junk_move_to_stacks[] - the stacks to move each false sequence of the
-     *      junk to.
-     * after_junk_num_freestacks - this variable holds the number of stacks
-     *      that remained unoccupied during and after the process of moving
-     *      the junk sequences to different stacks.
-     *
      * */
 
     SIMPS_define_vacant_stacks_accessors();
@@ -727,8 +712,6 @@ DECLARE_MOVE_FUNCTION(
      *      and end
      * stacks_map[] - a map of booleans that indicates if one can place a card
      *      on this stack or is already taken.
-     * above_num_true_seqs[] - the number of true sequences in each false
-     *      sequence
      * num_src_junk_true_seqs - the number of true seqs in the false seq above
      *      the source card.
      * end_of_junk - the height marking the end of the source junk.
@@ -852,17 +835,10 @@ DECLARE_MOVE_FUNCTION(
      * dc - the height of the card in "ds".
      * num_separate_false_seqs - this variable tells how many distinct false
      *      sequences exist above the false parent
-     * above_num_true_seqs[] - the number of true sequences in each false
-     *      sequence
      * seq_points[] - the separation points of the false sequences (i.e: where
      *      they begin and end)
      * stacks_map[] - a boolean map that indicates if one can place a card
      *      on this stack or is it already taken.
-     * junk_move_to_stacks[] - the stacks to move each false sequence of the
-     *      junk to.
-     * after_junk_num_freestacks - a variable that holds the number of stacks
-     *      that are left unoccupied as part of the junk disposal process.
-     *
      * */
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
