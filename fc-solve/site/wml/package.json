@@ -7,9 +7,9 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.5.0",
-    "@babel/core": "^7.5.4",
-    "@babel/preset-env": "^7.5.4",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
     "@types/jquery": "^3.3.30",
     "@types/qunit": "^2.9.0",
     "amdefine": "^1.0.1",
@@ -31,8 +31,8 @@
     "qunit-cli": "^0.2.0",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
-    "rollup": "^1.16.7",
-    "sass": "^1.22.4",
+    "rollup": "^1.17.0",
+    "sass": "^1.22.7",
     "tar": "^2.2.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
