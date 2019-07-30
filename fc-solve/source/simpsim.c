@@ -118,7 +118,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
     // cards_num - the number of cards in "stack"
     // suit - the suit of the complete sequence
-    // a - the height of the card
     // card - the current card (at height a)
     SIMPS_define_accessors();
 
@@ -143,7 +142,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
         var_AUTO(
             new_src_col, fcs_state_get_col(new_state_key, source_stack_idx));
-        for (size_t a = 0; a < FCS_MAX_RANK; a++)
+        for (size_t rank = 0; rank < FCS_MAX_RANK; ++rank)
         {
             fcs_col_pop_top(new_src_col);
         }
@@ -184,17 +183,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     }                                                                          \
     LOOK_FOR_TRUE_PARENT_with_ds_dc__END()
 
-/*
- * TODO:
- *
- * Convert to fc_solve_get_the_positions_by_rank_data.
- * */
+// TODO:
+//
+// Convert to fc_solve_get_the_positions_by_rank_data.
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
     /*
      * cards_num - the number of cards in "stack".
      * suit - the suit of the current card
-     * a - a temporary variable that designates a card height
      * h - the current height in stack
      * card - the current card (at height h)
      * dest_card - the destination card on which to put the sequence
@@ -848,11 +844,9 @@ DECLARE_MOVE_FUNCTION(
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
 
-    /*
-     * We never fill empty stacks with junk cards in this move function,
-     * so as a result, after_junk_num_freestacks == num_vacant_stacks and
-     * is constant here.
-     * */
+    // We never fill empty stacks with junk cards in this move function,
+    // so as a result, after_junk_num_freestacks == num_vacant_stacks and
+    // is constant here.
     const size_t max_seq_move =
         calc_max_simple_simon_seq_move(num_vacant_stacks);
 
@@ -1011,16 +1005,14 @@ DECLARE_MOVE_FUNCTION(
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 {
-    /*
-     * stack - the source stack index
-     * cards_num - number of cards in "stack"
-     * dest_cards_num - number of cards in "dest_stack_idx".
-     * card - the current card
-     * next_card - the next card on the stack.
-     * h - the height of the current card on "stack"
-     * num_true_seqs - the number of true sequences on the current
-     *                 false sequence
-     * */
+    // stack - the source stack index
+    // cards_num - number of cards in "stack"
+    // dest_cards_num - number of cards in "dest_stack_idx".
+    // card - the current card
+    // next_card - the next card on the stack.
+    // h - the height of the current card on "stack"
+    // num_true_seqs - the number of true sequences on the current
+    //                 false sequence
 
     SIMPS_define_vacant_stacks_accessors();
 
