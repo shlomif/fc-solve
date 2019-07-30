@@ -168,7 +168,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         if (dest_stack_idx >= 0 &&                                             \
             (stack_i)dest_stack_idx != source_stack_idx)                       \
         {                                                                      \
-            const int dc = pos.height;                                         \
+            const int dest_card_height = pos.height;                           \
             const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));    \
             const int dest_cards_num = fcs_col_len(dest_col);
 
@@ -177,7 +177,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     }
 
 #define LOOK_FOR_TRUE_PARENT_AT_TOP__START(card)                               \
-    LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) if (dc == dest_cards_num - 1) \
+    LOOK_FOR_TRUE_PARENT_with_ds_dc__START(                                    \
+        card) if (dest_card_height == dest_cards_num - 1)                      \
     {
 #define LOOK_FOR_TRUE_PARENT_AT_TOP__END()                                     \
     }                                                                          \
@@ -342,12 +343,14 @@ DECLARE_MOVE_FUNCTION(
 }
 
 static inline void generic_populate_seq_points(const fcs_cards_column dest_col,
-    const int dc, sequences_analysis *const seqs, const int dest_cards_num)
+    const int dest_card_height, sequences_analysis *const seqs,
+    const int dest_cards_num)
 {
     size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
     seqs->above_num_true_seqs[num_separate_false_seqs] = 1;
     fcs_card above_card = fcs_col_get_card(dest_col, dest_cards_num - 1);
-    for (int card_height = dest_cards_num - 2; card_height > dc; --card_height)
+    for (int card_height = dest_cards_num - 2; card_height > dest_card_height;
+         --card_height)
     {
         const fcs_card up_above_card = fcs_col_get_card(dest_col, card_height);
         if (!fcs_is_ss_false_parent(up_above_card, above_card))
@@ -360,19 +363,20 @@ static inline void generic_populate_seq_points(const fcs_cards_column dest_col,
         above_card = up_above_card;
     }
 
-    if (dc <= dest_cards_num - 2)
+    if (dest_card_height <= dest_cards_num - 2)
     {
-        seqs->seq_points[num_separate_false_seqs++] = dc + 1;
+        seqs->seq_points[num_separate_false_seqs++] = dest_card_height + 1;
     }
 
     seqs->num_separate_false_seqs = num_separate_false_seqs;
 }
 
 static inline void populate_seq_points(const fcs_cards_column dest_col,
-    const int dc, sequences_analysis *const seqs)
+    const int dest_card_height, sequences_analysis *const seqs)
 {
     seqs->num_separate_false_seqs = 0;
-    generic_populate_seq_points(dest_col, dc, seqs, fcs_col_len(dest_col));
+    generic_populate_seq_points(
+        dest_col, dest_card_height, seqs, fcs_col_len(dest_col));
 }
 
 static inline bool generic_false_seq_index_loop(const int stacks_num,
@@ -524,7 +528,6 @@ DECLARE_MOVE_FUNCTION(
      * suit - its suit
      * rank - its rank
      * dest_cards_num - the number of cards in "dest_stack_idx"
-     * dc - the index of the current card in "dest_stack_idx".
      * num_separate_false_seqs - this variable tells how many distinct false
      *      sequences exist above the true parent
      * seq_points[] - the separation points of the false sequences (i.e: where
@@ -567,8 +570,8 @@ DECLARE_MOVE_FUNCTION(
                    above it. */
                 sequences_analysis seqs;
 
-            if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(
-                     dest_col, dc, source_stack_idx, dest_stack_idx, false) &&
+            if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dest_card_height,
+                     source_stack_idx, dest_stack_idx, false) &&
                     (calc_max_simple_simon_seq_move(
                          seqs.after_junk_num_freestacks) >= num_true_seqs)))
             {
@@ -709,7 +712,6 @@ DECLARE_MOVE_FUNCTION(
      * suit - its suit
      * rank - its rank
      * dest_cards_num - the number of cards in "dest_stack_idx".
-     * dc - the height of the current card in "dest_stack_idx".
      * num_separate_false_seqs - the number of false sequences
      * seq_points[] - the places in which the false sequences of the junk begin
      *      and end
@@ -757,13 +759,14 @@ DECLARE_MOVE_FUNCTION(
     /* Start at the card below the top one, so we will
      * make sure there's at least some junk above it
      * */
-    LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card) if (dc <= dest_cards_num - 2)
+    LOOK_FOR_TRUE_PARENT_with_ds_dc__START(
+        card) if (dest_card_height <= dest_cards_num - 2)
     {
         /* This is a suitable parent - let's check if there's a sequence above
          * it. */
         sequences_analysis seqs;
 
-        populate_seq_points(dest_col, dc, &seqs);
+        populate_seq_points(dest_col, dest_card_height, &seqs);
 
         if (generic_false_seq_index_loop(LOCAL_STACKS_NUM, raw_state_raw,
                 num_vacant_stacks, dest_col, &seqs, source_stack_idx,
@@ -835,7 +838,6 @@ DECLARE_MOVE_FUNCTION(
      * suit - its suit
      * rank - its rank
      * dest_cards_num - the number of cards in it.
-     * dc - the height of the card in "dest_stack_idx".
      * num_separate_false_seqs - this variable tells how many distinct false
      *      sequences exist above the false parent
      * seq_points[] - the separation points of the false sequences (i.e: where
@@ -890,7 +892,7 @@ DECLARE_MOVE_FUNCTION(
     for (size_t i = 0; i < len; i++)
     {
         const size_t dest_stack_idx = (size_t)ds_dcs[i].col;
-        const size_t dc = (size_t)ds_dcs[i].height;
+        const size_t dest_card_height = (size_t)ds_dcs[i].height;
         const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));
         const int dest_cards_num = fcs_col_len(dest_col);
 
@@ -898,8 +900,8 @@ DECLARE_MOVE_FUNCTION(
          * it. */
         sequences_analysis seqs;
 
-        if (POPULATE_AND_CHECK_IF_FALSE_SEQ(
-                dest_col, (int)dc, source_stack_idx, (int)dest_stack_idx, true))
+        if (POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, (int)dest_card_height,
+                source_stack_idx, (int)dest_stack_idx, true))
         {
             /* We can do it - so let's move */
             sfs_check_state_begin();
