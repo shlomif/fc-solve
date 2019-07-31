@@ -516,21 +516,18 @@ static inline void move_sequences_analysis_seqs_loop(
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
-    /*
-     * stack - the source stack index
-     * cards_num - the number of cards in "stack"
-     * h - the height of the current card in "stack"
-     * card - the card in height "h"
-     * suit - its suit
-     * rank - its rank
-     * dest_cards_num - the number of cards in "dest_stack_idx"
-     * num_separate_false_seqs - this variable tells how many distinct false
-     *      sequences exist above the true parent
-     * seq_points[] - the separation points of the false sequences (i.e: where
-     *      they begin and end)
-     * stacks_map[] - a boolean map that indicates if one can place a card
-     *      on this stack or is it already taken.
-     * */
+    // cards_num - the number of cards in "stack"
+    // h - the height of the current card in "stack"
+    // card - the card in height "h"
+    // suit - its suit
+    // rank - its rank
+    // dest_cards_num - the number of cards in "dest_stack_idx"
+    // num_separate_false_seqs - this variable tells how many distinct false
+    //      sequences exist above the true parent
+    // seq_points[] - the separation points of the false sequences (i.e: where
+    //      they begin and end)
+    // stacks_map[] - a boolean map that indicates if one can place a card
+    //      on this stack or is it already taken.
 
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
