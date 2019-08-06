@@ -54,7 +54,9 @@ extern "C" {
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
+#ifndef WIN32
 #define HAVE_GETLINE 1
+#endif
 
 #if (defined(HARD_CODED_NUM_FREECELLS) && defined(HARD_CODED_NUM_STACKS) &&    \
      defined(HARD_CODED_NUM_DECKS))
