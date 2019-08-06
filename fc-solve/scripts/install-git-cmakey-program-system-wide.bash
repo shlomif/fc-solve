@@ -17,8 +17,8 @@ then
 fi
 
 clone_dir='mygit'
-"$vcs_tool" clone $branch "$url" "$clone_dir"
-(cd "$clone_dir/$d"
+"$vcs_tool" clone $branch "$url" "$clone_dir" || exit -1
+(cd "$clone_dir/$d" &&
 
 ( mkdir b && cd b && cmake .. && make && sudo make install ) || exit -1
 ) || exit -1
