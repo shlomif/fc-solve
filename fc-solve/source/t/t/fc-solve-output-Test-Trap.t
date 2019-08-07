@@ -274,6 +274,7 @@ SKIP:
             };
 
             my $out   = $trap->stdout();
+            my $err   = $trap->stderr();
             my @stats = $out =~
 /(\n>>>Queue Stats: inserted=[0-9]+ items_in_queue=[0-9]+ extracted=[0-9]+\n)/g;
 
@@ -282,7 +283,7 @@ SKIP:
                 $stats[-1],
                 qr/ items_in_queue=0 /,
 "queue is reported as empty in the $solver run for an impossible deal.",
-            );
+            ) or diag("solver=<<$solver>> out=<<$out>> err=<<$err>>");
         }
     }
 }
