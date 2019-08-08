@@ -40,8 +40,8 @@ static inline bool fcs_is_ss_suit_true(
          ++source_stack_idx)                                                   \
     {                                                                          \
         const_AUTO(col, fcs_state_get_col(state, source_stack_idx));           \
-        const int cards_num = fcs_col_len(col);                                \
-        if (cards_num < min_num_cards)                                         \
+        const int col_len = fcs_col_len(col);                                  \
+        if (col_len < min_num_cards)                                           \
         {                                                                      \
             continue;                                                          \
         }
@@ -116,13 +116,12 @@ typedef struct
 
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
-    // cards_num - the number of cards in "stack"
     // suit - the suit of the complete sequence
     // card - the current card (at height a)
     SIMPS_define_accessors();
 
     STACK_SOURCE_LOOP_START(13)
-    fcs_card *start_card_ptr = &fcs_col_get_card(col, cards_num - FCS_MAX_RANK);
+    fcs_card *start_card_ptr = &fcs_col_get_card(col, col_len - FCS_MAX_RANK);
     size_t suit = 0;
     /* Check if the top 13 cards are a sequence */
     for (; suit < FCS_NUM_SUITS; ++suit)
@@ -189,7 +188,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
     /*
-     * cards_num - the number of cards in "stack".
      * suit - the suit of the current card
      * card - the current card (at height height)
      * dest_card - the destination card on which to put the sequence
@@ -207,10 +205,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     STACK_SOURCE_LOOP_START(1)
     /* Loop on the cards in the stack and try to look for a true
      * parent on top one of the stacks */
-    fcs_card card = fcs_col_get_card(col, cards_num - 1);
+    fcs_card card = fcs_col_get_card(col, col_len - 1);
     size_t num_true_seqs = 1;
 
-    for (int height = cards_num - 2; height >= -1; --height)
+    for (int height = col_len - 2; height >= -1; --height)
     {
         LOOK_FOR_TRUE_PARENT_AT_TOP__START(card)
         /* This is a suitable parent - let's check if we
@@ -220,7 +218,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         sfs_check_state_begin();
         copy_two_stacks(source_stack_idx, dest_stack_idx);
         fcs_move_sequence((size_t)(dest_stack_idx), source_stack_idx,
-            (size_t)(cards_num - height - 1));
+            (size_t)(col_len - height - 1));
         sfs_check_state_end();
         LOOK_FOR_TRUE_PARENT_AT_TOP__END()
         /* Stop if we reached the bottom of the stack */
@@ -254,14 +252,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 static inline int get_seq_h(
     const fcs_const_cards_column col, size_t *const num_true_seqs_out_ptr)
 {
-    const int cards_num = fcs_col_len(col);
+    const int col_len = fcs_col_len(col);
 
-    fcs_card card = fcs_col_get_card(col, cards_num - 1);
+    fcs_card card = fcs_col_get_card(col, col_len - 1);
     size_t num_true_seqs = 1;
 
     int height;
     /* Stop if we reached the bottom of the stack */
-    for (height = cards_num - 2; height > -1; --height)
+    for (height = col_len - 2; height > -1; --height)
     {
         const fcs_card next_card = fcs_col_get_card(col, height);
         /* If this is no longer a sequence - move to the next stack */
@@ -287,7 +285,6 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent)
 {
     /*
-     * cards_num - number of cards in "stack"
      * dest_cards_num - number of cards in "dest_stack_idx".
      * card - the current card
      * rank - its rank
@@ -328,8 +325,8 @@ DECLARE_MOVE_FUNCTION(
 
     sfs_check_state_begin();
     copy_two_stacks(source_stack_idx, dest_stack_idx);
-    fcs_move_sequence((size_t)(dest_stack_idx), source_stack_idx,
-        (size_t)(cards_num - height));
+    fcs_move_sequence(
+        (size_t)(dest_stack_idx), source_stack_idx, (size_t)(col_len - height));
     sfs_check_state_end();
     STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
@@ -513,7 +510,6 @@ static inline void move_sequences_analysis_seqs_loop(
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
-    // cards_num - the number of cards in "stack"
     // card - the card in height "height"
     // suit - its suit
     // rank - its rank
@@ -531,7 +527,7 @@ DECLARE_MOVE_FUNCTION(
     STACK_SOURCE_LOOP_START(1)
     size_t num_true_seqs = 1;
 
-    for (int height = cards_num - 2; height >= -1; --height)
+    for (int height = col_len - 2; height >= -1; --height)
     {
         const fcs_card card = fcs_col_get_card(col, height + 1);
         bool should_search = true;
@@ -581,7 +577,7 @@ DECLARE_MOVE_FUNCTION(
 
                 /* Move the source seq on top of the dest seq */
                 fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
-                    (size_t)(cards_num - height - 1));
+                    (size_t)(col_len - height - 1));
 
                 sfs_check_state_end();
             }
@@ -607,7 +603,7 @@ DECLARE_MOVE_FUNCTION(
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-    for (ssize_t src_card_height = cards_num - 1; src_card_height >= 0;
+    for (ssize_t src_card_height = col_len - 1; src_card_height >= 0;
          src_card_height--)
     {
         const fcs_card h_card = fcs_col_get_card(col, src_card_height);
@@ -616,7 +612,7 @@ DECLARE_MOVE_FUNCTION(
         size_t num_true_seqs = 1;
 
         for (size_t end_of_src_seq = (size_t)(src_card_height) + 1;
-             end_of_src_seq < (size_t)cards_num; ++end_of_src_seq)
+             end_of_src_seq < (size_t)col_len; ++end_of_src_seq)
         {
             const fcs_card above_card = fcs_col_get_card(col, end_of_src_seq);
             if (!fcs_is_ss_false_parent(card, above_card))
@@ -642,7 +638,7 @@ DECLARE_MOVE_FUNCTION(
                     move_sequences_analysis_seqs_loop(
                         &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
                         source_stack_idx,
-                        cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                        col_len PASS_IND_BUF_T(indirect_stacks_buffer));
 
                     fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
                         end_of_src_seq - (size_t)src_card_height);
@@ -667,26 +663,26 @@ DECLARE_MOVE_FUNCTION(
  * */
 typedef struct
 {
-    int cards_num;
+    int seq_len;
     int src_stack;
 } s_e_src_type;
 
 static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
     const sequences_analysis *const seqs, const int after_end_of_junk,
-    const int cards_num, const int source_stack_idx, const int dest_stack_idx,
+    const int col_len, const int source_stack_idx, const int dest_stack_idx,
     const int dest_cards_num)
 {
     if ((size_t)seq_index == seqs->num_separate_false_seqs)
     {
-        return (const s_e_src_type){.cards_num = cards_num - after_end_of_junk,
+        return (const s_e_src_type){.seq_len = col_len - after_end_of_junk,
             .src_stack = source_stack_idx};
     }
     else
     {
         return (const s_e_src_type){
-            .cards_num = (((seq_index == 0) ? dest_cards_num
-                                            : seqs->seq_points[seq_index - 1]) -
-                          seqs->seq_points[seq_index]),
+            .seq_len = (((seq_index == 0) ? dest_cards_num
+                                          : seqs->seq_points[seq_index - 1]) -
+                        seqs->seq_points[seq_index]),
             .src_stack = dest_stack_idx};
     }
 }
@@ -695,7 +691,6 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
     /*
-     * cards_num - the number of cards in "stack"
      * card - the current card in "stack"
      * suit - its suit
      * rank - its rank
@@ -773,12 +768,12 @@ DECLARE_MOVE_FUNCTION(
                  seq_index < seqs.num_separate_false_seqs + 1; seq_index++)
             {
                 const s_e_src_type s_e = calc_start_end_src_stack(
-                    (int)seq_index, &seqs, after_end_of_junk, cards_num,
+                    (int)seq_index, &seqs, after_end_of_junk, col_len,
                     (int)source_stack_idx, dest_stack_idx, dest_cards_num);
                 const_AUTO(dest_col_i, seqs.junk_move_to_stacks[seq_index]);
                 copy_two_stacks(s_e.src_stack, dest_col_i);
                 fcs_move_sequence(
-                    dest_col_i, (size_t)s_e.src_stack, (size_t)s_e.cards_num);
+                    dest_col_i, (size_t)s_e.src_stack, (size_t)s_e.seq_len);
             }
 
             /* Move the source seq on top of the dest seq */
@@ -820,7 +815,6 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
     /*
-     * cards_num - the number of cards in "stack"
      * card - the current card
      * suit - its suit
      * rank - its rank
@@ -898,7 +892,7 @@ DECLARE_MOVE_FUNCTION(
                 dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
 
             fcs_move_sequence(
-                dest_stack_idx, source_stack_idx, (size_t)(cards_num - height));
+                dest_stack_idx, source_stack_idx, (size_t)(col_len - height));
 
             sfs_check_state_end();
         }
@@ -913,7 +907,7 @@ DECLARE_MOVE_FUNCTION(
 
     STACK_SOURCE_LOOP_START(3)
     /* Search for a parent card */
-    for (int parent_card_height = 0; parent_card_height < cards_num - 2;
+    for (int parent_card_height = 0; parent_card_height < col_len - 2;
          parent_card_height++)
     {
         const fcs_card parent_card = fcs_col_get_card(col, parent_card_height);
@@ -924,7 +918,7 @@ DECLARE_MOVE_FUNCTION(
         }
 
         for (int child_card_height = parent_card_height + 2;
-             child_card_height < cards_num; child_card_height++)
+             child_card_height < col_len; child_card_height++)
         {
             if (!fcs_is_ss_true_parent(
                     parent_card, fcs_col_get_card(col, child_card_height)))
@@ -938,7 +932,7 @@ DECLARE_MOVE_FUNCTION(
             int end_of_child_seq = child_card_height;
             size_t child_num_true_seqs = 1;
             while (
-                (end_of_child_seq + 1 < cards_num) &&
+                (end_of_child_seq + 1 < col_len) &&
                 fcs_is_ss_false_parent(fcs_col_get_card(col, end_of_child_seq),
                     fcs_col_get_card(col, end_of_child_seq + 1)))
             {
@@ -981,7 +975,7 @@ DECLARE_MOVE_FUNCTION(
             move_sequences_analysis_seqs_loop(
                 &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
                 source_stack_idx,
-                cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                col_len PASS_IND_BUF_T(indirect_stacks_buffer));
             const_AUTO(src_col_i, seqs.junk_move_to_stacks[child_seq_index]);
             my_copy_stack(src_col_i);
             fcs_move_sequence(source_stack_idx, src_col_i,
@@ -996,7 +990,6 @@ DECLARE_MOVE_FUNCTION(
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 {
     // stack - the source stack index
-    // cards_num - number of cards in "stack"
     // dest_cards_num - number of cards in "dest_stack_idx".
     // card - the current card
     // next_card - the next card on the stack.
@@ -1032,7 +1025,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     sfs_check_state_begin();
     copy_two_stacks(source_stack_idx, dest_stack_idx);
     fcs_move_sequence(
-        dest_stack_idx, source_stack_idx, (size_t)(cards_num - height));
+        dest_stack_idx, source_stack_idx, (size_t)(col_len - height));
     sfs_check_state_end();
     STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
