@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
 // split_fcc_solver.c - a specialised solver that solves one FCC (=
 // fully connected component) at a time - meant to try to
 // reduce the memory consumption. See

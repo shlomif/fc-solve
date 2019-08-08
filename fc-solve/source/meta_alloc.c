@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
 // meta_alloc.c - the Freecell Solver compact allocator based on the
 // meta-allocator concept that is used to collect the pages allocated by
 // the standard allocator after it is destroyed and to recycle them.

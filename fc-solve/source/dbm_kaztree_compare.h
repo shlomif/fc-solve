@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
 // dbm_kaztree_compare.h - contains the comparison routine. The record_t
 // definition can be found in delta_states.h.
 //
