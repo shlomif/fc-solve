@@ -187,17 +187,14 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 // Convert to fc_solve_get_the_positions_by_rank_data.
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
-    /*
-     * suit - the suit of the current card
-     * card - the current card (at height height)
-     * dest_card - the destination card on which to put the sequence
-     * rank - the rank (i.e: A, 2 ,3 ... K) of the card, or
-     * its previous one.
-     * num_true_seqs - the number of true sequences (i.e: sequences of a
-     * unified suit) in the source sequence.
-     * dest_cards_num - the number of cards in "dest_stack_idx".
-     * */
-
+    // suit - the suit of the current card
+    // card - the current card (at height height)
+    // dest_card - the destination card on which to put the sequence
+    // rank - the rank (i.e: A, 2 ,3 ... K) of the card, or
+    // its previous one.
+    // num_true_seqs - the number of true sequences (i.e: sequences of a
+    // unified suit) in the source sequence.
+    // dest_cards_num - the number of cards in "dest_stack_idx".
     SIMPS_define_vacant_stacks_accessors();
 
     CALC_POSITIONS_BY_RANK();
@@ -284,15 +281,13 @@ static inline int get_seq_h(
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent)
 {
-    /*
-     * dest_cards_num - number of cards in "dest_stack_idx".
-     * card - the current card
-     * rank - its rank
-     * suit - its suit
-     * dest_card - the card at the top of "dest_stack_idx".
-     * num_true_seqs - the number of true sequences on the current
-     *                 false sequence
-     * */
+    // dest_cards_num - number of cards in "dest_stack_idx".
+    // card - the current card
+    // rank - its rank
+    // suit - its suit
+    // dest_card - the card at the top of "dest_stack_idx".
+    // num_true_seqs - the number of true sequences on the current
+    //                 false sequence
     SIMPS_define_vacant_stacks_accessors();
 
     const size_t max_seq_move =
@@ -560,13 +555,10 @@ DECLARE_MOVE_FUNCTION(
                     (calc_max_simple_simon_seq_move(
                          seqs.after_junk_num_freestacks) >= num_true_seqs)))
             {
-                /*
-                 * We can do it - so let's move everything.
-                 * Notice that we only put the child in a different stack
-                 * then the parent and let it move to the parent in the
-                 * next iteration of the program
-                 * */
-
+                // We can do it - so let's move everything.
+                // Notice that we only put the child in a different stack
+                // than the parent and let it move to the parent in the
+                // next iteration of the program
                 sfs_check_state_begin();
                 copy_two_stacks(source_stack_idx, dest_stack_idx);
                 // Move the junk cards to their place
@@ -658,9 +650,7 @@ DECLARE_MOVE_FUNCTION(
     STACK_SOURCE_LOOP_END()
 }
 
-/*
- * start, end, src_stack.
- * */
+// start, end, src_stack.
 typedef struct
 {
     int seq_len;
@@ -690,22 +680,20 @@ static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
-    /*
-     * card - the current card in "stack"
-     * suit - its suit
-     * rank - its rank
-     * dest_cards_num - the number of cards in "dest_stack_idx".
-     * num_separate_false_seqs - the number of false sequences
-     * seq_points[] - the places in which the false sequences of the junk begin
-     *      and end
-     * stacks_map[] - a map of booleans that indicates if one can place a card
-     *      on this stack or is already taken.
-     * num_src_junk_true_seqs - the number of true seqs in the false seq above
-     *      the source card.
-     * end_of_junk - the height marking the end of the source junk.
-     * num_true_seqs - the number of true sequences in the false seq which we
-     *      wish to move.
-     * */
+    // card - the current card in "stack"
+    // suit - its suit
+    // rank - its rank
+    // dest_cards_num - the number of cards in "dest_stack_idx".
+    // num_separate_false_seqs - the number of false sequences
+    // seq_points[] - the places in which the false sequences of the junk begin
+    //      and end
+    // stacks_map[] - a map of booleans that indicates if one can place a card
+    //      on this stack or is already taken.
+    // num_src_junk_true_seqs - the number of true seqs in the false seq above
+    //      the source card.
+    // end_of_junk - the height marking the end of the source junk.
+    // num_true_seqs - the number of true sequences in the false seq which we
+    //      wish to move.
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
 
@@ -814,18 +802,16 @@ static inline void sort_ds_dcs(ds_dc_type *const ds_dcs, const int len)
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
-    /*
-     * card - the current card
-     * suit - its suit
-     * rank - its rank
-     * dest_cards_num - the number of cards in it.
-     * num_separate_false_seqs - this variable tells how many distinct false
-     *      sequences exist above the false parent
-     * seq_points[] - the separation points of the false sequences (i.e: where
-     *      they begin and end)
-     * stacks_map[] - a boolean map that indicates if one can place a card
-     *      on this stack or is it already taken.
-     * */
+    // card - the current card
+    // suit - its suit
+    // rank - its rank
+    // dest_cards_num - the number of cards in it.
+    // num_separate_false_seqs - this variable tells how many distinct false
+    //      sequences exist above the false parent
+    // seq_points[] - the separation points of the false sequences (i.e: where
+    //      they begin and end)
+    // stacks_map[] - a boolean map that indicates if one can place a card
+    //      on this stack or is it already taken.
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
 
