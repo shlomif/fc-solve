@@ -188,14 +188,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 // Convert to fc_solve_get_the_positions_by_rank_data.
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 {
-    // suit - the suit of the current card
     // card - the current card (at height height)
-    // dest_card - the destination card on which to put the sequence
-    // rank - the rank (i.e: A, 2 ,3 ... K) of the card, or
-    // its previous one.
     // num_true_seqs - the number of true sequences (i.e: sequences of a
     // unified suit) in the source sequence.
-    // dest_cards_num - the number of cards in "dest_stack_idx".
     SIMPS_define_vacant_stacks_accessors();
 
     CALC_POSITIONS_BY_RANK();
@@ -284,8 +279,6 @@ DECLARE_MOVE_FUNCTION(
 {
     // dest_cards_num - number of cards in "dest_stack_idx".
     // card - the current card
-    // rank - its rank
-    // suit - its suit
     // dest_card - the card at the top of "dest_stack_idx".
     // num_true_seqs - the number of true sequences on the current
     //                 false sequence
@@ -507,15 +500,12 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
     // card - the card in height "height"
-    // suit - its suit
     // rank - its rank
     // dest_cards_num - the number of cards in "dest_stack_idx"
     // num_separate_false_seqs - this variable tells how many distinct false
     //      sequences exist above the true parent
     // seq_points[] - the separation points of the false sequences (i.e: where
     //      they begin and end)
-    // stacks_map[] - a boolean map that indicates if one can place a card
-    //      on this stack or is it already taken.
 
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
@@ -682,14 +672,11 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
     // card - the current card in "stack"
-    // suit - its suit
     // rank - its rank
     // dest_cards_num - the number of cards in "dest_stack_idx".
     // num_separate_false_seqs - the number of false sequences
     // seq_points[] - the places in which the false sequences of the junk begin
     //      and end
-    // stacks_map[] - a map of booleans that indicates if one can place a card
-    //      on this stack or is already taken.
     // num_src_junk_true_seqs - the number of true seqs in the false seq above
     //      the source card.
     // end_of_junk - the height marking the end of the source junk.
@@ -728,9 +715,7 @@ DECLARE_MOVE_FUNCTION(
         card = next_card;
     }
 
-    /* Start at the card below the top one, so we will
-     * make sure there's at least some junk above it
-     * */
+    // Start at the card below the top one, so we know there's some junk above
     LOOK_FOR_TRUE_PARENT_with_ds_dc__START(
         card) if (dest_card_height <= dest_cards_num - 2)
     {
@@ -804,15 +789,6 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent_with_some_cards_above)
 {
     // card - the current card
-    // suit - its suit
-    // rank - its rank
-    // dest_cards_num - the number of cards in it.
-    // num_separate_false_seqs - this variable tells how many distinct false
-    //      sequences exist above the false parent
-    // seq_points[] - the separation points of the false sequences (i.e: where
-    //      they begin and end)
-    // stacks_map[] - a boolean map that indicates if one can place a card
-    //      on this stack or is it already taken.
     SIMPS_define_vacant_stacks_accessors();
     CALC_POSITIONS_BY_RANK();
 
@@ -860,7 +836,6 @@ DECLARE_MOVE_FUNCTION(
         const size_t dest_stack_idx = (size_t)ds_dcs[i].col;
         const size_t dest_card_height = (size_t)ds_dcs[i].height;
         const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));
-        const int dest_cards_num = fcs_col_len(dest_col);
 
         /* This is a suitable parent - let's check if there's a sequence above
          * it. */
@@ -876,7 +851,7 @@ DECLARE_MOVE_FUNCTION(
             move_sequences_analysis_seqs_loop(
                 &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
                 dest_stack_idx,
-                dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                fcs_col_len(dest_col) PASS_IND_BUF_T(indirect_stacks_buffer));
 
             fcs_move_sequence(
                 dest_stack_idx, source_stack_idx, (size_t)(col_len - height));
