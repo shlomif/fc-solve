@@ -112,10 +112,17 @@ typedef struct
 
 #include "simple_simon_rank_seqs.h"
 
+static inline void fcs_col_pop_seq(
+    fcs_cards_column src_col, const size_t cards_num)
+{
+    fcs_card *const src_cards_ptr =
+        &fcs_col_get_card(src_col, (fcs_col_len(src_col) -= cards_num));
+    const size_t cards_size = (((size_t)cards_num) * sizeof(fcs_card));
+    memset(src_cards_ptr, 0, cards_size);
+}
+
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 {
-    // suit - the suit of the complete sequence
-    // card - the current card (at height a)
     SIMPS_define_accessors();
 
     STACK_SOURCE_LOOP_START(13)
@@ -139,11 +146,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
         var_AUTO(
             new_src_col, fcs_state_get_col(new_state_key, source_stack_idx));
-        for (size_t rank = 0; rank < FCS_MAX_RANK; ++rank)
-        {
-            fcs_col_pop_top(new_src_col);
-        }
-
+        fcs_col_pop_seq(new_src_col, FCS_MAX_RANK);
         fcs_set_foundation(new_state_key, suit, FCS_MAX_RANK);
 
         fcs_move_stack_non_seq_push(
