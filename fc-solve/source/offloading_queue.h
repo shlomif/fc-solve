@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
 #include "rinutils/rinutils.h"
+#include <assert.h>
 #ifdef RINUTILS__IS_UNIX
 #include <fcntl.h>
 #endif
