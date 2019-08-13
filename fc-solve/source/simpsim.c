@@ -315,7 +315,7 @@ DECLARE_MOVE_FUNCTION(
     sfs_check_state_begin();
     copy_two_stacks(source_stack_idx, dest_stack_idx);
     fcs_move_sequence(
-        (size_t)(dest_stack_idx), source_stack_idx, (size_t)(col_len - height));
+        (size_t)(dest_stack_idx), source_stack_idx, (size_t)(col_len));
     sfs_check_state_end();
     STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
@@ -854,7 +854,7 @@ DECLARE_MOVE_FUNCTION(
                 fcs_col_len(dest_col) PASS_IND_BUF_T(indirect_stacks_buffer));
 
             fcs_move_sequence(
-                dest_stack_idx, source_stack_idx, (size_t)(col_len - height));
+                dest_stack_idx, source_stack_idx, (size_t)(col_len));
 
             sfs_check_state_end();
         }
