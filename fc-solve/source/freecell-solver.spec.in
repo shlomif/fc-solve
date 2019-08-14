@@ -4,8 +4,8 @@ Version: @VERSION@
 Release: 1
 License: MIT
 Group: Amusement/Games
-Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.xz
-URL: http://fc-solve.shlomifish.org/
+Source: https://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.xz
+URL: https://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
 BuildRequires: asciidoctor
@@ -122,6 +122,8 @@ find %{buildroot} -name *.a -delete
 
 %files
 %defattr(-,root,root)
+/usr/bin/dbm-fc-solver
+/usr/bin/depth-dbm-fc-solver
 /usr/bin/fc-solve
 /usr/bin/fc_solve_find_index_s2ints.py
 /usr/bin/find-freecell-deal-index.py
