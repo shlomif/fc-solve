@@ -56,9 +56,9 @@ static inline bool fcs_is_ss_suit_true(
         }                                                                      \
                                                                                \
         const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));        \
-        const int dest_cards_num = fcs_col_len(dest_col);                      \
+        const int dest_col_len = fcs_col_len(dest_col);                        \
                                                                                \
-        if (dest_cards_num < min_num_cards)                                    \
+        if (dest_col_len < min_num_cards)                                      \
         {                                                                      \
             continue;                                                          \
         }
@@ -169,7 +169,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         {                                                                      \
             const int dest_card_height = pos.height;                           \
             const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));    \
-            const int dest_cards_num = fcs_col_len(dest_col);
+            const int dest_col_len = fcs_col_len(dest_col);
 
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__END()                                 \
     }                                                                          \
@@ -177,7 +177,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
 
 #define LOOK_FOR_TRUE_PARENT_AT_TOP__START(card)                               \
     LOOK_FOR_TRUE_PARENT_with_ds_dc__START(                                    \
-        card) if (dest_card_height == dest_cards_num - 1)                      \
+        card) if (dest_card_height == dest_col_len - 1)                        \
     {
 #define LOOK_FOR_TRUE_PARENT_AT_TOP__END()                                     \
     }                                                                          \
@@ -277,7 +277,6 @@ static inline int get_seq_h(
 DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_whole_stack_sequence_to_false_parent)
 {
-    // dest_cards_num - number of cards in "dest_stack_idx".
     // card - the current card
     // dest_card - the card at the top of "dest_stack_idx".
     // num_true_seqs - the number of true sequences on the current
@@ -303,13 +302,11 @@ DECLARE_MOVE_FUNCTION(
     const fcs_card card = fcs_col_get_card(col, height);
 
     STACK_DEST_LOOP_START(1)
-    const fcs_card dest_card = fcs_col_get_card(dest_col, dest_cards_num - 1);
+    const fcs_card dest_card = fcs_col_get_card(dest_col, dest_col_len - 1);
     if (!(fcs_is_ss_false_parent(dest_card, card)))
     {
         continue;
     }
-    /* This is a suitable parent - let's check if we
-     * have enough empty stacks to make the move feasible */
     /* We can do it - so let's move */
 
     sfs_check_state_begin();
@@ -323,12 +320,12 @@ DECLARE_MOVE_FUNCTION(
 
 static inline void generic_populate_seq_points(const fcs_cards_column dest_col,
     const int dest_card_height, sequences_analysis *const seqs,
-    const int dest_cards_num)
+    const int dest_col_len)
 {
     size_t num_separate_false_seqs = seqs->num_separate_false_seqs;
     seqs->above_num_true_seqs[num_separate_false_seqs] = 1;
-    fcs_card above_card = fcs_col_get_card(dest_col, dest_cards_num - 1);
-    for (int card_height = dest_cards_num - 2; card_height > dest_card_height;
+    fcs_card above_card = fcs_col_get_card(dest_col, dest_col_len - 1);
+    for (int card_height = dest_col_len - 2; card_height > dest_card_height;
          --card_height)
     {
         const fcs_card up_above_card = fcs_col_get_card(dest_col, card_height);
@@ -342,7 +339,7 @@ static inline void generic_populate_seq_points(const fcs_cards_column dest_col,
         above_card = up_above_card;
     }
 
-    if (dest_card_height <= dest_cards_num - 2)
+    if (dest_card_height <= dest_col_len - 2)
     {
         seqs->seq_points[num_separate_false_seqs++] = dest_card_height + 1;
     }
@@ -500,8 +497,6 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_to_true_parent_with_some_cards_above)
 {
     // card - the card in height "height"
-    // rank - its rank
-    // dest_cards_num - the number of cards in "dest_stack_idx"
     // num_separate_false_seqs - this variable tells how many distinct false
     //      sequences exist above the true parent
     // seq_points[] - the separation points of the false sequences (i.e: where
@@ -556,7 +551,7 @@ DECLARE_MOVE_FUNCTION(
                 move_sequences_analysis_seqs_loop(
                     &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
                     (stack_i)dest_stack_idx,
-                    dest_cards_num PASS_IND_BUF_T(indirect_stacks_buffer));
+                    dest_col_len PASS_IND_BUF_T(indirect_stacks_buffer));
 
                 /* Move the source seq on top of the dest seq */
                 fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
@@ -597,8 +592,7 @@ DECLARE_MOVE_FUNCTION(
             const fcs_card above_card = fcs_col_get_card(col, end_of_src_seq);
             if (!fcs_is_ss_false_parent(card, above_card))
             {
-                /* Split the cards above it into false sequences */
-
+                // Split the cards above it into false sequences
                 LOOK_FOR_TRUE_PARENT_AT_TOP__START(h_card)
                 /* This is a suitable parent - let's check if we
                  * have enough empty stacks to make the move feasible */
@@ -648,7 +642,7 @@ typedef struct
 static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
     const sequences_analysis *const seqs, const int after_end_of_junk,
     const int col_len, const int source_stack_idx, const int dest_stack_idx,
-    const int dest_cards_num)
+    const int dest_col_len)
 {
     if ((size_t)seq_index == seqs->num_separate_false_seqs)
     {
@@ -658,7 +652,7 @@ static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
     else
     {
         return (const s_e_src_type){
-            .seq_len = (((seq_index == 0) ? dest_cards_num
+            .seq_len = (((seq_index == 0) ? dest_col_len
                                           : seqs->seq_points[seq_index - 1]) -
                         seqs->seq_points[seq_index]),
             .src_stack = dest_stack_idx};
@@ -669,8 +663,6 @@ DECLARE_MOVE_FUNCTION(
     fc_solve_sfs_simple_simon_move_sequence_with_junk_seq_above_to_true_parent_with_some_cards_above)
 {
     // card - the current card in "stack"
-    // rank - its rank
-    // dest_cards_num - the number of cards in "dest_stack_idx".
     // num_separate_false_seqs - the number of false sequences
     // seq_points[] - the places in which the false sequences of the junk begin
     //      and end
@@ -685,19 +677,18 @@ DECLARE_MOVE_FUNCTION(
     STACK_SOURCE_LOOP_START(1)
     size_t num_src_junk_true_seqs;
 
-    int height = get_seq_h(col, &num_src_junk_true_seqs);
-    if (!height)
+    const int after_end_of_junk = get_seq_h(col, &num_src_junk_true_seqs);
+    if (!after_end_of_junk)
     {
         continue;
     }
+    int height = after_end_of_junk;
 
     fcs_card card = fcs_col_get_card(col, height);
 
-    const int after_end_of_junk = height;
-    const int end_of_junk = (--height);
     size_t num_true_seqs = 1;
 
-    for (; height > -1; --height)
+    for (--height; height > -1; --height)
     {
         const fcs_card next_card = fcs_col_get_card(col, height);
         if (!fcs_is_ss_false_parent(next_card, card))
@@ -714,7 +705,7 @@ DECLARE_MOVE_FUNCTION(
 
     // Start at the card below the top one, so we know there's some junk above
     LOOK_FOR_TRUE_PARENT_with_ds_dc__START(
-        card) if (dest_card_height <= dest_cards_num - 2)
+        card) if (dest_card_height <= dest_col_len - 2)
     {
         /* This is a suitable parent - let's check if there's a sequence above
          * it. */
@@ -740,7 +731,7 @@ DECLARE_MOVE_FUNCTION(
             {
                 const s_e_src_type s_e = calc_start_end_src_stack(
                     (int)seq_index, &seqs, after_end_of_junk, col_len,
-                    (int)source_stack_idx, dest_stack_idx, dest_cards_num);
+                    (int)source_stack_idx, dest_stack_idx, dest_col_len);
                 const_AUTO(dest_col_i, seqs.junk_move_to_stacks[seq_index]);
                 copy_two_stacks(s_e.src_stack, dest_col_i);
                 fcs_move_sequence(
@@ -749,7 +740,7 @@ DECLARE_MOVE_FUNCTION(
 
             /* Move the source seq on top of the dest seq */
             fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
-                (size_t)(end_of_junk - height + 1));
+                (size_t)(after_end_of_junk - height));
 
             sfs_check_state_end();
         }
@@ -949,7 +940,6 @@ DECLARE_MOVE_FUNCTION(
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
 {
     // stack - the source stack index
-    // dest_cards_num - number of cards in "dest_stack_idx".
     // card - the current card
     // next_card - the next card on the stack.
     // num_true_seqs - the number of true sequences on the current
@@ -975,7 +965,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     /* take the sequence and try and put it on another stack */
     STACK_DEST_LOOP_START(1)
     if (!fcs_is_ss_false_parent(
-            fcs_col_get_card(dest_col, dest_cards_num - 1), card))
+            fcs_col_get_card(dest_col, dest_col_len - 1), card))
     {
         continue;
     }
