@@ -87,7 +87,7 @@ static inline bool fcs_is_ss_suit_true(
 #define STACKS_MAP_LEN MAX_NUM_STACKS
 
 static inline void init_stacks_map(bool *const stacks_map,
-    const stack_i source_stack_idx, const int dest_stack_idx)
+    const stack_i source_stack_idx, const stack_i dest_stack_idx)
 {
     for (stack_i i = 0; i < STACKS_MAP_LEN; i++)
     {
@@ -162,10 +162,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     {                                                                          \
         const fcs_pos_by_rank pos = positions_by_rank[FCS_POS_IDX(             \
             fcs_card_rank(card) + 1, fcs_card_suit(card))];                    \
-        const int dest_stack_idx = pos.col;                                    \
+        if (pos.col < 0)                                                       \
+        {                                                                      \
+            continue;                                                          \
+        }                                                                      \
+        const stack_i dest_stack_idx = pos.col;                                \
                                                                                \
-        if (dest_stack_idx >= 0 &&                                             \
-            (stack_i)dest_stack_idx != source_stack_idx)                       \
+        if (dest_stack_idx != source_stack_idx)                                \
         {                                                                      \
             const int dest_card_height = pos.height;                           \
             const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));    \
@@ -358,7 +361,7 @@ static inline void populate_seq_points(const fcs_cards_column dest_col,
 static inline bool generic_false_seq_index_loop(const int stacks_num,
     fcs_kv_state raw_state_raw, const int num_vacant_stacks,
     const fcs_cards_column col, sequences_analysis *const seqs,
-    const stack_i source_stack_idx, const int dest_stack_idx,
+    const stack_i source_stack_idx, const stack_i dest_stack_idx,
     const bool behavior_flag, const bool should_src_col,
     const fcs_card src_card, const size_t num_src_junk_true_seqs)
 {
@@ -449,7 +452,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
 static inline bool false_seq_index_loop(const int stacks_num,
     fcs_kv_state raw_state_raw, const int num_vacant_stacks,
     const fcs_cards_column col, sequences_analysis *const seqs,
-    const stack_i source_stack_idx, const int dest_stack_idx,
+    const stack_i source_stack_idx, const stack_i dest_stack_idx,
     const bool behavior_flag)
 {
     return generic_false_seq_index_loop(stacks_num, raw_state_raw,
@@ -550,11 +553,11 @@ DECLARE_MOVE_FUNCTION(
                 // Move the junk cards to their place
                 move_sequences_analysis_seqs_loop(
                     &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
-                    (stack_i)dest_stack_idx,
+                    dest_stack_idx,
                     dest_col_len PASS_IND_BUF_T(indirect_stacks_buffer));
 
                 /* Move the source seq on top of the dest seq */
-                fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
+                fcs_move_sequence(dest_stack_idx, source_stack_idx,
                     (size_t)(col_len - height - 1));
 
                 sfs_check_state_end();
@@ -614,7 +617,7 @@ DECLARE_MOVE_FUNCTION(
                         source_stack_idx,
                         col_len PASS_IND_BUF_T(indirect_stacks_buffer));
 
-                    fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
+                    fcs_move_sequence(dest_stack_idx, source_stack_idx,
                         end_of_src_seq - (size_t)src_card_height);
 
                     sfs_check_state_end();
@@ -636,13 +639,13 @@ DECLARE_MOVE_FUNCTION(
 typedef struct
 {
     int seq_len;
-    int src_stack;
+    stack_i src_stack;
 } s_e_src_type;
 
 static inline s_e_src_type calc_start_end_src_stack(const int seq_index,
     const sequences_analysis *const seqs, const int after_end_of_junk,
-    const int col_len, const int source_stack_idx, const int dest_stack_idx,
-    const int dest_col_len)
+    const int col_len, const stack_i source_stack_idx,
+    const stack_i dest_stack_idx, const int dest_col_len)
 {
     if ((size_t)seq_index == seqs->num_separate_false_seqs)
     {
@@ -668,7 +671,6 @@ DECLARE_MOVE_FUNCTION(
     //      and end
     // num_src_junk_true_seqs - the number of true seqs in the false seq above
     //      the source card.
-    // end_of_junk - the height marking the end of the source junk.
     // num_true_seqs - the number of true sequences in the false seq which we
     //      wish to move.
     SIMPS_define_vacant_stacks_accessors();
@@ -731,7 +733,7 @@ DECLARE_MOVE_FUNCTION(
             {
                 const s_e_src_type s_e = calc_start_end_src_stack(
                     (int)seq_index, &seqs, after_end_of_junk, col_len,
-                    (int)source_stack_idx, dest_stack_idx, dest_col_len);
+                    source_stack_idx, dest_stack_idx, dest_col_len);
                 const_AUTO(dest_col_i, seqs.junk_move_to_stacks[seq_index]);
                 copy_two_stacks(s_e.src_stack, dest_col_i);
                 fcs_move_sequence(
@@ -739,7 +741,7 @@ DECLARE_MOVE_FUNCTION(
             }
 
             /* Move the source seq on top of the dest seq */
-            fcs_move_sequence((size_t)dest_stack_idx, source_stack_idx,
+            fcs_move_sequence(dest_stack_idx, source_stack_idx,
                 (size_t)(after_end_of_junk - height));
 
             sfs_check_state_end();
@@ -821,7 +823,7 @@ DECLARE_MOVE_FUNCTION(
 
     for (size_t i = 0; i < len; i++)
     {
-        const size_t dest_stack_idx = (size_t)ds_dcs[i].col;
+        const stack_i dest_stack_idx = (stack_i)ds_dcs[i].col;
         const size_t dest_card_height = (size_t)ds_dcs[i].height;
         const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));
 
@@ -830,7 +832,7 @@ DECLARE_MOVE_FUNCTION(
         sequences_analysis seqs;
 
         if (POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, (int)dest_card_height,
-                source_stack_idx, (int)dest_stack_idx, true))
+                source_stack_idx, dest_stack_idx, true))
         {
             /* We can do it - so let's move */
             sfs_check_state_begin();
