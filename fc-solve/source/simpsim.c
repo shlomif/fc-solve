@@ -513,11 +513,11 @@ DECLARE_MOVE_FUNCTION(
     STACK_SOURCE_LOOP_START(1)
     size_t num_true_seqs = 1;
 
-    for (int height = col_len - 2; height >= -1; --height)
+    for (int height = col_len - 2;; --height)
     {
         const fcs_card card = fcs_col_get_card(col, height + 1);
         bool should_search = true;
-        bool should_increment_num_true_seqs = false;
+        size_t increment_num_true_seqs = 0;
         bool should_break;
         /* Stop if we reached the bottom of the stack */
         if (!((should_break = (height == -1))))
@@ -531,7 +531,7 @@ DECLARE_MOVE_FUNCTION(
             else if ((should_search =
                              (!fcs_is_ss_suit_true(h_above_card, card))))
             {
-                should_increment_num_true_seqs = true;
+                increment_num_true_seqs = 1;
             }
         }
         if (should_search)
@@ -571,10 +571,7 @@ DECLARE_MOVE_FUNCTION(
         {
             break;
         }
-        if (should_increment_num_true_seqs)
-        {
-            ++num_true_seqs;
-        }
+        num_true_seqs += increment_num_true_seqs;
     }
     STACK_SOURCE_LOOP_END()
 }
