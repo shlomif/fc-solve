@@ -483,6 +483,7 @@ UI
 UNIXes
 USR1
 USR2
+UTC
 Ubuntu
 Unported
 Valgrind

@@ -124,6 +124,15 @@ __PACKAGE__->populate(
             },
             msg => "Simple Simon #24 with default theme",
         },
+        'simple_simon15508default' => {
+            args => {
+                id      => "simple_simon15508default",
+                deal    => 15508,
+                variant => "simple_simon",
+                theme   => [],
+            },
+            msg => "Simple Simon #15508 with default theme - was a regression",
+        },
         'simple_simon19806default' => {
             args => {
                 id      => "simple_simon19806default",

@@ -113,6 +113,14 @@ my $arr = [
         argv => [ { type => 'sample_board', arg => '24-with-7-cols.board' } ],
         msg  => "Check the sanity of not enough input.",
     },
+    'fc-solve-simple-simon-15508' => {
+        prog => "fc-solve",
+        argv => [
+            '-g', 'simple_simon',
+            { type => 'sample_board', arg => '15508.simpsim.board' }
+        ],
+        msg => "Check the sanity of not enough input.",
+    },
     'fc-solve-trim-max-stored-states' => {
         prog => "fc-solve",
         argv => [
