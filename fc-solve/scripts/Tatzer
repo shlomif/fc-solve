@@ -411,11 +411,6 @@ if ( $build_type eq "debug" )
     $STR_OPTS{dbm}{value} //= 'kaztree';
 }
 
-if ( ( $STR_OPTS{dbm}{value} // '' ) eq 'none' )
-{
-    $STR_OPTS{dbm}{value} = '';
-}
-
 # This cache is sometimes causing problems.
 eval { unlink("CMakeCache.txt"); };
 eval {
@@ -449,7 +444,11 @@ my @cmd = (
         ) ? ("-DLIBAVL2_SOURCE_DIR=$ENV{LIBAVL2_SOURCE_DIR}")
         : ()
     ),
-    ( $STR_OPTS{dbm}{value} ? ("-DFCS_ENABLE_DBM_SOLVER=1") : () ),
+    (
+          ( $STR_OPTS{dbm}{value} eq 'none' ) ? ("-DFCS_ENABLE_DBM_SOLVER=0")
+        : $STR_OPTS{dbm}{value}               ? ("-DFCS_ENABLE_DBM_SOLVER=1")
+        :                                       ()
+    ),
     (
         defined( $int_opts__values{nfc} )
         ? ("-DFCS_DBM_FREECELLS_NUM=$int_opts__values{nfc}")

@@ -75,12 +75,12 @@ test_script:
     - cd pkg-build
     # For generating 32-bit release binaries.
     - SET PATH=C:\MinGW\bin;%PATH%
-    - perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r
+    - perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r --dbm=none
     - gmake package
     # See https://stackoverflow.com/questions/29754510/generating-an-installer-using-cmake-cpack-wix
     - cpack -G WIX
     # For generating the binaries zip for https://github.com/shlomif/PySolFC/issues/58 ( PySol )
-    - perl ../scripts/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite -r --prefix=c:\fcs-pysol
+    - perl ../scripts/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite -r --prefix=c:\fcs-pysol --dbm=none
     - gmake install
     - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
 # Disabling due to cache invalidation problems
