@@ -68,6 +68,8 @@ test_script:
     - cd pkg-build-win64
     - perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r
     - gmake package
+    # See https://stackoverflow.com/questions/29754510/generating-an-installer-using-cmake-cpack-wix
+    - cpack -G WIX
     - cd ..
     - mkdir pkg-build
     - cd pkg-build
@@ -80,8 +82,6 @@ test_script:
     # For generating the binaries zip for https://github.com/shlomif/PySolFC/issues/58 ( PySol )
     - perl ../scripts/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite -r --prefix=c:\fcs-pysol
     - gmake install
-    # See https://stackoverflow.com/questions/29754510/generating-an-installer-using-cmake-cpack-wix
-    - cpack -G WIX
     - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
 # Disabling due to cache invalidation problems
 # cache:
