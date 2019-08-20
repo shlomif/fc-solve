@@ -1,6 +1,15 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - A cmd line option that does not start with a "-" causes the cmd line
+      parsing to stop. Silently.
+      * https://fc-solve.shlomifish.org/js-fc-solve/text/
+      * E.g "fc-solve --freecells-num 0"
+      * Fix.
+      @ Added [Tue 2019-08-20]
+    - Add a <select> for freecells count and one for columns/stacks.
+      * With a "Default" no-op option.
+      @ Added [Tue 2019-08-20]
 
 LONG TERM:
 
