@@ -1728,7 +1728,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
                     var_AUTO(src_col,
                         fcs_state_get_col(pats_scan->current_pos.s, i));
                     fcs_card *dest = &(
-                        pats_scan->current_pos.indirect_stacks_buffer[i << 7]);
+                        pats_scan->current_pos.indirect_stacks_buffer[i << 6]);
                     memmove(dest, src_col, fcs_col_len(src_col) + 1);
                     fcs_state_get_col(pats_scan->current_pos.s, i) = dest;
                 }

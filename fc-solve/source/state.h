@@ -113,9 +113,9 @@ typedef struct
         {                                                                      \
             (state_val).stacks_copy_on_write_flags |= (1 << idx);              \
             const_AUTO(copy_stack_col, fcs_state_get_col((state_key), idx));   \
-            memcpy(&buffer[idx << 7], copy_stack_col,                          \
+            memcpy(&buffer[idx << 6], copy_stack_col,                          \
                 fcs_col_len(copy_stack_col) + 1);                              \
-            fcs_state_get_col((state_key), idx) = &buffer[idx << 7];           \
+            fcs_state_get_col((state_key), idx) = &buffer[idx << 6];           \
         }                                                                      \
     }
 
@@ -590,7 +590,7 @@ static inline void fc_solve_state_init_proto(fcs_state_keyval_pair *const state
     size_t i;
     for (i = 0; i < STACKS_NUM__VAL; ++i)
     {
-        memset(state->s.columns[i] = &indirect_stacks_buffer[i << 7], '\0',
+        memset(state->s.columns[i] = &indirect_stacks_buffer[i << 6], '\0',
             MAX_NUM_DECKS * 52 + 1);
     }
     for (; i < MAX_NUM_STACKS; ++i)

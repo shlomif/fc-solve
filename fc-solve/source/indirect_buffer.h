@@ -11,7 +11,7 @@
 #include <stdint.h>
 
 #ifdef INDIRECT_STACK_STATES
-typedef uint8_t dll_ind_buf[MAX_NUM_STACKS << 7];
+typedef uint8_t dll_ind_buf[MAX_NUM_STACKS << 6];
 #define DECLARE_IND_BUF_T(ident) dll_ind_buf ident;
 #define IND_BUF_T_PARAM(ident) , dll_ind_buf ident
 #define PASS_IND_BUF_T(ident) , ident

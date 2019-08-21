@@ -71,10 +71,10 @@ static inline void fcs_derived_state_list__recycle(
     {                                                                          \
         const_AUTO(copy_stack_col,                                             \
             fcs_state_get_col((ptr_new_state->state.s), copy_col_idx));        \
-        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]),    \
+        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 6]),    \
             copy_stack_col, (size_t)(fcs_col_len(copy_stack_col)) + 1);        \
         fcs_state_get_col((ptr_new_state->state.s), copy_col_idx) =            \
-            &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]);       \
+            &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 6]);       \
     }
 
 #else
