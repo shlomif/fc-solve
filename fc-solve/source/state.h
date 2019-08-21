@@ -976,7 +976,7 @@ static inline int fc_solve_stack_compare_for_comparison(
         using std::min;
 #endif
         const int min_len = min(s1[0], s2[0]);
-#ifdef FCS_FREECELL_ONLY
+#ifdef DO_NOT_ENABLE__FALSE_RESULTS
         if (min_len)
         {
             return fc_solve_card_compare(s1[1], s2[1]);
