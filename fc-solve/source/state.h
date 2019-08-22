@@ -591,7 +591,7 @@ static inline void fc_solve_state_init_proto(fcs_state_keyval_pair *const state
     for (i = 0; i < STACKS_NUM__VAL; ++i)
     {
         memset(state->s.columns[i] = &indirect_stacks_buffer[i << 6], '\0',
-            MAX_NUM_DECKS * 52 + 1);
+            1 * 52 + 1);
     }
     for (; i < MAX_NUM_STACKS; ++i)
     {
