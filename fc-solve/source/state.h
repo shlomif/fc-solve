@@ -1012,6 +1012,43 @@ static inline int fc_solve_stack_compare_for_comparison(
         return 0;
     }
 }
+
+static inline int fc_solve_stack_compare_for_canonize(
+    const void *const v_s1, const void *const v_s2)
+{
+    const fcs_card *const s1 = (const fcs_card *const)v_s1;
+    const fcs_card *const s2 = (const fcs_card *const)v_s2;
+
+    {
+#ifdef __cplusplus
+        using std::min;
+#endif
+        const int min_len = min(s1[0], s2[0]);
+        if (min_len)
+        {
+            return fc_solve_card_compare(s1[1], s2[1]);
+        }
+    }
+    /*
+     * The reason I do the stack length comparisons after the card-by-card
+     * comparison is to maintain correspondence with
+     * fcs_stack_compare_for_stack_sort, and with the one card comparison
+     * of the other state representation mechanisms.
+     * */
+    /* For some reason this code is faster than s1[0]-s2[0] */
+    if (s1[0] < s2[0])
+    {
+        return -1;
+    }
+    else if (s1[0] > s2[0])
+    {
+        return 1;
+    }
+    else
+    {
+        return 0;
+    }
+}
 #endif
 
 static inline void set_scan_visited(

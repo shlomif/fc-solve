@@ -28,7 +28,7 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 #elif defined(INDIRECT_STACK_STATES)
 
 #define DECLARE_TEMP_STACK() fcs_card *temp_stack
-#define STACK_COMPARE(a, b) (fc_solve_stack_compare_for_comparison(a, b))
+#define STACK_COMPARE(a, b) (fc_solve_stack_compare_for_canonize(a, b))
 #define GET_STACK(c) (state_key->columns[c])
 #define COPY_STACK(d, s) (d = s)
 
