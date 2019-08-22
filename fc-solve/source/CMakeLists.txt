@@ -91,7 +91,7 @@ SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
 SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
 SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
     "Maximal Number of Initial Cards in a Stack")
-SET (MAX_NUM_DECKS 2 CACHE STRING "Maximal Number of Decks (1 or 2)")
+SET (MAX_NUM_DECKS 1 CACHE STRING "Maximal Number of Decks (must be 1)")
 SET (MAX_NUM_BENCHMARK_THREADS 4 CACHE STRING "Maximal Number of Threads to Use When Benchmarking")
 SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
 SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")

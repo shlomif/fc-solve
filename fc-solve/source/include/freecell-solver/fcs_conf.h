@@ -14,6 +14,10 @@
 extern "C" {
 #endif
 
+#if MAX_NUM_DECKS != 1
+#error MAX_NUM_DECKS must be 1!
+#endif
+
 #ifndef FCS_DISABLE_MULTI_FLARES
 #define FCS_WITH_FLARES
 #endif
