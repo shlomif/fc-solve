@@ -67,6 +67,7 @@ LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.bc,$(CMAKE_C_FILES))
 all: $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
+	fc_solve__hll_ms_rand__get_singleton \
 	fc_solve__hll_ms_rand__init \
 	fc_solve__hll_ms_rand__mod_rand \
 	fc_solve_user__find_deal__alloc \
@@ -75,6 +76,10 @@ NEEDED_FUNCTIONS = \
 	fc_solve_user__find_deal__run \
 	free \
 	freecell_solver_user_alloc \
+	freecell_solver_user_args_man_argc \
+	freecell_solver_user_args_man_argv \
+	freecell_solver_user_args_man_chop \
+	freecell_solver_user_args_man_free \
 	freecell_solver_user_cmd_line_parse_args_with_file_nesting_count \
 	freecell_solver_user_cmd_line_read_cmd_line_preset \
 	freecell_solver_user_current_state_stringify \
@@ -88,7 +93,7 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_solve_board \
 	freecell_solver_user_stringify_move_ptr \
 	malloc \
-	fc_solve__hll_ms_rand__get_singleton \
+
 
 NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
 
