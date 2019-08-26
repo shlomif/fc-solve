@@ -22,19 +22,19 @@ DLLEXPORT void freecell_solver_user_stringify_move_ptr(
 
 DLLEXPORT void *freecell_solver_user_args_man_chop(const char *buffer)
 {
-    fcs_args_man *ret = SMALLOC(ret);
+    fcs_args_man *ret = SMALLOC1(ret);
     *ret = fc_solve_args_man_chop(buffer);
     return ret;
 }
 
 DLLEXPORT int freecell_solver_user_args_man_argc(void *a)
 {
-    return ((fcs_args_man * a)->argc);
+    return (((fcs_args_man *)a)->argc);
 }
 
 DLLEXPORT char **freecell_solver_user_args_man_argv(void *a)
 {
-    return ((fcs_args_man * a)->argv);
+    return (((fcs_args_man *)a)->argv);
 }
 
 DLLEXPORT void freecell_solver_user_args_man_free(void *v)
