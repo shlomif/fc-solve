@@ -164,6 +164,11 @@ my $SAFE = $FALSE;
 my %skip_indices;
 my @tests;
 
+my @TRAVIS_CI_SKIP_FAILING_TESTS =
+    $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+    ? ( runtest_args => [qw%--exclude-re valgrind--dbm_fc_solver_1%], )
+    : ();
+
 sub reg_test
 {
     my $blurb = shift;
@@ -171,7 +176,7 @@ sub reg_test
     {
         $blurb = { blurb => $blurb, randomly_avoid => $FALSE, };
     }
-    push @tests, [ $blurb, @_ ];
+    push @tests, [ $blurb, @TRAVIS_CI_SKIP_FAILING_TESTS, @_ ];
 }
 
 sub _calc_build_path
@@ -509,8 +514,6 @@ reg_lt_test(
     { blurb => "Break Backward Compatibility #1", randomly_avoid => $TRUE, },
     '--break-back-compat-1' );
 
-my @TRAVIS_CI_SKIP_FAILING_TESTS =
-    ( runtest_args => [qw%--exclude-re valgrind--dbm_fc_solver_1%], );
 reg_test(
     {
         blurb          => "Freecell-only (as well as Break Backcompat)",
@@ -518,7 +521,6 @@ reg_test(
     },
     {
         tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only), ],
-        @TRAVIS_CI_SKIP_FAILING_TESTS,
     }
 );
 
