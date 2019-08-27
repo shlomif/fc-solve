@@ -54,8 +54,9 @@ the most cards placed on it) in the left, to the bottommost card in the right
 (= the card with no other cards placed on it).
 
 A card string contains the rank of the card followed by its suit.
-The card number is one of: +A,1,2,3,4,5,6,7,8,9,10,J,Q,K+. Alternatively,
-+T+ can be used instead of +10+. The card suit is one of:  +H,S,D,C+ (standing
+The card number is one of: +A,1,2,3,4,5,6,7,8,9,T,J,Q,K+. Alternatively,
++10+ can be used instead of +T+, but using that is discouraged and
+is only supported for backward compatibility. The card suit is one of:  +H,S,D,C+ (standing
 for Hearts, Spades, Diamonds and Clubs respectively).
 
 Here is an example board: (PySol/Microsoft board No. 24)
@@ -65,8 +66,8 @@ Here is an example board: (PySol/Microsoft board No. 24)
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
 5D 2S JC 5C JH 6D AS
-2D KD 10H 10C 10D 8D
-7H JS KH 10S KC 7C
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 -----------------------
@@ -84,8 +85,8 @@ And another one: (PySol board No. 198246790)
 KD JH 5H 7D 9H KC 9D
 3H JD 5D 8H QH 7H 2D
 4D 3S QC 3C 6S QS KS
-10C 9S 6D 9C QD 8S 10D
-10S 8C 7S 10H 2C AS
+TC 9S 6D 9C QD 8S TD
+TS 8C 7S TH 2C AS
 8D AC AH 4H JC 4C
 6H 7C 4S 5S 5C JS
 AD KH 6C 2H 3D 2S

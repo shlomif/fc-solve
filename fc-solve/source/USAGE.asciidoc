@@ -127,7 +127,7 @@ own line, while beginning with a +:+.
 
 *Global*
 
-This option will display the 10 cards as a capital +T +instead of a +10+.
+This option will display the 10 cards as a capital +T+ instead of a +10+.
 Thus, the cards will be more properly aligned.
 
 For example, here is a command line using +-p+ and +-t+:
