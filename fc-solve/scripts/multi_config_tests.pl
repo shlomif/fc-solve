@@ -164,10 +164,11 @@ my $SAFE = $FALSE;
 my %skip_indices;
 my @tests;
 
-my @TRAVIS_CI_SKIP_FAILING_TESTS =
-    $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
+my @TRAVIS_CI_SKIP_FAILING_TESTS = (
+      ( exists( $ENV{TRAVIS} ) && ( $ENV{TRAVIS} eq 'true' ) )
     ? ( runtest_args => [qw%--exclude-re valgrind--dbm_fc_solver_1%], )
-    : ();
+    : ()
+);
 
 sub reg_test
 {
