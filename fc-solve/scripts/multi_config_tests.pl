@@ -177,7 +177,7 @@ sub reg_test
     {
         $blurb = { blurb => $blurb, randomly_avoid => $FALSE, };
     }
-    push @tests, [ $blurb, @TRAVIS_CI_SKIP_FAILING_TESTS, @_ ];
+    push @tests, [ $blurb, @_ ];
 }
 
 sub _calc_build_path
@@ -204,6 +204,7 @@ sub run_tests
 {
     my ( $idx, $blurb_rec, $args ) = @_;
 
+    $args = +{ @TRAVIS_CI_SKIP_FAILING_TESTS, %$args };
     my $blurb_base_base = $blurb_rec->{blurb};
 
     my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
