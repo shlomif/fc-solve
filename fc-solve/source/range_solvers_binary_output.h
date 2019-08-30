@@ -5,10 +5,6 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
- * range_solvers_binary_output.h - header file for range solvers binary
- * output.
- */
 #pragma once
 
 #ifdef __cplusplus

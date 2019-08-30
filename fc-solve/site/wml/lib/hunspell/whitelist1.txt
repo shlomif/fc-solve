@@ -1231,6 +1231,7 @@ DD-MMM-YYYY
 FCS_DEAL_ONLY_UP_TO_2G
 FCS_STATE_SOFT_SUSPEND_PROCESS
 Golf_
+MAX_NUM_DECKS
 PACKAGE_VERSION
 appveyor
 asciidoc
@@ -1248,6 +1249,7 @@ fc-pro-range-solver
 fc-solve-multi
 fc-solve-temp
 fc-solvers
+fc_solve_stack_compare_for_canonize
 freecell_solver_user_limit_iterations_long
 freecell_solver_user_soft_limit_iterations_long
 gen-multiple-pysol-layouts
@@ -1260,6 +1262,7 @@ libGMP
 libapr
 libtap
 macOS
+msi
 obf
 pysol-cards
 rinutils
