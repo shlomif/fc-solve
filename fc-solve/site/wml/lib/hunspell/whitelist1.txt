@@ -1315,6 +1315,7 @@ iterations's
 
 dnf
 freecell-solver-bin
+msi
 pkg
 
 ==== In: dest/faq.html
