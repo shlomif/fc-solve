@@ -32,7 +32,8 @@ addons:
             - xsltproc
 os: linux
 # dist: trusty
-dist: xenial
+# dist: xenial
+dist: bionic
 go:
     - '1.11.x'
 language: c
