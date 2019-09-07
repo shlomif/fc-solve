@@ -421,6 +421,8 @@ eval {
 };
 eval { unlink( glob("*.so") ); };
 
+$STR_OPTS{dbm}{value} //= '';
+
 my @cmd = (
     "cmake",
     (
