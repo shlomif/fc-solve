@@ -1,0 +1,33 @@
+{
+    "extends": [
+        "tslint-config-radiosilence"
+    ],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint"],
+    "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended"],
+    "parserOptions": {
+        "ecmaVersion": 6,
+        "sourceType": "module"
+    },
+    "rules": {
+        "arrow-return-shorthand": false,
+        "@typescript-eslint/camelcase": 0,
+        "@typescript-eslint/explicit-function-return-type": 0,
+        "class-name": false,
+        "max-classes-per-file": 0,
+        "no-bitwise": 0,
+        "no-conditional-assignment": false,
+        "no-string-throw": false,
+        "no-this-assignment": false,
+        "prefer-template": 0,
+        "prettier": [true,
+            {
+                "arrowParens": "always",
+                "tabWidth": 4,
+                "trailingComma": "all"
+            }
+        ],
+        "quotemark": false,
+        "variable-name": false
+    }
+}

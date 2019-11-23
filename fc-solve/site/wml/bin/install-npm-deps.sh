@@ -9,4 +9,5 @@ npm install \
     shlomif/qunit-puppeteer \
     @babel/cli @babel/core @babel/preset-env \
     @types/jquery @types/qunit \
+    @typescript-eslint/parser \
     @typescript-eslint/eslint-plugin \

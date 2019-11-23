@@ -1,7 +1,12 @@
-[ESLint]
+[ESLint javascript]
 select = lib/babel/js/*.js lib/babel/old/*.js
 argv = -c $ROOT/.eslintrc.yml --color
 ignore = lib/babel/js/jquery.phoenix.js lib/babel/js/jquery.phoenix.min.js
+
+[ESLint typescript]
+argv = -c $ROOT/eslint-ts.json
+select = src/**/*.ts
+ignore = src/ts/jquery.flot.d.ts src/ts/jq_qs.d.ts src/ts/web-fcs-tests-strings.ts src/ts/libfcs-wrap.d.ts src/js/dist/fc_solve_find_index_s2ints.d.ts
 
 [PerlTidy]
 select = **/*.{pl,pm,t}
@@ -11,8 +16,3 @@ ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/*
 [PerlCritic]
 select = **/*.{pl,pm,t}
 ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/* lib/App/Deps/Verify.pm
-
-[TSLint]
-argv = -c $ROOT/tslint.json
-select = src/**/*.ts
-ignore = src/ts/jquery.flot.d.ts src/ts/jq_qs.d.ts src/ts/web-fcs-tests-strings.ts src/ts/libfcs-wrap.d.ts src/js/dist/fc_solve_find_index_s2ints.d.ts
