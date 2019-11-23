@@ -115,8 +115,8 @@ LINES_PREFIX:
 
     my $running_state = $initial_state->clone();
 
-    my @cols_iter = ( 0 .. ( $running_state->num_columns() - 1 ) );
-    my @fc_iter   = ( 0 .. ( $running_state->num_freecells() - 1 ) );
+    my @cols_iter    = ( 0 .. ( $running_state->num_columns() - 1 ) );
+    my @fc_iter      = ( 0 .. ( $running_state->num_freecells() - 1 ) );
     my @cols_indexes = @cols_iter;
     my @fc_indexes   = @fc_iter;
 
