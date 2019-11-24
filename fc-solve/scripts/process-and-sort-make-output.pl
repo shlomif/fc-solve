@@ -22,7 +22,7 @@ sub foo
 }
 
 print map { s/[ \t]+/ /gr }
-    sort  { ( foo($a) cmp foo($b) ) or ( $a cmp $b ) }
+    sort { ( foo($a) cmp foo($b) ) or ( $a cmp $b ) }
     grep {
     not /-Dfreecell_solver_EXPOR/
         || /-Dfcs_gen_ms_freecell_boards_EXPORTS/
