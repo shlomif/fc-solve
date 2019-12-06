@@ -417,10 +417,21 @@ class FC_Solve_UI {
     }
     private _get_string_params() {
         const text = $("#string_params").val() as string;
+        function _calc(opt: string, id: string) {
+            const option_value = $("#" + id).val() as string;
+            if (option_value.match(/[^0-9]/) && option_value !== "default") {
+                throw "foo";
+            }
+            return option_value === "default"
+                ? ""
+                : " " + opt + " " + option_value + " ";
+        }
         return (
             "--game " +
             $("#game_type").val() +
             " " +
+            _calc("--freecells-num", "num_freecells") +
+            _calc("--stacks-num", "num_columns") +
             (text.match(/\S/) ? text : "")
         );
     }

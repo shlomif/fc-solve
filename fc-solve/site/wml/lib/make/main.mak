@@ -366,8 +366,8 @@ upload: all
 upload_beta: all
 	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
 
-# upload_temp: all
-#	$(RSYNC) $(TEMP_UPLOAD_URL)
+upload_temp: all
+	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL)
 
 upload_local: all
 	$(RSYNC) -a $(D)/ /var/www/html/shlomif/fc-solve-temp

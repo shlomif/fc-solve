@@ -35,6 +35,29 @@ charts1 = _htmlish('4fc-deals-charts')
 charts2 = _htmlish('4fc-deals-charts2')
 msfreecell_note = _htmlish('msfreecell-note')
 tocs = []
+
+fc_listbox_id = "num_freecells"
+fc_listbox = (
+    '<label for="{id}">Freecells Number:</label>' +
+    '<select id="{id}" class="phoenix">' +
+    '<option value="default" selected="selected">' +
+    'Default</option>{options}</select>').format(
+        id=fc_listbox_id,
+        options=''.join(
+            ['<option value="{num}">{num}</option>'.format(num=num)
+             for num in range(8+1)]))
+
+cols_listbox_id = "num_columns"
+cols_listbox = (
+    '<label for="{id}">Columns Number:</label>' +
+    '<select id="{id}" class="phoenix">' +
+    '<option value="default" selected="selected">' +
+    'Default</option>{options}</select>').format(
+        id=cols_listbox_id,
+        options=''.join(
+            ['<option value="{num}">{num}</option>'.format(num=num)
+             for num in range(1, 12+1)]))
+
 for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
     template = env.get_template(fn+'.jinja')
@@ -51,6 +74,8 @@ class="try_main">Try</span><br/>
 """.format(base_path)
     for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
         text = template.render(
+                cols_listbox=cols_listbox,
+                fc_listbox=fc_listbox,
                 production=production,
                 front_page_news=news1,
                 games1=games1,
