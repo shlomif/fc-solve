@@ -7,7 +7,6 @@ const path = require( "path" );
 
 const requireFromCWD = require( "qunit/src/cli/require-from-cwd" );
 const requireQUnit = require( "qunit/src/cli/require-qunit" );
-const utils = require( "qunit/src/cli/utils" );
 
 let QUnit;
 
@@ -15,8 +14,6 @@ function run( args, options ) {
 
 	// Default to non-zero exit code to avoid false positives
 	process.exitCode = 1;
-
-	const files = utils.getFilesFromArgs( args );
 
 	QUnit = requireQUnit();
 	// TODO: Enable mode where QUnit is not auto-injected, but other setup is
@@ -27,7 +24,7 @@ function run( args, options ) {
 
 	options.reporter.init( QUnit );
 
-    require( path.resolve( process.cwd(), files[ 0 ] ));
+    require( path.resolve( process.cwd(), args[2] ));
 
 	QUnit.start();
 }
