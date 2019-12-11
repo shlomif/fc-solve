@@ -67,28 +67,6 @@ function run( args, options ) {
 	} );
 }
 
-run.restart = function( args ) {
-	clearTimeout( this._restartDebounceTimer );
-
-	this._restartDebounceTimer = setTimeout( () => {
-
-		const watchedFiles = utils.findFiles( process.cwd(), {
-			match: [ "**/*.js" ],
-			ignore: IGNORED_GLOBS
-		} );
-
-		watchedFiles.forEach( file => delete require.cache[ path.resolve( file ) ] );
-
-		if ( QUnit.config.queue.length ) {
-			console.log( "Finishing current test and restarting..." );
-		} else {
-			console.log( "Restarting..." );
-		}
-
-		run.abort( () => run.apply( null, args ) );
-	}, RESTART_DEBOUNCE_LENGTH );
-};
-
 const JSReporters = require( "js-reporters" );
 
 const options = {
