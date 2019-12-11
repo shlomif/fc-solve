@@ -63,5 +63,5 @@ while ( my $state = read_state() )
 
     print "Counts:\n";
     print map { "$_ => $encoded_counts{$_}\n" }
-        sort  { $a <=> $b } keys(%encoded_counts);
+        sort { $a <=> $b } keys(%encoded_counts);
 }

@@ -16,8 +16,8 @@ has [ 'dest_dir_base', 'march_flag' ] =>
 has 'flto' => ( is => 'ro', isa => 'Bool', required => 1 );
 has [ 'mem', 'num_hours', 'num_threads' ] =>
     ( is => 'ro', isa => 'Int', required => 1 );
-has ['num_freecells'] => ( is => 'ro', isa => 'Int', default => 4, );
-has 'deals' => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
+has ['num_freecells'] => ( is => 'ro', isa => 'Int',           default  => 4, );
+has 'deals'           => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
 
 sub main_base
 {

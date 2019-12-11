@@ -63,7 +63,7 @@ my @game_params;
     sub cmd_calc
     {
         my ( $self, $arg ) = @_;
-        my ( $s, $e ) = $arg =~ /\A([0-9]+)-([0-9]+)\z/;
+        my ( $s,    $e )   = $arg =~ /\A([0-9]+)-([0-9]+)\z/;
         for my $i ( $s .. $e )
         {
             STDERR->print( solve( \@game_params, $i ) );

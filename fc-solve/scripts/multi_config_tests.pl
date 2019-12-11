@@ -481,7 +481,7 @@ reg_test(
 );
 reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test(
-    { blurb => "Non-Debondt Delta States", randomly_avoid => $TRUE, },
+    { blurb      => "Non-Debondt Delta States", randomly_avoid => $TRUE, },
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] }
 );
 reg_tatzer_test( { blurb => "--rcs", randomly_avoid => $TRUE, }, qw(--rcs) );
@@ -529,7 +529,7 @@ reg_test(
 {
     my @found =
         grep { -e $_ }
-        map  { _calc_build_path( $TEST_BASE_IDX + $_ ); } keys @tests;
+        map { _calc_build_path( $TEST_BASE_IDX + $_ ); } keys @tests;
     if (@found)
     {
         die
