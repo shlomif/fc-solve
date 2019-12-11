@@ -10,13 +10,6 @@ const pkg = require( "qunit/package.json" );
 const findReporter = FindReporter.findReporter;
 const displayAvailableReporters = FindReporter.displayAvailableReporters;
 
-const description = `Runs tests using the QUnit framework.
-
-  Files should be a space-separated list of file/directory paths and/or glob
-  expressions. Defaults to 'test/**/*.js'.
-
-  For more info on working with QUnit, check out http://qunitjs.com.`;
-
 function collect( val, collection ) {
 	collection.push( val );
 	return collection;
@@ -26,7 +19,6 @@ program._name = "qunit";
 program
 	.version( pkg.version )
 	.usage( "[options] [files]" )
-	.description( description )
 	.option( "--require <module>", "specify a module to require prior to running " +
 		"any tests.", collect, [] )
 	.parse( process.argv );
