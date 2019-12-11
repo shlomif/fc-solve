@@ -29,23 +29,6 @@ function findReporter( reporterName ) {
 			throw e;
 		}
 	}
-
-	// If we didn't find a reporter, display the available reporters and exit
-	displayAvailableReporters( reporterName );
-}
-
-function displayAvailableReporters( inputReporterName ) {
-	const message = [];
-
-	if ( inputReporterName ) {
-		message.push( `No reporter found matching "${inputReporterName}".` );
-	}
-
-	const jsReporters = getReportersFromJSReporters();
-
-	message.push( `Available reporters from JS Reporters are: ${jsReporters.join( ", " )}` );
-
-	utils.error( message.join( "\n" ) );
 }
 
 const options = {
