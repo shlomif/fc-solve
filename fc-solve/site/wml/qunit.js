@@ -41,17 +41,6 @@ class TapReporter {
   onTestEnd (test) {
     this.testCount = this.testCount + 1
 
-    if (test.status === 'passed') {
-      console.log(`ok ${this.testCount} ${test.fullName.join(' > ')}`)
-    } else if (test.status === 'skipped') {
-      console.log((`ok ${this.testCount} # SKIP ${test.fullName.join(' > ')}`))
-    } else if (test.status === 'todo') {
-      console.log((`not ok ${this.testCount} # TODO ${test.fullName.join(' > ')}`))
-      test.errors.forEach((error) => this.logError(error, 'todo'))
-    } else {
-      console.log((`not ok ${this.testCount} ${test.fullName.join(' > ')}`))
-      test.errors.forEach((error) => this.logError(error))
-    }
   }
 
   onRunEnd (globalSuite) {
