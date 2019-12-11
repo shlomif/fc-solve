@@ -4,6 +4,7 @@ function foo (argument) {
     // body...
   console.log("global3foo=",global);
 }
+const mythisthiskk = (function() { console.log("this==",this); return this; }());
 
 foo(10);
 /*!
@@ -6635,7 +6636,7 @@ var _q = (function (global$1) {
   	};
   }();
 
-}((function() { console.log("this==",this); return this; }())));
+}(mythisthiskk));
 
 console.log(_q);
 "use strict";
