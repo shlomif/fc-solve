@@ -45,22 +45,7 @@ function displayAvailableReporters( inputReporterName ) {
 
 	message.push( `Available reporters from JS Reporters are: ${jsReporters.join( ", " )}` );
 
-	const npmReporters = getReportersFromDependencies();
-	if ( npmReporters.length ) {
-		message.push(
-			`Available custom reporters from dependencies are: ${npmReporters.join( ", " )}`
-		);
-	}
-
 	utils.error( message.join( "\n" ) );
-}
-
-function getReportersFromJSReporters() {
-	const jsReporterRegex = /(.*)Reporter$/;
-	return Object.keys( JSReporters )
-		.filter( key => jsReporterRegex.test( key ) )
-		.map( reporter => reporter.match( jsReporterRegex )[ 1 ].toLowerCase() )
-		.sort();
 }
 
 const options = {
