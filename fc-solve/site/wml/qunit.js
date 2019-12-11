@@ -8,7 +8,6 @@ const FindReporter = require( "qunit/src/cli/find-reporter" );
 const pkg = require( "qunit/package.json" );
 
 const findReporter = FindReporter.findReporter;
-const displayAvailableReporters = FindReporter.displayAvailableReporters;
 
 function collect( val, collection ) {
 	collection.push( val );
