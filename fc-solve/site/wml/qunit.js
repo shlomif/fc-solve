@@ -9,20 +9,12 @@ const pkg = require( "qunit/package.json" );
 
 const findReporter = FindReporter.findReporter;
 
-function collect( val, collection ) {
-	collection.push( val );
-	return collection;
-}
-
-program
-	.option( "--require <module>", "specify a module to require prior to running " +
-		"any tests.", collect, [] )
-	.parse( process.argv );
+program.parse( process.argv );
 
 const args = program.args;
 const options = {
 	reporter: findReporter( program.reporter ),
-	requires: program.require,
+	requires: [],
 	seed: program.seed
 };
 
