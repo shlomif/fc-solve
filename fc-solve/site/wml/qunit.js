@@ -9,13 +9,6 @@ const requireFromCWD = require( "qunit/src/cli/require-from-cwd" );
 const requireQUnit = require( "qunit/src/cli/require-qunit" );
 const utils = require( "qunit/src/cli/utils" );
 
-const IGNORED_GLOBS = [
-	".git",
-	"node_modules"
-].concat( utils.getIgnoreList( process.cwd() ) );
-
-const RESTART_DEBOUNCE_LENGTH = 200;
-
 let QUnit;
 
 function run( args, options ) {
