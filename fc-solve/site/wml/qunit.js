@@ -44,33 +44,9 @@ class TapReporter {
   }
 
   onRunEnd (globalSuite) {
-    console.log(`1..${globalSuite.testCounts.total}`)
-    console.log(`# pass ${globalSuite.testCounts.passed}`)
-    console.log((`# skip ${globalSuite.testCounts.skipped}`))
-    console.log((`# todo ${globalSuite.testCounts.todo}`))
-    console.log((`# fail ${globalSuite.testCounts.failed}`))
   }
 
   logError (error, severity) {
-    console.log('  ---')
-    console.log(`  message: "${error.message || 'failed'}"`)
-    console.log(`  severity: ${severity || 'failed'}`)
-
-    if (error.hasOwnProperty('actual')) {
-      var actualStr = error.actual !== undefined ? JSON.stringify(error.actual, null, 2) : 'undefined'
-      console.log(`  actual: ${actualStr}`)
-    }
-
-    if (error.hasOwnProperty('expected')) {
-      var expectedStr = error.expected !== undefined ? JSON.stringify(error.expected, null, 2) : 'undefined'
-      console.log(`  expected: ${expectedStr}`)
-    }
-
-    if (error.stack) {
-      console.log(`  stack: ${error.stack}`)
-    }
-
-    console.log('  ...')
   }
 }
 run( process.argv,  TapReporter);
