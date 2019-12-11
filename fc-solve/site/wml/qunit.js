@@ -31,24 +31,7 @@ function run( args, options ) {
 		require( path.resolve( process.cwd(), files[ i ] ));
 	}
 
-	let running = true;
-
-	process.on( "exit", function() {
-		if ( running ) {
-			console.error( "Error: Process exited before tests finished running" );
-
-			const currentTest = QUnit.config.current;
-			if ( currentTest && currentTest.semaphore ) {
-				const name = currentTest.testName;
-				console.error( "Last test to run (" + name + ") has an async hold. " +
-					"Ensure all assert.async() callbacks are invoked and Promises resolve. " +
-					"You should also set a standard timeout via QUnit.config.testTimeout." );
-			}
-		}
-	} );
-
 	QUnit.start();
-
 }
 
 const JSReporters = require( "js-reporters" );
