@@ -107,41 +107,6 @@ run.abort = function( callback ) {
 	}
 };
 
-run.watch = function watch() {
-	const watch = require( "node-watch" );
-	const args = Array.prototype.slice.call( arguments );
-	const baseDir = process.cwd();
-
-	const watcher = watch( baseDir, {
-		persistent: true,
-		recursive: true,
-		delay: 0,
-		filter: ( fullpath ) => {
-			return !/\/node_modules\//.test( fullpath ) &&
-				/\.js$/.test( fullpath );
-		}
-	}, ( event, fullpath ) => {
-		console.log( `File ${event}: ${path.relative( baseDir, fullpath )}` );
-		run.restart( args );
-	} );
-
-	watcher.on( "ready", () => {
-		run.apply( null, args );
-	} );
-
-	function stop() {
-		console.log( "Stopping QUnit..." );
-
-		watcher.close();
-		run.abort( () => {
-			process.exit();
-		} );
-	}
-
-	process.on( "SIGTERM", stop );
-	process.on( "SIGINT", stop );
-};
-
 const JSReporters = require( "js-reporters" );
 
 const options = {
