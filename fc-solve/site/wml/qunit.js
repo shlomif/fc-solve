@@ -22,7 +22,6 @@ program
 
 const args = program.args;
 const options = {
-	filter: program.filter,
 	reporter: findReporter( program.reporter ),
 	requires: program.require,
 	seed: program.seed
