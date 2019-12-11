@@ -11,11 +11,10 @@ const findReporter = FindReporter.findReporter;
 
 program.parse( process.argv );
 
-const args = program.args;
 const options = {
 	reporter: findReporter( program.reporter ),
 	requires: [],
 	seed: program.seed
 };
 
-run( args, options );
+run( program.args, options );
