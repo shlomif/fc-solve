@@ -19,15 +19,13 @@ foo(10);
  *
  * Date: 2019-10-08T15:49Z
  */
-var _q = function (global$1) {
-  console.log("global[ flutey]=\n\n");
-
-    return;
+const _q = function (global$1) {
   global$1 = global$1 && global$1.hasOwnProperty('default') ? global$1['default'] : global$1;
+  let console = global$1.console;
+  console.log("global[ flutey]=\n\n");
 
   var window$1 = global$1.window;
   var self$1 = global$1.self;
-  var console = global$1.console;
   var setTimeout$1 = global$1.setTimeout;
   var clearTimeout = global$1.clearTimeout;
 
