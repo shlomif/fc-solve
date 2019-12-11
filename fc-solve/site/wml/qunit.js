@@ -89,24 +89,6 @@ run.restart = function( args ) {
 	}, RESTART_DEBOUNCE_LENGTH );
 };
 
-run.abort = function( callback ) {
-	function clearQUnit() {
-		delete global.QUnit;
-		QUnit = null;
-		if ( callback ) {
-			callback();
-		}
-	}
-
-	if ( QUnit.config.queue.length ) {
-		const nextTestIndex = QUnit.config.queue.findIndex( fn => fn.name === "runTest" );
-		QUnit.config.queue.splice( nextTestIndex );
-		QUnit.on( "runEnd", clearQUnit );
-	} else {
-		clearQUnit();
-	}
-};
-
 const JSReporters = require( "js-reporters" );
 
 const options = {
