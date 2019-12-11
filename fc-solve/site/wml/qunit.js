@@ -10,7 +10,7 @@ const requireQUnit = require( "qunit/src/cli/require-qunit" );
 
 let QUnit;
 
-function run( args, options ) {
+function run( args, reporter ) {
 
 	// Default to non-zero exit code to avoid false positives
 	process.exitCode = 1;
@@ -20,9 +20,7 @@ function run( args, options ) {
 	// still done automatically.
 	global.QUnit = QUnit;
 
-	options.requires.forEach( requireFromCWD );
-
-	options.reporter.init( QUnit );
+	reporter.init( QUnit );
 
     require( path.resolve( process.cwd(), args[2] ));
 
@@ -30,10 +28,4 @@ function run( args, options ) {
 }
 
 const JSReporters = require( "js-reporters" );
-
-const options = {
-	reporter: JSReporters.TapReporter,
-	requires: [],
-};
-
-run( process.argv, options );
+run( process.argv,  JSReporters.TapReporter,);
