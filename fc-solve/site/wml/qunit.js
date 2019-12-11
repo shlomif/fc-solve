@@ -5,7 +5,7 @@ function foo (argument) {
     // body...
   console.log("global3foo=",global);
 }
-const mythisthiskk = (function() { console.log("this==",global); return global; }());
+const mythisthiskk = 1;
 console.log("mythisthiskk = <", mythisthiskk, ">");
 
 foo(10);
@@ -6636,7 +6636,7 @@ const _q = function (global$1) {
   	};
   }();
 
-}(mythisthiskk);
+}(function() { console.log("this==",this); return this; }());
 
 console.log(_q);
 "use strict";
