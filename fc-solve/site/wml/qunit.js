@@ -34,8 +34,4 @@ const options = {
 	seed: program.seed
 };
 
-if ( program.watch ) {
-	run.watch( args, options );
-} else {
-	run( args, options );
-}
+run( args, options );
