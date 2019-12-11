@@ -20,10 +20,6 @@ program
 		"any tests.", collect, [] )
 	.parse( process.argv );
 
-if ( program.reporter === true ) {
-	displayAvailableReporters();
-}
-
 const args = program.args;
 const options = {
 	filter: program.filter,
