@@ -2,8 +2,6 @@
 
 "use strict";
 
-const chalk = require( 'chalk');
-
 const program = require( "commander" );
 const path = require( "path" );
 
@@ -46,12 +44,12 @@ class TapReporter {
     if (test.status === 'passed') {
       console.log(`ok ${this.testCount} ${test.fullName.join(' > ')}`)
     } else if (test.status === 'skipped') {
-      console.log(chalk.yellow(`ok ${this.testCount} # SKIP ${test.fullName.join(' > ')}`))
+      console.log((`ok ${this.testCount} # SKIP ${test.fullName.join(' > ')}`))
     } else if (test.status === 'todo') {
-      console.log(chalk.cyan(`not ok ${this.testCount} # TODO ${test.fullName.join(' > ')}`))
+      console.log((`not ok ${this.testCount} # TODO ${test.fullName.join(' > ')}`))
       test.errors.forEach((error) => this.logError(error, 'todo'))
     } else {
-      console.log(chalk.red(`not ok ${this.testCount} ${test.fullName.join(' > ')}`))
+      console.log((`not ok ${this.testCount} ${test.fullName.join(' > ')}`))
       test.errors.forEach((error) => this.logError(error))
     }
   }
@@ -59,9 +57,9 @@ class TapReporter {
   onRunEnd (globalSuite) {
     console.log(`1..${globalSuite.testCounts.total}`)
     console.log(`# pass ${globalSuite.testCounts.passed}`)
-    console.log(chalk.yellow(`# skip ${globalSuite.testCounts.skipped}`))
-    console.log(chalk.cyan(`# todo ${globalSuite.testCounts.todo}`))
-    console.log(chalk.red(`# fail ${globalSuite.testCounts.failed}`))
+    console.log((`# skip ${globalSuite.testCounts.skipped}`))
+    console.log((`# todo ${globalSuite.testCounts.todo}`))
+    console.log((`# fail ${globalSuite.testCounts.failed}`))
   }
 
   logError (error, severity) {
