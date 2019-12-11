@@ -5,7 +5,8 @@ function foo (argument) {
     // body...
   console.log("global3foo=",global);
 }
-const mythisthiskk = (function() { console.log("this==",this); return this; }());
+const mythisthiskk = (function() { console.log("this==",global); return global; }());
+console.log("mythisthiskk = <", mythisthiskk, ">");
 
 foo(10);
 /*!
@@ -18,9 +19,10 @@ foo(10);
  *
  * Date: 2019-10-08T15:49Z
  */
-var _q = (function (global$1) {
+var _q = function (global$1) {
   console.log("global[ flutey]=\n\n");
 
+    return;
   global$1 = global$1 && global$1.hasOwnProperty('default') ? global$1['default'] : global$1;
 
   var window$1 = global$1.window;
@@ -6636,7 +6638,7 @@ var _q = (function (global$1) {
   	};
   }();
 
-}(mythisthiskk));
+}(mythisthiskk);
 
 console.log(_q);
 "use strict";
