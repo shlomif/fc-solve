@@ -27,9 +27,6 @@ program
 	.version( pkg.version )
 	.usage( "[options] [files]" )
 	.description( description )
-	.option( "-r, --reporter [name]", "specify the reporter to use; " +
-		"if no match is found or no name is provided, a list of available " +
-		"reporters will be displayed" )
 	.option( "--require <module>", "specify a module to require prior to running " +
 		"any tests.", collect, [] )
 	.option( "--seed [value]", "specify a seed to order your tests; " +
