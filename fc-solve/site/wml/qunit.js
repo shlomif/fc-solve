@@ -5,7 +5,6 @@
 const program = require( "commander" );
 const run = require( "qunit/src/cli/run" );
 const FindReporter = require( "qunit/src/cli/find-reporter" );
-const pkg = require( "qunit/package.json" );
 
 const findReporter = FindReporter.findReporter;
 
