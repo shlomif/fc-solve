@@ -16,8 +16,6 @@ function collect( val, collection ) {
 }
 
 program
-	.version( pkg.version )
-	.usage( "[options] [files]" )
 	.option( "--require <module>", "specify a module to require prior to running " +
 		"any tests.", collect, [] )
 	.parse( process.argv );
