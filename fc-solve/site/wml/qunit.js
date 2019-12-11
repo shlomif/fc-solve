@@ -15,7 +15,6 @@ function collect( val, collection ) {
 	return collection;
 }
 
-program._name = "qunit";
 program
 	.version( pkg.version )
 	.usage( "[options] [files]" )
