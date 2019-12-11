@@ -29,8 +29,6 @@ program
 	.description( description )
 	.option( "--require <module>", "specify a module to require prior to running " +
 		"any tests.", collect, [] )
-	.option( "--seed [value]", "specify a seed to order your tests; " +
-		"if option is specified without a value, one will be generated" )
 	.option( "-w, --watch", "Watch files for changes and re-run the test suite" )
 	.parse( process.argv );
 
