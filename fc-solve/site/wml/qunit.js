@@ -25,9 +25,6 @@ class TapReporter {
   constructor (runner) {
     this.testCount = 0
 
-    runner.on('runStart', this.onRunStart.bind(this))
-    runner.on('testEnd', this.onTestEnd.bind(this))
-    runner.on('runEnd', this.onRunEnd.bind(this))
   }
 
   static init (runner) {
@@ -35,12 +32,9 @@ class TapReporter {
   }
 
   onRunStart (globalSuite) {
-    console.log('TAP version 13')
   }
 
   onTestEnd (test) {
-    this.testCount = this.testCount + 1
-
   }
 
   onRunEnd (globalSuite) {
