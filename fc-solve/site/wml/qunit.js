@@ -14,7 +14,6 @@ program.parse( process.argv );
 const options = {
 	reporter: findReporter( program.reporter ),
 	requires: [],
-	seed: program.seed
 };
 
 run( program.args, options );
