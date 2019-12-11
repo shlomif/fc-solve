@@ -23,8 +23,6 @@ function run( args, reporter ) {
 
 class TapReporter {
   constructor (runner) {
-    this.testCount = 0
-
   }
 
   static init (runner) {
