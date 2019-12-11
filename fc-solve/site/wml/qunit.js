@@ -27,10 +27,6 @@ function run( args, options ) {
 
 	QUnit = requireQUnit();
 
-	if ( options.filter ) {
-		QUnit.config.filter = options.filter;
-	}
-
 	const seed = options.seed;
 	if ( seed ) {
 		if ( seed === true ) {
