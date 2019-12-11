@@ -8,11 +8,9 @@ const FindReporter = require( "qunit/src/cli/find-reporter" );
 
 const findReporter = FindReporter.findReporter;
 
-program.parse( process.argv );
-
 const options = {
 	reporter: findReporter( program.reporter ),
 	requires: [],
 };
 
-run( program.args, options );
+run( process.argv, options );
