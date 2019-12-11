@@ -27,9 +27,7 @@ function run( args, options ) {
 
 	options.reporter.init( QUnit );
 
-	for ( let i = 0; i < files.length; i++ ) {
-		require( path.resolve( process.cwd(), files[ i ] ));
-	}
+    require( path.resolve( process.cwd(), files[ 0 ] ));
 
 	QUnit.start();
 }
