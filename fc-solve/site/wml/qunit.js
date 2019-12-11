@@ -29,7 +29,6 @@ program
 	.description( description )
 	.option( "--require <module>", "specify a module to require prior to running " +
 		"any tests.", collect, [] )
-	.option( "-w, --watch", "Watch files for changes and re-run the test suite" )
 	.parse( process.argv );
 
 if ( program.reporter === true ) {
