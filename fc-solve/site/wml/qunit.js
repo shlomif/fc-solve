@@ -18,7 +18,7 @@ foo(10);
  */
 var _q = (function (global$1) {
   'use strict';
-  console.log("global1=",global$1);
+  console.log("global[ flutey]=\n\n");
 
   global$1 = global$1 && global$1.hasOwnProperty('default') ? global$1['default'] : global$1;
 
