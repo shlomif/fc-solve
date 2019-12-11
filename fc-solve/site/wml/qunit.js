@@ -4,8 +4,6 @@
 
 const program = require( "commander" );
 const path = require( "path" );
-
-const requireFromCWD = require( "qunit/src/cli/require-from-cwd" );
 const requireQUnit = require( "qunit/src/cli/require-qunit" );
 
 function run( args, reporter ) {
