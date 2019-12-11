@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
 #
@@ -6,22 +6,22 @@
 #
 # Distributed under terms of the MIT license.
 
-"""
-
-"""
-
 import time
 
 
 def main():
-    """docstring for main"""
+    o = None
+
+    def pump(s, delay=2):
+        o.write(s + "\n")
+        o.flush()
+        time.sleep(delay)
+
     o = open("/home/shlomif/in.pipe", "wt")
-    o.write("breakOnUncaught\n")
-    o.flush()
-    time.sleep(2)
-    o.write("c\n")
-    o.flush()
-    time.sleep(0.2)
+
+    pump("breakOnUncaught")
+    pump("c", 5)
+    pump("c")
 
 
 main()
