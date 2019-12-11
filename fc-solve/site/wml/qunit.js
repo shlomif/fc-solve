@@ -52,15 +52,6 @@ function run( args, options ) {
 
 	let running = true;
 
-	// Listen for unhandled rejections, and call QUnit.onUnhandledRejection
-	process.on( "unhandledRejection", function( reason ) {
-		QUnit.onUnhandledRejection( reason );
-	} );
-
-	process.on( "uncaughtException", function( error ) {
-		QUnit.onError( error );
-	} );
-
 	process.on( "exit", function() {
 		if ( running ) {
 			console.error( "Error: Process exited before tests finished running" );
