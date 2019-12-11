@@ -4,7 +4,6 @@
 
 const program = require( "commander" );
 const path = require( "path" );
-const resolve = require( "resolve" );
 
 function run( args, reporter ) {
 
