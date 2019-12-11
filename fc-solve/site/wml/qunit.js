@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 
+'use strict';
 function foo (argument) {
     // body...
   console.log("global3foo=",global);
@@ -18,7 +19,6 @@ foo(10);
  * Date: 2019-10-08T15:49Z
  */
 var _q = (function (global$1) {
-  'use strict';
   console.log("global[ flutey]=\n\n");
 
   global$1 = global$1 && global$1.hasOwnProperty('default') ? global$1['default'] : global$1;
