@@ -49,15 +49,6 @@ function run( args, options ) {
 
 	QUnit.start();
 
-	QUnit.on( "runEnd", function setExitCode( data ) {
-		running = false;
-
-		if ( data.testCounts.failed ) {
-			process.exitCode = 1;
-		} else {
-			process.exitCode = 0;
-		}
-	} );
 }
 
 const JSReporters = require( "js-reporters" );
