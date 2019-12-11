@@ -50,18 +50,7 @@ function run( args, options ) {
 		const filePath = path.resolve( process.cwd(), files[ i ] );
 		delete require.cache[ filePath ];
 
-		try {
 			require( filePath );
-		} catch ( e ) {
-
-			// eslint-disable-next-line no-loop-func
-			QUnit.module( files[ i ], function() {
-				const loadFailureMessage = `Failed to load the test file with error:\n${e.stack}`;
-				QUnit.test( loadFailureMessage, function( assert ) {
-					assert.ok( false, "should be able to load file" );
-				} );
-			} );
-		}
 	}
 
 	let running = true;
