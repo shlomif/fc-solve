@@ -1,9 +1,7 @@
 if (process.env.SKIP_EMCC != '1') {
     // QUnit.config.autostart = false;
     const test_code = require('web-fc-solve-tests');
-    test_code.test_js_fc_solve_class(QUnit, function() {
-        return;
-    });
+    test_code.test_js_fc_solve_class();
 } else {
     QUnit.module("SKIP_EMCC");
     QUnit.test("dummy", (a) => {
