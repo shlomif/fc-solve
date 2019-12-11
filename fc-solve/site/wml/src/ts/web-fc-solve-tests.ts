@@ -6,5 +6,6 @@ export function test_js_fc_solve_class() {
     console.log("gflut\n");
     _my_mod[0] = Module()({
     });
+    console.log("end\n");
     return;
 }
