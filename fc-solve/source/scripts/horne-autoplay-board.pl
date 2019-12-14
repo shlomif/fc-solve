@@ -36,7 +36,7 @@ sub run
     my $s = do { local $/; <$fh> };
     close($fh);
     $s =~ s/^(\w)/: $1/gms;
-    $s = "Freecells:\n$s" if ( $s !~ /^Freecells/ms );
+    $s = "Freecells:\n$s"                   if ( $s !~ /^Freecells/ms );
     $s = "Foundations: H-0 C-0 D-0 S-0\n$s" if ( $s !~ /^Found/ms );
 
     my $running_state = Games::Solitaire::Verify::State->new(

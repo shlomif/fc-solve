@@ -21,7 +21,7 @@ for ( 1 .. 7 )
 $layout = ( lc join '', @cards ) . " -- -- -- -- --\n$layout";
 
 my ( $deck, $over, $spades, $hearts, $diamonds, $clubs, @stacks );
-my %found = ( S => \$spades, H => \$hearts, D => \$diamonds, C => \$clubs );
+my %found    = ( S => \$spades, H => \$hearts, D => \$diamonds, C => \$clubs );
 my %wantsuit = ( S => '[HD]', H => '[SC]', D => '[SC]', C => '[HD]' );
 my ( %rank, %state, $moves );
 @rank{qw(-A A2 23 34 45 56 67 78 89 9T TJ JQ QK)} = ();
