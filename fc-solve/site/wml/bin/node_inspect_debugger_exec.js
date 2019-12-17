@@ -26,13 +26,18 @@ test('qunit-emcc-fcs', (t) => {
         'shows hint for how to leave repl');
       t.notMatch(cli.output, 'debug>', 'changes the repl style');
     })*/
+    .then(() => cli.command('sb("lib/for-node/js/web-fc-solve-tests.js", 2)'))
+    .then(() => cli.command('sb("lib/for-node/js/libfreecell-solver.min.js", 1833)'))
     .then(() => cli.command('cont'))
     .then(() => {console.log(cli.output);})
     // .then(() => cli.waitFor(/debug> $/))
     // .then(() => cli.command('cont'))
     // .then(() => cli.command('cont'))
     // .then(() => cli.waitFor(/function/))
-    .then(() => cli.waitFor(/No|throw/, timeout))
+    .then(() => cli.waitForPrompt(timeout))
+    .then(() => cli.command('cont'))
+    .then(() => cli.waitForPrompt(timeout))
+    // .then(() => cli.waitFor(/No|throw/, timeout))
     .then(() => {
         console.log(cli.output);
         // console.log(cli);
