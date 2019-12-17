@@ -3,16 +3,17 @@ const { test } = require('tap');
 
 const startCLI = require('./start-cli');
 
-test('examples/alive.js', (t) => {
+test('qunit-emcc-fcs', (t) => {
     const cli = startCLI(['node_modules/.bin/qunit', 'lib/for-node/test-code-emcc.js']);
 
   function onFatal(error) {
     cli.quit();
     throw error;
   }
+    const timeout = 20*1000;
 
-  return cli.waitForInitialBreak()
-    .then(() => cli.waitForPrompt())
+  return cli.waitForInitialBreak(timeout)
+    .then(() => cli.waitForPrompt(timeout))
 /*    .then(() => cli.command('exec [typeof heartbeat, typeof process.exit]'))
     .then(() => {
       t.match(cli.output, '[ \'function\', \'function\' ]', 'works w/o paren');
@@ -25,9 +26,18 @@ test('examples/alive.js', (t) => {
         'shows hint for how to leave repl');
       t.notMatch(cli.output, 'debug>', 'changes the repl style');
     })*/
-    .then(() => cli.command('run'))
+    .then(() => cli.command('cont'))
+    .then(() => {console.log(cli.output);})
+    // .then(() => cli.waitFor(/debug> $/))
+    // .then(() => cli.command('cont'))
+    // .then(() => cli.command('cont'))
     // .then(() => cli.waitFor(/function/))
-    .then(() => cli.waitForPrompt())
+    .then(() => cli.waitFor(/No|throw/, timeout))
+    .then(() => {
+        console.log(cli.output);
+        // console.log(cli);
+    })
+    .then(() => cli.waitForPrompt(timeout))
     /*.then(() => {
       t.match(
         cli.output,
@@ -49,6 +59,7 @@ test('examples/alive.js', (t) => {
         'non-paused exec can see global but not module-scope values');
     })
     */
+    .then(() => {console.log(cli.output);})
     .then(() => cli.quit())
     .then(null, onFatal);
 });
