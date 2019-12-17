@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+set -e -x
+base="Freecell-Solver--benchmarks-vs-time"
+tsv="$base.tsv"
+perl fc-solve/scripts/plot-benchmarks-against-time.pl | tee "$tsv"
+xlsx="$base.xlsx"
+cat "$tsv" | (perl -nalE 'say join",",@F[0,2]') | csv2chart xlsx -o "$xlsx" --title "fc-solve Benchmark"
+ods="$base.ods"
+ssconvert "$xlsx" "$ods"
+svgtemp="i.svg"
+svgtemp0="$svgtemp.0"
+ssconvert --export-graphs "$xlsx" "$svgtemp"
+svg="$base.svg"
+mv -f "$svgtemp0" "$svg"
+eog "$svg"
