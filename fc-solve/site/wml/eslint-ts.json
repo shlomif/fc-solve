@@ -24,6 +24,7 @@
         "max-classes-per-file": 0,
         "no-bitwise": 0,
         "no-conditional-assignment": false,
+        "no-console": 0,
         "no-constant-condition": 0,
         "no-inner-declarations": 0,
         "no-string-throw": false,
