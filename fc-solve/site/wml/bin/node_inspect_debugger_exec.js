@@ -23,7 +23,17 @@ test('qunit-emcc-fcs', (t) => {
         };
         run() {
             const that = this;
-            cli.command(that.cmds[that.idx++]) .then(() => cli.waitForPrompt(timeout)) .then(() => {console.log(cli.output);}) .then(() => {that.run()});
+            console.log(cli.output);
+            if (that.idx === that.cmds.length) {
+                console.log("foooooooollllllkkkkkkkkkk\n");
+                return;
+            } else {
+                console.log("apploo idx=" + that.idx + ";\n" );
+            }
+            cli.command(that.cmds[that.idx++]) .then(() => {
+                console.log("output=[[[[[[[[[[" + cli.output + "]]]]]]]]]]\n");
+                cli.waitForPrompt(timeout);
+            })  .then(() => {that.run()});
         }
     }
 
@@ -31,8 +41,8 @@ test('qunit-emcc-fcs', (t) => {
 
     return cli.waitForInitialBreak(timeout)
         .then(() => cli.waitForPrompt(timeout))
-//        .then(() => {queue.run();})
-        .then(() => {console.log(cli.output);})
+        .then(() => {queue.run();})
+        // .then(() => {console.log(cli.output);})
         .then(() => cli.quit())
         .then(null, onFatal);
 });
