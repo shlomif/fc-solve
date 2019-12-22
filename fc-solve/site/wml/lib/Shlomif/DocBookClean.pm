@@ -3,11 +3,25 @@ package Shlomif::DocBookClean;
 use strict;
 use warnings;
 
+use XML::LibXML  ();
+use XML::LibXSLT ();
+
+my $xslt      = XML::LibXSLT->new;
+my $style_doc = XML::LibXML->load_xml(
+    location => "./bin/clean-up-docbook-xhtml5.xslt",
+    no_cdata => 1
+);
+my $stylesheet = $xslt->parse_stylesheet($style_doc);
+
 sub cleanup_docbook
 {
     my ($str_ref) = @_;
+    my $source    = XML::LibXML->load_xml( string => $$str_ref, );
+    my $results   = $stylesheet->transform($source);
+    $$str_ref = $stylesheet->output_as_chars($results);
 
     # It's a kludge
+    $$str_ref =~ s/[ \t]+$//gms;
     $$str_ref =~ s#<head profile="">#<head>#g;
     $$str_ref =~
 s# (?:xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"|xml:space="preserve")([ >]|/>)#$1#g;
