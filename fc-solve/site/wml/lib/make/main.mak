@@ -7,7 +7,7 @@ include lib/make/include.mak
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
 
-SKIP_EMCC = 0
+SKIP_EMCC ?= 0
 
 D = dest
 
