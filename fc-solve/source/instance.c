@@ -125,8 +125,7 @@ static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
             &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
         break;
 
-    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
-    {
+    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS: {
         size_t moves_order = 0;
 
         accumulate_tests_by_ptr(&moves_order,
@@ -438,8 +437,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             switch (move_ptr->totype)
             {
 #if MAX_NUM_FREECELLS > 0
-            case FCS_PATS__TYPE_FREECELL:
-            {
+            case FCS_PATS__TYPE_FREECELL: {
                 stack_i src_col_idx;
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
                      ++src_col_idx)
@@ -471,8 +469,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             }
             break;
 #endif
-            case FCS_PATS__TYPE_FOUNDATION:
-            {
+            case FCS_PATS__TYPE_FOUNDATION: {
                 const find_card_ret src = find_card_src_string(&(s_and_info.s),
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)
                         PASS_STACKS(STACKS_NUM__VAL));
@@ -490,8 +487,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
                 fcs_int_move_set_dest(out_move, fcs_card_suit(card));
             }
             break;
-            default:
-            {
+            default: {
                 const fcs_card dest_card = move_ptr->destcard;
                 const find_card_ret src = find_card_src_string(s,
                     card PASS_FREECELLS(FREECELLS_NUM__VAL)

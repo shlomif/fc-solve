@@ -93,8 +93,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
 
         switch (fcs_move_get_type(move))
         {
-        case FCS_MOVE_TYPE_STACK_TO_FOUNDATION:
-        {
+        case FCS_MOVE_TYPE_STACK_TO_FOUNDATION: {
             const int src = fcs_move_get_src_stack(move);
             var_AUTO(col, fcs_state_get_col(pos, src));
             assert(virtual_stack_len[src] >= fcs_col_len(col));
@@ -162,8 +161,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
 #endif
         break;
 
-        case FCS_MOVE_TYPE_STACK_TO_STACK:
-        {
+        case FCS_MOVE_TYPE_STACK_TO_STACK: {
             const_AUTO(src, fcs_move_get_src_freecell(move));
             const_AUTO(dest, fcs_move_get_dest_stack(move));
             stack_i num_cards = fcs_move_get_num_cards_in_seq(move);

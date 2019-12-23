@@ -64,8 +64,7 @@ int main(const int argc, char **const argv)
         fflush(output_fh);
         switch (ret)
         {
-        case FCS_STATE_INVALID_STATE:
-        {
+        case FCS_STATE_INVALID_STATE: {
 #ifdef FCS_WITH_ERROR_STRS
             char error_string[120];
 
@@ -84,8 +83,7 @@ int main(const int argc, char **const argv)
             exit_code = ERROR;
             break;
 
-        default:
-        {
+        default: {
             fc_solve_output_result_to_file(
                 output_fh, instance, ret, &display_context);
         }

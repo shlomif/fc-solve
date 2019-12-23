@@ -32,8 +32,7 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
 #define state_key (ptr_state_key)
     switch (fcs_int_move_get_type(move))
     {
-    case FCS_MOVE_TYPE_STACK_TO_STACK:
-    {
+    case FCS_MOVE_TYPE_STACK_TO_STACK: {
         fcs_col_transfer_cards(fcs_state_get_col(*state_key, dest),
             fcs_state_get_col(*state_key, src),
             fcs_int_move_get_num_cards_in_seq(move));
@@ -44,16 +43,14 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
         fcs_state_push(state_key, dest, fcs_freecell_card(*state_key, src));
         fcs_empty_freecell(*state_key, src);
         break;
-    case FCS_MOVE_TYPE_FREECELL_TO_FREECELL:
-    {
+    case FCS_MOVE_TYPE_FREECELL_TO_FREECELL: {
         fcs_card card = fcs_freecell_card(*state_key, src);
         fcs_put_card_in_freecell(*state_key, dest, card);
         fcs_empty_freecell(*state_key, src);
     }
     break;
 
-    case FCS_MOVE_TYPE_STACK_TO_FREECELL:
-    {
+    case FCS_MOVE_TYPE_STACK_TO_FREECELL: {
         col = fcs_state_get_col(*state_key, src);
         fcs_card card;
         fcs_col_pop_card(col, card);

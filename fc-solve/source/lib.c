@@ -1133,8 +1133,7 @@ static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
     }
     switch (local_shuffling_type)
     {
-    case FCS_RAND:
-    {
+    case FCS_RAND: {
         for (size_t i = num_states - 1; i > 0; i--)
         {
             const typeof(i) j =
@@ -3694,8 +3693,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
         break;
 
     case FCS_METHOD_RANDOM_DFS:
-    case FCS_METHOD_SOFT_DFS:
-    {
+    case FCS_METHOD_SOFT_DFS: {
         super_method_type = FCS_SUPER_METHOD_DFS;
         soft_thread->master_to_randomize =
             (int_method == FCS_METHOD_RANDOM_DFS);
@@ -3703,8 +3701,7 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
     break;
 
 #ifndef FCS_DISABLE_PATSOLVE
-    case FCS_METHOD_PATSOLVE:
-    {
+    case FCS_METHOD_PATSOLVE: {
         super_method_type = FCS_SUPER_METHOD_PATSOLVE;
 
         if (!soft_thread->pats_scan)
@@ -4026,8 +4023,7 @@ void freecell_solver_user_get_invalid_state_error_into_string(
         break;
 
     case FCS_STATE_VALIDITY__MISSING_CARD:
-    case FCS_STATE_VALIDITY__EXTRA_CARD:
-    {
+    case FCS_STATE_VALIDITY__EXTRA_CARD: {
         /*
          * user->state_validity_card is only valid for these states,
          * so we should call fc_solve_card_stringify on there only.

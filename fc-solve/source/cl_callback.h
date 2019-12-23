@@ -71,8 +71,7 @@ int main(const int argc, char **const argv)
     exit_code_type exit_code = SUCCESS;
     switch (ret)
     {
-    case FCS_STATE_INVALID_STATE:
-    {
+    case FCS_STATE_INVALID_STATE: {
 #ifdef FCS_WITH_ERROR_STRS
         char error_string[120];
 
@@ -91,8 +90,7 @@ int main(const int argc, char **const argv)
         exit_code = ERROR;
         break;
 
-    default:
-    {
+    default: {
         FILE *output_fh;
 
         if (display_context.output_filename)

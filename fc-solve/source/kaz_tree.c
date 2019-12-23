@@ -349,8 +349,7 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
                     next = current->right;
                 }
                 else
-                case from_right:
-                {
+                case from_right: {
                     came_from = (current == current->parent->left) ? from_left
                                                                    : from_right;
                     next = current->parent;
@@ -1551,8 +1550,7 @@ void dict_merge(dict_t *const dest, dict_t *const source)
             break;
         }
 
-    copyleft:
-    {
+    copyleft : {
         dnode_t *next = dict_next(dest, leftnode);
 #ifndef NDEBUG
         leftnode->left = NULL; /* suppress assertion in dict_load_next */
@@ -1562,8 +1560,7 @@ void dict_merge(dict_t *const dest, dict_t *const source)
         continue;
     }
 
-    copyright:
-    {
+    copyright : {
         dnode_t *next = dict_next(source, rightnode);
 #ifndef NDEBUG
         rightnode->left = NULL;

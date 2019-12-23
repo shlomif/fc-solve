@@ -136,8 +136,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
 
                 break;
 
-            case '\\':
-            {
+            case '\\': {
                 const_AUTO(next_char, *(++s));
                 s++;
                 switch (next_char)
@@ -175,8 +174,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                     case '\0':
                         goto after_quote;
 
-                    case '\\':
-                    {
+                    case '\\': {
                         const_AUTO(next_char, *(++s));
 
                         switch (next_char)
@@ -202,8 +200,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                         }
                     }
                     break;
-                    default:
-                    {
+                    default: {
                         add_to_last_arg(&manager, c);
                     }
                     break;

@@ -154,8 +154,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             exit_error("Fork for worker No. %lu failed! Exiting.\n",
                 (unsigned long)idx);
 
-        case 0:
-        {
+        case 0: {
             /* I'm the child. */
             const_AUTO(w, workers[idx]);
             close(w.parent_to_child_pipe[WRITE_FD]);
