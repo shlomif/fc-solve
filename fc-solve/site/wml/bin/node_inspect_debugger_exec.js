@@ -81,10 +81,11 @@ cli_global
     .then(() => {
         out("after sb(7)");
     })
-    .then(() => cli_global.command('exec ["2nd command"]'))
+    /*    .then(() => cli_global.command('exec ["2nd command"]'))
     .then(() => {
         out("exec 2nd");
     })
+    */
     .then(() => cli_global.command("cont"))
     .then(() => {
         out("after cont");
