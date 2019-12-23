@@ -22,6 +22,7 @@ class Queue {
             "cont",
         ];
         that.cmds = ["sb(7)", "cont"];
+        that.cmds = ["exec [20+4]"];
     }
     run() {
         const that = this;
@@ -61,6 +62,18 @@ const queue = new Queue();
 
 cli.waitForInitialBreak(timeout)
     .then(() => cli.waitForPrompt(timeout))
+    .then(() => {
+        console.log("test0=<<" + cli.output + ">>\n");
+    })
+    // .then(() => cli.command("exec [typeof heartbeat, typeof process.exit]"))
+    .then(() => cli.command("exec [20+4]"))
+    .then(() => {
+        console.log("test1=<<" + cli.output + ">>\n");
+    })
+    .then(() => cli.command('exec ["2nd command"]'))
+    .then(() => {
+        console.log("test2=<<" + cli.output + ">>\n");
+    })
     .then(() => {
         console.log("sparkle\n");
         queue.run();
