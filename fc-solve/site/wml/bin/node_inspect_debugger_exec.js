@@ -59,31 +59,40 @@ function onFatal(error) {
     throw error;
 }
 
+function wrap(label, o) {
+    return "" + label + "=\n" + "««««««\n" + o + "\n»»»»»»\n";
+}
+
+function out(label) {
+    console.log(wrap(label, cli_global.output));
+    return;
+}
+
 const queue = new Queue();
 
 cli_global
     .waitForInitialBreak(timeout)
     .then(() => cli_global.waitForPrompt(timeout))
     .then(() => {
-        console.log("test0=\n<<\n" + cli_global.output + "\n>>\n");
+        out("test0");
     })
     // .then(() => cli_global.command("exec [typeof heartbeat, typeof process.exit]"))
     .then(() => cli_global.command("sb(7)"))
     .then(() => {
-        console.log("test1=\n<<\n" + cli_global.output + "\n>>\n");
+        out("after sb(7)");
     })
     .then(() => cli_global.command('exec ["2nd command"]'))
     .then(() => {
-        console.log("test2=\n<<\n" + cli_global.output + "\n>>\n");
+        out("exec 2nd");
     })
     .then(() => cli_global.command("cont"))
     .then(() => {
-        console.log("test3=\n<<\n" + cli_global.output + "\n>>\n");
+        out("after cont");
     })
-    .then(() => {
-        console.log("sparkle\n");
-        queue.run(cli_global);
-    })
+    //     .then(() => {
+    //         console.log("sparkle\n");
+    //         queue.run(cli_global);
+    //     })
     // .then(() => {console.log(cli_global.output);})
     .then(() => cli_global.quit())
     .then(null, onFatal);
