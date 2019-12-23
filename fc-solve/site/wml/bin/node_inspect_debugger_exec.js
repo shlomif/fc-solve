@@ -1,24 +1,28 @@
-'use strict';
-const startCLI = require('./start-cli');
+"use strict";
+const startCLI = require("./start-cli");
 
-const cli = startCLI(['node_modules/.bin/qunit', 'lib/for-node/test-code-emcc.js']);
+const cli = startCLI([
+    "node_modules/.bin/qunit",
+    "lib/for-node/test-code-emcc.js",
+]);
 
 function onFatal(error) {
     cli.quit();
     throw error;
 }
-const timeout = 20*1000;
+const timeout = 20 * 1000;
 
 class Queue {
     constructor() {
         const that = this;
         that.idx = 0;
-        that.cmds =['sb("lib/for-node/js/web-fc-solve-tests.js", 2);',
-'sb("lib/for-node/js/libfreecell-solver.min.js", 1833)',
-            'cont',
+        that.cmds = [
+            'sb("lib/for-node/js/web-fc-solve-tests.js", 2);',
+            'sb("lib/for-node/js/libfreecell-solver.min.js", 1833)',
+            "cont",
         ];
-        that.cmds = ['sb(7)', 'cont',];
-    };
+        that.cmds = ["sb(7)", "cont"];
+    }
     run() {
         const that = this;
         console.log(cli.output);
@@ -26,20 +30,30 @@ class Queue {
             console.log("foooooooollllllkkkkkkkkkk\n");
             return;
         } else {
-            console.log("apploo idx=" + that.idx + ";\n" );
+            console.log("apploo idx=" + that.idx + ";\n");
         }
         const mycmd = that.cmds[that.idx++];
-        console.log("vwooby idx=" + that.idx + " cmd=" + mycmd + ";\n" );
-        cli.command(mycmd).then (()=>{
-        console.log("sweeet idx=" + that.idx + ";\n" );
-        }).catch((error)=>{
-            console.log("cli.command returned error at idx=" + that.idx + "; error=<<<" + error + ">>>\n" );
-        });
+        console.log("vwooby idx=" + that.idx + " cmd=" + mycmd + ";\n");
+        cli.command(mycmd)
+            .then(() => {
+                console.log("sweeet idx=" + that.idx + ";\n");
+            })
+            .catch((error) => {
+                console.log(
+                    "cli.command returned error at idx=" +
+                        that.idx +
+                        "; error=<<<" +
+                        error +
+                        ">>>\n",
+                );
+            });
         return;
         cli.then(() => {
             console.log("output=[[[[[[[[[[" + cli.output + "]]]]]]]]]]\n");
             cli.waitForPrompt(timeout);
-        })  .then(() => {that.run()});
+        }).then(() => {
+            that.run();
+        });
     }
 }
 
@@ -49,7 +63,8 @@ cli.waitForInitialBreak(timeout)
     .then(() => cli.waitForPrompt(timeout))
     .then(() => {
         console.log("sparkle\n");
-        queue.run();})
-// .then(() => {console.log(cli.output);})
+        queue.run();
+    })
+    // .then(() => {console.log(cli.output);})
     .then(() => cli.quit())
     .then(null, onFatal);
