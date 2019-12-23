@@ -24,7 +24,7 @@ class Queue {
         that.cmds = ["sb(7)", "cont"];
         that.cmds = ["exec [20+4]"];
     }
-    run() {
+    run(cli) {
         const that = this;
         console.log(cli.output);
         if (that.idx === that.cmds.length) {
@@ -53,7 +53,7 @@ class Queue {
             console.log("output=[[[[[[[[[[" + cli.output + "]]]]]]]]]]\n");
             cli.waitForPrompt(timeout);
         }).then(() => {
-            that.run();
+            that.run(cli);
         });
     }
 }
@@ -76,7 +76,7 @@ cli.waitForInitialBreak(timeout)
     })
     .then(() => {
         console.log("sparkle\n");
-        queue.run();
+        queue.run(cli);
     })
     // .then(() => {console.log(cli.output);})
     .then(() => cli.quit())
