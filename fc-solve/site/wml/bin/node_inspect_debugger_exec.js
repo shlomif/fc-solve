@@ -1,13 +1,13 @@
 "use strict";
 const startCLI = require("./start-cli");
 
-const cli = startCLI([
+const cli_global = startCLI([
     "node_modules/.bin/qunit",
     "lib/for-node/test-code-emcc.js",
 ]);
 
 function onFatal(error) {
-    cli.quit();
+    cli_global.quit();
     throw error;
 }
 const timeout = 20 * 1000;
@@ -26,7 +26,7 @@ class Queue {
     }
     run(cli) {
         const that = this;
-        console.log(cli.output);
+        console.log("in run();:\n<<<\n" + cli.output + "\n>>>\n");
         if (that.idx === that.cmds.length) {
             console.log("foooooooollllllkkkkkkkkkk\n");
             return;
@@ -60,24 +60,25 @@ class Queue {
 
 const queue = new Queue();
 
-cli.waitForInitialBreak(timeout)
-    .then(() => cli.waitForPrompt(timeout))
+cli_global
+    .waitForInitialBreak(timeout)
+    .then(() => cli_global.waitForPrompt(timeout))
     .then(() => {
-        console.log("test0=<<" + cli.output + ">>\n");
+        console.log("test0=<<" + cli_global.output + ">>\n");
     })
-    // .then(() => cli.command("exec [typeof heartbeat, typeof process.exit]"))
-    .then(() => cli.command("exec [20+4]"))
+    // .then(() => cli_global.command("exec [typeof heartbeat, typeof process.exit]"))
+    .then(() => cli_global.command("exec [20+4]"))
     .then(() => {
-        console.log("test1=<<" + cli.output + ">>\n");
+        console.log("test1=<<" + cli_global.output + ">>\n");
     })
-    .then(() => cli.command('exec ["2nd command"]'))
+    .then(() => cli_global.command('exec ["2nd command"]'))
     .then(() => {
-        console.log("test2=<<" + cli.output + ">>\n");
+        console.log("test2=<<" + cli_global.output + ">>\n");
     })
     .then(() => {
         console.log("sparkle\n");
-        queue.run(cli);
+        queue.run(cli_global);
     })
-    // .then(() => {console.log(cli.output);})
-    .then(() => cli.quit())
+    // .then(() => {console.log(cli_global.output);})
+    .then(() => cli_global.quit())
     .then(null, onFatal);
