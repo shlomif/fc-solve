@@ -65,20 +65,20 @@ cli_global
     .waitForInitialBreak(timeout)
     .then(() => cli_global.waitForPrompt(timeout))
     .then(() => {
-        console.log("test0=<<" + cli_global.output + ">>\n");
+        console.log("test0=\n<<\n" + cli_global.output + "\n>>\n");
     })
     // .then(() => cli_global.command("exec [typeof heartbeat, typeof process.exit]"))
     .then(() => cli_global.command("sb(7)"))
     .then(() => {
-        console.log("test1=<<" + cli_global.output + ">>\n");
+        console.log("test1=\n<<\n" + cli_global.output + "\n>>\n");
     })
     .then(() => cli_global.command('exec ["2nd command"]'))
     .then(() => {
-        console.log("test2=<<" + cli_global.output + ">>\n");
+        console.log("test2=\n<<\n" + cli_global.output + "\n>>\n");
     })
     .then(() => cli_global.command("cont"))
     .then(() => {
-        console.log("test3=<<" + cli_global.output + ">>\n");
+        console.log("test3=\n<<\n" + cli_global.output + "\n>>\n");
     })
     .then(() => {
         console.log("sparkle\n");
