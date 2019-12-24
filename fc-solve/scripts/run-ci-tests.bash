@@ -17,6 +17,11 @@ cd "$emsdk_path"
 ./emsdk activate latest
 . "emsdk_env.sh"
 cd "$a"
+skip_emscripten_tests__disable_me_after_fixing_the_emcc_issue()
+{
+    export SKIP_EMCC='1'
+}
+skip_emscripten_tests__disable_me_after_fixing_the_emcc_issue
 export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 SKIP_SPELL_CHECK=1
 which dbtoepub
 export DBTOEPUB="/usr/bin/ruby $(which dbtoepub)"
