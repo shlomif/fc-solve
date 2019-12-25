@@ -12,6 +12,8 @@ use FC_Solve::Paths
 
 use Test::RunValgrind ();
 
+use Path::Tiny qw/ path tempdir tempfile cwd /;
+
 sub _expand_arg
 {
     my $hash_ref = shift;
@@ -87,6 +89,9 @@ SKIP:
             )
             )
         {
+            Test::More::diag( "valgrind failed: log=<<"
+                    . path( $args->{log_fn} )->slurp_utf8()
+                    . ">>" );
             die "Valgrind failed";
         }
     }
