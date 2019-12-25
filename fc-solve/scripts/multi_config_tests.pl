@@ -417,7 +417,7 @@ elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
 # This is just to test that the reporting is working fine.
 # run_cmd('false', {cmd => [qw(false)],});
 # my $ARCH = 'x64';
-my $ARCH = 'n2';
+my $ARCH = $ENV{FC_SOLVE__MULT_CONFIG_TESTS__GCC_ARCH} // 'n2';
 
 # Load the b or t suffixes.
 my @LB = ( '-l', $ARCH . 'b' );

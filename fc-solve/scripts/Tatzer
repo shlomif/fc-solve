@@ -236,7 +236,7 @@ foreach my $rec (
     { id => "ci7", a => "corei7-avx", },
     { id => "n2",  a => "native", },
     { id => "p4",  a => "pentium4" },
-    { id => "x64", a => "barcelona" },
+    { id => "x64", a => "x86-64" },
     )
 {
     my $id   = $rec->{id};
