@@ -52,7 +52,7 @@ function startCLI(args, flags = []) {
   return {
     flushOutput() {
       const output = this.output;
-      outputBuffer.length = 0;
+      // outputBuffer.length = 0;
       return output;
     },
 
