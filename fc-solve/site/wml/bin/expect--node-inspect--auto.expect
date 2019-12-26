@@ -1,9 +1,10 @@
 #!/usr/bin/env expect -f
 set timeout 60
 spawn node inspect node_modules/.bin/qunit lib/for-node/test-code-emcc.js
+expect "7[ 	]*const Find"
 expect "debug> $"
 # wait 2
-send "sb(7)\n"
+send "sb(56)\n"
 expect "debug> $"
 send "cont\n"
 expect "debug> $"
