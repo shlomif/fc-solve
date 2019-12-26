@@ -90,6 +90,10 @@ cli_global
     .then(() => {
         out("after cont");
     })
+    .then(() => cli_global.command("list()"))
+    .then(() => {
+        out("after list");
+    })
     //     .then(() => {
     //         console.log("sparkle\n");
     //         queue.run(cli_global);
