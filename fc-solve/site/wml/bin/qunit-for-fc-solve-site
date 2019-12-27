@@ -4,7 +4,7 @@
 
 const old_setTimeout = global.setTimeout;
 global.setTimeout = (cb, delay) => {
-    return old_setTimeout(cb, (delay ? delay : 2000));
+    return old_setTimeout(cb, (delay ? delay : 100));
 };
 const program = require( "commander" );
 const run = require( "qunit/src/cli/run" );
