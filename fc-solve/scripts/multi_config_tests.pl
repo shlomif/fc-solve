@@ -313,23 +313,29 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                 }
                 my $run_make = sub {
                     my ($args) = @_;
-                    unshift @$args, 'make',
+                    my @cmd = @$args;
+
+                    unshift @cmd,
                         ( $ENV{DBTOEPUB} ? "DBTOEPUB=\"$ENV{DBTOEPUB}\"" : () ),
                         (
                         $ENV{DOCBOOK5_XSL_STYLESHEETS_PATH}
                         ? "DOCBOOK5_XSL_STYLESHEETS_PATH=\"$ENV{DOCBOOK5_XSL_STYLESHEETS_PATH}\""
                         : ()
                         );
+                    foreach my $x ( $args, \@cmd )
+                    {
+                        unshift @$x, "make";
+                    }
                     return run_cmd(
                         "$blurb_base : @$args",
                         {
                             cmd => [
                                 $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
-                                ? (@$args)
+                                ? (@cmd)
                                 : (
                                     'bash',
                                     '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; @$args 2>&1 | tail -300"
+". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; @cmd 2>&1 | tail -300"
                                 )
                             ]
                         }
