@@ -34,11 +34,21 @@ install:
     - gmake
     - gmake install
     - cd ..\..\
+    - git clone https://github.com/shlomif/rinutils rinutils
+    - mkdir rinutils\b
+    - cd rinutils\b
+    - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
+    - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+    - echo %PATH%
+    - gmake
+    - gmake install
+    - cd ..\..\
 build: off
 test_script:
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
     - set LIBRARY_PATH=C:\libtap\lib
     - set CMAKE_LIBRARY_PATH=C:\libtap\lib
+    - set CMAKE_PREFIX_PATH=C:/libtap
     - set LD_LIBRARY_PATH=C:\libtap\lib
     - set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig;
     # - set PKG_CONFIG_PATH=c:/libtap/lib/pkgconfig/

@@ -431,6 +431,11 @@ my @cmd = (
         ? "-DCMAKE_MAKE_PROGRAM=$ENV{CMAKE_MAKE_PROGRAM}"
         : ()
     ),
+    (
+        defined( $ENV{CMAKE_PREFIX_PATH} )
+        ? "-DCMAKE_PREFIX_PATH=$ENV{CMAKE_PREFIX_PATH}"
+        : ()
+    ),
     ( defined($generate_what) ? ( "-G", $generate_what ) : () ),
     "-DCMAKE_BUILD_TYPE=$build_type",
     "-DDATADIR=$STR_OPTS{prefix}{value}/share",
