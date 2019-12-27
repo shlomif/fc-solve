@@ -2,6 +2,20 @@
 
 "use strict";
 
+/*
+ * Based on the 'qunit' program from:
+ *
+ * https://github.com/qunitjs/qunit/
+ *
+ * Thanks!
+ *
+ * Under the MIT/Expat licence:
+ *
+ * https://www.gnu.org/licenses/license-list.html#Expat
+ *
+ * */
+// SPDX-License-Identifier: MIT
+
 const old_setTimeout = global.setTimeout;
 global.setTimeout = (cb, delay) => {
     return old_setTimeout(cb, (delay ? delay : 100));
