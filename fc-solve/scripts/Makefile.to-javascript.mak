@@ -102,12 +102,16 @@ NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" 
 OPT_FLAGS = -O3
 # OPT_FLAGS = -O1
 # OPT_FLAGS =
-OPT_FLAGS = -g
+# OPT_FLAGS = -g
 
-CFLAGS = $(OPT_FLAGS) -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I . -I $(SRC_DIR)/include -I $(SRC_DIR)/rinutils/rinutils/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.7.0 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+RINUTILS_DIR = $(CMAKE_DIR)/rinutils-include
+RINUTILS_INCLUDE_DIR := $(RINUTILS_DIR)/include
+RINUTILS_PIVOT = $(RINUTILS_INCLUDE_DIR)/rinutils/rinutils.h
 
-ASSERT_FLAGS = -s ASSERTIONS=1
-# ASSERT_FLAGS =
+CFLAGS = $(OPT_FLAGS) -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINUTILS_INCLUDE_DIR) -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.7.0 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+
+# ASSERT_FLAGS = -s ASSERTIONS=1
+ASSERT_FLAGS =
 
 EMCC_CFLAGS = -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXTRA_EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(CFLAGS) $(ASSERT_FLAGS)
 
@@ -126,6 +130,11 @@ $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	emcc $(EMCC_CFLAGS) $< -c -o $@
 
 LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
+
+$(LLVM_AND_FILES_TARGETS): $(RINUTILS_PIVOT)
+
+$(RINUTILS_PIVOT):
+	rin="$$(perl -MPath::Tiny -e 'print path(shift)->absolute' "$(RINUTILS_DIR)")"; unset CFLAGS ; (git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$$rin" .. && make && make install && cd ../.. && rm -fr rinutils)
 
 $(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS)
 	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
