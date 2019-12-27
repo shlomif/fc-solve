@@ -13,7 +13,8 @@ sub run
     my ( $self, $args ) = @_;
 
     local $ENV{NODE_PATH} = cwd->child(qw(lib for-node js));
-    system( 'qunit', $self->tests ) and die "qunit failed!";
+    system( 'node', 'bin/qunit-for-fc-solve-site', $self->tests )
+        and die "qunit failed!";
 
     return;
 }
