@@ -16,7 +16,7 @@ use Data::Dumper ();
 
 use Term::ANSIColor qw(colored);
 
-use parent 'Games::Solitaire::Verify::Base';
+use Moo;
 
 my @fields = qw(
     exit
@@ -25,22 +25,12 @@ my @fields = qw(
     warn
 );
 
-__PACKAGE__->mk_acc_ref( [@fields] );
-__PACKAGE__->mk_acc_ref( [ 'blurb', 'cmd_line', ] );
+has [ @fields, 'blurb', 'cmd_line', ] => ( is => 'rw' );
 
 use Text::Sprintf::Named ();
 
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
-
-sub _init
-{
-    my ( $self, $args ) = @_;
-
-    %$self = ( %$self, %$args );
-
-    return $self;
-}
 
 sub _stringify_value
 {
