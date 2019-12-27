@@ -38,21 +38,6 @@ sub src_filenames
     };
 
     return [
-        (
-            map { "rinutils/rinutils/include/rinutils/$_" } 'alloc_wrap.h',
-            'bit_rw.h',
-            'count.h',
-            'dllexport.h',
-            'exit_error.h',
-            'likely.h',
-            'longlong.h',
-            'min_and_max.h',
-            'portable_time.h',
-            'rinutils.h',
-            'str_utils.h',
-            'typeof_wrap.h',
-            'unused.h',
-        ),
         $self->main_base . '.c',
         'card.c',
         'dbm_cache.h',
@@ -121,6 +106,19 @@ sub modules
     ];
 }
 
+sub src_rinutils_filenames
+{
+    my $self = shift;
+
+    return [
+        'alloc_wrap.h', 'bit_rw.h',      'count.h',
+        'dllexport.h',  'exit_error.h',  'likely.h',
+        'longlong.h',   'min_and_max.h', 'portable_time.h',
+        'rinutils.h',   'str_utils.h',   'typeof_wrap.h',
+        'unused.h',
+    ];
+}
+
 sub run
 {
     my $self = shift;
@@ -138,7 +136,8 @@ sub run
     path("$dest_dir/fcs-libavl")->mkpath;
     path("$dest_dir/include/freecell-solver")->mkpath;
     path("$dest_dir/pthread")->mkpath;
-    path("$dest_dir/rinutils/rinutils/include/rinutils")->mkpath;
+    my $rinutils_dest = path("$dest_dir/rinutils/rinutils/include/rinutils");
+    $rinutils_dest->mkpath;
     if ( $self->fcc_solver )
     {
         path("$dest_dir/sys")->mkpath;
@@ -211,6 +210,24 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     {
         my $src  = "$src_path/$fn";
         my $dest = "$dest_dir/$fn";
+        if ( !-f $dest )
+        {
+            if ( !-f $src )
+            {
+                die "'$src' is not a file!";
+            }
+            io($src) > io($dest);
+        }
+    }
+    my ($rinutils_dir) = (
+        grep { -d $_ }
+        map  { "$_/rinutils" } qw# /usr/local/include /usr/include #
+    ) or die "cannot find rinutils include dir";
+
+    foreach my $fn ( @{ $self->src_rinutils_filenames() } )
+    {
+        my $src  = "$rinutils_dir/$fn";
+        my $dest = "$rinutils_dest/$fn";
         if ( !-f $dest )
         {
             if ( !-f $src )
