@@ -42,13 +42,22 @@ install:
     - echo %PATH%
     - gmake
     - gmake install
+    - SET MYOLDPATH_=%PATH%
+    - SET PATH=C:\MinGW\bin;%PATH%
+    - mkdir ..\b32
+    - cd ..\b32
+    - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap32 ..
+    - echo %PATH%
+    - gmake
+    - gmake install
+    - SET PATH=%MYOLDPATH_%
     - cd ..\..\
 build: off
 test_script:
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
     - set LIBRARY_PATH=C:\libtap\lib
     - set CMAKE_LIBRARY_PATH=C:\libtap\lib
-    - set CMAKE_PREFIX_PATH=C:/libtap
+    - set CMAKE_PREFIX_PATH=C:/libtap;c:/libtap32
     - set LD_LIBRARY_PATH=C:\libtap\lib
     - set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig;
     # - set PKG_CONFIG_PATH=c:/libtap/lib/pkgconfig/
