@@ -15,3 +15,4 @@ cpanm --quiet App::Deps::Verify App::XML::DocBook::Builder
 cpanm --quiet --notest Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount Games::Solitaire::Verify::HorneAutomovePrune Task::FreecellSolver::Testing
 (cd cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/ && dzil authordeps --missing | cpanm --notest)
 ( cd fc-solve/site/wml && bash -x bin/install-npm-deps.sh )
+git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF .. && make && sudo make install && cd ../.. && rm -fr rinutils

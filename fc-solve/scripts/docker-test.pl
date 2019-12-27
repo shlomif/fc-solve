@@ -27,7 +27,7 @@ sub do_system
 
 my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
-my $SYS       = "fedora:31";
+my $SYS       = "fedora:32";
 my $CONTAINER = "fcsfed";
 do_system( { cmd => [ 'docker', 'pull', $SYS ] } );
 do_system(

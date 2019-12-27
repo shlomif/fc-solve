@@ -50,6 +50,7 @@ BuildRequires: perl(strict)
 BuildRequires: perl(warnings)
 BuildRequires: perl-devel >= 5.14.0
 BuildRequires: pkgconfig(cmocka)
+BuildRequires: pkgconfig(librinutils)
 BuildRequires: python3-cffi
 BuildRequires: python3-pycotap
 BuildRequires: python3-pysol-cards
