@@ -202,13 +202,6 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     )
 ENDIF ()
 find_package(Rinutils REQUIRED)
-if ()
-    PKG_CHECK_MODULES(RINUTILS REQUIRED "librinutils")
-    IF (NOT "${RINUTILS_FOUND}")
-        MESSAGE (FATAL "rinutils could not be found.")
-    ENDIF ()
-ENDIF ()
-
 INCLUDE_DIRECTORIES(AFTER ${RINUTILS_INCLUDE_DIR} ${RINUTILS_INCLUDE_DIRS})
 
 SET (_gen_c_files )
