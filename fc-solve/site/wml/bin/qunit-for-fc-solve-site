@@ -16,10 +16,14 @@
  * */
 // SPDX-License-Identifier: MIT
 
-const old_setTimeout = global.setTimeout;
-global.setTimeout = (cb, delay, ...callback_args) => {
-    return old_setTimeout(cb, (delay ? delay : 100), ...callback_args);
-};
+function overrideTimeoutForQUnitInodeFixInitialization () {
+    const old_setTimeout = global.setTimeout;
+    global.setTimeout = (cb, delay, ...callback_args) => {
+        return old_setTimeout(cb, (delay ? delay : 100), ...callback_args);
+    };
+}
+overrideTimeoutForQUnitInodeFixInitialization();
+
 const program = require( "commander" );
 const run = require( "qunit/src/cli/run" );
 const FindReporter = require( "qunit/src/cli/find-reporter" );
