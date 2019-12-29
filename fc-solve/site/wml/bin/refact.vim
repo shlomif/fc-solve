@@ -10,3 +10,6 @@ fun RefactForEach()
     s/});/}/
 endf
 command! RefactForEach call RefactForEach()
+if 0
+    map <F2> Oconsole.log("<<line no. <C-r>=line(".")<cr> at <c-r>% : trace>>");<esc>
+endif
