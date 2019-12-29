@@ -86,6 +86,7 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve/patsolve/*.bc
+/fc-solve/site/wml/lib/fc-solve-for-javascript/rinutils/
 /fc-solve/site/wml/lib/for-node/js/*.js
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver.wasm
