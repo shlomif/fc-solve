@@ -18,6 +18,19 @@ sub _exec
     }
     return;
 }
+
+my $rin = path("lib/repos/rinutils-include")->absolute;
+
+if ( not -e $rin )
+{
+    _exec(
+        [
+qq#cd lib/repos/ && git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$rin" .. && make && make install && cd ../.. && rm -fr rinutils#
+        ],
+        "rinutils"
+    );
+}
+
 if ( not -e "lib/jquery/jquery-phoenix/" )
 {
     _exec(
