@@ -4,6 +4,11 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2019-06-18
 :Revision: $Id$
 
+Version 5.16.0: (30-Dec-2019)
+-----------------------------
+
+1. Require https://github.com/shlomif/rinutils/[rinutils] to be installed.
+
 Version 5.14.0: (30-Aug-2019)
 -----------------------------
 
