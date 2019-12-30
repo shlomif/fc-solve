@@ -109,6 +109,7 @@
 /fc-solve/site/wml/lib/old-news.htmlish
 /fc-solve/site/wml/lib/out-babel/js/*.js
 /fc-solve/site/wml/lib/repos/Solitairey/
+/fc-solve/site/wml/lib/repos/rinutils-include/
 /fc-solve/site/wml/lib/sgml/
 /fc-solve/site/wml/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/libfreecell-solver.wasm
