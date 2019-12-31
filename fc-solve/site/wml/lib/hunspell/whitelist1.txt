@@ -1339,6 +1339,9 @@ Der
 Feelin
 Grimmie
 Rihanna
+WiX
+msi
+rinutils
 solv
 transpose-freecell-board
 
