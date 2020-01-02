@@ -8,7 +8,7 @@ Shlomi Fish <shlomif@cpan.org>
 Update: The split-FCC improvement
 ----------------------------------
 
-First of all see link:split-fully-connected-components-based-solver-planning.asciidoc[the split fully connect components ("FCC") spec]. Thereby we keep a fingerprint of
+First of all see link:split-fully-connected-components-based-solver-planning.asciidoc[the split fully connected components ("FCC") spec]. Thereby we keep a fingerprint of
 the game state using 52 enums of three states (= { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 } ) each.
 
 Now, if card is at ORIG_POS or IN_FOUNDATIONS then its deBondt encoding is
