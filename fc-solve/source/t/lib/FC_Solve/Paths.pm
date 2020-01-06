@@ -5,11 +5,12 @@ use strict;
 use warnings;
 use Socket qw(:crlf);
 use String::ShellQuote qw/shell_quote/;
+use File::Temp qw( tempdir );
 
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf samp_board samp_preset samp_sol src_file src_script);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -158,6 +159,11 @@ sub normalize_lf
     my ($s) = @_;
     $s =~ s#$CRLF#$LF#g;
     return $s;
+}
+
+sub offload_arg
+{
+    return ( "--offload-dir-path", ( tempdir( CLEANUP => 1 ) . '/' ) );
 }
 
 1;

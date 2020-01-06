@@ -6,14 +6,13 @@ use warnings;
 use Test::More tests => 1;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
-use FC_Solve::Paths qw/ samp_board samp_sol /;
+use FC_Solve::Paths qw/ offload_arg samp_board samp_sol /;
 
 {
     my $expected_text = path( samp_sol('dbm-24-mid.sol') )->slurp_utf8;
 
-    my $tempdir = Path::Tiny->tempdir;
     my $got_text =
-`./dbm-fc-solver --offload-dir-path $tempdir --num-threads 1 @{[samp_board('24-mid.board')]}`
+`./dbm-fc-solver @{[offload_arg()]} --num-threads 1 @{[samp_board('24-mid.board')]}`
         =~ s/[ \t]+\n/\n/gr;
 
     foreach my $text ( $got_text, $expected_text )

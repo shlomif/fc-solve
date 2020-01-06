@@ -4,11 +4,10 @@ use strict;
 use warnings;
 
 use Test::More tests => 36;
-use File::Temp qw( tempdir );
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths
-    qw( bin_board bin_exe_raw is_freecell_only is_without_dbm normalize_lf samp_board $FC_SOLVE__RAW );
+    qw( bin_board bin_exe_raw is_freecell_only is_without_dbm normalize_lf offload_arg samp_board $FC_SOLVE__RAW );
 
 my $MID24_BOARD = samp_board('24-mid.board');
 
@@ -193,9 +192,7 @@ SKIP:
         {
             $status = system(
                 bin_exe_raw( ['depth-dbm-fc-solver'] ),
-                "--offload-dir-path",
-                ( tempdir( CLEANUP => 1 ) . '/' ),
-                bin_board('empty.board'),
+                offload_arg(), bin_board('empty.board'),
             );
         };
 
@@ -229,13 +226,9 @@ SKIP:
         trap
         {
             $status = system(
-                bin_exe_raw( ['depth-dbm-fc-solver'] ),
-                '--num-threads',
-                3,
-                '--batch-size',
-                20,
-                "--offload-dir-path",
-                ( tempdir( CLEANUP => 1 ) . '/' ),
+                bin_exe_raw( ['depth-dbm-fc-solver'] ), '--num-threads',
+                3,                                      '--batch-size',
+                20,                                     offload_arg(),
                 bin_board('1107600547.board'),
             );
         };
@@ -267,9 +260,7 @@ SKIP:
             {
                 $status = system(
                     bin_exe_raw( [$solver] ),
-                    "--offload-dir-path",
-                    ( tempdir( CLEANUP => 1 ) . '/' ),
-                    bin_board('11982.board'),
+                    offload_arg(), bin_board('11982.board'),
                 );
             };
 

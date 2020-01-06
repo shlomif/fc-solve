@@ -7,10 +7,9 @@ use Test::More tests => 14;
 use FC_Solve::GetOutput ();
 use Carp                ();
 use String::ShellQuote qw/ shell_quote /;
-use File::Temp qw( tempdir );
 use Test::Differences qw/ eq_or_diff /;
 use FC_Solve::Paths
-    qw/ $IS_WIN bin_board bin_exe_raw is_dbm_apr is_without_dbm normalize_lf samp_board /;
+    qw/ $IS_WIN bin_board bin_exe_raw is_dbm_apr is_without_dbm normalize_lf offload_arg samp_board /;
 
 sub _get
 {
@@ -36,11 +35,8 @@ sub trap_dbm
     my $args = shift;
 
     open my $fc_solve_output,
-        shell_quote(
-        bin_exe_raw( ['dbm-fc-solver'] ),
-        "--offload-dir-path", tempdir( CLEANUP => 1 ),
-        "--num-threads", 1, $args->{board_fn}
-        )
+        shell_quote( bin_exe_raw( ['dbm-fc-solver'] ),
+        offload_arg(), "--num-threads", 1, $args->{board_fn} )
         . " |"
         or Carp::confess "Error! Could not open the fc-solve pipeline";
 
@@ -58,12 +54,9 @@ sub trap_depth_dbm
     my $args = shift;
 
     open my $fc_solve_output,
-        shell_quote(
-        bin_exe_raw( ['depth-dbm-fc-solver'] ), "--offload-dir-path",
-        ( tempdir( CLEANUP => 1 ) . '/' ), "--num-threads",
-        1,                  "--iters-delta-limit",
-        $args->{max_iters}, $args->{board_fn}
-        )
+        shell_quote( bin_exe_raw( ['depth-dbm-fc-solver'] ),
+        offload_arg(), "--num-threads", 1, "--iters-delta-limit",
+        $args->{max_iters}, $args->{board_fn} )
         . " |"
         or Carp::confess
         "Error! Could not open the depth-dbm-fc-solver pipline!";

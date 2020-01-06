@@ -20,7 +20,8 @@ sub _expand_arg
 
     if ( $type eq 'tempdir' )
     {
-        return scalar( tempdir( CLEANUP => 1 ) =~ s%([^/])\z%$1/%r );
+        my $ret = tempdir( CLEANUP => 1 );
+        return scalar( $ret =~ m%/\z% ? $ret : "$ret/" );
     }
     elsif ( $type eq 'ENV' )
     {
