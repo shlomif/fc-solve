@@ -278,7 +278,7 @@ $(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
 
 TYPESCRIPT_COMMON_DEPS = src/ts/web-fc-solve.ts src/ts/web-fcs-tests-strings.ts
 
-src/ts/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/texts-lists.txt
+src/ts/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/list.txt
 	perl $<
 
 # run_tsc = tsc --target es6 --moduleResolution node --module $1 --outDir $$(dirname $@) $<

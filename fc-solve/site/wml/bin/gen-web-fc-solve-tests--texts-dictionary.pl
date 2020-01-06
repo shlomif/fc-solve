@@ -12,7 +12,7 @@ use JSON::MaybeXS ();
 my $dir   = "lib/web-fcs-tests-strings/";
 my $TEXTS = Dir::Manifest->new(
     {
-        manifest_fn => "$dir/texts-lists.txt",
+        manifest_fn => "$dir/list.txt",
         dir         => "$dir/texts"
     }
 )->texts_dictionary( { slurp_opts => {} } );
