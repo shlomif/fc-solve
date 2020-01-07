@@ -94,6 +94,7 @@ int main(int argc, char *argv[])
     close(fh);
 #endif
     DEALS_ITERATE__END()
+    deals_ranges__free();
 
     return 0;
 }

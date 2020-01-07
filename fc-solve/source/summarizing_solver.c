@@ -111,7 +111,6 @@ int main(int argc, char *argv[])
     DEALS_ITERATE__END()
 
     freecell_solver_user_free(instance);
-    free(mydeals);
-
+    deals_ranges__free();
     return 0;
 }
