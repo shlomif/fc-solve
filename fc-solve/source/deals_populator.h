@@ -39,10 +39,9 @@ static inline void append(const long start, const long end)
     }
 }
 
-static inline int populate_deals_from_argv(const int argc, char *argv[])
+static inline int populate_deals_from_argv(
+    const int argc, char *argv[], int arg)
 {
-    int arg = 1;
-
     while (arg < argc && (strcmp(argv[arg], "--")))
     {
         if (!strcmp(argv[arg], "seq"))

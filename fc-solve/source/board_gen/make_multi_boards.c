@@ -21,15 +21,59 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "deals_populator.h"
 
+static void __attribute__((noreturn)) print_help(void)
+{
+    printf("\n%s", "summary-fc-solve [deal1_idx] [deal2_idx] .. -- \n"
+                   "   [--variant variant_str] [fc-solve theme args]\n"
+                   "\n"
+                   "Attempts to solve several arbitrary deal indexes from the\n"
+                   "Microsoft/Freecell Pro deals using the fc-solve's theme "
+                   "and reports a\n"
+                   "summary of their results to STDOUT\n");
+    exit(-1);
+}
+
 int main(int argc, char *argv[])
 {
-    int arg = populate_deals_from_argv(argc, argv);
+    int arg = 1;
+    const char *dir = NULL;
+    const char *suffix = "";
+    for (; arg < argc; ++arg)
+    {
+        const char *param;
+        if ((param = TRY_P("--dir")))
+        {
+            if (strlen(dir = param) > 100)
+            {
+                fprintf(stderr, "--dir's argument is too long!\n");
+                print_help();
+            }
+        }
+        else if ((param = TRY_P("--suffix")))
+        {
+            if (strlen(suffix = param) > 20)
+            {
+                fprintf(stderr, "--suffix's argument is too long!\n");
+                print_help();
+            }
+        }
+        else
+        {
+            break;
+        }
+    }
+    if (!dir)
+    {
+        fprintf(stderr, "--dir must be specified!\n");
+        print_help();
+    }
+    arg = populate_deals_from_argv(argc, argv, arg);
 
     DEALS_ITERATE__START(board_num)
     fcs_state_string s;
     get_board_l(board_num, s);
     char filename[256];
-    sprintf(filename, ("../foo/" RIN_ULL_FMT ".board"), board_num);
+    sprintf(filename, ("%s/" RIN_ULL_FMT "%s"), dir, board_num, suffix);
     FILE *f = fopen(filename, "wt");
     fputs(s, f);
     fclose(f);

@@ -31,7 +31,7 @@ int main(int argc, char *argv[])
 {
     const char *variant = "freecell";
 
-    int arg = populate_deals_from_argv(argc, argv);
+    int arg = populate_deals_from_argv(argc, argv, 1);
     if (arg == argc)
     {
         exit_error("No double dash (\"--\") after deals indexes!\n");
