@@ -19,18 +19,21 @@
 #include <string.h>
 #include <stdbool.h>
 #include "range_solvers_gen_ms_boards.h"
+#include "deals_populator.h"
 
 int main(int argc, char *argv[])
 {
-    for (unsigned long long gamenumber = 1; gamenumber <= 32000; ++gamenumber)
-    {
-        fcs_state_string s;
-        get_board_l(gamenumber, s);
-        char filename[256];
-        sprintf(filename, "../foo/%llu.board", gamenumber);
-        FILE *f = fopen(filename, "wt");
-        fputs(s, f);
-        fclose(f);
-    }
+    int arg = populate_deals_from_argv(argc, argv);
+
+    DEALS_ITERATE__START(board_num)
+    fcs_state_string s;
+    get_board_l(board_num, s);
+    char filename[256];
+    sprintf(filename, "../foo/%llu.board", board_num);
+    FILE *f = fopen(filename, "wt");
+    fputs(s, f);
+    fclose(f);
+    DEALS_ITERATE__END()
+
     return 0;
 }

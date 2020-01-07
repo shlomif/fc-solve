@@ -24,86 +24,14 @@ static void __attribute__((noreturn)) print_help(void)
                    "summary of their results to STDOUT\n");
     exit(-1);
 }
-typedef struct
-{
-    long start, end;
-} deals_range;
-static deals_range *mydeals = NULL;
-static size_t num_deals = 0, max_num_deals = 0;
 
-static inline bool is_valid(const deals_range r) { return (r.start <= r.end); }
-static inline void append(const long start, const long end)
-{
-    if (num_deals == max_num_deals)
-    {
-        mydeals = SREALLOC(mydeals, max_num_deals += 1000);
-        if (!mydeals)
-        {
-            exit_error("Number of deals exceeded %ld!\n", (long)max_num_deals);
-        }
-    }
-    const deals_range new_r = (deals_range){.start = start, .end = end};
-    if ((num_deals == 0) ||
-        (!(is_valid(new_r) && is_valid(mydeals[num_deals - 1]) &&
-            (start == mydeals[num_deals - 1].end + 1))))
-    {
-        mydeals[num_deals++] = new_r;
-    }
-    else
-    {
-        mydeals[num_deals - 1].end = end;
-    }
-}
+#include "deals_populator.h"
 
 int main(int argc, char *argv[])
 {
     const char *variant = "freecell";
-    int arg = 1;
 
-    while (arg < argc && (strcmp(argv[arg], "--")))
-    {
-        if (!strcmp(argv[arg], "seq"))
-        {
-            if (++arg >= argc)
-            {
-                exit_error("seq without args!\n");
-            }
-            const long start = atol(argv[arg]);
-            if (++arg >= argc)
-            {
-                exit_error("seq without args!\n");
-            }
-            const long end = atol(argv[arg++]);
-            append(start, end);
-        }
-        else if (!strcmp(argv[arg], "slurp"))
-        {
-            if (++arg >= argc)
-            {
-                exit_error("slurp without arg!\n");
-            }
-            FILE *const f = fopen(argv[arg++], "rt");
-            if (!f)
-            {
-                exit_error("Cannot slurp file!\n");
-            }
-            while (!feof(f))
-            {
-                long deal;
-                if (fscanf(f, "%ld", &deal) == 1)
-                {
-                    append(deal, deal);
-                }
-            }
-            fclose(f);
-        }
-        else
-        {
-            const long deal = atol(argv[arg++]);
-            append(deal, deal);
-        }
-    }
-
+    int arg = populate_deals_from_argv(argc, argv);
     if (arg == argc)
     {
         exit_error("No double dash (\"--\") after deals indexes!\n");
@@ -131,64 +59,56 @@ int main(int argc, char *argv[])
     const bool variant_is_freecell = (!strcmp(variant, "freecell"));
     char buffer[2000];
 
-    for (size_t deal_idx = 0; deal_idx < num_deals; ++deal_idx)
+    DEALS_ITERATE__START(board_num)
+    if (variant_is_freecell)
     {
-        const_AUTO(board_range, mydeals[deal_idx]);
-        for (long board_num = board_range.start; board_num <= board_range.end;
-             ++board_num)
-        {
-            if (variant_is_freecell)
-            {
-                get_board_l((unsigned long long)board_num, buffer);
-            }
-            else
-            {
-                char command[1000];
-                sprintf(command, "make_pysol_freecell_board.py -F -t %ld %s",
-                    board_num, variant);
-
-                FILE *const from_make_pysol = popen(command, "r");
-                if (fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
-                        from_make_pysol) <= 0)
-                {
-                    abort();
-                }
-                pclose(from_make_pysol);
-            }
-            LAST(buffer) = '\0';
-
-            long num_moves;
-            const char *verdict;
-            switch (freecell_solver_user_solve_board(instance, buffer))
-            {
-            case FCS_STATE_SUSPEND_PROCESS:
-                num_moves = -1;
-                verdict = "Intractable";
-                break;
-
-            case FCS_STATE_IS_NOT_SOLVEABLE:
-                num_moves = -1;
-                verdict = "Unsolved";
-                break;
-
-            default:
-#ifdef FCS_WITH_MOVES
-                num_moves = freecell_solver_user_get_moves_left(instance);
-#else
-                num_moves = -1;
-#endif
-                verdict = "Solved";
-                break;
-            }
-            printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num,
-                verdict,
-                (long)freecell_solver_user_get_num_times_long(instance),
-                num_moves);
-            fflush(stdout);
-
-            freecell_solver_user_recycle(instance);
-        }
+        get_board_l((unsigned long long)board_num, buffer);
     }
+    else
+    {
+        char command[1000];
+        sprintf(command, "make_pysol_freecell_board.py -F -t %ld %s", board_num,
+            variant);
+
+        FILE *const from_make_pysol = popen(command, "r");
+        if (fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
+                from_make_pysol) <= 0)
+        {
+            abort();
+        }
+        pclose(from_make_pysol);
+    }
+    LAST(buffer) = '\0';
+
+    long num_moves;
+    const char *verdict;
+    switch (freecell_solver_user_solve_board(instance, buffer))
+    {
+    case FCS_STATE_SUSPEND_PROCESS:
+        num_moves = -1;
+        verdict = "Intractable";
+        break;
+
+    case FCS_STATE_IS_NOT_SOLVEABLE:
+        num_moves = -1;
+        verdict = "Unsolved";
+        break;
+
+    default:
+#ifdef FCS_WITH_MOVES
+        num_moves = freecell_solver_user_get_moves_left(instance);
+#else
+        num_moves = -1;
+#endif
+        verdict = "Solved";
+        break;
+    }
+    printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num, verdict,
+        (long)freecell_solver_user_get_num_times_long(instance), num_moves);
+    fflush(stdout);
+
+    freecell_solver_user_recycle(instance);
+    DEALS_ITERATE__END()
 
     freecell_solver_user_free(instance);
     free(mydeals);
