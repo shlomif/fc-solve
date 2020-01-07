@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     fcs_state_string s;
     get_board_l(board_num, s);
     char filename[256];
-    sprintf(filename, "../foo/%llu.board", board_num);
+    sprintf(filename, ("../foo/" RIN_ULL_FMT ".board"), board_num);
     FILE *f = fopen(filename, "wt");
     fputs(s, f);
     fclose(f);
