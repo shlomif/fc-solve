@@ -41,33 +41,37 @@ static void __attribute__((noreturn)) print_help(void)
 int main(int argc, char *argv[])
 {
     int arg = 1;
-    const char *dir = NULL;
-    const char *suffix = "";
+#define DIR_LEN 99
+    char dir[DIR_LEN + 1] = "";
+#define SUFFIX_LEN 19
+    char suffix[SUFFIX_LEN + 1] = "";
     for (; arg < argc; ++arg)
     {
         const char *param;
         if ((param = TRY_P("--dir")))
         {
-            if (strlen(dir = param) > 100)
+            if (strlen(param) > DIR_LEN)
             {
                 fprintf(stderr, "--dir's argument is too long!\n");
                 print_help();
             }
+            strcpy(dir, param);
         }
         else if ((param = TRY_P("--suffix")))
         {
-            if (strlen(suffix = param) > 20)
+            if (strlen(param) > SUFFIX_LEN)
             {
                 fprintf(stderr, "--suffix's argument is too long!\n");
                 print_help();
             }
+            strcpy(suffix, param);
         }
         else
         {
             break;
         }
     }
-    if (!dir)
+    if (!dir[0])
     {
         fprintf(stderr, "--dir must be specified!\n");
         print_help();
@@ -77,7 +81,9 @@ int main(int argc, char *argv[])
     DEALS_ITERATE__START(board_num)
     fcs_state_string s;
     get_board_l(board_num, s);
-    char filename[256];
+#define MAX_NUM_DIGITS 30
+#define MARGIN 5
+    char filename[DIR_LEN + SUFFIX_LEN + MAX_NUM_DIGITS + MARGIN];
     sprintf(filename, ("%s/%ld%s"), dir, board_num, suffix);
 #if 1
     FILE *f = fopen(filename, "wt");
