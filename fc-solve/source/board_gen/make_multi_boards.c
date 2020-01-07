@@ -21,6 +21,10 @@
 #include "range_solvers_gen_ms_boards.h"
 #include "deals_populator.h"
 #include "try_param.h"
+#include "rinutils/rinutils.h"
+#ifdef RINUTILS__IS_UNIX
+#include <fcntl.h>
+#endif
 
 static void __attribute__((noreturn)) print_help(void)
 {
@@ -75,9 +79,15 @@ int main(int argc, char *argv[])
     get_board_l(board_num, s);
     char filename[256];
     sprintf(filename, ("%s/" RIN_ULL_FMT "%s"), dir, board_num, suffix);
+#if 1
     FILE *f = fopen(filename, "wt");
     fputs(s, f);
     fclose(f);
+#else
+    int fh = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+    write(fh, s, strlen(s));
+    close(fh);
+#endif
     DEALS_ITERATE__END()
 
     return 0;
