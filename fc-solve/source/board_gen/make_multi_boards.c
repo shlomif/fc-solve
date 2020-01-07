@@ -20,6 +20,7 @@
 #include <stdbool.h>
 #include "range_solvers_gen_ms_boards.h"
 #include "deals_populator.h"
+#include "try_param.h"
 
 static void __attribute__((noreturn)) print_help(void)
 {

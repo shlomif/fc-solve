@@ -2,6 +2,10 @@ ADD_EXECUTABLE(
     pi-make-microsoft-freecell-board
     pi_make_microsoft_freecell_board.c
 )
+ADD_EXECUTABLE(
+    generate-multiple-solitaire-deals
+    make_multi_boards.c
+)
 
 MACRO(my_board_gen_prog myprog tgt)
     SET (_dest "${CMAKE_CURRENT_BINARY_DIR}/${myprog}")
