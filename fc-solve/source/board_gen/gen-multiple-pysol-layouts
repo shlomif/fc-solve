@@ -1,24 +1,19 @@
 #! /usr/bin/env python3
-# -*- coding: utf-8 -*-
-# vim:fenc=utf-8
 #
 # Copyright © 2018 Shlomi Fish <shlomif@cpan.org>
 #
 # Distributed under terms of the MIT license.
 
-"""
-
-"""
-
 import argparse
-from os.path import basename, join
 import sys
+from os.path import basename, join
+
 from fc_solve_find_index_s2ints import CardRenderer
+
 from make_pysol_freecell_board import Game, RandomBase
 
 
 class GenMulti:
-    """docstring for GenMulti"""
     def __init__(self, argv):
         parser = argparse.ArgumentParser(
             prog='PROG',
@@ -50,12 +45,10 @@ class GenMulti:
         self.game = Game(self.game_variant, 1, self.which_deals, 13)
 
     def _out_deal(self, deal):
-        fn = join(self.dir_, self.pre + str(deal) + self.suf)
-        with open(fn, 'wt') as f:
+        with open(join(self.dir_, self.pre + str(deal) + self.suf), 'wt') as f:
             f.write(self.game.calc_deal_string(deal, self.rend))
 
     def run(self):
-        """docstring for run"""
         idxs = self.idxs
         while len(idxs):
             i = idxs.pop(0)
