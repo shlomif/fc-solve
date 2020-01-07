@@ -3,7 +3,7 @@ ADD_EXECUTABLE(
     pi_make_microsoft_freecell_board.c
 )
 ADD_EXECUTABLE(
-    generate-multiple-solitaire-deals
+    gen-multiple-solitaire-layouts--c
     make_multi_boards.c
 )
 

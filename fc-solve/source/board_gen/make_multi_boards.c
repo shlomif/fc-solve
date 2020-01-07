@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     fcs_state_string s;
     get_board_l(board_num, s);
     char filename[256];
-    sprintf(filename, ("%s/" RIN_ULL_FMT "%s"), dir, board_num, suffix);
+    sprintf(filename, ("%s/%ld%s"), dir, board_num, suffix);
 #if 1
     FILE *f = fopen(filename, "wt");
     fputs(s, f);

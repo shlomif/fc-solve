@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 42;
+use Test::More tests => 45;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny qw/ path /;
 use Test::Trap
@@ -59,11 +59,12 @@ sub _test_gen_multi
     my ($args) = @_;
 
     my $cmd_line_args = $args->{cmd};
+    my $exe           = $args->{exe};
 
     _reset_dir;
 
     # print STDERR "<<$GEN_MULTI @$cmd_line_args>>\n";
-    my $got = `$GEN_MULTI @$cmd_line_args`;
+    my $got = `$exe @$cmd_line_args`;
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 
@@ -72,6 +73,8 @@ sub _test_gen_multi
 
 my $MAKE_MS_EXE =
     bin_exe_raw( [ 'board_gen', 'pi-make-microsoft-freecell-board' ] );
+my $GEN_MULTI__C =
+    bin_exe_raw( [ 'board_gen', 'gen-multiple-solitaire-layouts--c' ] );
 
 {
     my $i = ( Math::BigInt->new(1) << 39 ) + 3;
@@ -176,6 +179,17 @@ QC 9S 6H 9H 3S KS 3D
 7H JS KH TS KC 7C
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
+EOF
+
+my $BOARD_25_T = <<'EOF';
+5C KS 6H 4C 6C 9D TD
+2D 7S 6S QS 3S 6D TS
+JC 4D 5D 7H QD 2C TH
+9H 3H AS JS AD AH 8S
+4S 2H JH TC JD 3C
+KH 4H 8H 9S 7D 8C
+9C 2S AC KD 5H 8D
+7C QH KC QC 3D 5S
 EOF
 
 # TEST
@@ -799,6 +813,7 @@ _test_gen_multi(
             '--suffix', '.board',
             '--',       '45508856405861261758'
         ],
+        exe      => $GEN_MULTI,
         expected => '',
     }
 );
@@ -830,6 +845,32 @@ AD 9S QS
 6H KS TH
 5S 9H 8C
 EOF
+);
+
+$dir->remove_tree;
+
+$dir = path("gen-multi-yoo--c");
+
+# TEST
+_test_gen_multi(
+    {
+        blurb => "gen-multi--c for freecell",
+        cmd => [ '--dir', $dir . '', '--suffix', '.board', 'seq', '24', '25', ],
+        exe => $GEN_MULTI__C,
+        expected => '',
+    }
+);
+
+# TEST
+eq_or_diff(
+    [ normalize_lf( scalar $dir->child('24.board')->slurp_utf8 ) ],
+    [$BOARD_24_T], "gen-multi-c 24",
+);
+
+# TEST
+eq_or_diff(
+    [ normalize_lf( scalar $dir->child('25.board')->slurp_utf8 ) ],
+    [$BOARD_25_T], "gen-multi-c 25",
 );
 
 $dir->remove_tree;

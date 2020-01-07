@@ -55,7 +55,6 @@ sub exe_fn
 sub _board_gen
 {
     return "${PY3}../board_gen/" . shift;
-
 }
 our $MAKE_PYSOL      = _board_gen('make_pysol_freecell_board.py');
 our $FIND_DEAL_INDEX = _board_gen('find-freecell-deal-index.py');
