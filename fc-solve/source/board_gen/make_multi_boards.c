@@ -17,7 +17,6 @@
 */
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 #include "range_solvers_gen_ms_boards.h"
 #include "deals_populator.h"
 #include "try_param.h"
@@ -79,14 +78,14 @@ int main(int argc, char *argv[])
     arg = populate_deals_from_argv(argc, argv, arg);
 
     DEALS_ITERATE__START(board_num)
-    fcs_state_string s;
-    get_board_l(board_num, s);
 #define MAX_NUM_DIGITS 30
 #define MARGIN 5
     char filename[DIR_LEN + SUFFIX_LEN + MAX_NUM_DIGITS + MARGIN];
     sprintf(filename, ("%s/%ld%s"), dir, board_num, suffix);
 #if 1
     FILE *f = fopen(filename, "wt");
+    fcs_state_string s;
+    get_board_l(board_num, s);
     fputs(s, f);
     fclose(f);
 #else
