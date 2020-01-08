@@ -7,7 +7,7 @@
 #
 
 
-outdir='../foo'
+outdir='../bench-gen-multi'
 minidx=1
 maxidx=32000
 
@@ -21,6 +21,21 @@ shell_loop()
     done
 }
 
+c_gen()
+{
+    ./board_gen/gen-multiple-solitaire-layouts--c --dir "$outdir" --suffix .board seq "$minidx" "$maxidx"
+}
+
+pypy_gen()
+{
+    pypy3 board_gen/gen-multiple-pysol-layouts --dir "$outdir" --ms --prefix '' --suffix .board --game freecell seq "$minidx" "$maxidx"
+}
+
+python_gen()
+{
+    python3 board_gen/gen-multiple-pysol-layouts --dir "$outdir" --ms --prefix '' --suffix .board --game freecell seq "$minidx" "$maxidx"
+}
+
 wrapper()
 {
     local fn="$1"
@@ -31,3 +46,6 @@ wrapper()
 }
 
 wrapper shell_loop
+wrapper python_gen
+wrapper pypy_gen
+wrapper c_gen
