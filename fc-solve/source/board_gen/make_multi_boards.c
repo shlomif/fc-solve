@@ -82,11 +82,17 @@ int main(int argc, char *argv[])
 #define MARGIN 5
     char filename[DIR_LEN + SUFFIX_LEN + MAX_NUM_DIGITS + MARGIN];
     sprintf(filename, ("%s/%ld%s"), dir, board_num, suffix);
+#define CARD_STR_LEN 3
+#define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
 #if 1
     FILE *f = fopen(filename, "wt");
     fcs_state_string s;
     get_board_l(board_num, s);
+#if 0
     fputs(s, f);
+#else
+    fwrite(s, OUTPUT_LEN, 1, f);
+#endif
     fclose(f);
 #else
     int fh = open(filename, O_CREAT | O_WRONLY | O_TRUNC);

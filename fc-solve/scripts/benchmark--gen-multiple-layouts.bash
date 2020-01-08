@@ -47,7 +47,7 @@ wrapper()
     mv "$outdir" "$outdir-$func"
 }
 
-wrapper shell_loop
+# wrapper shell_loop
 wrapper python_gen
 wrapper pypy_gen
 wrapper c_gen
