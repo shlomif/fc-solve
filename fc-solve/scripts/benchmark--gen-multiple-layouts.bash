@@ -9,7 +9,8 @@
 
 outdir='../bench-gen-multi'
 minidx=1
-maxidx=32000
+# maxidx=32000
+maxidx=100000
 
 shell_loop()
 {
@@ -38,11 +39,11 @@ python_gen()
 
 wrapper()
 {
-    local fn="$1"
+    local func="$1"
     shift
     mkdir -p "$outdir"
-    time "$fn"
-    mv "$outdir" "$outdir-$fn"
+    time "$func"
+    mv "$outdir" "$outdir-$func"
 }
 
 wrapper shell_loop
