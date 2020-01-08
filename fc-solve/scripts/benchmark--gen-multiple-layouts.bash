@@ -41,6 +41,7 @@ wrapper()
 {
     local func="$1"
     shift
+    echo "== Benchmarking '$func' =="
     mkdir -p "$outdir"
     time "$func"
     mv "$outdir" "$outdir-$func"
