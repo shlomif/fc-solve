@@ -85,7 +85,7 @@ int main(int argc, char *argv[])
     sprintf(fn_suffix, "%ld%s", board_num, suffix);
 #define CARD_STR_LEN 3
 #define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
-#if 1
+#if 0
     FILE *f = fopen(filename, "wt");
     fcs_state_string s;
     get_board_l(board_num, s);
