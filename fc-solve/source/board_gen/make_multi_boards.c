@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
 #endif
     fclose(f);
 #else
-    int fh = open(filename, O_CREAT | O_WRONLY | O_TRUNC);
+    const int fh = creat(filename, 0644);
     fcs_state_string s;
     get_board_l(board_num, s);
     write(fh, s, OUTPUT_LEN);
