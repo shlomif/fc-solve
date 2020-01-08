@@ -18,7 +18,7 @@ shell_loop()
     while test "$i" -le "$maxidx"
     do
         ./board_gen/pi-make-microsoft-freecell-board -t "$i" > "$outdir/$i.board"
-        let ++i
+        (( ++i ))
     done
 }
 
