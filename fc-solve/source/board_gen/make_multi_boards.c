@@ -85,15 +85,11 @@ int main(int argc, char *argv[])
     sprintf(fn_suffix, "%ld%s", board_num, suffix);
 #define CARD_STR_LEN 3
 #define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
-#if 0
+#ifndef RINUTILS__IS_UNIX
     FILE *f = fopen(filename, "wt");
     fcs_state_string s;
     get_board_l(board_num, s);
-#if 0
-    fputs(s, f);
-#else
     fwrite(s, OUTPUT_LEN, 1, f);
-#endif
     fclose(f);
 #else
     const int fh = creat(filename, 0644);

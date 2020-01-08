@@ -27,6 +27,11 @@ c_gen()
     ./board_gen/gen-multiple-solitaire-layouts--c --dir "$outdir" --suffix .board seq "$minidx" "$maxidx"
 }
 
+rust_gen()
+{
+    ~/progs/rust/tutorial-progs/git/rust-progs/multi_deal_freecell --dir "$outdir" --suffix .board seq "$minidx" "$maxidx"
+}
+
 pypy_gen()
 {
     pypy3 board_gen/gen-multiple-pysol-layouts --dir "$outdir" --ms --prefix '' --suffix .board --game freecell seq "$minidx" "$maxidx"
@@ -52,3 +57,4 @@ rm -fr "$outdir-"{shell_loop,python_gen,pypy_gen,c_gen}
 wrapper python_gen
 wrapper pypy_gen
 wrapper c_gen
+wrapper rust_gen
