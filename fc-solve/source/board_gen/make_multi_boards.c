@@ -76,12 +76,13 @@ int main(int argc, char *argv[])
         print_help();
     }
     arg = populate_deals_from_argv(argc, argv, arg);
-
-    DEALS_ITERATE__START(board_num)
 #define MAX_NUM_DIGITS 30
 #define MARGIN 5
     char filename[DIR_LEN + SUFFIX_LEN + MAX_NUM_DIGITS + MARGIN];
-    sprintf(filename, ("%s/%ld%s"), dir, board_num, suffix);
+    char *const fn_suffix = filename + sprintf(filename, "%s/", dir);
+
+    DEALS_ITERATE__START(board_num)
+    sprintf(fn_suffix, "%ld%s", board_num, suffix);
 #define CARD_STR_LEN 3
 #define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
 #if 1
