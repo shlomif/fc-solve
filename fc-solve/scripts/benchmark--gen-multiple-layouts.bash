@@ -57,7 +57,7 @@ wrapper()
     mv "$outdir" "$outdir-$func"
 }
 
-rm -fr "$outdir-"{shell_loop,perl_gen,python_gen,pypy_gen,c_gen}
+rm -fr "$outdir-"{c_gen,perl_gen,pypy_gen,python_gen,rust_gen,shell_loop}
 # wrapper shell_loop
 wrapper python_gen
 wrapper pypy_gen

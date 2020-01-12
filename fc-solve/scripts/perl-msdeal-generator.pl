@@ -8,10 +8,6 @@
 #
 use strict;
 use warnings;
-use 5.014;
-use autodie;
-
-use Path::Tiny qw/ path tempdir tempfile cwd /;
 
 use Getopt::Long qw/ GetOptions /;
 use Math::RNG::Microsoft ();
@@ -44,7 +40,7 @@ for ( my $i = 0 ; $i < @ARGV ; ++$i )
             while (@cards)
             {
                 push @{ $lines[$l] }, pop(@cards);
-                ( $l += 1 ) &= 7;
+                $l = ( ( $l + 1 ) & 7 );
             }
             open my $o, '>', "$dir/$deal$suffix";
             print {$o} map { join( " ", @$_ ) . "\n" } @lines;
