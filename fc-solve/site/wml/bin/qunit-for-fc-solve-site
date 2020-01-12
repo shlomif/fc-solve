@@ -19,7 +19,7 @@
 function overrideTimeoutForQUnitInodeFixInitialization () {
     const old_setTimeout = global.setTimeout;
     global.setTimeout = (cb, delay, ...callback_args) => {
-        return old_setTimeout(cb, (delay ? delay : 100), ...callback_args);
+        return old_setTimeout(cb, (delay ? delay : 500), ...callback_args);
     };
 }
 overrideTimeoutForQUnitInodeFixInitialization();
