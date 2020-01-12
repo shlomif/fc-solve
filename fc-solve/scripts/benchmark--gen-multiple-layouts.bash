@@ -58,10 +58,13 @@ wrapper()
 }
 
 rm -fr "$outdir-"{c_gen,perl_gen,pypy_gen,python_gen,rust_gen,shell_loop}
-wrapper c_gen
-wrapper perl_gen
-exit
 
+if false
+then
+    wrapper c_gen
+    wrapper perl_gen
+    exit
+fi
 # wrapper shell_loop
 wrapper python_gen
 wrapper pypy_gen
