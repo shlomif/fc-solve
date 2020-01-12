@@ -36,14 +36,17 @@ for ( my $i = 0 ; $i < @ARGV ; ++$i )
             );
             Math::RNG::Microsoft->new( seed => $deal )->shuffle( \@cards );
             my @lines = ( map { [] } 0 .. 7 );
-            my $l     = 0;
+            my $i     = 0;
             while (@cards)
             {
-                push @{ $lines[$l] }, pop(@cards);
-                $l = ( ( $l + 1 ) & 7 );
+                push @{ $lines[$i] }, pop(@cards);
+                $i = ( ( $i + 1 ) & 7 );
             }
             open my $o, '>', "$dir/$deal$suffix";
-            print {$o} map { join( " ", @$_ ) . "\n" } @lines;
+            foreach my $l (@lines)
+            {
+                print {$o} "@$l\n";
+            }
             close $o;
         }
     }
