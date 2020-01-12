@@ -42,6 +42,11 @@ python_gen()
     python3 board_gen/gen-multiple-pysol-layouts --dir "$outdir" --ms --prefix '' --suffix .board --game freecell seq "$minidx" "$maxidx"
 }
 
+perl_gen()
+{
+    perl ../scripts/perl-msdeal-generator.pl --dir "$outdir" --suffix .board seq "$minidx" "$maxidx"
+}
+
 wrapper()
 {
     local func="$1"
@@ -52,9 +57,10 @@ wrapper()
     mv "$outdir" "$outdir-$func"
 }
 
-rm -fr "$outdir-"{shell_loop,python_gen,pypy_gen,c_gen}
+rm -fr "$outdir-"{shell_loop,perl_gen,python_gen,pypy_gen,c_gen}
 # wrapper shell_loop
 wrapper python_gen
 wrapper pypy_gen
 wrapper c_gen
 wrapper rust_gen
+wrapper perl_gen
