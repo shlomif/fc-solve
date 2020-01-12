@@ -42,6 +42,8 @@ python_gen()
     python3 board_gen/gen-multiple-pysol-layouts --dir "$outdir" --ms --prefix '' --suffix .board --game freecell seq "$minidx" "$maxidx"
 }
 
+# perl -d:NYTProf ../scripts/perl-msdeal-generator.pl --dir "$outdir" --suffix .board seq "$minidx" "$maxidx"
+
 perl_gen()
 {
     perl ../scripts/perl-msdeal-generator.pl --dir "$outdir" --suffix .board seq "$minidx" "$maxidx"

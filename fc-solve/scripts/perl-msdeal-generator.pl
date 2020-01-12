@@ -8,9 +8,30 @@
 #
 use strict;
 use warnings;
+use integer;
 
 use Getopt::Long qw/ GetOptions /;
-use Math::RNG::Microsoft ();
+
+my $seed;
+
+sub _rand
+{
+    $seed = ( ( $seed * 214013 + 2531011 ) & (0x7FFF_FFFF) );
+    return ( ( $seed >> 16 ) & 0x7fff );
+}
+
+sub shuffle
+{
+    my ($deck) = @_;
+
+    my $i = @$deck;
+    while ( --$i )
+    {
+        my $j = _rand() % ( $i + 1 );
+        @$deck[ $i, $j ] = @$deck[ $j, $i ];
+    }
+    return;
+}
 
 my $dir;
 my $suffix = '';
@@ -34,7 +55,8 @@ for ( my $i = 0 ; $i < @ARGV ; ++$i )
                     map { $s . $_ } qw/C D H S/;
                 } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
             );
-            Math::RNG::Microsoft->new( seed => $deal )->shuffle( \@cards );
+            $seed = $deal;
+            shuffle( \@cards );
             my @lines = ( map { [] } 0 .. 7 );
             my $i     = 0;
             while (@cards)
