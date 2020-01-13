@@ -19,6 +19,33 @@ GetOptions(
     'suffix=s' => \$suffix,
 ) or die $!;
 
+sub gen
+{
+    my ($deal) = @_;
+
+    my @cards = (
+        map {
+            my $s = $_;
+            map { $s . $_ } qw/C D H S/;
+        } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
+    );
+    Math::RNG::Microsoft->new( seed => $deal )->shuffle( \@cards );
+    my @lines = ( map { [] } 0 .. 7 );
+    my $i     = 0;
+    while (@cards)
+    {
+        push @{ $lines[$i] }, pop(@cards);
+        $i = ( ( $i + 1 ) & 7 );
+    }
+    open my $o, '>', "$dir/$deal$suffix";
+    foreach my $l (@lines)
+    {
+        print {$o} "@$l\n";
+    }
+    close $o;
+    return;
+}
+
 for ( my $i = 0 ; $i < @ARGV ; ++$i )
 {
     my $arg = $ARGV[$i];
@@ -28,26 +55,11 @@ for ( my $i = 0 ; $i < @ARGV ; ++$i )
         my $end   = $ARGV[ ++$i ];
         foreach my $deal ( $start .. $end )
         {
-            my @cards = (
-                map {
-                    my $s = $_;
-                    map { $s . $_ } qw/C D H S/;
-                } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
-            );
-            Math::RNG::Microsoft->new( seed => $deal )->shuffle( \@cards );
-            my @lines = ( map { [] } 0 .. 7 );
-            my $i     = 0;
-            while (@cards)
-            {
-                push @{ $lines[$i] }, pop(@cards);
-                $i = ( ( $i + 1 ) & 7 );
-            }
-            open my $o, '>', "$dir/$deal$suffix";
-            foreach my $l (@lines)
-            {
-                print {$o} "@$l\n";
-            }
-            close $o;
+            gen($deal);
         }
+    }
+    else
+    {
+        gen($arg);
     }
 }
