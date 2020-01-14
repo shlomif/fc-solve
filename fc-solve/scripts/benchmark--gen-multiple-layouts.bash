@@ -55,6 +55,7 @@ wrapper()
     mkdir -p "$outdir"
     time "$func"
     mv "$outdir" "$outdir-$func"
+    echo
 }
 
 rm -fr "$outdir-"{c_gen,perl_gen,pypy_gen,python_gen,rust_gen,shell_loop}
