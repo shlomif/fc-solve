@@ -51,10 +51,13 @@ wrapper()
 {
     local func="$1"
     shift
-    echo "== Benchmarking '$func' =="
+    echo "== Benchmarking '$func'"
+    echo
     mkdir -p "$outdir"
+    printf '%s\n' '----------------------------------------'
     time "$func"
     mv "$outdir" "$outdir-$func"
+    printf '%s\n' '----------------------------------------'
     echo
 }
 
@@ -66,6 +69,17 @@ then
     wrapper perl_gen
     exit
 fi
+
+cat <<'EOF'
+= Timings for Batch Microsoft FreeCell Board Generators:
+
+See https://fc-solve.shlomifish.org/faq.html#what_are_ms_deals .
+
+These are not freecell solvers, they just generate the initial
+deals as individual NNN.board files in a directory.
+
+EOF
+
 # wrapper shell_loop
 wrapper python_gen
 wrapper pypy_gen
