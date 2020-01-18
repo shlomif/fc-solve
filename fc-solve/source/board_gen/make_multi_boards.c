@@ -80,6 +80,8 @@ int main(int argc, char *argv[])
 #define MARGIN 5
     char filename[DIR_LEN + SUFFIX_LEN + MAX_NUM_DIGITS + MARGIN];
     char *const fn_suffix = filename + sprintf(filename, "%s/", dir);
+    fcs_state_string s;
+    get_board__setup_string(s);
 
     DEALS_ITERATE__START(board_num)
     sprintf(fn_suffix, "%ld%s", board_num, suffix);
@@ -87,14 +89,12 @@ int main(int argc, char *argv[])
 #define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
 #ifndef RINUTILS__IS_UNIX
     FILE *f = fopen(filename, "wt");
-    fcs_state_string s;
-    get_board_l(board_num, s);
+    get_board_l__without_setup(board_num, s);
     fwrite(s, OUTPUT_LEN, 1, f);
     fclose(f);
 #else
     const int fh = creat(filename, 0644);
-    fcs_state_string s;
-    get_board_l(board_num, s);
+    get_board_l__without_setup(board_num, s);
     write(fh, s, OUTPUT_LEN);
     close(fh);
 #endif
