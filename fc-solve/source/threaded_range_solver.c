@@ -43,6 +43,8 @@ static fcs_iters_int total_num_iters = 0;
 
 static void *worker_thread(void *const void_arg)
 {
+    fcs_state_string state_string;
+    get_board__setup_string(state_string);
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     void *const instance = simple_alloc_and_parse(0, NULL, 0);
 #else
@@ -63,7 +65,7 @@ static void *worker_thread(void *const void_arg)
         for (; board_num < quota_end; board_num++)
         {
             if (range_solvers__solve(
-                    instance, board_num, &total_num_iters_temp))
+                    state_string, instance, board_num, &total_num_iters_temp))
             {
                 goto theme_error;
             }

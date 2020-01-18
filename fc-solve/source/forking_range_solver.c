@@ -161,6 +161,8 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             close(w.child_to_parent_pipe[READ_FD]);
             /* I'm one of the slaves */
             request_type req;
+            fcs_state_string state_string;
+            get_board__setup_string(state_string);
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)) ==
                        sizeof(req) &&
                    req.board_num != -1)
@@ -171,8 +173,8 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                 };
                 for (; req.board_num <= req.quota_end; ++req.board_num)
                 {
-                    range_solvers__solve(
-                        instance, req.board_num, &response.num_iters);
+                    range_solvers__solve(state_string, instance, req.board_num,
+                        &response.num_iters);
                     freecell_solver_user_recycle(instance);
                 }
                 if (sizeof(response) != write(w.child_to_parent_pipe[WRITE_FD],
