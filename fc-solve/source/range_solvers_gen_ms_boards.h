@@ -121,7 +121,7 @@ static inline void get_board_l(
     const unsigned long long seedx, char *const ret)
 {
     get_board__setup_string(ret);
-    return get_board_l__without_setup(seedx, ret);
+    get_board_l__without_setup(seedx, ret);
 }
 
 #ifndef FCS_GEN_BOARDS_WITH_EXTERNAL_API

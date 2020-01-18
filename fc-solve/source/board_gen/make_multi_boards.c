@@ -84,7 +84,7 @@ int main(int argc, char *argv[])
     get_board__setup_string(s);
 
     DEALS_ITERATE__START(board_num)
-    sprintf(fn_suffix, "%ld%s", board_num, suffix);
+    sprintf(fn_suffix, "%lu%s", board_num, suffix);
 #define CARD_STR_LEN 3
 #define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
 #ifndef RINUTILS__IS_UNIX

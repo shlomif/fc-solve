@@ -67,7 +67,7 @@ int main(int argc, char *argv[])
     else
     {
         char command[1000];
-        sprintf(command, "make_pysol_freecell_board.py -F -t %ld %s", board_num,
+        sprintf(command, "make_pysol_freecell_board.py -F -t %lu %s", board_num,
             variant);
 
         FILE *const from_make_pysol = popen(command, "r");
@@ -103,7 +103,7 @@ int main(int argc, char *argv[])
         verdict = "Solved";
         break;
     }
-    printf("%ld = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num, verdict,
+    printf("%lu = Verdict: %s ; Iters: %ld ; Length: %ld\n", board_num, verdict,
         (long)freecell_solver_user_get_num_times_long(instance), num_moves);
     fflush(stdout);
 
