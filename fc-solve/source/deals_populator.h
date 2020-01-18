@@ -8,9 +8,10 @@
 // deals_populator.h
 #pragma once
 
+typedef unsigned long fcs_deals_range_int;
 typedef struct
 {
-    long start, end;
+    fcs_deals_range_int start, end;
 } deals_range;
 static deals_range *deals_ranges_array = NULL;
 static size_t num_deals = 0, max_num_deals = 0;
@@ -19,7 +20,8 @@ static inline bool deals_range__is_valid(const deals_range r)
 {
     return (r.start <= r.end);
 }
-static inline void deals_range__append(const long start, const long end)
+static inline void deals_range__append(
+    const fcs_deals_range_int start, const fcs_deals_range_int end)
 {
     if (num_deals == max_num_deals)
     {
@@ -55,12 +57,14 @@ static inline int populate_deals_from_argv(
             {
                 exit_error("seq without args!\n");
             }
-            const long start = atol(argv[arg]);
+            const fcs_deals_range_int start =
+                (fcs_deals_range_int)atol(argv[arg]);
             if (++arg >= argc)
             {
                 exit_error("seq without args!\n");
             }
-            const long end = atol(argv[arg++]);
+            const fcs_deals_range_int end =
+                (fcs_deals_range_int)atol(argv[arg++]);
             deals_range__append(start, end);
         }
         else if (!strcmp(argv[arg], "slurp"))
@@ -76,8 +80,8 @@ static inline int populate_deals_from_argv(
             }
             while (!feof(f))
             {
-                long deal;
-                if (fscanf(f, "%ld", &deal) == 1)
+                fcs_deals_range_int deal;
+                if (fscanf(f, "%lu", &deal) == 1)
                 {
                     deals_range__append(deal, deal);
                 }
@@ -86,7 +90,8 @@ static inline int populate_deals_from_argv(
         }
         else
         {
-            const long deal = atol(argv[arg++]);
+            const fcs_deals_range_int deal =
+                (fcs_deals_range_int)atol(argv[arg++]);
             deals_range__append(deal, deal);
         }
     }
@@ -99,7 +104,8 @@ static inline void deals_ranges__free(void) { free(deals_ranges_array); }
     for (size_t deal_idx = 0; deal_idx < num_deals; ++deal_idx)                \
     {                                                                          \
         const_AUTO(board_range, deals_ranges_array[deal_idx]);                 \
-        for (long var = board_range.start; var <= board_range.end; ++var)      \
+        for (fcs_deals_range_int var = board_range.start;                      \
+             var <= board_range.end; ++var)                                    \
         {
 
 #define DEALS_ITERATE__END()                                                   \

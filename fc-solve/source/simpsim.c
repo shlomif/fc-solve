@@ -166,7 +166,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         {                                                                      \
             continue;                                                          \
         }                                                                      \
-        const stack_i dest_stack_idx = pos.col;                                \
+        const stack_i dest_stack_idx = (stack_i)pos.col;                       \
                                                                                \
         if (dest_stack_idx != source_stack_idx)                                \
         {                                                                      \
@@ -911,7 +911,7 @@ DECLARE_MOVE_FUNCTION(
             /* Let's check if we can move the child after we are done
              * moving all the junk cards */
             if (!(IS_false_seq_index_loop(
-                      col, false, source_stack_idx, (int)source_stack_idx) &&
+                      col, false, source_stack_idx, source_stack_idx) &&
                     (calc_max_simple_simon_seq_move(
                          seqs.after_junk_num_freestacks) >=
                         child_num_true_seqs)))
