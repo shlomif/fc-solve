@@ -19,7 +19,7 @@ static inline void fc_pro_get_board(const long long deal_idx,
     fcs_state_string state_string,
     fcs_state_keyval_pair *const pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-    get_board_l((unsigned long long)deal_idx, state_string);
+    get_board_l__without_setup((unsigned long long)deal_idx, state_string);
     fc_solve_initial_user_state_to_c(
         state_string, pos, 4, 8, 1, indirect_stacks_buffer);
 }
@@ -96,6 +96,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 #endif
 
     char buffer[2000];
+    if (variant_is_freecell)
+    {
+        get_board__setup_string(buffer);
+    }
     for (long long board_num = start_board; board_num <= end_board; board_num++)
     {
         fcs_state_keyval_pair pos;

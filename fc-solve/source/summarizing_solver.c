@@ -58,11 +58,15 @@ int main(int argc, char *argv[])
 
     const bool variant_is_freecell = (!strcmp(variant, "freecell"));
     char buffer[2000];
+    if (variant_is_freecell)
+    {
+        get_board__setup_string(buffer);
+    }
 
     DEALS_ITERATE__START(board_num)
     if (variant_is_freecell)
     {
-        get_board_l((unsigned long long)board_num, buffer);
+        get_board_l__without_setup((unsigned long long)board_num, buffer);
     }
     else
     {
