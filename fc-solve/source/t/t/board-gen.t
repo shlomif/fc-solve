@@ -818,13 +818,16 @@ _test_gen_multi(
     }
 );
 
+sub _child_slurp
+{
+    my ($basename) = @_;
+
+    return [ normalize_lf( scalar $dir->child($basename)->slurp_utf8 ) ];
+}
+
 # TEST
 eq_or_diff(
-    [
-        normalize_lf(
-            scalar $dir->child('pys45508856405861261758.board')->slurp_utf8
-        )
-    ],
+    _child_slurp('pys45508856405861261758.board'),
     [<<'EOF'], "gen-multi",
 Foundations: AS
 2S 3D 6S
@@ -862,16 +865,10 @@ _test_gen_multi(
 );
 
 # TEST
-eq_or_diff(
-    [ normalize_lf( scalar $dir->child('24.board')->slurp_utf8 ) ],
-    [$BOARD_24_T], "gen-multi-c 24",
-);
+eq_or_diff( _child_slurp('24.board'), [$BOARD_24_T], "gen-multi-c 24", );
 
 # TEST
-eq_or_diff(
-    [ normalize_lf( scalar $dir->child('25.board')->slurp_utf8 ) ],
-    [$BOARD_25_T], "gen-multi-c 25",
-);
+eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
 
 $dir->remove_tree;
 __END__
