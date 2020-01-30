@@ -3,11 +3,10 @@
 use strict;
 use warnings;
 
-use List::MoreUtils qw(first_index);
-
-use IPC::System::Simple qw(capturex);
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::App::CmdLine;
+use List::MoreUtils qw( first_index );
+use IPC::System::Simple qw( capturex );
+use Games::Solitaire::Verify::Solution     ();
+use Games::Solitaire::Verify::App::CmdLine ();
 
 if ( $ARGV[0] =~ m{\A-h|--help\z} )
 {
@@ -33,7 +32,7 @@ if ( $separator < 0 )
 "You must specify both [Game Params] and [Extra fc-solve Args]. See --help";
 }
 
-my @game_params = @args[ 0 .. $separator - 1 ];
+my @game_params   = @args[ 0 .. $separator - 1 ];
 my @fc_solve_args = ( @game_params, @args[ $separator + 1 .. $#args ] );
 
 my $fc_solve_output = capturex( qw(fc-solve -p -t -sam -sel), @fc_solve_args );
@@ -84,7 +83,7 @@ if ($is_solvable)
 }
 
 my ($num_iters) =
-    ( $fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms );
+    ( $fc_solve_output =~ m{^Total number of states checked is ([0-9]+)\.$}ms );
 my $sol_len = () = ( $fc_solve_output =~ m{^Move}msg );
 
 print "Verdict: "
