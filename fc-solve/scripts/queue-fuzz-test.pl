@@ -38,8 +38,8 @@ package main;
 use Path::Tiny qw( path );
 use Data::Dump qw(dd);
 
-use FC_Solve::QueuePrototype;
-use FC_Solve::QueueInC;
+use FC_Solve::QueuePrototype ();
+use FC_Solve::QueueInC       ();
 
 my ( $items_per_page, $data_seed, $interval_seed ) = @ARGV;
 
