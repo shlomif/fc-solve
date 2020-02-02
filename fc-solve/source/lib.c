@@ -1167,7 +1167,7 @@ static inline fcs_moves_group_kind dfs_run_moves(
 
 #ifdef FCS_ZERO_FREECELLS_MODE
     fc_solve_sfs_zerofc_0AB_atomic_all_moves(soft_thread, pass, derived_list);
-    ++the_soft_dfs_info->move_func_idx;
+    ++the_soft_dfs_info->move_func_list_idx;
 #else
     do
     {
