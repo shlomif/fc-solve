@@ -8,7 +8,9 @@
 // instance.c - instance/hard_thread/soft_thread functions for Freecell Solver.
 #include "instance_for_lib.h"
 #include "instance.h"
+#ifndef FCS_ZERO_FREECELLS_MODE
 #include "move_funcs_order.h"
+#endif
 #include "preset.h"
 #include "scans.h"
 
@@ -77,6 +79,7 @@ static inline void soft_thread_clean_soft_dfs(
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fcs_soft_thread *const soft_thread)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     const_AUTO(
         by_depth_moves, soft_thread->by_depth_moves_order.by_depth_moves);
     const_AUTO(num, soft_thread->by_depth_moves_order.num);
@@ -89,6 +92,7 @@ extern void fc_solve_free_soft_thread_by_depth_move_array(
 
     free(by_depth_moves);
     soft_thread->by_depth_moves_order.by_depth_moves = NULL;
+#endif
 }
 
 static inline void accumulate_tests_by_ptr(
@@ -121,11 +125,15 @@ static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
         break;
 
     case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
+#ifndef FCS_ZERO_FREECELLS_MODE
         accumulate_tests_by_ptr((size_t *)context,
             &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
+#endif
         break;
 
-    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS: {
+    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
+#ifndef FCS_ZERO_FREECELLS_MODE
+    {
         size_t moves_order = 0;
 
         accumulate_tests_by_ptr(&moves_order,
@@ -134,6 +142,7 @@ static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
         STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
             (moves_order == *(size_t *)context));
     }
+#endif
     break;
     }
 }
@@ -207,11 +216,14 @@ static inline
                         .dfs_max_depth = 0,
                         .soft_dfs_info = NULL,
                         .depth = 0,
+#ifndef FCS_ZERO_FREECELLS_MODE
+
                         .moves_by_depth =
                             {
                                 .num_units = 0,
                                 .by_depth_units = NULL,
                             },
+#endif
                         .rand_seed = 24,
                     },
                 .befs =
@@ -235,12 +247,17 @@ static inline
                             },
                     },
             },
+
+#ifndef FCS_ZERO_FREECELLS_MODE
+
         .by_depth_moves_order =
             {
                 .num = 1,
                 .by_depth_moves =
                     SMALLOC1(soft_thread->by_depth_moves_order.by_depth_moves),
             },
+#endif
+
         .is_befs = false,
 #ifdef FCS_WITH_MOVES
         .is_optimize_scan = false,
@@ -258,12 +275,14 @@ static inline
         .pats_scan = NULL,
 #endif
     };
+#ifndef FCS_ZERO_FREECELLS_MODE
     soft_thread->by_depth_moves_order.by_depth_moves[0] =
         (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
             .max_depth = SSIZE_MAX,
             .moves_order = moves_order_dup(
                 &(fcs_st_instance(soft_thread)->instance_moves_order)),
         };
+#endif
 
     fc_solve_reset_soft_thread(soft_thread);
 }

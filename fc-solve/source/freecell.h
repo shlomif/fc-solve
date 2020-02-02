@@ -16,6 +16,9 @@ extern "C" {
 #include "instance.h"
 
 DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func);
+#ifdef FCS_ZERO_FREECELLS_MODE
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves);
+#else
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks);
@@ -33,9 +36,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top);
-
-#ifdef FCS_ZERO_FREECELLS_MODE
-DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves);
 #endif
 
 #ifdef __cplusplus

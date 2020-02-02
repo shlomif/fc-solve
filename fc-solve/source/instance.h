@@ -154,7 +154,10 @@ extern bool fc_solve_check_and_add_state(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern guint fc_solve_hash_function(gconstpointer key);
 #endif
+
+#ifndef FCS_ZERO_FREECELLS_MODE
 #include "move_funcs_maps.h"
+#endif
 
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -384,12 +387,14 @@ struct fc_solve_soft_thread_struct
     // state-specific flags.
     fastest_type_for_num_soft_threads__unsigned id;
 
+#ifndef FCS_ZERO_FREECELLS_MODE
     // The moves' order indicates which move funcs to run.
     struct
     {
         size_t num;
         fcs_by_depth_moves_order *by_depth_moves;
     } by_depth_moves_order;
+#endif
 
     fcs_super_method_type super_method_type;
 
@@ -435,10 +440,13 @@ struct fc_solve_soft_thread_struct
             // The initial seed of this random number generator
             fcs_rand_gen rand_seed;
 
+#ifndef FCS_ZERO_FREECELLS_MODE
             /*
              * The moves to be performed in a preprocessed form.
              * */
             fcs_moves_by_depth_array moves_by_depth;
+#endif
+
         } soft_dfs;
         struct
         {

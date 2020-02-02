@@ -286,7 +286,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
     {
         fc_solve_initialize_bfs_queue(soft_thread);
     }
-
+#ifndef FCS_ZERO_FREECELLS_MODE
     if (!BEFS_M_VAR(soft_thread, moves_list))
     {
         size_t num = 0;
@@ -308,6 +308,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
         BEFS_M_VAR(soft_thread, moves_list) = moves_list;
         BEFS_M_VAR(soft_thread, moves_list_end) = moves_list + num;
     }
+#endif
+
     BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(
             &fcs_st_instance(soft_thread)->state_copy);

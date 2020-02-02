@@ -22,6 +22,20 @@
 #define RAR
 #endif
 
+/*
+ * Throughout this code the following local variables are used to quickly
+ * access the instance's members:
+ *
+ * LOCAL_STACKS_NUM - the number of stacks in the state
+ * LOCAL_FREECELLS_NUM - the number of freecells in the state
+ * sequences_are_built_by - the type of sequences of this board.
+ * */
+
+#if MAX_NUM_FREECELLS == 0
+DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
+#endif
+
+#ifndef FCS_ZERO_FREECELLS_MODE
 static inline int find_empty_stack(fcs_kv_state raw_state_raw,
     const int start_from, const int local_stacks_num)
 {
@@ -52,20 +66,6 @@ static inline void sort_derived_states(
         }
     }
 }
-
-/*
- * Throughout this code the following local variables are used to quickly
- * access the instance's members:
- *
- * LOCAL_STACKS_NUM - the number of stacks in the state
- * LOCAL_FREECELLS_NUM - the number of freecells in the state
- * sequences_are_built_by - the type of sequences of this board.
- * */
-
-#if MAX_NUM_FREECELLS == 0
-DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
-#endif
-
 /*
  * This function tries to move stack cards that are present at the
  * top of stacks to the foundations.
@@ -1448,6 +1448,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
 }
 #endif
 
+#endif // FCS_ZERO_FREECELLS_MODE
+
 #define CALC_FOUNDATION_TO_PUT_CARD_ON()                                       \
     calc_foundation_to_put_card_on(soft_thread, pass_new_state.key, card)
 
@@ -1493,7 +1495,6 @@ static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
 
     return -1;
 }
-
 extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
     fcs_soft_thread *const soft_thread, fcs_kv_state raw_state_raw)
 {

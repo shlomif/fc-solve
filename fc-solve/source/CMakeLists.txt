@@ -335,17 +335,19 @@ SET (FREECELL_SOLVER_LIB_MODULES
     lib.c
     meta_alloc.c
     move.c
-    move_funcs_order.c
     pos_by_rank__freecell.c
     rate_state.c
     scans.c
     state.c
-    "${MOVE_C}"
 )
 MACRO(add_lib_mods)
     LIST (APPEND FREECELL_SOLVER_LIB_MODULES ${ARGV})
 ENDMACRO()
 
+IF (NOT "${FCS_ZERO_FREECELLS_MODE}")
+    # add_lib_mods(fcs_is_ss_false_parent.c)
+    add_lib_mods("${MOVE_C}" move_funcs_order.c)
+ENDIF ()
 IF (NOT "${FCS_DISABLE_SIMPLE_SIMON}")
     # add_lib_mods(fcs_is_ss_false_parent.c)
     add_lib_mods(fcs_is_ss_true_parent.c)

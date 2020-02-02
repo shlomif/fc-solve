@@ -9,7 +9,9 @@
 #include "instance_for_lib.h"
 #include "preset.h"
 #include "freecell-solver/fcs_user.h"
+#ifndef FCS_ZERO_FREECELLS_MODE
 #include "move_funcs_order.h"
+#endif
 #include "fcs_user_internal.h"
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 #include "fc_pro_iface_pos.h"
@@ -188,9 +190,11 @@ static inline void alloc_instance(
 #ifndef FCS_FREECELL_ONLY
     apply_preset_by_name(instance, "freecell");
 #else
+#ifndef FCS_ZERO_FREECELLS_MODE
     FCS__DECL_ERR_BUF(no_use);
     fc_solve_apply_moves_order(&(instance->instance_moves_order),
         "[01][23456789]" FCS__PASS_ERR_STR(no_use));
+#endif
 #endif
 
 /****************************************/
@@ -808,6 +812,8 @@ static inline void recycle_inst(fcs_instance *const instance)
 static inline void setup_opt_thread__helper(
     fcs_instance *const instance, fcs_soft_thread *const soft_thread)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
+
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
         if (soft_thread->by_depth_moves_order.by_depth_moves != NULL)
@@ -827,6 +833,7 @@ static inline void setup_opt_thread__helper(
                 .moves_order = moves_order_dup(&(instance->opt_moves)),
             };
     }
+#endif
 
     soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
     soft_thread->is_optimize_scan = true;
@@ -1275,7 +1282,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
+#ifndef FCS_ZERO_FREECELLS_MODE
     ssize_t by_depth_max_depth, by_depth_min_depth;
+#endif
 #if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
@@ -1313,8 +1322,12 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
         &the_soft_dfs_info->derived_states_list;
     fcs_rand_gen *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
     calculate_real_depth(calc_real_depth, PTR_STATE);
+#ifndef FCS_ZERO_FREECELLS_MODE
     const_AUTO(
         by_depth_units, DFS_VAR(soft_thread, moves_by_depth).by_depth_units);
+#else
+    the_moves_list.num = 1;
+#endif
     TRACE0("Before depth loop");
 #define RECALC_BY_DEPTH_LIMITS()                                               \
     {                                                                          \
@@ -1337,11 +1350,13 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     const_SLOT(debug_iter_output_context, instance);
 #endif
 
+#ifndef FCS_ZERO_FREECELLS_MODE
     const moves_by_depth_unit *curr_by_depth_unit = by_depth_units;
     for (; (DEPTH() >= get_depth(curr_by_depth_unit)); ++curr_by_depth_unit)
     {
     }
     RECALC_BY_DEPTH_LIMITS();
+#endif
 
     // The main loop. We exit out of it when DEPTH() is decremented below zero.
     while (1)
@@ -1388,11 +1403,13 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 soft_thread->num_vacant_stacks = count_num_vacant_stacks(
                     LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
 
+#ifndef FCS_ZERO_FREECELLS_MODE
                 if (unlikely(DEPTH() < by_depth_min_depth))
                 {
                     curr_by_depth_unit--;
                     RECALC_BY_DEPTH_LIMITS();
                 }
+#endif
 
                 continue; /* Just to make sure depth is not -1 now */
             }
@@ -1511,11 +1528,13 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [aft set_visit]");
                 // I'm using current_state_indexes[depth]-1 because we already
                 // increased it by one, so now it refers to the next state.
+#ifndef FCS_ZERO_FREECELLS_MODE
                 if (unlikely(++DEPTH() >= by_depth_max_depth))
                 {
                     curr_by_depth_unit++;
                     RECALC_BY_DEPTH_LIMITS();
                 }
+#endif
                 the_soft_dfs_info->current_state_index = state_idx;
                 ++the_soft_dfs_info;
                 the_soft_dfs_info->state = PTR_STATE = single_derived_state;
@@ -1569,6 +1588,8 @@ static inline void init_dfs(fcs_soft_thread *const soft_thread)
     [0].state = FCS_STATE_keyval_pair_to_collectible(&instance->state_copy);
     fc_solve_rand_init(
         &(DFS_VAR(soft_thread, rand_gen)), DFS_VAR(soft_thread, rand_seed));
+
+#ifndef FCS_ZERO_FREECELLS_MODE
 
     if (!DFS_VAR(soft_thread, moves_by_depth).by_depth_units)
     {
@@ -1635,6 +1656,7 @@ static inline void init_dfs(fcs_soft_thread *const soft_thread)
                 SREALLOC(moves_list_of_lists->groups, moves_list_of_lists->num);
         }
     }
+#endif
 }
 
 /*
@@ -2588,6 +2610,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     void *const api_instance, const int min_depth,
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
     if (min_depth < 0)
@@ -2657,6 +2680,9 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
             soft_thread->by_depth_moves_order.num = depth_idx + 1);
 
     return ret_code;
+#else
+    return 0;
+#endif
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -4570,6 +4596,7 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
     void *const api_instance,
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     var_AUTO(obj, active_obj(api_instance));
     moves_order__free(&obj->opt_moves);
     STRUCT_CLEAR_FLAG(obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
@@ -4582,6 +4609,9 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
         STRUCT_TURN_ON_FLAG(obj, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
     return ret;
+#else
+    return 0;
+#endif
 }
 #endif
 
@@ -4843,16 +4873,24 @@ fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
 int DLLEXPORT __attribute__((pure))
 fc_solve_user_INTERNAL_get_num_by_depth_tests_order(void *const api_instance)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     return (int)api_soft_thread(api_instance)->by_depth_moves_order.num;
+#else
+    return 1;
+#endif
 }
 
 int DLLEXPORT __attribute__((pure))
 fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     void *const api_instance, const int depth_idx)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     return (int)api_soft_thread(api_instance)
         ->by_depth_moves_order.by_depth_moves[depth_idx]
         .max_depth;
+#else
+    return 1;
+#endif
 }
 
 #endif
