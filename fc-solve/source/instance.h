@@ -223,7 +223,9 @@ typedef struct
 typedef struct
 {
     uint_fast32_t num;
+#ifndef FCS_ZERO_FREECELLS_MODE
     fcs_moves_group *groups;
+#endif
 } fcs_moves_order;
 
 typedef struct
@@ -352,8 +354,10 @@ typedef struct
     size_t move_func_list_idx;
     size_t current_state_index;
     size_t move_func_idx;
+#ifndef FCS_ZERO_FREECELLS_MODE
     size_t derived_states_random_indexes_max_size;
     rating_with_index *derived_states_random_indexes;
+#endif
     fcs__positions_by_rank positions_by_rank;
 } fcs_soft_dfs_stack_item;
 
@@ -824,16 +828,20 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 {
     const_SLOT(num, orig);
     fcs_moves_order ret = (fcs_moves_order){.num = num,
-        .groups = memdup(orig->groups,
-            sizeof(orig->groups[0]) *
-                ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
-
+#ifndef FCS_ZERO_FREECELLS_MODE
+        .groups = memdup(
+            orig->groups, sizeof(orig->groups[0]) *
+                              ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))
+#endif
+    };
+#ifndef FCS_ZERO_FREECELLS_MODE
     for (size_t i = 0; i < num; ++i)
     {
         ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
             sizeof(ret.groups[i].move_funcs[0]) *
                 ((ret.groups[i].num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
     }
+#endif
 
     return ret;
 }
@@ -879,6 +887,7 @@ extern void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 
 static inline void moves_order__free(fcs_moves_order *moves_order)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     const_SLOT(groups, moves_order);
     const_SLOT(num, moves_order);
     for (size_t group_idx = 0; group_idx < num; ++group_idx)
@@ -887,6 +896,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     }
     free(groups);
     moves_order->groups = NULL;
+#endif
     moves_order->num = 0;
 }
 

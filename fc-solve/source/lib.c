@@ -107,14 +107,18 @@ static inline void alloc_instance(
         .instance_moves_order =
             {
                 .num = 0,
+#ifndef FCS_ZERO_FREECELLS_MODE
                 .groups = NULL,
+#endif
             },
         .list_of_vacant_states = NULL,
 #ifdef FCS_WITH_MOVES
         .opt_moves =
             {
                 .num = 0,
+#ifndef FCS_ZERO_FREECELLS_MODE
                 .groups = NULL,
+#endif
             },
         .solution_moves = (fcs_move_stack){.moves = NULL, .num_moves = 0},
         .FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH = false,
@@ -344,13 +348,17 @@ static inline void init_instance(fcs_instance *const instance)
         }
         instance->opt_moves = (typeof(instance->opt_moves)){
             .num = 1,
+#ifndef FCS_ZERO_FREECELLS_MODE
             .groups = SMALLOC(instance->opt_moves.groups, MOVES_GROW_BY),
+#endif
         };
+#ifndef FCS_ZERO_FREECELLS_MODE
         instance->opt_moves.groups[0] = (typeof(instance->opt_moves.groups[0])){
             .move_funcs = move_funcs,
             .num = num_move_funcs,
             .shuffling_type = FCS_NO_SHUFFLING,
         };
+#endif
         STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET);
     }
 #endif
@@ -1002,6 +1010,7 @@ static inline bool fcs__is_state_a_dead_end(
 static inline void free_states_handle_soft_dfs_soft_thread(
     fcs_soft_thread *const soft_thread)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info));
     const_AUTO(end_soft_dfs_info, soft_dfs_info + DFS_VAR(soft_thread, depth));
 
@@ -1034,6 +1043,7 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         soft_dfs_info->derived_states_list.num_states =
             (size_t)(dest_rand_index_ptr - rand_indexes);
     }
+#endif
 }
 
 static bool free_states_should_delete(void *const key, void *const context)
@@ -1142,6 +1152,7 @@ static inline bool was_pruned(const bool enable_pruning,
         return false;
     }
     the_soft_dfs_info->move_func_list_idx = the_moves_list->num;
+#ifndef FCS_ZERO_FREECELLS_MODE
     fc_solve_derived_states_list_add_state(derived_list, derived, 0);
     if (the_soft_dfs_info->derived_states_random_indexes_max_size < 1)
     {
@@ -1153,6 +1164,7 @@ static inline bool was_pruned(const bool enable_pruning,
 
     the_soft_dfs_info->derived_states_random_indexes[0].rating_with_index__idx =
         0;
+#endif
     return true;
 }
 
@@ -1167,15 +1179,16 @@ static inline fcs_moves_group_kind dfs_run_moves(
     {
         return init_shuffling_type;
     }
+#ifdef FCS_ZERO_FREECELLS_MODE
+    const_AUTO(local_shuffling_type, init_shuffling_type);
+    fc_solve_sfs_zerofc_0AB_atomic_all_moves(soft_thread, pass, derived_list);
+    ++the_soft_dfs_info->move_func_list_idx;
+#else
     /* Always do the first test */
     const_AUTO(local_shuffling_type,
         the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
             .shuffling_type);
 
-#ifdef FCS_ZERO_FREECELLS_MODE
-    fc_solve_sfs_zerofc_0AB_atomic_all_moves(soft_thread, pass, derived_list);
-    ++the_soft_dfs_info->move_func_list_idx;
-#else
     do
     {
         the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
@@ -1320,7 +1333,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     FCS_ASSIGN_STATE_KEY();
     fcs_derived_states_list *derived_list =
         &the_soft_dfs_info->derived_states_list;
+#ifndef FCS_ZERO_FREECELLS_MODE
     fcs_rand_gen *const rand_gen = &(DFS_VAR(soft_thread, rand_gen));
+#endif
     calculate_real_depth(calc_real_depth, PTR_STATE);
 #ifndef FCS_ZERO_FREECELLS_MODE
     const_AUTO(
@@ -1475,12 +1490,15 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
             }
 
             TRACE0("After iter_handler");
+#ifndef FCS_ZERO_FREECELLS_MODE
             const_AUTO(orig_idx, the_soft_dfs_info->move_func_list_idx);
             const fcs_state_weighting *const weighting =
                 &(the_moves_list.groups[orig_idx].weighting);
+#endif
 
             local_shuffling_type = dfs_run_moves(soft_thread, the_soft_dfs_info,
                 local_shuffling_type, &the_moves_list, pass, derived_list);
+#ifndef FCS_ZERO_FREECELLS_MODE
             const_AUTO(num_states, derived_list->num_states);
             if (num_states >
                 the_soft_dfs_info->derived_states_random_indexes_max_size)
@@ -1495,6 +1513,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 local_shuffling_type, rand_gen,
                 the_soft_dfs_info->derived_states_random_indexes, orig_idx,
                 &the_moves_list, derived_list->states, weighting);
+#endif
             // We just performed a test, so the index of the first state that
             // ought to be checked in this depth is 0.
             the_soft_dfs_info->current_state_index = 0;
@@ -1504,14 +1523,21 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
         fcs_derived_states_list_item *const derived_states =
             derived_list->states;
         var_AUTO(state_idx, the_soft_dfs_info->current_state_index - 1);
+#ifndef FCS_ZERO_FREECELLS_MODE
         const rating_with_index *rand_int_ptr =
             the_soft_dfs_info->derived_states_random_indexes + state_idx;
+#endif
 
         while (++state_idx < num_states)
         {
-            fcs_collectible_state *const single_derived_state =
-                derived_states[(*(++rand_int_ptr)).rating_with_index__idx]
-                    .state_ptr;
+            fcs_collectible_state *const single_derived_state = derived_states[
+#ifndef FCS_ZERO_FREECELLS_MODE
+                (*(++rand_int_ptr)).rating_with_index__idx
+#else
+                state_idx
+#endif
+            ]
+                                                                    .state_ptr;
 
             VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
@@ -1534,6 +1560,8 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     curr_by_depth_unit++;
                     RECALC_BY_DEPTH_LIMITS();
                 }
+#else
+                ++DEPTH();
 #endif
                 the_soft_dfs_info->current_state_index = state_idx;
                 ++the_soft_dfs_info;
