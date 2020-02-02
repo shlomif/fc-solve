@@ -101,6 +101,7 @@ class="try_main">Try</span><br/>
                 arch_doc_url=base_path + "arch_doc/",
                 )
         out_fn = dest+'/'+fn
+        text = re.sub("\\A[\\s\\n]+", '', text)
         if re.search('<toc */ *>', text):
             tocs.append(out_fn)
         open(out_fn, 'wt').write(text)
