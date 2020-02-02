@@ -51,6 +51,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'without-iter-handler'      => 'FCS_WITHOUT_ITER_HANDLER',
     'without-trim'              => 'FCS_WITHOUT_TRIM_MAX_STORED_STATES',
     'without-visited-iter'      => 'FCS_WITHOUT_VISITED_ITER',
+    'zero-freecells-mode'       => 'FCS_ZERO_FREECELLS_MODE',
 );
 
 my %TRUE_BOOL_OPTS = (
@@ -212,6 +213,7 @@ my %themes = (
     zerofc     => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
     zerofcst   => [qw(-l zerofc --dbm-single-thread --dbmtree=apr_hash)],
+    zerofcmode => [qw(-l zerofcst --zero-freecells-mode)],
 );
 
 my $SEED_KEY = 'FCS_THEME_RAND';
