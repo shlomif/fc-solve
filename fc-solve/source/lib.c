@@ -14,6 +14,9 @@
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 #include "fc_pro_iface_pos.h"
 #endif
+#ifdef FCS_ZERO_FREECELLS_MODE
+#include "zerofc_freecell_moves.h"
+#endif
 
 #ifdef DEBUG
 static void verify_state_sanity(const fcs_state *const ptr_state)
@@ -1162,6 +1165,10 @@ static inline fcs_moves_group_kind dfs_run_moves(
         the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
             .shuffling_type);
 
+#ifdef FCS_ZERO_FREECELLS_MODE
+    fc_solve_sfs_zerofc_0AB_atomic_all_moves(soft_thread, pass, derived_list);
+    ++the_soft_dfs_info->move_func_idx;
+#else
     do
     {
         the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
@@ -1178,6 +1185,7 @@ static inline fcs_moves_group_kind dfs_run_moves(
         }
     } while ((local_shuffling_type != FCS_NO_SHUFFLING) ||
              (derived_list->num_states == 0));
+#endif
     return local_shuffling_type;
 }
 

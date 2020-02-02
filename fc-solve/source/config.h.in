@@ -160,6 +160,8 @@ extern "C" {
 
 #define FCS_RCS_CACHE_STORAGE ${FCS_RCS_CACHE_STORAGE}
 
+#cmakedefine FCS_ZERO_FREECELLS_MODE
+
 #cmakedefine HAVE_STRNCASECMP
 #cmakedefine HAVE_STRNDUP
 #cmakedefine HAVE_VASPRINTF

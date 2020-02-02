@@ -52,6 +52,10 @@ extern "C" {
     ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
 #endif
 
+#if defined(FCS_ZERO_FREECELLS_MODE) && (MAX_NUM_FREECELLS != 0)
+#error FCS_ZERO_FREECELLS_MODE requires zero freecells
+#endif
+
 #if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES))
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif

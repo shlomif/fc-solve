@@ -34,6 +34,11 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack);
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top);
 
+#define FCS_ZERO_FREECELLS_MODE
+#ifdef FCS_ZERO_FREECELLS_MODE
+DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves);
+#endif
+
 #ifdef __cplusplus
 }
 #endif

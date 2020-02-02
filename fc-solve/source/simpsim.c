@@ -37,7 +37,7 @@ static inline bool fcs_is_ss_suit_true(
     for (stack_i source_stack_idx = 0; source_stack_idx < LOCAL_STACKS_NUM;    \
          ++source_stack_idx)                                                   \
     {                                                                          \
-        const_AUTO(col, fcs_state_get_col(state, source_stack_idx));           \
+        const_AUTO(col, fcs_state_get_col(state_key, source_stack_idx));       \
         const int col_len = fcs_col_len(col);                                  \
         if (col_len < min_num_cards)                                           \
         {                                                                      \
@@ -55,7 +55,7 @@ static inline bool fcs_is_ss_suit_true(
             continue;                                                          \
         }                                                                      \
                                                                                \
-        const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));        \
+        const_AUTO(dest_col, fcs_state_get_col(state_key, dest_stack_idx));    \
         const int dest_col_len = fcs_col_len(dest_col);                        \
                                                                                \
         if (dest_col_len < min_num_cards)                                      \
@@ -171,7 +171,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
         if (dest_stack_idx != source_stack_idx)                                \
         {                                                                      \
             const int dest_card_height = pos.height;                           \
-            const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));    \
+            const_AUTO(                                                        \
+                dest_col, fcs_state_get_col(state_key, dest_stack_idx));       \
             const int dest_col_len = fcs_col_len(dest_col);
 
 #define LOOK_FOR_TRUE_PARENT_with_ds_dc__END()                                 \
@@ -398,7 +399,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
              ++clear_junk_dest_stack)
         {
             const fcs_const_cards_column clear_junk_dest_col =
-                fcs_state_get_col(state, clear_junk_dest_stack);
+                fcs_state_get_col(state_key, clear_junk_dest_stack);
             const int clear_junk_stack_len = fcs_col_len(clear_junk_dest_col);
 
             if (!((clear_junk_stack_len > 0) &&
@@ -432,7 +433,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
          * junk */
         for (clear_junk_dest_stack = 0;; ++clear_junk_dest_stack)
         {
-            if (fcs_state_col_is_empty(state, clear_junk_dest_stack) &&
+            if (fcs_state_col_is_empty(state_key, clear_junk_dest_stack) &&
                 (!stacks_map[clear_junk_dest_stack]))
             {
                 break;
@@ -825,7 +826,7 @@ DECLARE_MOVE_FUNCTION(
     {
         const stack_i dest_stack_idx = (stack_i)ds_dcs[i].col;
         const size_t dest_card_height = (size_t)ds_dcs[i].height;
-        const_AUTO(dest_col, fcs_state_get_col(state, dest_stack_idx));
+        const_AUTO(dest_col, fcs_state_get_col(state_key, dest_stack_idx));
 
         /* This is a suitable parent - let's check if there's a sequence above
          * it. */
@@ -976,7 +977,5 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     STACK_DEST_LOOP_END()
     STACK_SOURCE_LOOP_END()
 }
-
-#undef state
 
 #endif /* #ifdef FCS_DISABLE_SIMPLE_SIMON */
