@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use IO::All;
-use Template;
+use Template ();
 
 my $MIN  = 1;
 my $MAX  = 32_000;
@@ -19,11 +18,7 @@ my $ARGS = +{
     },
 };
 
-my $template = Template->new(
-    {
-        EVAL_PERL => 1,    # evaluate Perl code blocks
-    }
-);
+my $template = Template->new( {} );
 
 my $TEXT = <<'EOF';
 all:[% FOREACH i = [min .. max] %] [% res(i) %][% END %]

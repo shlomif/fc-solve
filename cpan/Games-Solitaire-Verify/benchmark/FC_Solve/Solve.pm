@@ -24,10 +24,10 @@ our @EXPORT_OK = qw(solve fc_solve_init);
 
 use autodie;
 
-use List::MoreUtils qw(true);
+use List::MoreUtils qw/ true /;
 
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::App::CmdLine;
+use Games::Solitaire::Verify::Solution     ();
+use Games::Solitaire::Verify::App::CmdLine ();
 
 sub solve
 {
@@ -103,6 +103,7 @@ __C__
 
 #include <string.h>
 #include <stdio.h>
+#include "freecell-solver/fcs_conf.h"
 #include "freecell-solver/fcs_cl.h"
 #include "output_to_file.h"
 #include "range_solvers_gen_ms_boards.h"
@@ -168,7 +169,13 @@ SV * fc_solve_solve(int board_num)
 {
     get_board(board_num, board_buf);
     const int err_code = freecell_solver_user_solve_board(fcs, board_buf);
+#ifdef WRITE_TO_FILE
+    char fn[100];
+    sprintf(fn, "/tmp/fcs%d.sol", board_num);
+    FILE * const output_fh = fopen(fn, "wt");
+#else
     FILE * const output_fh = fmemopen(buffer , COUNT(buffer), "wt");
+#endif
 
     #if 1
     fc_solve_output_result_to_file(output_fh, fcs, err_code, &my_context);
@@ -180,6 +187,12 @@ SV * fc_solve_solve(int board_num)
 
     freecell_solver_user_recycle(fcs);
 
+#ifdef WRITE_TO_FILE
+    FILE * readfh = fopen(fn, "rt");
+    memset(buffer, '\0', COUNT(buffer));
+    fread(buffer, 1, COUNT(buffer), readfh);
+    fclose(readfh);
+#endif
     SV * const ret = newSVpv(buffer, 0);
 
     return ret;

@@ -4,14 +4,12 @@ use strict;
 use warnings;
 use autodie;
 
+use lib '.';
 use lib '../Games-Solitaire-Verify/lib';
 
-use FC_Solve::Solve (qw/fc_solve_init solve/);
+use FC_Solve::Solve qw/ fc_solve_init solve /;
 
-use List::MoreUtils qw(first_index true);
-
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::App::CmdLine;
+use List::MoreUtils qw/ first_index /;
 
 my @args = @ARGV;
 
