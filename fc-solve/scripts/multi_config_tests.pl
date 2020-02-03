@@ -354,17 +354,18 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                     $run->( "cmake", [ 'cmake', @$cmake_args, '../source' ] );
                 }
                 $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
+                my $run_test = sub {
+                    my ($cmd_line) = @_;
+                    $run->( "test", [ $^X, "$CWD/run-tests.pl", @$cmd_line, ] );
+                };
                 if ( not $args->{do_not_test} )
                 {
-                    $run->(
-                        "test",
-                        [
-                            $^X, "$CWD/run-tests.pl",
-                            @{ $args->{runtest_args} // [] }
-                        ]
-                    );
+                    $run_test->( [ @{ $args->{runtest_args} // [] } ] );
                 }
-
+                if ( my $exe = $args->{extra_test_command} )
+                {
+                    $run_test->($exe);
+                }
             }
         );
         $build_path->remove_tree( { safe => $SAFE } );
@@ -459,7 +460,20 @@ reg_prep( "prepare_dist vendu",
 reg_prep( "prepare_dist pbs",
     'prepare_pbs_dbm_solver_self_contained_package.pl' );
 reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
-reg_lt_test( "-l n2t with --disable-patsolve", '--disable-patsolve', );
+reg_test(
+    "-l n2t with --disable-patsolve",
+    {
+        tatzer_args        => [ @LT, '--disable-patsolve' ],
+        extra_test_command => [
+            (
+                map { ; ( "--execute", $_ ) } (
+                    $^X,
+"$CWD/../../cpan/Games-Solitaire-Verify/benchmark/test-me.pl",
+                )
+            ),
+        ],
+    },
+);
 reg_test(
     "build_only: maximum speed preset",
     {
