@@ -468,7 +468,7 @@ reg_test(
             (
                 map { ; ( "--execute", $_ ) } (
                     $^X,
-"$CWD/../../cpan/Games-Solitaire-Verify/benchmark/test-me.pl",
+"$CWD/../../cpan/Games-Solitaire-Verify/benchmark/sanity-test.pl",
                 )
             ),
         ],

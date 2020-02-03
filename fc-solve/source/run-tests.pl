@@ -276,7 +276,10 @@ EOF
     }
     elsif (@execute)
     {
-        system(@execute);
+        if ( system(@execute) )
+        {
+            die "execute failed";
+        }
     }
     else
     {
