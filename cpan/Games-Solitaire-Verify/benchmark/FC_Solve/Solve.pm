@@ -83,7 +83,7 @@ sub solve
             die "Invalid solution!";
         }
 
-        $sol_len = () = ( $fc_solve_output =~ m{^Move}msg );
+        $sol_len = () = ( $fc_solve_output =~ m{\nMove}gms );
     }
 
     my ($num_iters) = (
