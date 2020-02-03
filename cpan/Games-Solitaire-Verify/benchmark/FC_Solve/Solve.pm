@@ -41,7 +41,7 @@ sub solve
     my $_line_found = sub {
         my ($s) = @_;
 
-        return ( ( $fc_solve_output =~ m{^\Q$s\E}ms ) ? 1 : 0 );
+        return ( index( $fc_solve_output, $s ) >= 0 );
     };
 
     my $is_solvable = $_line_found->('This game is solveable');
@@ -163,11 +163,12 @@ void fc_solve_init(AV * args)
         -1,
         NULL
     );
+    get_board__setup_string(board_buf);
 }
 
 SV * fc_solve_solve(int board_num)
 {
-    get_board(board_num, board_buf);
+    get_board_l__without_setup(board_num, board_buf);
     const int err_code = freecell_solver_user_solve_board(fcs, board_buf);
 #ifdef WRITE_TO_FILE
     char fn[100];
