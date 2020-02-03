@@ -10,12 +10,13 @@ my $MAX  = 32_000;
 my $STEP = 100;
 
 my $ARGS = +{
-    min  => $MIN,
-    max  => ( $MAX / $STEP ),
-    step => $STEP,
-    res  => sub {
+    cmd => qq#perl benchmark-no-backticks.pl -- -l lg -ni -l fg#,
+    min => $MIN,
+    max => ( $MAX / $STEP ),
+    res => sub {
         return "Results/" . shift . ".res";
     },
+    step => $STEP,
 };
 
 my $template = Template->new( {} );
@@ -25,7 +26,7 @@ all:[% FOREACH i = [min .. max] %] [% res(i) %][% END %]
 
 [% FOREACH i = [min .. max] %]
 [% res(i) %]:
-[% "\t" %]F=[% min + (i - 1) * step %] L=[% min + i * step - 1 %] perl benchmark-no-backticks.pl -- -l as -ni -l fg > [% res(i) %]
+[% "\t" %]F=[% min + (i - 1) * step %] L=[% min + i * step - 1 %] [% cmd %] > [% res(i) %]
 [% END %]
 EOF
 
@@ -33,7 +34,7 @@ $template->process( \$TEXT, $ARGS, 'par2.mak', ) or die $template->error;
 
 my $NINJA_TEXT = <<'EOF';
 rule b
-  command = F=$f L=$l perl benchmark-no-backticks.pl -- -l as -ni -l fg > $out
+  command = F=$f L=$l [% cmd %] > $out
 
 [% FOREACH i = [min .. max] %]
 build [% res(i) %]: b
