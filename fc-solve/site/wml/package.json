@@ -9,7 +9,7 @@
   "dependencies": {
     "@babel/cli": "^7.7.7",
     "@babel/core": "^7.7.7",
-    "@babel/preset-env": "^7.7.7",
+    "@babel/preset-env": "^7.8.3",
     "@types/jquery": "^3.3.31",
     "@types/qunit": "^2.9.0",
     "@typescript-eslint/eslint-plugin": "^2.14.0",
