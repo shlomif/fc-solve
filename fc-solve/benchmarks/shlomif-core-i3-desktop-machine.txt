@@ -1779,3 +1779,44 @@ Finished at 1581268657.114574 (total_num_iters=5886704)
 </DUMP>
 
     ( DUMPS-1581268653-t/dump004 )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit 47d92571f9f10487253ca3360d254f5732add197
+(commit Date:   Sun Feb 9 19:49:32 2020 +0200 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+gcc 9.2.0 ( /home/shlomif/apps/prog/gcc-9.2.0/bin/gcc )
+tcmalloc from mageia.
+Without strip.
+
+2.88306212425232s
+
+    Highlight: change the int width of game_type_limit.h & gcc9.2.0
+
+<DUMP>
+Started at 1581270651.030736
+Unsolved Board No. 11982 at 1581270652.686524
+Started at 1581270651.030736
+Started at 1581270651.030736
+Started at 1581270651.030736
+Started at 1581270651.030736
+Reached Board No. 4000 at 1581270651.380751 (total_num_iters=712094)
+Reached Board No. 8000 at 1581270651.721421 (total_num_iters=1429370)
+Reached Board No. 12000 at 1581270652.066771 (total_num_iters=2152005)
+Reached Board No. 16000 at 1581270652.511171 (total_num_iters=2856277)
+Reached Board No. 20000 at 1581270652.895865 (total_num_iters=3772186)
+Reached Board No. 24000 at 1581270653.209845 (total_num_iters=4435931)
+Reached Board No. 28000 at 1581270653.543833 (total_num_iters=5134085)
+Reached Board No. 32000 at 1581270653.913271 (total_num_iters=5886704)
+Finished at 1581270653.913798 (total_num_iters=5886704)
+</DUMP>
+
+    ( DUMPS-1581270650-p/dump004 )
