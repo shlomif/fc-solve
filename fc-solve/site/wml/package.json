@@ -7,7 +7,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.7.7",
+    "@babel/cli": "^7.8.3",
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.8.3",
     "@types/jquery": "^3.3.31",
