@@ -8,4 +8,4 @@
 // game_type_limit.h: define fcs_game_limit.
 #pragma once
 #include <stdint.h>
-typedef uint8_t fcs_game_limit;
+typedef uint16_t fcs_game_limit;
