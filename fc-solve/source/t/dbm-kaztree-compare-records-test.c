@@ -5,11 +5,8 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2011 Shlomi Fish
-
-/*
- * A test for the DBM kaztree compare records.
- */
-#include "fcs_cmocka.h"
+// A test for the DBM kaztree compare records.
+#include "rinutils/rin_cmocka.h"
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS

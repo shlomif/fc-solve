@@ -1,6 +1,6 @@
 /* vim:syn=tt2
 */
-#include "fcs_cmocka.h"
+#include "rinutils/rin_cmocka.h"
 #include "card.c"
 
 static void main_tests(void **state GCC_UNUSED)

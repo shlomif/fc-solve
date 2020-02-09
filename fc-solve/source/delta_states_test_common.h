@@ -7,7 +7,7 @@
 // Copyright (c) 2011 Shlomi Fish
 // Common t/delta-states-test.c code.
 #pragma once
-#include "fcs_cmocka.h"
+#include "rinutils/rin_cmocka.h"
 
 #ifndef FCS_COMPILE_DEBUG_FUNCTIONS
 #define FCS_COMPILE_DEBUG_FUNCTIONS

@@ -6,7 +6,7 @@
 //
 // Copyright (c) 2011 Shlomi Fish
 // A test for the bit reader and writer.
-#include "fcs_cmocka.h"
+#include "rinutils/rin_cmocka.h"
 #include "freecell-solver/fcs_conf.h"
 #include "rinutils/unused.h"
 #include "rinutils/bit_rw.h"
