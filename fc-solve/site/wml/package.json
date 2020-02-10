@@ -33,7 +33,7 @@
     "qunit-cli": "^0.2.0",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
-    "rollup": "^1.27.14",
+    "rollup": "^1.29.0",
     "sass": "^1.24.5",
     "tap": "^14.10.4",
     "tar": "^2.2.2",
