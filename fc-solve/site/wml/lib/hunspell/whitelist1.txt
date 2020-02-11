@@ -1233,6 +1233,7 @@ FCS_STATE_SOFT_SUSPEND_PROCESS
 Golf_
 MAX_NUM_DECKS
 PACKAGE_VERSION
+Refactorings
 appveyor
 asciidoc
 cffi
@@ -1250,9 +1251,12 @@ fc-solve-multi
 fc-solve-temp
 fc-solvers
 fc_solve_stack_compare_for_canonize
+fcs_game_limit
 freecell_solver_user_limit_iterations_long
 freecell_solver_user_soft_limit_iterations_long
 gen-multiple-pysol-layouts
+get_board__setup_string
+get_board_l__without_setup
 includable
 int128
 int128-optimisation
@@ -1262,6 +1266,7 @@ libGMP
 libapr
 libtap
 macOS
+make_multi_boards
 msi
 obf
 pysol-cards
@@ -1271,6 +1276,7 @@ solution_moves
 sp
 summarizing_solver
 transpose-freecell-board
+uint16_t
 userland
 usleep
 v0
