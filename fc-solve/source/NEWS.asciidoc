@@ -1,8 +1,20 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2019-06-18
+:Date: 2020-02-11
 :Revision: $Id$
+
+Version 5.18.0: (11-Feb-2020)
+-----------------------------
+
+1. Add +board_gen/make_multi_boards.c+ (not installed by default).
+
+2. Add +get_board__setup_string()+ and +get_board_l__without_setup()+
+(optimization).
+
+3. Convert +fcs_game_limit+ to +uint16_t+ (optimization).
+
+4. Refactorings and cleanups.
 
 Version 5.16.0: (30-Dec-2019)
 -----------------------------
