@@ -166,6 +166,10 @@ EOF
         # TEST
         trap
         {
+            local %ENV = %ENV;
+
+            # CFLAGS messes with cmake on rpmbuild on fedora 31 x86-64
+            delete $ENV{CFLAGS};
             $ret = system("rpmbuild -tb $arc_name ");
         };
         if ( !is( $ret, 0, "rpmbuild -tb is successful." ) )
