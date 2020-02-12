@@ -37,6 +37,7 @@ test -f "$tzr"
 test -f "$src/freecell.c"
 build="$src/../prerel-build"
 assets_dir="$src/../../../../Arcs/fc-solve-site-assets/fc-solve-site-assets"
+test -d "$assets_dir"
 mkdir "$build"
 cd "$build"
 "$tzr" -l n2t
