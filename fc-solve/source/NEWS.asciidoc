@@ -1,10 +1,10 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2020-02-11
+:Date: 2020-02-12
 :Revision: $Id$
 
-Version 5.18.0: (11-Feb-2020)
+Version 5.18.0: (12-Feb-2020)
 -----------------------------
 
 1. Add +board_gen/make_multi_boards.c+ (not installed by default).
