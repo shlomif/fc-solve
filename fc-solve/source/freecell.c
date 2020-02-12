@@ -90,8 +90,7 @@ static inline void sort_derived_states(
 
     for (var_AUTO(b, start + 1); b < limit; b++)
     {
-        for (var_AUTO(c, b); (c > start) && (c[0].context.i < c[-1].context.i);
-             c--)
+        for (var_AUTO(c, b); (c > start) && (c[0].context < c[-1].context); c--)
         {
             const_AUTO(swap_temp, c[-1]);
             c[-1] = c[0];

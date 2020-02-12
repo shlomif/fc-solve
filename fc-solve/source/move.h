@@ -346,14 +346,12 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
 
 #endif
 
+typedef uint32_t fcs_derived_states_list_item_context_type;
 typedef struct
 {
     fcs_collectible_state *state_ptr;
-    union {
-        void *ptr;
-        int i;
-        char c[sizeof(void *) / sizeof(char)];
-    } context;
+    fcs_derived_states_list_item_context_type context;
+    int padding_no_use;
 } fcs_derived_states_list_item;
 
 typedef struct
@@ -366,15 +364,15 @@ typedef struct
 #define DERIVED_STATES_LIST_GROW_BY 16
 static inline void fc_solve_derived_states_list_add_state(
     fcs_derived_states_list *const list, fcs_collectible_state *const state,
-    const int context)
+    const fcs_derived_states_list_item_context_type context)
 {
     if (list->num_states == list->max_num_states)
     {
         list->states = SREALLOC(
             list->states, list->max_num_states += DERIVED_STATES_LIST_GROW_BY);
     }
-    list->states[list->num_states++] = (fcs_derived_states_list_item){
-        .state_ptr = state, .context.i = context};
+    list->states[list->num_states++] =
+        (fcs_derived_states_list_item){.state_ptr = state, .context = context};
 }
 #ifdef __cplusplus
 }

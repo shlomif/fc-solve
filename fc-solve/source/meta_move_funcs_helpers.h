@@ -127,7 +127,8 @@ static inline void fc_solve_move_sequence_function(
 #define tests_define_accessors_move_stack()
 #endif
 
-#define tests_state_context_val int state_context_value = 0;
+#define tests_state_context_val                                                \
+    fcs_derived_states_list_item_context_type state_context_value = 0;
 /*
  * This macro defines these accessors to have some value.
  * */
