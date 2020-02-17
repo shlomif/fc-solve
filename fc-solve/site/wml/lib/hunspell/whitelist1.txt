@@ -1374,6 +1374,7 @@ pysolfc
 
 GitLab
 Screencasts
+Solvitaire
 cffi
 gg
 xxHash
