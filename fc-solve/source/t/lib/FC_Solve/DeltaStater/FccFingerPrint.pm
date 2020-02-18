@@ -319,35 +319,40 @@ sub encode_composite
             $fingerprint1 = $opt1->[0];
             $fingerprint2 = $opt2->[0];
 
-            if ( $fingerprint1 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+            if ( $rank > 1 )
             {
-                if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+                if ( $fingerprint1 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
                 {
+                    if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+                    {
+                    }
+                    else
+                    {
+                        my $state_o = $opt2->[1];
+                        $writer_state->write( { base => 4, item => $state_o } );
+                    }
                 }
                 else
                 {
-                    my $state_o = $opt2->[1];
-                    $writer_state->write( { base => 4, item => $state_o } );
+                    if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+                    {
+                        my $state_o = $opt1->[1];
+                        $writer_state->write( { base => 4, item => $state_o } );
+                    }
+                    else
+                    {
+                        my @states = ( $opt1->[1], $opt2->[1] );
+                        $writer_state->write(
+                            {
+                                base => $state_opt_next,
+                                item => $STATES_OPTS{"@states"}
+                            }
+                        );
+                    }
                 }
             }
-            else
-            {
-                if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
-                {
-                    my $state_o = $opt1->[1];
-                    $writer_state->write( { base => 4, item => $state_o } );
-                }
-                else
-                {
-                    my @states = ( $opt1->[1], $opt2->[1] );
-                    $writer_state->write(
-                        {
-                            base => $state_opt_next,
-                            item => $STATES_OPTS{"@states"}
-                        }
-                    );
-                }
-            }
+
+            # print("$rank $color $fingerprint1 $fingerprint2\n");
 
             $writer_fingerprint->write( { base => 3, item => $fingerprint1 } );
             $writer_fingerprint->write( { base => 3, item => $fingerprint2 } );
@@ -361,8 +366,19 @@ sub encode_composite
     }
     $self->_free_card_states;
 
-    my $ret = $writer_fingerprint->get_data();
-    return [ $ret , $writer_state->get_data() ];
+    my $_data = sub {
+        my $n   = shift()->get_data;
+        my $ret = '';
+        while ( $n > 0 )
+        {
+            $ret .= chr( $n & 255 );
+            $n >>= 8;
+        }
+        return $ret;
+    };
+
+    my $ret = $_data->($writer_fingerprint);
+    return [ $ret, $_data->($writer_state) ];
 }
 
 sub _fill_column_with_descendant_cards
