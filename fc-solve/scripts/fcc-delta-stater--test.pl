@@ -21,8 +21,9 @@ my $RANK_J = 11;
 my $RANK_Q = 12;
 my $RANK_K = 13;
 
+sub mytest
 {
-    my $DEAL_IDX = 25;
+    my $DEAL_IDX = shift;
 
     # MS Freecell No. 982 Initial state.
     my $delta = FC_Solve::DeltaStater::FccFingerPrint->new(
@@ -51,7 +52,7 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
             }
             if ( $l !~ /TD/ )
             {
-                $DB::single = 1;
+                # $DB::single = 1;
 
                 # ...;
             }
@@ -62,23 +63,33 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
             );
             if ( $delta->_derived_state->to_string !~ /TD/ )
             {
-                $DB::single = 1;
+                # $DB::single = 1;
 
                 # ...;
             }
-            print(
-                join(
-                    ",",
-                    map {
-                        # join "|", map { sprintf "%.2X", ord($_) } split //, $_
-                        length
-                    } @{ $delta->encode_composite() }
-                )
-            );
+            my @x =
+                map {
+                [
+                    ( join "|", map { sprintf "%.2X", ord($_) } split //, $_ ),
+                    length
+                ]
+                } @{ $delta->encode_composite() };
+            die if @x != 2;
 
+            print( $DEAL_IDX , ":", join( ",", map { $_->[0] } @x ) );
             print "\n";
+            if ( $x[1][1] > 10 )
+            {
+                $DB::single = 1;
+                die "exceeded len in deal $DEAL_IDX";
+            }
         }
     }
+}
+
+foreach my $DEAL_IDX ( 1 .. 300 )
+{
+    mytest($DEAL_IDX);
 }
 
 __END__

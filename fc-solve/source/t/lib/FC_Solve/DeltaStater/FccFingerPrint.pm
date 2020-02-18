@@ -34,6 +34,8 @@ my $IN_FOUNDATIONS                   = 2;
 my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
 my $state_opt_next = 0;
 my %STATES_OPTS;
+my $state_opt_next__king = 0;
+my %STATES_OPTS__king;
 {
 
     sub _add
@@ -54,6 +56,18 @@ my %STATES_OPTS;
     _add( $PARENT_1,       $ABOVE_FREECELL );
     _add( $PARENT_0,       $PARENT_1 );
     _add( $PARENT_1,       $PARENT_0 );
+}
+
+{
+
+    sub _addk
+    {
+        $STATES_OPTS__king{"@_"} = $state_opt_next__king++;
+    }
+    _addk( $LOWEST_CARD,    $LOWEST_CARD );
+    _addk( $LOWEST_CARD,    $ABOVE_FREECELL );
+    _addk( $ABOVE_FREECELL, $LOWEST_CARD );
+    _addk( $ABOVE_FREECELL, $ABOVE_FREECELL );
 }
 my $OPT_TOPMOST              = 0;
 my $OPT_DONT_CARE            = $OPT_TOPMOST;
@@ -318,6 +332,7 @@ sub encode_composite
             }
             $fingerprint1 = $opt1->[0];
             $fingerprint2 = $opt2->[0];
+            my $is_king = ( $rank == $RANK_KING );
 
             if ( $rank > 1 )
             {
@@ -329,7 +344,16 @@ sub encode_composite
                     else
                     {
                         my $state_o = $opt2->[1];
-                        $writer_state->write( { base => 4, item => $state_o } );
+                        if ($is_king)
+                        {
+                            $writer_state->write(
+                                { base => 2, item => $state_o } );
+                        }
+                        else
+                        {
+                            $writer_state->write(
+                                { base => 4, item => $state_o } );
+                        }
                     }
                 }
                 else
@@ -337,17 +361,40 @@ sub encode_composite
                     if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
                     {
                         my $state_o = $opt1->[1];
-                        $writer_state->write( { base => 4, item => $state_o } );
+                        if ($is_king)
+                        {
+                            $writer_state->write(
+                                { base => 2, item => $state_o } );
+                        }
+                        else
+                        {
+                            $writer_state->write(
+                                { base => 4, item => $state_o } );
+                        }
                     }
                     else
                     {
                         my @states = ( $opt1->[1], $opt2->[1] );
-                        $writer_state->write(
+                        if ($is_king)
+                        {
+                            foreach my $state_o (@states)
                             {
-                                base => $state_opt_next,
-                                item => $STATES_OPTS{"@states"}
+                                $writer_state->write(
+                                    { base => 2, item => $state_o } );
                             }
-                        );
+                        }
+                        else
+                        {
+                            $writer_state->write(
+                                {
+                                    base => $state_opt_next,
+                                    item => (
+                                        $STATES_OPTS{"@states"}
+                                            // do { die "unknown key @states"; }
+                                    ),
+                                }
+                            );
+                        }
                     }
                 }
             }
