@@ -292,6 +292,7 @@ sub encode_composite
     }
 
     # We encode the foundations separately so set the card value as don't care.
+    my $cnt = 0;
     foreach my $rank ( 1 .. $RANK_KING )
     {
         foreach my $color ( 0 .. 1 )
@@ -350,13 +351,18 @@ sub encode_composite
 
             $writer_fingerprint->write( { base => 3, item => $fingerprint1 } );
             $writer_fingerprint->write( { base => 3, item => $fingerprint2 } );
-
+            $cnt += 2;
         }
     }
 
+    if ( $cnt != 52 )
+    {
+        ...;
+    }
     $self->_free_card_states;
 
-    return [ $writer_fingerprint->get_data(), $writer_state->get_data() ];
+    my $ret = $writer_fingerprint->get_data();
+    return [ $ret , $writer_state->get_data() ];
 }
 
 sub _fill_column_with_descendant_cards

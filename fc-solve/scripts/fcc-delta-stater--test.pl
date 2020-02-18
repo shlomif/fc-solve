@@ -70,7 +70,8 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
                 join(
                     ",",
                     map {
-                        join "|", map { sprintf "%.2X", ord($_) } split //, $_
+                        # join "|", map { sprintf "%.2X", ord($_) } split //, $_
+                        length
                     } @{ $delta->encode_composite() }
                 )
             );
