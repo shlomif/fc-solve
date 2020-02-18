@@ -88,18 +88,23 @@ sub _init
     return;
 }
 
+sub _calc_state_obj_generic
+{
+    my ( $self, $args ) = @_;
+    return $self->_is_bakers_dozen()
+        ? ( die "unimpl" )
+        : Games::Solitaire::Verify::State->new(
+        {
+            %{$args}, variant => 'freecell'
+        },
+        );
+}
+
 sub _initialize_card_states
 {
     my ( $self, $num_opts ) = @_;
 
-    $self->_card_states(
-        [
-            map {
-                FC_Solve::DeltaStater::OptionsStruct->new(
-                    { count => $num_opts, } );
-            } ( 0 .. $RANK_KING * 4 )
-        ]
-    );
+    $self->_card_states( [ map { [] } ( 0 .. $RANK_KING * 4 - 1 ) ] );
 
     return;
 }
@@ -118,6 +123,10 @@ sub _opt_by_suit_rank
     my ( $self, $suit, $rank ) = @_;
 
     # Carp::cluck("Suit == $suit ; Rank == $rank");
+    if ( $rank < 1 or $rank > $RANK_KING )
+    {
+        $DB::single = 1;
+    }
     return $self->_card_states->[ $suit * $RANK_KING + $rank - 1 ];
 }
 
@@ -125,7 +134,7 @@ sub _mark_suit_rank_as_true
 {
     my ( $self, $suit, $rank, $opt ) = @_;
 
-    $self->_opt_by_suit_rank( $suit, $rank )->mark_as_true($opt);
+    @{ $self->_opt_by_suit_rank( $suit, $rank ) } = @$opt;
 
     return;
 }
@@ -149,7 +158,7 @@ sub _mark_opt_as_true
 {
     my ( $self, $card, $opt ) = @_;
 
-    $self->_opt_by_card($card)->mark_as_true($opt);
+    @{ $self->_opt_by_card($card) } = (@$opt);
 
     return;
 }
@@ -234,6 +243,7 @@ sub encode_composite
     my $writer_state       = FC_Solve::VarBaseDigitsWriter->new;
     my $writer_fingerprint = FC_Solve::VarBaseDigitsWriter->new;
 
+    my @cols_indexes = ( 0 .. $derived->num_columns - 1 );
     foreach my $col_idx (@cols_indexes)
     {
         my $col     = $derived->get_column($col_idx);
@@ -254,7 +264,9 @@ sub encode_composite
                 {
                     $o = [
                         $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                        ( $parent_card->suit & 2 ) ? $PARENT_1 : $PARENT_0
+                        ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
+                        ? $PARENT_1
+                        : $PARENT_0
                     ];
                 }
                 else
@@ -263,7 +275,9 @@ sub encode_composite
                 }
 
             }
-            $self->_mark_suit_rank_as_true( $card->suit, $card->rank, $o );
+            $self->_mark_suit_rank_as_true(
+                $self->_suit_get_suit_idx( $card->suit ),
+                $card->rank, $o );
         }
     }
     foreach my $fc_idx ( 0 .. $derived->num_freecells - 1 )
@@ -293,7 +307,14 @@ sub encode_composite
             my $opt1       = $self->_opt_by_suit_rank( $suit1, $rank );
             my $opt2       = $self->_opt_by_suit_rank( $suit2, $rank );
             $opt1->[0] = $IN_FOUNDATIONS if $is_founds1;
+            die if !defined $opt1->[0];
             $opt2->[0] = $IN_FOUNDATIONS if $is_founds2;
+
+            if ( !defined $opt2->[0] )
+            {
+                $DB::single = 1;
+                Carp::confess "opt2";
+            }
             $fingerprint1 = $opt1->[0];
             $fingerprint2 = $opt2->[0];
 
