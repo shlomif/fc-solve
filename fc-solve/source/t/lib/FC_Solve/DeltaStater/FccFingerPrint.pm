@@ -34,8 +34,6 @@ my $IN_FOUNDATIONS                   = 2;
 my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
 my $state_opt_next = 0;
 my %STATES_OPTS;
-my $state_opt_next__king = 0;
-my %STATES_OPTS__king;
 {
 
     sub _add
@@ -58,17 +56,6 @@ my %STATES_OPTS__king;
     _add( $PARENT_1,       $PARENT_0 );
 }
 
-{
-
-    sub _addk
-    {
-        $STATES_OPTS__king{"@_"} = $state_opt_next__king++;
-    }
-    _addk( $LOWEST_CARD,    $LOWEST_CARD );
-    _addk( $LOWEST_CARD,    $ABOVE_FREECELL );
-    _addk( $ABOVE_FREECELL, $LOWEST_CARD );
-    _addk( $ABOVE_FREECELL, $ABOVE_FREECELL );
-}
 my $OPT_TOPMOST              = 0;
 my $OPT_DONT_CARE            = $OPT_TOPMOST;
 my $OPT_FREECELL             = 1;
