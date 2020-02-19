@@ -1070,6 +1070,46 @@ be time consuming for a small percentage of the input layouts.
 
 {% endcall %}
 
+{% call h3_section(id="i_want_a_gui",title="Where can I find a GUI for Freecell Solver? I dislike the fact that it is a command line program.") %}
+
+<p>
+Freecell Solver provides some <a href="https://en.wikipedia.org/wiki/Application_programming_interface">APIs</a>
+written in C (and which can be compiled for browser-side use using <a href="https://emscripten.org/">Emscripten</a>) which
+software developers can use to write other apps and front ends. Aside from the <a href="https://en.wikipedia.org/wiki/Command-line_interface">command
+line</a> programs that are part of the Freecell Solver distribution, you can opt to use:
+</p>
+
+<ol>
+<li>
+<p>
+<a href="{{ base_path }}js-fc-solve/">The web-based solver</a>
+which provides a graphical and animated preview of the solution.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://pysolfc.sourceforge.io/">PySol FC</a> - an
+application for desktops and Android devices, that has integrated
+Freecell Solver.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://kde.org/applications/games/org.kde.kpat">KPatience</a> -
+a desktop game.
+</p>
+</li>
+</ol>
+
+<p>
+We believe competent software developers can write other front ends and wrappers using
+the provided APIs.
+</p>
+
+{% endcall %}
+
 {% endcall %}
 
 </div>
