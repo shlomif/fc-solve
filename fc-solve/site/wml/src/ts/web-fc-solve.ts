@@ -22,6 +22,8 @@ let c_free = null;
 let freecell_solver_user_get_next_move = null;
 let freecell_solver_user_get_num_freecells = null;
 let freecell_solver_user_get_num_stacks = null;
+let freecell_solver_user_get_unrecognized_cmd_line_flag = null;
+let freecell_solver_user_get_unrecognized_cmd_line_flag_status = null;
 let freecell_solver_user_current_state_stringify = null;
 let freecell_solver_user_stringify_move_ptr = null;
 let freecell_solver_user_free = null;
@@ -107,6 +109,16 @@ export function FC_Solve_init_wrappers_with_module(Module) {
         "freecell_solver_user_get_num_stacks",
         "number",
         ["number"],
+    );
+    freecell_solver_user_get_unrecognized_cmd_line_flag = Module.cwrap(
+        "freecell_solver_user_get_unrecognized_cmd_line_flag",
+        "number",
+        ["number", "number"],
+    );
+    freecell_solver_user_get_unrecognized_cmd_line_flag_status = Module.cwrap(
+        "freecell_solver_user_get_unrecognized_cmd_line_flag_status",
+        "number",
+        ["number", "number"],
     );
     freecell_solver_user_current_state_stringify = Module.cwrap(
         "freecell_solver_user_current_state_stringify",
@@ -726,11 +738,18 @@ export class FC_Solve {
                 c_free(error_string_ptr_buf);
 
                 if (args_ret_code !== 0) {
+                    const unrecognized_opt_ptr = ((freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+                        obj, 0) == 0) ? freecell_solver_user_get_unrecognized_cmd_line_flag(obj, 0) : 0);
+                    let unrecognized_opt_s = '';
+                    if (unrecognized_opt_ptr != 0) {
+                        unrecognized_opt_s = "There was an unrecognized command line flag: «" + that._stringify_possibly_null_ptr(unrecognized_opt_ptr) + "».";
+                        c_free(unrecognized_opt_ptr);
+                    }
                     alert(
                         "Failed to process user-specified command " +
                             "line arguments. Problem is: «" +
                             error_string +
-                            "».",
+                            "»." + unrecognized_opt_s
                     );
                     throw "Foo";
                 }

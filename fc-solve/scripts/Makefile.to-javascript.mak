@@ -88,6 +88,8 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_get_num_freecells \
 	freecell_solver_user_get_num_stacks \
+	freecell_solver_user_get_unrecognized_cmd_line_flag \
+	freecell_solver_user_get_unrecognized_cmd_line_flag_status \
 	freecell_solver_user_limit_iterations_long \
 	freecell_solver_user_resume_solution \
 	freecell_solver_user_solve_board \
