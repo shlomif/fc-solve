@@ -372,8 +372,17 @@ int DLLEXPORT freecell_solver_user_set_unrecognized_cmd_line_flag(
 DLLEXPORT char *freecell_solver_user_get_unrecognized_cmd_line_flag(
     void *, int);
 
-DLLEXPORT int freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+typedef enum
+{
+    FC_SOLVE__FLAG_STATUS__ERROR = -1,
+    FC_SOLVE__FLAG_STATUS__VALID = 0,
+    FC_SOLVE__FLAG_STATUS__IS_NULL = 1,
+} fc_solve_unrecognized_flag_status_type;
+
+DLLEXPORT fc_solve_unrecognized_flag_status_type
+freecell_solver_user_get_unrecognized_cmd_line_flag_status(
     void *const api_instance, const int flag_idx);
+
 #ifdef __cplusplus
 }
 #endif

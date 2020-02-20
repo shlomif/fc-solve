@@ -3756,22 +3756,24 @@ int DLLEXPORT freecell_solver_user_set_unrecognized_cmd_line_flag(
 
     fcs_user *const user = (fcs_user *)api_instance;
     free(user->unrecognized_cmd_line_options[flag_idx]);
-    user->unrecognized_cmd_line_options[flag_idx] = strdup(val);
+    user->unrecognized_cmd_line_options[flag_idx] = (val ? strdup(val) : NULL);
 
     return 0;
 }
 
-DLLEXPORT int freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+DLLEXPORT fc_solve_unrecognized_flag_status_type
+freecell_solver_user_get_unrecognized_cmd_line_flag_status(
     void *const api_instance, const int flag_idx)
 {
     if (flag_idx != 0)
     {
-        return -1;
+        return FC_SOLVE__FLAG_STATUS__ERROR;
     }
 
     fcs_user *const user = (fcs_user *)api_instance;
     const_AUTO(ret, user->unrecognized_cmd_line_options[flag_idx]);
-    return (ret ? 0 : 1);
+    return (
+        ret ? FC_SOLVE__FLAG_STATUS__VALID : FC_SOLVE__FLAG_STATUS__IS_NULL);
 }
 
 DLLEXPORT char *freecell_solver_user_get_unrecognized_cmd_line_flag(

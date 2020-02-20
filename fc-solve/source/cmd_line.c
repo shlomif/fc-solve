@@ -702,7 +702,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     if (ret != FCS_CMD_LINE_OK)
                     {
                         if (freecell_solver_user_get_unrecognized_cmd_line_flag_status(
-                                instance, 0) == 1)
+                                instance, 0) == FC_SOLVE__FLAG_STATUS__IS_NULL)
                         {
                             freecell_solver_user_set_unrecognized_cmd_line_flag(
                                 instance, 0, args_man.argv[*last_arg]);

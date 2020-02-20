@@ -54,9 +54,9 @@ static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
             char opt_static[1000];
             const_AUTO(status,
                 freecell_solver_user_get_unrecognized_cmd_line_flag_status(
-                    instance, 0));
+                    instance, 0) == FC_SOLVE__FLAG_STATUS__VALID);
 
-            if (status == 0)
+            if (status)
             {
                 opt = freecell_solver_user_get_unrecognized_cmd_line_flag(
                     instance, 0);
@@ -66,7 +66,7 @@ static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
             }
             exit_error("Unknown option \"%s\". Type \"%s --help\" for usage "
                        "information.\n",
-                (status == 0 ? opt_static : argv[*arg_ptr]), argv[0]);
+                (status ? opt_static : argv[*arg_ptr]), argv[0]);
         }
         break;
     case FCS_CMD_LINE_PARAM_WITH_NO_ARG:
