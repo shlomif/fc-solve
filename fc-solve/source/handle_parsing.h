@@ -48,9 +48,25 @@ static inline void *alloc_instance_and_parse(const int argc GCC_UNUSED,
         exit(0);
 
     case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
-        if (only_recognized)
+        if (only_recognized || ((*arg_ptr) < argc - 1))
         {
-            exit_error("Unknown option: %s\n", argv[*arg_ptr]);
+            char *opt = NULL;
+            char opt_static[1000];
+            const_AUTO(status,
+                freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+                    instance, 0));
+
+            if (status == 0)
+            {
+                opt = freecell_solver_user_get_unrecognized_cmd_line_flag(
+                    instance, 0);
+                strncpy(opt_static, opt, COUNT(opt_static) - 1);
+                LAST(opt_static) = '\0';
+                free(opt);
+            }
+            exit_error("Unknown option \"%s\". Type \"%s --help\" for usage "
+                       "information.\n",
+                (status == 0 ? opt_static : argv[*arg_ptr]), argv[0]);
         }
         break;
     case FCS_CMD_LINE_PARAM_WITH_NO_ARG:

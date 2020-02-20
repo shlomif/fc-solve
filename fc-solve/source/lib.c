@@ -2073,6 +2073,9 @@ typedef struct
     FCS_ON_NOT_FC_ONLY(fcs_preset common_preset;)
     FCS__DECL_ERR_BUF(error_string)
     meta_allocator meta_alloc;
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    char *unrecognized_cmd_line_options[1];
+#endif
 } fcs_user;
 
 static inline fcs_instance *user_obj(fcs_user *const user)
@@ -2403,6 +2406,12 @@ static MYINLINE void user_initialize(fcs_user *const user)
     user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
 #endif
     user->flares_iters_factor = 1.0;
+#endif
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    for (size_t i = 0; i < COUNT(user->unrecognized_cmd_line_options); ++i)
+    {
+        user->unrecognized_cmd_line_options[i] = NULL;
+    }
 #endif
     clear_error(user);
     user_next_instance(user);
@@ -3607,6 +3616,12 @@ static MYINLINE void user_free_resources(fcs_user *const user)
     free(user->instances_list);
 #endif
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    for (size_t i = 0; i < COUNT(user->unrecognized_cmd_line_options); ++i)
+    {
+        free(user->unrecognized_cmd_line_options[i]);
+    }
+#endif
 }
 
 void DLLEXPORT freecell_solver_user_free(void *const api_instance)
@@ -3729,6 +3744,50 @@ void DLLEXPORT freecell_solver_user_set_solving_method(
 
     soft_thread->super_method_type = super_method_type;
 }
+
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+int DLLEXPORT freecell_solver_user_set_unrecognized_cmd_line_flag(
+    void *const api_instance, const int flag_idx, const char *val)
+{
+    if (flag_idx != 0)
+    {
+        return 1;
+    }
+
+    fcs_user *const user = (fcs_user *)api_instance;
+    free(user->unrecognized_cmd_line_options[flag_idx]);
+    user->unrecognized_cmd_line_options[flag_idx] = strdup(val);
+
+    return 0;
+}
+
+DLLEXPORT int freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+    void *const api_instance, const int flag_idx)
+{
+    if (flag_idx != 0)
+    {
+        return -1;
+    }
+
+    fcs_user *const user = (fcs_user *)api_instance;
+    const_AUTO(ret, user->unrecognized_cmd_line_options[flag_idx]);
+    return (ret ? 0 : 1);
+}
+
+DLLEXPORT char *freecell_solver_user_get_unrecognized_cmd_line_flag(
+    void *const api_instance, const int flag_idx)
+{
+    if (flag_idx != 0)
+    {
+        return NULL;
+    }
+
+    fcs_user *const user = (fcs_user *)api_instance;
+    const_AUTO(ret, user->unrecognized_cmd_line_options[flag_idx]);
+    return strdup(ret ? ret : "");
+}
+
+#endif
 
 #if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
 #ifndef HARD_CODED_NUM_FREECELLS

@@ -366,6 +366,14 @@ typedef struct
 DLLEXPORT extern void fc_solve_user_set_ht_compiled_prelude(
     void *, size_t, const fc_solve_prelude_item *);
 
+int DLLEXPORT freecell_solver_user_set_unrecognized_cmd_line_flag(
+    void *const api_instance, const int flag_idx, const char *val);
+
+DLLEXPORT char *freecell_solver_user_get_unrecognized_cmd_line_flag(
+    void *, int);
+
+DLLEXPORT int freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+    void *const api_instance, const int flag_idx);
 #ifdef __cplusplus
 }
 #endif

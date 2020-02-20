@@ -3,11 +3,13 @@
 use strict;
 use warnings;
 
-use Test::More tests => 36;
+use Test::More tests => 37;
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths
     qw( bin_board bin_exe_raw is_freecell_only is_without_dbm normalize_lf offload_arg samp_board $FC_SOLVE__RAW );
+
+use Path::Tiny qw/ path tempdir tempfile cwd /;
 
 my $MID24_BOARD = samp_board('24-mid.board');
 
@@ -57,6 +59,25 @@ qq#Unknown option "--reset_junk_at_end". Type "$FC_SOLVE__RAW --help" for usage 
 
     my $needle =
 qq#Unknown option "--read-from-file4,amateur-star.sh". Type "$FC_SOLVE__RAW --help" for usage information.#;
+
+    # TEST
+    like( $trap->stderr(), qr/^\Q$needle\E\r?$/ms,
+        "Option without space is not accepted." );
+}
+
+{
+    my $dir = tempdir();
+    my $fh  = $dir->child("foo.txt");
+    $fh->spew_utf8("-invalidopt 25\n");
+
+    trap
+    {
+        system( $FC_SOLVE__RAW, '--read-from-file',
+            ( $fh->absolute->stringify ), $MID24_BOARD );
+    };
+
+    my $needle =
+qq#Unknown option "-invalidopt". Type "$FC_SOLVE__RAW --help" for usage information.#;
 
     # TEST
     like( $trap->stderr(), qr/^\Q$needle\E\r?$/ms,

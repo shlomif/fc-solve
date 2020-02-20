@@ -699,11 +699,16 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                     : (file_nesting_count - 1)),
                             opened_files_dir);
 
-                    if (!((ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION) ||
-                            (ret == FCS_CMD_LINE_OK)))
+                    if (ret != FCS_CMD_LINE_OK)
                     {
+                        if (freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+                                instance, 0) == 1)
+                        {
+                            freecell_solver_user_set_unrecognized_cmd_line_flag(
+                                instance, 0, args_man.argv[*last_arg]);
+                        }
                         /* So we don't give a last_arg to the read file.*/
-                        *last_arg = (int)(arg - &(argv[0]));
+                        *last_arg = (int)(arg - 1 - &(argv[0]));
                         fc_solve_args_man_free(&args_man);
                         return ret;
                     }
