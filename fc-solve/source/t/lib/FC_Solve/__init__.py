@@ -21,6 +21,10 @@ int fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
     void * api_instance);
 int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
     void * api_instance, int depth_idx);
+int freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+    void * api_instance, int flag_idx);
+char * freecell_solver_user_get_unrecognized_cmd_line_flag(
+    void *, int);
         ''')
         self.unittest = ut
 
@@ -160,3 +164,34 @@ int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
                 name + " - Testing Weight No. " + str(idx) +
                 "Should be: [" + str(bottom) + "," + str(top) + "] ; " +
                 "Is: " + str(have))
+
+    # TEST:$unrecognized_flag=0;
+    def unrecognized_flag__test(self):
+        import os.path
+        import tempfile
+        with tempfile.TemporaryDirectory() as tempname:
+            fn = os.path.join(tempname, "foo.txt")
+            open(fn, "wt").write("-unrecognized foo\n")
+            self.input_cmd_line(["--read-from-file", fn])
+            # TEST:$unrecognized_flag++;
+            self._eq(
+                getattr(
+                    self.lib,
+                    'freecell_solver_user' +
+                    '_get_unrecognized_cmd_line_flag_status')(
+                    self.user,
+                    0
+                ),
+                0,
+                'flag_status',
+            )
+            s = self.lib.freecell_solver_user_get_unrecognized_cmd_line_flag(
+                self.user,
+                0,
+            )
+            # TEST:$unrecognized_flag++;
+            self._eq(
+                self.ffi.string(s),
+                b'-unrecognized',
+                'flag_string',
+            )

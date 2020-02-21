@@ -45,6 +45,12 @@ class MyTests(unittest.TestCase):
         # TEST
         fcs.by_depth_max_depth_of_depth_idx_is(testname, 1, 50)
 
+    def test_unrecognized_flag(self):
+        fcs = FreecellSolverTestSuite(self)
+
+        # TEST*$unrecognized_flag
+        fcs.unrecognized_flag__test()
+
 
 if __name__ == "__main__":
     # plan(7)
