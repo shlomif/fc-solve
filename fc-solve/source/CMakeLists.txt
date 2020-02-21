@@ -1187,9 +1187,10 @@ FILE (MAKE_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/.deps")
 ADD_CUSTOM_TARGET(
     "pgo_proto"
     COMMAND "bash" "${CMAKE_CURRENT_SOURCE_DIR}/../scripts/pgo.bash" "gcc" "total"
-    DEPENDS generate_c_files
-            "${CMAKE_CURRENT_BINARY_DIR}/config.h"
-            "${CMAKE_CURRENT_BINARY_DIR}/prefix.h"
+    DEPENDS
+        generate_c_files
+        "${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/config.h"
+        "${CMAKE_CURRENT_BINARY_DIR}/prefix.h"
 )
 
 # This does not work properly because the silencing happens earlier in the
