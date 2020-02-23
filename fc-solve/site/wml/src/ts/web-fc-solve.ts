@@ -283,13 +283,16 @@ export class FC_Solve {
     private cmd_line_preset: string;
     private current_iters_limit: number;
     private obj: any;
+    private _do_not_alert: boolean;
     private _pre_expand_states_and_moves_seq: any;
     private _post_expand_states_and_moves_seq: any;
     private _state_string_buffer: number;
     private _move_string_buffer: number;
+    private _unrecognized_opt: string;
 
     constructor(args) {
         const that = this;
+        that._do_not_alert = false;
 
         that.dir_base = args.dir_base;
         that.string_params = args.string_params;
@@ -310,7 +313,11 @@ export class FC_Solve {
             }
 
             if (that._initialize_obj(ret_obj) !== 0) {
-                alert("Failed to initialize solver (Bug!)");
+                if (that._do_not_alert) {
+                    that._do_not_alert = false;
+                } else {
+                    alert("Failed to initialize solver (Bug!)");
+                }
                 freecell_solver_user_free(ret_obj);
                 throw "Bar";
             }
@@ -742,21 +749,25 @@ export class FC_Solve {
                         obj, 0) == 0) ? freecell_solver_user_get_unrecognized_cmd_line_flag(obj, 0) : 0);
                     let unrecognized_opt_s = '';
                     if (unrecognized_opt_ptr != 0) {
-                        unrecognized_opt_s = "There was an unrecognized command line flag: «" + that._stringify_possibly_null_ptr(unrecognized_opt_ptr) + "».";
+                        that._unrecognized_opt = that._stringify_possibly_null_ptr(unrecognized_opt_ptr);
                         c_free(unrecognized_opt_ptr);
+                        unrecognized_opt_s = "There was an unrecognized command line flag: «" + that._unrecognized_opt + "».";
+                        alert(unrecognized_opt_s);
+                        that._do_not_alert = true;
+                        throw "Bar";
                     }
                     alert(
                         "Failed to process user-specified command " +
                             "line arguments. Problem is: «" +
                             error_string +
-                            "»." + unrecognized_opt_s
+                            "»."
                     );
                     throw "Foo";
                 }
             }
             return 0;
         } catch (e) {
-            that.set_status("error", "Error");
+            that.set_status("error", "Error", );
             return -1;
         }
     }
