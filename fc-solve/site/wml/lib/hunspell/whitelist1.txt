@@ -502,6 +502,7 @@ Win32
 X11
 XHTML
 XML
+XMPP
 XP
 YahooGroups
 YouTube
