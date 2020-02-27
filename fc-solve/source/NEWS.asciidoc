@@ -7,7 +7,7 @@ Shlomi Fish <shlomif@cpan.org>
 Version 5.20.0: (27-Feb-2020)
 -----------------------------
 
-1. Add the unrecognized cmd line flags API methods (for use by
+1. Add the unrecognized command line flags API methods (for use by
 the online interface).
 
 2. Some cleanups and fixes.
