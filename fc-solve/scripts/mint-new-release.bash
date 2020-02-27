@@ -59,4 +59,5 @@ git add "$arc_path"
 git commit -F "$commit_fn"
 git push
 make upload
+make upload-sf
 rm -fr "$build"
