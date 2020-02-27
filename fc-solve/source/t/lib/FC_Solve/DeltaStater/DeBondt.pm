@@ -143,7 +143,10 @@ sub _opt_by_suit_rank
 {
     my ( $self, $suit, $rank ) = @_;
 
-    # Carp::cluck("Suit == $suit ; Rank == $rank");
+    if ( $rank < 1 or $rank > $RANK_KING )
+    {
+        $DB::single = 1;
+    }
     return $self->_card_states->[ $suit * $RANK_KING + $rank - 1 ];
 }
 
@@ -203,6 +206,13 @@ sub _wanted_suit_idx_opt
         $self->_get_suit_idx($parent_card);
 }
 
+sub _is_parent_card
+{
+    my ( $self, $parent_card, $child_card ) = @_;
+    return (   ( $child_card->rank() + 1 == $parent_card->rank() )
+            && ( $child_card->color() ne $parent_card->color() ) );
+}
+
 sub _calc_child_card_option
 {
     my ( $self, $parent_card, $child_card ) = @_;
@@ -220,11 +230,8 @@ sub _calc_child_card_option
         }
     }
 
-    if (
-        ( $child_card->rank() != 1 )
-        and (  ( $child_card->rank() + 1 == $parent_card->rank() )
-            && ( $child_card->color() ne $parent_card->color() ) )
-        )
+    if ( ( $child_card->rank() != 1 )
+        and $self->_is_parent_card( $parent_card, $child_card ) )
     {
         return $self->_wanted_suit_bit_opt($parent_card);
     }
