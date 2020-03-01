@@ -26,7 +26,6 @@ required:
         Code::TidyAll::Plugin::ESLint: 0
         Code::TidyAll::Plugin::TSLint: 0
         Dir::Manifest: 0
-        File::ReadBackwards: 0
         HTML::T5: 0
         Markdent: 0.32
         Moo: 0
