@@ -62,7 +62,7 @@ qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_da
                 "./dest/charts/fc-pro--4fc-intractable-deals--report/data/$deal"
                     . ( ( $try2 && ( $deal eq '6825625742' ) ) ? '--try2' : '' )
                     . ".filtered.tsv"
-            )->slurp_raw =~ s%^[^\t\n]+\t%%gmrs
+            )->slurp_raw =~ s%(?:\A|\n)\K[^\t\n]+\t%%gmrs
         );
         $fh->print(qq#</textarea>\n<br />\n#);
     }
