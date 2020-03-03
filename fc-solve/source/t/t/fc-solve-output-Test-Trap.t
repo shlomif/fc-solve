@@ -248,8 +248,8 @@ SKIP:
         {
             $status = system(
                 bin_exe_raw( ['depth-dbm-fc-solver'] ), '--num-threads',
-                3,  '--batch-size',
-                20, offload_arg(),
+                3,                                      '--batch-size',
+                20,                                     offload_arg(),
                 bin_board('1107600547.board'),
             );
         };

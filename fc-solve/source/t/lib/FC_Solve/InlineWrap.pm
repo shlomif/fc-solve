@@ -32,7 +32,7 @@ sub import
         name => $pkg,
         NAME => $pkg,
         INC  => join( " ",
-            map { "-I$_" }
+            map     { "-I$_" }
                 map { bin_file($_), src_file($_) }
                 ( ["include"], ["rinutils/rinutils/include"], [] ) ),
         CCFLAGS           => $ccflags,
