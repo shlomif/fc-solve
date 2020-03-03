@@ -27,6 +27,8 @@ required:
         Code::TidyAll::Plugin::TSLint: 0
         Dir::Manifest: 0
         HTML::T5: 0
+        HTML::Toc: 0
+        HTML::TocGenerator: 0
         Markdent: 0.32
         Moo: 0
         MooX: 0
