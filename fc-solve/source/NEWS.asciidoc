@@ -4,6 +4,13 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-02-12
 :Revision: $Id$
 
+Version 5.20.1: (03-Mar-2020)
+-----------------------------
+
+1. Keep a clone of rinutils v0.2.0 in the source directory to avoid
+a build time dep. Still using the system one if it is found.
+(Requested by the maintainer of the Debian package.)
+
 Version 5.20.0: (27-Feb-2020)
 -----------------------------
 

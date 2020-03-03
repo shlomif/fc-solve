@@ -55,7 +55,7 @@ sub trap_depth_dbm
 
     open my $fc_solve_output,
         shell_quote( bin_exe_raw( ['depth-dbm-fc-solver'] ),
-        offload_arg(),      "--num-threads", 1, "--iters-delta-limit",
+        offload_arg(), "--num-threads", 1, "--iters-delta-limit",
         $args->{max_iters}, $args->{board_fn} )
         . " |"
         or Carp::confess

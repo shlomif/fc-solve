@@ -4,7 +4,7 @@ select = **/*.{c,cpp,h,hpp}
 
 [PerlTidy]
 argv = -ci=4 -bl -cti=0
-ignore = **/scripts/err-on-unbuilt-executable.pl **/{cmpdigest,valgrind,verify}--*.t
+ignore = rinutils/**/* **/scripts/err-on-unbuilt-executable.pl **/{cmpdigest,valgrind,verify}--*.t
 select = **/*.{pl,pm,t}
 
 [TestCount]
