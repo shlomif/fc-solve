@@ -68,7 +68,7 @@ sub _init
     $self->_num_redeals_so_far(0);
 
     $self->_undealt_cards( [] );
-    $self->_waste( [] );
+    $self->_waste(         [] );
 
     if ( exists( $args->{string} ) )
     {

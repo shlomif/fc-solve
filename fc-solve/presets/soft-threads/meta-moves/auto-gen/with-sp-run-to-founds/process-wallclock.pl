@@ -105,12 +105,12 @@ while (
 
     my $recs        = $max_scan->{r};
     my $iters_count = max(
-        map      { $_->[$ITERS_IDX] }
+        map { $_->[$ITERS_IDX] }
             grep { $_->[$STATUS_IDX] && ( $_->[$TIME_DELTA_IDX] < $quota ) }
             @{$recs}
     );
     my $time_delta = max(
-        map      { $_->[$TIME_DELTA_IDX] }
+        map { $_->[$TIME_DELTA_IDX] }
             grep { $_->[$STATUS_IDX] && ( $_->[$TIME_DELTA_IDX] < $quota ) }
             @{$recs}
     );
