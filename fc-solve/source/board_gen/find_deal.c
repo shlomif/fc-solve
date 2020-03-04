@@ -9,11 +9,11 @@
 #include "gen_ms_boards__find_deal.h"
 
 long long DLLEXPORT __attribute__((pure))
-fc_solve_find_deal_in_range(const unsigned long long start,
-    const unsigned long long end, const uint_fast32_t *const ints)
+fc_solve_find_deal_in_range(const fc_solve_ms_deal_idx_type start,
+    const fc_solve_ms_deal_idx_type end, const uint_fast32_t *const ints)
 {
-    for (unsigned long long deal_idx = (microsoft_rand)start; deal_idx <= end;
-         ++deal_idx)
+    for (fc_solve_ms_deal_idx_type deal_idx = (microsoft_rand)start;
+         deal_idx <= end; ++deal_idx)
     {
         microsoft_rand seedx = microsoft_rand__calc_init_seedx(deal_idx);
         const uint_fast32_t *ptr = ints;
@@ -69,7 +69,7 @@ extern DLLEXPORT const char *fc_solve_user__find_deal__run(
 {
     find_deal *const obj = obj_ptr;
     sprintf(obj->ret, RIN_LL_FMT,
-        fc_solve_find_deal_in_range((unsigned long long)atoll(start),
-            (unsigned long long)atoll(end), obj->ints));
+        fc_solve_find_deal_in_range((fc_solve_ms_deal_idx_type)atoll(start),
+            (fc_solve_ms_deal_idx_type)atoll(end), obj->ints));
     return obj->ret;
 }

@@ -10,7 +10,7 @@ lib = ffi.dlopen("../libfcs_gen_ms_freecell_boards." +
                  ("dll" if (platform.system() == 'Windows') else "so"))
 
 ffi.cdef('''
-    void fc_solve_get_board_l(long long gamenumber, char * ret);
+    void fc_solve_get_board_l(unsigned long long gamenumber, char * ret);
 ''')
 
 

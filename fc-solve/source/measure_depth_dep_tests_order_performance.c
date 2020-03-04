@@ -63,8 +63,9 @@ static void set_tests_order(
 }
 
 static inline int range_solvers_main(int argc, char *argv[], int arg,
-    const long long start_board, const long long end_board,
-    const long long stop_at GCC_UNUSED)
+    const fc_solve_ms_deal_idx_type start_board,
+    const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type stop_at GCC_UNUSED)
 {
     /* char buffer[2048]; */
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -160,14 +161,13 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
         result *curr_result;
-        long long board_num;
+        fc_solve_ms_deal_idx_type board_num;
         fcs_state_string state_string;
         get_board__setup_string(state_string);
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
-            get_board_l__without_setup(
-                (unsigned long long)board_num, state_string);
+            get_board_l__without_setup(board_num, state_string);
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, iters_limit);

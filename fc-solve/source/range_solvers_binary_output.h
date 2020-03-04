@@ -89,7 +89,8 @@ static void read_int_wrapper(FILE *const in, long long *const var)
 }
 
 static inline void bin_init(fcs_binary_output *const bin,
-    long long *const start_board_ptr, long long *const end_board_ptr,
+    fc_solve_ms_deal_idx_type *const start_board_ptr,
+    fc_solve_ms_deal_idx_type *const end_board_ptr,
     fcs_int_limit_t *const total_iterations_limit_per_board_ptr)
 {
     if (bin->filename)
@@ -113,8 +114,12 @@ static inline void bin_init(fcs_binary_output *const bin,
         }
         else
         {
-            read_int_wrapper(in, start_board_ptr);
-            read_int_wrapper(in, end_board_ptr);
+            long long temp = 0;
+            read_int_wrapper(in, &temp);
+            *start_board_ptr = temp;
+            temp = 0;
+            read_int_wrapper(in, &temp);
+            *end_board_ptr = temp;
             {
                 long long val;
                 read_int_wrapper(in, &val);

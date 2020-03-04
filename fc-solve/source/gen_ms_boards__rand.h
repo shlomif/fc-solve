@@ -16,6 +16,8 @@ extern "C" {
 
 #include "rinutils/rinutils.h"
 
+typedef unsigned long long fc_solve_ms_deal_idx_type;
+
 typedef uint32_t microsoft_rand_uint;
 
 typedef unsigned long long microsoft_rand;

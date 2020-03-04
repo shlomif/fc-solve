@@ -29,10 +29,10 @@ help_err(const char *const msg, ...)
 #endif
 
 static inline bool range_solvers__solve(char *const state_string,
-    void *const instance, const long long board_num,
+    void *const instance, const fc_solve_ms_deal_idx_type board_num,
     fcs_iters_int *const total_num_iters_temp)
 {
-    get_board_l__without_setup((unsigned long long)board_num, state_string);
+    get_board_l__without_setup(board_num, state_string);
 
     switch (freecell_solver_user_solve_board(instance, state_string))
     {
@@ -58,8 +58,9 @@ static inline bool range_solvers__solve(char *const state_string,
     return false;
 }
 
-static inline int range_solvers_main(
-    int argc, char *argv[], int arg, long long, long long, long long);
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    fc_solve_ms_deal_idx_type, fc_solve_ms_deal_idx_type,
+    fc_solve_ms_deal_idx_type);
 int main(int argc, char *argv[])
 {
     if (argc < 4)
@@ -71,9 +72,9 @@ int main(int argc, char *argv[])
 #endif
     }
     int arg = 1;
-    const long long next_board_num = atoll(argv[arg++]);
-    const long long end_board = atoll(argv[arg++]);
-    const long long stop_at = atoll(argv[arg++]);
+    const fc_solve_ms_deal_idx_type next_board_num = atoll(argv[arg++]);
+    const fc_solve_ms_deal_idx_type end_board = atoll(argv[arg++]);
+    const fc_solve_ms_deal_idx_type stop_at = atoll(argv[arg++]);
 
     if (stop_at <= 0)
     {

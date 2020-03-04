@@ -34,7 +34,8 @@ static void print_help(void)
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t next_board_num_lock;
-static long long next_board_num, stop_at, past_end_board, board_num_step = 1;
+static fc_solve_ms_deal_idx_type next_board_num, stop_at, past_end_board,
+    board_num_step = 1;
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
 static char **context_argv;
 static int arg = 1, context_argc;
@@ -52,15 +53,17 @@ static void *worker_thread(void *const void_arg)
         simple_alloc_and_parse(context_argc, context_argv, arg);
 #endif
     typeof(total_num_iters) total_num_iters_temp = 0;
-    long long board_num;
+    fc_solve_ms_deal_idx_type board_num;
     do
     {
         pthread_mutex_lock(&next_board_num_lock);
         board_num = next_board_num;
-        const long long proposed_quota_end = (next_board_num += board_num_step);
+        const fc_solve_ms_deal_idx_type proposed_quota_end =
+            (next_board_num += board_num_step);
         pthread_mutex_unlock(&next_board_num_lock);
 
-        const long long quota_end = min(proposed_quota_end, past_end_board);
+        const fc_solve_ms_deal_idx_type quota_end =
+            min(proposed_quota_end, past_end_board);
 
         for (; board_num < quota_end; board_num++)
         {
@@ -85,8 +88,9 @@ theme_error:
 }
 
 static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
-    const long long par__next_board_num, const long long par__end_board,
-    const long long par__stop_at)
+    const fc_solve_ms_deal_idx_type par__next_board_num,
+    const fc_solve_ms_deal_idx_type par__end_board,
+    const fc_solve_ms_deal_idx_type par__stop_at)
 {
     next_board_num_lock = initial_mutex_constant;
 #ifdef FCS_USE_PRECOMPILED_CMD_LINE_THEME

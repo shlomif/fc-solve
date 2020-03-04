@@ -45,9 +45,9 @@ static inline void get_board__setup_string(char *const ret)
 
 static inline void get_board_l__without_setup(
 #ifdef FCS_DEAL_ONLY_UP_TO_2G
-    const unsigned long long seedx
+    const fc_solve_ms_deal_idx_type seedx
 #else
-    const unsigned long long deal_idx
+    const fc_solve_ms_deal_idx_type deal_idx
 #endif
     ,
     char *const ret)
@@ -97,7 +97,7 @@ static inline void get_board_l__without_setup(
  *
  * */
 void DLLEXPORT fc_solve_get_board_l(
-    const unsigned long long deal_idx, char *const ret);
+    const fc_solve_ms_deal_idx_type deal_idx, char *const ret);
 #endif
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
@@ -112,13 +112,13 @@ void DLLEXPORT fc_solve_get_board_l(
  *
  * */
 void DLLEXPORT fc_solve_get_board_l(
-    const unsigned long long deal_idx, char *const ret);
+    const fc_solve_ms_deal_idx_type deal_idx, char *const ret);
 
 extern void DLLEXPORT fc_solve_get_board_l(
 #else
 static inline void get_board_l(
 #endif
-    const unsigned long long seedx, char *const ret)
+    const fc_solve_ms_deal_idx_type seedx, char *const ret)
 {
     get_board__setup_string(ret);
     get_board_l__without_setup(seedx, ret);

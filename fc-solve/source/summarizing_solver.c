@@ -66,7 +66,7 @@ int main(int argc, char *argv[])
     DEALS_ITERATE__START(board_num)
     if (variant_is_freecell)
     {
-        get_board_l__without_setup((unsigned long long)board_num, buffer);
+        get_board_l__without_setup(board_num, buffer);
     }
     else
     {

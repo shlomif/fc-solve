@@ -33,10 +33,10 @@ int main(int argc, char *argv[])
     }
     const char *const deal_s = argv[arg];
 
-    const unsigned long long gamenumber =
-        ((arg < argc) ? (unsigned long long)atoll(deal_s) : 1);
-    const unsigned long long MAX = ((1ULL << 33) - 1);
-    const unsigned long long MIN = 1;
+    const fc_solve_ms_deal_idx_type gamenumber =
+        ((arg < argc) ? (fc_solve_ms_deal_idx_type)atoll(deal_s) : 1);
+    const fc_solve_ms_deal_idx_type MAX = ((1ULL << 33) - 1);
+    const fc_solve_ms_deal_idx_type MIN = 1;
     if (gamenumber < MIN || gamenumber > MAX)
     {
         fprintf(stderr,

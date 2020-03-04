@@ -37,7 +37,7 @@ static void print_help(void)
 #endif
 
 static fcs_iters_int total_num_iters = 0;
-static long long total_num_finished_boards = 0;
+static fc_solve_ms_deal_idx_type total_num_finished_boards = 0;
 
 #define READ_FD 0
 #define WRITE_FD 1
@@ -48,17 +48,18 @@ typedef struct
 
 typedef struct
 {
-    long long board_num, quota_end;
+    fc_solve_ms_deal_idx_type board_num, quota_end;
 } request_type;
 
 typedef struct
 {
     fcs_iters_int num_iters;
-    long long num_finished_boards;
+    fc_solve_ms_deal_idx_type num_finished_boards;
 } response_type;
 
-static inline void write_request(const long long end_board,
-    const long long board_num_step, long long *const next_board_num_ptr,
+static inline void write_request(const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type board_num_step,
+    fc_solve_ms_deal_idx_type *const next_board_num_ptr,
     const fcs_worker *const worker)
 {
     request_type req;
@@ -88,8 +89,9 @@ static inline void write_request(const long long end_board,
 }
 
 static inline void transaction(const fcs_worker *const worker,
-    const int read_fd, const long long end_board,
-    const long long board_num_step, long long *const next_board_num_ptr)
+    const int read_fd, const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type board_num_step,
+    fc_solve_ms_deal_idx_type *const next_board_num_ptr)
 {
     response_type response;
     if (read(read_fd, &response, sizeof(response)) <
@@ -109,11 +111,12 @@ static inline int read_fd(const fcs_worker *const worker)
 }
 
 static inline int range_solvers_main(int argc, char *argv[], int arg,
-    long long next_board_num, const long long end_board,
-    const long long stop_at)
+    fc_solve_ms_deal_idx_type next_board_num,
+    const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type stop_at)
 {
     size_t num_workers = 3;
-    long long board_num_step = 1;
+    fc_solve_ms_deal_idx_type board_num_step = 1;
     for (; arg < argc; ++arg)
     {
         const char *param;
@@ -238,9 +241,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 #ifndef USE_EPOLL
     ++mymax;
 #endif
-    const long long total_num_boards_to_check = end_board - next_board_num + 1;
+    const fc_solve_ms_deal_idx_type total_num_boards_to_check =
+        end_board - next_board_num + 1;
 
-    long long next_milestone = stop_at;
+    fc_solve_ms_deal_idx_type next_milestone = stop_at;
     for (size_t idx = 0; idx < num_workers; ++idx)
     {
         write_request(

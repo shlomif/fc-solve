@@ -20,7 +20,8 @@
 #include "print_time.h"
 
 static inline int range_solvers_main(int argc, char *argv[], int arg,
-    long long start_board, long long end_board, const long long stop_at)
+    fc_solve_ms_deal_idx_type start_board, fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type stop_at)
 {
     fcs_iters_int total_num_iters = 0;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -78,9 +79,10 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     fcs_state_string state_string;
     get_board__setup_string(state_string);
-    for (long long board_num = start_board; board_num <= end_board; ++board_num)
+    for (fc_solve_ms_deal_idx_type board_num = start_board;
+         board_num <= end_board; ++board_num)
     {
-        get_board_l__without_setup((unsigned long long)board_num, state_string);
+        get_board_l__without_setup(board_num, state_string);
 
         const int ret =
             freecell_solver_user_solve_board(instance, state_string);
