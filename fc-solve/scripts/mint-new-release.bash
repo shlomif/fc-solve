@@ -31,6 +31,7 @@ which perl
 which qunit-cli
 which unxz
 which xz
+perl -E 'use Task::FreecellSolver::Testing::MultiConfig v0.0.2; exit(0)'
 src="$(pwd)"
 tzr="$src/../scripts/Tatzer"
 test -f "$tzr"
