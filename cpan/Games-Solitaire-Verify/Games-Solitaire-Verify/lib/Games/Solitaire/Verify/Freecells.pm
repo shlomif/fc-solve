@@ -12,8 +12,8 @@ Freecells in games such as Freecell, Baker's Game, or Seahaven Towers
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::Exception;
-use Games::Solitaire::Verify::Card;
+use Games::Solitaire::Verify::Exception ();
+use Games::Solitaire::Verify::Card      ();
 
 use List::Util qw(first);
 

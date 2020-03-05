@@ -14,11 +14,11 @@ of Freecell Solver (or a similar solver)
 
 use parent 'Games::Solitaire::Verify::Solution::Base';
 
-use Games::Solitaire::Verify::Exception;
-use Games::Solitaire::Verify::Card;
-use Games::Solitaire::Verify::Column;
-use Games::Solitaire::Verify::Move;
-use Games::Solitaire::Verify::State;
+use Games::Solitaire::Verify::Exception ();
+use Games::Solitaire::Verify::Card      ();
+use Games::Solitaire::Verify::Column    ();
+use Games::Solitaire::Verify::Move      ();
+use Games::Solitaire::Verify::State     ();
 
 =head1 SYNOPSIS
 

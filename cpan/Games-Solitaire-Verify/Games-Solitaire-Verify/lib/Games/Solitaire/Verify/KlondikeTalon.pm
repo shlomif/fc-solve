@@ -12,8 +12,8 @@ talon of Klondike-like games.
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::Exception;
-use Games::Solitaire::Verify::Card;
+use Games::Solitaire::Verify::Exception ();
+use Games::Solitaire::Verify::Card      ();
 
 use List::Util qw(first);
 

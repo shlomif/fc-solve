@@ -2,16 +2,14 @@ package Games::Solitaire::Verify::App::CmdLine::From_Patsolve;
 
 use strict;
 use warnings;
-
 use autodie;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::VariantsMap;
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::State;
-use Games::Solitaire::Verify::State::LaxParser;
-use Games::Solitaire::Verify::Move;
+use Games::Solitaire::Verify::VariantsMap      ();
+use Games::Solitaire::Verify::Solution         ();
+use Games::Solitaire::Verify::State::LaxParser ();
+use Games::Solitaire::Verify::Move             ();
 
 use List::MoreUtils qw(firstidx);
 

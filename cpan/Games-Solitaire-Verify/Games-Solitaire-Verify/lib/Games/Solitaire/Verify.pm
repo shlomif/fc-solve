@@ -13,7 +13,7 @@ Games::Solitaire::Verify - verify solutions for solitaire games.
 
 =head1 SYNOPSIS
 
-    use Games::Solitaire::Verify::Solution;
+    use Games::Solitaire::Verify::Solution ();
 
     my $verifier = Games::Solitaire::Verify::Solution->new();
 

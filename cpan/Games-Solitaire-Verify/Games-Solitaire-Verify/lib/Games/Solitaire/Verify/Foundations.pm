@@ -12,8 +12,8 @@ foundations (or home-cells) in a Solitaire game.
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::Exception;
-use Games::Solitaire::Verify::Card;
+use Games::Solitaire::Verify::Exception ();
+use Games::Solitaire::Verify::Card      ();
 
 use List::Util qw(first);
 

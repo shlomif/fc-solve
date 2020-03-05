@@ -14,7 +14,7 @@ Solitaire card.
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::Exception;
+use Games::Solitaire::Verify::Exception ();
 
 __PACKAGE__->mk_acc_ref(
     [

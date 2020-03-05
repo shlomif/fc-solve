@@ -12,14 +12,14 @@ states (or positions) of the entire board.
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::Exception;
-use Games::Solitaire::Verify::Card;
-use Games::Solitaire::Verify::Column;
-use Games::Solitaire::Verify::Move;
-use Games::Solitaire::Verify::Freecells;
-use Games::Solitaire::Verify::Foundations;
-use Games::Solitaire::Verify::VariantParams;
-use Games::Solitaire::Verify::VariantsMap;
+use Games::Solitaire::Verify::Exception     ();
+use Games::Solitaire::Verify::Card          ();
+use Games::Solitaire::Verify::Column        ();
+use Games::Solitaire::Verify::Move          ();
+use Games::Solitaire::Verify::Freecells     ();
+use Games::Solitaire::Verify::Foundations   ();
+use Games::Solitaire::Verify::VariantParams ();
+use Games::Solitaire::Verify::VariantsMap   ();
 
 use List::Util qw(first);
 use POSIX qw();
