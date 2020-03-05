@@ -12,13 +12,23 @@ the Freecell Solver multi-config test suite.
 
 =pkgroup Freecell Solver deps
 
+=pkg App::Deps::Verify
+
+=pkg App::Docmake
+
+=pkg Code::TidyAll::Plugin::ClangFormat
+
 =pkg Code::TidyAll::Plugin::ESLint
+
+=pkg Code::TidyAll::Plugin::TSLint
 
 =pkg Dist::Zilla::Plugin::Test::Kwalitee
 
 =pkg Dist::Zilla::Plugin::Test::TidyAll
 
 =pkg Dist::Zilla::PluginBundle::SHLOMIF
+
+=pkg Pod::Weaver::PluginBundle::SHLOMIF
 
 =pkg Pod::Weaver::Section::Support
 
