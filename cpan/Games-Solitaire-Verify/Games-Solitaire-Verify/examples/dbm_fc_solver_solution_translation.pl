@@ -5,12 +5,12 @@ use warnings;
 
 package Games::Solitaire::Verify::App::From_DBM_FC_Solver;
 
-use base 'Games::Solitaire::Verify::Base';
+use parent 'Games::Solitaire::Verify::Base';
 
-use Games::Solitaire::Verify::VariantsMap;
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::State;
-use Games::Solitaire::Verify::Move;
+use Games::Solitaire::Verify::VariantsMap ();
+use Games::Solitaire::Verify::Solution    ();
+use Games::Solitaire::Verify::State       ();
+use Games::Solitaire::Verify::Move        ();
 
 use Getopt::Long qw(GetOptionsFromArray);
 
@@ -218,19 +218,17 @@ LINES_PREFIX:
             if ( $running_state->get_foundation_value( $card->suit(), $deck ) ==
                 $card->rank() - 1 )
             {
-                my $other_deck_idx;
-
-                for $other_deck_idx (
+                for my $other_suit_idx (
                     0 .. ( ( $running_state->num_decks() << 2 ) - 1 ) )
                 {
                     if (
                         $running_state->get_foundation_value(
-                            $card->get_suits_seq->[ $other_deck_idx % 4 ],
-                            ( $other_deck_idx >> 2 ),
+                            $card->get_suits_seq->[ $other_suit_idx % 4 ],
+                            ( $other_suit_idx >> 2 ),
                         ) < $card->rank() - 2 - (
                             (
                                 $card->color_for_suit(
-                                    $card->get_suits_seq->[ $other_deck_idx %
+                                    $card->get_suits_seq->[ $other_suit_idx %
                                         4 ]
                                 ) eq $card->color()
                             ) ? 1 : 0
