@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.2300  2020-03-06
+        - Avoid implicit symbol imports
+            - https://perl-begin.org/tutorials/bad-elements/#non_explicitly_imported_symbols
+        - Convert weaver.ini to @SHLOMIF .
+
 0.2202  2019-07-19
         - Add --help flag.
 
