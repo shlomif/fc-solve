@@ -131,7 +131,15 @@ else
     _docker_chown();
     $script = <<"EOSCRIPTTTTTTT";
 $BASH_SAFETY
-( pypy2debian --python3 $PYPI_BASE --root $SRC_ROOT_DIR_fullpath ) 2>&1 | tee ~/"$LOG_FN"
+cd "$HOMEDIR"
+fn1="./overrides/$PYPI_BASE/ctx.json"
+fn2="./overrides/pysol_cards/ctx.json"
+for fn in "\$fn1" "\$fn2"
+do
+    mkdir -p "\$(dirname \"\$fn\")"
+    echo "{\\"interpreters\\":[\\"python3\\"]}" > "\$fn"
+done
+( py2dsp $PYPI_BASE --root $SRC_ROOT_DIR_fullpath ) 2>&1 | tee ~/"$LOG_FN"
 EOSCRIPTTTTTTT
 
     do_system(
