@@ -33,6 +33,7 @@ my $CONTAINER             = "pypi-pysol-cards--deb--test-build";
 my $USER                  = "mygbp";
 my $HOMEDIR               = "/home/$USER";
 my $PYPI_BASE             = "pysol-cards";
+my $VER                   = '0.8.7';
 my $SRC_ROOT_DIR          = $PYPI_BASE;
 my $SRC_ROOT_DIR_fullpath = "$HOMEDIR/$SRC_ROOT_DIR";
 
@@ -60,7 +61,7 @@ my $script = <<"EOSCRIPTTTTTTT";
 $BASH_SAFETY
 apt-get -y update
 apt-get -y install eatmydata sudo
-sudo eatmydata apt -y install build-essential chrpath cmake git-buildpackage librecode-dev perl recode pypi2deb
+sudo eatmydata apt -y install build-essential chrpath cmake git-buildpackage librecode-dev perl pypi2deb python-all python-pbr python-setuptools python-six python3-all python3-pbr python3-setuptools recode
 sudo adduser --disabled-password --gecos '' "$USER"
 sudo usermod -a -G sudo "$USER"
 echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
@@ -76,39 +77,84 @@ if (0)
     );
 }
 
-do_system(
-    {
-        cmd => [
-            'docker', 'exec', $CONTAINER, 'bash', '-c',
-            "$BASH_SAFETY chown -R $USER:$USER $HOMEDIR",
-        ]
-    }
-);
+sub _docker_chown
+{
+    do_system(
+        {
+            cmd => [
+                'docker', 'exec', $CONTAINER, 'bash', '-c',
+                "$BASH_SAFETY chown -R $USER:$USER $HOMEDIR",
+            ]
+        }
+    );
+    return;
+}
 
-$script = <<"EOSCRIPTTTTTTT";
+if ( -e $PYPI_BASE )
+{
+    do_system(
+        {
+            cmd => [
+                'docker',      'cp',
+                $SRC_ROOT_DIR, "$CONTAINER:$SRC_ROOT_DIR_fullpath",
+            ]
+        }
+    );
+    _docker_chown();
+    $script = <<"EOSCRIPTTTTTTT";
 $BASH_SAFETY
-( py2dsp $PYPI_BASE --root $SRC_ROOT_DIR_fullpath ) 2>&1 | tee ~/"$LOG_FN"
+( cd $SRC_ROOT_DIR_fullpath/$PYPI_BASE-$VER && dpkg-buildpackage -us -uc ) 2>&1 | tee ~/"$LOG_FN"
 EOSCRIPTTTTTTT
 
-do_system(
-    {
-        cmd => [
-            'docker',   'exec', '--user', $USER,
-            $CONTAINER, 'bash', '-c',     $script,
-        ]
-    }
-);
-do_system(
-    { cmd => [ 'docker', 'cp', "$CONTAINER:$HOMEDIR/$LOG_FN", $LOG_FN, ] } );
+    do_system(
+        {
+            cmd => [
+                'docker',   'exec', '--user', $USER,
+                $CONTAINER, 'bash', '-c',     $script,
+            ]
+        }
+    );
 
-do_system(
-    {
-        cmd => [
-            'docker',                            'cp',
-            "$CONTAINER:$SRC_ROOT_DIR_fullpath", $SRC_ROOT_DIR,
-        ]
-    }
-);
+    $script = <<"EOSCRIPTTTTTTT";
+$BASH_SAFETY
+apt-get -y install $SRC_ROOT_DIR_fullpath/*.deb
+EOSCRIPTTTTTTT
+
+    do_system(
+        {
+            cmd => [ 'docker', 'exec', $CONTAINER, 'bash', '-c', $script, ]
+        }
+    );
+}
+else
+{
+    _docker_chown();
+    $script = <<"EOSCRIPTTTTTTT";
+$BASH_SAFETY
+( pypy2debian --python3 $PYPI_BASE --root $SRC_ROOT_DIR_fullpath ) 2>&1 | tee ~/"$LOG_FN"
+EOSCRIPTTTTTTT
+
+    do_system(
+        {
+            cmd => [
+                'docker',   'exec', '--user', $USER,
+                $CONTAINER, 'bash', '-c',     $script,
+            ]
+        }
+    );
+    do_system(
+        { cmd => [ 'docker', 'cp', "$CONTAINER:$HOMEDIR/$LOG_FN", $LOG_FN, ] }
+    );
+
+    do_system(
+        {
+            cmd => [
+                'docker',                            'cp',
+                "$CONTAINER:$SRC_ROOT_DIR_fullpath", $SRC_ROOT_DIR,
+            ]
+        }
+    );
+}
 do_system( { cmd => [ 'docker', 'stop', $CONTAINER, ] } );
 do_system( { cmd => [ 'docker', 'rm',   $CONTAINER, ] } );
 
