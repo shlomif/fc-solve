@@ -745,13 +745,26 @@ export class FC_Solve {
                 c_free(error_string_ptr_buf);
 
                 if (args_ret_code !== 0) {
-                    const unrecognized_opt_ptr = ((freecell_solver_user_get_unrecognized_cmd_line_flag_status(
-                        obj, 0) == 0) ? freecell_solver_user_get_unrecognized_cmd_line_flag(obj, 0) : 0);
-                    let unrecognized_opt_s = '';
+                    const unrecognized_opt_ptr =
+                        freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+                            obj,
+                            0,
+                        ) == 0
+                            ? freecell_solver_user_get_unrecognized_cmd_line_flag(
+                                  obj,
+                                  0,
+                              )
+                            : 0;
+                    let unrecognized_opt_s = "";
                     if (unrecognized_opt_ptr != 0) {
-                        that._unrecognized_opt = that._stringify_possibly_null_ptr(unrecognized_opt_ptr);
+                        that._unrecognized_opt = that._stringify_possibly_null_ptr(
+                            unrecognized_opt_ptr,
+                        );
                         c_free(unrecognized_opt_ptr);
-                        unrecognized_opt_s = "There was an unrecognized command line flag: «" + that._unrecognized_opt + "».";
+                        unrecognized_opt_s =
+                            "There was an unrecognized command line flag: «" +
+                            that._unrecognized_opt +
+                            "».";
                         alert(unrecognized_opt_s);
                         that._do_not_alert = true;
                         throw "Bar";
@@ -760,14 +773,14 @@ export class FC_Solve {
                         "Failed to process user-specified command " +
                             "line arguments. Problem is: «" +
                             error_string +
-                            "»."
+                            "».",
                     );
                     throw "Foo";
                 }
             }
             return 0;
         } catch (e) {
-            that.set_status("error", "Error", );
+            that.set_status("error", "Error");
             return -1;
         }
     }
