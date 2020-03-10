@@ -13,7 +13,7 @@
     "@types/jquery": "^3.3.32",
     "@types/qunit": "^2.9.0",
     "@typescript-eslint/eslint-plugin": "^2.19.2",
-    "@typescript-eslint/parser": "^2.19.2",
+    "@typescript-eslint/parser": "^2.20.0",
     "amdefine": "^1.0.1",
     "babel-eslint": "^10.0.3",
     "big-integer": "^1.6.48",
