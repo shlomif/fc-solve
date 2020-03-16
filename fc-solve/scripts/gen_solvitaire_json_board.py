@@ -60,7 +60,7 @@ def make_pysol_board__main(args):
     renderer = JsonRenderer(print_ts)
     je = json.JSONEncoder(sort_keys=True)
     json_obj = {}
-    json_obj["tableu piles"] = [
+    json_obj["tableau piles"] = [
         renderer.render_l(x) for x in g.board.columns.cols]
     json_obj["stock"] = renderer.render_l(g.board.talon)
     print(je.encode(json_obj))
