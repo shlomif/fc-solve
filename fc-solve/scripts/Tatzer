@@ -179,6 +179,8 @@ my %themes = (
     ten_mil_bench =>
         [qw(-l extra_speed2 --no-without-max-num-states --cmdline-compile)],
 
+    verify_bench => [qw(-l n2b)],
+
     # Role for enabling the pseudo-DFS solver
     pdfs       => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
     pysol_defs => [ '--num-stacks=14', '--nobreak-back-compat-1', ],
