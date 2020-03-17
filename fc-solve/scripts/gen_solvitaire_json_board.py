@@ -62,7 +62,11 @@ def make_pysol_board__main(args):
     json_obj = {}
     json_obj["tableau piles"] = [
         renderer.render_l(x) for x in g.board.columns.cols]
-    json_obj["stock"] = renderer.render_l(g.board.talon)
+    try:
+        talon = renderer.render_l(g.board.talon)
+        json_obj["stock"] = talon
+    except AttributeError:
+        pass
     print(je.encode(json_obj))
 
 
