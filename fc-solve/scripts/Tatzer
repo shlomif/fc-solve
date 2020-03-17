@@ -14,6 +14,8 @@ use autodie;
 use Getopt::Long qw/ GetOptions /;
 use Path::Tiny qw/path/;
 
+my $HOME = $ENV{HOME} // $ENV{userprofile} // "";
+
 my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'avoid-tcmalloc'            => 'FCS_AVOID_TCMALLOC',
     'break-back-compat-1'       => 'FCS_BREAK_BACKWARD_COMPAT_1',
@@ -179,7 +181,9 @@ my %themes = (
     ten_mil_bench =>
         [qw(-l extra_speed2 --no-without-max-num-states --cmdline-compile)],
 
-    verify_bench => [qw(-l n2b)],
+    verify_bench => [
+        qw(-l extra_speed3 --no-disable-ni --no-without-max-num-states --nohard-code-theme --no-disable-moves-track --no-disable-err-strs)
+    ],
 
     # Role for enabling the pseudo-DFS solver
     pdfs       => [qw(--judy --states-type=COMPACT_STATES --dbm=kaztree)],
@@ -230,8 +234,6 @@ if ( defined $SEED )
     delete $ENV{$SEED_KEY};
     exec( "bash", $FN );
 }
-
-my $HOME = $ENV{HOME} // $ENV{userprofile} // "";
 
 foreach my $rec (
     { id => "c2",  a => "core2", },
