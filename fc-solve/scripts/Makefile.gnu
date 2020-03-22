@@ -1,7 +1,7 @@
 DEBUG = 0
 PROFILE = 0
 WITH_TRACES = 0
-FREECELL_ONLY = 1
+FREECELL_ONLY = 0
 DISABLE_PATSOLVE = 1
 DISABLE_SIMPLE_SIMON := 0
 OPT_FOR_SIZE = 0
@@ -213,8 +213,6 @@ THR_MAIN_OBJECT := threaded_range_solver.o
 FORK_MAIN_OBJECT := forking_range_solver.o
 #>>>OBJECTS.END
 
-OBJECTS := $(GEN_C_OBJECTS) $(SOURCE_OBJECTS)
-
 PAT_OBJECTS = \
 		  param.o \
 		  patsolve.o \
@@ -222,12 +220,18 @@ PAT_OBJECTS = \
 		  tree.o \
 
 ifeq ($(DISABLE_SIMPLE_SIMON),0)
-	OBJECTS += simpsim.o
+	GEN_C_OBJECTS += fcs_is_ss_false_parent.o
+	GEN_C_OBJECTS += fcs_is_ss_true_parent.o
+	SOURCE_OBJECTS += simpsim.o
 endif
 
 ifeq ($(FREECELL_ONLY),0)
-	OBJECTS += preset.o
+	SOURCE_OBJECTS += card.o
+	SOURCE_OBJECTS += fc_pro_iface.o
+	SOURCE_OBJECTS += preset.o
 endif
+
+OBJECTS := $(GEN_C_OBJECTS) $(SOURCE_OBJECTS)
 
 # MYOBJ.o ==> .deps/MYOBJ.P
 DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
@@ -248,7 +252,7 @@ $(PAT_OBJECTS): %.o: $(SRC_DIR)/patsolve/patsolve/%.c
 STATIC_LIB_BASE = fcs
 STATIC_LIB = lib$(STATIC_LIB_BASE).a
 
-FCS_OBJECTS = $(OBJECTS)
+FCS_OBJECTS := $(OBJECTS)
 
 ifeq ($(DISABLE_PATSOLVE),0)
 	FCS_OBJECTS += $(PAT_OBJECTS)
