@@ -236,7 +236,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS "${presets_gen}" "${MOVE_GEN_MOD}"
 )
 SET (ENV{FCS_MAX_RANK} "${FCS_MAX_RANK}")
-SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
+SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
 # We do this so there will be no need to run "make" first.
 # See: http://github.com/kripken/emscripten/issues/766#issuecomment-11771150
 SET (is_parent_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-c-lookup-files.pl")
@@ -244,8 +244,8 @@ SET (is_parent_args "${is_parent_gen}")
 SET (is_parent_output
     "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__card_pos.h"
     "${CMAKE_CURRENT_BINARY_DIR}/debondt__state_pos.c" "${CMAKE_CURRENT_BINARY_DIR}/debondt__state_pos.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/is_king.c" "${CMAKE_CURRENT_BINARY_DIR}/is_king.h"
-    "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/is_king.h"
+    "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
     "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.c" "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.h"
     ${rate_state_output}
     )
@@ -330,14 +330,11 @@ SET (FREECELL_SOLVER_LIB_MODULES
     check_and_add_state.c
     freecell.c
     instance.c
-    is_king.c
-    is_parent.c
     lib.c
     meta_alloc.c
     move.c
     move_funcs_order.c
     pos_by_rank__freecell.c
-    rate_state.c
     scans.c
     state.c
     "${MOVE_C}"
@@ -654,7 +651,7 @@ FCS_ADD_EXEC_NO_INSTALL(fc-solve-pruner pruner-main.c)
 FCS_ADD_EXEC_NO_INSTALL(fc-solve-multi multi_fc_solve_main.c)
 FCS_ADD_EXEC_NO_INSTALL(summary-fc-solve summarizing_solver.c)
 
-SET (DBM_FCC_COMMON card.c is_king.c is_king.h is_parent.c meta_alloc.c state.c)
+SET (DBM_FCC_COMMON card.c is_king.h meta_alloc.c state.c)
 
 IF (NOT FCS_AVOID_INT128)
     CHECK_TYPE_SIZE("__int128" INT128 LANGUAGE C)

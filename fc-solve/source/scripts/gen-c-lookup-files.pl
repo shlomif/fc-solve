@@ -167,7 +167,7 @@ sub emit_lookup
     );
 }
 
-emit_lookup( 'fc_solve_is_parent_buf', 'is_parent', \%lookup );
+emit_lookup( 'fc_solve_is_parent_buf', 'is_parent', \%lookup, 1, );
 emit_lookup( 'fc_solve_is_ss_false_parent', 'fcs_is_ss_false_parent',
     \%fcs_is_ss_false_parent );
 emit_lookup( 'fc_solve_is_ss_true_parent', 'fcs_is_ss_true_parent',
@@ -250,6 +250,7 @@ emit(
                     contents => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
                 }
             ),
+            static => 1,
             typedefs =>
 "\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
         },
@@ -266,6 +267,7 @@ emit(
             }
         ),
         header_headers => [ q/<stdbool.h>/, ],
+        static         => 1,
     },
 );
 
