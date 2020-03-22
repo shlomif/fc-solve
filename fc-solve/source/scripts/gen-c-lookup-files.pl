@@ -115,15 +115,23 @@ sub emit
                 . join( '', @$text ) );
 
     };
-    my $code = "$DECL = " . _perl2c_code($contents) . ";\n";
+    my $code  = "$DECL = " . _perl2c_code($contents) . ";\n";
+    my $out_c = sub {
+        path("$bn.c")->spew_utf8( @{ shift(@_) } );
+        return;
+    };
     if ($is_static)
     {
         $out_header->( ["static $code"] );
+        if ( $is_static eq 'gen_c' )
+        {
+            $out_c->( [qq/#include "$header_fn"\n\n/] );
+        }
     }
     else
     {
         $out_header->( ["extern $DECL;\n"] );
-        path("$bn.c")->spew_utf8(qq/#include "$header_fn"\n\n$code/);
+        $out_c->( [qq/#include "$header_fn"\n\n$code/] );
     }
     return;
 }
@@ -167,7 +175,7 @@ sub emit_lookup
     );
 }
 
-emit_lookup( 'fc_solve_is_parent_buf', 'is_parent', \%lookup, 1, );
+emit_lookup( 'fc_solve_is_parent_buf', 'is_parent', \%lookup, 'gen_c', );
 emit_lookup( 'fc_solve_is_ss_false_parent', 'fcs_is_ss_false_parent',
     \%fcs_is_ss_false_parent );
 emit_lookup( 'fc_solve_is_ss_true_parent', 'fcs_is_ss_true_parent',
@@ -250,7 +258,7 @@ emit(
                     contents => [ map { $_**$POWER } ( 0 .. $TOP - 1 ) ],
                 }
             ),
-            static => 1,
+            static => 'gen_c',
             typedefs =>
 "\ntypedef double $TYPE_NAME;\n#define FCS_SEQS_OVER_RENEGADE_POWER(n) ${ARRAY_NAME}[(n)]\n",
         },
@@ -267,7 +275,7 @@ emit(
             }
         ),
         header_headers => [ q/<stdbool.h>/, ],
-        static         => 1,
+        static         => 'gen_c',
     },
 );
 

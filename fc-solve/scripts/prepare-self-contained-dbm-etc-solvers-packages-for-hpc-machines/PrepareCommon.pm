@@ -73,7 +73,6 @@ sub src_filenames
         'include/freecell-solver/fcs_move.h',
         'indirect_buffer.h',
         'internal_move_struct.h',
-        'is_parent.c',
         'is_parent.h',
         'kaz_tree.h',
         'lock.h',
@@ -100,9 +99,8 @@ sub modules
     return [
         sort { $a cmp $b } $self->main_base . '.o', 'card.o',
         'dbm_kaztree.o',        'debondt__card_pos.o',
-        'debondt__state_pos.o', 'is_parent.o',
-        'fcs-libavl/rb.o',      'meta_alloc.o',
-        'state.o',
+        'debondt__state_pos.o', 'fcs-libavl/rb.o',
+        'meta_alloc.o',         'state.o',
     ];
 }
 
@@ -202,7 +200,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
         chdir($dest_dir);
         if ( system( $^X, "$src_path/scripts/gen-c-lookup-files.pl" ) != 0 )
         {
-            die "Could not generate is_parent.{c,h}!";
+            die "Could not generate is_parent.h!";
         }
         chdir($cwd);
     }

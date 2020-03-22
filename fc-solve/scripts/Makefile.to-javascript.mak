@@ -47,12 +47,9 @@ $(PATS_C_FILES)
 
 CMAKE_C_FILES = \
 fcs_is_ss_true_parent.c \
-is_king.c \
-is_parent.c \
 move_funcs_maps.c \
 param.c \
 pos_by_rank__freecell.c \
-rate_state.c \
 
 
 C_FILES = main.c $(LIB_C_FILES)
