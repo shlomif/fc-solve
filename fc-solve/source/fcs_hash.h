@@ -122,7 +122,7 @@ static inline void fc_solve_hash_init(
     const typeof(hash_ptr[0]->size) initial_hash_size = 2048;
 
     const_AUTO(size_entries, initial_hash_size * sizeof(hash_table_entry));
-    hash_table *const hash = malloc(sizeof(*hash) + size_entries);
+    hash_table *const hash = calloc(1, sizeof(*hash) + size_entries);
     *hash_ptr = hash;
     hash->size = initial_hash_size;
     hash->size_bitmask = initial_hash_size - 1;
@@ -133,7 +133,6 @@ static inline void fc_solve_hash_init(
     /* Allocate a table of size entries */
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the end of each chain is right at the start. */
-    memset(hash->entries, '\0', size_entries);
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     hash->list_of_vacant_items = NULL;

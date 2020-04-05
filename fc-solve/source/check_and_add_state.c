@@ -33,10 +33,9 @@ static inline void fc_solve_hash_rehash(hash_table **const hash)
 
     hash_table_entry *entries = hash[0]->entries;
     const_AUTO(size_entries, new_size * sizeof(hash_table_entry));
-    hash_table *const new_hash = malloc(sizeof(*new_hash) + size_entries);
+    hash_table *const new_hash = calloc(1, sizeof(*new_hash) + size_entries);
     *new_hash = **hash;
     hash_table_entry *const new_entries = new_hash->entries;
-    memset(new_entries, '\0', size_entries);
 
     /* Copy the items to the new hash while not allocating them again */
     for (size_t i = 0; i < old_size; i++)
