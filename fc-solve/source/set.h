@@ -31,8 +31,6 @@
 #include <inttypes.h>
 #include <stdbool.h>
 
-#include "inline.h"
-
 struct set_entry
 {
     uint32_t hash;
@@ -79,17 +77,17 @@ struct set_entry *set_search_pre_hashed(
 void set_rehash(struct set *set, int new_size_index);
 extern void *deleted_key;
 
-static GCC_INLINE int entry_is_free(const struct set_entry *entry)
+static inline int entry_is_free(const struct set_entry *entry)
 {
     return entry->key == NULL;
 }
 
-static GCC_INLINE int entry_is_deleted(const struct set_entry *entry)
+static inline int entry_is_deleted(const struct set_entry *entry)
 {
     return entry->key == deleted_key;
 }
 
-static GCC_INLINE int entry_is_present(const struct set_entry *entry)
+static inline int entry_is_present(const struct set_entry *entry)
 {
     return entry->key != NULL && entry->key != deleted_key;
 }
@@ -101,7 +99,7 @@ static GCC_INLINE int entry_is_present(const struct set_entry *entry)
  * previously found set_entry pointers are no longer valid after this
  * function.
  */
-static GCC_INLINE struct set_entry *set_add_pre_hashed(
+static inline struct set_entry *set_add_pre_hashed(
     struct set *const set, const uint32_t hash, void *const key)
 {
     uint32_t hash_address;

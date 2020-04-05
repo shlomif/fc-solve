@@ -27,10 +27,10 @@ typedef size_t fcs_hash_value;
 
 #ifdef FCS_USE_ANHOLT_HASH
 #include "set.h"
-typedef struct set fc_solve_hash_t;
+typedef struct set hash_table;
 
-static GCC_INLINE void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
-    fcs_bool_t (*should_delete_ptr)(void *const key, void *const context),
+static inline void fc_solve_hash_foreach(hash_table *const hash,
+    bool (*should_delete_ptr)(void *const key, void *const context),
     void *const context)
 {
     const_AUTO(set, hash);

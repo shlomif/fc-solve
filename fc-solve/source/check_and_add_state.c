@@ -286,12 +286,12 @@ static inline void fc_solve_cache_stacks(
 #ifdef FCS_USE_ANHOLT_HASH
             const_AUTO(
                 ret, set_add_pre_hashed(&(instance->stacks_hash),
-                         perl_hash_function((ub1 *)*(current_stack), col_len),
+                         DO_XXH(*(current_stack), col_len),
                          column));
             cached_stack = ret ? ret->key : NULL;
 #else
             cached_stack = fc_solve_hash_insert(&(instance->stacks_hash),
-                column, perl_hash_function((ub1 *)*(current_stack), col_len)
+                column, DO_XXH(*(current_stack), col_len)
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
                                                   ,
             hash_value_int
@@ -494,7 +494,7 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
     {
 #ifdef FCS_USE_ANHOLT_HASH
         const_AUTO(ret, set_add_pre_hashed(&(instance->hash),
-                            perl_hash_function((ub1 *)(new_state_key),
+                            DO_XXH((new_state_key),
                                 sizeof(*(new_state_key))),
                             FCS_STATE_kv_to_collectible(new_state)));
         void *const existing_void = ret ? ret->key : NULL;
@@ -512,14 +512,7 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
 #endif
     return HANDLE_existing_void(fc_solve_hash_insert(
         &(instance->hash), A, DO_XXH(new_state_key, sizeof(*new_state_key)) B));
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    void *existing_void;
-    if (!fc_solve_states_google_hash_insert(instance->hash,
-            FCS_STATE_kv_to_collectible(new_state), &(existing_void)))
-    {
-        existing_void = NULL;
-    }
-    return HANDLE_existing_void(existing_void);
+#endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
     const void *existing_void = rbsearch(new_state_void, instance->tree);
