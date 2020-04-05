@@ -1,0 +1,36 @@
+{% extends "template.jinja" %}
+{% block title %}Incompatible browser with the online fc-solve{% endblock %}
+{% block body %}
+
+
+<p>
+Your browser does not support the necessary
+HTML 5/JavaScript extensions required by the WWW-based Freecell Solver. Please
+use one of the following browsers instead, or instead
+<a href="{{ base_path }}download.html">download and install</a> the standalone
+native executable, or a graphical interface for it.
+</p>
+
+<h2 id="recommended-browsers">Recommended Browsers</h2>
+
+<h3 id="firefox"><a href="http://www.getfirefox.com/">Mozilla Firefox</a></h3>
+
+<h3 id="chromium"><a href="http://dev.chromium.org/getting-involved/download-chromium">Google Chromium</a></h3>
+
+<h3 id="opera"><a href="http://www.opera.com/">Opera</a></h3>
+
+<p>
+(Not open source).
+</p>
+
+<h3 id="msie10">Microsoft Internet Explorer 10 and Above</h3>
+
+<p>
+We do <b>not</b> recommend using this proprietary and Windows-only
+browser from Microsoft for
+<a href="http://www.shlomifish.org/no-ie/">several important reasons</a>
+and it will only run on Windows 7 and above, but it appears to work well
+enough. Older versions of Internet Explorer are unfortunately not supported.
+</p>
+
+{% endblock %}

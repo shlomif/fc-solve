@@ -1,0 +1,1122 @@
+{% extends "template.jinja" %}
+{% block title %}The Freecell Solver Frequently Asked Questions (F.A.Q.) List{% endblock %}
+{% block body %}
+
+
+<div class="wrap-me">
+
+<section>
+<toc />
+</section>
+
+{% call h2_section(id="questions",title="The Questions") %}
+
+{% call h3_section(id="what_is_it",title="What is Freecell Solver? What is a solver for Freecell in general?") %}
+
+<p>
+<a href="https://en.wikipedia.org/wiki/FreeCell">Freecell (or “FreeCell”)</a>
+is a single-player card game (which are generally known as <a
+href="https://en.wikipedia.org/wiki/Patience_%28game%29">“Patience” or
+“Solitaire”</a>), where all the cards are played face-up at startup and where
+no talon is used. There is more information about it in
+<a href="http://www.solitairelaboratory.com/fcfaq.html">the FreeCell FAQ</a>
+which is maintained by Michael Keller.
+</p>
+
+<p>
+An automated solver for Freecell is a computer program that attempts to solve
+layouts of Freecell: either initial deals, or often also mid-play states of the
+game, and emit a solution to completion, or conclude that the layout could
+not be solved by it. Freecell Solver is one such program, and it is
+<a href="https://en.wikipedia.org/wiki/Open-source_software">open source</a>
+under the permissive and common
+<a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
+provided free-of-charge for download or use online, and sports a large number
+of features. (See <a href="{{ base_path }}features.html">its features list</a>.)
+</p>
+
+<p>
+One should note that Freecell Solver can solve several other variants of
+solitaire that are similar enough to Freecell for us to provide support for,
+but Freecell appears to be the most popular variant out of them, and the
+name is kept for historical reasons.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="what_is_solitaire",title="What is Solitaire? Is it the Windows implementation of Klondike?") %}
+
+<p>
+<a href="https://en.wikipedia.org/wiki/Patience_%28game%29">“Patience” or
+“Solitaire”</a> are any single-player card game, or at least those played
+using the standard
+<a href="https://en.wikipedia.org/wiki/French_playing_cards">French playing cards</a>.
+One such solitaire variant is <a href="https://en.wikipedia.org/wiki/Klondike_(solitaire)">Klondike</a>
+which has become associated with card Solitaire in general, and
+was implemented as
+<a href="https://en.wikipedia.org/wiki/Microsoft_Solitaire">a game for
+Microsoft Windows</a> under the name "Solitaire". Nevertheless, there are many
+other variants of card Solitaire, and Freecell is one of them.
+</p>
+
+<p>
+In some countries, "Solitaire" can also refer to
+<a href="https://en.wikipedia.org/wiki/Peg_solitaire">peg solitaire</a>.
+</p>
+
+<p>
+You can find <a href="{{ base_path }}links.html#other_solvers">a list of solvers</a>
+for various variants of patience games in our links page.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="what_are_ms_deals",title="What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?") %}
+
+<p>
+Microsoft shipped several implementations of Freecell for its Windows operating
+systems called
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">“Microsoft
+FreeCell”</a> which contributed to popularising the game. They dealt cards
+with numbered deals using a shuffling algorithm based on inputting the number
+of the deal into the Microsoft C Run time library
+<a href="https://en.wikipedia.org/wiki/Pseudorandom_number_generator">pseudorandom
+number generator</a>. The algorithm for dealing cards was made available by
+Jim Horne, a Microsoft software developer who implemented Microsoft FreeCell.
+</p>
+
+<p>
+While the original MS FreeCell only dealt deals in the range 1 to 32,000, these
+deals can be extended up to a 31-bit number and were later extended by
+<a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a> to 33-bits
+dealing.
+</p>
+
+<p>
+The Microsoft deals are considered canonical among Freecell researchers in
+their studies of the game.
+</p>
+
+<p>
+For more information, see:
+</p>
+
+<ol>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/source/range_solvers_gen_ms_boards.h">range_solvers_gen_ms_boards.h</a> and
+<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/source/gen_ms_boards__rand.h">gen_ms_boards__rand.h</a>
+- from the Freecell Solver's source - implementations of the dealing algorithm
+in optimised C under the MIT/Expat licence.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://rosettacode.org/wiki/Deal_cards_for_FreeCell">“Deal cards
+for FreeCell”</a> on Rosetta Code - implementations in many programming
+languages, but under a problematic licence.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/freecell-pro-impossible-deals">The
+impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals</a>.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/theodorepringle/MicrosoftFreeCell32000-minimal-freecells/">The minimal number of freecells needed to win for each deal in the original Microsoft FreeCell 32,000 deals.</a>
+</p>
+</li>
+</ol>
+
+{% endcall %}
+
+{% call h3_section(id="solve_all_games",title="Can Freecell Solver solve all the Freecell layouts?") %}
+
+<p>
+First of all, despite popular belief, a small percentage of the standard
+8 columns+4 freecells
+Freecell layouts are
+<a href="http://www.staff.science.uu.nl/~bodla101/d.freecell/freecellhtml.html"><b>impossible</b>
+to solve</a>, and even more deals are impossible with fewer than 4 freecells
+available. What
+Freecell Solver will do in this case is traverse the entire game graph (given
+enough time and computer memory) and then report
+“I could not solve this game.”
+</p>
+
+<p>
+That put aside, some deals may be
+<a href="#unsolvable_solution">inaccurately reported as unsolvable</a> with
+the default heuristic. See <a href="#unsolvable_solution">the link</a> for
+more information and for a solution.
+</p>
+
+<p>
+Part of the confusion may have stemmed from the phrasing in the Microsoft
+Freecell help file which read “It is believed (though not proven) that every
+[Freecell] game is winnable.” which referred only to the 32,000 built-in deals
+and proved to be false as well (because deal #11,982 turned out to be
+impossible).
+</p>
+
+<p>
+Some of the most famous impossible deals are:
+</p>
+
+<ol>
+
+<li>
+<p>
+Microsoft Deal #11,982.
+</p>
+</li>
+
+<li>
+<p>
+Recent versions of Microsoft Freecell contain two impossible deals numbered
+-1 and -2 as a joke.
+</p>
+</li>
+
+<li>
+<p>
+Theodore Pringle has constructed <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1472">a deal</a>
+which is impossible to win with 8 freecells or fewer.
+</p>
+</li>
+</ol>
+
+{% endcall %}
+
+{% call h3_section(id="a_move_seems_wrong",title="I think I found a wrong move in the solution? What can I do?") %}
+
+<p>
+While it is not unthinkable that Freecell Solver will have a bug and will
+make a wrong move, it is extremely unlikely that that is the case. Some people
+have reported that several multi-card moves are impossible, but as I
+demonstrated to them, they were in fact possible.
+</p>
+
+<p>
+One can find the maximal number of cards that can be moved as a sequence
+in Freecell using the formula
+<code>max_cards = (1 + num_vacant_freecells) * (2 ^ num_columns)</code>
+(where “*” is multiplication and “^” is <a href="https://en.wikipedia.org/wiki/Exponentiation">exponentiation</a>.). Note that <code>num_columns</code>
+refers to the number of <b>intermediate/temporary</b> columns one uses in the
+the transfer and if you are trying to transfer cards to an empty column, the
+number will be smaller.
+</p>
+
+<p>
+One can also try using
+<a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
+from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
+in order to filter solutions and produce ones with multi-card moves
+expanded into many single-card moves. If you are on Microsoft Windows, you can
+install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
+</p>
+
+<p>
+Note that the <a href="{{ base_path }}js-fc-solve/">web-based solver</a> also has an
+option to expand such moves and one can use it in most modern JavaScript-enabled
+browsers without having to install any additional software on your computer.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="abuse_of_fc_solve",title="I think I found an abuse of Freecell Solver. What should I do?") %}
+
+<p>
+We received a report or two about various people or companies distributing
+Freecell Solver along with their products, and the answer is that it is:
+1. Likely legal, 2. We don't mind, and 3. We encourage commercial and/or
+proprietary use of the code or binaries.
+</p>
+
+<p>
+Freecell Solver used to be distributed under the Public Domain, but was
+relicensed to the permissive
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a> due
+to the problematic and not globally accepted nature of the Public Domain,
+especially in software. (See
+<a href="http://linuxmafia.com/faq/Licensing_and_Law/public-domain.html">the
+page maintained by Rick Moen about it</a>.) As far as we know (and this is
+not legal advice), the main legal and practical
+difference between the public domain and the Expat licence, is that one should
+keep attributing the original copyright holders as rightful holders (while
+the licence of derivative works may be changed into any other). As far as
+we are concerned, this is not something we want to enforce, but we still
+recommend to follow this, to stay on the safe side of the law.
+</p>
+
+<p>
+So unless someone sues us for damages for a problem caused by the program
+or library (which violates the no warranty paragraph of the licence) everything
+should be fine and the “abuse” of the program is acceptable.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="what_are_the_uses_of_a_solver",title="What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?") %}
+
+<p>
+Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
+but it still has some uses. One use is determining whether an initial layout
+of a game, or a layout in mid-play is solvable or not so a human player can
+know whether he needs to return to an earlier position. The default
+configuration of Freecell solver may still report a small number of solvable
+positions as unsolved, but that can be mitigated by passing some command-line
+flags.
+</p>
+
+<p>
+Another use of a Solitaire solver is to find solutions for difficult deals,
+or attempt to find shorter solutions. It can also be used to provide hints
+by giving the first leading moves, when a (human) player gets stuck.
+</p>
+
+<p>
+Yet another use is to collect statistics
+from a large number of random deals (say, the Microsoft Windows Freecell deals
+or PySolFC’s deals), which is part of what Freecell researchers do.
+</p>
+
+<p>
+Freecell 3D, a Freecell implementation for Windows, has also introduced a
+“Race against the computer” mode of Freecell, which is an interesting challenge.
+</p>
+
+<p>
+Finally, we have more recently started to investigate some “human/computer
+collaboration”-based Freecell solving, where a human aided by a Solitaire
+suite with a good solver integration can attempt to solve some difficult
+deals (for both a human and a computerised solver), by pruning dead ends, and
+by finding whether reached states are solvable. This provides a combined
+solving technique, that is greater than the sum of both parts.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="does_anyone_care",title="Does anyone care about this project? I think no one cares about it except you.") %}
+
+<p>
+The short answer is that: yes, some people care. As of November 2016, I received
+over 900 E-mails about the project to my private inbox and my
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">fc-solve-discuss group</a>’s
+folder also contains over 900 E-mails. Furthermore, some people to whom
+I mentioned my solver in real life, expressed interest in it, in part due to
+the fact that in <a href="https://en.wikipedia.org/wiki/Israel">Israel</a>,
+where I live, many people played it on
+<a href="http://en.wikipedia.org/wiki/Israel_Defense_Forces">the
+Israeli military</a>’s computers during their draft/etc. service. An
+<a href="http://www.nrg.co.il/online/10/ART/782/006.html">internal survey</a>
+conducted in 2004 found that it was the preferable game of 29% of the
+surveyed soldiers - thanks to <a href="https://he.wikipedia.org/wiki/%D7%A4%D7%A8%D7%99%D7%A1%D7%9C">the Hebrew wikipedia page about Freecell</a> for the link. One should note that Israel has instated a draft for girls as well
+as boys, so some of the people who were impressed were attractive females.
+</p>
+
+<p>
+I have written <a href="http://blogs.perl.org/users/shlomi_fish/2013/03/ann-my-transition-from-software-developer-to-writerentertaineramateur-philosopherinternet-celebrity.html">a section
+in a three-part essay</a> titled “How to achieve world domination” about that
+and niche software in general.
+</p>
+
+<p>
+Freecell may have been declining in popularity lately, but I expect interest
+in it to continue for a while.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="new_solver_is_too_slow",title="I started writing a solver for Freecell (of my own) but it is too slow. What can I do?") %}
+
+<p>
+The problem with many naïve Freecell solving programs is that, while they
+can succeed in solving many Freecell deals, they may fail spectacularly in
+the general case. Furthermore, Generalised Freecell (where there is an
+arbitrary number of ranks) was shown to be
+an <a href="http://en.wikipedia.org/wiki/NP-complete">NP-complete problem</a>
+and as a result, it is likely that no efficient solution for solving that
+in the general case can be found (but it is possible that some good heuristics
+can be devised).
+</p>
+
+<p>
+You can try inspecting the code of Freecell Solver or one of the
+<a href="{{ base_path }}links.html#other_solvers">other solvers</a> for insights, but
+note that their code (and especially Freecell Solver’s) may be somewhat
+complex and hard to understand for people with relatively little experience.
+You can also pursue some of the
+<a href="{{ base_path }}docs/">Freecell Solver documentation</a> as well as the
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">archives of
+the fc-solve-discuss mailing list</a> for some insights and ideas.
+</p>
+
+<p>
+Here are some general tips:
+</p>
+
+<ul>
+
+<li>
+<p>
+Make sure that the positions in the graph of the game are represented as a
+single segment of memory (normally a C struct) and can be compared for
+equivalence easily (using <a href="http://en.cppreference.com/w/c/string/byte/memcmp">memcmp()</a> or a similar function).
+</p>
+</li>
+
+<li>
+<p>
+Use an efficient data structure to hold the states in the collection such as
+a <a href="https://en.wikipedia.org/wiki/Hash_table">hash table</a> or a
+<a href="https://en.wikipedia.org/wiki/Self-balancing_binary_search_tree">self-balancing
+binary search tree</a>. There are libraries implementing them for most
+popular languages.
+</p>
+</li>
+
+<li>
+<p>
+Often randomising the solution (see Freecell Solver's Random-DFS scan
+which was inspired by a different solver called “Freecell Tool”) can help
+a lot.
+</p>
+</li>
+
+<li>
+<p>
+Freecell Solver makes heavy use of switch tasking: having several different
+searches operate on the same board, until the first search yields a solution.
+This normally yields a solution quicker than a singular scan.
+</p>
+</li>
+
+<li>
+<p>
+Consider implementing moves as meta-moves: sequences of several single-card
+and/or sequence moves that implement a certain ends. This can yield a solution
+faster than using single-card moves (also known as atomic moves).
+</p>
+</li>
+
+</ul>
+
+<p>
+Finally, note that we could use a helping hand with Freecell Solver, and the
+authors of other open-source solvers may be happy for help as well, so if
+you want to help to improve something more mature, then contact us.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="integrate_fcs_into_program",title="May I integrate Freecell Solver into my program? If so - how?") %}
+
+<p>
+Yes, you can, as long as you accept the
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>. We
+also would appreciate an acknowledgement and a link to the Freecell Solver
+home page, in the About Dialogue, and in other places.
+</p>
+
+<p>
+Now regarding how to integrate: please either use the
+<code>freecell_solver_user_*</code>
+API, or alternatively parse the output of <kbd>fc-solve</kbd>
+with the <kbd>-p -t -sam -sel</kbd> flags. The <code>freecell_solver_user_*</code>
+API is not documented at the moment, but should be self-explanatory, and there
+are some examples of using it in the various solvers in the distribution.
+One useful way to configure a solver handle is to use “fcs_cl.h”
+which provides an API based on the Freecell Solver command-line and is more
+convenient than issuing multiple lower-level API calls.
+</p>
+
+<p>
+You can opt to put the solver on a separate thread, on a separate process,
+or alternatively limit the iterations and increase it constantly, in a
+pre-emptive multi-tasking fashion.
+</p>
+
+<p>
+Good luck and please let us know if you run into any trouble, or,
+alternatively, if you are successful.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="solutions_are_too_long",title="The Solutions I got are too long. What can I do?") %}
+
+<p>
+You can try using a flares-based preset such as “video-editing” and
+optionally add <kbd>--flares-choice fcpro</kbd> and <kbd>-fif 10</kbd>, where 10
+can be replaced by a larger (or smaller) number. So the complete command would
+be:
+</p>
+
+<pre>
+pi-make-microsoft-freecell-board -t 24 | \
+    fc-solve -l ve --flares-choice fcpro -fif 10 -
+</pre>
+
+<p>
+If this still does not work to your satisfaction, you can try constructing
+a specialised heuristic from the many command line options of Freecell Solver
+that will yield something. There are some examples for those in the individual
+flares and soft threads under the “Presets/presets” directory.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="which_prog_lang",title="Which programming language (or programming languages) is Freecell Solver written in?") %}
+
+<p>
+The core Freecell Solver source is written in the GNU11 version of
+the C11 standard of the <a href="https://en.wikipedia.org/wiki/C_%28programming_language%29">C programming language</a>
+(<code>-std=gnu11</code>), which is supported by the
+<a href="https://en.wikipedia.org/wiki/GNU_Compiler_Collection">GCC</a> and
+<a href="https://en.wikipedia.org/wiki/Clang">clang</a> compilers
+and compatible compilers. This
+includes
+the libfreecell-solver library, most of the user-facing executables
+using it, and some other related code. Aside from that, there's quite a lot
+of support code for testing (a.k.a: “quality-assurance”), automation, building,
+results analysis, and other tasks, written in
+<a href="https://en.wikipedia.org/wiki/Perl">Perl 5</a>,
+<a href="https://en.wikipedia.org/wiki/CMake">CMake</a>,
+<a href="https://en.wikipedia.org/wiki/Python_%28programming_language%29">Python 3.x</a>,
+<a href="https://en.wikipedia.org/wiki/Bash_%28Unix_shell%29">the GNU Bash
+shell</a>,
+<a href="https://en.wikipedia.org/wiki/Ruby_%28programming_language%29">Ruby</a>,
+and possibly some other languages. The git repository also contains code and
+markup in other languages such as JavaScript.
+</p>
+
+<p>
+Here are the estimated lines-of-codes-per-language statistics of running
+<a href="http://www.dwheeler.com/sloccount/">SLOCCount by David Wheeler</a> on
+the “fc-solve/source” sub-directory of the git repository (as of
+9 December 2016)
+</p>
+
+<pre>
+Totals grouped by language (dominant language first):
+ansic:        27360 (68.34%)
+perl:         10165 (25.39%)
+python:        1262 (3.15%)
+sh:             970 (2.42%)
+cpp:            277 (0.69%)
+</pre>
+
+{% endcall %}
+
+{% call h3_section(id="why_in_c",title="Why is Freecell Solver written in C? Why not in another language?") %}
+
+<p>
+Part of the reason why Freecell Solver is written in C, is because the first
+released version (version 0.2) was written in C, and it continued to be
+maintained in this language. Other reasons are:
+</p>
+
+<ul>
+
+<li>
+<p>
+C is fast and memory efficient.
+</p>
+</li>
+
+<li>
+<p>
+C is portable.
+</p>
+</li>
+
+<li>
+<p>
+The bit-handling operators of C are utilised extensively in the Freecell
+Solver source.
+</p>
+</li>
+
+<li>
+<p>
+As opposed to C++, C is easier to get right, is more of a “no-nonsense
+language”, is less hyped, and does not encourage crazy or pointless
+practices. Also see
+<a href="http://www.shlomifish.org/lecture/Freecell-Solver/slides/why_not_cpp.html">what
+I’ve written about it previously</a>.
+</p>
+</li>
+
+</ul>
+
+<p>
+Here are a few other links I collected which speak against C++:
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="http://lbrandy.com/blog/2010/03/never-trust-a-programmer-who-says-he-knows-c/">“Never trust a programmer who says he knows C++”</a> - by Louis Brandy.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://shlomif-tech.livejournal.com/63781.html">“C++ Joke”</a> - on
+my technical blog.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://idkn.wordpress.com/2008/11/21/%D7%A6%D7%99%D7%98%D7%95%D7%98%D7%99-%D7%AA%D7%95%D7%9B%D7%A0%D7%94/">“Software-related Quotes”
+on Ido Kanner’s blog</a>. His blog contains many
+<a href="https://idkn.wordpress.com/?s=C%2B%2B">other entries</a> criticising
+C++.
+</p>
+</li>
+</ul>
+
+<p>
+Nevertheless, I cannot guarantee that Freecell Solver’s code will remain
+written in C forever, and that I won’t gradually convert it to C++ or a
+different language. My main issue with using C++ right now is that I
+(rationally) fear it will give me too much rope to hang myself, and
+be too tempting to go wild with advanced features, as well as potentially
+bring too many unexpected and hard-to-debug problems.
+</p>
+
+<p>
+One final note is that the Freecell Solver C source has been compiled to
+browser-side-compatible JavaScript using
+<a href="https://github.com/kripken/emscripten">Emscripten</a>, so it can
+be used inside a JavaScript-compatible browser. This was done for making
+it easy to be tested and used, at the (usually not show-stopping) trade-off
+of being slower than compiled-to-native-binary-code. Nevertheless, the C code
+is still maintained directly, and the generated JavaScript code is not
+idiomatic JavaScript.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="unsolvable_solution",title="I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?") %}
+
+<p>
+The default Freecell Solver heuristic may have a small number of deals that
+are reported as unsolvable despite being solvable. However, you can use scans
+based on atomic moves to rectify that. See <kbd>fc-solve --help-configs</kbd>
+and the <a href="{{ base_path }}docs/distro/USAGE.html">USAGE.html</a> file for
+more information.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="is_fc_solve_completed",title="Have you completed/finished the work on Freecell Solver? Is it done yet?") %}
+
+<p>
+I am getting asked that a lot, and I find it a strange notion. It is similar
+to asking if the <a href="http://www.kde.org/">KDE</a> developers are done
+working on KDE, or if the developers of the
+<a href="https://en.wikipedia.org/wiki/Linux_kernel">Linux kernel</a>
+have completed the Linux kernel, or if the
+<a href="https://www.mozilla.org/en-US/firefox/new/">Firefox browser</a>
+is done. Freecell Solver is a fairly large and complex project and there is
+still a lot of room for improvement, and while I sometimes take a break
+from working on it, it does not mean I planned to have permanently stopped.
+</p>
+
+<p>
+Sometimes, I complete one task and call it a day, but it does not mean that
+I plan to ever stop working on it. Perhaps when I tell people that
+“I’m working on Freecell Solver” they assume that this work is temporary,
+but it has been developed since the year 2000, while taking some breaks.
+</p>
+
+<p>
+All that put aside, one should not conclude that Freecell Solver is an immature
+project or is unusable, just like KDE, the Linux kernel, and Firefox are not
+immature or unusable. Freecell Solver is not perfect (and will probably
+never be) but it is still usable in its current state.
+</p>
+
+<p>
+Also see <a href="http://shlomif-tech.livejournal.com/2011/03/12/">an
+earlier blog post</a> about “Finished Projects, Maintained Projects and Those
+that are Up For Adoption”.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="wasnt_freecell_solved_yet",title="“‘Freecell Solver’? Hasn’t Freecell been solved yet?”") %}
+
+<p>
+This question shows a basic misunderstanding of what Freecell is, and the
+purpose of a solver for it. Just to clarify the matters,
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> is a single-player
+card game, with some rules about what constitutes a legal move, and since there
+are 52 cards (Ace-to-King in the four suits), which are usually placed in
+8 columns (although a different number is possible), there are about
+1.75 × 10<sup>64</sup> distinct initial layout (according to the Wikipedia
+page), and many more if we consider mid-play layouts.
+</p>
+
+<p>
+The primary purpose of solvers such as this one is to attempt to solve any
+arbitrary layouts, while optionally giving the moves to completion. Note
+that due to the nature of the game, it may be
+<a href="#solve_all_games">impossible and/or time consuming</a> for
+some layouts, but hopefully the chance of this risk can be minimised
+with the more advanced searches.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="is_fc_solve_written_in_perl",title="Is Freecell Solver written in Perl?") %}
+
+<p>
+For some reason, some people assume that I (= Shlomi Fish) wrote Freecell
+Solver in Perl. That may stem from the fact that I've written a lot of
+Perl 5 code (see <a href="http://perlresume.org/shlomif">my “Perl Résumé”</a>
+over at perlresume.org), but it is not, in essence, the case for Freecell
+Solver.
+</p>
+
+<p>
+In fact, the core C libfreecell-solver library, some of the command line
+executables, and some other code, is written in
+<a href="#which_prog_lang">the GNU11 version of the C programming language</a>,
+and does not require the Perl runtime to be used.
+</p>
+
+<p>
+It is true that the preliminary version of Freecell Solver (that was written
+before the first “0.2” release and that can be found
+<a href="https://github.com/shlomif/fc-solve/tree/master/nostalgia/perl">in
+the “nostalgia” directory</a> of the version control system) was written
+in Perl, but that was quickly rewritten in C. The original reason for the
+rewrite was that the Perl version ran too slowly, but part of the problem was
+the fact that it was poorly coded, rather than Perl’s fault.
+</p>
+
+<p>
+I've kept the code written in C after version 0.2 which was written in C,
+and have preferred to keep it in C, for performance reasons. Porting a
+<a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">different
+solver</a> I wrote - for
+<a href="https://en.wikipedia.org/wiki/Black_Hole_%28solitaire%29">Black Hole
+Solitaire</a> - from its initial Perl version
+to C - made it roughly
+<a href="http://permalink.gmane.org/gmane.culture.hackers.israel/2415">24
+times faster</a> and I naturally find a 24 factor performance decrease
+unacceptable.
+</p>
+
+<h3 id="algo">How does Freecell Solver solve Freecell? Which algorithm
+does it use?</h3>
+
+<p>
+The exact algorithm used by “fc-solve” can be configured using the various
+command line arguments it accepts, which are documented in the
+<a href="{{ base_path }}docs/distro/README.html">README</a> and
+<a href="{{ base_path }}docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
+“-l” flag can load some predefined configurations, which are essentially a
+sequence of command line arguments loaded from a file.
+</p>
+
+<p>
+Some of the highlights of the methods supported by Freecell Solver are:
+</p>
+
+<ol>
+
+<li>
+<p>
+Switch-tasking in which different scans are interrupted, swapped with another
+scan, and then resumed.
+</p>
+</li>
+
+<li>
+<p>
+Randomised and/or prioritised depth-first-search (DFS) scans, and
+Best-First-Search (BeFS) scans.
+</p>
+</li>
+
+<li>
+<p>
+Different types of moves, with configurable order and grouping.
+</p>
+</li>
+
+<li>
+<p>
+One can instantiate different instances of the solver, that will each solve
+different deals in different threads or processes.
+</p>
+</li>
+
+</ol>
+
+<h3 id="input">How does Freecell Solver reads the cards and board layout? What
+kind of input does it accept?</h3>
+
+<p>
+The API of the solver accepts a textual representation in a certain well-formed
+format of the starting layout of the game's board (which may be a mid-play
+layout), parses it, and starts the processing from it. This allows Freecell
+Solver to accept any arbitrary layout, not just the initial layouts of Microsoft
+Freecell or a different Solitaire implementation.
+</p>
+
+<p>
+We did not bother with graphically extracting the cards, because it is harder
+to do, and would have limited the utility and generality of the solver.
+Nevertheless, the solver can be input with a text layout based on that which
+seems to be the approach taken by the <a href="https://www.youtube.com/watch?v=oGgnyysFNTQ">iPhone Freecell Bot</a> demo.
+</p>
+
+<p>
+Note that Freecell Solver also ships with some programs that generate the
+initial deals of some popular Solitaire implementations, and some
+<a href="links.html#front_ends">implementations of Solitaire</a> provide
+integration with Freecell Solver, that provides it with automated input, and
+also uses its moves output to display the solution.
+</p>
+
+<h3 id="deal_11982">I found a solution for MS Deal No. 11,982 - should I
+report it to you?</h3>
+
+<p>
+That deal was found to be impossible by most human
+players, and all automated solvers that tried to solve it (including
+<a href="https://github.com/boundedvariation/Freecell">a solver</a> which
+is written in <a href="https://en.wikipedia.org/wiki/Haskell_%28programming_language%29">Haskell</a>,
+which is a statically typed programming language that code that is written in
+it tends to exhibit very few bugs.). Nevertheless, we would welcome a proof
+to the contrary given it actually refers to the actual deal.
+</p>
+
+<p>
+For the record, the card arrangement is:
+</p>
+
+<pre>
+ --  --  --  --  --  --  --  --
+ AH  AS  4H  AC  2D  6S  TS  JS
+ 3D  3H  QS  QC  8S  7H  AD  KS
+ KD  6H  5S  4D  9H  JH  9S  3C
+ JC  5D  5C  8C  9D  TD  KH  7C
+ 6C  2C  TH  QH  6D  TC  4S  7S
+ JD  7D  8H  9C  2H  QD  4C  5H
+ KC  8D  2S  3S
+</pre>
+
+<p>
+Or arranged with the piles in each text line:
+</p>
+
+<pre>
+: AH 3D KD JC 6C JD KC
+: AS 3H 6H 5D 2C 7D 8D
+: 4H QS 5S 5C TH 8H 2S
+: AC QC 4D 8C QH 9C 3S
+: 2D 8S 9H 9D 6D 2H
+: 6S 7H JH TD TC QD
+: TS AD 9S KH 4S 4C
+: JS KS 3C 7C 7S 5H
+</pre>
+
+<p>
+Here is a <a href="{{ base_path }}images/pysol-freecell-ms11982.png">screenshot
+of that deal in PySol</a>.
+</p>
+
+<p>
+If, and only if, the cards match, please record a solution using
+<a href="http://pysolfc.sourceforge.net/">PySol FC</a> and send us the saved
+game. Make sure you are playing Freecell with exactly four reserves and not some other
+variant.
+</p>
+
+<p>
+Note that
+<a href="https://www.makorrishon.co.il/nrg/online/10/ART/939/623.html">NRG
+Israel reported</a> (in Hebrew) that an Israeli couple was able to solve
+deal no. 11,982 but they didn't record the solution, and it is possible that
+it exploited a bug in
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">MS Freecell</a>.
+</p>
+
+<hr />
+
+<p>
+A partial list of the solvers that have failed in finding a solution to #11,982:
+</p>
+
+<ol>
+
+<li>
+<p>
+The aforementioned solver written in Haskell.
+</p>
+</li>
+
+<li>
+<p>
+fc-solve / libfreecell-solver - hosted on this site.
+</p>
+</li>
+
+<li>
+<p>
+The dbm_fc_solver - shares some code with fc-solve and part of the Freecell Solver
+distribution.
+</p>
+</li>
+
+<li>
+<p>
+The depth_dbm_fc_solver - shares some code with both dbm_fc_solver and fc-solve.
+</p>
+</li>
+
+<li>
+<p>
+The original <a href="http://cards.wikia.com/wiki/Patsolve">patsolve</a> by Dr. Tom
+Holroyd.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/patsolve">patsolve-shlomif</a> which shares
+some code with fc-solve.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://fc-solve.shlomifish.org/don_woods.html">Don Woods' Freecell Solver</a> -
+written in C with available source.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/shirl-hart-freecell-solver">Shirl Hart's solver</a> -
+written in Java with an <a href="https://metacpan.org/release/Freecell-App">earlier
+version</a> in Perl 5.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.numin8r.us/programs/">Gary Campbell's FCELL.COM</a> - written
+in x86 assembly for DOS.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://sourceforge.net/projects/freecelljsolver/">FreeCell Java Solver</a>
+- open source under the GPLv3.
+</p>
+</li>
+</ol>
+
+{% endcall %}
+
+{% call h3_section(id="complexity",title="What is the runtime complexity of solving Freecell?") %}
+
+<p>
+Generalised Freecell (where there is an
+arbitrary number of ranks) was shown to be
+an <a href="https://github.com/shlomif/Freenode-programming-channel-FAQ/blob/master/FAQ.mdwn#what-do-np-complete-np-hard-etc-mean">NP-complete problem</a>
+and as a result, it is likely that no efficient solution for solving that
+in the general case can be found (but it is possible that some good heuristics
+can be devised).
+</p>
+
+<p>
+That put aside, Freecell is a degenerate case where the number of ranks is
+fixed at 13 (ace-to-king).
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="what_is_pysol",title="What is PySol? What is PySol FC? Are they solvers as well?") %}
+
+<p>
+No, actually <a href="http://pysolfc.sourceforge.net/">PySol FC</a>, which
+is short for "Python Solitaire Fan Club edition" is an open source suite of
+card solitaire / patience games, which includes, but is not limited to several
+Freecell-like variants. While it includes some solver and hints functionality
+and makes use of Freecell Solver and other solvers, it contains many other
+features including allowing a human to play the games on their own.
+</p>
+
+<p>
+Note that Shlomi Fish, who is the chief maintainer of Freecell Solver, also
+co-maintains PySol FC so he tends to talk about his work on both.
+</p>
+
+<p>
+For some more information, see:
+</p>
+
+<ol>
+
+<li>
+<p>
+<a href="https://en.wikipedia.org/wiki/PySol">Wikipedia Page</a>
+</p>
+</li>
+</ol>
+
+{% endcall %}
+
+{% call h3_section(id="is_freecell_the_ms_game",title="“Freecell”? Is it the Microsoft/Windows game?") %}
+
+<p>
+Yes, and no. The "Freecell" game (see its <a href="https://en.wikipedia.org/wiki/FreeCell">wikipedia entry</a>)
+was invented by Paul Alfille based on an earlier game called "Baker's Game"
+and was implemented for the PLATO educational computer system back in 1978. The
+<a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">Microsoft Windows Freecell</a>
+implementation came later and made the game much more well-known
+and popular, but had some limitations. While Freecell Solver can handle the
+MS FreeCell deals, parameters and rules perfectly fine, it also has run-time
+support for many variations on them, and accepts any arbitrary layout of the
+cards, including those at mid play, as input.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="is_it_foss",title="Is Freecell Solver open source?") %}
+
+<p>
+Freecell Solver is
+<a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">free and
+open source software</a>
+under the permissive and common
+<a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
+and provided free-of-charge for download or use online. You can find the
+latest development sources in
+<a href="https://github.com/shlomif/fc-solve">its GitHub repository</a>
+and call also download release source archive files from
+<a href="{{ base_path }}download.html">the download page</a>. Share and enjoy!
+</p>
+
+<p>
+Contributions are welcome.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="exceeded_512GB",title="What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?") %}
+
+<p>
+We were trying to conclusively determine whether MS deal no. 384,243 was
+<a href="http://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html">winnable or impossible to solve with <b>two</b> freecells</a>.
+This was done by running the depth_dbm_fc_solver on an <a href="https://en.wikipedia.org/wiki/Supercomputer">HPC</a>
+node which used <a href="https://en.wikipedia.org/wiki/X86-64">x86-64</a> processors
+and had 512 gigabytes of RAM. We were given indirect access to it thanks
+to a certain university. Note that steps were taken to reduce the RAM
+consumption and it seems unlikely that there were memory leaks in the code.
+</p>
+
+<p>
+We have been able to complete a <a href="{{ base_path }}charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
+milliard range</a> using an AWS node with only 256 GB of RAM and about
+40-50 GB of hard disk (though we could probably use less or make use
+of <a href="https://github.com/s3fs-fuse/s3fs-fuse">s3fs-fuse</a> or similar
+— to save on costs).
+</p>
+
+<p>
+It is true that
+<a href="https://en.wikiquote.org/wiki/Bill_Gates#Misattributed">a quote mis-attributed to Bill Gates</a>
+says “640 kB [of RAM] ought to be enough for anybody” but many computing
+tasks require much more than that and Freecell is <a href="#complexity">a hard
+(NP-complete) problem</a>. There may be ways to reduce RAM consumption further
+using a different algorithm, by distributing calculations, or other techniques.
+As usual, patches/<a href="https://help.github.com/articles/about-pull-requests/">pull requests</a> or ideas are welcome.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="machine_learning",title="Have you considered using machine learning, neural networks, or deep learning for improving the solver?") %}
+
+<p>
+I did, but I didn't get too far, in part due to not investing a lot of time, and in part due to lacking sufficient knowledge.
+The closest we got may be <a href="https://github.com/shlomif/patsolve/">patsolve</a> which utilises
+a <a href="https://en.wikipedia.org/wiki/Genetic_programming">genetic programming</a>
+program to calculate optimal parameters (note that I didn't write it originally so I'm hazy about
+its exact algorithm) and which Freecell Solver can use, and an <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1388">academic solver</a>
+that performs poorly compared to some of the solvers of hobbyists, while using methods that were trendy in the academia
+during the time in which it was written.
+</p>
+
+<p>
+Despite common misconception, there are other approaches to <a href="https://en.wikipedia.org/wiki/Artificial_intelligence">AI</a>
+than machine learning, and AI is: 1. Not "magic". 2. Tends to involve <a href="https://en.wikipedia.org/wiki/Heuristic">heuristics</a>
+that while performing well on most inputs, can sometimes take a lot of time in a minority of them.
+Freecell Solver is not an exception to either item, as even its best performing meta-scans can
+be time consuming for a small percentage of the input layouts.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="i_want_a_gui",title="Where can I find a GUI for Freecell Solver? I dislike the fact that it is a command line program.") %}
+
+<p>
+Freecell Solver provides some <a href="https://en.wikipedia.org/wiki/Application_programming_interface">APIs</a>
+written in C (and which can be compiled for browser-side use using <a href="https://emscripten.org/">Emscripten</a>) which
+software developers can use to write other apps and front ends. Aside from the <a href="https://en.wikipedia.org/wiki/Command-line_interface">command
+line</a> programs that are part of the Freecell Solver distribution, you can opt to use:
+</p>
+
+<ol>
+<li>
+<p>
+<a href="{{ base_path }}js-fc-solve/">The web-based solver</a>
+which provides a graphical and animated preview of the solution.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://pysolfc.sourceforge.io/">PySol FC</a> - an
+application for desktops and Android devices, that has integrated
+Freecell Solver.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://kde.org/applications/games/org.kde.kpat">KPatience</a> -
+a desktop game.
+</p>
+</li>
+</ol>
+
+<p>
+We believe competent software developers can write other front ends and wrappers using
+the provided APIs.
+</p>
+
+{% endcall %}
+
+{% endcall %}
+
+</div>
+
+{% endblock %}

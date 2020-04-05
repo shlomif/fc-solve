@@ -3,84 +3,46 @@ package FC_Solve::SplitCmdLine;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw/ bin_exe_raw /;
-use IPC::Open2 qw(open2);
+use FC_Solve::Paths qw( normalize_lf );
 
-my $SPLIT_EXE = bin_exe_raw([qw#t out-split-cmd-line.exe#]);
+use FC_Solve::InlineWrap (
+    C => <<"EOF",
+#include "split_cmd_line.c"
+
+SV * _internal_parse_args(char * input) {
+    AV *const results = (AV *)sv_2mortal((SV *)newAV());
+    fcs_args_man args = fc_solve_args_man_chop(input);
+
+    for ( int i=0 ; i < args.argc ; ++i)
+    {
+        av_push(results, newSVpv(args.argv[i], 0));
+    }
+
+    fc_solve_args_man_free(&args);
+    return newRV((SV *)results);
+}
+
+EOF
+);
 
 sub split_cmd_line_string
 {
-    my ($class, $input_string) = @_;
-
-    my ($child_out, $child_in);
-
-    my $pid = open2($child_out , $child_in, $SPLIT_EXE);
-
-    print {$child_in} $input_string;
-    close($child_in);
-
-    my @have;
-    while (my $line = <$child_out>)
-    {
-        chomp($line);
-        if ($line !~ m{\A<<(.*)\z})
-        {
-            die "Invalid output from program.";
-        }
-        my $terminator = $1;
-
-        my $item = "";
-        my $found_terminator = 0;
-        while ($line = <$child_out>)
-        {
-            if ($line eq "$terminator\n")
-            {
-                $found_terminator = 1;
-                last;
-            }
-            $item .= $line;
-        }
-        if (!$found_terminator)
-        {
-            die "Could not find terminator '$terminator' in output.";
-        }
-        chomp($item);
-        push @have, $item;
-    }
-
-    close ($child_out);
-
-    return (\@have);
+    my ( $class, $input_string ) = @_;
+    return _internal_parse_args( normalize_lf($input_string) );
 }
 
 1;
 
-=head1 COPYRIGHT & LICENSE
+__END__
 
-Copyright 2013 by Shlomi Fish
+=head1 COPYRIGHT AND LICENSE
 
-This program is distributed under the MIT (X11) License:
-L<http://www.opensource.org/licenses/mit-license.php>
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+Copyright (c) 2013 Shlomi Fish
 
 =cut

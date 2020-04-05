@@ -83,10 +83,6 @@ L<http://annocpan.org/dist/Games-Solitaire-Verify>
 
 L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
 
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Games-Solitaire-Verify>
-
 =back
 
 =head1 AUTHORS
@@ -97,9 +93,7 @@ Shlomi Fish, L<http://www.shlomifish.org/> .
 
 Copyright 2010 Shlomi Fish.
 
-This program is released under the following license: MIT/X11
+This program is released under the following license: MIT/Expat
 ( L<http://www.opensource.org/licenses/mit-license.php> ).
 
 =cut
-
-

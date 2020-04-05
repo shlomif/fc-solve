@@ -1,4 +1,4 @@
-SUBDIRS( presets )
+ADD_SUBDIRECTORY ("presets")
 
 SET (suf "/presets/")
 SET (PRESETS_DATA_DIR "${PKGDATADIR}${suf}")

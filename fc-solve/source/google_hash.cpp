@@ -1,31 +1,14 @@
-/* Copyright (c) 2010 Shlomi Fish
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
 /*
- * google_hash.cpp - module file for Google's dense_hash_map as adapted
- * for Freecell Solver.
+ * This file is part of Freecell Solver. It is subject to the license terms in
+ * the COPYING.txt file found in the top-level directory of this distribution
+ * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+ * Freecell Solver, including this file, may be copied, modified, propagated,
+ * or distributed except according to the terms contained in the COPYING file.
+ *
+ * Copyright (c) 2010 Shlomi Fish
  */
-
+// google_hash.cpp - module file for Google's dense_hash_map as adapted
+// for Freecell Solver.
 #include "google_hash.h"
 
 #if ((FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE) ||  \
@@ -53,10 +36,9 @@ using google::sparse_hash_set; // namespace where class lives by default
 typedef unsigned long int ub4; /* unsigned 4-byte quantities */
 typedef unsigned char ub1;
 
-static GCC_INLINE ub4 perl_hash_function(
-    register const ub1 *s_ptr, /* the key */
-    register const ub4 length  /* the length of the key */
-    )
+static inline ub4 perl_hash_function(register const ub1 *s_ptr, /* the key */
+    register const ub4 length /* the length of the key */
+)
 {
     register ub4 hash_value_int = 0;
     register const ub1 *s_end = s_ptr + length;
@@ -85,7 +67,7 @@ struct state_hash
 {
     int operator()(const char *s1) const
     {
-        return perl_hash_function((const ub1 *)s1, sizeof(fcs_state_t));
+        return perl_hash_function((const ub1 *)s1, sizeof(fcs_state));
     }
 };
 
@@ -95,15 +77,17 @@ typedef sparse_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 typedef dense_hash_set<char *, state_hash, state_equality> StatesGoogleHash;
 #endif
 
-extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
+extern "C" fcs_states_google_hash_handle fc_solve_states_google_hash_new()
 {
+    static fcs_state deleted_key = {0};
     StatesGoogleHash *ret = new StatesGoogleHash;
 
 #if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_STATES_GOOGLE_HASH__DENSE)
     ret->set_empty_key(NULL);
 #endif
+    ret->set_deleted_key((char *)&deleted_key);
 
-    return (fcs_states_google_hash_handle_t)(ret);
+    return (fcs_states_google_hash_handle)(ret);
 }
 
 /*
@@ -113,8 +97,8 @@ extern "C" fcs_states_google_hash_handle_t fc_solve_states_google_hash_new()
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern "C" fcs_bool_t fc_solve_states_google_hash_insert(
-    fcs_states_google_hash_handle_t void_hash, void *key, void **existing_key)
+extern "C" bool fc_solve_states_google_hash_insert(
+    fcs_states_google_hash_handle void_hash, void *key, void **existing_key)
 {
     StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;
     std::pair<StatesGoogleHash::iterator, bool> result =
@@ -124,18 +108,18 @@ extern "C" fcs_bool_t fc_solve_states_google_hash_insert(
     if (result.second)
     {
         *existing_key = NULL;
-        return FALSE;
+        return false;
     }
     else
     {
         *existing_key = (*(result.first));
 
-        return TRUE;
+        return true;
     }
 }
 
 extern "C" void fc_solve_states_google_hash_free(
-    fcs_states_google_hash_handle_t void_hash)
+    fcs_states_google_hash_handle void_hash)
 {
     StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;
 
@@ -145,8 +129,8 @@ extern "C" void fc_solve_states_google_hash_free(
 }
 
 extern void fc_solve_states_google_hash_foreach(
-    fcs_states_google_hash_handle_t void_hash,
-    fcs_bool_t (*should_delete_ptr)(void *key, void *context), void *context)
+    fcs_states_google_hash_handle void_hash,
+    bool (*should_delete_ptr)(void *key, void *context), void *context)
 {
     StatesGoogleHash *hash = (StatesGoogleHash *)void_hash;
 
@@ -187,15 +171,17 @@ typedef sparse_hash_set<char *, column_hash, column_equality> ColumnsGoogleHash;
 typedef dense_hash_set<char *, column_hash, column_equality> ColumnsGoogleHash;
 #endif
 
-extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
+extern "C" fcs_columns_google_hash_handle fc_solve_columns_google_hash_new()
 {
+    static char deleted_key[3] = "\xFF\xFF";
     ColumnsGoogleHash *ret = new ColumnsGoogleHash;
 
 #if (FCS_WHICH_STATES_GOOGLE_HASH == FCS_WHICH_COLUMNS_GOOGLE_HASH__DENSE)
     ret->set_empty_key(NULL);
 #endif
+    ret->set_deleted_key(deleted_key);
 
-    return (fcs_columns_google_hash_handle_t)(ret);
+    return (fcs_columns_google_hash_handle)(ret);
 }
 
 /*
@@ -205,8 +191,8 @@ extern "C" fcs_columns_google_hash_handle_t fc_solve_columns_google_hash_new()
  * Returns 1 if the key is not new and *existing_key / *existing_val
  * was set to it.
  */
-extern "C" fcs_bool_t fc_solve_columns_google_hash_insert(
-    fcs_columns_google_hash_handle_t void_hash, void *key, void **existing_key)
+extern "C" bool fc_solve_columns_google_hash_insert(
+    fcs_columns_google_hash_handle void_hash, void *key, void **existing_key)
 {
     ColumnsGoogleHash *hash = (ColumnsGoogleHash *)void_hash;
     std::pair<ColumnsGoogleHash::iterator, bool> result =
@@ -216,18 +202,18 @@ extern "C" fcs_bool_t fc_solve_columns_google_hash_insert(
     if (result.second)
     {
         *existing_key = NULL;
-        return FALSE;
+        return false;
     }
     else
     {
         *existing_key = (*(result.first));
 
-        return TRUE;
+        return true;
     }
 }
 
 extern "C" void fc_solve_columns_google_hash_free(
-    fcs_columns_google_hash_handle_t void_hash)
+    fcs_columns_google_hash_handle void_hash)
 {
     ColumnsGoogleHash *hash = (ColumnsGoogleHash *)void_hash;
 

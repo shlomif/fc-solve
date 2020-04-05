@@ -3,11 +3,16 @@
 use strict;
 use warnings;
 
-use Test::More tests => 32;
+use Test::More tests => 45;
 use Test::Differences qw/ eq_or_diff /;
+use Path::Tiny qw/ path /;
+use Test::Trap
+    qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
-use FC_Solve::Paths qw/ bin_exe_raw /;
+use FC_Solve::Paths
+    qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf src_script /;
 use FC_Solve::Trim qw/trim_trail_ws/;
+use Math::BigInt lib => 'GMP';
 
 sub _test_out
 {
@@ -17,18 +22,81 @@ sub _test_out
 
     my $cmd_line_args = $args->{cmd};
 
-    my $got = `../board_gen/make_pysol_freecell_board.py @$cmd_line_args`;
+    my $got = `$MAKE_PYSOL @$cmd_line_args`;
 
-    eq_or_diff(
-        $got,
-        $args->{expected},
-        $args->{blurb}
-    );
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 
     return;
 }
 
-my $MAKE_MS_EXE = bin_exe_raw(['board_gen', 'pi-make-microsoft-freecell-board']);
+sub _test_find_index
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my ($args) = @_;
+
+    my $cmd_line_args = $args->{cmd};
+
+    my $got = `$FIND_DEAL_INDEX @$cmd_line_args`;
+
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
+
+    return;
+}
+
+my $dir = path("gen-multi-foo");
+
+sub _reset_dir
+{
+    $dir->remove_tree;
+    $dir->mkpath;
+}
+
+sub _test_gen_multi
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my ($args) = @_;
+
+    my $cmd_line_args = $args->{cmd};
+    my $exe           = $args->{exe};
+
+    _reset_dir;
+
+    # print STDERR "<<$GEN_MULTI @$cmd_line_args>>\n";
+    my $got = `$exe @$cmd_line_args`;
+
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
+
+    return;
+}
+
+my $MAKE_MS_EXE =
+    bin_exe_raw( [ 'board_gen', 'pi-make-microsoft-freecell-board' ] );
+my $GEN_MULTI__C =
+    bin_exe_raw( [ 'board_gen', 'gen-multiple-solitaire-layouts--c' ] );
+
+{
+    my $i = ( Math::BigInt->new(1) << 39 ) + 3;
+    my $status;
+    trap
+    {
+        $status = system( $MAKE_MS_EXE, "-t", $i );
+    };
+
+    # TEST
+    ok( $status != 0, "error" );
+
+    # TEST
+    is( $trap->stdout, "", "empty stdout" );
+
+    my $NEEDLE =
+"Deal No. \"$i\" is out of the valid range ( 1 - @{[(Math::BigInt->new(1) << 33)-1]} )!";
+
+    # TEST
+    like( $trap->stderr, qr#\A\Q$NEEDLE\E\r?\n#, "valid error on out of range",
+    );
+}
 
 sub _test_ms
 {
@@ -38,13 +106,9 @@ sub _test_ms
 
     my $cmd_line_args = $args->{cmd};
 
-    my $got = trim_trail_ws(scalar `$MAKE_MS_EXE @$cmd_line_args`);
+    my $got = trim_trail_ws( scalar `$MAKE_MS_EXE @$cmd_line_args` );
 
-    eq_or_diff(
-        $got,
-        $args->{expected},
-        $args->{blurb}
-    );
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 
     return;
 }
@@ -52,8 +116,8 @@ sub _test_ms
 # TEST
 _test_out(
     {
-        blurb => "Testing for good Baker's Dozen",
-        cmd => [qw(-t 24 bakers_dozen)],
+        blurb    => "Testing for good Baker's Dozen",
+        cmd      => [qw(-t 24 bakers_dozen)],
         expected => <<'EOF',
 KD 8H AC AS
 KC 3D 8C 2S
@@ -75,8 +139,8 @@ EOF
 # TEST
 _test_out(
     {
-        blurb => "Testing for good Baker's Dozen",
-        cmd => [qw(-t 10800 bakers_dozen)],
+        blurb    => "Testing for good Baker's Dozen",
+        cmd      => [qw(-t 10800 bakers_dozen)],
         expected => <<'EOF',
 KC 3S AC AD
 JD 9H 6H JS
@@ -117,11 +181,22 @@ AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 EOF
 
+my $BOARD_25_T = <<'EOF';
+5C KS 6H 4C 6C 9D TD
+2D 7S 6S QS 3S 6D TS
+JC 4D 5D 7H QD 2C TH
+9H 3H AS JS AD AH 8S
+4S 2H JH TC JD 3C
+KH 4H 8H 9S 7D 8C
+9C 2S AC KD 5H 8D
+7C QH KC QC 3D 5S
+EOF
+
 # TEST
 _test_out(
     {
-        blurb => "Testing for Freecell",
-        cmd => [qw(24 freecell)],
+        blurb    => "Testing for Freecell",
+        cmd      => [qw(24 freecell)],
         expected => $BOARD_24,
     }
 );
@@ -129,8 +204,8 @@ _test_out(
 # TEST
 _test_ms(
     {
-        blurb => "Testing for Freecell",
-        cmd => [qw(24)],
+        blurb    => "Testing for Freecell",
+        cmd      => [qw(24)],
         expected => $BOARD_24,
     }
 );
@@ -138,8 +213,8 @@ _test_ms(
 # TEST
 _test_ms(
     {
-        blurb => "Testing for -t pi-ms-make Freecell",
-        cmd => [qw(-t 24)],
+        blurb    => "Testing for -t pi-ms-make Freecell",
+        cmd      => [qw(-t 24)],
         expected => $BOARD_24_T,
     }
 );
@@ -158,8 +233,8 @@ EOF
 # TEST
 _test_ms(
     {
-        blurb => "Testing pi-ms-make long seed",
-        cmd => [qw(-t 3000000000)],
+        blurb    => "Testing pi-ms-make long seed",
+        cmd      => [qw(-t 3000000000)],
         expected => $MS3E9,
     }
 );
@@ -178,8 +253,8 @@ EOF
 # TEST
 _test_ms(
     {
-        blurb => "Testing pi-ms-make long seed",
-        cmd => [qw(-t 6000000000)],
+        blurb    => "Testing pi-ms-make long seed",
+        cmd      => [qw(-t 6000000000)],
         expected => $MS6E9,
     }
 );
@@ -187,8 +262,8 @@ _test_ms(
 # TEST
 _test_out(
     {
-        blurb => "Testing for Bakers' Game",
-        cmd => [qw(24 bakers_game)],
+        blurb    => "Testing for Bakers' Game",
+        cmd      => [qw(24 bakers_game)],
         expected => <<'EOF',
 4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
@@ -202,14 +277,13 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Testing for Forecell",
-        cmd => [qw(1977 forecell)],
+        blurb    => "Testing for Forecell",
+        cmd      => [qw(1977 forecell)],
         expected => <<'EOF',
-FC: 2D 8H 5S 6H
+Freecells: 2D 8H 5S 6H
 QH JC 7D 8S 4D 2C
 JD JH KS 9C QD 2S
 AD 10S 9D 3C 9S AC
@@ -222,14 +296,13 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Seahaven 100 Output",
-        cmd => [qw(100 seahaven_towers)],
+        blurb    => "Seahaven 100 Output",
+        cmd      => [qw(100 seahaven_towers)],
         expected => <<'EOF',
-FC: - 9S 5S
+Freecells: - 9S 5S
 AD 5C 9C 9H 2C
 JS 9D 6H 7H 2H
 4S 4H AC 3C KH
@@ -244,12 +317,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Simple Simon 250",
-        cmd => [qw(250 simple_simon)],
+        blurb    => "Simple Simon 250",
+        cmd      => [qw(250 simple_simon)],
         expected => <<'EOF',
 6S 6C 10C JC 9H 8D 3C 5S
 JH 2S KH 10S 7D 4D 8S 5D
@@ -265,13 +337,11 @@ EOF
     }
 );
 
-
-
 # TEST
 _test_out(
     {
-        blurb => "Fan 4200",
-        cmd => [qw(-t 4200 fan)],
+        blurb    => "Fan 4200",
+        cmd      => [qw(-t 4200 fan)],
         expected => <<'EOF',
 7H 9H 3S
 4C 8H 8C
@@ -295,14 +365,13 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Eight Off 314",
-        cmd => [qw(-t 314 eight_off)],
+        blurb    => "Eight Off 314",
+        cmd      => [qw(-t 314 eight_off)],
         expected => <<'EOF',
-FC: TD - 8D - 5D - 6S -
+Freecells: TD - 8D - 5D - 6S -
 7C QD 8H AS AD 2S
 5C 5H 2C QH 8C TS
 3H JD 4C 3S AH 9C
@@ -315,12 +384,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "der_katzenschwantz 103",
-        cmd => [qw(-t 103 der_katzenschwantz)],
+        blurb    => "der_katzenschwantz 103",
+        cmd      => [qw(-t 103 der_katzenschwantz)],
         expected => <<'EOF',
 JC JS AH 2H 3H 2S 2D 9D 9C 4C QD TH 6H 6S 9C 3C 5H JD 4H JH 9S 7D 4D 4C JH QH 9D 2D
 KC
@@ -335,12 +403,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "yukon 973",
-        cmd => [qw(-t 973 yukon)],
+        blurb    => "yukon 973",
+        cmd      => [qw(-t 973 yukon)],
         expected => <<'EOF',
 TD
 <QC> 5H TH 9C 7H 4D
@@ -353,12 +420,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "beleaguered_castle 99",
-        cmd => [qw(-t 99 beleaguered_castle)],
+        blurb    => "beleaguered_castle 99",
+        cmd      => [qw(-t 99 beleaguered_castle)],
         expected => <<'EOF',
 Foundations: H-A C-A D-A S-A
 KD 3D JS 8C JC 6C
@@ -373,12 +439,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "streets_and_alleys 1080",
-        cmd => [qw(-t 1080 streets_and_alleys)],
+        blurb    => "streets_and_alleys 1080",
+        cmd      => [qw(-t 1080 streets_and_alleys)],
         expected => <<'EOF',
 8D 5C KS KC 2C 7C AS
 3H 8S 8C AD 4D TC 9C
@@ -392,12 +457,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "streets_and_alleys 1080",
-        cmd => [qw(-t 1080 citadel)],
+        blurb    => "streets_and_alleys 1080",
+        cmd      => [qw(-t 1080 citadel)],
         expected => <<'EOF',
 Foundations: H-2 C-2 D-2 S-2
 8D 5C 8C 6D 7S 6S
@@ -412,12 +476,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "gypsy 200",
-        cmd => [qw(-t 200 gypsy)],
+        blurb    => "gypsy 200",
+        cmd      => [qw(-t 200 gypsy)],
         expected => <<'EOF',
 Talon: 9C AD 6S KH 8D 3D TC QC AD QC 7S AH 6C QH 8S 5C KD 4H 2D 8C JD 9S 7H 4C JS JH 9D JC 4D 9S AC QS 5S KS TD 2H 4H KC TC 2C JD 3H 3D KD 7C 9C 8C 6D 4C 3S TH 2S 5D 7D 6H TH 8H JS 6S 2C 4S 3C JH 2D TD 3H 5C QS AH AC 4D 5H 2H 2S JC 9D AS QD 9H 6C
 <3S> <7H> 7D
@@ -432,12 +495,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "klondike 460",
-        cmd => [qw(-t 460 klondike)],
+        blurb    => "klondike 460",
+        cmd      => [qw(-t 460 klondike)],
         expected => <<'EOF',
 Talon: 3C AD AH KH KS 2H 3S 4D QS TD 8H AS 8D 6C 5D 4S 3H 6D 2C 7S AC 9S 7C TC
 QC
@@ -451,12 +513,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "small_harp 468",
-        cmd => [qw(-t 468 small_harp)],
+        blurb    => "small_harp 468",
+        cmd      => [qw(-t 468 small_harp)],
         expected => <<'EOF',
 Talon: 8S AD 6S 7H AC 3S 9H 9D 8D TD 2S QH 4S JH 9C 4C QS AS AH 3H 4H KD 2D 5D
 <2H> <5C> <TH> <6C> <5S> <TS> 7D
@@ -470,12 +531,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Simple Simon 7537454 (Long seed)",
-        cmd => [qw(-t 7537454 simple_simon)],
+        blurb    => "Simple Simon 7537454 (Long seed)",
+        cmd      => [qw(-t 7537454 simple_simon)],
         expected => <<'EOF',
 KD TH 7H 2H 3S 7D KC 6S
 QD JC 5C TS 8H TD 5D 4C
@@ -491,32 +551,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Freecell PySolFC 800600",
-        cmd => [qw(-F 800600)],
-        expected => <<'EOF',
-3H 10S QH 10D 8D JC AS
-3S KC 2D 6D 5S 10H 5C
-JH 6S 4D 8S 7H 7D 6H
-4C 7C 9D AH 4H 5D 8C
-7S KS QD 3D 5H 2H
-8H 9H 2C AC KD AD
-JS 9C 4S 9S 10C 2S
-JD QS QC KH 3C 6C
-EOF
-    }
-);
-
-
-
-# TEST
-_test_out(
-    {
-        blurb => "Freecell PySolFC 800600 (Long flag).",
-        cmd => [qw(--pysolfc 800600)],
+        blurb    => "Freecell PySolFC 800600",
+        cmd      => [qw(-F 800600)],
         expected => <<'EOF',
 3H 10S QH 10D 8D JC AS
 3S KC 2D 6D 5S 10H 5C
@@ -533,8 +572,26 @@ EOF
 # TEST
 _test_out(
     {
-        blurb => "Freecell PySolFC 800600",
-        cmd => [qw(-F -t 800600)],
+        blurb    => "Freecell PySolFC 800600 (Long flag).",
+        cmd      => [qw(--pysolfc 800600)],
+        expected => <<'EOF',
+3H 10S QH 10D 8D JC AS
+3S KC 2D 6D 5S 10H 5C
+JH 6S 4D 8S 7H 7D 6H
+4C 7C 9D AH 4H 5D 8C
+7S KS QD 3D 5H 2H
+8H 9H 2C AC KD AD
+JS 9C 4S 9S 10C 2S
+JD QS QC KH 3C 6C
+EOF
+    }
+);
+
+# TEST
+_test_out(
+    {
+        blurb    => "Freecell PySolFC 800600",
+        cmd      => [qw(-F -t 800600)],
         expected => <<'EOF',
 3H TS QH TD 8D JC AS
 3S KC 2D 6D 5S TH 5C
@@ -548,12 +605,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "Freecell PySolFC 2400240 Simple Simon",
-        cmd => [qw(-F -t 2400240 simple_simon)],
+        blurb    => "Freecell PySolFC 2400240 Simple Simon",
+        cmd      => [qw(-F -t 2400240 simple_simon)],
         expected => <<'EOF',
 9D 5C 7D 4H TH 7S KH AC
 TC KD AD 5S 9C 5D AH QC
@@ -569,12 +625,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "PySolFC 45508856405861261758 black_hole",
-        cmd => [qw(--pysolfc -t 45508856405861261758 black_hole)],
+        blurb    => "PySolFC 45508856405861261758 black_hole",
+        cmd      => [qw(--pysolfc -t 45508856405861261758 black_hole)],
         expected => <<'EOF',
 Foundations: AS
 2S 3D 6S
@@ -598,12 +653,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "make_pysol --ms board No. 100 - the FC-Pro board.",
-        cmd => [qw(--ms -t 100000)],
+        blurb    => "make_pysol --ms board No. 100 - the FC-Pro board.",
+        cmd      => [qw(--ms -t 100000)],
         expected => <<'EOF',
 5C 6S JC 2D 2C 8S 3C
 QS 7S 9C QD JD 9D AS
@@ -617,12 +671,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "make_pysol -M board No. 100 - the FC-Pro board.",
-        cmd => [qw(-M -t 100000)],
+        blurb    => "make_pysol -M board No. 100 - the FC-Pro board.",
+        cmd      => [qw(-M -t 100000)],
         expected => <<'EOF',
 5C 6S JC 2D 2C 8S 3C
 QS 7S 9C QD JD 9D AS
@@ -636,12 +689,11 @@ EOF
     }
 );
 
-
 # TEST
 _test_out(
     {
-        blurb => "PySolFC black_hole 2",
-        cmd => [qw(--pysolfc -t 2 all_in_a_row)],
+        blurb    => "PySolFC black_hole 2",
+        cmd      => [qw(--pysolfc -t 2 all_in_a_row)],
         expected => <<'EOF',
 Foundations: -
 QD 6D KS 2H
@@ -664,8 +716,8 @@ EOF
 # TEST
 _test_out(
     {
-        blurb => "make_pysol --ms board long seed.",
-        cmd => [qw(--ms -t 3000000000)],
+        blurb    => "make_pysol --ms board long seed.",
+        cmd      => [qw(--ms -t 3000000000)],
         expected => $MS3E9,
     }
 );
@@ -673,36 +725,162 @@ _test_out(
 # TEST
 _test_out(
     {
-        blurb => "make_pysol --ms board even longer (> 4 G) seed.",
-        cmd => [qw(--ms -t 6000000000)],
+        blurb    => "make_pysol --ms board even longer (> 4 G) seed.",
+        cmd      => [qw(--ms -t 6000000000)],
         expected => $MS6E9,
     }
 );
 
+# TEST
+_test_find_index(
+    {
+        blurb    => "find-deal-index for deal No. 1941",
+        cmd      => [ '--ms', bin_board("1941.board") ],
+        expected => "Found deal = 1941\n",
+    }
+);
+
+# TEST
+_test_find_index(
+    {
+        blurb => "find-deal-index with -o",
+        cmd =>
+            [ '--ms', '-o', bin_board("24.find.txt"), bin_board("24.board") ],
+        expected => q{},
+    }
+);
+
+# TEST
+eq_or_diff(
+    [ normalize_lf( scalar path( bin_board("24.find.txt") )->slurp_utf8 ) ],
+    ["Found deal = 24\n"], "-o flag output to file.",
+);
+
+sub _test_autoplay
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+
+    my ($args) = @_;
+
+    my $cmd_line_args = $args->{cmd};
+
+    my $got = trim_trail_ws(
+        scalar
+            `$^X @{[src_script('horne-autoplay-board.pl')]} @$cmd_line_args` );
+
+    eq_or_diff( $got, $args->{expected}, $args->{blurb} );
+
+    return;
+}
+
+# TEST
+_test_autoplay(
+    {
+        blurb    => "24 horne prune/autoplay",
+        cmd      => bin_board("24.board"),
+        expected => <<'EOF',
+Foundations: H-0 C-0 D-0 S-A
+Freecells:
+: 4C 2C 9C 8C QS 4S 2H
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D
+: 5D 2S JC 5C JH 6D
+: 2D KD TH TC TD 8D
+: 7H JS KH TS KC 7C
+: AH 5S 6S AD 8H JD
+: 7S 6C 7D 4D 8S 9D
+EOF
+    }
+);
+
+# TEST
+_test_find_index(
+    {
+        blurb    => "find-deal-index for no newline board",
+        cmd      => [ '--ms', bin_board("24.no-newline.board") ],
+        expected => "Found deal = 24\n",
+    }
+);
+
+# TEST
+_test_gen_multi(
+    {
+        blurb => "gen-multi for black_hole",
+        cmd   => [
+            '--game',   'black_hole',
+            '--dir',    $dir . '',
+            '--prefix', 'pys',
+            '--suffix', '.board',
+            '--',       '45508856405861261758'
+        ],
+        exe      => $GEN_MULTI,
+        expected => '',
+    }
+);
+
+sub _child_slurp
+{
+    my ($basename) = @_;
+
+    return [ normalize_lf( scalar $dir->child($basename)->slurp_utf8 ) ];
+}
+
+# TEST
+eq_or_diff(
+    _child_slurp('pys45508856405861261758.board'),
+    [<<'EOF'], "gen-multi",
+Foundations: AS
+2S 3D 6S
+2C 5D 7H
+3C 7C 3S
+4C AC JS
+9D QC 4S
+QD 6C 8H
+TC JC TS
+8D 7S 8S
+7D 3H 5H
+JD 9C 2H
+TD 6D QH
+2D KH KC
+4D KD AH
+4H JH 5C
+AD 9S QS
+6H KS TH
+5S 9H 8C
+EOF
+);
+
+$dir->remove_tree;
+
+$dir = path("gen-multi-yoo--c");
+
+# TEST
+_test_gen_multi(
+    {
+        blurb => "gen-multi--c for freecell",
+        cmd => [ '--dir', $dir . '', '--suffix', '.board', 'seq', '24', '25', ],
+        exe => $GEN_MULTI__C,
+        expected => '',
+    }
+);
+
+# TEST
+eq_or_diff( _child_slurp('24.board'), [$BOARD_24_T], "gen-multi-c 24", );
+
+# TEST
+eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
+
+$dir->remove_tree;
+__END__
+
 =head1 COPYRIGHT AND LICENSE
+
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
 
 Copyright (c) 2008 Shlomi Fish
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
 =cut
-

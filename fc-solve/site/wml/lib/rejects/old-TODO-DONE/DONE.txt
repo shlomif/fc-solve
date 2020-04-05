@@ -17,4 +17,3 @@ and briefer text.
 
 * “Bookmark” a deal using GET parameters in the URL, in order to facilitate
 debugging and sharing.
-

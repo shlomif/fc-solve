@@ -1,64 +1,151 @@
-from TAP.Simple import diag, is_ok, ok
-from ctypes import byref, c_char_p, c_double, c_int, c_long, CDLL
+from freecell_solver import FreecellSolver
 
 
-class FC_Solve:
-    # TEST:$num_befs_weights=5;
-    NUM_BEFS_WEIGHTS = 5
+class FreecellSolverTestSuite(FreecellSolver):
+    def __init__(self, ut):
+        FreecellSolver.__init__(self)
+        self.ffi.cdef('''
+double fc_solve_user_INTERNAL_get_befs_weight(void * user, int idx);
+int freecell_solver_user_INTERNAL_compile_all_flares_plans(void * instance,
+char * * s);
+int fc_solve_user_INTERNAL_get_flares_plan_num_items(void * i);
+char * fc_solve_user_INTERNAL_get_flares_plan_item_type(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(void * i,
+int item_idx);
+int fc_solve_user_INTERNAL_compile_all_flares_plans(void * i,
+char **error_string);
+int fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+    void * api_instance);
+int fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+    void * api_instance, int depth_idx);
+int freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+    void * api_instance, int flag_idx);
+char * freecell_solver_user_get_unrecognized_cmd_line_flag(
+    void *, int);
+        ''')
+        self.unittest = ut
 
-    def __init__(self):
-        self.fcs = CDLL("../libfreecell-solver.so")
-
-        self.user = self.fcs.freecell_solver_user_alloc()
-
-        self.get_befs_weight = self.fcs.fc_solve_user_INTERNAL_get_befs_weight
-
-        self.get_befs_weight.restype = c_double
+    def _get_plan_type(self, item_idx):
+        return self.ffi.string(
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_type(
+                self.user, item_idx))
 
     # TEST:$input_cmd_line=0;
-    def input_cmd_line(self, name, cmd_line_args):
+    def input_cmd_line__test(self, name, cmd_line_args):
+        ret = self.input_cmd_line(cmd_line_args)
+        # TEST:$input_cmd_line++;
+        self._eq(
+            ret['last_arg'], ret['cmd_line_args_len'],
+            name + " - assign weights - processed two arguments")
 
-        last_arg = c_int()
-        error_string = c_char_p()
-        known_params = c_char_p(None)
-        opened_files_dir = c_char_p(None)
+    def _eq(self, x, y, blurb):
+        return self.unittest.assertEqual(x, y, blurb)
 
-        cmd_line_args_tuple = tuple(cmd_line_args)
+    # TEST:$compile_flares_plan_ok=0;
+    def compile_flares_plan_ok(self, name, flares_plan_string):
+        error_string = self.ffi.new('char * *')
 
-        prefix = 'freecell_solver_user_cmd_line'
-        func = 'parse_args_with_file_nesting_count'
-
-        self.fcs[prefix + '_' + func](
-            self.user,  # instance
-            len(cmd_line_args),    # argc
-            ((c_char_p * len(cmd_line_args))(
-                *tuple(bytes(s, 'UTF-8') for s in cmd_line_args_tuple)
-            )),  # argv
-            0,   # start_arg
-            byref(known_params),  # known_params
-            None,   # callback
-            None,   # callback_context
-            byref(error_string),  # error_string
-            byref(last_arg),    # last_arg
-            c_int(-1),  # file_nesting_count
-            opened_files_dir
+        myplan = self.ffi.NULL
+        if flares_plan_string:
+            myplan = bytes(flares_plan_string, 'UTF-8')
+        ret_code = self.lib.freecell_solver_user_set_flares_plan(
+            self.user,
+            myplan
         )
 
-        # TEST:$input_cmd_line++;
-        is_ok(last_arg.value, len(cmd_line_args),
-              name + " - assign weights - processed two arguments")
+        # TEST:$compile_flares_plan_ok++;
+        self._eq(ret_code, 0, name + " - set_string returned success")
+        ret_code = self.lib.fc_solve_user_INTERNAL_compile_all_flares_plans(
+            self.user,
+            error_string
+        )
+
+        # TEST:$compile_flares_plan_ok++;
+        self._eq(ret_code, 0, name + " - returned success.")
+
+        # TEST:$compile_flares_plan_ok++;
+        self._eq(error_string[0], self.ffi.NULL,
+                 name + " - error_string returned NULL.")
+
+    def flare_plan_num_items_is(self, name, want_num_items):
+        got_num_items = \
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_num_items(
+                self.user
+            )
+
+        self._eq(want_num_items, got_num_items, name + " - got_num_items.")
+
+    # TEST:$flare_plan_item_is_run_indef=0;
+    def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
+        # TEST:$flare_plan_item_is_run_indef++;
+        self._eq(self._get_plan_type(item_idx), b"RunIndef",
+                 name + " - right type")
+
+        got_flare_idx = \
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+                self.user,
+                item_idx
+            )
+
+        # TEST:$flare_plan_item_is_run_indef++;
+        self._eq(got_flare_idx, flare_idx, name + " - matching flare_idx")
+
+    # TEST:$flare_plan_item_is_run=0;
+    def flare_plan_item_is_run(self, name, item_idx, flare_idx, iters_count):
+        # TEST:$flare_plan_item_is_run++;
+        self._eq(self._get_plan_type(item_idx), b"Run",
+                 name + " - right type")
+
+        got_flare_idx = \
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+                self.user,
+                item_idx
+            )
+
+        # TEST:$flare_plan_item_is_run++;
+        self._eq(got_flare_idx, flare_idx, name + " - matching flare_idx")
+
+        got_iters_count = \
+            self.lib.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
+                self.user,
+                item_idx
+            )
+
+        # TEST:$flare_plan_item_is_run++;
+        self._eq(got_iters_count, iters_count,
+                 name + " - matching iters_count")
+
+    # TEST:$flare_plan_item_is_checkpoint=0;
+    def flare_plan_item_is_checkpoint(self, name, item_idx):
+        # TEST:$flare_plan_item_is_checkpoint++;
+        self._eq(self._get_plan_type(item_idx), b"CP", name + " - right type")
+
+    def num_by_depth_tests_order_is(self, name, want_num):
+        got_num = self.lib.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+                self.user
+        )
+
+        self._eq(want_num, got_num, name + " - by_depth_tests_order.")
+
+    def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
+        got_num = self.lib.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
+            self.user,
+            depth_idx
+        )
+
+        self._eq(want_num, got_num, "%s - max_depth_of_depth_idx_is for %d." %
+                 (name, depth_idx))
 
     # TEST:$set_befs=0;
     def _set_befs_weights(self, name, weights_s):
         # TEST:$set_befs=$set_befs+$input_cmd_line;
-        self.input_cmd_line(name, ["-asw", weights_s])
-
-    def __destroy__(self):
-        self.fcs.freecell_solver_user_free(self.user)
+        self.input_cmd_line__test(name, ["-asw", weights_s])
 
     # TEST:$test_befs=0;
     def test_befs_weights(self, name, string, weights):
-
         # TEST:$test_befs=$test_befs+$set_befs;
         self._set_befs_weights(name, string)
 
@@ -69,151 +156,42 @@ class FC_Solve:
                 top = top + 1e-6
                 bottom = bottom - 1e-6
 
-            have = self.get_befs_weight(self.user, idx)
+            have = self.lib.fc_solve_user_INTERNAL_get_befs_weight(
+                    self.user, idx)
             # TEST:$test_befs=$test_befs+$num_befs_weights;
-            if (not ok((bottom <= have) and (have <= top),
-                       name + " - Testing Weight No. " + str(idx))):
-                diag("Should be: [" + str(bottom) + "," + str(top) + "] ; " +
-                     "Is: " + str(have))
+            self.unittest.assertTrue(
+                (bottom <= have) and (have <= top),
+                name + " - Testing Weight No. " + str(idx) +
+                "Should be: [" + str(bottom) + "," + str(top) + "] ; " +
+                "Is: " + str(have))
 
-    # TEST:$compile_flares_plan_ok=0;
-    def compile_flares_plan_ok(self, name, flares_plan_string):
-        instance_list_index = c_int()
-        error_string = c_char_p()
-
-        myplan = None
-        if flares_plan_string:
-            myplan = bytes(flares_plan_string, 'UTF-8')
-        ret_code = self.fcs.freecell_solver_user_set_flares_plan(
-            self.user,
-            c_char_p(myplan)
-        )
-
-        # TEST:$compile_flares_plan_ok++;
-        ok(ret_code == 0,
-           name + " - set_string returned success")
-        ret_code = self.fcs.fc_solve_user_INTERNAL_compile_all_flares_plans(
-            self.user,
-            byref(instance_list_index),
-            byref(error_string)
-        )
-
-        # TEST:$compile_flares_plan_ok++;
-        ok(ret_code == 0,
-           name + " - returned success.")
-
-        # TEST:$compile_flares_plan_ok++;
-        ok(instance_list_index.value == -1,
-           name + " - instance_list_index returned -1.")
-
-        # TEST:$compile_flares_plan_ok++;
-        ok(error_string.value is None,
-           name + " - error_string returned NULL.")
-
-    def flare_plan_num_items_is(self, name, want_num_items):
-        got_num_items = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_num_items(
-                self.user
+    # TEST:$unrecognized_flag=0;
+    def unrecognized_flag__test(self):
+        import os.path
+        import tempfile
+        with tempfile.TemporaryDirectory() as tempname:
+            fn = os.path.join(tempname, "foo.txt")
+            open(fn, "wt").write("-unrecognized foo\n")
+            self.input_cmd_line(["--read-from-file", fn])
+            # TEST:$unrecognized_flag++;
+            self._eq(
+                getattr(
+                    self.lib,
+                    'freecell_solver_user' +
+                    '_get_unrecognized_cmd_line_flag_status')(
+                    self.user,
+                    0
+                ),
+                0,
+                'flag_status',
             )
-
-        ok(want_num_items == got_num_items, name + " - got_num_items.")
-
-    def _get_plan_type(self, item_idx):
-        f = self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_type
-        f.restype = c_char_p
-
-        return f(self.user, item_idx)
-
-    # TEST:$flare_plan_item_is_run_indef=0;
-    def flare_plan_item_is_run_indef(self, name, item_idx, flare_idx):
-        # TEST:$flare_plan_item_is_run_indef++;
-        ok(self._get_plan_type(item_idx) == b"RunIndef",
-           name + " - right type")
-
-        got_flare_idx = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
+            s = self.lib.freecell_solver_user_get_unrecognized_cmd_line_flag(
                 self.user,
-                item_idx
+                0,
             )
-
-        # TEST:$flare_plan_item_is_run_indef++;
-        ok(got_flare_idx == flare_idx,
-           name + " - matching flare_idx")
-
-    # TEST:$flare_plan_item_is_run=0;
-    def flare_plan_item_is_run(self, name, item_idx, flare_idx, iters_count):
-        # TEST:$flare_plan_item_is_run++;
-        ok(self._get_plan_type(item_idx) == b"Run",
-           name + " - right type")
-
-        got_flare_idx = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_flare_idx(
-                self.user,
-                item_idx
+            # TEST:$unrecognized_flag++;
+            self._eq(
+                self.ffi.string(s),
+                b'-unrecognized',
+                'flag_string',
             )
-
-        # TEST:$flare_plan_item_is_run++;
-        ok(got_flare_idx == flare_idx, name + " - matching flare_idx")
-
-        got_iters_count = \
-            self.fcs.fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
-                self.user,
-                item_idx
-            )
-
-        # TEST:$flare_plan_item_is_run++;
-        ok(got_iters_count == iters_count, name + " - matching iters_count")
-
-    # TEST:$flare_plan_item_is_checkpoint=0;
-    def flare_plan_item_is_checkpoint(self, name, item_idx):
-        # TEST:$flare_plan_item_is_checkpoint++;
-        ok(self._get_plan_type(item_idx) == b"CP",
-           name + " - right type")
-
-    def num_by_depth_tests_order_is(self, name, want_num):
-        got_num = self.fcs.fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
-                self.user
-        )
-
-        ok(want_num == got_num, name + " - by_depth_tests_order.")
-
-    def by_depth_max_depth_of_depth_idx_is(self, name, depth_idx, want_num):
-        got_num = self.fcs.fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-            self.user,
-            depth_idx
-        )
-
-        ok(want_num == got_num,
-            name + " - max_depth_of_depth_idx_is for" + str(depth_idx) + ".")
-
-    def solve_board(self, board):
-        return self.fcs.freecell_solver_user_solve_board(
-                self.user,
-                (c_char_p)(bytes(board, 'UTF-8'))
-        )
-
-    def resume_solution(self):
-        return self.fcs.freecell_solver_user_resume_solution(self.user)
-
-    def limit_iterations(self, max_iters):
-        self.fcs.freecell_solver_user_limit_iterations_long(
-            self.user,
-            (c_long)(max_iters)
-        )
-        return
-
-    def get_num_times(self):
-        return c_long(
-            self.fcs.freecell_solver_user_get_num_times_long(self.user)
-        ).value
-
-    def get_num_states_in_col(self):
-        return c_long(
-            self.fcs.freecell_solver_user_get_num_states_in_collection_long(
-                self.user
-            )
-        ).value
-
-    def recycle(self):
-        self.fcs.freecell_solver_user_recycle(self.user)
-        return

@@ -1,21 +1,20 @@
-
 use strict;
 use warnings;
 use autodie;
 
-use List::Util qw(first);
-use Data::Dumper;
 use FindBin;
-use Path::Tiny qw/path/;
+use Path::Tiny qw/ path /;
 
 my %strings_to_opts_map;
 
-my $enum_fn = 'cmd_line_enum.h';
+my $enum_fn  = 'cmd_line_enum.h';
 my $gperf_fn = 'cmd_line.gperf';
-my $UNREC = 'FCS_OPT_UNRECOGNIZED';
+my $UNREC    = 'FCS_OPT_UNRECOGNIZED';
+
 sub gen_radix_tree
 {
-    path($gperf_fn)->spew_utf8( <<"EOF",
+    path($gperf_fn)->spew_utf8(
+        <<"EOF",
 %define initializer-suffix ,$UNREC
 %{
 #include "$enum_fn"
@@ -27,32 +26,34 @@ struct CommandOption
   };
 %%
 EOF
-    map { "$_, $strings_to_opts_map{$_}\n" } sort { $a cmp $b } keys %strings_to_opts_map,);
+        map      { "$_, $strings_to_opts_map{$_}\n" }
+            sort { $a cmp $b } keys %strings_to_opts_map,
+    );
     return;
 }
 
-my $ws = " " x 4;
+my $ws   = " " x 4;
 my @enum = ($UNREC);
 
 open my $module, "<", "$FindBin::Bin/../cmd_line.c";
-SEARCH_FOR_SWITCH: while (my $line = <$module>)
+SEARCH_FOR_SWITCH: while ( my $line = <$module> )
 {
-    if ($line =~ m{\A(\s*)/\* OPT-PARSE-START \*/})
+    if ( $line =~ m{\A(\s*)/\* OPT-PARSE-START \*/} )
     {
-        while ($line = <$module>)
+        while ( $line = <$module> )
         {
-            if ($line =~ m{\A */\* OPT-PARSE-END \*/})
+            if ( $line =~ m{\A */\* OPT-PARSE-END \*/} )
             {
                 last SEARCH_FOR_SWITCH;
             }
-            if (my ($opt, $strings) = $line =~ m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+);(?: \*/)? *\n?\z})
+            if ( my ( $opt, $strings ) =
+                $line =~
+                m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+);(?: \*/)? *\n?\z}
+                )
             {
-                my @s = split(/\|/, $strings);
+                my @s = split( /\|/, $strings );
                 %strings_to_opts_map =
-                (
-                    %strings_to_opts_map,
-                    (map { $_ => $opt } @s),
-                );
+                    ( %strings_to_opts_map, ( map { $_ => $opt } @s ), );
                 push @enum, $opt;
             }
         }
@@ -65,57 +66,68 @@ path($enum_fn)->spew_utf8(
     <<"EOF",
 /*
  * $enum_fn - the ANSI C enum (= enumeration) for the command line
- * arguments. Partially auto-generated.
+ * arguments. Partly auto-generated.
  */
 
 #pragma once
 EOF
     "enum\n{\n",
-    (map { $ws . $_ . ",\n" } @enum[0..$#enum-1]),
+    ( map { $ws . $_ . ",\n" } @enum[ 0 .. $#enum - 1 ] ),
     $ws . $enum[-1] . "\n",
-    "};\n");
+    "};\n"
+);
 
-my $inc_h = 'cmd_line_inc.h';
+my $inc_h      = 'cmd_line_inc.h';
+my $tempdir    = Path::Tiny->tempdir;
+my $temp_inc_h = $tempdir->child('temp__cmd_line_inc.h');
 
 sub del
 {
-    if (-e $inc_h)
+    if ( -e $inc_h )
     {
-        unlink($inc_h);
+        eval { unlink($inc_h); };
     }
 }
 
 del();
-if (system('gperf', '-L', 'ANSI-C', '-t', $gperf_fn, "--output-file=$inc_h"))
+if (
+    system(
+        'gperf', '-L',      'ANSI-C',
+        '-t',    $gperf_fn, "--output-file=$temp_inc_h"
+    )
+    )
 {
     del();
     die "Running gperf failed!";
 }
-path($inc_h)->edit_utf8(sub { s#^(struct CommandOption \*)$#static $1#gms;});
+path($inc_h)->spew_utf8(
+    do
+    {
+        my $str = path($temp_inc_h)->slurp_utf8();
+        $str =~ s#(register (unsigned int) hval = )(len;)#$1($2)$3#ms;
+
+        $str =~
+            s#(^|\n)(struct CommandOption \*(?:$|\n|\r\n))#${1}static $2#gms;
+        my $DETERMINSTIC_BUILD = 1;
+        if ($DETERMINSTIC_BUILD)
+        {
+            $str =~
+                s#^(/\*[^\n]*--output-file=)\S+([^\n]*\*/)$#${1}temp.txt$2#ms;
+        }
+        $str;
+    }
+);
+
+__END__
 
 =head1 COPYRIGHT AND LICENSE
 
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
 Copyright (c) 2000 Shlomi Fish
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
 
 =cut

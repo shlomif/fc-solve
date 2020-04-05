@@ -1,5 +1,36 @@
 Revision history for Games-Solitaire-Verify
 
+0.2300  2020-03-06
+        - Avoid implicit symbol imports
+            - https://perl-begin.org/tutorials/bad-elements/#non_explicitly_imported_symbols
+        - Convert weaver.ini to @SHLOMIF .
+
+0.2202  2019-07-19
+        - Add --help flag.
+
+0.2201  2019-05-19
+        - Add tests for some Golf variants.
+
+0.2200  2019-05-15
+        - Add POD to lib/Games/Solitaire/Verify/HorneAutomovePrune.pm .
+        - Add support for verifying black_hole solutions.
+
+0.2100  2019-04-29
+        - Add lib/Games/Solitaire/Verify/Golf.pm and
+        lib/Games/Solitaire/Verify/App/Golf.pm .
+
+0.2000  2019-04-04
+        - Add lib/Games/Solitaire/Verify/HorneAutomovePrune.pm .
+
+0.1900  2018-08-02
+        - Add verify_contents() to ::State and check for initial board sanity
+        on the solution.
+            - It was an accidental bug/feature.
+        - Add the --max-rank flag and options.
+
+0.1800  2018-05-02
+        - Add lib/Games/Solitaire/Verify/State/LaxParser.pm .
+
 0.1701  2016-02-28
         - Fix the tests (and the code) of method ->print could not be found in
         IO::Handle/IO::File on older perls.
@@ -116,7 +147,7 @@ Revision history for Games-Solitaire-Verify
 
 0.08    2009-07-04
         - Removed the "all rights reserved" language. I was told it is
-        incompatible with the MIT/X11 License.
+        incompatible with the MIT/Expat License.
         - Added the COPYING file.
 
 0.07    2009-06-22
@@ -136,7 +167,7 @@ Revision history for Games-Solitaire-Verify
         affected by kings_only, etc. I.e: it always allows to move an
         arbitrary number of cards when it is specified.
             - Bug discovered based on this post by larrysan:
-            - http://tech.groups.yahoo.com/group/fc-solve-discuss/message/856
+            - https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/856
 
 0.04    2008-08-07
         - Now verify_and_perform_move in Games::Solitaire::Verify::State

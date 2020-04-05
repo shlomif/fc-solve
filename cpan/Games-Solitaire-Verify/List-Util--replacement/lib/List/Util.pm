@@ -14,7 +14,7 @@ sub first(&@)
     foreach my $x (@_)
     {
         local $_ = $x;
-        if ($cb->($x))
+        if ( $cb->($x) )
         {
             return $x;
         }
@@ -35,4 +35,3 @@ sub min
 }
 
 1;
-

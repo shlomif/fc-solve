@@ -1,21 +1,15 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * fcs_user_internal.h - header files for the routines of fcs_user.h for
- * internal use.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// fcs_user_internal.h - header files for the routines of fcs_user.h for
+// internal use.
 #pragma once
 
-#include "fcs_dllexport.h"
-#include "fcs_enums.h"
-#include "fcs_move.h"
+#include "freecell-solver/fcs_dllexport.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -26,7 +20,7 @@ double DLLEXPORT fc_solve_user_INTERNAL_get_befs_weight(
     void *api_instance, int my_index);
 
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
-    void *api_instance, int *instance_list_index, char **error_string);
+    void *api_instance, char **error_string);
 
 int DLLEXPORT fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *api_instance);

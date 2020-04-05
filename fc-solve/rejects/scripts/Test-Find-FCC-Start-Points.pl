@@ -82,8 +82,9 @@ void DESTROY(SV* obj) {
 }
 EOF
     CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . $ENV{FCS_PATH},
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
+    INC               => "-I" . $ENV{FCS_PATH},
+    LIBS              => "-L" . $ENV{FCS_PATH} . " -lfcs_fcc_brfs_test",
+
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
@@ -97,9 +98,12 @@ use List::MoreUtils qw(any uniq);
 
 use Test::More;
 
-__PACKAGE__->mk_acc_ref([qw(
-    states
-    )]
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            states
+            )
+    ]
 );
 
 sub _init
@@ -110,9 +114,7 @@ sub _init
     my $moves_prefix = $args->{moves_prefix} || '';
 
     $self->states(
-        FccStartPoint::find_fcc_start_points(
-            $args->{start}, $moves_prefix,
-        )
+        FccStartPoint::find_fcc_start_points( $args->{start}, $moves_prefix, )
     );
 
     return;
@@ -128,15 +130,15 @@ sub sanity_check
     my $fcc_start_points_list = $self->states();
 
     # TEST:$sanity_check++;
-    is (
-        scalar(uniq map { $_->get_state_string() } @$fcc_start_points_list),
+    is(
+        scalar( uniq map { $_->get_state_string() } @$fcc_start_points_list ),
         scalar(@$fcc_start_points_list),
         'The states are unique',
     );
 
     # TEST:$sanity_check++;
-    is (
-        scalar(uniq map { $_->get_moves() } @$fcc_start_points_list),
+    is(
+        scalar( uniq map { $_->get_moves() } @$fcc_start_points_list ),
         scalar(@$fcc_start_points_list),
         'The states are unique',
     );
@@ -156,16 +158,18 @@ use IO::All;
 my ($start_fn) = @ARGV;
 
 # MS Freecell Board No. 24.
-my $derived_states_list = FccStartPoint::find_fcc_start_points(
-    scalar(io($start_fn)->slurp),
-    ''
-);
+my $derived_states_list =
+    FccStartPoint::find_fcc_start_points( scalar( io($start_fn)->slurp ), '' );
 
 foreach my $obj (@$derived_states_list)
 {
-    print sprintf("<<<%s>>>\nLeading Moves: %s\n\n-------------\n\n",
+    print sprintf(
+        "<<<%s>>>\nLeading Moves: %s\n\n-------------\n\n",
         do { my $s = $obj->get_state_string(); $s =~ s/\n/\\n/g; $s; },
-        (join '', map { sprintf("{%.2x}", ord($_)) } split//, $obj->get_moves()),
+        (
+            join '', map { sprintf( "{%.2x}", ord($_) ) } split //,
+            $obj->get_moves()
+        ),
     );
 }
 

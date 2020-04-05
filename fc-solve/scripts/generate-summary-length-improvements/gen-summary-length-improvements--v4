@@ -1,0 +1,101 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use autodie;
+
+use IO::All qw/io/;
+
+STDOUT->autoflush(1);
+
+# my $MAX_ITERS = 10_000;
+my $MAX_ITERS = 2_000;
+
+# my $THEME = q#--method random-dfs -to '[01][2345]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+# my $THEME = q#--method random-dfs -to '[01][2345][6789]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+# my $THEME = q#--method random-dfs -to '[01][2345][67]' -opt -opt-to '0123456789ABCDE'#;
+# my $THEME = q#--method random-dfs -to '[01][234567][89]' -opt -opt-to '0123456789ABCDE'#;
+my $THEME = q#--method random-dfs -to '[01][2345]=asw(1,1)[67]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+
+my $REFERENCE_FN = "$ENV{HOME}/Backup/Arcs/FC_SOLVE_SUMMARIZE_RESULTS--fif-10.cat.txt";
+# my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-PinkiePie";
+# my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-AppleBloom";
+my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-CheeseSandwich";
+
+my $BASE = 'theme1';
+
+my @REF = map { /Length: ([0-9\-]+)\z/ ? $1 : (die "Cannot match <$_>") }
+    io->file($REFERENCE_FN)->chomp->getlines;
+
+io->dir($OUTPUT_PATH)->mkpath;
+
+foreach my $seed (1 .. 1000)
+{
+
+    my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
+
+    if (! -e $out_fn)
+    {
+        my $max = 0;
+        my $sum = 0;
+        my $count = 0;
+        my $out_fn_deltas = "$out_fn.DELTAS";
+        my $out_fn_summary = "$out_fn.SUMMARY";
+
+        my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn"#;
+        print "$cmd\n";
+        open(my $fh, '-|', $cmd)
+        my $deal = 0;
+        open my $d_fh, '>', $out_fn_deltas;
+        while (my $l = <$fh>)
+        {
+            my $delta = -1;
+            if ($l =~ /Unsolved/)
+            {
+                print $l;
+            }
+            elsif ($l =~ /Verdict: Solved/)
+            {
+                my ($i) = ($l =~ /Length: ([0-9]+)/)
+                    or die "Wrong line <$l>";
+
+                my $r = $REF[$deal];
+
+                if ($i < $r)
+                {
+                    $delta = $r - $i;
+                    $sum += $delta;
+                    $count++;
+                    if ($delta > $max)
+                    {
+                        $max = $delta;
+                    }
+                }
+            }
+            print {$d_fh} "$delta\n";
+        }
+        continue
+        {
+            $deal++;
+        }
+        close ($fh);
+        close ($d_fh);
+        my $MSG = "count = $count ; sum = $sum ; max = $max";
+        io->file($out_fn_summary)->print("$MSG\n");
+        print "Seed = $seed ; $MSG\n";
+    }
+}
+
+__END__
+
+=head1 COPYRIGHT AND LICENSE
+
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
+Copyright (c) 2016 Shlomi Fish
+
+=cut

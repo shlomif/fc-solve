@@ -1,0 +1,12 @@
+* The following invocation crashes Freecell Solver:
+
+---------------------
+./fc-solve --method soft-dfs --st-name 'dfs' -nst \
+    --method a-star --st-name 'befs' \
+    --trim-max-stored-states 100 \
+    --prelude '200@befs,100@dfs,1000@befs,500000@dfs' \
+    -s -i -p -t -sam 1941.board
+---------------------
+
+since +--trim-max-stored-states+ is a rarely used feature we decided to
+release Freecell Solver 3.4.0 with this bug present.

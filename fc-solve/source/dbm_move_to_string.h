@@ -1,24 +1,20 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
-/*
- * dbm_move_to_string.h - the move_to_string function.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
+// dbm_move_to_string.h - the move_to_string function.
 #pragma once
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-static void move_to_string(unsigned char move, char *const move_buffer)
+static void move_to_string(uint8_t move, char *const move_buffer)
 {
     char *s = move_buffer;
 

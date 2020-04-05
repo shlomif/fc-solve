@@ -12,19 +12,17 @@ laxer expansion.
 
 =cut
 
-our $VERSION = '0.1701';
-
 sub _assign_read_new_state
 {
-    my ($self, $str) = @_;
+    my ( $self, $str ) = @_;
 
-    if (!defined($self->_st()))
+    if ( !defined( $self->_st() ) )
     {
         $self->_st(
             Games::Solitaire::Verify::State->new(
                 {
                     string => $str,
-                    @{$self->_V},
+                    @{ $self->_V },
                 }
             )
         );
@@ -66,4 +64,4 @@ sub _assign_read_new_state
 
 =cut
 
-1; # End of Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax
+1;    # End of Games::Solitaire::Verify::Solution::ExpandMultiCardMoves::Lax

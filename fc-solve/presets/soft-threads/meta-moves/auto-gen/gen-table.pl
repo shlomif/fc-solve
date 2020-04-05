@@ -12,43 +12,39 @@ use List::Util qw(first);
 
 use Text::Table;
 
-my $scan_ids = "1,2,3";
+my $scan_ids      = "1,2,3";
 my $top_board_idx = 10;
 
 GetOptions(
     "scans=s" => \$scan_ids,
-    "top=i" => \$top_board_idx,
+    "top=i"   => \$top_board_idx,
 );
 
-my @scans = ($scan_ids =~ m{([0-9]+)}g);
+my @scans = ( $scan_ids =~ m{([0-9]+)}g );
 
 my $input_obj = FC_Solve::TimePresets->new;
 
-my @scan_indexes = (map { $input_obj->lookup_scan_idx_based_on_id($_) } @scans);
+my @scan_indexes =
+    ( map { $input_obj->lookup_scan_idx_based_on_id($_) } @scans );
 
 my $tb =
-    Text::Table->new(
-        "Deal No.",
-            (map { (\" | "), "$_ Iters", (\" | "),  "$_ Len" } @scans),
-            (\" |"),
-    );
+    Text::Table->new( "Deal No.",
+    ( map { ( \" | " ), "$_ Iters", ( \" | " ), "$_ Len" } @scans ),
+    ( \" |" ), );
 
 my $scans_lens_data = $input_obj->calc_scans_lens_data;
 
-foreach my $board_idx (1 .. $top_board_idx)
+foreach my $board_idx ( 1 .. $top_board_idx )
 {
     my $at = sub {
-        my ($scan_idx, $stat) = @_;
+        my ( $scan_idx, $stat ) = @_;
 
-        return $scans_lens_data->at(
-            $board_idx- $input_obj->start_board,
-            $scan_idx,
-            $stat
-        );
+        return $scans_lens_data->at( $board_idx - $input_obj->start_board,
+            $scan_idx, $stat );
     };
 
-    $tb->add($board_idx, (map { $at->($_,0), $at->($_,1) } @scan_indexes));
+    $tb->add( $board_idx,
+        ( map { $at->( $_, 0 ), $at->( $_, 1 ) } @scan_indexes ) );
 }
 
 print $tb;
-

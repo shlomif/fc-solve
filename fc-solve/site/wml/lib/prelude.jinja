@@ -1,0 +1,5 @@
+{% import "lib.jinja" as lib %}
+{% macro js_requirejs() %}
+{{ lib.js_requirejs(base_path, production)}}
+{% endmacro %}
+{% block prelude_body %}{% endblock %}

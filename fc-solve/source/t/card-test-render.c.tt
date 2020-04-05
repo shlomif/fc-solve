@@ -1,11 +1,9 @@
 /* vim:syn=tt2
 */
-#include <tap.h>
-#include <string.h>
+#include "rinutils/rin_cmocka.h"
+#include "card.c"
 
-#include "../card.c"
-
-static int main_tests(void)
+static void main_tests(void **state GCC_UNUSED)
 {
     char buffer[1024];
 
@@ -23,25 +21,8 @@ static int main_tests(void)
             _   rank.value.${t_key}
             _   suit.value
             _   '"') -%]
-[% IF 0 # Removing because the set_suit and set_rank() functions
-        # were removed.
-%]
     {
-        fcs_card_t mycard;
-        mycard = fc_solve_empty_card;
-
-        fcs_card_set_suit(mycard, [% suit.idx %]);
-        fcs_card_set_rank(mycard, [% rank.idx %]);
-
-        fc_solve_card_stringify(mycard, buffer, [% t %]);
-        /* TEST */
-        [%- SET num_tests = num_tests + 1 -%]
-        ok (!strcmp(buffer, [% card_string %]),
-            "Trying to render " [% card_string %] " into a string");
-    }
-[% END %]
-    {
-        fcs_card_t mycard = fcs_make_card([% rank.idx %], [% suit.idx %]);
+        fcs_card mycard = fcs_make_card([% rank.idx %], [% suit.idx %]);
 
         fc_solve_card_stringify(mycard, buffer
         [%- IF NOT implicit_t -%]
@@ -50,19 +31,19 @@ static int main_tests(void)
         );
         /* TEST */
         [%- SET num_tests = num_tests + 1 -%]
-        ok (!strcmp(buffer, [% card_string %]),
-            "fcs_make_card() - Trying to render " [% card_string %] " into a string");
+        assert_string_equal(buffer, [% card_string %]);
+        //    "fcs_make_card() - Trying to render " [% card_string %] " into a string");
     }
 [% END %]
 [% END %]
 [% END %]
-
-    return 0;
 }
 
 int main(void)
 {
-  plan_tests([% num_tests %]);
-  main_tests();
-  return exit_status();
+  // plan([% num_tests %]);
+  const struct CMUnitTest tests[]={
+    cmocka_unit_test(main_tests),
+    };
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }

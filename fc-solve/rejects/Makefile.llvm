@@ -108,4 +108,3 @@ clean:
 	rm -f *.bc $(TARGETS) libfcs.a test-lib mtest mptest
 
 endif
-

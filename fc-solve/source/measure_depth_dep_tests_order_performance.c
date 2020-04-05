@@ -1,30 +1,23 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * measure_depth_dep_tests_order_performance.c - measure the relative
- * depth-dependent
- * performance of two scans.
- */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#include "rinutils.h"
-#include "fcs_user.h"
-#include "fcs_cl.h"
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// measure_depth_dep_tests_order_performance.c - measure the relative
+// depth-dependent performance of two scans.
+#include "rinutils/rinutils.h"
+#include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
+#include "try_param.h"
+#include "range_solvers.h"
 
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
     printf("\n%s",
-        "measure-depth-dep-tests-order-performance start end\n"
+        "measure-depth-dep-tests-order-performance start end stop_at\n"
         "   [--args-start] [--args-end] [--output-to]\n"
         "[--scan1-to] [--scan2-to] [--iters-limit]\n"
         "[--max-ver-depth]"
@@ -41,45 +34,53 @@ static void print_help(void)
         "--total-iterations-limit  limit\n"
         "     Limits each board for up to 'limit' iterations.\n");
 }
+#endif
 
 typedef struct
 {
-    fcs_portable_time_t start_time, end_time;
-    fcs_int_limit_t num_iters;
+    rinutils_portable_time start_time, end_time;
+    fcs_iters_int num_iters;
     int verdict;
-} result_t;
+} result;
 
 static const char *known_parameters[] = {NULL};
 
-int main(int argc, char *argv[])
+static void set_tests_order(
+    void *const instance, const int min_depth, const char *const moves_order)
 {
-    /* char buffer[2048]; */
-    int board_num;
-    int start_board, end_board;
-    FILE *output_fh;
-    fcs_int_limit_t iters_limit = 100000;
-    int max_var_depth_to_check = 100;
-#ifdef FCS_WITH_ERROR_STRS
-    char *error_string;
-#endif
-    const char *scan1_to = NULL, *scan2_to = NULL;
-
-    char *output_filename = NULL;
-    fcs_state_string_t state_string;
-
-    int arg = 1, start_from_arg = -1, end_args = -1;
-
-    if (argc < 3)
+    FCS__DECL_ERR_PTR(error_string);
+    if (freecell_solver_user_set_depth_tests_order(
+            instance, min_depth, moves_order FCS__PASS_ERR_STR(&error_string)))
     {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
+#ifdef FCS_WITH_ERROR_STRS
+        fprintf(stderr, "Error! Got '%s'!\n", error_string);
+        free(error_string);
+#else
+        fprintf(stderr, "%s\n", "depth-tests-order Error!");
+#endif
         exit(-1);
     }
-    start_board = atoi(argv[arg++]);
-    end_board = atoi(argv[arg++]);
+}
+
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    const fc_solve_ms_deal_idx_type start_board,
+    const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type stop_at GCC_UNUSED)
+{
+    /* char buffer[2048]; */
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+    fcs_int_limit_t iters_limit = 100000;
+#endif
+    int max_var_depth_to_check = 100;
+    FCS__DECL_ERR_PTR(error_string);
+    const char *scan1_to = NULL, *scan2_to = NULL;
+    const char *output_filename = NULL;
+
+    int start_from_arg = -1, end_args = -1;
 
     for (; arg < argc; arg++)
     {
+        const char *param;
         if (!strcmp(argv[arg], "--args-start"))
         {
             arg++;
@@ -95,99 +96,60 @@ int main(int argc, char *argv[])
             }
             end_args = arg;
         }
-        else if (!strcmp(argv[arg], "--output-to"))
+        else if ((param = TRY_P("--output-to")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--output-to came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            output_filename = argv[arg];
+            output_filename = param;
         }
-        else if (!strcmp(argv[arg], "--scan1-to"))
+        else if ((param = TRY_P("--scan1-to")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--scan1-to came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            scan1_to = argv[arg];
+            scan1_to = param;
         }
-        else if (!strcmp(argv[arg], "--scan2-to"))
+        else if ((param = TRY_P("--scan2-to")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--scan1-to came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            scan2_to = argv[arg];
+            scan2_to = param;
         }
-        else if (!strcmp(argv[arg], "--iters-limit"))
+        else if ((param = TRY_P("--iters-limit")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--iters-limit came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            iters_limit = (fcs_int_limit_t)atol(argv[arg]);
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+            iters_limit = (fcs_int_limit_t)atol(param);
+#endif
         }
-        else if (!strcmp(argv[arg], "--max-var-depth"))
+        else if ((param = TRY_P("--max-var-depth")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--max-var-depth came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            max_var_depth_to_check = atoi(argv[arg]);
+            max_var_depth_to_check = atoi(param);
         }
         else
         {
-            fprintf(stderr, "Unknown argument - '%s'!\n", argv[arg]);
-            exit(-1);
+            exit_error("Unknown argument - '%s'!\n", argv[arg]);
         }
     }
 
     if (!scan1_to)
     {
-        fprintf(stderr, "--scan1-to not specified!\n");
-        exit(-1);
+        exit_error("--scan1-to not specified!\n");
     }
 
     if (!scan2_to)
     {
-        fprintf(stderr, "--scan2-to not specified!\n");
-        exit(-1);
+        exit_error("--scan2-to not specified!\n");
     }
 
     if (!output_filename)
     {
-        fprintf(stderr, "output filename not specified");
-        exit(-1);
+        exit_error("output filename not specified");
     }
 
     fc_solve_print_started_at();
     fflush(stdout);
 
-    result_t *const results =
+    result *const results =
         SMALLOC(results, (size_t)(end_board - start_board + 1));
 
-    output_fh = fopen(output_filename, "wt");
-
+    FILE *const output_fh = fopen(output_filename, "wt");
     for (int min_depth_for_scan2 = 0;
          min_depth_for_scan2 < max_var_depth_to_check; min_depth_for_scan2++)
     {
         void *const instance = freecell_solver_user_alloc();
-
         if (start_from_arg >= 0)
         {
             freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
@@ -195,46 +157,25 @@ int main(int argc, char *argv[])
                 start_from_arg, known_parameters, NULL,
                 NULL FCS__PASS_ERR_STR(&error_string), &arg, -1, NULL);
         }
+        set_tests_order(instance, 0, scan1_to);
+        set_tests_order(instance, min_depth_for_scan2, scan2_to);
 
-        if (freecell_solver_user_set_depth_tests_order(
-                instance, 0, scan1_to FCS__PASS_ERR_STR(&error_string)))
-        {
-#ifdef FCS_WITH_ERROR_STRS
-            fprintf(stderr, "Error! Got '%s'!\n", error_string);
-            free(error_string);
-#else
-            fprintf(stderr, "%s\n", "depth-tests-order Error!");
-#endif
-
-            exit(-1);
-        }
-        if (freecell_solver_user_set_depth_tests_order(instance,
-                min_depth_for_scan2, scan2_to FCS__PASS_ERR_STR(&error_string)))
-        {
-#ifdef FCS_WITH_ERROR_STRS
-            fprintf(stderr, "Error! Got '%s'!\n", error_string);
-            free(error_string);
-#else
-            fprintf(stderr, "%s\n", "depth-tests-order Error!");
-#endif
-            exit(-1);
-        }
-
-        result_t *curr_result;
+        result *curr_result;
+        fc_solve_ms_deal_idx_type board_num;
+        fcs_state_string state_string;
+        get_board__setup_string(state_string);
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
-            get_board(board_num, state_string);
+            get_board_l__without_setup(board_num, state_string);
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, iters_limit);
-
-            FCS_GET_TIME(curr_result->start_time);
-
+#endif
+            curr_result->start_time = rinutils_get_time();
             curr_result->verdict =
                 freecell_solver_user_solve_board(instance, state_string);
-
-            FCS_GET_TIME(curr_result->end_time);
-
+            curr_result->end_time = rinutils_get_time();
             curr_result->num_iters =
                 freecell_solver_user_get_num_times_long(instance);
 
@@ -249,20 +190,17 @@ int main(int argc, char *argv[])
         for (board_num = start_board, curr_result = results;
              board_num <= end_board; board_num++, curr_result++)
         {
-            fprintf(output_fh, "board[%d].ret == %d\n", board_num,
+            fprintf(output_fh, "board[%ld].ret == %d\n", (long)board_num,
                 curr_result->verdict);
-            fprintf(output_fh, "board[%d].iters == %ld\n", board_num,
+            fprintf(output_fh, "board[%ld].iters == %ld\n", (long)board_num,
                 (long)curr_result->num_iters);
 
 #define FPRINTF_TIME(label, field)                                             \
-    fprintf(output_fh, "board[%d].%s = %li.%.6li\n", board_num, label,         \
-        FCS_TIME_GET_SEC(curr_result->field),                                  \
-        FCS_TIME_GET_USEC(curr_result->field));
+    fprintf(output_fh, "board[%ld].%s = " RIN_TIME_FMT "\n", (long)board_num,  \
+        label, RIN_TIME__GET_BOTH(curr_result->field));
 
             FPRINTF_TIME("start", start_time);
             FPRINTF_TIME("end", end_time);
-
-#undef FPRINTF_TIME
         }
         fflush(output_fh);
     }

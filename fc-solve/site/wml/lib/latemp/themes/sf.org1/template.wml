@@ -1,0 +1,87 @@
+<define-tag latemp_theme_breadcrumbs_trail_html>
+<div class="leading_path">
+<latemp_get_breadcrumbs_trail_unconditionally />
+</div>
+</define-tag>
+
+<latemp_init_h_w_navmenu />
+
+<latemp_html_header />
+<latemp_html_head_tag />
+<body>
+
+<define-tag latemp_start_layout>
+<div class="header" id="header">
+<latemp_top_banner_text />
+<latemp_get_breadcrumbs_trail />
+</div>
+<div id="faux">
+<p class="invisible">
+<a href="#main">Go to main content</a>
+</p>
+<p class="invisible">
+<a href="#navbar">Go to the navigation</a>
+</p>
+<div id="container-all">
+
+<button id="show_navbar" class="on">Hide NavBar ⬈</button>
+
+<main id="main">
+<latemp_before_main_title_text />
+</define-tag>
+
+<latemp_get_start_layout />
+
+<header>
+<latemp_default_h1_tag />
+<latemp_after_main_title_text />
+</header>
+{#LATEMP_BODY#}
+
+<define-tag latemp_end_layout>
+<latemp_after_body_text />
+</main>
+
+<div id="navbar_wrapper">
+<nav class="navbar" id="navbar">
+<p class="invisible">
+<a href="#nav_menu">Go to the navigation menu</a>
+</p>
+
+<latemp_top_left_corner_logo_text />
+<latemp_get_html_body_nav_links place="top-left" with_accesskey="1" />
+<div id="nav_menu">
+<latemp_get_nav_menu_html />
+</div>
+
+<latemp_affiliations_buttons_text />
+<latemp_get_html_body_nav_links place="bottom-left" />
+</nav>
+</div>
+<div id="container-footer">
+</div>
+</div> ;;; container-all
+</div> ;;; faux
+
+<footer id="footer">
+<hr />
+
+<div class="righty">
+<latemp_license_text />
+</div>
+
+<div class="foot_left">
+<latemp_webmaster_text />
+<latemp_timestamp_text />
+</div>
+
+<latemp_foot_image_text />
+</footer>
+</define-tag>
+
+<latemp_get_end_layout />
+
+</body>
+</html>
+
+{#LATEMP_BODY#:

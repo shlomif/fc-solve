@@ -1,26 +1,19 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * fcs_hash.h - header file of Freecell Solver's internal hash implementation.
- */
-
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// fcs_hash.h - header file of Freecell Solver's internal hash implementation.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "config.h"
-
 #include "meta_alloc.h"
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef FCS_INLINED_HASH_COMPARISON
 enum FCS_INLINED_HASH_DATA_TYPE
@@ -30,7 +23,7 @@ enum FCS_INLINED_HASH_DATA_TYPE
 };
 #endif
 
-typedef int fc_solve_hash_value_t;
+typedef size_t fcs_hash_value;
 
 #ifdef FCS_USE_ANHOLT_HASH
 #include "set.h"
@@ -57,52 +50,51 @@ struct fc_solve_hash_symlink_item_struct
     void *key;
     /* We also store the hash value corresponding to this key for faster
        comparisons */
-    fc_solve_hash_value_t hash_value;
+    fcs_hash_value hash_value;
 #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
     /*
      * We also store a secondary hash value, which is not used for indexing,
      * but is used to speed up comparison.
      * */
-    fc_solve_hash_value_t secondary_hash_value;
+    fcs_hash_value secondary_hash_value;
 #endif
     /* The next item in the list */
     struct fc_solve_hash_symlink_item_struct *next;
 };
 
-typedef struct fc_solve_hash_symlink_item_struct fc_solve_hash_symlink_item_t;
+typedef struct fc_solve_hash_symlink_item_struct hash_item;
 
 typedef struct
 {
-    fc_solve_hash_symlink_item_t *first_item;
-} fc_solve_hash_symlink_t;
+    hash_item *first_item;
+} hash_table_entry;
 
 struct fc_solve_instance_struct;
 
 #ifndef FCS_INLINED_HASH_COMPARISON
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-typedef int (*fcs_hash_compare_function_t)(
+typedef int (*hash_compare_function)(
     const void *const, const void *const, void *context);
 #else
-typedef int (*fcs_hash_compare_function_t)(
-    const void *const, const void *const);
+typedef int (*hash_compare_function)(const void *const, const void *const);
 #endif
 #endif
 
 typedef struct
 {
     /* The vector of the hash table itself */
-    fc_solve_hash_symlink_t *entries;
+    hash_table_entry *entries;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     /* The list of vacant items as freed by the garbage collector. Use
      * if before allocating more. */
-    fc_solve_hash_symlink_item_t *list_of_vacant_items;
+    hash_item *list_of_vacant_items;
 #endif
 /* A comparison function that can be used for comparing two keys
    in the collection */
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #else
-    fcs_hash_compare_function_t compare_function;
+    hash_compare_function compare_function;
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     /* A context to pass to the comparison function */
     void *context;
@@ -111,40 +103,40 @@ typedef struct
 #endif
 
     /* The size of the hash table */
-    int size;
+    size_t size;
 
     /* A bit mask that extract the lowest bits out of the hash value */
-    int size_bitmask;
+    size_t size_bitmask;
     /* The number of elements stored inside the hash */
-    fcs_int_limit_t num_elems;
+    size_t num_elems;
 
-    fcs_int_limit_t max_num_elems_before_resize;
+    size_t max_num_elems_before_resize;
 
-    fcs_compact_allocator_t allocator;
+    compact_allocator allocator;
 #ifdef FCS_RCS_STATES
     struct fc_solve_instance_struct *instance;
 #endif
-} fc_solve_hash_t;
+} hash_table;
 
-static GCC_INLINE void fcs_hash_set_max_num_elems(
-    fc_solve_hash_t *const hash, const fcs_int_limit_t new_size)
+static inline void fcs_hash_set_max_num_elems(
+    hash_table *const hash, const size_t new_size)
 {
     hash->max_num_elems_before_resize = (new_size << 1);
 }
 
-static GCC_INLINE void fc_solve_hash_init(
-    fcs_meta_compact_allocator_t *const meta_alloc, fc_solve_hash_t *const hash,
+static inline void fc_solve_hash_init(
+    meta_allocator *const meta_alloc, hash_table *const hash,
 #ifdef FCS_INLINED_HASH_COMPARISON
     const enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
-    fcs_hash_compare_function_t compare_function
+    hash_compare_function compare_function
 #ifdef FCS_WITH_CONTEXT_VARIABLE
     ,
     void *const context
 #else
 #endif
 #endif
-    )
+)
 {
     const typeof(hash->size) initial_hash_size = 2048;
 
@@ -157,8 +149,8 @@ static GCC_INLINE void fc_solve_hash_init(
     /* Allocate a table of size entries */
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the end of each chain is right at the start. */
-    hash->entries = (fc_solve_hash_symlink_t *)calloc(
-        initial_hash_size, sizeof(hash->entries[0]));
+    hash->entries =
+        (hash_table_entry *)calloc(initial_hash_size, sizeof(hash->entries[0]));
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     hash->list_of_vacant_items = NULL;
@@ -174,32 +166,37 @@ static GCC_INLINE void fc_solve_hash_init(
 #endif
 
     fc_solve_compact_allocator_init(&(hash->allocator), meta_alloc);
-
-    return;
 }
 
-static GCC_INLINE void fc_solve_hash_free(fc_solve_hash_t *const hash)
+static inline void fc_solve_hash_recycle(hash_table *const hash)
+{
+    fc_solve_compact_allocator_recycle(&(hash->allocator));
+    memset(hash->entries, '\0', sizeof(hash->entries[0]) * hash->size);
+    hash->num_elems = 0;
+}
+
+static inline void fc_solve_hash_free(hash_table *const hash)
 {
     fc_solve_compact_allocator_finish(&(hash->allocator));
-
     free(hash->entries);
     hash->entries = NULL;
 }
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-static GCC_INLINE void fc_solve_hash_foreach(fc_solve_hash_t *const hash,
-    fcs_bool_t (*should_delete_ptr)(void *const key, void *const context),
+static inline void fc_solve_hash_foreach(hash_table *const hash,
+    bool (*should_delete_ptr)(void *const key, void *const context),
     void *const context)
 {
     const_SLOT(size, hash);
-    for (int i = 0; i < size; i++)
+    var_AUTO(entries, hash->entries);
+    for (size_t i = 0; i < size; ++i)
     {
-        fc_solve_hash_symlink_item_t **item = &(hash->entries[i].first_item);
+        hash_item **item = &(entries[i].first_item);
         while ((*item) != NULL)
         {
             if (should_delete_ptr((*item)->key, context))
             {
-                fc_solve_hash_symlink_item_t *next_item = (*item)->next;
+                hash_item *const next_item = (*item)->next;
                 /* Garbage collect (*item). */
                 (*item)->next = hash->list_of_vacant_items;
                 hash->list_of_vacant_items = (*item);

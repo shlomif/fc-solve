@@ -1,28 +1,20 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * instance_for_lib.h - header file that contains declarations
- * and definitions that depend on instance.h functions and are only used only
- * by lib.c.
- *
- * This is done to speed compilation.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// instance_for_lib.h - header file that contains declarations
+// and definitions that depend on instance.h functions and are only used only
+// by lib.c.
+// This is done to speed up compilation.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-#include "instance.h"
 #include "scans_impl.h"
-
 #include "preset.h"
 #include "move_funcs_order.h"
 
@@ -628,41 +620,55 @@ static GCC_INLINE void fc_solve_release_tests_list(
     fc_solve_soft_thread_t *const soft_thread)
 {
     /* Free the BeFS data. */
-    free(BEFS_M_VAR(soft_thread, tests_list));
-    BEFS_M_VAR(soft_thread, tests_list) = NULL;
+    free(BEFS_M_VAR(soft_thread, moves_list));
+    BEFS_M_VAR(soft_thread, moves_list) = NULL;
 
     /* Free the DFS data. */
-    fcs_tests_by_depth_array_t *const arr =
-        &(DFS_VAR(soft_thread, tests_by_depth_array));
+    fcs_moves_by_depth_array *const arr =
+        &(DFS_VAR(soft_thread, moves_by_depth));
     const_SLOT(num_units, arr);
     for (size_t unit_idx = 0; unit_idx < num_units; unit_idx++)
     {
-        if (arr->by_depth_units[unit_idx].tests.lists)
+        if (arr->by_depth_units[unit_idx].move_funcs.groups)
         {
-            fcs_tests_list_t *const lists =
-                arr->by_depth_units[unit_idx].tests.lists;
-            const int num_lists = arr->by_depth_units[unit_idx].tests.num_lists;
+            fcs_moves_group *const groups =
+                arr->by_depth_units[unit_idx].move_funcs.groups;
+            const_AUTO(num, arr->by_depth_units[unit_idx].move_funcs.num);
 
-            for (int i = 0; i < num_lists; i++)
+            for (typeof(arr->by_depth_units[unit_idx].move_funcs.num) i = 0;
+                 i < num; i++)
             {
-                free(lists[i].tests);
+                free(groups[i].move_funcs);
             }
-            free(lists);
+            free(groups);
         }
     }
     free(arr->by_depth_units);
     arr->by_depth_units = NULL;
 }
 
-static GCC_INLINE void fc_solve_free_instance_soft_thread_callback(
-    fc_solve_soft_thread_t *const soft_thread)
+#ifdef FCS_WITH_MOVES
+static inline void instance_free_solution_moves(fcs_instance *const instance)
 {
-    fc_solve_st_free_pq(soft_thread);
+    if (instance->solution_moves.moves)
+    {
+        fcs_move_stack_static_destroy(instance->solution_moves);
+        instance->solution_moves.moves = NULL;
+    }
+}
+#endif
 
-    fc_solve_release_tests_list(soft_thread);
+static inline void st_free_pq(fcs_soft_thread *const soft_thread)
+{
+    fc_solve_PQueueFree(&(BEFS_VAR(soft_thread, pqueue)));
+}
 
-    fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
-
+static inline void fc_solve_free_instance_soft_thread_callback(
+    fcs_soft_thread *const soft_thread)
+{
+    st_free_pq(soft_thread);
+    fcs_free_moves_list(soft_thread);
+    fc_solve_free_soft_thread_by_depth_move_array(soft_thread);
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, soft_thread);
 
@@ -675,656 +681,6 @@ static GCC_INLINE void fc_solve_free_instance_soft_thread_callback(
     }
 #endif
 }
-
-#ifdef FCS_WITH_MOVES
-static GCC_INLINE void instance_free_solution_moves(
-    fc_solve_instance_t *const instance)
-{
-    if (instance->solution_moves.moves)
-    {
-        fcs_move_stack_static_destroy(instance->solution_moves);
-        instance->solution_moves.moves = NULL;
-    }
-}
-#endif
-
-static GCC_INLINE void fc_solve_free_instance(
-    fc_solve_instance_t *const instance)
-{
-    fc_solve_foreach_soft_thread(
-        instance, FOREACH_SOFT_THREAD_FREE_INSTANCE, NULL);
-
-    HT_LOOP_START() { free_instance_hard_thread_callback(hard_thread); }
-
-#ifdef FCS_SINGLE_HARD_THREAD
-#ifdef FCS_WITH_MOVES
-    if (instance->is_optimization_st)
-    {
-        fc_solve_free_instance_soft_thread_callback(
-            &(instance->optimization_soft_thread));
-        instance->is_optimization_st = FALSE;
-    }
-#endif
-#else
-    free(instance->hard_threads);
-
-#ifdef FCS_WITH_MOVES
-    if (instance->optimization_thread)
-    {
-        free_instance_hard_thread_callback(instance->optimization_thread);
-        free(instance->optimization_thread);
-    }
-#endif
-#endif
-    fc_solve_free_tests_order(&(instance->instance_tests_order));
-#ifdef FCS_WITH_MOVES
-    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
-    {
-        fc_solve_free_tests_order(&(instance->opt_tests_order));
-    }
-    instance_free_solution_moves(instance);
-#endif
-}
-
-static GCC_INLINE void fc_solve_instance__recycle_hard_thread(
-    fc_solve_hard_thread_t *const hard_thread)
-{
-    fc_solve_reset_hard_thread(hard_thread);
-    fc_solve_compact_allocator_recycle(&(HT_FIELD(hard_thread, allocator)));
-
-    ST_LOOP_START()
-    {
-        fc_solve_st_free_pq(soft_thread);
-
-        fc_solve_reset_soft_thread(soft_thread);
-
-#ifndef FCS_DISABLE_PATSOLVE
-        const_SLOT(pats_scan, soft_thread);
-
-        if (pats_scan)
-        {
-            fc_solve_pats__recycle_soft_thread(pats_scan);
-        }
-#endif
-    }
-
-    return;
-}
-
-static GCC_INLINE fc_solve_soft_thread_t *
-fc_solve_instance_get_first_soft_thread(fc_solve_instance_t *const instance)
-{
-    return &(INST_HT0(instance).soft_threads[0]);
-}
-
-extern void fc_solve_finish_instance(fc_solve_instance_t *const instance);
-
-static GCC_INLINE void fc_solve_recycle_instance(
-    fc_solve_instance_t *const instance)
-{
-    fc_solve_finish_instance(instance);
-#ifdef FCS_WITH_MOVES
-    instance_free_solution_moves(instance);
-#endif
-
-    instance->i__num_checked_states = 0;
-
-    instance->num_hard_threads_finished = 0;
-
-#ifdef FCS_SINGLE_HARD_THREAD
-    fc_solve_instance__recycle_hard_thread(instance);
-
-#ifdef FCS_WITH_MOVES
-    if (instance->is_optimization_st)
-    {
-        fc_solve_reset_soft_thread(&(instance->optimization_soft_thread));
-    }
-#endif
-#else
-    for (int ht_idx = 0; ht_idx < instance->num_hard_threads; ht_idx++)
-    {
-        fc_solve_instance__recycle_hard_thread(
-            &(instance->hard_threads[ht_idx]));
-    }
-
-#ifdef FCS_WITH_MOVES
-    if (instance->optimization_thread)
-    {
-        fc_solve_instance__recycle_hard_thread(instance->optimization_thread);
-    }
-#endif
-#endif
-#ifdef FCS_WITH_MOVES
-    STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
-#endif
-}
-
-#ifdef FCS_WITH_MOVES
-extern void fc_solve_trace_solution(fc_solve_instance_t *const instance);
-
-static GCC_INLINE void fc_solve__setup_optimization_thread__helper(
-    fc_solve_instance_t *const instance,
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
-    {
-        if (soft_thread->by_depth_tests_order.by_depth_tests != NULL)
-        {
-            fc_solve_free_soft_thread_by_depth_test_array(soft_thread);
-        }
-
-        soft_thread->by_depth_tests_order =
-            (typeof(soft_thread->by_depth_tests_order)){
-                .num = 1,
-                .by_depth_tests =
-                    SMALLOC1(soft_thread->by_depth_tests_order.by_depth_tests),
-            };
-        soft_thread->by_depth_tests_order.by_depth_tests[0] =
-            (typeof(soft_thread->by_depth_tests_order.by_depth_tests[0])){
-                .max_depth = SSIZE_MAX,
-                .tests_order = tests_order_dup(&(instance->opt_tests_order)),
-            };
-    }
-
-    soft_thread->super_method_type = FCS_SUPER_METHOD_BEFS_BRFS;
-    soft_thread->is_optimize_scan = TRUE;
-    soft_thread->is_befs = FALSE;
-    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN);
-    fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
-    STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
-}
-
-/*
-    This function optimizes the solution path using a BFS scan on the
-    states in the solution path.
-*/
-#ifdef FCS_SINGLE_HARD_THREAD
-static GCC_INLINE int fc_solve_optimize_solution(
-    fc_solve_instance_t *const instance)
-{
-    fc_solve_soft_thread_t *const optimization_soft_thread =
-        &(instance->optimization_soft_thread);
-
-    if (!instance->solution_moves.moves)
-    {
-        fc_solve_trace_solution(instance);
-    }
-
-#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
-#endif
-
-    if (!instance->is_optimization_st)
-    {
-        fc_solve_init_soft_thread(instance, optimization_soft_thread);
-        /* Copy enable_pruning from the thread that reached the solution,
-         * because otherwise -opt in conjunction with -sp r:tf will fail.
-         * */
-        optimization_soft_thread->enable_pruning =
-            instance->hard_thread.soft_threads[instance->hard_thread.st_idx]
-                .enable_pruning;
-        instance->is_optimization_st = TRUE;
-    }
-
-    fc_solve__setup_optimization_thread__helper(
-        instance, optimization_soft_thread);
-    /* Instruct the optimization hard thread to run indefinitely AFA it
-     * is concerned */
-    instance->hard_thread.ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
-    return fc_solve_befs_or_bfs_do_solve(optimization_soft_thread);
-}
-#undef soft_thread
-#else
-static GCC_INLINE int fc_solve_optimize_solution(
-    fc_solve_instance_t *const instance)
-{
-    fc_solve_soft_thread_t *soft_thread;
-    fc_solve_hard_thread_t *optimization_thread;
-
-    if (!instance->solution_moves.moves)
-    {
-        fc_solve_trace_solution(instance);
-    }
-
-#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
-#endif
-
-    if (!instance->optimization_thread)
-    {
-        instance->optimization_thread = optimization_thread =
-            SMALLOC1(optimization_thread);
-
-        fc_solve_instance__init_hard_thread(instance, optimization_thread);
-
-        fc_solve_hard_thread_t *const old_hard_thread =
-            instance->current_hard_thread;
-
-        soft_thread = optimization_thread->soft_threads;
-
-        /* Copy enable_pruning from the thread that reached the solution,
-         * because otherwise -opt in conjunction with -sp r:tf will fail.
-         * */
-        soft_thread->enable_pruning =
-            old_hard_thread->soft_threads[old_hard_thread->st_idx]
-                .enable_pruning;
-    }
-    else
-    {
-        optimization_thread = instance->optimization_thread;
-        soft_thread = optimization_thread->soft_threads;
-    }
-
-    fc_solve__setup_optimization_thread__helper(instance, soft_thread);
-    /* Instruct the optimization hard thread to run indefinitely AFA it
-     * is concerned */
-    optimization_thread->ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
-    return fc_solve_befs_or_bfs_do_solve(soft_thread);
-}
-#endif
-#endif
-
-static GCC_INLINE int fc_solve__soft_thread__do_solve(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    switch (soft_thread->super_method_type)
-    {
-    case FCS_SUPER_METHOD_DFS:
-        return fc_solve_soft_dfs_do_solve(soft_thread);
-
-    case FCS_SUPER_METHOD_BEFS_BRFS:
-        return fc_solve_befs_or_bfs_do_solve(soft_thread);
-
-#ifndef FCS_DISABLE_PATSOLVE
-    case FCS_SUPER_METHOD_PATSOLVE:
-        return fc_solve_patsolve_do_solve(soft_thread);
-#endif
-
-    default:
-        return FCS_STATE_IS_NOT_SOLVEABLE;
-    }
-}
-
-static GCC_INLINE void fc_solve_soft_thread_init_soft_dfs(
-    fc_solve_soft_thread_t *const soft_thread)
-{
-    fc_solve_soft_thread_update_initial_cards_val(soft_thread);
-    fc_solve_instance_t *const instance = HT_INSTANCE(soft_thread->hard_thread);
-
-    /*
-        Allocate some space for the states at depth 0.
-    */
-    DFS_VAR(soft_thread, depth) = 0;
-
-    fc_solve_increase_dfs_max_depth(soft_thread);
-
-    DFS_VAR(soft_thread, soft_dfs_info)
-    [0].state = FCS_STATE_keyval_pair_to_collectible(instance->state_copy_ptr);
-
-    fc_solve_rand_init(
-        &(DFS_VAR(soft_thread, rand_gen)), DFS_VAR(soft_thread, rand_seed));
-
-    if (!DFS_VAR(soft_thread, tests_by_depth_array).by_depth_units)
-    {
-        const_SLOT(master_to_randomize, soft_thread);
-        fcs_tests_by_depth_array_t *const arr_ptr =
-            &(DFS_VAR(soft_thread, tests_by_depth_array));
-        arr_ptr->by_depth_units = SMALLOC(arr_ptr->by_depth_units,
-            (arr_ptr->num_units = soft_thread->by_depth_tests_order.num));
-
-        const fcs_by_depth_tests_order_t *const by_depth_tests_order =
-            soft_thread->by_depth_tests_order.by_depth_tests;
-
-        var_AUTO(unit, arr_ptr->by_depth_units);
-        const_AUTO(depth_num, soft_thread->by_depth_tests_order.num);
-        for (size_t depth_idx = 0; depth_idx < depth_num; depth_idx++, unit++)
-        {
-            unit->max_depth = by_depth_tests_order[depth_idx].max_depth;
-
-            fcs_tests_order_group_t *const tests_order_groups =
-                by_depth_tests_order[depth_idx].tests_order.groups;
-
-            const_AUTO(tests_order_num,
-                by_depth_tests_order[depth_idx].tests_order.num_groups);
-
-            const_AUTO(tests_list_of_lists, &(unit->tests));
-
-            *tests_list_of_lists = (typeof(*tests_list_of_lists)){
-                .num_lists = 0,
-                .lists = SMALLOC(tests_list_of_lists->lists, tests_order_num),
-            };
-
-            for (size_t group_idx = 0; group_idx < tests_order_num; group_idx++)
-            {
-                size_t num = 0;
-                fc_solve_solve_for_state_move_func_t *tests_list = NULL;
-                add_to_move_funcs_list(&tests_list, &num,
-                    tests_order_groups[group_idx].order_group_tests,
-                    tests_order_groups[group_idx].num);
-                /* TODO : convert to C99 struct initializers. */
-                const_AUTO(tests_list_struct_ptr,
-                    &(tests_list_of_lists
-                                   ->lists[tests_list_of_lists->num_lists++]));
-
-                const fcs_tests_group_type_t shuffling_type =
-                    (master_to_randomize
-                            ? tests_order_groups[group_idx].shuffling_type
-                            : FCS_NO_SHUFFLING);
-                *tests_list_struct_ptr = (typeof(*tests_list_struct_ptr)){
-                    .tests = tests_list,
-                    .num_move_funcs = num,
-                    .shuffling_type = shuffling_type,
-                };
-
-                if (shuffling_type == FCS_WEIGHTING)
-                {
-                    tests_list_struct_ptr->weighting =
-                        tests_order_groups[group_idx].weighting;
-
-                    fc_solve_initialize_befs_rater(
-                        soft_thread, &(tests_list_struct_ptr->weighting));
-                }
-            }
-
-            tests_list_of_lists->lists = SREALLOC(
-                tests_list_of_lists->lists, tests_list_of_lists->num_lists);
-        }
-    }
-
-    return;
-}
-
-/*
- * Switch to the next soft thread in the hard thread,
- * since we are going to call continue and this is
- * a while loop
- * */
-static GCC_INLINE void switch_to_next_soft_thread(
-    fc_solve_hard_thread_t *const hard_thread, const int num_soft_threads,
-    const fc_solve_soft_thread_t *const soft_threads,
-    const fcs_prelude_item_t *const prelude,
-    const fcs_int_limit_t prelude_num_items, int *const st_idx_ptr)
-{
-    if (HT_FIELD(hard_thread, prelude_idx) < prelude_num_items)
-    {
-        set_next_prelude_item(hard_thread, prelude, st_idx_ptr);
-    }
-    else
-    {
-        const int next_st_idx = ((1 + (*st_idx_ptr)) % num_soft_threads);
-        set_next_soft_thread(hard_thread, next_st_idx,
-            soft_threads[next_st_idx].checked_states_step, st_idx_ptr);
-    }
-}
-
-/* instance__check_exceeded_stats() cannot be an inline function because if
- * it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
- * Linux). */
-#define instance__check_exceeded_stats(instance)                               \
-    ((instance->i__num_checked_states >=                                       \
-         instance->effective_max_num_checked_states) ||                        \
-        (instance->num_states_in_collection >=                                 \
-            instance->effective_max_num_states_in_collection))
-
-static GCC_INLINE int run_hard_thread(fc_solve_hard_thread_t *const hard_thread)
-{
-    const fcs_int_limit_t prelude_num_items =
-        HT_FIELD(hard_thread, prelude_num_items);
-#ifdef FCS_SINGLE_HARD_THREAD
-#define instance hard_thread
-#else
-    fc_solve_instance_t *const instance = hard_thread->instance;
-#endif
-    int *const st_idx_ptr = &(HT_FIELD(hard_thread, st_idx));
-    /*
-     * Again, making sure that not all of the soft_threads in this
-     * hard thread are finished.
-     * */
-
-    int ret = FCS_STATE_SUSPEND_PROCESS;
-    const int num_soft_threads = HT_FIELD(hard_thread, num_soft_threads);
-    const fcs_prelude_item_t *const prelude = HT_FIELD(hard_thread, prelude);
-    fc_solve_soft_thread_t *const soft_threads =
-        HT_FIELD(hard_thread, soft_threads);
-
-    while (HT_FIELD(hard_thread, num_soft_threads_finished) < num_soft_threads)
-    {
-        fc_solve_soft_thread_t *const soft_thread =
-            &(soft_threads[*st_idx_ptr]);
-        /*
-         * Move to the next thread if it's already finished
-         * */
-        if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED))
-        {
-            switch_to_next_soft_thread(hard_thread, num_soft_threads,
-                soft_threads, prelude, prelude_num_items, st_idx_ptr);
-
-            continue;
-        }
-
-        /*
-         * Call the resume or solving function that is specific
-         * to each scan
-         *
-         * This switch-like construct calls for declaring a class
-         * that will abstract a scan. But it's not critical since
-         * I don't support user-defined scans.
-         * */
-        if (!STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
-        {
-            fc_solve_soft_thread_init_soft_dfs(soft_thread);
-            fc_solve_soft_thread_init_befs_or_bfs(soft_thread);
-
-#ifndef FCS_DISABLE_PATSOLVE
-            const_SLOT(pats_scan, soft_thread);
-            if (pats_scan)
-            {
-                fc_solve_pats__init_buckets(pats_scan);
-                fc_solve_pats__init_clusters(pats_scan);
-
-                pats_scan->current_pos.s =
-                    instance->initial_non_canonized_state->s;
-#ifdef INDIRECT_STACK_STATES
-
-                memset(pats_scan->current_pos.indirect_stacks_buffer, '\0',
-                    sizeof(pats_scan->current_pos.indirect_stacks_buffer));
-
-#ifndef HARD_CODED_NUM_STACKS
-                const int stacks_num = INSTANCE_STACKS_NUM;
-#endif
-
-                for (int i = 0; i < STACKS_NUM__VAL; i++)
-                {
-                    fcs_cards_column_t src_col =
-                        fcs_state_get_col(pats_scan->current_pos.s, i);
-                    char *dest = &(
-                        pats_scan->current_pos.indirect_stacks_buffer[i << 7]);
-                    memmove(dest, src_col, fcs_col_len(src_col) + 1);
-                    fcs_state_get_col(pats_scan->current_pos.s, i) = dest;
-                }
-#endif
-                fc_solve_pats__initialize_solving_process(pats_scan);
-            }
-#endif
-            STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
-        }
-        ret = fc_solve__soft_thread__do_solve(soft_thread);
-        /*
-         * I use <= instead of == because it is possible that
-         * there will be a few more iterations than what this
-         * thread was allocated, due to the fact that
-         * check_and_add_state is only called by the test
-         * functions.
-         *
-         * It's a kludge, but it works.
-         * */
-        if (NUM_CHECKED_STATES >=
-            HT_FIELD(hard_thread, ht__max_num_checked_states))
-        {
-            switch_to_next_soft_thread(hard_thread, num_soft_threads,
-                soft_threads, prelude, prelude_num_items, st_idx_ptr);
-        }
-
-        /*
-         * It this thread indicated that the scan was finished,
-         * disable the thread or even stop searching altogether.
-         * */
-        if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
-        {
-            STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
-            if (++(HT_FIELD(hard_thread, num_soft_threads_finished)) ==
-                num_soft_threads)
-            {
-                instance->num_hard_threads_finished++;
-            }
-/*
- * Check if this thread is a complete scan and if so,
- * terminate the search. Note that if the scans synergy is set,
- * then we may still need to continue running the other threads
- * which may have blocked some positions / states in the graph.
- * */
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-            if (STRUCT_QUERY_FLAG(
-                    soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) &&
-                (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY)))
-            {
-                return FCS_STATE_IS_NOT_SOLVEABLE;
-            }
-            else
-#endif
-            {
-                /*
-                 * Else, make sure ret is something more sensible
-                 * */
-                ret = FCS_STATE_SUSPEND_PROCESS;
-            }
-        }
-
-        const fcs_bool_t was_solved = (ret == FCS_STATE_WAS_SOLVED);
-        if (was_solved)
-        {
-            instance->solving_soft_thread = soft_thread;
-        }
-
-        if (was_solved || ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                              instance__check_exceeded_stats(instance)))
-        {
-            return ret;
-        }
-    }
-
-    return ret;
-}
-#ifdef FCS_SINGLE_HARD_THREAD
-#undef instance
-#endif
-
-/* Resume a solution process that was stopped in the middle */
-static GCC_INLINE int fc_solve_resume_instance(
-    fc_solve_instance_t *const instance)
-{
-    int ret = FCS_STATE_SUSPEND_PROCESS;
-
-/*
- * If the optimization thread is defined, it means we are in the
- * optimization phase of the total scan. In that case, just call
- * its scanning function.
- *
- * Else, proceed with the normal total scan.
- * */
-#ifdef FCS_WITH_MOVES
-    if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
-    {
-        ret = fc_solve_befs_or_bfs_do_solve(
-#ifdef FCS_SINGLE_HARD_THREAD
-            &(instance->optimization_soft_thread)
-#else
-            &(instance->optimization_thread->soft_threads[0])
-#endif
-                );
-    }
-    else
-#endif
-    {
-#ifdef FCS_SINGLE_HARD_THREAD
-#define hard_thread instance
-#define NUM_HARD_THREADS() 1
-#else
-        fc_solve_hard_thread_t *const end_of_hard_threads =
-            instance->hard_threads + instance->num_hard_threads;
-
-        fc_solve_hard_thread_t *hard_thread = instance->current_hard_thread;
-#define NUM_HARD_THREADS() (instance->num_hard_threads)
-#endif
-        /*
-         * instance->num_hard_threads_finished signals to us that
-         * all the incomplete soft threads terminated. It is necessary
-         * in case the scan only contains incomplete threads.
-         *
-         * I.e: 01235 and 01246, where no thread contains all tests.
-         * */
-        while (instance->num_hard_threads_finished < NUM_HARD_THREADS())
-        {
-/*
- * A loop on the hard threads.
- * Note that we do not initialize instance->ht_idx because:
- * 1. It is initialized before the first call to this function.
- * 2. It is reset to zero below.
- * */
-#ifndef FCS_SINGLE_HARD_THREAD
-            for (; hard_thread < end_of_hard_threads; hard_thread++)
-#endif
-            {
-                ret = run_hard_thread(hard_thread);
-                if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
-                    (ret == FCS_STATE_WAS_SOLVED) ||
-                    ((ret == FCS_STATE_SUSPEND_PROCESS) &&
-                        instance__check_exceeded_stats(instance)))
-                {
-                    goto end_of_hard_threads_loop;
-                }
-            }
-#ifndef FCS_SINGLE_HARD_THREAD
-            hard_thread = instance->hard_threads;
-#endif
-        }
-
-    end_of_hard_threads_loop:
-#ifndef FCS_SINGLE_HARD_THREAD
-        instance->current_hard_thread = hard_thread;
-#endif
-
-        /*
-         * If all the incomplete scans finished, then terminate.
-         * */
-        if (instance->num_hard_threads_finished == NUM_HARD_THREADS())
-        {
-            ret = FCS_STATE_IS_NOT_SOLVEABLE;
-        }
-    }
-
-#ifdef FCS_WITH_MOVES
-    if (ret == FCS_STATE_WAS_SOLVED)
-    {
-        if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPTIMIZE_SOLUTION_PATH))
-        {
-            /* Call optimize_solution only once. Make sure that if
-             * it has already run - we retain the old ret. */
-            if (!STRUCT_QUERY_FLAG(
-                    instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
-            {
-                ret = fc_solve_optimize_solution(instance);
-            }
-        }
-    }
-#endif
-
-    return ret;
-}
-#ifdef FCS_SINGLE_HARD_THREAD
-#undef hard_thread
-#endif
 
 #ifdef __cplusplus
 }

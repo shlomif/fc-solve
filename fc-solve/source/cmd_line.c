@@ -1,46 +1,33 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * cmd_line.c - the Freecell Solver command line arguments-like parsing
- * routines. Useful for more easily configuring a Freecell Solver instance.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// cmd_line.c - the Freecell Solver command line arguments-like parsing
+// routines. Useful for more easily configuring a Freecell Solver instance.
+#include "freecell-solver/fcs_conf.h"
 
-#include "dll_thunk.h"
-
-#include "config.h"
-
-#ifdef HAVE_VASPRINTF
-#define _GNU_SOURCE
-#else
+#ifndef HAVE_VASPRINTF
 #include "asprintf.h"
 #endif
 
-#include <string.h>
-#include <stdlib.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <ctype.h>
 #ifdef _WIN32
 #include <windows.h>
 #endif
 
 #include "set_weights.h"
-#include "fcs_user.h"
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_cl.h"
 #include "split_cmd_line.h"
 
 #include "prefix.h"
 #include "cmd_line_enum.h"
 #include "cmd_line_inc.h"
 
-static GCC_INLINE void nullify_newline(char *const line)
+static inline void nullify_newline(char *const line)
 {
     char *const s = strchr(line, '\n');
 
@@ -51,8 +38,8 @@ static GCC_INLINE void nullify_newline(char *const line)
 }
 
 #define MAX_PATH_LEN 4000
-static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
-    args_man_t *const args_man, char *const opened_files_dir,
+static inline bool read_preset(const char *const preset_name,
+    fcs_args_man *const args_man, char *const opened_files_dir,
     const char *const user_preset_dir)
 {
     char home_dir_presetrc[MAX_PATH_LEN];
@@ -63,31 +50,23 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
             "%s/.freecell-solver/presetrc", home_dir);
     }
     const char *global_presetrc;
-    char *env_var_presetrc = getenv("FREECELL_SOLVER_PRESETRC");
-
 #ifdef _WIN32
-
     char windows_exe_dir[MAX_PATH] = "";
     char windows_global_presetc[MAX_PATH + 100] = "";
-
-    /* Will contain exe path */
     const HMODULE hModule = GetModuleHandle(NULL);
     if (hModule != NULL)
     {
-        /* When passing NULL to GetModuleHandle, it returns handle of exe itself
-         */
+        // When passing NULL to GetModuleHandle, it returns handle of exe itself
         GetModuleFileName(hModule, windows_exe_dir, (sizeof(windows_exe_dir)));
+        /* Remove the basename and keep only the dirname. */
+        char *s = windows_exe_dir + strlen(windows_exe_dir) - 1;
+        while ((s > windows_exe_dir) && (!((*s == '/') || (*s == '\\'))))
         {
-            /* Remove the basename and keep only the dirname. */
-            char *s = windows_exe_dir + strlen(windows_exe_dir) - 1;
-            while ((s > windows_exe_dir) && (!((*s == '/') || (*s == '\\'))))
-            {
-                s--;
-            }
-            if (s > windows_exe_dir)
-            {
-                *s = '\0';
-            }
+            s--;
+        }
+        if (s > windows_exe_dir)
+        {
+            *s = '\0';
         }
         sprintf(windows_global_presetc, "%s/../share/freecell-solver/presetrc",
             windows_exe_dir);
@@ -97,17 +76,17 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
     {
         global_presetrc = NULL;
     }
-
 #else
     global_presetrc = (FREECELL_SOLVER_PKG_DATA_DIR "/presetrc");
 #endif
     const char *const presetrc_pathes[4] = {
-        (const char *)env_var_presetrc,
+        (const char *)getenv("FREECELL_SOLVER_PRESETRC"),
         (home_dir ? ((const char *)home_dir_presetrc) : NULL),
-        (const char *)global_presetrc, user_preset_dir,
+        (const char *)global_presetrc,
+        user_preset_dir,
     };
-    fcs_bool_t read_next_preset = FALSE;
-    for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); path_idx++)
+    bool read_next_preset = false;
+    for (size_t path_idx = 0; path_idx < COUNT(presetrc_pathes); ++path_idx)
     {
         const char *const path = presetrc_pathes[path_idx];
         if (path == NULL)
@@ -115,7 +94,7 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
             continue;
         }
         FILE *f = fopen(path, "rt");
-        if (f == NULL)
+        if (!f)
         {
             continue;
         }
@@ -154,7 +133,7 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
                 nullify_newline(line);
                 if (!strcmp(s, preset_name))
                 {
-                    read_next_preset = TRUE;
+                    read_next_preset = true;
                 }
             }
             else if ((s = try_str_prefix(line, "command=")))
@@ -162,47 +141,53 @@ static GCC_INLINE fcs_bool_t read_preset(const char *const preset_name,
                 if (read_next_preset)
                 {
                     *args_man = fc_solve_args_man_chop(s);
-#if 0
-                    fprintf(stderr, "man_chop for <<<%s>>>\n", line);
-                    fflush(stderr);
-#endif
                     fclose(f);
-                    return FALSE;
+                    return false;
                 }
             }
         }
         fclose(f);
     }
-    return TRUE;
-}
-
-static GCC_INLINE char *calc_errstr_s(const char *const format, ...)
-{
-    va_list my_va_list;
-
-    va_start(my_va_list, format);
-
-    char *errstr;
-
-    vasprintf(&errstr, format, my_va_list);
-
-    va_end(my_va_list);
-
-    return errstr;
+    return true;
 }
 
 #ifdef FCS_WITH_ERROR_STRS
+static inline __attribute__((format(printf, 1, 2))) char *calc_errstr_s(
+    const char *const format, ...)
+{
+    va_list my_va_list;
+    va_start(my_va_list, format);
+    char *errstr;
+    const_AUTO(ret, vasprintf(&errstr, format, my_va_list));
+    va_end(my_va_list);
+
+    return ((ret < 0) ? NULL : errstr);
+}
+
 #define ASSIGN_ERR_STR(error_string, format, ...)                              \
     *(error_string) = calc_errstr_s(format, __VA_ARGS__)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)    \
-    {                                                                          \
-        ASSIGN_ERR_STR(error_string, format, __VA_ARGS__);                     \
-        free(fcs_user_errstr);                                                 \
-    }
+    ASSIGN_ERR_STR(error_string, format, __VA_ARGS__);                         \
+    free(fcs_user_errstr)
 #else
 #define ASSIGN_ERR_STR(error_string, format, ...)
 #define ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string, format, ...)
 #endif
+#define PROCESS_OPT_ARG()                                                      \
+    if ((++arg) == arg_argc)                                                   \
+    {                                                                          \
+        *last_arg = (int)(arg - 1 - &(argv[0]));                               \
+        return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                                 \
+    }
+#define RET_ERROR_IN_ARG()                                                     \
+    *last_arg = (int)(arg - &(argv[0]));                                       \
+    return FCS_CMD_LINE_ERROR_IN_ARG
+#define RET_ERR_STR(...)                                                       \
+    ASSIGN_ERR_STR(__VA_ARGS__);                                               \
+    RET_ERROR_IN_ARG()
+#define RET_ERR_STR_AND_FREE(...)                                              \
+    ASSIGN_ERR_STR_AND_FREE(__VA_ARGS__);                                      \
+    RET_ERROR_IN_ARG()
 
 DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
     void *const instance, const char *const preset_name,
@@ -210,8 +195,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
         char **const error_string),
     const int file_nesting_count, freecell_solver_str_t opened_files_dir)
 {
-    args_man_t preset_args;
-    char dir[MAX_PATH_LEN];
+    fcs_args_man preset_args;
+    char dir[MAX_PATH_LEN + 1];
 
     dir[0] = '\0';
 
@@ -220,24 +205,21 @@ DLLEXPORT int freecell_solver_user_cmd_line_read_cmd_line_preset(
         ASSIGN_ERR_STR(error_string, "%s", "Could not read preset.");
         return FCS_CMD_LINE_ERROR_IN_ARG;
     }
-    else
-    {
-        int last_arg = 0;
+    int last_arg = 0;
 
-        const int ret =
-            freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
-                instance, preset_args.argc,
-                (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
-                known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
-                &(last_arg),
-                ((file_nesting_count < 0) ? file_nesting_count
-                                          : (file_nesting_count - 1)),
-                dir[0] ? dir : opened_files_dir);
+    const int ret =
+        freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+            instance, preset_args.argc,
+            (freecell_solver_str_t *)(void *)(preset_args.argv), 0,
+            known_parameters, NULL, NULL FCS__PASS_ERR_STR(error_string),
+            &(last_arg),
+            ((file_nesting_count < 0) ? file_nesting_count
+                                      : (file_nesting_count - 1)),
+            dir[0] ? dir : opened_files_dir);
 
-        fc_solve_args_man_free(&preset_args);
+    fc_solve_args_man_free(&preset_args);
 
-        return ret;
-    }
+    return ret;
 }
 
 DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
@@ -252,9 +234,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     char *fcs_user_errstr;
     *error_string = NULL;
 #endif
-
     const freecell_solver_str_t *const arg_argc = &(argv[argc]);
-
     freecell_solver_str_t *arg = &(argv[start_arg]);
     for (; arg < arg_argc; arg++)
     {
@@ -269,7 +249,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             if (*known_param)
             {
                 int ret, num_to_skip;
-                switch (callback(instance, argc, argv, arg - &(argv[0]),
+                switch (callback(instance, argc, argv, (int)(arg - &(argv[0])),
                     &num_to_skip, &ret, callback_context))
                 {
                 case FCS_CMD_LINE_SKIP:
@@ -277,7 +257,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     goto end_of_arg_loop;
 
                 case FCS_CMD_LINE_STOP:
-                    *last_arg = arg - &(argv[0]);
+                    *last_arg = (int)(arg - &(argv[0]));
                     return ret;
                 }
             }
@@ -293,106 +273,76 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         switch (opt)
         {
         case FCS_OPT_UNRECOGNIZED:
-            *last_arg = arg - &(argv[0]);
+            *last_arg = (int)(arg - &(argv[0]));
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
 
-#define PROCESS_OPT_ARG()                                                      \
-    {                                                                          \
-        arg++;                                                                 \
-        if (arg == arg_argc)                                                   \
-        {                                                                      \
-            *last_arg = arg - &(argv[0]);                                      \
-            return FCS_CMD_LINE_PARAM_WITH_NO_ARG;                             \
-        }                                                                      \
-    }
-
-#define RET_ERROR_IN_ARG()                                                     \
-    *last_arg = arg - &(argv[0]);                                              \
-    return FCS_CMD_LINE_ERROR_IN_ARG;
-
         case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
-        {
             PROCESS_OPT_ARG();
-        }
-        break;
+            break;
 
         case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
-        {
             PROCESS_OPT_ARG();
-
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, atol((*arg)));
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
-        {
             PROCESS_OPT_ARG();
 
-            if (freecell_solver_user_set_tests_order(
-                    instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
+            if (freecell_solver_user_set_depth_tests_order(instance, 0,
+                    (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
-                ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in tests' order!\n%s\n", fcs_user_errstr);
-                RET_ERROR_IN_ARG();
             }
-        }
-        break;
+            break;
 
         case FCS_OPT_FREECELLS_NUM: /* STRINGS=--freecells-num; */
-        {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_FREECELLS
-            if (freecell_solver_user_set_num_freecells(
-                    instance, atoi((*arg))) != 0)
+            if (freecell_solver_user_set_num_freecells(instance, atoi(*arg)) !=
+                0)
             {
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "Error! The freecells\' number "
                     "exceeds the maximum of %i.\n"
                     "Recompile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_freecells());
-                RET_ERROR_IN_ARG();
             }
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_STACKS_NUM: /* STRINGS=--stacks-num; */
-        {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_STACKS
-            if (freecell_solver_user_set_num_stacks(instance, atoi((*arg))) !=
-                0)
+            if (freecell_solver_user_set_num_stacks(instance, atoi(*arg)) != 0)
             {
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "Error! The stacks\' number "
                     "exceeds the maximum of %i.\n"
                     "Recompile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_stacks());
-                RET_ERROR_IN_ARG();
             }
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_DECKS_NUM: /* STRINGS=--decks-num; */
-        {
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_DECKS
-            if (freecell_solver_user_set_num_decks(instance, atoi((*arg))) != 0)
+            if (freecell_solver_user_set_num_decks(instance, atoi(*arg)) != 0)
             {
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "Error! The decks\' number "
                     "exceeds the maximum of %i.\n"
                     "Recopmile the program if you wish to have more.\n",
                     freecell_solver_user_get_max_num_decks());
-                RET_ERROR_IN_ARG();
             }
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_SEQUENCES_ARE_BUILT_BY: /* STRINGS=--sequences-are-built-by;
-                                                */
+                                              */
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
@@ -407,19 +357,14 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
-        {
             PROCESS_OPT_ARG();
-#ifndef FCS_FREECELL_ONLY
-            freecell_solver_user_set_sequence_move(
-                instance, !strcmp((*arg), "unlimited"));
-#endif
-        }
-        break;
+            FCS_ON_NOT_FC_ONLY(freecell_solver_user_set_sequence_move(
+                instance, !strcmp((*arg), "unlimited")));
+            break;
 
         case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by;
-                                                */
+                                              */
         {
-
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
             const char *const s = (*arg);
@@ -435,7 +380,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_GAME: /* STRINGS=--game|--preset|-g; */
         {
             PROCESS_OPT_ARG();
-
 #ifndef FCS_FREECELL_ONLY
             const char *const string_arg = (*arg);
             switch (freecell_solver_user_apply_preset(instance, string_arg))
@@ -444,35 +388,31 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 break;
 
             case FCS_PRESET_CODE_NOT_FOUND:
-                ASSIGN_ERR_STR(
+                RET_ERR_STR(
                     error_string, "Unknown game \"%s\"!\n\n", string_arg);
-                RET_ERROR_IN_ARG();
 
             case FCS_PRESET_CODE_FREECELLS_EXCEED_MAX:
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "The game \"%s\" exceeds the maximal number "
                     "of freecells in the program.\n"
                     "Modify the file \"config.h\" and recompile, "
                     "if you wish to solve one of its boards.\n",
                     string_arg);
-                RET_ERROR_IN_ARG();
 
             case FCS_PRESET_CODE_STACKS_EXCEED_MAX:
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "The game \"%s\" exceeds the maximal number "
                     "of stacks in the program.\n"
                     "Modify the file \"config.h\" and recompile, "
                     "if you wish to solve one of its boards.\n",
                     string_arg);
-                RET_ERROR_IN_ARG();
 
             default:
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "The game \"%s\" exceeds the limits of the program.\n"
                     "Modify the file \"config.h\" and recompile, if you wish "
                     "to solve one of its boards.\n",
                     string_arg);
-                RET_ERROR_IN_ARG();
             }
 #endif
         }
@@ -481,9 +421,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_METHOD: /* STRINGS=-me|--method; */
         {
             int int_method;
-
             PROCESS_OPT_ARG();
-
             const_AUTO(s, (*arg));
             if (!strcmp(s, "soft-dfs") || !strcmp(s, "dfs"))
             {
@@ -509,10 +447,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             else
             {
-                ASSIGN_ERR_STR(
+                RET_ERR_STR(
                     error_string, "Unknown solving method \"%s\".\n", s);
-
-                RET_ERROR_IN_ARG();
             }
 
             freecell_solver_user_set_solving_method(instance, int_method);
@@ -522,93 +458,82 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_BEFS_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
         {
             PROCESS_OPT_ARG();
+            double befs_weights[FCS_NUM_BEFS_WEIGHTS];
+            const char *const s = *arg;
 
+            fc_solve_set_weights(s, strchr(s, '\0'), befs_weights);
+            for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
             {
-                double befs_weights[FCS_NUM_BEFS_WEIGHTS];
-
-                const char *const s = *arg;
-
-                fc_solve_set_weights(s, strchr(s, '\0'), befs_weights);
-
-                for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
-                {
-                    freecell_solver_user_set_a_star_weight(
-                        instance, i, befs_weights[i]);
-                }
+                freecell_solver_user_set_a_star_weight(
+                    instance, i, befs_weights[i]);
             }
         }
         break;
 
         case FCS_OPT_OPTIMIZE_SOLUTION: /* STRINGS=-opt|--optimize-solution; */
-        {
+#ifdef FCS_WITH_MOVES
             freecell_solver_user_set_solution_optimization(instance, 1);
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_SEED: /* STRINGS=-seed; */
-        {
             PROCESS_OPT_ARG();
-
-            freecell_solver_user_set_random_seed(instance, atoi((*arg)));
-        }
-        break;
+            freecell_solver_user_set_random_seed(instance, atoi(*arg));
+            break;
 
         case FCS_OPT_MAX_STORED_STATES: /* STRINGS=-mss|--max-stored-states; */
-        {
             PROCESS_OPT_ARG();
 
+#ifndef FCS_DISABLE_NUM_STORED_STATES
             freecell_solver_user_limit_num_states_in_collection_long(
                 instance, atol((*arg)));
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_TRIM_MAX_STORED_STATES: /* STRINGS=-tmss|--trim-max-stored-states;
-                                                */
-        {
+                                              */
             PROCESS_OPT_ARG();
-
+#ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
             freecell_solver_set_stored_states_trimming_limit(
                 instance, atol((*arg)));
 #endif
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
-        {
+#ifdef FCS_WITH_NI
             freecell_solver_user_next_instance(instance);
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_NEXT_FLARE: /* STRINGS=-nf|--next-flare; */
 #ifdef FCS_WITH_FLARES
-        {
             freecell_solver_user_next_flare(instance);
-        }
 #endif
-        break;
+            break;
 
         case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
         case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */
-        {
-            if ((opt == FCS_OPT_NEXT_SOFT_THREAD)
+            if (
+#ifdef FCS_SINGLE_HARD_THREAD
+                freecell_solver_user_next_soft_thread(instance)
+#else
+                (opt == FCS_OPT_NEXT_SOFT_THREAD)
                     ? freecell_solver_user_next_soft_thread(instance)
-                    : freecell_solver_user_next_hard_thread(instance))
+                    : freecell_solver_user_next_hard_thread(instance)
+#endif
+            )
             {
-                ASSIGN_ERR_STR(error_string, "%s",
+                RET_ERR_STR(error_string, "%s",
                     "The maximal number of soft threads has been exceeded\n");
-                RET_ERROR_IN_ARG();
             }
-        }
-        break;
+            break;
 
         case FCS_OPT_SOFT_THREAD_STEP: /* STRINGS=-step|--soft-thread-step; */
-        {
             PROCESS_OPT_ARG();
-
-            freecell_solver_user_set_soft_thread_step(instance, atoi((*arg)));
-        }
-        break;
+            freecell_solver_user_set_soft_thread_step(instance, atoi(*arg));
+            break;
 
         case FCS_OPT_REPARENT_STATES: /* STRINGS=--reparent-states; */
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
@@ -623,63 +548,50 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             break;
 
         case FCS_OPT_ST_NAME: /* STRINGS=--st-name; */
-        {
             PROCESS_OPT_ARG();
-
             freecell_solver_user_set_soft_thread_name(instance, (*arg));
-        }
-        break;
+            break;
 
         case FCS_OPT_FLARE_NAME: /* STRINGS=--flare-name; */
-        {
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flare_name(instance, (*arg));
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_PRELUDE: /* STRINGS=--prelude; */
-        {
             PROCESS_OPT_ARG();
-
             freecell_solver_user_set_hard_thread_prelude(instance, (*arg));
-        }
-        break;
+            break;
 
         case FCS_OPT_FLARES_PLAN: /* STRINGS=--flares-plan; */
-        {
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_plan(instance, (*arg));
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_FLARES_ITERS_FACTOR: /* STRINGS=-fif|--flares-iters-factor;
-                                             */
-        {
+                                           */
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_iters_factor(instance, atof(*arg));
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order;
-                                                  */
-        {
+                                                */
             PROCESS_OPT_ARG();
+#ifdef FCS_WITH_MOVES
             if (freecell_solver_user_set_optimization_scan_tests_order(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
-                ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in the optimization scan's tests' order!\n%s\n",
                     fcs_user_errstr);
-                RET_ERROR_IN_ARG();
             }
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_SCANS_SYNERGY: /* STRINGS=--scans-synergy; */
         {
@@ -697,10 +609,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             else
             {
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "Unknown scans' synergy type \"%s\"!\n", (*arg));
-
-                RET_ERROR_IN_ARG();
             }
 
             freecell_solver_user_set_scans_synergy(instance, value);
@@ -709,33 +619,26 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
 
         case FCS_OPT_RESET: /* STRINGS=--reset; */
-        {
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
             freecell_solver_user_reset(instance);
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_READ_FROM_FILE: /* STRINGS=--read-from-file; */
-        {
             PROCESS_OPT_ARG();
 
-            if (file_nesting_count == 0)
+            if (file_nesting_count != 0)
             {
-                /* do nothing */
-            }
-            else
-            {
-                freecell_solver_str_t s;
-                char *buffer;
                 FILE *f;
                 int num_file_args_to_skip = 0;
-                s = (*arg);
+                freecell_solver_str_t s = (*arg);
                 while (isdigit(*s))
                 {
                     s++;
                 }
                 if (*s == ',')
                 {
-                    num_file_args_to_skip = atoi((*arg));
+                    num_file_args_to_skip = atoi(*arg);
                     s++;
                 }
 
@@ -748,42 +651,37 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 }
                 else
                 {
-                    /*
-                     * Initialize f to NULL so it will be initialized
-                     * */
+                    // Initialize f to NULL so it will be initialized
                     f = NULL;
                 }
 
                 /* Try to open from the local path */
-                if (f == NULL)
+                if (!f)
                 {
                     f = fopen(s, "rt");
                 }
 
                 /* If we still could not open it return an error */
-                if (f == NULL)
+                if (!f)
                 {
-                    ASSIGN_ERR_STR(error_string,
+                    RET_ERR_STR(error_string,
                         "Could not open file \"%s\"!\nQuitting.\n", s);
-                    RET_ERROR_IN_ARG();
                 }
                 fseek(f, 0, SEEK_END);
                 const long file_len = ftell(f);
-                buffer = SMALLOC(buffer, file_len + 1);
+                char *buffer = SMALLOC(buffer, (size_t)(file_len + 1));
                 if (buffer == NULL)
                 {
-                    ASSIGN_ERR_STR(error_string, "%s",
+                    fclose(f);
+                    RET_ERR_STR(error_string, "%s",
                         "Could not allocate enough memory "
                         "to parse the file. Quitting.\n");
-                    fclose(f);
-
-                    RET_ERROR_IN_ARG();
                 }
                 fseek(f, 0, SEEK_SET);
-                buffer[fread(buffer, 1, file_len, f)] = '\0';
+                buffer[fread(buffer, 1, (size_t)(file_len), f)] = '\0';
                 fclose(f);
 
-                args_man_t args_man = fc_solve_args_man_chop(buffer);
+                fcs_args_man args_man = fc_solve_args_man_chop(buffer);
                 free(buffer);
 
                 if (num_file_args_to_skip < args_man.argc)
@@ -795,24 +693,29 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                                     *)(args_man.argv + num_file_args_to_skip),
                             0, known_parameters, callback,
                             callback_context FCS__PASS_ERR_STR(error_string),
-                            last_arg, ((file_nesting_count < 0)
-                                              ? file_nesting_count
-                                              : (file_nesting_count - 1)),
+                            last_arg,
+                            ((file_nesting_count < 0)
+                                    ? file_nesting_count
+                                    : (file_nesting_count - 1)),
                             opened_files_dir);
 
-                    if (!((ret == FCS_CMD_LINE_UNRECOGNIZED_OPTION) ||
-                            (ret == FCS_CMD_LINE_OK)))
+                    if (ret != FCS_CMD_LINE_OK)
                     {
+                        if (freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+                                instance, 0) == FC_SOLVE__FLAG_STATUS__IS_NULL)
+                        {
+                            freecell_solver_user_set_unrecognized_cmd_line_flag(
+                                instance, 0, args_man.argv[*last_arg]);
+                        }
                         /* So we don't give a last_arg to the read file.*/
-                        *last_arg = arg - &(argv[0]);
+                        *last_arg = (int)(arg - 1 - &(argv[0]));
                         fc_solve_args_man_free(&args_man);
                         return ret;
                     }
                 }
                 fc_solve_args_man_free(&args_man);
             }
-        }
-        break;
+            break;
 
         case FCS_OPT_LOAD_CONFIG: /* STRINGS=-l|--load-config; */
         {
@@ -826,9 +729,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             switch (ret)
             {
             case FCS_CMD_LINE_ERROR_IN_ARG:
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "Unable to load the \"%s\" configuration!\n", (*arg));
-                RET_ERROR_IN_ARG();
 
             case FCS_CMD_LINE_UNRECOGNIZED_OPTION:
             case FCS_CMD_LINE_OK:
@@ -842,106 +744,90 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 
         case FCS_OPT_DEPTH_TESTS_ORDER: /* STRINGS=-dto|--depth-tests-order; */
         case FCS_OPT_DEPTH_TESTS_ORDER_2: /* STRINGS=-dto2|--depth-tests-order2;
-                                             */
+                                           */
         {
             PROCESS_OPT_ARG();
-
+            int min_depth = 0;
+            const char *s = (*arg);
+            while (isdigit(*s))
             {
-                int min_depth = 0;
+                s++;
+            }
+            if (*s == ',')
+            {
+                min_depth = atoi(*arg);
+                s++;
+            }
+            else
+            {
+                s = (*arg);
+            }
 
-                const char *s = (*arg);
-                while (isdigit(*s))
-                {
-                    s++;
-                }
-                if (*s == ',')
-                {
-                    min_depth = atoi((*arg));
-                    s++;
-                }
-                else
-                {
-                    s = (*arg);
-                }
-
-                /* Note: passing (*arg) instead of s to the
-                 * set_depth_tests_order is likely wrong, but when doing
-                 * it right, the tests fail.
-                 * */
-                if (freecell_solver_user_set_depth_tests_order(instance,
-                        min_depth,
-                        ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
-                            FCS__PASS_ERR_STR(&fcs_user_errstr)))
-                {
-                    ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
-                        "Error in depth tests' order!\n%s\n", fcs_user_errstr);
-                    RET_ERROR_IN_ARG();
-                }
+            /* Note: passing (*arg) instead of s to the
+             * set_depth_tests_order is likely wrong, but when doing
+             * it right, the tests fail.
+             * */
+            if (freecell_solver_user_set_depth_tests_order(instance, min_depth,
+                    ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
+                        FCS__PASS_ERR_STR(&fcs_user_errstr)))
+            {
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in depth tests' order!\n%s\n", fcs_user_errstr);
             }
         }
         break;
 
         case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
-        {
             PROCESS_OPT_ARG();
+#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
             if (freecell_solver_user_set_pruning(
                     instance, (*arg)FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
             {
-                ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
                     "Error in the optimization scan's pruning!\n%s\n",
                     fcs_user_errstr);
-                RET_ERROR_IN_ARG();
             }
-        }
-        break;
+#endif
+            break;
 
         case FCS_OPT_CACHE_LIMIT: /* STRINGS=--cache-limit; */
-        {
             PROCESS_OPT_ARG();
-
+#ifndef FCS_BREAK_BACKWARD_COMPAT_1
+#ifdef FCS_RCS_STATES
             freecell_solver_user_set_cache_limit(instance, atol(*arg));
-        }
-        break;
+#endif
+#endif
+            break;
 
         case FCS_OPT_FLARES_CHOICE: /* STRINGS=--flares-choice; */
-        {
             PROCESS_OPT_ARG();
-
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
             if (freecell_solver_user_set_flares_choice(instance, (*arg)) != 0)
             {
-                ASSIGN_ERR_STR(error_string,
+                RET_ERR_STR(error_string,
                     "Unknown flares choice argument '%s'.\n", (*arg));
-                RET_ERROR_IN_ARG();
             }
 #endif
 #endif
-        }
-        break;
+            break;
 
         case FCS_OPT_PATSOLVE_X_PARAM: /* STRINGS=--patsolve-x-param; */
         {
             PROCESS_OPT_ARG();
-
 #ifndef FCS_DISABLE_PATSOLVE
+            int position, x_param_val;
+            if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
             {
-                int position, x_param_val;
-                if (sscanf((*arg), "%d,%d", &position, &x_param_val) != 2)
-                {
-                    ASSIGN_ERR_STR(error_string, "%s",
-                        "Wrong format for --patsolve-x-param");
-                    RET_ERROR_IN_ARG();
-                }
-                if (freecell_solver_user_set_patsolve_x_param(instance,
-                        position,
-                        x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
-                {
-                    ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
-                        "Error in patsolve X param setting!\n%s\n",
-                        fcs_user_errstr);
-                    RET_ERROR_IN_ARG();
-                }
+                RET_ERR_STR(
+                    error_string, "%s", "Wrong format for --patsolve-x-param");
+            }
+            if (freecell_solver_user_set_patsolve_x_param(instance, position,
+                    x_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
+            {
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in patsolve X param setting!\n%s\n",
+                    fcs_user_errstr);
             }
 #endif
         }
@@ -950,26 +836,20 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_PATSOLVE_Y_PARAM: /* STRINGS=--patsolve-y-param; */
         {
             PROCESS_OPT_ARG();
-
 #ifndef FCS_DISABLE_PATSOLVE
+            int position;
+            double y_param_val;
+            if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
             {
-                int position;
-                double y_param_val;
-                if (sscanf((*arg), "%d,%lf", &position, &y_param_val) != 2)
-                {
-                    ASSIGN_ERR_STR(error_string, "%s",
-                        "Wrong format for --patsolve-y-param");
-                    RET_ERROR_IN_ARG();
-                }
-                if (freecell_solver_user_set_patsolve_y_param(instance,
-                        position,
-                        y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
-                {
-                    ASSIGN_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
-                        "Error in patsolve Y param setting!\n%s\n",
-                        fcs_user_errstr);
-                    RET_ERROR_IN_ARG();
-                }
+                RET_ERR_STR(
+                    error_string, "%s", "Wrong format for --patsolve-y-param");
+            }
+            if (freecell_solver_user_set_patsolve_y_param(instance, position,
+                    y_param_val FCS__PASS_ERR_STR(&fcs_user_errstr)) != 0)
+            {
+                RET_ERR_STR_AND_FREE(fcs_user_errstr, error_string,
+                    "Error in patsolve Y param setting!\n%s\n",
+                    fcs_user_errstr);
             }
 #endif
         }
@@ -980,7 +860,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     end_of_arg_loop:;
     }
 
-    *last_arg = arg - &(argv[0]);
+    *last_arg = (int)(arg - &(argv[0]));
     return FCS_CMD_LINE_OK;
 }
 
@@ -990,7 +870,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args(void *instance, int argc,
     freecell_solver_str_t *known_parameters,
     freecell_solver_user_cmd_line_known_commands_callback_t callback,
     void *const callback_context FCS__PASS_ERR_STR(char **error_string),
-    int *last_arg)
+    int *const last_arg)
 {
     return freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         instance, argc, argv, start_arg, known_parameters, callback,

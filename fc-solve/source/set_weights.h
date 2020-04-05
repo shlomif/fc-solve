@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
 /*
  * set_weights.h - header file of the set_weights function.
  */
@@ -16,15 +14,14 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
-#include <ctype.h>
-#include "rinutils.h"
-#include "fcs_user.h"
+#include "rinutils/rinutils.h"
+#include "freecell-solver/fcs_user.h"
 
-static GCC_INLINE void fc_solve_set_weights(freecell_solver_str_t start_num,
-    const freecell_solver_str_t string_end, double *const befs_weights)
+static inline void fc_solve_set_weights(freecell_solver_str_t start_num,
+    const freecell_solver_str_t string_end,
+    fc_solve_weighting_float *const befs_weights)
 {
-    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
+    for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; ++i)
     {
         while (*start_num == ',')
         {
@@ -44,7 +41,8 @@ static GCC_INLINE void fc_solve_set_weights(freecell_solver_str_t start_num,
             return;
         }
         char *end_num;
-        befs_weights[i] = strtod(start_num, &end_num);
+        const_AUTO(val, strtod(start_num, &end_num));
+        befs_weights[i] = max(val, 0.0);
         start_num = end_num;
     }
 }

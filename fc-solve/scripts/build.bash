@@ -1,0 +1,1 @@
+gcc -I ../source/xxHash-wrapper/xxHash-0.7.0/ -I ../source/rinutils/rinutils/include -I ../source -I include -I ../source/include -Wall -Wextra -O3 -march=native -flto -fwhole-program ../scripts/range-hashes-output.c

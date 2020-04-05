@@ -51,7 +51,7 @@ The constructor. Blesses and calls _init() .
 sub new
 {
     my $class = shift;
-    my $self = {};
+    my $self  = {};
     bless $self, $class;
 
     # May throw an exception.
@@ -72,7 +72,7 @@ Gotta love dynamic languages like Perl 5.
 sub mk_accessors
 {
     my $package = shift;
-    return $package->mk_acc_ref([@_]);
+    return $package->mk_acc_ref( [@_] );
 }
 
 =head2 __PACKAGE__->mk_acc_ref([qw(method1 method2 method3)])
@@ -84,7 +84,7 @@ Creates the accessors in the array-ref of names at run-time.
 sub mk_acc_ref
 {
     my $package = shift;
-    my $names = shift;
+    my $names   = shift;
 
     my $mapping = +{ map { $_ => $_ } @$names };
 
@@ -98,68 +98,4 @@ EOF
 
 }
 
-=head1 AUTHOR
-
-Shlomi Fish, C<< <shlomif at iglu.org.il> >>
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Shlomif::FCS::CalcMetaScan
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Shlomif-FCS-CalcMetaScan>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Shlomif-FCS-CalcMetaScan>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Shlomif-FCS-CalcMetaScan>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Shlomif-FCS-CalcMetaScan>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (c) 2010 Shlomi Fish
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-=cut
-
-1; # End of Shlomif::FCS::CalcMetaScan::Move
-
+1;    # End of Shlomif::FCS::CalcMetaScan::Move

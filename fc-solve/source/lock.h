@@ -1,14 +1,12 @@
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
 /*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
-/*
- * lock.h - FCS_LOCK()/etc. macros for locking.
+ * lock.h - macros/functions for locking.
  */
 #pragma once
 
@@ -28,44 +26,93 @@ extern "C" {
 #include <pthread/rwlock_fcfs.h>
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #ifdef FCS_DBM_SINGLE_THREAD
 
-typedef fcs_bool_t fcs_lock_t;
-#define FCS_LOCK(lock)                                                         \
-    {                                                                          \
-    }
-#define FCS_UNLOCK(lock)                                                       \
-    {                                                                          \
-    }
-#define FCS_INIT_LOCK(lock)                                                    \
-    {                                                                          \
-    }
-#define FCS_DESTROY_LOCK(lock)                                                 \
-    {                                                                          \
-    }
-
+typedef bool fcs_lock;
+typedef bool fcs_condvar;
+static inline void fcs_lock_lock(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_lock_unlock(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_lock_init(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_lock_destroy(GCC_UNUSED fcs_lock *const lock) {}
+static inline void fcs_condvar_init(GCC_UNUSED fcs_condvar *const cond) {}
+static inline void fcs_condvar_destroy(GCC_UNUSED fcs_condvar *const cond) {}
+static inline void fcs_condvar__wait_on(
+    GCC_UNUSED fcs_condvar *const cond, GCC_UNUSED fcs_lock *const lock)
+{
+}
+static inline void fcs_condvar_signal(GCC_UNUSED fcs_condvar *const cond) {}
+static inline void fcs_condvar_broadcast(GCC_UNUSED fcs_condvar *const cond) {}
 #elif defined(FCS_DBM_USE_RWLOCK)
 
-typedef pthread_rwlock_fcfs_t *fcs_lock_t;
-#define FCS_LOCK(lock) pthread_rwlock_fcfs_gain_write(lock)
-#define FCS_UNLOCK(lock) pthread_rwlock_fcfs_release(lock)
-#define FCS_INIT_LOCK(lock) ((lock) = pthread_rwlock_fcfs_alloc())
-#define FCS_DESTROY_LOCK(lock) pthread_rwlock_fcfs_destroy(lock)
+typedef pthread_rwlock_fcfs_t *fcs_lock;
+static inline void fcs_lock_lock(fcs_lock *const lock)
+{
+    pthread_rwlock_fcfs_gain_write(*lock);
+}
+static inline void fcs_lock_unlock(fcs_lock *const lock)
+{
+    pthread_rwlock_fcfs_release(*lock);
+}
+static inline void fcs_lock_init(fcs_lock *const lock)
+{
+    *lock = pthread_rwlock_fcfs_alloc();
+}
+static inline void fcs_lock_destroy(fcs_lock *const lock)
+{
+    pthread_rwlock_fcfs_destroy(*lock);
+}
 
 #else
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
+static const pthread_cond_t initial_cond_constant = PTHREAD_COND_INITIALIZER;
 
-typedef pthread_mutex_t fcs_lock_t;
-#define FCS_LOCK(lock) pthread_mutex_lock(&(lock))
-#define FCS_UNLOCK(lock) pthread_mutex_unlock(&(lock))
-#define FCS_INIT_LOCK(lock) ((lock) = initial_mutex_constant)
-#define FCS_DESTROY_LOCK(lock)                                                 \
-    {                                                                          \
-    }
+typedef pthread_mutex_t fcs_lock;
+typedef pthread_cond_t fcs_condvar;
+static inline void fcs_lock_lock(fcs_lock *const lock)
+{
+    pthread_mutex_lock(lock);
+}
+static inline void fcs_lock_init(fcs_lock *const lock)
+{
+    *lock = initial_mutex_constant;
+}
+static inline void fcs_lock_unlock(fcs_lock *const lock)
+{
+    pthread_mutex_unlock(lock);
+}
+static inline void fcs_lock_destroy(fcs_lock *const lock)
+{
+    pthread_mutex_destroy(lock);
+}
+static inline void fcs_condvar_init(fcs_condvar *const cond)
+{
+    *cond = initial_cond_constant;
+    pthread_cond_init(cond, NULL);
+}
 
+static inline void fcs_condvar_destroy(fcs_condvar *const cond)
+{
+    pthread_cond_destroy(cond);
+}
+
+static inline void fcs_condvar__wait_on(
+    fcs_condvar *const cond, fcs_lock *const lock)
+{
+    pthread_cond_wait(cond, lock);
+}
+
+static inline void fcs_condvar_signal(fcs_condvar *const cond)
+{
+    pthread_cond_signal(cond);
+}
+
+static inline void fcs_condvar_broadcast(fcs_condvar *const cond)
+{
+    pthread_cond_broadcast(cond);
+}
 #endif
 
 #ifdef __cplusplus

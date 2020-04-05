@@ -20,4 +20,3 @@ parse_and_validate()
     }
 
 }
-

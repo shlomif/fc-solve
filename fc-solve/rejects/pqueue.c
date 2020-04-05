@@ -13,4 +13,3 @@
 
 /* manage a priority queue as a heap
    the heap is implemented as a fixed size array of pointers to your data */
-

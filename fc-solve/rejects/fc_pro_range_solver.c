@@ -1,12 +1,8 @@
 /*
- * =====================================================================================
- *
- *       Filename:  fc_pro_range_sovler.c
  *
  *    Description:  rejects from fc_pro_range_sovler.c
  *
  */
-
 
 #ifdef MYDEBUG
     {
@@ -43,4 +39,3 @@
         }
     }
 #endif
-

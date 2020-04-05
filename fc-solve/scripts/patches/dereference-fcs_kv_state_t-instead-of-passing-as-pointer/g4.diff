@@ -1,0 +1,169 @@
+diff --git a/fc-solve/source/check_and_add_state.c b/fc-solve/source/check_and_add_state.c
+index 41262532..62064994 100644
+--- a/fc-solve/source/check_and_add_state.c
++++ b/fc-solve/source/check_and_add_state.c
+@@ -234,7 +234,7 @@ static inline ul perl_hash_function(register const ub1 *s_ptr, /* the key */
+  * replaced_with_cached macro above.
+  * */
+ static inline void fc_solve_cache_stacks(
+-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state)
++    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t new_state)
+ {
+ #ifdef FCS_SINGLE_HARD_THREAD
+ #define instance hard_thread
+@@ -242,8 +242,8 @@ static inline void fc_solve_cache_stacks(
+     fc_solve_instance_t *const instance = hard_thread->instance;
+ #endif
+     STACKS__SET_PARAMS();
+-    register fcs_state_t *const new_state_key = new_state->key;
+-    register fcs_state_extra_info_t *const new_state_info = new_state->val;
++    register fcs_state_t *const new_state_key = new_state.key;
++    register fcs_state_extra_info_t *const new_state_info = new_state.val;
+     fcs_compact_allocator_t *const stacks_allocator =
+         &(HT_FIELD(hard_thread, allocator));
+     fcs_cards_column_t *current_stack = new_state_key->columns;
+@@ -424,10 +424,10 @@ static inline void upon_new_state(fc_solve_instance_t *const instance,
+ #endif
+ }
+ 
+-#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state->val);
++#define ON_STATE_NEW() upon_new_state(instance, hard_thread, new_state.val);
+ static inline fcs_bool_t handle_existing_void(
+     fc_solve_instance_t *const instance,
+-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
++    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t new_state,
+     fcs_kv_state_t *const existing_state_raw, void *const existing_void)
+ {
+     if (existing_void)
+@@ -446,7 +446,7 @@ static inline fcs_bool_t handle_existing_void(
+         instance, hard_thread, new_state, existing_state_raw, (existing_void))
+ 
+ fcs_bool_t fc_solve_check_and_add_state(
+-    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t *const new_state,
++    fc_solve_hard_thread_t *const hard_thread, fcs_kv_state_t new_state,
+     fcs_kv_state_t *const existing_state_raw)
+ {
+ /*
+@@ -454,7 +454,7 @@ fcs_bool_t fc_solve_check_and_add_state(
+  * some of the less commonly tested data storage backends. They should be
+  * tested and updated.
+  * */
+-#define new_state_key (new_state->key)
++#define new_state_key (new_state.key)
+ 
+ #ifdef FCS_SINGLE_HARD_THREAD
+ #define instance hard_thread
+@@ -495,9 +495,9 @@ fcs_bool_t fc_solve_check_and_add_state(
+     }
+ #endif
+ #ifdef FCS_RCS_STATES
+-#define A new_state->val, new_state->key
++#define A new_state.val, new_state.key
+ #else
+-#define A FCS_STATE_kv_to_collectible(new_state)
++#define A FCS_STATE_kv_to_collectible(&new_state)
+ #endif
+ #ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
+ #define B , hash_value_int
+diff --git a/fc-solve/source/instance.h b/fc-solve/source/instance.h
+index 3d393d45..325976f0 100644
+--- a/fc-solve/source/instance.h
++++ b/fc-solve/source/instance.h
+@@ -137,7 +137,7 @@ typedef struct fc_solve_hard_thread_struct fc_solve_hard_thread_t;
+ #endif
+ 
+ extern fcs_bool_t fc_solve_check_and_add_state(
+-    fc_solve_hard_thread_t *, fcs_kv_state_t *, fcs_kv_state_t *);
++    fc_solve_hard_thread_t *, fcs_kv_state_t, fcs_kv_state_t *);
+ 
+ #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
+ extern guint fc_solve_hash_function(gconstpointer key);
+diff --git a/fc-solve/source/lib.c b/fc-solve/source/lib.c
+index 07af3683..264cce95 100644
+--- a/fc-solve/source/lib.c
++++ b/fc-solve/source/lib.c
+@@ -549,15 +549,13 @@ static inline void fc_solve_start_instance_process_with_board(
+ #endif
+ 
+     fcs_kv_state_t no_use;
+-    fcs_kv_state_t pass_copy = FCS_STATE_keyval_pair_to_kv(state_copy_ptr);
+-
+     fc_solve_check_and_add_state(
+ #ifdef FCS_SINGLE_HARD_THREAD
+         instance,
+ #else
+         instance->hard_threads,
+ #endif
+-        &pass_copy, &no_use);
++        FCS_STATE_keyval_pair_to_kv(state_copy_ptr), &no_use);
+ 
+ #ifndef FCS_SINGLE_HARD_THREAD
+     instance->current_hard_thread = instance->hard_threads;
+diff --git a/fc-solve/source/meta_move_funcs_helpers.h b/fc-solve/source/meta_move_funcs_helpers.h
+index b6e1b36f..ee96652b 100644
+--- a/fc-solve/source/meta_move_funcs_helpers.h
++++ b/fc-solve/source/meta_move_funcs_helpers.h
+@@ -59,7 +59,7 @@ static inline int calc_max_simple_simon_seq_move(const int num_empty_cols)
+ #define sfs_check_state_end()                                                  \
+     fc_solve_derived_states_list_add_state(derived_states_list,                \
+         fc_solve_sfs_check_state_end(soft_thread, raw_state_raw,               \
+-            &pass_new_state FCS__pass_moves(moves)),                           \
++            pass_new_state FCS__pass_moves(moves)),                            \
+         state_context_value)
+ 
+ static inline void fc_solve_move_sequence_function(
+diff --git a/fc-solve/source/scans.c b/fc-solve/source/scans.c
+index a043a17a..d7a7222b 100644
+--- a/fc-solve/source/scans.c
++++ b/fc-solve/source/scans.c
+@@ -732,7 +732,7 @@ int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const hard_thread,
+ 
+ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
+     fc_solve_soft_thread_t *const soft_thread, fcs_kv_state_t raw_state_raw,
+-    fcs_kv_state_t *const raw_ptr_new_state_raw FCS__pass_moves(
++    fcs_kv_state_t raw_new_state_raw FCS__pass_moves(
+         fcs_move_stack_t *const moves))
+ {
+     const_SLOT(hard_thread, soft_thread);
+@@ -748,17 +748,17 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
+ #endif
+     fcs_kv_state_t existing_state;
+ 
+-#define ptr_new_state_foo (raw_ptr_new_state_raw->val)
++#define ptr_new_state_foo (raw_new_state_raw.val)
+ #define ptr_state (raw_state_raw.val)
+ 
+     if (!fc_solve_check_and_add_state(
+-            hard_thread, raw_ptr_new_state_raw, &existing_state))
++            hard_thread, raw_new_state_raw, &existing_state))
+     {
+         if (HT_FIELD(hard_thread, allocated_from_list))
+         {
+             ptr_new_state_foo->parent = instance->list_of_vacant_states;
+             instance->list_of_vacant_states =
+-                INFO_STATE_PTR(raw_ptr_new_state_raw);
++                INFO_STATE_PTR(&raw_new_state_raw);
+         }
+         else
+         {
+@@ -805,6 +805,6 @@ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
+     }
+     else
+     {
+-        return INFO_STATE_PTR(raw_ptr_new_state_raw);
++        return INFO_STATE_PTR(&raw_new_state_raw);
+     }
+ }
+diff --git a/fc-solve/source/scans.h b/fc-solve/source/scans.h
+index 8a0335f4..6099553c 100644
+--- a/fc-solve/source/scans.h
++++ b/fc-solve/source/scans.h
+@@ -171,7 +171,7 @@ extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,
+ 
+ extern fcs_collectible_state_t *fc_solve_sfs_check_state_end(
+     fc_solve_soft_thread_t *, fcs_kv_state_t,
+-    fcs_kv_state_t *FCS__pass_moves(fcs_move_stack_t *));
++    fcs_kv_state_t FCS__pass_moves(fcs_move_stack_t *));
+ 
+ #ifdef __cplusplus
+ }

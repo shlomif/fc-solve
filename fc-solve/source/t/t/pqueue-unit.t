@@ -14,7 +14,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    pri_queue_t pq;
+    pri_queue pq;
 } PqInC;
 
 SV* _proto_new() {
@@ -29,11 +29,11 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-static GCC_INLINE PqInC * deref(SV * const obj) {
+static inline PqInC * deref(SV * const obj) {
     return (PqInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE pri_queue_t * q(SV * const obj) {
+static inline pri_queue * q(SV * const obj) {
     return &(deref(obj)->pq);
 }
 
@@ -44,11 +44,11 @@ int is_empty(SV * obj) {
 void push(SV * obj, char * val, int rating) {
     SV * const sv = newSVpv(val, 0);
 
-    fc_solve_pq_push(q(obj), (fcs_collectible_state_t *)sv, rating);
+    fc_solve_pq_push(q(obj), (fcs_collectible_state *)sv, rating);
 }
 
 SV * pop(SV * obj) {
-    fcs_collectible_state_t * val;
+    fcs_collectible_state * val;
 
     fc_solve_pq_pop(q(obj), &val);
 
@@ -76,54 +76,62 @@ package main;
     my $pq = PQ->new;
 
     # TEST
-    ok (scalar($pq->is_empty()), "PQ is empty upon init.");
+    ok( scalar( $pq->is_empty() ), "PQ is empty upon init." );
 
-    $pq->push("Hello", 24);
-
-    # TEST
-    ok (scalar(! $pq->is_empty()), "PQ is not empty upon insertion.");
+    $pq->push( "Hello", 24 );
 
     # TEST
-    is (scalar($pq->pop()), "Hello", "Received the right item after pop.");
+    ok( scalar( !$pq->is_empty() ), "PQ is not empty upon insertion." );
 
     # TEST
-    ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
+    is( scalar( $pq->pop() ), "Hello", "Received the right item after pop." );
 
     # TEST
-    ok (!defined($pq->pop()), "Item is null.");
+    ok( scalar( $pq->is_empty() ), "PQ is empty again after popping." );
+
+    # TEST
+    ok( !defined( $pq->pop() ), "Item is null." );
 }
 
 {
     my $pq = PQ->new;
 
     # TEST
-    ok (!defined($pq->pop()), "Popped item is null upon empty");
+    ok( !defined( $pq->pop() ), "Popped item is null upon empty" );
 }
 
 {
     my $pq = PQ->new;
 
-    $pq->push("ShouldBeFirst", 1000);
-    $pq->push("ShouldBeSecond", 1);
+    $pq->push( "ShouldBeFirst",  1000 );
+    $pq->push( "ShouldBeSecond", 1 );
 
     # TEST
-    is (scalar($pq->pop()), "ShouldBeFirst", "First string out on in-order insert.");
+    is( scalar( $pq->pop() ),
+        "ShouldBeFirst", "First string out on in-order insert." );
+
     # TEST
-    is (scalar($pq->pop()), "ShouldBeSecond", "Second string out on in-order insert.");
+    is( scalar( $pq->pop() ),
+        "ShouldBeSecond", "Second string out on in-order insert." );
+
     # TEST
-    ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
+    ok( scalar( $pq->is_empty() ), "PQ is empty again after popping." );
 }
 
 {
     my $pq = PQ->new;
 
-    $pq->push("ShouldBeSecond", 1);
-    $pq->push("ShouldBeFirst", 1000);
+    $pq->push( "ShouldBeSecond", 1 );
+    $pq->push( "ShouldBeFirst",  1000 );
 
     # TEST
-    is (scalar($pq->pop()), "ShouldBeFirst", "First string out on reverse-order insert.");
+    is( scalar( $pq->pop() ),
+        "ShouldBeFirst", "First string out on reverse-order insert." );
+
     # TEST
-    is (scalar($pq->pop()), "ShouldBeSecond", "Second string out on reverse-order insert.");
+    is( scalar( $pq->pop() ),
+        "ShouldBeSecond", "Second string out on reverse-order insert." );
+
     # TEST
-    ok (scalar($pq->is_empty()), "PQ is empty again after popping.");
+    ok( scalar( $pq->is_empty() ), "PQ is empty again after popping." );
 }

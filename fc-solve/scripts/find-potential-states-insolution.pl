@@ -6,7 +6,7 @@
 use strict;
 use warnings;
 
-use IO::All;
+use IO::All qw/ io /;
 
 my $fh = io->file("dump.txt");
 
@@ -18,19 +18,19 @@ sub _read_line
     return $fh->getline();
 }
 
-while (my $line = _read_line())
+while ( my $line = _read_line() )
 {
-    if ($line =~ m{\A: })
+    if ( $line =~ m{\A: } )
     {
         my @l = ($line);
 
-        while (($line = _read_line()) && $line =~ m{\A: })
+        while ( ( $line = _read_line() ) && $line =~ m{\A: } )
         {
             push @l, $line;
         }
 
         my @empties = grep { /\A:\s*\z/ } @l;
-        if (@empties >= 3)
+        if ( @empties >= 3 )
         {
             print "Two empty columns at Line # $line_num\n";
         }

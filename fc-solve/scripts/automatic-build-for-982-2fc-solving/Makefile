@@ -38,7 +38,7 @@ $(TRUNK_STAMP):
 libavl2: $(LIBAVL2_STAMP)
 
 $(LIBAVL2_STAMP):
-	wget -c http://ftp.gnu.org/pub/gnu/avl/$(AVL_ARC)
+	wget -c https://ftp.gnu.org/pub/gnu/avl/$(AVL_ARC)
 	tar -xvf $(AVL_ARC)
 	if ! test -e $@ ; then > $@ ; fi
 

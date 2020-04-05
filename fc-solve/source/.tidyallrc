@@ -1,0 +1,11 @@
+[ClangFormat]
+ignore = build/**/* asprintf-1.0/* patsolve/patsolve/Rejects/* patsolve/patsolve/ga/* fcs-libavl/* sys/tree.h xxHash-wrapper/*/*
+select = **/*.{c,cpp,h,hpp}
+
+[PerlTidy]
+argv = -ci=4 -bl -cti=0
+ignore = rinutils/**/* **/scripts/err-on-unbuilt-executable.pl **/{cmpdigest,valgrind,verify}--*.t
+select = **/*.{pl,pm,t}
+
+[TestCount]
+select = **/*.t

@@ -1,0 +1,6 @@
+[PerlTidy]
+argv = -ci=4 -bl -cti=0
+select = {lib,t}/*.{pl,pm,t} {lib,t}/**/*.{pl,pm,t}
+
+[TestCount]
+select = t/*.t

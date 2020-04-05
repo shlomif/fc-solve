@@ -27,3 +27,37 @@ SET(CPACK_SOURCE_IGNORE_FILES
     "/Testing/"
     "/_Inline/"
 )
+# Inspired from /usr/share/autoconf/autoconf/c.m4
+FOREACH(KEYWORD "inline" "__inline__" "__inline")
+   IF(NOT DEFINED HAVE_C_INLINE)
+     TRY_COMPILE(C_HAS_${KEYWORD} "${CMAKE_CURRENT_BINARY_DIR}"
+       "${CMAKE_CURRENT_SOURCE_DIR}/test_inline.c"
+       COMPILE_DEFINITIONS "-Dinline=${KEYWORD}")
+     IF(C_HAS_${KEYWORD})
+       SET(HAVE_C_INLINE TRUE)
+       SET(FCS_INLINE_KEYWORD "${KEYWORD}")
+     ENDIF()
+   ENDIF()
+ENDFOREACH()
+
+# Cancelled out.
+IF ()
+    RUN_POD2MAN(
+        "${CMAKE_CURRENT_SOURCE_DIR}/fc-solve.pod"
+        "fc-solve.6"
+        "6"
+        "Freecell Solver"
+        "Freecell Solver ${VERSION}"
+    )
+ENDIF ()
+
+ADD_CUSTOM_TARGET(
+    "dist"
+    COMMAND make package_source
+    COMMAND
+    "perl" "${CMAKE_CURRENT_SOURCE_DIR}/scripts/normalize-cmake-source-tarballs-time-stamps.pl"
+    "--version" "${VERSION}"
+    "--package-base" "${CPACK_PACKAGE_NAME}"
+    "--source-dir" "${CMAKE_CURRENT_SOURCE_DIR}"
+    "--binary-dir" "${CMAKE_CURRENT_BINARY_DIR}"
+)

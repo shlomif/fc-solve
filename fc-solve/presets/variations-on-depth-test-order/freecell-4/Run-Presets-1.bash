@@ -81,4 +81,3 @@ done
 
 _preset "qlad"  -to 01234567  -dto 13,0187465  -dto 26,0134587 -dto 35,819435
 _preset "encad"  -to 01234567  -dto 13,0187465  -dto 26,0134587 -dto 35,0123456789
-

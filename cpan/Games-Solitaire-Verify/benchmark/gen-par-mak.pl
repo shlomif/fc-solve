@@ -3,45 +3,38 @@
 use strict;
 use warnings;
 
-use IO::All;
-use Template;
+use Template ();
 
-my $MIN = 1;
-my $MAX = 32_000;
+my $MIN  = 1;
+my $MAX  = 32_000;
 my $STEP = 100;
 
 my $ARGS = +{
+    cmd => qq#perl benchmark-no-backticks.pl -- -l lg -ni -l fg#,
     min => $MIN,
-    max => ($MAX / $STEP),
-    step => $STEP,
+    max => ( $MAX / $STEP ),
     res => sub {
         return "Results/" . shift . ".res";
     },
+    step => $STEP,
 };
 
-my $template = Template->new(
-    {
-            EVAL_PERL    => 1,               # evaluate Perl code blocks
-    }
-);
+my $template = Template->new( {} );
 
 my $TEXT = <<'EOF';
 all:[% FOREACH i = [min .. max] %] [% res(i) %][% END %]
 
 [% FOREACH i = [min .. max] %]
 [% res(i) %]:
-[% "\t" %]F=[% min + (i - 1) * step %] L=[% min + i * step - 1 %] perl benchmark-no-backticks.pl -- -l as -ni -l fg > [% res(i) %]
+[% "\t" %]F=[% min + (i - 1) * step %] L=[% min + i * step - 1 %] [% cmd %] > [% res(i) %]
 [% END %]
 EOF
 
-$template->process(\$TEXT,
-    $ARGS,
-    'par2.mak',
-) or die $template->error;
+$template->process( \$TEXT, $ARGS, 'par2.mak', ) or die $template->error;
 
 my $NINJA_TEXT = <<'EOF';
 rule b
-  command = F=$f L=$l perl benchmark-no-backticks.pl -- -l as -ni -l fg > $out
+  command = F=$f L=$l [% cmd %] > $out
 
 [% FOREACH i = [min .. max] %]
 build [% res(i) %]: b
@@ -50,8 +43,5 @@ build [% res(i) %]: b
 [% END %]
 EOF
 
-$template->process(\$NINJA_TEXT,
-    $ARGS,
-    'build.ninja',
-) or die $template->error;
-
+$template->process( \$NINJA_TEXT, $ARGS, 'build.ninja', )
+    or die $template->error;

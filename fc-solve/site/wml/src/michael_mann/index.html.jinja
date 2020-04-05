@@ -1,0 +1,33 @@
+{% extends "template.jinja" %}
+{% block title %}Michael Mann’s Freecell Solver Work{% endblock %}
+{% block body %}
+
+
+{% call h2_section(id="about",title="About") %}
+<p>
+Michael Mann converted an old version of Freecell Solver to C++ and
+added <a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>-generated
+documentation to it.
+</p>
+{% endcall %}
+
+{% call h2_section(id="resources",title="Resources") %}
+<ul>
+
+<li>
+<p>
+<a href="cppfreecell.zip">The C++ Source</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="doxygen/html/">The Doxygen Hypertext Browser Information</a>
+</p>
+</li>
+
+</ul>
+
+{% endcall %}
+
+{% endblock %}

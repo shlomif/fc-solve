@@ -1,1 +1,6 @@
-sudo_renice bash -c "export FCS_PATH=\"$b\"; export FCS_SRC_PATH=\"$c_src\"; PATH=\"\$HOME/apps/perl/bleadperl/bin:\$PATH\"; time make -j4 -f par.mak"
+rm -f Results/*.res
+if perl FC_Solve/PreSanityCheck.pm
+then
+    # sudo_renice bash -c "export FCS_PATH=\"$b\"; export FCS_SRC_PATH=\"$c_src\"; time make -j4 -f par.mak"
+    sudo_renice bash -c "export FCS_PATH=\"$b\"; export FCS_SRC_PATH=\"$c_src\"; export LD_LIBRARY_PATH=\"$LD_LIBRARY_PATH\" ; PATH=\"\$HOME/apps/perl/bleadperl/bin:\$PATH\"; time ninja -j4"
+fi

@@ -1,0 +1,126 @@
+{% extends "template.jinja" %}
+{% block title %}Report: Solving the Remaining Freecell Pro 4 Freecells Intractable Deals{% endblock %}
+{% block page_extra_head_elements %}
+<script src="{{ base_path }}js/jquery.flot.js"></script>
+{{ js_requirejs() }}
+{% endblock %}
+{% block body %}
+
+
+<script>
+requirejs.config({
+    baseUrl: '{{ base_path }}js',
+    });
+require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
+</script>
+
+<toc />
+
+<h2 id="intro">Introduction</h2>
+
+<p>
+<b>Publishing Date:</b> 21 November 2016.
+</p>
+
+<p>
+Theodore Pringle had posted <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1466">an announcement</a>
+to the "fc-solve-discuss" group, where he said that he ran a
+<a href="https://en.wikipedia.org/wiki/FreeCell">Freecell</a> solver over all
+the deals in the 8 milliard (1 to 8,589,934,591)
+<a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a> deals range
+which are based on the original <a href="https://en.wikipedia.org/wiki/Microsoft_FreeCell">Microsoft FreeCell</a> dealing.
+He ended up discovering that there are 102,032
+impossible deals and 46 intractable deals. Further analysis reduced the number
+of intractable deals down to 9 - see
+<a href="https://github.com/shlomif/freecell-pro-intractable-deals">the updated
+list</a>.
+</p>
+
+<p>
+I (= Shlomi Fish) set out to determine the solvability of these intractable
+deals while using
+<a href="http://fc-solve.shlomifish.org/">Freecell Solver</a>'s
+depth_dbm_fc_solver, which is a solver which occupies relatively
+little RAM, and aims to completely scan all positions in a board and
+conclusively determine whether it is solvable or not. That solver was ran on an
+<a href="https://aws.amazon.com/">Amazon Web Services (“AWS”)</a> EC2 node
+with 256 GB of RAM. (Thanks to Jonathan Ringstad for the suggestion to use
+AWS.)
+</p>
+
+<h2 id="conclusions">Conclusions</h2>
+
+<p>
+Deals 219837216, 1252215044, 2255988055, 2901685480, 2902413565, 4260084873,
+6687921694, and 7489392343 were <b>shown to be impossible</b> by the solver.
+Deal 6825625742 ran out of hard disk space (we were given only 8 GB of disk
+space by default, which turned out to not be enough), and appears to be
+impossible as well, but not yet provably so.
+</p>
+
+<h3 id="reflections">Some Reflections</h3>
+
+<p>
+This space will be filled with the contemporary statistics of the total
+number and percentage of impossible and solvable deals out of the 8.5 milliard
+deals.
+</p>
+
+<p>
+Otherwise note that one surprising fact is that solving 4-freecells deals was
+much easier for us to do programatically than solving the same
+2-freecells deals. An
+<a href="http://fc-solve.blogspot.co.il/2012/09/two-freecell-solvability-report-for.html">earlier report</a>
+about their statistics, ran into more difficulties solving the first 400,000
+2-freecells deals, which is a deals’ space smaller by over 4 orders of
+magnitude. Perhaps this can be explained by the fact that many more deals
+are winnable using 4 freecells.
+</p>
+
+<h2 id="charts">Charts</h2>
+
+<h3 id="queue-items">Queue Items Per Iterations for Each of the Deals</h3>
+
+<p>
+<b>Note:</b> the depth_dbm_fc_solver uses a variation on
+<a href="https://en.wikipedia.org/wiki/Breadth-first_search">breadth-first
+search</a> where we keep a queue of items to check and check an iterations
+count of states. The x-axis - "Iterations" roughly corresponds to time while
+the y-axis, corresponds to the number of states in the queue.
+</p>
+
+<h4 id="iters-summary-table">Iterations Summary Table</h4>
+
+{{ charts2 }}
+
+<h2 id="links">Links and References</h2>
+
+<ul>
+
+<li>
+<p>
+<a href="https://drive.google.com/drive/u/0/folders/0B6WZWNModsLfaEIzbnM5UkpHek0">Theodore Pringle’s lists of impossible and intractable FC-Pro deals</a> - on
+Google Drive.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/scripts/prepare-self-contained-dbm-etc-solvers-packages-for-hpc-machines/prepare_aws_depth_dbm_fc_solver_self_contained_package.pl">The script used to prepare the source package for deployment</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1483">fc-solve-discuss thread about the effort</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="data/">Log/output files of the runs</a>
+</p>
+</li>
+</ul>
+
+{% endblock %}

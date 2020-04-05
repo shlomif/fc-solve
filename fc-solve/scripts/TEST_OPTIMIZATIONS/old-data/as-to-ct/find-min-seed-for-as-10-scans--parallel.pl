@@ -8,7 +8,7 @@ use FindSeed ();
 my $x = <<'EOF';
 EOF
 
-my @deals = (<<'EOF' =~ /^ *([0-9]+)/gms);
+my @deals = ( <<'EOF' =~ /^ *([0-9]+)/gms );
    617	7992
  19677	8037
  13583	8166
@@ -37,8 +37,7 @@ my @deals = (<<'EOF' =~ /^ *([0-9]+)/gms);
   1941	19934
 EOF
 
-my @scans =
-(
+my @scans = (
     q#--method random-dfs -to "01[2345789]"#,
     q#--method random-dfs -to "01[234579]"#,
     q#--method random-dfs -to "01[234589]"#,
@@ -55,8 +54,8 @@ my @scans =
 
 FindSeed->parallel_find(
     {
-        scan => \@scans,
-        deals => \@deals,
+        scan      => \@scans,
+        deals     => \@deals,
         threshold => 10,
     },
 );

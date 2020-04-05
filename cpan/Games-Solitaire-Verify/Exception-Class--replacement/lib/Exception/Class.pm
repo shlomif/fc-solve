@@ -11,7 +11,8 @@ BEGIN { $BASE_EXC_CLASS ||= 'Exception::Class::Base'; }
 
 our %CLASSES;
 
-sub import {
+sub import
+{
     my $class = shift;
 
     local $Exception::Class::Caller = caller();
@@ -19,10 +20,11 @@ sub import {
     my %c;
 
     my %needs_parent;
-    while ( my $subclass = shift ) {
+    while ( my $subclass = shift )
+    {
         my $def = ref $_[0] ? shift : {};
-        $def->{isa}
-            = $def->{isa}
+        $def->{isa} =
+            $def->{isa}
             ? ( ref $def->{isa} ? $def->{isa} : [ $def->{isa} ] )
             : [];
 
@@ -32,7 +34,8 @@ sub import {
     # We need to sort by length because if we check for keys in the
     # Foo::Bar:: stash, this creates a "Bar::" key in the Foo:: stash!
 MAKE_CLASSES:
-    foreach my $subclass ( sort { length $a <=> length $b } keys %c ) {
+    foreach my $subclass ( sort { length $a <=> length $b } keys %c )
+    {
         my $def = $c{$subclass};
 
         # We already made this one.
@@ -40,8 +43,10 @@ MAKE_CLASSES:
 
         {
             no strict 'refs';
-            foreach my $parent ( @{ $def->{isa} } ) {
-                unless ( keys %{"$parent\::"} ) {
+            foreach my $parent ( @{ $def->{isa} } )
+            {
+                unless ( keys %{"$parent\::"} )
+                {
                     $needs_parent{$subclass} = {
                         parents => $def->{isa},
                         def     => $def
@@ -57,7 +62,8 @@ MAKE_CLASSES:
         );
     }
 
-    foreach my $subclass ( keys %needs_parent ) {
+    foreach my $subclass ( keys %needs_parent )
+    {
 
         # This will be used to spot circular references.
         my %seen;
@@ -65,7 +71,8 @@ MAKE_CLASSES:
     }
 }
 
-sub _make_parents {
+sub _make_parents
+{
     my $class    = shift;
     my $needs    = shift;
     my $subclass = shift;
@@ -81,12 +88,13 @@ sub _make_parents {
     # mentioned is in the 'isa' param for some other class, which is
     # not a good enough reason to make a new class.
     die
-        "Class $subclass appears to be a typo as it is only specified in the 'isa' param for $child\n"
+"Class $subclass appears to be a typo as it is only specified in the 'isa' param for $child\n"
         unless exists $needs->{$subclass}
         || $CLASSES{$subclass}
         || keys %{"$subclass\::"};
 
-    foreach my $c ( @{ $needs->{$subclass}{parents} } ) {
+    foreach my $c ( @{ $needs->{$subclass}{parents} } )
+    {
 
         # It's been made
         next if $CLASSES{$c} || keys %{"$c\::"};
@@ -107,7 +115,8 @@ sub _make_parents {
     );
 }
 
-sub _make_subclass {
+sub _make_subclass
+{
     my $class = shift;
     my %p     = @_;
 
@@ -115,7 +124,8 @@ sub _make_subclass {
     my $def      = $p{def};
 
     my $isa;
-    if ( $def->{isa} ) {
+    if ( $def->{isa} )
+    {
         $isa = ref $def->{isa} ? join ' ', @{ $def->{isa} } : $def->{isa};
     }
     $isa ||= $BASE_EXC_CLASS;
@@ -136,7 +146,8 @@ our \$$version_name = '1.1';
 
 EOPERL
 
-    if ( $def->{description} ) {
+    if ( $def->{description} )
+    {
         ( my $desc = $def->{description} ) =~ s/([\\\'])/\\$1/g;
         $code .= <<"EOPERL";
 sub description
@@ -147,31 +158,35 @@ EOPERL
     }
 
     my @fields;
-    if ( my $fields = $def->{fields} ) {
+    if ( my $fields = $def->{fields} )
+    {
         @fields = UNIVERSAL::isa( $fields, 'ARRAY' ) ? @$fields : $fields;
 
-        $code
-            .= "sub Fields { return (\$_[0]->SUPER::Fields, "
+        $code .=
+              "sub Fields { return (\$_[0]->SUPER::Fields, "
             . join( ", ", map { "'$_'" } @fields )
             . ") }\n\n";
 
-        foreach my $field (@fields) {
+        foreach my $field (@fields)
+        {
             $code .= sprintf( "sub %s { \$_[0]->{%s} }\n", $field, $field );
         }
     }
 
-    if ( my $alias = $def->{alias} ) {
+    if ( my $alias = $def->{alias} )
+    {
         die "Cannot make alias without caller"
             unless defined $Exception::Class::Caller;
 
         no strict 'refs';
-        *{"$Exception::Class::Caller\::$alias"}
-            = sub { $subclass->throw(@_) };
+        *{"$Exception::Class::Caller\::$alias"} =
+            sub { $subclass->throw(@_) };
     }
 
-    if ( my $defaults = $def->{defaults} ) {
-        $code
-            .= "sub _defaults { return shift->SUPER::_defaults, our \%_DEFAULTS }\n";
+    if ( my $defaults = $def->{defaults} )
+    {
+        $code .=
+"sub _defaults { return shift->SUPER::_defaults, our \%_DEFAULTS }\n";
         no strict 'refs';
         *{"$subclass\::_DEFAULTS"} = {%$defaults};
     }
@@ -183,7 +198,8 @@ EOPERL
     $CLASSES{$subclass} = 1;
 }
 
-sub caught {
+sub caught
+{
     my $e = $@;
 
     return $e unless $_[1];

@@ -1,65 +1,38 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * range_solvers_gen_ms_boards.h - a header file that defines some
- * static (and preferably inline) routines for generating the Microsoft
- * boards.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// range_solvers_gen_ms_boards.h - a header file that defines some
+// static (and preferably inline) routines for generating the Microsoft
+// boards.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <string.h>
-
 #include "gen_ms_boards__rand.h"
+#include "board_gen_lookup1.h"
 
-typedef int CARD;
+typedef size_t CARD;
 
 #define SUIT(card) ((card) & (4 - 1))
 #define VALUE(card) ((card) >> 2)
 
-#define MAXPOS 7
-#define MAXCOL 8
-
 static const char *card_to_string_values = "A23456789TJQK";
 static const char *card_to_string_suits = "CDHS";
 
-static GCC_INLINE void card_to_string(char *const s, const CARD card)
+static inline void card_to_string(char *const s, const CARD card)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
 }
 
-#ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-/* This is to settle gcc's -Wmissing-prototypes which complains about missing
- * prototypes for "extern" subroutines.
- *
- * It is not critical that it would be in the same place because the only thing
- * that uses this function is Python's ctypes (in the test files under t/t/ )
- * which does not process the
- * included C code. In the future, we may have an external API in which case
- * we'll devise a header for this routine.
- *
- * */
-void DLLEXPORT fc_solve_get_board_l(
-    const long long gamenumber, char *const ret);
-
-extern void DLLEXPORT fc_solve_get_board_l(
-    const long long gamenumber, char *const ret)
-#else
-static GCC_INLINE void get_board_l(const long long gamenumber, char *const ret)
-#endif
+static inline void get_board__setup_string(char *const ret)
 {
-    long long seedx = microsoft_rand__calc_init_seedx(gamenumber);
     strcpy(ret, "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX XX\n"
@@ -68,60 +41,97 @@ static GCC_INLINE void get_board_l(const long long gamenumber, char *const ret)
                 "XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX\n"
                 "XX XX XX XX XX XX\n");
+}
 
+static inline void get_board_l__without_setup(
+#ifdef FCS_DEAL_ONLY_UP_TO_2G
+    const fc_solve_ms_deal_idx_type seedx
+#else
+    const fc_solve_ms_deal_idx_type deal_idx
+#endif
+    ,
+    char *const ret)
+{
+// #define FCS_DEAL_ONLY_UP_TO_2G
+#ifdef FCS_DEAL_ONLY_UP_TO_2G
+#else
+    microsoft_rand seedx =
+        microsoft_rand__calc_init_seedx((microsoft_rand)deal_idx);
+#endif
     CARD deck[52]; /* deck of 52 unique cards */
 
     /* shuffle cards */
 
-    for (int i = 0; i < 52; i++) /* put unique card in each deck loc. */
+    for (size_t i = 0; i < 52; ++i) /* put unique card in each deck loc. */
     {
         deck[i] = i;
     }
 
+    microsoft_rand_uint num_cards_left = 52;
+    for (size_t i = 0; i < 52; ++i)
     {
-        microsoft_rand_uint_t num_cards_left =
-            52; /*  cards left to be chosen in shuffle */
-        for (int i = 0; i < 52; i++)
-        {
-            const microsoft_rand_uint_t j =
-                microsoft_rand__game_num_rand(&seedx, gamenumber) %
-                num_cards_left;
-            const int col = (i & (8 - 1));
-            const int card_idx = i >> 3;
-            card_to_string(
-                &ret[3 * (col * 7 - ((col > 4) ? (col - 4) : 0) + card_idx)],
-                deck[j]);
-            deck[j] = deck[--num_cards_left];
-        }
+#ifdef FCS_DEAL_ONLY_UP_TO_2G
+        const microsoft_rand_uint j =
+            microsoft_rand_rand(&seedx) % num_cards_left;
+#if 0
+        exit(-1);
+#endif
+#else
+        const microsoft_rand_uint j =
+            microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;
+#endif
+        card_to_string(&ret[offset_by_i[i]], deck[j]);
+        deck[j] = deck[--num_cards_left];
     }
 }
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-/* This is to settle gcc's -Wmissing-prototypes which complains about missing
- * prototypes for "extern" subroutines.
+/* This is to settle gcc's -Wmissing-prototypes which complains about
+ * missing prototypes for "extern" subroutines.
  *
- * It is not critical that it would be in the same place because the only thing
- * that uses this function is Python's ctypes (in the test files under t/t/ )
- * which does not process the
- * included C code. In the future, we may have an external API in which case
- * we'll devise a header for this routine.
+ * It is not critical that it would be in the same place because the only
+ * thing that uses this function is Python's ctypes (in the test files under
+ * t/t/ ) which does not process the included C code. In the future, we may
+ * have an external API in which case we'll devise a header for this
+ * routine.
  *
  * */
-void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret);
+void DLLEXPORT fc_solve_get_board_l(
+    const fc_solve_ms_deal_idx_type deal_idx, char *const ret);
+#endif
 
-extern void DLLEXPORT fc_solve_get_board(long gamenumber, char *ret)
-#else
-static GCC_INLINE void get_board(long gamenumber, char *ret)
-#endif
-{
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-    fc_solve_get_board_l((long long)gamenumber, ret);
+/* This is to settle gcc's -Wmissing-prototypes which complains about
+ * missing prototypes for "extern" subroutines.
+ *
+ * It is not critical that it would be in the same place because the only
+ * thing that uses this function is Python's ctypes (in the test files under
+ * t/t/ ) which does not process the included C code. In the future, we may
+ * have an external API in which case we'll devise a header for this
+ * routine.
+ *
+ * */
+void DLLEXPORT fc_solve_get_board_l(
+    const fc_solve_ms_deal_idx_type deal_idx, char *const ret);
+
+extern void DLLEXPORT fc_solve_get_board_l(
 #else
-    get_board_l((long long)gamenumber, ret);
+static inline void get_board_l(
 #endif
+    const fc_solve_ms_deal_idx_type seedx, char *const ret)
+{
+    get_board__setup_string(ret);
+    get_board_l__without_setup(seedx, ret);
 }
 
-typedef char fcs_state_string_t[52 * 3 + 8 + 1];
+#ifndef FCS_GEN_BOARDS_WITH_EXTERNAL_API
+static inline void get_board(unsigned long deal_idx, char *ret)
+{
+    get_board_l(deal_idx, ret);
+}
+#endif
+
+typedef char fcs_state_string[52 * 3 + 8 + 1];
 
 #ifdef __cplusplus
 }

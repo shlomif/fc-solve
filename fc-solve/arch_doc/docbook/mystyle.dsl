@@ -63,4 +63,3 @@
 <external-specification id="print-stylesheet" document="print-ss">
 <external-specification id="html-stylesheet"  document="html-ss">
 </style-sheet>
-

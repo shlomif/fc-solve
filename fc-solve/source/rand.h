@@ -1,43 +1,35 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * rand.h - header for the Freecell Solver pseudo-random number generator.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// rand.h - header for the Freecell Solver pseudo-random number generator.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
-typedef long fcs_rand_t;
+typedef long fcs_rand_gen;
 
-static GCC_INLINE void fc_solve_rand_init(
-    fcs_rand_t *const my_rand, const unsigned int seed)
+static inline void fc_solve_rand_init(
+    fcs_rand_gen *const my_rand, const fcs_rand_gen seed)
 {
-    *my_rand = (long)seed;
+    *my_rand = seed;
 }
 
-static GCC_INLINE int fc_solve_rand_rand15(fcs_rand_t *const my_rand)
+static inline int fc_solve_rand_rand15(fcs_rand_gen *const my_rand)
 {
     return ((((*my_rand) = ((*my_rand) * 214013 + 2531011)) >> 16) & 0x7fff);
 }
 
-/*
- *
- * This function constructs a larger integral number of out of two
- * 15-bit ones.
- *
- * */
-static GCC_INLINE int fc_solve_rand_get_random_number(fcs_rand_t *const my_rand)
+// This function constructs a larger integral number of out of two
+// 15-bit ones.
+static inline int fc_solve_rand_get_random_number(fcs_rand_gen *const my_rand)
 {
     const int first = fc_solve_rand_rand15(my_rand);
     return (first | (fc_solve_rand_rand15(my_rand) << 15));

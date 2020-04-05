@@ -1,72 +1,102 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * offloading_queue.h - header file for the offloading-to-hard-disk
- * queue.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// offloading_queue.h - header file for the offloading-to-hard-disk queue.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <string.h>
-#include <limits.h>
-#include <stdio.h>
-#include <unistd.h>
+#include "rinutils/rinutils.h"
+#include <assert.h>
+#ifdef RINUTILS__IS_UNIX
+#include <fcntl.h>
+#endif
 
-#include "config.h"
-#include "state.h"
+#ifdef NDEBUG
+#define myassert(x)                                                            \
+    if (!(x))                                                                  \
+    {                                                                          \
+        abort();                                                               \
+    }
+#else
+#define myassert(x) assert(x)
+#endif
 
-typedef const unsigned char *fcs_offloading_queue_item_t;
+typedef const unsigned char *offloading_queue_item;
+
+typedef struct
+{
+    long num_inserted, num_items_in_queue, num_extracted;
+} fcs_queue_stats;
+
+static inline void fcs_queue_stats_init(fcs_queue_stats *const q)
+{
+    *q = (typeof(*q)){
+        .num_inserted = 0, .num_items_in_queue = 0, .num_extracted = 0};
+}
+
+static inline void q_stats_insert(fcs_queue_stats *const q)
+{
+    q->num_inserted++;
+    q->num_items_in_queue++;
+}
+
+static inline void q_stats_extract(fcs_queue_stats *const q)
+{
+    q->num_items_in_queue--;
+    q->num_extracted++;
+}
+
+static inline bool q_stats_is_empty(fcs_queue_stats *const q)
+{
+    return (q->num_items_in_queue == 0);
+}
+
 #if !defined(FCS_DBM_USE_OFFLOADING_QUEUE)
 
 typedef struct fcs_Q_item_wrapper_struct
 {
-    fcs_offloading_queue_item_t datum;
+    offloading_queue_item datum;
     struct fcs_Q_item_wrapper_struct *next;
-} fcs_Q_item_wrapper_t;
+} fcs_Q_item_wrapper;
 
 typedef struct
 {
-    fcs_compact_allocator_t queue_allocator;
-    fcs_Q_item_wrapper_t *queue_head, *queue_tail, *queue_recycle_bin;
-    long num_inserted, num_items_in_queue, num_extracted;
-} fcs_offloading_queue_t;
+    compact_allocator queue_allocator;
+    fcs_Q_item_wrapper *queue_head, *queue_tail, *queue_recycle_bin;
+    fcs_queue_stats stats;
+} fcs_offloading_queue;
 
-static GCC_INLINE void fcs_offloading_queue__init(
-    fcs_offloading_queue_t *queue, fcs_meta_compact_allocator_t *meta_alloc)
+static inline void fcs_offloading_queue__init(
+    fcs_offloading_queue *const queue, meta_allocator *const meta_alloc)
 {
     fc_solve_compact_allocator_init(&(queue->queue_allocator), meta_alloc);
 
     queue->queue_head = queue->queue_tail = queue->queue_recycle_bin = NULL;
-    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
-
-    return;
+    fcs_queue_stats_init(&queue->stats);
 }
 
-static GCC_INLINE void fcs_offloading_queue__destroy(
-    fcs_offloading_queue_t *queue)
+static inline void fcs_offloading_queue__destroy(
+    fcs_offloading_queue *const queue)
 {
     fc_solve_compact_allocator_finish(&(queue->queue_allocator));
 }
 
-static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
-    fcs_offloading_queue_t *const queue,
-    fcs_offloading_queue_item_t *const return_item)
+static inline bool fcs_offloading_queue__extract(
+    fcs_offloading_queue *const queue, offloading_queue_item *const return_item)
 {
-    fcs_Q_item_wrapper_t *const item = queue->queue_head;
+    fcs_Q_item_wrapper *const item = queue->queue_head;
 
     if (!item)
     {
-        return FALSE;
+        *return_item = NULL;
+        return false;
     }
 
     *return_item = item->datum;
@@ -75,28 +105,24 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
     {
         queue->queue_tail = NULL;
     }
-
     item->next = queue->queue_recycle_bin;
     queue->queue_recycle_bin = item;
 
-    queue->num_items_in_queue--;
-    queue->num_extracted++;
-
-    return TRUE;
+    q_stats_extract(&queue->stats);
+    return true;
 }
 
-static GCC_INLINE void fcs_offloading_queue__insert(
-    fcs_offloading_queue_t *queue, const fcs_offloading_queue_item_t *datum)
+static inline void fcs_offloading_queue__insert(
+    fcs_offloading_queue *const queue, const offloading_queue_item *const datum)
 {
-    fcs_Q_item_wrapper_t *new_item;
-
+    fcs_Q_item_wrapper *new_item;
     if (queue->queue_recycle_bin)
     {
         queue->queue_recycle_bin = (new_item = queue->queue_recycle_bin)->next;
     }
     else
     {
-        new_item = (fcs_Q_item_wrapper_t *)fcs_compact_alloc_ptr(
+        new_item = (fcs_Q_item_wrapper *)fcs_compact_alloc_ptr(
             &(queue->queue_allocator), sizeof(*new_item));
     }
     new_item->datum = *datum;
@@ -110,187 +136,173 @@ static GCC_INLINE void fcs_offloading_queue__insert(
     {
         queue->queue_head = queue->queue_tail = new_item;
     }
-
-    queue->num_inserted++;
-    queue->num_items_in_queue++;
-
-    return;
+    q_stats_insert(&queue->stats);
 }
 
-/* Implement the standard in-memory queue as a linked list. */
 #else
 
+static const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
 typedef struct
 {
-    size_t num_items_per_page;
     long page_index, queue_id;
     size_t write_to_idx;
     size_t read_from_idx;
     unsigned char *data;
-} fcs_offloading_queue_page_t;
+} off_q_page;
 
-static GCC_INLINE void fcs_offloading_queue_page__recycle(
-    fcs_offloading_queue_page_t *const page)
+static inline void fcs_offloading_queue_page__recycle(off_q_page *const page)
 {
     page->write_to_idx = 0;
     page->read_from_idx = 0;
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__init(
-    fcs_offloading_queue_page_t *const page, const size_t num_items_per_page,
-    const long page_index, const long queue_id)
+static inline void fcs_offloading_queue_page__init(
+    off_q_page *const page, const long page_index, const long queue_id)
 {
-    fcs_offloading_queue_page_t new_page = {
-        .num_items_per_page = num_items_per_page,
-        .page_index = page_index,
+    *page = (typeof(*page)){.page_index = page_index,
         .queue_id = queue_id,
-        .data =
-            malloc(sizeof(fcs_offloading_queue_item_t) * num_items_per_page)};
-    *page = new_page;
+        .data = malloc(sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE)};
     fcs_offloading_queue_page__recycle(page);
-
-    return;
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__destroy(
-    fcs_offloading_queue_page_t *const page)
+static inline void fcs_offloading_queue_page__destroy(off_q_page *const page)
 {
     free(page->data);
     page->data = NULL;
 }
 
-static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_extract(
-    const fcs_offloading_queue_page_t *const page)
+static inline bool fcs_offloading_queue_page__can_extract(
+    const off_q_page *const page)
 {
     return (page->read_from_idx < page->write_to_idx);
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__extract(
-    fcs_offloading_queue_page_t *const page,
-    fcs_offloading_queue_item_t *const out_item)
+static inline void fcs_offloading_queue_page__extract(
+    off_q_page *const page, offloading_queue_item *const out_item)
 {
     memcpy(out_item,
         (page->data + sizeof(*out_item) * ((page->read_from_idx)++)),
         sizeof(*out_item));
 }
 
-static GCC_INLINE fcs_bool_t fcs_offloading_queue_page__can_insert(
-    const fcs_offloading_queue_page_t *const page)
+static inline bool fcs_offloading_queue_page__can_insert(
+    const off_q_page *const page)
 {
-    return (page->write_to_idx < page->num_items_per_page);
+    return (page->write_to_idx < NUM_ITEMS_PER_PAGE);
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__insert(
-    fcs_offloading_queue_page_t *const page,
-    const fcs_offloading_queue_item_t *const in_item)
+static inline void fcs_offloading_queue_page__insert(
+    off_q_page *const page, const offloading_queue_item *const in_item)
 {
     memcpy(page->data + ((page->write_to_idx)++) * sizeof(*in_item), in_item,
         sizeof(*in_item));
 }
 
-static GCC_INLINE const char *fcs_offloading_queue_page__calc_filename(
-    fcs_offloading_queue_page_t *const page, char *const buffer,
+static inline void fcs_offloading_queue_page__calc_filename(
+    off_q_page *const page, char *const buffer,
     const char *const offload_dir_path)
 {
     sprintf(buffer, "%s/fcs_queue%lXq_%020lX.page", offload_dir_path,
-        page->queue_id, page->page_index);
-
-    return buffer;
+        (unsigned long)(page->queue_id), (unsigned long)(page->page_index));
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__start_after(
-    fcs_offloading_queue_page_t *const page,
-    const fcs_offloading_queue_page_t *const other_page)
+static inline void fcs_offloading_queue_page__start_after(
+    off_q_page *const page, const off_q_page *const other_page)
 {
     page->page_index = other_page->page_index + 1;
     fcs_offloading_queue_page__recycle(page);
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__bump(
-    fcs_offloading_queue_page_t *const page)
+static inline void fcs_offloading_queue_page__bump(off_q_page *const page)
 {
     fcs_offloading_queue_page__start_after(page, page);
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__read_next_from_disk(
-    fcs_offloading_queue_page_t *const page, const char *const offload_dir_path)
+#define FCS_OFFLOADING_Q_DATA_SIZE                                             \
+    (sizeof(offloading_queue_item) * NUM_ITEMS_PER_PAGE)
+static inline void fcs_offloading_queue_page__read_next_from_disk(
+    off_q_page *const page, const char *const offload_dir_path)
 {
     fcs_offloading_queue_page__bump(page);
     char page_filename[PATH_MAX + 1];
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
-
+#ifdef RINUTILS__IS_UNIX
+    const int f = open(page_filename, O_RDONLY);
+    myassert(FCS_OFFLOADING_Q_DATA_SIZE ==
+             read(f, page->data, FCS_OFFLOADING_Q_DATA_SIZE));
+    close(f);
+#else
     FILE *const f = fopen(page_filename, "rb");
-    fread(page->data, sizeof(fcs_offloading_queue_item_t),
-        page->num_items_per_page, f);
+    fread(page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
+#endif
 
     /* We need to set this limit because it's a read-only page that we
      * retrieve from the disk and otherwise ->can_extract() will return
      * false for most items.
      * */
-    page->write_to_idx = page->num_items_per_page;
+    page->write_to_idx = NUM_ITEMS_PER_PAGE;
 
     unlink(page_filename);
 }
 
-static GCC_INLINE void fcs_offloading_queue_page__offload(
-    fcs_offloading_queue_page_t *const page, const char *const offload_dir_path)
+static inline void fcs_offloading_queue_page__offload(
+    off_q_page *const page, const char *const offload_dir_path)
 {
     char page_filename[PATH_MAX + 1];
-
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
-
+#ifdef RINUTILS__IS_UNIX
+    const int f = creat(page_filename, 0644);
+    myassert(write(f, page->data, FCS_OFFLOADING_Q_DATA_SIZE) ==
+             FCS_OFFLOADING_Q_DATA_SIZE);
+    close(f);
+#else
     FILE *const f = fopen(page_filename, "wb");
-    fwrite(page->data, sizeof(fcs_offloading_queue_item_t),
-        page->num_items_per_page, f);
+    fwrite(page->data, sizeof(offloading_queue_item), NUM_ITEMS_PER_PAGE, f);
     fclose(f);
+#endif
 }
 
 typedef struct
 {
-    int num_items_per_page;
     const char *offload_dir_path;
-    long num_inserted, num_items_in_queue, num_extracted;
+    fcs_queue_stats stats;
     long id;
     /*
      * page_idx_to_write_to, page_idx_for_backup and page_idx_to_read_from
      * always point to the two "pages" below, but they can be swapped and
      * page_idx_for_backup may be NULL.
      */
-    int page_idx_to_write_to, page_idx_for_backup, page_idx_to_read_from;
-    fcs_offloading_queue_page_t pages[2];
-} fcs_offloading_queue_t;
+    int_fast32_t page_idx_to_write_to, page_idx_for_backup,
+        page_idx_to_read_from;
+    off_q_page pages[2];
+} fcs_offloading_queue;
 
-const size_t NUM_ITEMS_PER_PAGE = (128 * 1024);
-static GCC_INLINE void fcs_offloading_queue__init(
-    fcs_offloading_queue_t *const queue, const char *const offload_dir_path,
-    const long id)
+static inline void fcs_offloading_queue__init(fcs_offloading_queue *const queue,
+    const char *const offload_dir_path, const long id)
 {
-    queue->num_items_per_page = NUM_ITEMS_PER_PAGE;
     queue->offload_dir_path = offload_dir_path;
-    queue->num_inserted = queue->num_items_in_queue = queue->num_extracted = 0;
+    fcs_queue_stats_init(&queue->stats);
     queue->id = id;
 
-    fcs_offloading_queue_page__init(
-        &(queue->pages[0]), NUM_ITEMS_PER_PAGE, 0, queue->id);
-    fcs_offloading_queue_page__init(
-        &(queue->pages[1]), NUM_ITEMS_PER_PAGE, 0, queue->id);
+    fcs_offloading_queue_page__init(&(queue->pages[0]), 0, queue->id);
+    fcs_offloading_queue_page__init(&(queue->pages[1]), 0, queue->id);
 
     queue->page_idx_to_read_from = queue->page_idx_to_write_to = 0;
     queue->page_idx_for_backup = 1;
 }
 
-static GCC_INLINE void fcs_offloading_queue__destroy(
-    fcs_offloading_queue_t *queue)
+static inline void fcs_offloading_queue__destroy(
+    fcs_offloading_queue *const queue)
 {
     fcs_offloading_queue_page__destroy(&(queue->pages[0]));
     fcs_offloading_queue_page__destroy(&(queue->pages[1]));
 }
 
-static GCC_INLINE void fcs_offloading_queue__insert(
-    fcs_offloading_queue_t *queue, const fcs_offloading_queue_item_t *item)
+static inline void fcs_offloading_queue__insert(
+    fcs_offloading_queue *queue, const offloading_queue_item *item)
 {
     if (!fcs_offloading_queue_page__can_insert(
             queue->pages + queue->page_idx_to_write_to))
@@ -316,18 +328,16 @@ static GCC_INLINE void fcs_offloading_queue__insert(
 
     fcs_offloading_queue_page__insert(
         queue->pages + queue->page_idx_to_write_to, item);
-
-    queue->num_inserted++;
-    queue->num_items_in_queue++;
+    q_stats_insert(&queue->stats);
 }
 
-static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
-    fcs_offloading_queue_t *const queue,
-    fcs_offloading_queue_item_t *const return_item)
+static inline bool fcs_offloading_queue__extract(
+    fcs_offloading_queue *const queue, offloading_queue_item *const return_item)
 {
-    if (queue->num_items_in_queue == 0)
+    if (q_stats_is_empty(&queue->stats))
     {
-        return FALSE;
+        *return_item = NULL;
+        return false;
     }
 
     if (!fcs_offloading_queue_page__can_extract(
@@ -337,7 +347,7 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
          *
          * if (queue->_page_idx_to_read_from->page_index ==
          *     queue->_page_idx_to_write_to->page_index)
-        */
+         */
         if (queue->pages[queue->page_idx_to_read_from].page_index + 1 ==
             queue->pages[queue->page_idx_to_write_to].page_index)
         {
@@ -352,13 +362,12 @@ static GCC_INLINE fcs_bool_t fcs_offloading_queue__extract(
         }
     }
 
-    queue->num_items_in_queue--;
-    queue->num_extracted++;
+    q_stats_extract(&queue->stats);
 
     fcs_offloading_queue_page__extract(
         queue->pages + queue->page_idx_to_read_from, return_item);
 
-    return TRUE;
+    return true;
 }
 
 #endif

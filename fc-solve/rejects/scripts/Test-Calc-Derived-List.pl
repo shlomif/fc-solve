@@ -73,8 +73,9 @@ void DESTROY(SV* obj) {
 }
 EOF
     CLEAN_AFTER_BUILD => 0,
-    INC => "-I" . Cwd::getcwd(),
-    LIBS => "-L" . Cwd::getcwd() . " -lfcs_dbm_calc_derived_test",
+    INC               => "-I" . Cwd::getcwd(),
+    LIBS              => "-L" . Cwd::getcwd() . " -lfcs_dbm_calc_derived_test",
+
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
@@ -84,17 +85,21 @@ package main;
 
 use IO::All;
 
-my ($start_fn, $perform_horne_prune) = @ARGV;
+my ( $start_fn, $perform_horne_prune ) = @ARGV;
 
 # MS Freecell Board No. 24.
-my $derived_states_list = DerivedState::get_derived_states_list(
-    scalar(io($start_fn)->slurp),
-    $perform_horne_prune
-);
+my $derived_states_list =
+    DerivedState::get_derived_states_list( scalar( io($start_fn)->slurp ),
+    $perform_horne_prune );
 
 foreach my $obj (@$derived_states_list)
 {
-    printf ("<<<%s>>>\nReversible: %d\nMove: %.2x\n\n-------------\n\n", $obj->get_state_string(), $obj->get_is_reversible_move(), $obj->get_move());
+    printf(
+        "<<<%s>>>\nReversible: %d\nMove: %.2x\n\n-------------\n\n",
+        $obj->get_state_string(),
+        $obj->get_is_reversible_move(),
+        $obj->get_move()
+    );
 }
 
 __DATA__

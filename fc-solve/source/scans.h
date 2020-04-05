@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2009 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2009 Shlomi Fish
 /*
  * scans.h - header file for the scans.c - Best-First-Search and Soft-DFS
  * scans.
@@ -17,18 +15,21 @@
 extern "C" {
 #endif
 
-#include "config.h"
 #include "instance.h"
 
-static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
-    char *const positions_by_rank, const char dest_stack, const char dest_col,
-    const fcs_card_t dest_card)
+static inline void fc_solve__assign_dest_stack_and_col_ptr(
+    int8_t *const positions_by_rank, const int8_t dest_stack,
+    const int8_t dest_col, const fcs_card dest_card)
 {
-    char *ptr = &positions_by_rank[(FCS_POS_BY_RANK_WIDTH *
-                                       (fcs_card_rank(dest_card) - 1)) +
-                                   (fcs_card_suit(dest_card) << 1)];
+#ifdef FCS_FREECELL_ONLY
+    int8_t *ptr = &positions_by_rank[(dest_card - 4) << 1];
+#else
+    int8_t *ptr = &positions_by_rank[(FCS_POS_BY_RANK_WIDTH *
+                                         (fcs_card_rank(dest_card) - 1)) +
+                                     (fcs_card_suit(dest_card) << 1)];
+#endif
 
-#if (!defined(HARD_CODED_NUM_DECKS) || (HARD_CODED_NUM_DECKS == 1))
+#if ((!defined(HARD_CODED_NUM_DECKS)) || (HARD_CODED_NUM_DECKS > 1))
     for (; (*ptr) != -1; ptr += (4 << 1))
     {
     }
@@ -38,46 +39,36 @@ static GCC_INLINE void fc_solve__assign_dest_stack_and_col_ptr(
     *(ptr) = dest_col;
 }
 
-static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
-    fc_solve_soft_thread_t *const soft_thread,
-    const fcs_state_t *const ptr_state_key,
-    fcs__positions_by_rank_t positions_by_rank
-#ifndef FCS_DISABLE_SIMPLE_SIMON
-    ,
-    const fcs_bool_t is_simple_simon
-#endif
-    )
+static inline void fc_solve__calc_positions_by_rank_data(
+    fcs_soft_thread *const soft_thread GCC_UNUSED,
+    const fcs_state *const ptr_state_key,
+    fcs__positions_by_rank positions_by_rank)
 {
-#if (!(defined(HARD_CODED_NUM_STACKS) && defined(HARD_CODED_NUM_DECKS) &&      \
-         defined(FCS_DISABLE_SIMPLE_SIMON)))
-    fc_solve_instance_t *const instance = HT_INSTANCE(soft_thread->hard_thread);
+#ifndef HARD_CODED_ALL
+    var_AUTO(instance, fcs_st_instance(soft_thread));
     SET_GAME_PARAMS();
 #endif
 
-    memset(positions_by_rank, -1, sizeof(fcs__positions_by_rank_t));
+    memset(positions_by_rank, -1, sizeof(fcs__positions_by_rank));
 
 #ifndef FCS_DISABLE_SIMPLE_SIMON
-    if (is_simple_simon)
+    if (instance->is_simple_simon)
     {
-#define FCS_SS_POS_BY_RANK_SIZE                                                \
-    (sizeof(fcs_pos_by_rank_t) * FCS_SS_POS_BY_RANK_LEN)
 #define FCS_POS_IDX(rank, suit) ((suit)*FCS_SS_POS_BY_RANK_WIDTH + (rank))
-        fcs_pos_by_rank_t *const p_by_r =
-            (fcs_pos_by_rank_t *)positions_by_rank;
+        fcs_pos_by_rank *const p_by_r = (fcs_pos_by_rank *)positions_by_rank;
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            const fcs_const_cards_column_t dest_col =
-                fcs_state_get_col(*ptr_state_key, ds);
+            const_AUTO(dest_col, fcs_state_get_col(*ptr_state_key, ds));
             const int dest_cards_num = fcs_col_len(dest_col);
 
             for (int dc = 0; dc < dest_cards_num; dc++)
             {
-                const fcs_card_t card = fcs_col_get_card(dest_col, dc);
+                const fcs_card card = fcs_col_get_card(dest_col, dc);
                 const int suit = fcs_card_suit(card);
                 const int rank = fcs_card_rank(card);
 
                 p_by_r[FCS_POS_IDX(rank, suit)] =
-                    (fcs_pos_by_rank_t){.col = ds, .height = dc};
+                    (fcs_pos_by_rank){.col = (int8_t)ds, .height = (int8_t)dc};
             }
         }
     }
@@ -86,10 +77,8 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
     {
 #define state_key (*ptr_state_key)
 
-#ifndef FCS_FREECELL_ONLY
-        const int sequences_are_built_by =
-            GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
-#endif
+        FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
+                               GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 
         /* We need 2 chars per card - one for the column_idx and one
          * for the card_idx.
@@ -103,8 +92,7 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
 
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
-            const fcs_const_cards_column_t dest_col =
-                fcs_state_get_col(state_key, ds);
+            const_AUTO(dest_col, fcs_state_get_col(state_key, ds));
             int top_card_idx = fcs_col_len(dest_col);
 
             if (unlikely((top_card_idx--) == 0))
@@ -112,9 +100,9 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
                 continue;
             }
 
-            fcs_card_t dest_card;
+            fcs_card dest_card;
             {
-                fcs_card_t dest_below_card;
+                fcs_card dest_below_card;
                 dest_card = fcs_col_get_card(dest_col, 0);
                 for (int dc = 0; dc < top_card_idx;
                      dc++, dest_card = dest_below_card)
@@ -123,20 +111,21 @@ static GCC_INLINE void fc_solve__calc_positions_by_rank_data(
                     if (!fcs_is_parent_card(dest_below_card, dest_card))
                     {
                         fc_solve__assign_dest_stack_and_col_ptr(
-                            positions_by_rank, ds, dc, dest_card);
+                            positions_by_rank, (int8_t)ds, (int8_t)dc,
+                            dest_card);
                     }
                 }
             }
             fc_solve__assign_dest_stack_and_col_ptr(
-                positions_by_rank, ds, top_card_idx, dest_card);
+                positions_by_rank, (int8_t)ds, (int8_t)top_card_idx, dest_card);
         }
     }
 #undef state_key
 #undef ptr_state_key
 }
 
-static GCC_INLINE const char *fc_solve_calc_positions_by_rank_location(
-    fc_solve_soft_thread_t *const soft_thread)
+static inline const int8_t *fc_solve_calc_positions_by_rank_location(
+    fcs_soft_thread *const soft_thread)
 {
     if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
     {
@@ -149,31 +138,37 @@ static GCC_INLINE const char *fc_solve_calc_positions_by_rank_location(
     }
 }
 
-static GCC_INLINE void add_to_move_funcs_list(
-    fc_solve_solve_for_state_move_func_t **const out_move_funcs_list,
-    size_t *const num_so_far, const size_t *const indexes,
-    const size_t count_to_add)
+static inline void add_to_move_funcs_list(
+    fcs_move_func **const out_move_funcs_list, size_t *const num_so_far,
+    const fcs_move_func *const indexes, const size_t count_to_add)
 {
-    const size_t num = *num_so_far;
-    fc_solve_solve_for_state_move_func_t *const move_funcs_list =
+    size_t num = *num_so_far;
+    fcs_move_func *const move_funcs_list =
         SREALLOC(*out_move_funcs_list, num + count_to_add);
-    size_t next_i = num;
-    for (size_t i = 0; i < count_to_add; i++)
+    for (size_t i = 0; i < count_to_add; ++i)
     {
-        move_funcs_list[next_i++] = fc_solve_sfs_move_funcs[indexes[i]];
+        move_funcs_list[num++].f = fc_solve_sfs_move_funcs[indexes[i].idx];
     }
 
     *out_move_funcs_list = move_funcs_list;
-    *num_so_far = next_i;
+    *num_so_far = num;
 }
 
-extern int fc_solve_sfs_check_state_begin(fc_solve_hard_thread_t *const,
-    fcs_kv_state_t *const,
-    fcs_kv_state_t *const SFS__PASS_MOVE_STACK(fcs_move_stack_t *const));
+extern int fc_solve_sfs_check_state_begin(fcs_hard_thread *const,
+    fcs_kv_state *const,
+    fcs_kv_state SFS__PASS_MOVE_STACK(fcs_move_stack *const));
 
-extern void fc_solve_sfs_check_state_end(fc_solve_soft_thread_t *const,
-    fcs_kv_state_t *const, fcs_kv_state_t *const, const int,
-    fcs_move_stack_t *const, fcs_derived_states_list_t *const);
+extern fcs_collectible_state *fc_solve_sfs_check_state_end(fcs_soft_thread *,
+#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
+    fcs_kv_state,
+#endif
+    fcs_kv_state *FCS__pass_moves(fcs_move_stack *));
+
+#ifdef FCS_WITH_MOVES
+#define FCS_SET_final_state() instance->final_state = PTR_STATE
+#else
+#define FCS_SET_final_state()
+#endif
 
 #ifdef __cplusplus
 }

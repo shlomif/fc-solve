@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
 #pragma once
 
 #ifdef __cplusplus
@@ -17,15 +15,15 @@ extern "C" {
 #include "fcc_brfs_test.h"
 
 #ifdef FCS_LRU_KEY_IS_STATE
-typedef fcs_state_keyval_pair_t fcs_cache_key_t;
+typedef fcs_state_keyval_pair fcs_cache_key;
 #else
-typedef fcs_encoded_state_buffer_t fcs_cache_key_t;
+typedef fcs_encoded_state_buffer fcs_cache_key;
 #endif
 
 struct fcs_cache_key_info_struct
 {
-    fcs_cache_key_t key;
-    fcs_fcc_move_t *moves_to_key;
+    fcs_cache_key key;
+    fcs_fcc_move *moves_to_key;
     /* lower_pri and higher_pri form a doubly linked list.
      *
      * pri == priority.
@@ -33,7 +31,7 @@ struct fcs_cache_key_info_struct
     struct fcs_cache_key_info_struct *lower_pri, *higher_pri;
 };
 
-typedef struct fcs_cache_key_info_struct fcs_cache_key_info_t;
+typedef struct fcs_cache_key_info_struct fcs_cache_key_info;
 
 typedef struct
 {
@@ -44,15 +42,13 @@ typedef struct
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
-    fcs_compact_allocator_t states_values_to_keys_allocator;
-    long count_elements_in_cache, max_num_elements_in_cache;
+    compact_allocator states_values_to_keys_allocator;
+    unsigned long count_elements_in_cache, max_num_elements_in_cache;
 
-    fcs_cache_key_info_t *lowest_pri, *highest_pri;
-
+    fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
 #define RECYCLE_BIN_NEXT(item) ((item)->higher_pri)
-    fcs_cache_key_info_t *recycle_bin;
     void *tree_recycle_bin;
-} fcs_lru_cache_t;
+} fcs_lru_cache;
 
 #ifdef __cplusplus
 }

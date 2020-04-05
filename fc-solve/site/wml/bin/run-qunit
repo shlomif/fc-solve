@@ -1,0 +1,2 @@
+#!/bin/sh
+NODE_PATH="`pwd`"/lib/for-node/js qunit-cli lib/for-node/test-code.js

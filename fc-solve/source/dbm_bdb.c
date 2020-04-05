@@ -1,15 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-#include <sys/types.h>
-#include <stdio.h>
-#include <stdlib.h>
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
 #include <db.h>
 
 #include "dbm_solver.h"
@@ -18,19 +13,28 @@ typedef struct
 {
     DB *dbp;
     DBT key, data;
-} dbm_t;
+} fcs_dbm;
 
-void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
-    const char *const path, void **const recycle_bin_ptr)
+static __attribute__((noreturn)) inline void my_close(DB *const dbp, int ret)
 {
-    dbm_t *db = SMALLOC1(db);
+    int close_ret;
+    if ((close_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
+    {
+        ret = close_ret;
+    }
+    exit(ret);
+}
+
+void fc_solve_dbm_store_init(fcs_dbm_store *const store, const char *const path,
+    void **const recycle_bin_ptr)
+{
+    fcs_dbm *db = SMALLOC1(db);
 
     int ret;
 
     if ((ret = db_create(&(db->dbp), NULL, 0)) != 0)
     {
-        fprintf(stderr, "db_create: %s\n", db_strerror(ret));
-        exit(1);
+        exit_error("db_create: %s\n", db_strerror(ret));
     }
 
     if ((ret = db->dbp->open(
@@ -41,26 +45,19 @@ void fc_solve_dbm_store_init(fcs_dbm_store_t *const store,
     }
     memset(&(db->key), 0, sizeof(db->key));
     memset(&(db->data), 0, sizeof(db->data));
-    *store = (fcs_dbm_store_t)db;
+    *store = (fcs_dbm_store)db;
     return;
 
 err:
-{
-    int t_ret;
-    if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
-    {
-        ret = t_ret;
-    }
-}
-    exit(ret);
+    my_close(db->dbp, ret);
 }
 
-fcs_bool_t fc_solve_dbm_store_does_key_exist(
-    fcs_dbm_store_t store, const unsigned char *const key_raw)
+bool fc_solve_dbm_store_does_key_exist(
+    fcs_dbm_store store, const unsigned char *const key_raw)
 {
     unsigned char dummy[100];
 
-    dbm_t *db = (dbm_t *)store;
+    fcs_dbm *db = (fcs_dbm *)store;
     db->key.data = (unsigned char *)key_raw + 1;
     db->key.size = key_raw[0];
     db->data.data = dummy;
@@ -69,91 +66,77 @@ fcs_bool_t fc_solve_dbm_store_does_key_exist(
     int ret;
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
-        return TRUE;
+        return true;
     }
     else if (ret == DB_NOTFOUND)
     {
-        return FALSE;
+        return false;
     }
     else
     {
-        int t_ret;
         db->dbp->err(db->dbp, ret, "DB->get");
-        if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
-        {
-            ret = t_ret;
-        }
-        exit(ret);
+        my_close(db->dbp, ret);
     }
 }
 
-fcs_bool_t fc_solve_dbm_store_lookup_parent(fcs_dbm_store_t store,
+bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store store,
     const unsigned char *const key_raw, unsigned char *const parent)
 {
-    dbm_t *db = (dbm_t *)store;
+    fcs_dbm *db = (fcs_dbm *)store;
     db->key.data = (unsigned char *)key_raw + 1;
     db->key.size = key_raw[0];
     db->data.data = parent + 1;
-    db->data.size = sizeof(fcs_encoded_state_buffer_t) - 1;
+    db->data.size = sizeof(fcs_encoded_state_buffer) - 1;
 
     int ret;
     if ((ret = db->dbp->get(db->dbp, NULL, &(db->key), &(db->data), 0)) == 0)
     {
         parent[0] = db->data.size - 1;
-        return TRUE;
+        return true;
     }
     else if (ret == DB_NOTFOUND)
     {
-        return FALSE;
+        return false;
     }
     else
     {
         db->dbp->err(db->dbp, ret, "DB->get");
-        int t_ret;
-        if ((t_ret = db->dbp->close(db->dbp, 0)) != 0 && ret == 0)
-        {
-            ret = t_ret;
-        }
-        exit(ret);
+        my_close(db->dbp, ret);
     }
 }
 
 extern void fc_solve_dbm_store_offload_pre_cache(
-    fcs_dbm_store_t store, fcs_pre_cache_t *const pre_cache)
+    fcs_dbm_store store, fcs_pre_cache *const pre_cache)
 {
-    dbm_t *const db = (dbm_t *)store;
+    fcs_dbm *const db = (fcs_dbm *)store;
     dict_t *const kaz_tree = pre_cache->kaz_tree;
     DB *const dbp = db->dbp;
 
     for (dnode_t *node = fc_solve_kaz_tree_first(kaz_tree); node;
          node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
-        fcs_pre_cache_key_val_pair_t *const kv =
-            (fcs_pre_cache_key_val_pair_t *)(node->dict_key);
+        const_AUTO(kv, (pre_cache_key_val_pair *)(node->dict_key));
 
         db->key.data = kv->key.s + 1;
         db->key.size = kv->key.s[0];
         db->data.data = kv->parent.s + 1;
         db->data.size = kv->parent.s[0];
-        if ((int ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
+        int ret;
+        if ((ret = dbp->put(dbp, NULL, &(db->key), &(db->data), 0)) != 0)
         {
             dbp->err(dbp, ret, "DB->put");
-            if ((int t_ret = dbp->close(dbp, 0)) != 0 && ret == 0)
-            {
-                ret = t_ret;
-            }
-            exit(ret);
+            my_close(dbp, ret);
         }
     }
 }
 
-extern void fc_solve_dbm_store_destroy(fcs_dbm_store_t store)
+extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {
-    dbm_t *const db = (dbm_t *)store;
-    if ((int ret = db->dbp->close(db->dbp, 0)) != 0)
+    fcs_dbm *const db = (fcs_dbm *)store;
+    int ret;
+    if ((ret = db->dbp->close(db->dbp, 0)) != 0)
     {
-        fprintf(stderr, "DB close failed with ret=%d\n", ret);
-        exit(-1);
+        exit_error("DB close failed with ret=%d\n", ret);
     }
     free(db);
 }

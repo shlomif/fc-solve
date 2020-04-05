@@ -12,6 +12,4 @@ if ! test -e "$FCS_PATH" ; then
     make && \
     perl scripts/parallel-range-solver-total --mode setup &&
     rm -f range-queue.sock
-
 fi
-

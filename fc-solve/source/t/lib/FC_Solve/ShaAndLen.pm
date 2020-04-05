@@ -3,61 +3,56 @@ package FC_Solve::ShaAndLen;
 use strict;
 use warnings;
 
-use Digest::SHA;
+use Digest::SHA ();
 
 use parent 'Games::Solitaire::Verify::Base';
 
-__PACKAGE__->mk_acc_ref([qw(
-    _len
-    _hasher
-    )]);
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            _len
+            _hasher
+            )
+    ]
+);
 
 sub new
 {
     my $class = shift;
-    my $self = {};
-
+    my $self  = {};
     bless $self, $class;
-
     $self->_init(@_);
-
     return $self;
 }
 
 sub _init
 {
-    my $self = shift;
-    my $args = shift;
+    my ( $self, $args ) = @_;
 
     $self->_len(0);
-    $self->_hasher(Digest::SHA->new(256));
+    $self->_hasher( Digest::SHA->new(256) );
 
-    return 0;
+    return;
 }
 
 sub add
 {
-    my $self = shift;
-    my $string = shift;
+    my ( $self, $str ) = @_;
 
-    $self->_len($self->_len()+length($string));
-    $self->_hasher->add($string);
+    $self->_len( $self->_len() + length($str) );
+    $self->_hasher->add($str);
 
     return;
 }
 
 sub len
 {
-    my $self = shift;
-
-    return $self->_len();
+    return shift->_len();
 }
 
 sub hexdigest
 {
-    my $self = shift;
-
-    return $self->_hasher->clone()->hexdigest();
+    return shift->_hasher->clone()->hexdigest();
 }
 
 sub _unity
@@ -67,56 +62,32 @@ sub _unity
 
 sub add_file
 {
-    my $self = shift;
-    my $fh = shift;
-
-    return $self->add_processed_slurp($fh, \&_unity);
+    my ( $self, $fh ) = @_;
+    return $self->add_processed_slurp( $fh, \&_unity );
 }
 
 sub add_processed_slurp
 {
-    my $self = shift;
-    my $fh = shift;
-    my $callback = shift;
-
-    my $buffer;
-    {
-        local $/;
-        $buffer = <$fh>;
-    }
-    return $self->add(scalar($callback->($buffer)));
+    my ( $self, $fh, $cb ) = @_;
+    return $self->add(
+        scalar $cb->(
+            do { local $/; scalar <$fh>; }
+        )
+    );
 }
 
 1;
 
-
+__END__
 
 =head1 COPYRIGHT AND LICENSE
 
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
 Copyright (c) 2000 Shlomi Fish
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-
-
 =cut
-

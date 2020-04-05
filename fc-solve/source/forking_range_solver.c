@@ -1,263 +1,132 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- *  forking_range_solver.c - a range solver that solves different boards in
- *  several UNIX processes.
- *
- *  See also:
- *      - fc_pro_range_solver.c
- *      - test_multi_parallel.c
- *      - threaded_range_solver.c
- */
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+//  forking_range_solver.c - a range solver that solves different boards in
+//  several UNIX processes.
+//
+//  See also:
+//      - fc_pro_range_solver.c
+//      - serial_range_solver.c
+//      - threaded_range_solver.c
 #ifdef __linux__
 #define USE_EPOLL
-#endif
-
-#ifndef WIN32
-#include <unistd.h>
-#endif
-#include <sys/time.h>
-#include <sys/types.h>
-#include <sys/wait.h>
-
-#ifdef USE_EPOLL
 #include <sys/epoll.h>
 #endif
+#include <sys/wait.h>
+#include "range_solvers.h"
+#include "try_param.h"
+#include "print_time.h"
 
-#include "fcs_user.h"
-#include "fcs_cl.h"
-#include "range_solvers_gen_ms_boards.h"
-#include "handle_parsing.h"
-#include "rinutils.h"
-
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
     printf("\n%s",
         "freecell-solver-fork-solve start end print_step\n"
-        "    [--num-workers n] [--worker-step step] [--total-iterations-limit "
-        "limit]\n"
-        "   [fc-solve Arguments...]\n"
+        "    [--num-workers n] [--worker-step step] [fc-solve Arguments...]\n"
         "\n"
         "Solves a sequence of boards from the Microsoft/Freecell Pro Deals\n"
         "\n"
         "start - the first board in the sequence\n"
         "end - the last board in the sequence (inclusive)\n"
-        "print_step - at which division to print a status line\n"
-        "\n"
-        "--total-iterations-limit  limit\n"
-        "     Limits each board for up to 'limit' iterations.\n");
+        "print_step - at which division to print a status line\n");
 }
+#endif
 
-static long long total_num_iters = 0;
+static fcs_iters_int total_num_iters = 0;
+static fc_solve_ms_deal_idx_type total_num_finished_boards = 0;
 
 #define READ_FD 0
 #define WRITE_FD 1
 typedef struct
 {
-    int child_to_parent_pipe[2];
-    int parent_to_child_pipe[2];
-} worker_t;
+    int child_to_parent_pipe[2], parent_to_child_pipe[2];
+} fcs_worker;
 
 typedef struct
 {
-    long long board_num;
-    long long quota_end;
-} request_t;
+    fc_solve_ms_deal_idx_type board_num, quota_end;
+} request_type;
 
 typedef struct
 {
-    fcs_int_limit_t num_iters;
-    int num_finished_boards;
-} response_t;
+    fcs_iters_int num_iters;
+    fc_solve_ms_deal_idx_type num_finished_boards;
+} response_type;
 
-static GCC_INLINE int worker_func(const worker_t w, void *const instance)
+static inline void write_request(const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type board_num_step,
+    fc_solve_ms_deal_idx_type *const next_board_num_ptr,
+    const fcs_worker *const worker)
 {
-    /* I'm one of the slaves */
-    request_t request;
-    response_t response;
-    fcs_state_string_t state_string;
-    fcs_portable_time_t mytime;
-
-    while (1)
-    {
-        response.num_iters = 0;
-
-        read(w.parent_to_child_pipe[READ_FD], &request, sizeof(request));
-
-        if (request.board_num == -1)
-        {
-            break;
-        }
-
-        response.num_finished_boards =
-            request.quota_end - request.board_num + 1;
-
-#define board_num (request.board_num)
-#define total_num_iters_temp (response.num_iters)
-        for (; board_num <= request.quota_end; board_num++)
-        {
-            get_board(board_num, state_string);
-
-            switch (freecell_solver_user_solve_board(instance, state_string))
-            {
-            case FCS_STATE_SUSPEND_PROCESS:
-                FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
-                break;
-            case FCS_STATE_FLARES_PLAN_ERROR:
-#ifdef FCS_WITH_ERROR_STRS
-                fprintf(stderr, "Flares Plan: %s\n",
-                    freecell_solver_user_get_last_error_string(instance));
-#endif
-
-                goto next_board;
-
-            case FCS_STATE_IS_NOT_SOLVEABLE:
-                FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
-                break;
-            }
-
-            total_num_iters_temp +=
-                freecell_solver_user_get_num_times_long(instance);
-
-/*  TODO : implement at the master. */
-#if 0
-
-#endif
-
-        next_board:
-            freecell_solver_user_recycle(instance);
-        }
-#undef board_num
-#undef total_num_iters_temp
-
-        write(w.child_to_parent_pipe[WRITE_FD], &response, sizeof(response));
-    }
-
-    /* Cleanup */
-    freecell_solver_user_free(instance);
-
-    close(w.child_to_parent_pipe[WRITE_FD]);
-    close(w.parent_to_child_pipe[READ_FD]);
-
-    return 0;
-}
-
-static GCC_INLINE void write_request(const long long end_board,
-    const long long board_num_step, long long *const next_board_num_ptr,
-    const worker_t *const worker)
-{
-    request_t request;
+    request_type req;
     if ((*next_board_num_ptr) > end_board)
     {
         /* We only absolutely need to initialize .board_num here, but the
          * Coverity Scan scanner complains about quota_end being uninitialized
          * when passed to write() so we initialize it here as well.
          * */
-        request = (request_t){.board_num = -1, .quota_end = -1};
+        req = (request_type){.board_num = -1, .quota_end = -1};
     }
     else
     {
-        request.board_num = *(next_board_num_ptr);
+        req.board_num = *(next_board_num_ptr);
         if (((*next_board_num_ptr) += board_num_step) > end_board)
         {
             (*next_board_num_ptr) = end_board + 1;
         }
-        request.quota_end = (*next_board_num_ptr) - 1;
+        req.quota_end = (*next_board_num_ptr) - 1;
     }
-
-    write(worker->parent_to_child_pipe[WRITE_FD], &request, sizeof(request));
+    const_AUTO(
+        ret, write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req)));
+    if (ret != sizeof(req))
+    {
+        exit(-1);
+    }
 }
 
-static GCC_INLINE void transaction(const worker_t *const worker,
-    const int read_fd, int *const total_num_finished_boards,
-    const long long end_board, const long long board_num_step,
-    long long *const next_board_num_ptr)
+static inline void transaction(const fcs_worker *const worker,
+    const int read_fd, const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type board_num_step,
+    fc_solve_ms_deal_idx_type *const next_board_num_ptr)
 {
-    response_t response;
+    response_type response;
     if (read(read_fd, &response, sizeof(response)) <
         (ssize_t)(sizeof(response)))
     {
         return;
     }
-
     total_num_iters += response.num_iters;
-    (*total_num_finished_boards) += response.num_finished_boards;
+    total_num_finished_boards += response.num_finished_boards;
 
     write_request(end_board, board_num_step, next_board_num_ptr, worker);
 }
 
-int main(int argc, char *argv[])
+static inline int read_fd(const fcs_worker *const worker)
 {
+    return worker->child_to_parent_pipe[READ_FD];
+}
 
-    int arg = 1;
-
-    if (argc < 4)
-    {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
-        exit(-1);
-    }
-    long long next_board_num = atoll(argv[arg++]);
-    const long long end_board = atoll(argv[arg++]);
-    const long long stop_at = atoll(argv[arg++]);
-    if (stop_at <= 0)
-    {
-        fprintf(stderr,
-            "print_step (the third argument) must be greater than 0.\n");
-        print_help();
-        exit(-1);
-    }
-
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    fc_solve_ms_deal_idx_type next_board_num,
+    const fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type stop_at)
+{
     size_t num_workers = 3;
-    int board_num_step = 1;
-    fcs_int_limit_t total_iterations_limit_per_board = -1;
-
-    for (; arg < argc; arg++)
+    fc_solve_ms_deal_idx_type board_num_step = 1;
+    for (; arg < argc; ++arg)
     {
-        if (!strcmp(argv[arg], "--total-iterations-limit"))
+        const char *param;
+        if ((param = TRY_P("--num-workers")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr,
-                    "--total-iterations-limit came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            total_iterations_limit_per_board = (fcs_int_limit_t)atol(argv[arg]);
+            num_workers = (size_t)atoi(param);
         }
-        else if (!strcmp(argv[arg], "--num-workers"))
+        else if ((param = TRY_P("--worker-step")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--num-workers came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            num_workers = atoi(argv[arg]);
-        }
-        else if (!strcmp(argv[arg], "--worker-step"))
-        {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr, "--worker-step came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            board_num_step = atoi(argv[arg]);
+            board_num_step = atoll(param);
         }
         else
         {
@@ -265,178 +134,181 @@ int main(int argc, char *argv[])
         }
     }
 
-    fcs_portable_time_t mytime;
     fc_solve_print_started_at();
+    void *const instance = simple_alloc_and_parse(argc, argv, arg);
+    fcs_worker workers[num_workers];
 
-    void *const instance = simple_alloc_and_parse(argc, argv, &arg);
-    freecell_solver_user_limit_iterations_long(
-        instance, total_iterations_limit_per_board);
-    worker_t workers[num_workers];
-
-    for (size_t idx = 0; idx < num_workers; idx++)
+    for (size_t idx = 0; idx < num_workers; ++idx)
     {
         if (pipe(workers[idx].child_to_parent_pipe))
         {
-            fprintf(
-                stderr, "C->P Pipe for worker No. %zd failed! Exiting.\n", idx);
-            exit(-1);
+            exit_error("C->P Pipe for worker No. %lu failed! Exiting.\n",
+                (unsigned long)idx);
         }
         if (pipe(workers[idx].parent_to_child_pipe))
         {
-            fprintf(
-                stderr, "P->C Pipe for worker No. %zd failed! Exiting.\n", idx);
-            exit(-1);
+            exit_error("P->C Pipe for worker No. %lu failed! Exiting.\n",
+                (unsigned long)idx);
         }
 
         switch (fork())
         {
         case -1:
-        {
-            fprintf(stderr, "Fork for worker No. %zd failed! Exiting.\n", idx);
-            exit(-1);
-        }
+            exit_error("Fork for worker No. %lu failed! Exiting.\n",
+                (unsigned long)idx);
 
-        case 0:
-        {
+        case 0: {
             /* I'm the child. */
             const_AUTO(w, workers[idx]);
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
-            return worker_func(w, instance);
+            /* I'm one of the slaves */
+            request_type req;
+            fcs_state_string state_string;
+            get_board__setup_string(state_string);
+            while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)) ==
+                       sizeof(req) &&
+                   req.board_num != -1)
+            {
+                response_type response = {
+                    .num_iters = 0,
+                    .num_finished_boards = req.quota_end - req.board_num + 1,
+                };
+                for (; req.board_num <= req.quota_end; ++req.board_num)
+                {
+                    range_solvers__solve(state_string, instance, req.board_num,
+                        &response.num_iters);
+                    freecell_solver_user_recycle(instance);
+                }
+                if (sizeof(response) != write(w.child_to_parent_pipe[WRITE_FD],
+                                            &response, sizeof(response)))
+                {
+                    abort();
+                }
+            }
+            /* Cleanup */
+            freecell_solver_user_free(instance);
+            close(w.child_to_parent_pipe[WRITE_FD]);
+            close(w.parent_to_child_pipe[READ_FD]);
+            return 0;
         }
 
         default:
-        {
             /* I'm the parent. */
             close(workers[idx].parent_to_child_pipe[READ_FD]);
             close(workers[idx].child_to_parent_pipe[WRITE_FD]);
-        }
-        break;
+            break;
         }
     }
 
     freecell_solver_user_free(instance);
 
-    {
 /* I'm the master. */
 #ifdef USE_EPOLL
-        const int epollfd = epoll_create1(0);
-        if (epollfd == -1)
+    const int epollfd = epoll_create1(0);
+    if (epollfd == -1)
+    {
+        perror("epoll_create1");
+        exit(EXIT_FAILURE);
+    }
+#else
+    fd_set initial_readers;
+    FD_ZERO(&initial_readers);
+    int mymax = -1;
+#endif
+
+    for (size_t idx = 0; idx < num_workers; ++idx)
+    {
+        const int fd = read_fd(&workers[idx]);
+#ifdef USE_EPOLL
+        struct epoll_event ev = {
+            .events = EPOLLIN,
+            .data.ptr = &(workers[idx]),
+        };
+        if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
         {
-            perror("epoll_create1");
+            perror("epoll_ctl: listen_sock");
             exit(EXIT_FAILURE);
         }
 #else
-        fd_set initial_readers;
-        FD_ZERO(&initial_readers);
-        int mymax = -1;
-#endif
-
-        for (size_t idx = 0; idx < num_workers; idx++)
+        FD_SET(fd, &initial_readers);
+        if (fd > mymax)
         {
-#define GET_READ_FD(worker) ((worker).child_to_parent_pipe[READ_FD])
-            const int fd = GET_READ_FD(workers[idx]);
-#ifdef USE_EPOLL
-            struct epoll_event ev = {
-                .events = EPOLLIN, .data.ptr = &(workers[idx]),
-            };
-            if (epoll_ctl(epollfd, EPOLL_CTL_ADD, fd, &ev) == -1)
-            {
-                perror("epoll_ctl: listen_sock");
-                exit(EXIT_FAILURE);
-            }
-#else
-            FD_SET(fd, &initial_readers);
-            if (fd > mymax)
-            {
-                mymax = fd;
-            }
-#endif
+            mymax = fd;
         }
+#endif
+    }
 #ifndef USE_EPOLL
-        mymax++;
+    ++mymax;
 #endif
-        int total_num_finished_boards = 0;
-        const long long total_num_boards_to_check =
-            end_board - next_board_num + 1;
+    const fc_solve_ms_deal_idx_type total_num_boards_to_check =
+        end_board - next_board_num + 1;
 
-        long long next_milestone = next_board_num + stop_at;
-        next_milestone -= (next_milestone % stop_at);
+    fc_solve_ms_deal_idx_type next_milestone = stop_at;
+    for (size_t idx = 0; idx < num_workers; ++idx)
+    {
+        write_request(
+            end_board, board_num_step, &next_board_num, &(workers[idx]));
+    }
 
-        for (size_t idx = 0; idx < num_workers; idx++)
+    while (total_num_finished_boards < total_num_boards_to_check)
+    {
+        while (total_num_finished_boards >= next_milestone)
         {
-            write_request(
-                end_board, board_num_step, &next_board_num, &(workers[idx]));
+            fc_solve_print_reached(next_milestone, total_num_iters);
+            next_milestone += stop_at;
+        }
+#ifdef USE_EPOLL
+        struct epoll_event events[4];
+        const int nfds = epoll_wait(epollfd, events, COUNT(events), -1);
+        if (nfds == -1)
+        {
+            perror("epoll_pwait");
+            exit(EXIT_FAILURE);
         }
 
-#ifdef USE_EPOLL
-#define MAX_EVENTS 10
-        struct epoll_event events[MAX_EVENTS];
-#endif
-
-        while (total_num_finished_boards < total_num_boards_to_check)
+        for (int i = 0; i < nfds; ++i)
         {
-            if (total_num_finished_boards >= next_milestone)
-            {
-                FCS_PRINT_REACHED_BOARD(
-                    mytime, next_milestone, total_num_iters);
-                next_milestone += stop_at;
-            }
-
-#ifdef USE_EPOLL
-            const int nfds = epoll_wait(epollfd, events, MAX_EVENTS, -1);
-            if (nfds == -1)
-            {
-                perror("epoll_pwait");
-                exit(EXIT_FAILURE);
-            }
-
-            for (int i = 0; i < nfds; i++)
-            {
-                const worker_t *const worker = events[i].data.ptr;
-                transaction(worker, GET_READ_FD(*worker),
-                    &total_num_finished_boards, end_board, board_num_step,
-                    &next_board_num);
-            }
-
+            const fcs_worker *const worker = events[i].data.ptr;
+            transaction(worker, read_fd(worker), end_board, board_num_step,
+                &next_board_num);
+        }
 #else
-            fd_set readers = initial_readers;
-            /* I'm the master. */
-            const int select_ret = select(mymax, &readers, NULL, NULL, NULL);
+        fd_set readers = initial_readers;
+        /* I'm the master. */
+        const int select_ret = select(mymax, &readers, NULL, NULL, NULL);
 
-            if (select_ret == -1)
+        if (select_ret == -1)
+        {
+            perror("select()");
+        }
+        else if (select_ret)
+        {
+            for (size_t idx = 0; idx < num_workers; ++idx)
             {
-                perror("select()");
-            }
-            else if (select_ret)
-            {
-                for (size_t idx = 0; idx < num_workers; idx++)
+                const int fd = read_fd(&workers[idx]);
+
+                if (FD_ISSET(fd, &readers))
                 {
-                    const int fd = GET_READ_FD(workers[idx]);
-
-                    if (FD_ISSET(fd, &readers))
-                    {
-                        /* FD_ISSET can be set on EOF, so we check if
-                         * read failed. */
-                        transaction(&(workers[idx]), fd,
-                            &total_num_finished_boards, end_board,
-                            board_num_step, &next_board_num);
-                    }
+                    /* FD_ISSET can be set on EOF, so we check if
+                     * read failed. */
+                    transaction(&(workers[idx]), fd, end_board, board_num_step,
+                        &next_board_num);
                 }
             }
+        }
 #endif
-        }
     }
-
+    while (total_num_finished_boards >= next_milestone)
     {
-        int status;
-        for (size_t idx = 0; idx < num_workers; idx++)
-        {
-            wait(&status);
-        }
+        fc_solve_print_reached(next_milestone, total_num_iters);
+        next_milestone += stop_at;
     }
 
-    FCS_PRINT_FINISHED(mytime, total_num_iters);
-
+    for (size_t idx = 0; idx < num_workers; ++idx)
+    {
+        wait(NULL);
+    }
+    fc_solve_print_finished(total_num_iters);
     return 0;
 }

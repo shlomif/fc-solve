@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
 /*
  * dbm_procs.h - common procedures for dbm_solver.c and depth_dbm_solver.c.
  */
@@ -14,6 +12,8 @@
 
 #include "dbm_move_to_string.h"
 #include "render_state.h"
+#include "try_param.h"
+#include "rinutils/portable_time.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -24,14 +24,14 @@ extern "C" {
 static int fc_solve_compare_pre_cache_keys(
     const void *const void_a, const void *const void_b, void *const context)
 {
-#define GET_PARAM(p) ((((const fcs_pre_cache_key_val_pair_t *)(p))->key))
+#define GET_PARAM(p) ((((const pre_cache_key_val_pair *)(p))->key))
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
 }
 
-static GCC_INLINE void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+static inline void pre_cache_init(
+    fcs_pre_cache *const pre_cache_ptr, meta_allocator *const meta_alloc)
 {
     pre_cache_ptr->tree_recycle_bin = NULL;
     pre_cache_ptr->kaz_tree =
@@ -43,10 +43,10 @@ static GCC_INLINE void pre_cache_init(fcs_pre_cache_t *const pre_cache_ptr,
     pre_cache_ptr->count_elements = 0;
 }
 
-static GCC_INLINE void pre_cache_insert(fcs_pre_cache_t *pre_cache,
-    fcs_encoded_state_buffer_t *key, fcs_encoded_state_buffer_t *parent)
+static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
+    fcs_encoded_state_buffer *key, fcs_encoded_state_buffer *parent)
 {
-    fcs_pre_cache_key_val_pair_t *to_insert;
+    pre_cache_key_val_pair *to_insert;
 
     if (pre_cache->kv_recycle_bin)
     {
@@ -62,54 +62,44 @@ static GCC_INLINE void pre_cache_insert(fcs_pre_cache_t *pre_cache,
     to_insert->parent = *parent;
 
     fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
-    pre_cache->count_elements++;
+    ++pre_cache->count_elements;
 }
 
-static GCC_INLINE fcs_bool_t pre_cache_does_key_exist(
-    fcs_pre_cache_t *pre_cache, fcs_encoded_state_buffer_t *key)
+static inline bool pre_cache_does_key_exist(
+    fcs_pre_cache *pre_cache, fcs_encoded_state_buffer *key)
 {
-    fcs_pre_cache_key_val_pair_t to_check;
-
-    to_check.key = *key;
-
+    pre_cache_key_val_pair to_check = {.key = *key};
     return (
         fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }
 
-static GCC_INLINE void cache_populate_from_pre_cache(
-    fcs_lru_cache_t *const cache, fcs_pre_cache_t *const pre_cache)
+static inline void cache_populate_from_pre_cache(
+    fcs_lru_cache *const cache, fcs_pre_cache *const pre_cache)
 {
 #ifdef FCS_DBM_USE_LIBAVL
-    dict_t *kaz_tree;
-    struct avl_traverser trav;
-    dict_key_t item;
+    struct rb_traverser trav;
+    var_AUTO(kaz_tree, pre_cache->kaz_tree);
+    rb_t_init(&trav, kaz_tree);
 
-    kaz_tree = pre_cache->kaz_tree;
-    avl_t_init(&trav, kaz_tree);
-
-    for (item = avl_t_first(&trav, kaz_tree); item; item = avl_t_next(&trav))
+    for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
+         item = rb_t_next(&trav))
     {
-        cache_insert(cache, &(((fcs_pre_cache_key_val_pair_t *)(item))->key),
-            NULL, '\0');
+        cache_insert(
+            cache, &(((pre_cache_key_val_pair *)(item))->key), NULL, '\0');
     }
 #else
-    dnode_t *node;
-    dict_t *kaz_tree;
-
-    kaz_tree = pre_cache->kaz_tree;
-
-    for (node = fc_solve_kaz_tree_first(kaz_tree); node;
+    var_AUTO(kaz_tree, pre_cache->kaz_tree);
+    for (dnode_t *node = fc_solve_kaz_tree_first(kaz_tree); node;
          node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
         cache_insert(
-            cache, &(((fcs_pre_cache_key_val_pair_t *)(node->dict_key))->key));
+            cache, &(((pre_cache_key_val_pair *)(node->dict_key))->key));
     }
 #endif
 }
 
-static GCC_INLINE void pre_cache_offload_and_destroy(
-    fcs_pre_cache_t *const pre_cache, fcs_dbm_store_t store,
-    fcs_lru_cache_t *const cache)
+static inline void pre_cache_offload_and_destroy(fcs_pre_cache *const pre_cache,
+    fcs_dbm_store store, fcs_lru_cache *const cache)
 {
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
     cache_populate_from_pre_cache(cache, pre_cache);
@@ -131,10 +121,9 @@ static GCC_INLINE void pre_cache_offload_and_destroy(
 
 #ifndef FCS_DBM_CACHE_ONLY
 
-static GCC_INLINE void pre_cache_offload_and_reset(
-    fcs_pre_cache_t *const pre_cache, const fcs_dbm_store_t store,
-    fcs_lru_cache_t *const cache,
-    fcs_meta_compact_allocator_t *const meta_alloc)
+static inline void pre_cache_offload_and_reset(fcs_pre_cache *const pre_cache,
+    const fcs_dbm_store store, fcs_lru_cache *const cache,
+    meta_allocator *const meta_alloc)
 {
     pre_cache_offload_and_destroy(pre_cache, store, cache);
     pre_cache_init(pre_cache, meta_alloc);
@@ -142,95 +131,116 @@ static GCC_INLINE void pre_cache_offload_and_reset(
 
 #endif
 
-#endif /* FCS_DBM_WITHOUT_CACHES */
+#endif // FCS_DBM_WITHOUT_CACHES
 
-typedef struct fcs_dbm_solver_thread_struct fcs_dbm_solver_thread_t;
+typedef struct fcs_dbm_solver_thread_struct dbm_solver_thread;
 
-static GCC_INLINE void instance_check_key(fcs_dbm_solver_thread_t *const thread,
-    fcs_dbm_solver_instance_t *const instance, const int key_depth,
-    fcs_encoded_state_buffer_t *const key, fcs_dbm_record_t *const parent,
-    const unsigned char move,
-    const fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask
-#ifdef FCS_DBM_CACHE_ONLY
+typedef struct
+{
+    dbm_solver_thread *thread;
+} thread_arg;
+
+static inline void instance_check_key(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    const size_t key_depth, fcs_encoded_state_buffer *const key,
+    fcs_dbm_record *const parent, const uint8_t move,
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
-    );
+);
 
-static GCC_INLINE void instance_check_multiple_keys(
-    fcs_dbm_solver_thread_t *thread, fcs_dbm_solver_instance_t *instance,
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_meta_compact_allocator_t *const meta_alloc, fcs_derived_state_t *list
-#ifdef FCS_DBM_CACHE_ONLY
+static inline bool instance_check_multiple_keys(
+    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+    fcs_dbm__cache_store__common *const cache_store GCC_UNUSED,
+    meta_allocator *const meta_alloc GCC_UNUSED, fcs_derived_state **lists,
+    size_t batch_size
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
-    const fcs_fcc_move_t *moves_to_parent
+    const fcs_fcc_move *moves_to_parent
 #endif
-    )
+)
 {
     /* Small optimization in case the list is empty. */
-    if (!list)
+    if (batch_size == 1 && !lists[0])
     {
-        return;
+        return false;
     }
-    FCS_LOCK(instance->storage_lock);
-    for (; list; list = list->next)
+    fcs_lock_lock(&instance->common.storage_lock);
+    for (typeof(batch_size) batch_i = 0; batch_i < batch_size; ++batch_i)
     {
-        instance_check_key(
-            thread, instance, CHECK_KEY_CALC_DEPTH(), &(list->key),
-            list->parent, list->move, &(list->which_irreversible_moves_bitmask)
-#ifdef FCS_DBM_CACHE_ONLY
-                                          ,
-            moves_to_parent
+        for (var_AUTO(list, lists[batch_i]); list; list = list->next)
+        {
+            instance_check_key(thread, instance, CHECK_KEY_CALC_DEPTH(),
+                &(list->key), list->parent, list->move,
+                &(list->which_irreversible_moves_bitmask)
+#ifndef FCS_DBM_WITHOUT_CACHES
+                    ,
+                moves_to_parent
 #endif
             );
-    }
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
-    if (cache_store->pre_cache.count_elements >=
-        cache_store->pre_cache_max_count)
-    {
-        pre_cache_offload_and_reset(&(cache_store->pre_cache),
-            cache_store->store, &(cache_store->cache), meta_alloc);
+            if (cache_store->pre_cache.count_elements >=
+                cache_store->pre_cache_max_count)
+            {
+                pre_cache_offload_and_reset(&(cache_store->pre_cache),
+                    cache_store->store, &(cache_store->cache), meta_alloc);
+            }
+#endif
+#endif
+        }
     }
+#ifdef MAX_FCC_DEPTH
+    const bool have_more = !q_stats_is_empty(
+        &instance->colls_by_depth[instance->curr_depth].queue.stats);
+
+    if (have_more)
+    {
+        fcs_condvar_signal(&(instance->monitor));
+    }
+    else
+    {
+        fcs_condvar_broadcast(&(instance->monitor));
+    }
+#else
+    const bool have_more = false;
 #endif
-#endif
-    FCS_UNLOCK(instance->storage_lock);
+    fcs_lock_unlock(&instance->common.storage_lock);
+    return have_more;
 }
 
-static void instance_print_stats(fcs_dbm_solver_instance_t *const instance)
+static void instance_print_stats(dbm_solver_instance *const instance)
 {
-    fcs_portable_time_t mytime;
-    FCS_GET_TIME(mytime);
-
+    const_AUTO(mytime, rinutils_get_time());
     FILE *const out_fh = instance->common.out_fh;
     fprintf(out_fh,
-        ("Reached %ld ; States-in-collection: %ld ; Time: %li.%.6li\n"
-         ">>>Queue Stats: inserted=%ld items_in_queue=%ld extracted=%ld\n"),
+        ("Reached %lu ; States-in-collection: %lu ; Time: " RIN_TIME_FMT "\n"
+         ">>>Queue Stats: inserted=%lu items_in_queue=%lu extracted=%lu\n"),
         instance->common.count_num_processed,
-        instance->common.num_states_in_collection, FCS_TIME_GET_SEC(mytime),
-        FCS_TIME_GET_USEC(mytime), instance->common.num_states_in_collection,
-        instance->common.num_states_in_collection -
-            instance->common.count_num_processed,
+        instance->common.num_states_in_collection, RIN_TIME__GET_BOTH(mytime),
+        instance->common.num_states_in_collection,
+        instance->common.count_of_items_in_queue,
         instance->common.count_num_processed);
     fflush(out_fh);
 }
 
 #ifdef DEBUG_FOO
 
-static GCC_INLINE void instance_debug_out_state(
-    fcs_dbm_solver_instance_t *instance, fcs_encoded_state_buffer_t *enc_state)
+static inline void instance_debug_out_state(
+    dbm_solver_instance *const instance, fcs_encoded_state_buffer *enc_state)
 {
-    fcs_state_keyval_pair_t state;
-    fcs_state_locs_struct_t locs;
-    DECLARE_IND_BUF_T(indirect_stacks_buffer)
-
+    fcs_state_keyval_pair state;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
+    DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
     /* Handle item. */
     fc_solve_delta_stater_decode_into_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
-    char state_str[1000];
+    fcs_render_state_str state_str;
     FCS__RENDER_STATE(state_str, &(state.s), &locs);
     fprintf(instance->common.out_fh, "Found State:\n<<<\n%s>>>\n", state_str);
     fflush(instance->common.out_fh);
@@ -242,15 +252,15 @@ static GCC_INLINE void instance_debug_out_state(
     }
 #endif
 
-static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
-    fcs_encoded_state_buffer_t **const ptr_trace, int *const ptr_trace_num)
+static void calc_trace(fcs_dbm_record *const ptr_initial_record,
+    fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
 {
 #define GROW_BY 100
     size_t trace_num = 0;
     size_t trace_max_num = GROW_BY;
-    fcs_encoded_state_buffer_t *trace = SMALLOC(trace, trace_max_num);
-    fcs_encoded_state_buffer_t *key_ptr = trace;
-    fcs_dbm_record_t *record = ptr_initial_record;
+    fcs_encoded_state_buffer *trace = SMALLOC(trace, trace_max_num);
+    fcs_encoded_state_buffer *key_ptr = trace;
+    fcs_dbm_record *record = ptr_initial_record;
 
     while (record)
     {
@@ -268,57 +278,65 @@ static void calc_trace(fcs_dbm_record_t *const ptr_initial_record,
 #undef GROW_BY
     *ptr_trace_num = trace_num;
     *ptr_trace = trace;
-
-    return;
 }
 
-static GCC_INLINE void mark_and_sweep_old_states(
-    fcs_dbm_solver_instance_t *const instance, dict_t *const kaz_tree,
-    const int curr_depth)
+static inline void mark_and_sweep_old_states(
+    dbm_solver_instance *const instance GCC_UNUSED,
+    dict_t *const kaz_tree GCC_UNUSED, const size_t curr_depth GCC_UNUSED)
 {
+#ifndef FCS_NO_DBM_AVL
     /* Now that we are about to ascend to a new depth, let's
      * mark-and-sweep
      * the old states, some of which are no longer of interest.
      * */
     FILE *const out_fh = instance->common.out_fh;
-    TRACE("Start mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
-    struct avl_node **tree_recycle_bin =
-        ((struct avl_node **)(&(instance->common.tree_recycle_bin)));
+    TRACE("Start mark-and-sweep cleanup for curr_depth=%lu\n",
+        (unsigned long)curr_depth);
+    const_AUTO(tree_recycle_bin,
+        ((struct rb_node **)(&(instance->common.tree_recycle_bin))));
 
-    struct avl_traverser trav;
-    avl_t_init(&trav, kaz_tree);
+    struct rb_traverser trav;
+    rb_t_init(&trav, kaz_tree);
 
-    const size_t items_count = kaz_tree->avl_count;
+    const size_t items_count = kaz_tree->rb_count;
     size_t idx = 0;
-    for (dict_key_t item = avl_t_first(&trav, kaz_tree); item;
-         item = avl_t_next(&trav))
+    for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
+         item = rb_t_next(&trav))
     {
-        if (!avl_get_decommissioned_flag(item))
+        if (!rb_get_decommissioned_flag(item))
         {
-            var_AUTO(ancestor, (struct avl_node *)item);
-            while (fcs_dbm_record_get_refcount(&(ancestor->avl_data)) == 0)
+            var_AUTO(ancestor, (struct rb_node *)item);
+            while (fcs_dbm_record_get_refcount(&(ancestor->rb_data)) == 0)
             {
-                avl_set_decommissioned_flag(ancestor, 1);
+                rb_set_decommissioned_flag(ancestor, 1);
 
-                AVL_SET_NEXT(ancestor, *(tree_recycle_bin));
-                *(tree_recycle_bin) = ancestor;
+                AVL_SET_NEXT(ancestor, *tree_recycle_bin);
+                *tree_recycle_bin = ancestor;
 
                 if (!(ancestor =
-                            (struct avl_node *)fcs_dbm_record_get_parent_ptr(
-                                &(ancestor->avl_data))))
+                            (struct rb_node *)fcs_dbm_record_get_parent_ptr(
+                                &(ancestor->rb_data))))
                 {
                     break;
                 }
-                fcs_dbm_record_decrement_refcount(&(ancestor->avl_data));
+                fcs_dbm_record_decrement_refcount(&(ancestor->rb_data));
             }
         }
         if (((++idx) % 100000) == 0)
         {
+#ifdef WIN32
+            fprintf(out_fh,
+                "Mark+Sweep Progress - " RIN_ULL_FMT "/" RIN_ULL_FMT "\n",
+                (unsigned long long)idx, (unsigned long long)items_count);
+#else
             fprintf(
-                out_fh, "Mark+Sweep Progress - %zd/%zd\n", idx, items_count);
+                out_fh, "Mark+Sweep Progress - %zu/%zu\n", idx, items_count);
+#endif
         }
     }
-    TRACE("Finish mark-and-sweep cleanup for curr_depth=%d\n", curr_depth);
+    TRACE("Finish mark-and-sweep cleanup for curr_depth=%lu\n",
+        (unsigned long)curr_depth);
+#endif
 }
 
 #ifdef FCS_DBM_SINGLE_THREAD
@@ -345,28 +363,30 @@ static GCC_INLINE void mark_and_sweep_old_states(
 #define DESTROY_CACHE(instance) DESTROY_STORE(instance)
 #endif
 
-static GCC_INLINE void instance_increment(
-    fcs_dbm_solver_instance_t *const instance)
+static inline void instance_increment(dbm_solver_instance *const instance)
 {
-    instance->common.count_of_items_in_queue--;
-    instance->common.queue_num_extracted_and_processed++;
+    --instance->common.count_of_items_in_queue;
+    ++instance->common.queue_num_extracted_and_processed;
     if (++instance->common.count_num_processed % 100000 == 0)
     {
         instance_print_stats(instance);
     }
-    if (instance->common.count_num_processed >=
-        instance->common.max_count_num_processed)
+    if (unlikely((instance->common.count_num_processed >=
+                     instance->common.max_count_num_processed) ||
+                 (instance->common.num_states_in_collection >=
+                     instance->common.max_num_states_in_collection)))
     {
         instance->common.should_terminate = MAX_ITERS_TERMINATE;
     }
 }
 
-static GCC_INLINE void fcs_dbm__cache_store__init(
-    fcs_dbm__cache_store__common_t *const cache_store,
-    fcs_dbm_instance_common_elems_t *const common,
-    fcs_meta_compact_allocator_t *const meta_alloc,
-    const char *const dbm_store_path, const long pre_cache_max_count,
-    const long caches_delta)
+static inline void fcs_dbm__cache_store__init(
+    fcs_dbm__cache_store__common *const cache_store,
+    dbm_instance_common_elems *const common,
+    meta_allocator *const meta_alloc GCC_UNUSED,
+    const char *const dbm_store_path,
+    const unsigned long pre_cache_max_count GCC_UNUSED,
+    const unsigned long caches_delta GCC_UNUSED)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
 #ifndef FCS_DBM_CACHE_ONLY
@@ -381,36 +401,133 @@ static GCC_INLINE void fcs_dbm__cache_store__init(
 #endif
 }
 
-static GCC_INLINE fcs_bool_t fcs_dbm__extract_game_variant_from_argv(
-    const int argc, char **const argv, int *const arg,
-    fcs_dbm_variant_type_t *const ptr_local_variant)
+typedef struct
 {
-    if (!strcmp(argv[*arg], "--game"))
+    fcs_dbm_variant_type local_variant;
+    const char *offload_dir_path, *dbm_store_path;
+    unsigned long iters_delta_limit, max_num_states_in_collection;
+    unsigned long pre_cache_max_count, caches_delta;
+    size_t num_threads;
+} fcs_dbm_common_input;
+
+static const fcs_dbm_common_input fcs_dbm_common_input_init = {
+    .local_variant = FCS_DBM_VARIANT_2FC_FREECELL,
+    .offload_dir_path = NULL,
+    .dbm_store_path = "./fc_solve_dbm_store",
+    .pre_cache_max_count = 1000000,
+    .iters_delta_limit = ULONG_MAX,
+    .max_num_states_in_collection = ULONG_MAX,
+    .caches_delta = 1000000,
+    .num_threads = 2};
+
+static inline bool fcs_dbm__extract_common_from_argv(const int argc,
+    char **const argv, int *const arg, fcs_dbm_common_input *const inp)
+{
+    const char *param;
+    if ((param = TRY_PARAM("--pre-cache-max-count")))
     {
-        (*arg)++;
-        if (*arg == argc)
+        if ((inp->pre_cache_max_count = (unsigned long)atol(param)) < 1000)
         {
-            fprintf(stderr, "--game came without an argument!\n");
-            exit(-1);
+            exit_error("--pre-cache-max-count must be at least 1,000.\n");
         }
-        const_AUTO(name, argv[*arg]);
-        if (!strcmp(name, "bakers_dozen"))
+        return true;
+    }
+    else if ((param = TRY_PARAM("--game")))
+    {
+        if (!strcmp(param, "bakers_dozen"))
         {
-            *ptr_local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
+            inp->local_variant = FCS_DBM_VARIANT_BAKERS_DOZEN;
         }
-        else if (!strcmp(name, "freecell"))
+        else if (!strcmp(param, "freecell"))
         {
-            *ptr_local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
+            inp->local_variant = FCS_DBM_VARIANT_2FC_FREECELL;
         }
         else
         {
-            fprintf(stderr, "Unknown game '%s'. Aborting\n", name);
-            exit(-1);
+            exit_error("Unknown game '%s'. Aborting\n", param);
         }
-        return TRUE;
+        return true;
     }
-    return FALSE;
+    else if ((param = TRY_PARAM("--offload-dir-path")))
+    {
+        inp->offload_dir_path = param;
+        return true;
+    }
+    else if ((param = TRY_PARAM("--num-threads")))
+    {
+        if ((inp->num_threads = (size_t)atoi(param)) < 1)
+        {
+            exit_error("--num-threads must be at least 1.\n");
+        }
+        return true;
+    }
+    else if ((param = TRY_PARAM("--max-num-states")))
+    {
+        inp->max_num_states_in_collection = (unsigned long)atol(param);
+        return true;
+    }
+    else if ((param = TRY_PARAM("--iters-delta-limit")))
+    {
+        inp->iters_delta_limit = (unsigned long)atol(param);
+        return true;
+    }
+    else if ((param = TRY_PARAM("--caches-delta")))
+    {
+        if ((inp->caches_delta = (unsigned long)atol(param)) < 1000)
+        {
+            exit_error("--caches-delta must be at least 1,000.\n");
+        }
+        return true;
+    }
+    else if ((param = TRY_PARAM("--dbm-store-path")))
+    {
+        inp->dbm_store_path = param;
+        return true;
+    }
+    return false;
 }
+
+static inline fcs_dbm_record *cache_store__has_key(
+    fcs_dbm__cache_store__common *const cache_store,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent)
+{
+#ifndef FCS_DBM_WITHOUT_CACHES
+    if (cache_does_key_exist(&(cache_store->cache), key))
+    {
+        return NULL;
+    }
+#ifndef FCS_DBM_CACHE_ONLY
+    else if (pre_cache_does_key_exist(&(cache_store->pre_cache), key))
+    {
+        return NULL;
+    }
+    else if (fc_solve_dbm_store_does_key_exist(cache_store->store, key->s))
+    {
+        cache_insert(&(cache_store->cache), key, NULL, '\0');
+        return NULL;
+    }
+#endif
+    return ((fcs_dbm_record *)key);
+#else
+    return fc_solve_dbm_store_insert_key_value(
+        cache_store->store, key, parent, true);
+#endif
+}
+
+#ifndef FCS_DBM_WITHOUT_CACHES
+static inline fcs_cache_key_info *cache_store__insert_key(
+    fcs_dbm__cache_store__common *const cache_store,
+    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
+    const fcs_fcc_move *const moves_to_parent, const uint8_t move GCC_UNUSED)
+{
+#ifndef FCS_DBM_CACHE_ONLY
+    pre_cache_insert(&(cache_store->pre_cache), key, &(parent->key));
+    return NULL;
+#else
+    return cache_insert(&(cache_store->cache), key, moves_to_parent, move);
+#endif
+}
+#endif
 
 #ifdef __cplusplus
 }

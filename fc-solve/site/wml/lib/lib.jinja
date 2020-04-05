@@ -1,0 +1,12 @@
+{% macro js_requirejs(base_path, production) %}
+{% if production %}
+<script src="{{ base_path }}js/require.js"></script>
+{% else %}
+<script src="{{ base_path }}js/require--debug.js"></script>
+{% endif %}
+{% endmacro %}
+{% macro jquery_ui_head_elements(base_path) %}
+<script src="{{ base_path }}js/jquery-ui/jquery-ui.min.js"></script>
+<link rel="stylesheet" href="{{ base_path }}js/jquery-ui/jquery-ui.min.css" media="screen" />
+<link rel="stylesheet" href="{{ base_path }}jqui-override.css" media="screen" />
+{% endmacro %}

@@ -1,0 +1,131 @@
+{% set more_keywords = "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" %}
+{% extends "template.jinja" %}
+{% block title %}Freecell Solver{% endblock %}
+{% block body %}
+
+
+
+<ul class="emphasis">
+<li><a href="{{ base_path }}js-fc-solve/text/">Try Freecell Solver Online!</a></li>
+<li><a href="{{ base_path }}download.html">Download Freecell Solver</a></li>
+<li><a href="{{ base_path }}links.html#other_solvers">Other Solvers</a></li>
+</ul>
+
+{% call h2_section(id="about",title="About") %}
+<p>
+This is Freecell Solver - a program that automatically solves layouts of
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
+variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card
+Solitaire</a> such as Eight Off, Forecell, and
+Seahaven Towers, as well as
+<a href="http://en.wikipedia.org/wiki/Simple_Simon_%28solitaire%29">Simple
+Simon</a> boards. Freecell Solver is
+<a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free
+and open source software</a> freely available under the
+<a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat License</a>.
+It can be <a href="{{ base_path }}js-fc-solve/text/">used online</a> (which
+requires a modern enough web browser with JavaScript support),
+or <a href="{{ base_path }}download.html">downloaded</a> either as
+Microsoft Windows 32-bit binaries, or as the C source distribution.
+</p>
+
+<p>
+Included with the archive are programs that can automatically
+provide the starting layouts of several popular Solitaire Implementations.
+</p>
+
+<p>
+Freecell Solver can also be built as a library for use within your own
+Solitaire implementations. A more detailed list of features can be found
+in the <a href="features.html"><b>Features List</b></a>.
+</p>
+
+{% endcall %}
+
+{% call h2_section(id="news",title="News") %}
+
+{{ front_page_news }}
+
+<h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
+{% endcall %}
+
+{% call h2_section(id="links",title="Links") %}
+
+<ul>
+
+<li>
+<p>
+<a href="http://www.freecell.org/">Freecell.org</a> - a web-site dedicated
+to the game.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.solitairelaboratory.com/freecell.html">Michael
+Keller’s Freecell site</a> -
+contains the
+<a href="http://www.solitairelaboratory.com/fcfaq.html">Freecell FAQ
+(Frequently Asked Questions)</a> and other resources.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://pysolfc.sourceforge.net/">PySol Fan Club Edition</a> - a
+cross-platform, open-source implementation of many Solitaire games with
+a good integration of Freecell Solver.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://people.cs.uu.nl/hansb/d.freecell/freecellhtml.html">
+An unsolvable instance of Freecell</a> - why not all possible initial Freecell
+boards can be solved.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.heyes-jones.com/astar.html">Justin Heyes-Jones’s A* page</a> - a page about the A* scan.
+</p>
+</li>
+
+</ul>
+
+<ul>
+
+<li>
+<p>
+<a href="http://freecode.com/projects/freecellsolver/">Freecell Solver’s
+Freecode App-Index Record</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">Freecell Solver's
+Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://fc-solve.blogspot.com/">The Freecell Solver Blog</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="{{ presentation_url }}">A Presentation about Freecell Solver</a>
+</p>
+</li>
+
+</ul>
+
+<h3 class="plain"><a href="links.html">More Links</a></h3>
+
+{% endcall %}
+
+{% endblock %}

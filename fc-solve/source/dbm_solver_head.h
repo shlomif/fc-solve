@@ -1,43 +1,26 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
-/*
- * dbm_solver_head.h - contains the common part (headers/etc.) from the
- * beginning of depth_dbm_solver.c and dbm_solver.c .
- */
-
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
+// dbm_solver_head.h - contains the common part (headers/etc.) from the
+// beginning of depth_dbm_solver.c and dbm_solver.c .
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include <stdio.h>
-#include <string.h>
 #include <pthread.h>
-#include <unistd.h>
-#include <assert.h>
-#include <limits.h>
 
+// Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
 #if 0
-#define DEBUG_FOO
-#endif
-
-/*
- * Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
- */
-#if 1
 #define FCS_DBM_SINGLE_THREAD 1
 #endif
 
-#include "config.h"
-
+#include "freecell-solver/fcs_conf.h"
 #undef FCS_RCS_STATES
 
 #include "lock.h"
@@ -68,9 +51,19 @@ extern "C" {
 #include "dbm_trace.h"
 
 #ifdef DEBUG_FOO
-fc_solve_delta_stater_t global_delta_stater;
+fcs_delta_stater global_delta_stater;
 #endif
 
+#ifdef FCS_DBM_USE_APR
+#include "apr_general.h"
+#else
+#define apr_initialize()                                                       \
+    {                                                                          \
+    }
+#define apr_terminate()                                                        \
+    {                                                                          \
+    }
+#endif
 #ifdef __cplusplus
 }
 #endif

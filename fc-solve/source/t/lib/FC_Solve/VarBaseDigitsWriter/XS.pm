@@ -3,18 +3,16 @@ package FC_Solve::VarBaseDigitsWriter::XS;
 use strict;
 use warnings;
 
-use Config;
-
 use FC_Solve::InlineWrap (
     C => <<'EOF',
 #include "var_base_writer.h"
 
 SV* _proto_new() {
-        fcs_var_base_writer_t * s;
+        fcs_var_base_writer * s;
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::VarBaseDigitsWriter::XS");
 
-        New(42, s, 1, fcs_var_base_writer_t);
+        New(42, s, 1, fcs_var_base_writer);
         fc_solve_var_base_writer_init(s);
         fc_solve_var_base_writer_start(s);
 
@@ -23,8 +21,8 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-static GCC_INLINE fcs_var_base_writer_t * deref(SV * const obj) {
-    return (fcs_var_base_writer_t *)SvIV(SvRV(obj));
+static inline fcs_var_base_writer * deref(SV * const obj) {
+    return (fcs_var_base_writer *)SvIV(SvRV(obj));
 }
 
 void _proto_write(SV* obj, int base, int item) {
@@ -39,7 +37,7 @@ SV * _proto_get_data(SV* obj) {
 }
 
 void DESTROY(SV* obj) {
-  fcs_var_base_writer_t * s = deref(obj);
+  fcs_var_base_writer * s = deref(obj);
   fc_solve_var_base_writer_release(s);
   Safefree(s);
 }
@@ -56,12 +54,12 @@ sub new
 
 sub write
 {
-    my ($self, $args) = @_;
+    my ( $self, $args ) = @_;
 
     my $base = $args->{base};
     my $item = $args->{item};
 
-    $self->_proto_write($base, $item);
+    $self->_proto_write( $base, $item );
 
     return;
 }
@@ -75,30 +73,16 @@ sub get_data
 
 1;
 
+__END__
+
 =head1 COPYRIGHT AND LICENSE
 
-Copyright (c) 2011 Shlomi Fish
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
+Copyright (c) 2000 Shlomi Fish
 
 =cut
-

@@ -6,3 +6,10 @@
 */
 #define PREV_STATES_GROW_BY 128
 
+/*
+ * Define this macro if the C compiler supports the keyword inline or
+ * a similar keyword that was found by Autoconf (and defined as inline).
+ * */
+#cmakedefine HAVE_C_INLINE
+
+#cmakedefine FCS_INLINE_KEYWORD ${FCS_INLINE_KEYWORD}

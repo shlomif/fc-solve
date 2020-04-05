@@ -9,10 +9,6 @@ Games::Solitaire::Verify::Base - a base class.
 
 =cut
 
-use vars qw($VERSION);
-
-$VERSION = '0.1701';
-
 use Class::XSAccessor;
 
 =head1 SYNOPSIS
@@ -51,7 +47,7 @@ The constructor. Blesses and calls _init() .
 sub new
 {
     my $class = shift;
-    my $self = {};
+    my $self  = {};
     bless $self, $class;
 
     # May throw an exception.
@@ -72,7 +68,7 @@ Gotta love dynamic languages like Perl 5.
 sub mk_accessors
 {
     my $package = shift;
-    return $package->mk_acc_ref([@_]);
+    return $package->mk_acc_ref( [@_] );
 }
 
 =head2 __PACKAGE__->mk_acc_ref([qw(method1 method2 method3)])
@@ -84,7 +80,7 @@ Creates the accessors in the array-ref of names at run-time.
 sub mk_acc_ref
 {
     my $package = shift;
-    my $names = shift;
+    my $names   = shift;
 
     my $mapping = +{ map { $_ => $_ } @$names };
 
@@ -98,4 +94,4 @@ EOF
 
 }
 
-1; # End of Games::Solitaire::Verify::Base
+1;    # End of Games::Solitaire::Verify::Base

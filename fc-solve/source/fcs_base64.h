@@ -8,9 +8,7 @@
 #pragma once
 
 #include <stdint.h>
-#include <stdlib.h>
-
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 /* We modified the encoding table to have '_' instead of '/',
  * which interferes with UNIX paths.
@@ -21,26 +19,24 @@ static const char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
     'X', 'Y', 'Z', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
     'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0',
     '1', '2', '3', '4', '5', '6', '7', '8', '9', '+', '_'};
-static char decoding_table[256];
-static const int mod_table[] = {0, 2, 1};
+static unsigned char decoding_table[256];
+static const size_t mod_table[] = {0, 2, 1};
 
-static GCC_INLINE void build_decoding_table(void)
+static inline void build_decoding_table(void)
 {
-    for (int i = 0; i < 64; i++)
-        decoding_table[(unsigned char)encoding_table[i]] = i;
+    for (size_t i = 0; i < 64; i++)
+        decoding_table[(unsigned char)encoding_table[i]] = (unsigned char)i;
 }
 
-static void base64_encode(const unsigned char *data, size_t input_length,
+static void base64_encode(const unsigned char *data, const size_t input_length,
     char *encoded_data, /* Should have enough space, we got rid of
    malloc()s to avoid memory fragmentation. */
-    size_t *output_length)
+    size_t *const output_length)
 {
-
     *output_length = 4 * ((input_length + 2) / 3);
 
     for (size_t i = 0, j = 0; i < input_length;)
     {
-
         const uint32_t octet_a = i < input_length ? data[i++] : 0;
         const uint32_t octet_b = i < input_length ? data[i++] : 0;
         const uint32_t octet_c = i < input_length ? data[i++] : 0;
@@ -53,18 +49,15 @@ static void base64_encode(const unsigned char *data, size_t input_length,
         encoded_data[j++] = encoding_table[(triple >> 0 * 6) & 0x3F];
     }
 
-    for (int i = 0; i < mod_table[input_length % 3]; i++)
+    for (size_t i = 0; i < mod_table[input_length % 3]; i++)
         encoded_data[*output_length - 1 - i] = '=';
 
     encoded_data[*output_length] = '\0';
-
-    return;
 }
 
-static int base64_decode(const char *data, size_t input_length,
-    unsigned char *decoded_data, size_t *output_length)
+static int base64_decode(const char *data, const size_t input_length,
+    unsigned char *decoded_data, size_t *const output_length)
 {
-
     if (input_length % 4 != 0)
         return -1;
 
@@ -76,7 +69,6 @@ static int base64_decode(const char *data, size_t input_length,
 
     for (size_t i = 0, j = 0; i < input_length;)
     {
-
 #define DECODE()                                                               \
     (data[i] == '=' ? 0 & i++                                                  \
                     : decoding_table[(size_t)(unsigned char)(data[i++])])

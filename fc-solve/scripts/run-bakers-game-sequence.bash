@@ -20,4 +20,3 @@ seq "$START" "$END" |
         ./fc-solve --game "$GAME" -l eo -mi "${MAX_ITERS//,/}" -p -t -sam > \
         "$(printf "%s/%09d.sol" "$RESULTS_DIR" "$DEAL")"
 done) | tee -a total_dump.txt
-

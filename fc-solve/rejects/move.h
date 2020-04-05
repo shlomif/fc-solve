@@ -40,4 +40,3 @@ fcs_move_stack_t * fcs_move_stack_create(void);
     fcs_move_stack_static_destroy(*stack); \
     free(stack); \
 }
-

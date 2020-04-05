@@ -12,4 +12,3 @@ File.open(ARGV[0], "r").each do |l|
         next_idx += 1
     end
 end
-

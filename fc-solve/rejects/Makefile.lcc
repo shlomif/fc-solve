@@ -117,4 +117,3 @@ clean:
 	rm -f *.o $(TARGETS) libfcs.a libfreecell-solver.* test-lib mtest
 
 endif
-

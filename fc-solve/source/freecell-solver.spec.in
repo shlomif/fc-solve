@@ -1,17 +1,18 @@
+%global debug_package %{nil}
 Name: freecell-solver
 Version: @VERSION@
 Release: 1
 License: MIT
 Group: Amusement/Games
-Source: http://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.xz
-Buildroot: %{_tmppath}/freecell-solver-root
-URL: http://fc-solve.shlomifish.org/
+Source: https://fc-solve.shlomifish.org/downloads/fc-solve/freecell-solver-%{version}.tar.xz
+URL: https://fc-solve.shlomifish.org/
 Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
-BuildRequires: ack
+BuildRequires: asciidoctor
 BuildRequires: cmake
 BuildRequires: gmp-devel
-BuildRequires: perl(base)
+BuildRequires: gperf
+BuildRequires: perl(CHI)
 BuildRequires: perl(Carp)
 BuildRequires: perl(Cwd)
 BuildRequires: perl(Data::Dumper)
@@ -22,18 +23,15 @@ BuildRequires: perl(File::Spec)
 BuildRequires: perl(File::Which)
 BuildRequires: perl(Games::Solitaire::Verify)
 BuildRequires: perl(Games::Solitaire::Verify::Solution)
+BuildRequires: perl(IPC::Open2)
 BuildRequires: perl(Inline)
 BuildRequires: perl(Inline::C)
-BuildRequires: perl(IPC::Open2)
-BuildRequires: perl(lib)
 BuildRequires: perl(List::MoreUtils)
 BuildRequires: perl(Moo)
 BuildRequires: perl(MooX)
 BuildRequires: perl(MooX::late)
-BuildRequires: perl(parent)
 BuildRequires: perl(Path::Tiny)
 BuildRequires: perl(Storable)
-BuildRequires: perl(strict)
 BuildRequires: perl(String::ShellQuote)
 BuildRequires: perl(Template)
 BuildRequires: perl(Test::Data::Split)
@@ -44,13 +42,24 @@ BuildRequires: perl(Test::More)
 BuildRequires: perl(Test::RunValgrind)
 BuildRequires: perl(Test::TrailingSpace)
 BuildRequires: perl(Test::Trap)
-BuildRequires: perl(warnings)
 BuildRequires: perl(YAML::XS)
-BuildRequires: perl-devel
+BuildRequires: perl(base)
+BuildRequires: perl(lib)
+BuildRequires: perl(parent)
+BuildRequires: perl(strict)
+BuildRequires: perl(warnings)
+BuildRequires: perl-devel >= 5.14.0
+BuildRequires: pkgconfig(cmocka)
+BuildRequires: pkgconfig(librinutils)
+BuildRequires: python3-cffi
+BuildRequires: python3-pycotap
+BuildRequires: python3-pysol-cards
 BuildRequires: python3-random2
-BuildRequires: tap-devel
+BuildRequires: rpm-build
+BuildRequires: tar
 BuildRequires: the_silver_searcher
 BuildRequires: valgrind
+BuildRequires: xz
 
 %description
 The Freecell Solver package contains the fc-solve executable which is
@@ -70,12 +79,12 @@ games of Freecell and similar variants of card solitaire.
 
 This package is mandatory for the Freecell Solver executable too.
 
-%package -n libfreecell-solver0-devel
+%package -n libfreecell-solver-devel
 Summary: The Freecell Solver development tools for solving Freecell games
 Group: Amusement/Games
 Requires: libfreecell-solver0 = %{version}
 
-%description -n libfreecell-solver0-devel
+%description -n libfreecell-solver-devel
 Freecell Solver is a library for automatically solving boards of Freecell and
 similar variants of card Solitaire. This package contains the header files and
 static libraries necessary for developing programs using Freecell Solver.
@@ -83,77 +92,61 @@ static libraries necessary for developing programs using Freecell Solver.
 You should install it if you are a game developer who would like to use
 Freecell Solver from within your programs.
 
-%package -n libfreecell-solver0-static
-Summary: The Freecell Solver static libraries
-Group: Amusement/Games
-Requires: libfreecell-solver0 = %{version}
-
-%description -n libfreecell-solver0-static
-Freecell Solver is a library for automatically solving boards of Freecell and
-similar variants of card Solitaire. This package contains the static libraries.
-
-It is not generally required.
-
 %prep
 %setup
-# This is a hack that is meant to make sure the README of the board
-# generation programs resides inside the board_gen sub-dir of the
-# documentation directory.
-cd board_gen
-mkdir doc
-cd doc
-mkdir board_gen
-cd board_gen
-cp ../../README .
-
 
 %build
 %cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12
+if test -d build
+then
+    cd build
+fi
 %make_build
 
 %check
-cd build
-perl ../run-tests.pl
+rm -f t/t/tidyall.t
+src="`pwd`"
+if test -d build
+then
+    cd build
+fi
+perl "$src"/run-tests.pl
 
 %install
-rm -rf %buildroot
-cd build
-%{make_install}
-
-rm -f %buildroot/usr/bin/make-microsoft-freecell-board
-
-%post -p /sbin/ldconfig
-
-%postun -p /sbin/ldconfig
+if test -d build
+then
+    cd build
+fi
+%make_install
+find %{buildroot} -name *.a -delete
 
 %files -n libfreecell-solver0
-%{_libdir}/libfreecell-solver.so*
+%{_libdir}/libfreecell-solver.so.*
 /usr/share/freecell-solver/presetrc
 /usr/share/freecell-solver/presets/*
 
-%files -n libfreecell-solver0-static
-%{_libdir}/libfreecell-solver.a
-
 %files
 %defattr(-,root,root)
+/usr/bin/dbm-fc-solver
+/usr/bin/depth-dbm-fc-solver
 /usr/bin/fc-solve
+/usr/bin/fc_solve_find_index_s2ints.py
+/usr/bin/find-freecell-deal-index.py
 /usr/bin/freecell-solver-fc-pro-range-solve
 /usr/bin/freecell-solver-multi-thread-solve
 /usr/bin/freecell-solver-range-parallel-solve
+/usr/bin/gen-multiple-pysol-layouts
 /usr/bin/make_pysol_freecell_board.py
 /usr/bin/pi-make-microsoft-freecell-board
 /usr/bin/transpose-freecell-board.py
 %{_mandir}/*/*
 %{_docdir}/*
 
-%files -n libfreecell-solver0-devel
+%files -n libfreecell-solver-devel
 %defattr(-,root,root)
 /usr/include/freecell-solver/*.h
-/usr/bin/freecell-solver-config
+%{_libdir}/libfreecell-solver.so
 %{_libdir}/pkgconfig/*.pc
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %changelog
 * Tue Mar 31 2009 Shlomi Fish <shlomif@iglu.org.il> 2.21.2-1

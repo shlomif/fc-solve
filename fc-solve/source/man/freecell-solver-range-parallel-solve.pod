@@ -6,8 +6,7 @@ solving a range of Microsoft Freecell/Freecell Pro Boards
 =head1 SYNOPSIS
 
 freecell-solver-range-parallel-solve I<start> I<end> I<print_step>
-B<[--binary-output-to filename]> B<[--total-iterations-limit limit]>
-[fc-solve Arguments...]
+B<[--binary-output-to filename]> [fc-solve Arguments...]
 
 =head1 DESCRIPTION
 
@@ -26,10 +25,6 @@ use to solve each board. Refer to the B<fc-solve>(6) man page for
 information about its options.
 
 =head1 OPTIONS
-
-B<--total-iterations-limit> sets the maximal number of iterations with
-which to try to solve each deal. After that, the program will give up
-and report that the board was intractable.
 
 B<--binary-output-to> sets the filename into which to output the number
 of iterations it took to solve each board. This file can later be used with

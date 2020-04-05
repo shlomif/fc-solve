@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
 /*
  * dbm_calc_derived.h - contains functions to calculate the derived states
  * from a certain position.
@@ -17,15 +15,9 @@
 extern "C" {
 #endif
 
-#include <stdlib.h>
-
-#include "config.h"
-
-#include "state.h"
 #include "meta_alloc.h"
-#include "fcs_enums.h"
-
-#include "fcs_dllexport.h"
+#include "freecell-solver/fcs_enums.h"
+#include "freecell-solver/fcs_dllexport.h"
 #include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
@@ -34,18 +26,34 @@ extern "C" {
 
 typedef struct fcs_derived_state_struct
 {
-    fcs_state_keyval_pair_t state;
-    fcs_encoded_state_buffer_t key;
-    fcs_dbm_record_t *parent;
+    fcs_state_keyval_pair state;
+    fcs_encoded_state_buffer key;
+    fcs_dbm_record *parent;
     struct fcs_derived_state_struct *next;
-    int core_irreversible_moves_count;
-    fcs_which_moves_bitmask_t which_irreversible_moves_bitmask;
-    fcs_fcc_move_t move;
-    int num_non_reversible_moves_including_prune;
+    size_t core_irreversible_moves_count;
+    fcs_which_moves_bitmask which_irreversible_moves_bitmask;
+    fcs_fcc_move move;
+    size_t num_non_reversible_moves_including_prune;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
-} fcs_derived_state_t;
+} fcs_derived_state;
 
-#define MAKE_MOVE(src, dest) ((fcs_fcc_move_t)((src) | ((dest) << 4)))
+static inline void fcs_derived_state_list__recycle(
+    fcs_derived_state **const p_recycle_bin, fcs_derived_state **const p_list)
+{
+    var_AUTO(list, *p_list);
+    var_AUTO(bin, *p_recycle_bin);
+    while (list)
+    {
+        var_AUTO(list_next, list->next);
+        list->next = bin;
+        bin = list;
+        list = list_next;
+    }
+    *p_recycle_bin = bin;
+    *p_list = NULL;
+}
+
+#define MAKE_MOVE(src, dest) ((fcs_fcc_move)((src) | ((dest) << 4U)))
 #define COL2MOVE(idx) (idx)
 #define FREECELL2MOVE(idx) (idx + 8)
 #define FOUND2MOVE(idx) ((idx) + (8 + 4))
@@ -63,10 +71,10 @@ typedef struct fcs_derived_state_struct
     {                                                                          \
         const_AUTO(copy_stack_col,                                             \
             fcs_state_get_col((ptr_new_state->state.s), copy_col_idx));        \
-        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]),    \
+        memcpy(&(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 6]),    \
             copy_stack_col, (size_t)(fcs_col_len(copy_stack_col)) + 1);        \
         fcs_state_get_col((ptr_new_state->state.s), copy_col_idx) =            \
-            &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 7]);       \
+            &(ptr_new_state->indirect_stacks_buffer[copy_col_idx << 6]);       \
     }
 
 #else
@@ -82,7 +90,7 @@ typedef struct fcs_derived_state_struct
         }                                                                      \
         else                                                                   \
         {                                                                      \
-            ptr_new_state = (fcs_derived_state_t *)fcs_compact_alloc_ptr(      \
+            ptr_new_state = (fcs_derived_state *)fcs_compact_alloc_ptr(        \
                 derived_list_allocator, sizeof(*ptr_new_state));               \
         }                                                                      \
         memset(&(ptr_new_state->which_irreversible_moves_bitmask), '\0',       \
@@ -92,19 +100,17 @@ typedef struct fcs_derived_state_struct
         COPY_INDIRECT_COLS()                                                   \
     }
 
-static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
-    fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
-    const fcs_card_t moved_card, const int count)
+static inline void fc_solve_add_to_irrev_moves_bitmask(
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
+    const fcs_card moved_card, const uint_fast32_t count)
 {
     unsigned char *const by_rank_ptr =
         which_irreversible_moves_bitmask->s + fcs_card_rank(moved_card) - 1;
-    const int suit_times_two = (fcs_card_suit(moved_card) << 1);
-    const int new_count =
-        ((((*by_rank_ptr) >> (suit_times_two)) & ((1 << 2) - 1)) + count);
+    const size_t suit_times_two = (fcs_card_suit(moved_card) << 1);
+    const size_t new_count =
+        ((((*by_rank_ptr) >> (suit_times_two)) & ((1U << 2U) - 1U)) + count);
     *by_rank_ptr &= (~((((unsigned char)0x3) << (suit_times_two))));
     *by_rank_ptr |= (new_count << (suit_times_two));
-
-    return;
 }
 
 #define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count, moved_card)              \
@@ -129,37 +135,35 @@ static GCC_INLINE void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-static GCC_INLINE int calc_foundation_to_put_card_on(
-    const fcs_dbm_variant_type_t local_variant, fcs_state_t *const ptr_state,
-    const fcs_card_t card)
+static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
+    const fcs_dbm_variant_type local_variant GCC_UNUSED,
+    fcs_state *const ptr_state, const fcs_card card)
 {
-#ifndef FCS_FREECELL_ONLY
-    /* needed by the macros. */
-    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
-    for (int deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+    FCS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
+    const fcs_card rank = fcs_card_rank(card);
+    const fcs_card suit = fcs_card_suit(card);
+    for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
     {
-        if (fcs_foundation_value(*ptr_state,
-                (deck << 2) + fcs_card_suit(card)) == fcs_card_rank(card) - 1)
+        if (fcs_foundation_value(*ptr_state, (deck << 2) + suit) == rank - 1)
         {
-            int other_deck_idx;
+            uint_fast32_t other_deck_idx;
 
             for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
-                 other_deck_idx++)
+                 ++other_deck_idx)
             {
                 if (fcs_foundation_value(*ptr_state, other_deck_idx) <
-                    fcs_card_rank(card) - 2 -
+                    rank - 2 -
                         (FCS__SEQS_ARE_BUILT_BY_RANK()
                                 ? 0
-                                : ((other_deck_idx & 0x1) ==
-                                      (fcs_card_suit(card) & 0x1))))
+                                : ((other_deck_idx & 0x1) == (suit & 0x1))))
                 {
                     break;
                 }
             }
             if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
             {
-                return (deck << 2) + fcs_card_suit(card);
+                return (int)((deck << 2) + suit);
             }
         }
     }
@@ -168,89 +172,90 @@ static GCC_INLINE int calc_foundation_to_put_card_on(
 
 typedef struct
 {
-    fcs_fcc_moves_list_item_t *recycle_bin;
-    fcs_compact_allocator_t *allocator;
-} fcs_fcc_moves_seq_allocator_t;
+    fcs_fcc_moves_list_item *recycle_bin;
+    compact_allocator *allocator;
+} fcs_fcc_moves_seq_allocator;
 
-static GCC_INLINE fcs_fcc_moves_list_item_t *fc_solve_fcc_alloc_moves_list_item(
-    fcs_fcc_moves_seq_allocator_t *allocator)
+static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
+    fcs_fcc_moves_seq_allocator *const allocator)
 {
-    fcs_fcc_moves_list_item_t *new_item;
-
+    fcs_fcc_moves_list_item *new_item;
     if (allocator->recycle_bin)
     {
         allocator->recycle_bin = (new_item = allocator->recycle_bin)->next;
     }
     else
     {
-        new_item = (fcs_fcc_moves_list_item_t *)fcs_compact_alloc_ptr(
+        new_item = (fcs_fcc_moves_list_item *)fcs_compact_alloc_ptr(
             allocator->allocator, sizeof(*new_item));
     }
     new_item->next = NULL;
-
     return new_item;
 }
 
 #define FROM_COL_IS_REVERSIBLE_MOVE()                                          \
-    ((cards_num <= 1) ? TRUE : fcs_is_parent_card(card,                        \
-                                   fcs_col_get_card(col, cards_num - 2)))
+    ((cards_num <= 1)                                                          \
+            ? true                                                             \
+            : fcs_is_parent_card(card, fcs_col_get_card(col, cards_num - 2)))
+#define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
 /* Returns the number of amortized irreversible moves performed. */
-static GCC_INLINE int horne_prune(const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr,
-    fcs_which_moves_bitmask_t *const which_irreversible_moves_bitmask,
-    fcs_fcc_moves_seq_t *const moves_seq,
-    fcs_fcc_moves_seq_allocator_t *const allocator)
+static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const init_state_kv_ptr,
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
+    fcs_fcc_moves_seq *const moves_seq,
+    fcs_fcc_moves_seq_allocator *const allocator)
 {
-    fcs_fcc_move_t additional_moves[RANK_KING * 4 * DECKS_NUM];
-    int count_moves_so_far = 0;
-    int count_additional_irrev_moves = 0;
-
-#ifndef FCS_FREECELL_ONLY
-    const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
+    fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
+    size_t count_moves_so_far = 0;
+    size_t count_additional_irrev_moves = 0;
+    FCS_ON_NOT_FC_ONLY(
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
 
 #define the_state (init_state_kv_ptr->s)
-    int num_cards_moved;
+    uint_fast32_t num_cards_moved;
     do
     {
         num_cards_moved = 0;
-        for (int stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            fcs_cards_column_t col = fcs_state_get_col(the_state, stack_idx);
+            var_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const int cards_num = fcs_col_len(col);
-            if (cards_num)
+            if (!cards_num)
             {
-                /* Get the top card in the stack */
-                const fcs_card_t card = fcs_col_get_card(col, cards_num - 1);
-                const int dest_foundation = calc_foundation_to_put_card_on(
-                    local_variant, &the_state, card);
-                if (dest_foundation >= 0)
+                continue;
+            }
+            /* Get the top card in the stack */
+            const fcs_card card = fcs_col_get_card(col, cards_num - 1);
+            const int dest_foundation =
+                calc_foundation_to_put_card_on(local_variant, &the_state, card);
+            if (dest_foundation >= 0)
+            {
+                const_AUTO(is_reversible, FROM_COL_IS_REVERSIBLE_MOVE());
+                if (!is_reversible)
                 {
-                    if (!FROM_COL_IS_REVERSIBLE_MOVE())
-                    {
-                        count_additional_irrev_moves++;
-                    }
-                    /* We can safely move it. */
-                    num_cards_moved++;
-                    fc_solve_add_to_irrev_moves_bitmask(
-                        which_irreversible_moves_bitmask, card,
-                        ((!FROM_COL_IS_REVERSIBLE_MOVE()) ? 2 : 1));
-
-                    fcs_col_pop_top(col);
-
-                    fcs_increment_foundation(the_state, dest_foundation);
-
-                    additional_moves[count_moves_so_far++] = MAKE_MOVE(
-                        COL2MOVE(stack_idx), FOUND2MOVE(dest_foundation));
+                    count_additional_irrev_moves++;
                 }
+                /* We can safely move it. */
+                num_cards_moved++;
+                fc_solve_add_to_irrev_moves_bitmask(
+                    which_irreversible_moves_bitmask, card,
+                    COUNT_NON_REV(is_reversible));
+
+                fcs_col_pop_top(col);
+
+                fcs_increment_foundation(the_state, dest_foundation);
+
+                additional_moves[count_moves_so_far++] = MAKE_MOVE(
+                    COL2MOVE(stack_idx), FOUND2MOVE((stack_i)dest_foundation));
             }
         }
 
-        /* Now check the same for the free cells */
-        for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+#if MAX_NUM_FREECELLS > 0
+        // Now check the same for the free cells
+        for (stack_i fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
         {
-            const fcs_card_t card = fcs_freecell_card(the_state, fc);
+            const fcs_card card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
             {
                 const int dest_foundation = calc_foundation_to_put_card_on(
@@ -265,22 +270,23 @@ static GCC_INLINE int horne_prune(const fcs_dbm_variant_type_t local_variant,
 
                     fcs_empty_freecell(the_state, fc);
                     fcs_increment_foundation(the_state, dest_foundation);
-                    additional_moves[count_moves_so_far++] =
-                        MAKE_MOVE(COL2MOVE(fc), FOUND2MOVE(dest_foundation));
+                    additional_moves[count_moves_so_far++] = MAKE_MOVE(
+                        COL2MOVE(fc), FOUND2MOVE((stack_i)dest_foundation));
                 }
             }
         }
+#endif
     } while (num_cards_moved);
 
     /* modify moves_seq in-place. */
     if (count_moves_so_far && moves_seq)
     {
-        fcs_fcc_moves_list_item_t **iter = &(moves_seq->moves_list);
+        fcs_fcc_moves_list_item **iter = &(moves_seq->moves_list);
 
         /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
-         * to point at the place to either write the new moves or alternatively
-         * (on parity) on the pointer to allocate a new list_item for the
-         * moves.
+         * to point at the place to either write the new moves or
+         * alternatively (on parity) on the pointer to allocate a new
+         * list_item for the moves.
          *
          * If count is 0, then we should move 0.
          * If count is 1, then we should move 0.
@@ -293,16 +299,16 @@ static GCC_INLINE int horne_prune(const fcs_dbm_variant_type_t local_variant,
          * to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
          *
          * */
-        const int count = moves_seq->count;
-        for (int pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
+        const size_t count = moves_seq->count;
+        for (size_t pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
              pos += FCS_FCC_NUM_MOVES_IN_ITEM)
         {
             iter = &((*iter)->next);
         }
 
-        int pos = count;
+        size_t pos = count;
 
-        for (int pos_moves_so_far = 0; pos_moves_so_far < count_moves_so_far;
+        for (size_t pos_moves_so_far = 0; pos_moves_so_far < count_moves_so_far;
              pos_moves_so_far++)
         {
             if (pos % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
@@ -322,333 +328,272 @@ static GCC_INLINE int horne_prune(const fcs_dbm_variant_type_t local_variant,
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
-static GCC_INLINE int horne_prune__simple(
-    const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr)
+static inline size_t horne_prune__simple(
+    const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const init_state_kv_ptr)
 {
-    fcs_which_moves_bitmask_t no_use = {{'\0'}};
+    fcs_which_moves_bitmask no_use = {{'\0'}};
     return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
 }
 
-#define the_state (init_state_kv_ptr->s)
-static GCC_INLINE fcs_bool_t is_state_solved(
-    const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr)
+static inline bool card_cannot_be_placed(const fcs_state *const s,
+    const stack_i ds, const fcs_card card,
+    const int sequences_are_built_by GCC_UNUSED)
 {
-    for (int suit = 0; suit < DECKS_NUM * 4; suit++)
+    const_AUTO(col, fcs_state_get_col(*s, ds));
+    const_AUTO(col_len, fcs_col_len(col));
+    return ((col_len == 0) ||
+            (!fcs_is_parent_card(card, fcs_col_get_card(col, col_len - 1))));
+}
+
+#define the_state (init_state_kv_ptr->s)
+static inline bool is_state_solved(
+    fcs_state_keyval_pair *const init_state_kv_ptr)
+{
+    for (stack_i suit = 0; suit < DECKS_NUM * 4; suit++)
     {
         if (fcs_foundation_value(the_state, suit) < RANK_KING)
         {
-            return FALSE;
+            return false;
         }
     }
-    return TRUE;
+    return true;
 }
 
-static GCC_INLINE fcs_bool_t instance_solver_thread_calc_derived_states(
-    const fcs_dbm_variant_type_t local_variant,
-    fcs_state_keyval_pair_t *const init_state_kv_ptr,
-    fcs_dbm_record_t *const parent_ptr,
-    fcs_derived_state_t **const derived_list,
-    fcs_derived_state_t **const derived_list_recycle_bin,
-    fcs_compact_allocator_t *const derived_list_allocator,
-    const fcs_bool_t perform_horne_prune)
+static inline bool instance_solver_thread_calc_derived_states(
+    const fcs_dbm_variant_type local_variant,
+    fcs_state_keyval_pair *const init_state_kv_ptr,
+    fcs_dbm_record *const parent_ptr, fcs_derived_state **const derived_list,
+    fcs_derived_state **const derived_list_recycle_bin,
+    compact_allocator *const derived_list_allocator,
+    const bool perform_horne_prune)
 {
-    fcs_derived_state_t *ptr_new_state;
-    int stack_idx, cards_num, ds;
-    fcs_cards_column_t col, dest_col;
-    fcs_card_t card, dest_card;
-    int deck, suit;
-    int empty_stack_idx = -1;
-
-#ifndef FCS_FREECELL_ONLY
-    /* needed by the macros. */
+    fcs_derived_state *ptr_new_state;
+    bool has_empty_stack = false;
+    stack_i empty_stack_idx = 0;
     const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY();
-#endif
-
 #define new_state (ptr_new_state->state.s)
-    if (is_state_solved(local_variant, init_state_kv_ptr))
+    if (is_state_solved(init_state_kv_ptr))
     {
-        return TRUE;
+        return true;
     }
 
     /* Move top stack cards to foundations. */
-    for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        col = fcs_state_get_col(the_state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (cards_num)
-        {
-            /* Get the top card in the stack */
-            card = fcs_col_get_card(col, cards_num - 1);
-            suit = fcs_card_suit(card);
-            for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
-            {
-
-                if (fcs_foundation_value(the_state, deck * 4 + suit) ==
-                    fcs_card_rank(card) - 1)
-                {
-                    /* We can put it there */
-                    BEGIN_NEW_STATE()
-
-                    {
-                        fcs_cards_column_t new_temp_col;
-                        new_temp_col = fcs_state_get_col(new_state, stack_idx);
-                        fcs_col_pop_top(new_temp_col);
-                    }
-
-                    fcs_increment_foundation(new_state, deck * 4 + suit);
-
-                    COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx),
-                        FOUND2MOVE(suit),
-                        (FROM_COL_IS_REVERSIBLE_MOVE() ? 1 : 2), card)
-                }
-            }
-        }
-        else
+        const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
+        const_AUTO(cards_num, fcs_col_len(col));
+        if (cards_num == 0)
         {
             empty_stack_idx = stack_idx;
+            has_empty_stack = true;
+            continue;
         }
-    }
-
-    int empty_fc_idx = -1;
-#define fc_idx stack_idx
-    /* Move freecell cards to foundations. */
-    for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
-    {
-        card = fcs_freecell_card(the_state, fc_idx);
-        suit = fcs_card_suit(card);
-        if (fcs_card_is_valid(card))
+        /* Get the top card in the stack */
+        const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+        const_AUTO(suit, fcs_card_suit(card));
+        for (stack_i deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
-            for (deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
+            if (fcs_foundation_value(the_state, deck * 4 + suit) !=
+                fcs_card_rank(card) - 1)
             {
-                if (fcs_foundation_value(the_state, deck * 4 + suit) ==
-                    fcs_card_rank(card) - 1)
-                {
-                    BEGIN_NEW_STATE()
-
-                    /* We can put it there */
-                    fcs_empty_freecell(new_state, fc_idx);
-
-                    fcs_increment_foundation(new_state, deck * 4 + suit);
-
-                    COMMIT_NEW_STATE(
-                        FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), FALSE, card)
-                }
+                continue;
             }
-        }
-        else
-        {
-            empty_fc_idx = fc_idx;
+            /* We can put it there */
+            BEGIN_NEW_STATE()
+
+            fcs_state_pop_col_top(&new_state, stack_idx);
+            fcs_increment_foundation(new_state, deck * 4 + suit);
+
+            COMMIT_NEW_STATE_WITH_COUNT(COL2MOVE(stack_idx), FOUND2MOVE(suit),
+                COUNT_NON_REV(FROM_COL_IS_REVERSIBLE_MOVE()), card)
+            break;
         }
     }
+
+#if MAX_NUM_FREECELLS > 0
+    int empty_fc_idx = -1;
+    // Move freecell cards to foundations.
+    for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; ++fc_idx)
+    {
+        const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
+        if (fcs_card_is_empty(card))
+        {
+            empty_fc_idx = (int)fc_idx;
+            continue;
+        }
+        const_AUTO(suit, fcs_card_suit(card));
+        for (stack_i deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
+        {
+            if (fcs_foundation_value(the_state, deck * 4 + suit) !=
+                fcs_card_rank(card) - 1)
+            {
+                continue;
+            }
+            BEGIN_NEW_STATE()
+
+            /* We can put it there */
+            fcs_empty_freecell(new_state, fc_idx);
+            fcs_increment_foundation(new_state, deck * 4 + suit);
+
+            COMMIT_NEW_STATE(
+                FREECELL2MOVE(fc_idx), FOUND2MOVE(suit), false, card)
+            break;
+        }
+    }
+#endif
 
     const int cards_num_min_limit =
         ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0);
 
     /* Move stack card on top of a parent */
-    for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
-        col = fcs_state_get_col(the_state, stack_idx);
-        cards_num = fcs_col_len(col);
-        if (cards_num > cards_num_min_limit)
+        const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
+        const_AUTO(cards_num, fcs_col_len(col));
+        if (cards_num <= cards_num_min_limit)
         {
-            card = fcs_col_get_card(col, cards_num - 1);
+            continue;
+        }
+        const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
 
-            for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+        for (stack_i ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
+        {
+            if (ds == stack_idx || card_cannot_be_placed(&the_state, ds, card,
+                                       sequences_are_built_by))
             {
-                if (ds == stack_idx)
-                {
-                    continue;
-                }
-
-                dest_col = fcs_state_get_col(the_state, ds);
-
-                if (fcs_col_len(dest_col) > 0)
-                {
-                    dest_card =
-                        fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1);
-                    if (fcs_is_parent_card(card, dest_card))
-                    {
-                        /* Let's move it */
-                        BEGIN_NEW_STATE()
-
-                        {
-                            fcs_cards_column_t new_src_col;
-                            fcs_cards_column_t new_dest_col;
-
-                            new_src_col =
-                                fcs_state_get_col(new_state, stack_idx);
-                            new_dest_col = fcs_state_get_col(new_state, ds);
-
-                            fcs_col_pop_top(new_src_col);
-                            fcs_col_push_card(new_dest_col, card);
-                        }
-
-                        COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(ds),
-                            FROM_COL_IS_REVERSIBLE_MOVE(), card)
-                    }
-                }
+                continue;
             }
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_state_pop_col_top(&new_state, stack_idx);
+            fcs_state_push(&new_state, ds, card);
+
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(ds),
+                FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
 
-    /* Move freecell card on top of a parent */
-    for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+#if MAX_NUM_FREECELLS > 0
+    // Move freecell card on top of a parent
+    for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
     {
-        card = fcs_freecell_card(the_state, fc_idx);
-        if (fcs_card_is_valid(card))
+        const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
+        if (!fcs_card_is_valid(card))
         {
-            for (ds = 0; ds < LOCAL_STACKS_NUM; ds++)
+            continue;
+        }
+        for (stack_i ds = 0; ds < LOCAL_STACKS_NUM; ++ds)
+        {
+            if (card_cannot_be_placed(
+                    &the_state, ds, card, sequences_are_built_by))
             {
-                dest_col = fcs_state_get_col(the_state, ds);
-
-                if (fcs_col_len(dest_col) > 0)
-                {
-                    dest_card =
-                        fcs_col_get_card(dest_col, fcs_col_len(dest_col) - 1);
-                    if (fcs_is_parent_card(card, dest_card))
-                    {
-                        /* Let's move it */
-                        BEGIN_NEW_STATE()
-
-                        {
-                            fcs_cards_column_t new_dest_col;
-
-                            new_dest_col = fcs_state_get_col(new_state, ds);
-
-                            fcs_col_push_card(new_dest_col, card);
-
-                            fcs_empty_freecell(new_state, fc_idx);
-                        }
-
-                        COMMIT_NEW_STATE(
-                            FREECELL2MOVE(fc_idx), COL2MOVE(ds), TRUE, card)
-                    }
-                }
+                continue;
             }
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_state_push(&new_state, ds, card);
+            fcs_empty_freecell(new_state, fc_idx);
+
+            COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx), COL2MOVE(ds), true, card)
         }
     }
+#endif
 
-    if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) &&
-        (empty_stack_idx >= 0))
+    if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) && has_empty_stack)
     {
         /* Stack Card to Empty Stack */
-        for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            col = fcs_state_get_col(the_state, stack_idx);
-            cards_num = fcs_col_len(col);
+            const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
+            const_AUTO(cards_num, fcs_col_len(col));
             /* Bug fix: if there's only one card in a column, there's no
              * point moving it to a new empty column.
              * */
-            if (cards_num > 1)
+            if (cards_num <= 1)
             {
-                card = fcs_col_get_card(col, cards_num - 1);
-                /* Let's move it */
-                {
-                    BEGIN_NEW_STATE()
-
-                    {
-                        fcs_cards_column_t new_src_col;
-
-                        new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                        fcs_col_pop_top(new_src_col);
-
-                        fcs_cards_column_t empty_stack_col =
-                            fcs_state_get_col(new_state, empty_stack_idx);
-                        fcs_col_push_card(empty_stack_col, card);
-                    }
-                    COMMIT_NEW_STATE(COL2MOVE(stack_idx),
-                        COL2MOVE(empty_stack_idx),
-                        FROM_COL_IS_REVERSIBLE_MOVE(), card)
-                }
+                continue;
             }
+
+            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_state_pop_col_top(&new_state, stack_idx);
+            fcs_state_push(&new_state, empty_stack_idx, card);
+
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx), COL2MOVE(empty_stack_idx),
+                FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
 
+#if MAX_NUM_FREECELLS > 0
         /* Freecell card -> Empty Stack. */
-        for (fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
+        for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
-            card = fcs_freecell_card(the_state, fc_idx);
+            const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
             if (fcs_card_is_empty(card))
             {
                 continue;
             }
 
-            {
-                BEGIN_NEW_STATE()
+            BEGIN_NEW_STATE()
 
-                {
-                    fcs_cards_column_t new_dest_col;
-                    new_dest_col =
-                        fcs_state_get_col(new_state, empty_stack_idx);
-                    fcs_col_push_card(new_dest_col, card);
-                    fcs_empty_freecell(new_state, fc_idx);
-                }
+            fcs_state_push(&new_state, empty_stack_idx, card);
+            fcs_empty_freecell(new_state, fc_idx);
 
-                COMMIT_NEW_STATE(FREECELL2MOVE(fc_idx),
-                    COL2MOVE(empty_stack_idx), TRUE, card);
-            }
+            COMMIT_NEW_STATE(
+                FREECELL2MOVE(fc_idx), COL2MOVE(empty_stack_idx), true, card);
         }
+#endif
     }
 
+#if MAX_NUM_FREECELLS > 0
     if (empty_fc_idx >= 0)
     {
         /* Stack Card to Empty Freecell */
-        for (stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+        for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
-            col = fcs_state_get_col(the_state, stack_idx);
-            cards_num = fcs_col_len(col);
-            if (cards_num > cards_num_min_limit)
+            const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
+            const_AUTO(cards_num, fcs_col_len(col));
+            if (cards_num <= cards_num_min_limit)
             {
-                card = fcs_col_get_card(col, cards_num - 1);
-                /* Let's move it */
-                {
-                    BEGIN_NEW_STATE()
-
-                    {
-                        fcs_cards_column_t new_src_col;
-
-                        new_src_col = fcs_state_get_col(new_state, stack_idx);
-
-                        fcs_col_pop_top(new_src_col);
-
-                        fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
-                    }
-                    COMMIT_NEW_STATE(COL2MOVE(stack_idx),
-                        FREECELL2MOVE(empty_fc_idx),
-                        FROM_COL_IS_REVERSIBLE_MOVE(), card)
-                }
+                continue;
             }
+            const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
+            /* Let's move it */
+            BEGIN_NEW_STATE()
+
+            fcs_state_pop_col_top(&new_state, stack_idx);
+            fcs_put_card_in_freecell(new_state, empty_fc_idx, card);
+
+            COMMIT_NEW_STATE(COL2MOVE(stack_idx),
+                FREECELL2MOVE((stack_i)empty_fc_idx),
+                FROM_COL_IS_REVERSIBLE_MOVE(), card)
         }
     }
-#undef fc_idx
-
+#endif
     /* Perform Horne's Prune on all the states,
      * or just set their num irreversible moves counts.
      * */
+    for (var_AUTO(derived_iter, *derived_list); derived_iter;
+         derived_iter = derived_iter->next)
     {
-        fcs_derived_state_t *derived_iter;
-
-        for (derived_iter = (*derived_list); derived_iter;
-             derived_iter = derived_iter->next)
-        {
-            derived_iter->num_non_reversible_moves_including_prune =
-                (derived_iter->core_irreversible_moves_count +
-                    (perform_horne_prune
-                            ? horne_prune(
-                                  local_variant, &(derived_iter->state),
-                                  &(derived_iter
-                                          ->which_irreversible_moves_bitmask),
-                                  NULL, NULL)
-                            : 0));
-        }
+        derived_iter->num_non_reversible_moves_including_prune =
+            (derived_iter->core_irreversible_moves_count +
+                (perform_horne_prune
+                        ? horne_prune(local_variant, &(derived_iter->state),
+                              &(derived_iter->which_irreversible_moves_bitmask),
+                              NULL, NULL)
+                        : 0));
     }
 
-    return FALSE;
+    return false;
 }
 
 #undef FROM_COL_IS_REVERSIBLE_MOVE
+#undef COUNT_NON_REV
 #undef the_state
 #undef new_state
 

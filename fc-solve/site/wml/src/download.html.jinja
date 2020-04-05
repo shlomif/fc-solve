@@ -1,0 +1,356 @@
+{% extends "template.jinja" %}
+{% import "fcs-distribution-docs.jinja" as fcs_docs %}
+{% block title %}Download Freecell Solver{% endblock %}
+{% block body %}
+
+
+{# The assets (downloads/tarballs/etc.) for this site are kept in a #}
+{# separate repository at: #}
+{# #}
+{# http://github.com/shlomif/fc-solve-site-assets #}
+
+{% macro link_to_download_file(fn) %}
+<a href="{{ base_path }}downloads/fc-solve/{{fn}}">{{fn}}</a>
+{% endmacro %}
+
+{% macro link_to_sourceforge_download_file(fn) %}
+<a href="https://sourceforge.net/projects/fc-solve/files/fc-solve/{{fn}}/download">{{fn}}</a>
+{% endmacro %}
+
+{% macro download_stop() %}
+<section class="stop">
+<header>
+<img src="{{ base_path }}images/Stop_hand_nuvola.png" class="sign" alt="Stop Sign" />
+<h2 id="download-gui-instead">Stop! Don't you want a Graphical Interface?</h2>
+</header>
+
+<p>
+Freecell Solver is <b>not</b> a graphical program, and is instead oriented
+towards software developers and users of the UNIX/Linux or Windows command
+lines. If you prefer a graphical program with a convenient
+interface and an animated solution look at the
+<a href="{{ base_path }}links.html#front_ends"><b>graphical front-ends</b></a> for
+Freecell Solver that people have prepared.
+</p>
+
+<p>
+Of these we can recommend <a href="http://pysolfc.sourceforge.net/">PySolFC</a>
+which is open-source, cross-platform, configurable, and supports a very
+large number of Solitaire variants.
+</p>
+
+</section>
+{% endmacro %}
+
+{{ download_stop() }}
+
+{% call h2_section(id="latest-stable",title="Latest Stable Versions") %}
+
+<table class="downloads">
+<tr>
+<th>File</th>
+<th>Description</th>
+</tr>
+<tr>
+<td>
+{{ link_to_download_file(fn="freecell-solver-5.20.1.tar.xz") }}
+</td>
+<td>
+Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
+</td>
+</tr>
+
+<tr>
+<td>
+{{ link_to_sourceforge_download_file(fn="freecell-solver-5.20.0-win32.msi") }}
+</td>
+<td>
+Win32 Binaries. Download the .msi, double-click it, and an
+interactive installer will start.
+</td>
+</tr>
+
+<tr>
+<td>
+{{ link_to_sourceforge_download_file(fn="freecell-solver-5.20.0-win64.msi") }}
+</td>
+<td>
+Binaries for x86-64 Windows.
+</td>
+</tr>
+</table>
+
+{% endcall %}
+
+{% call h2_section(id="distributions",title="How to install in various Linux/etc. distributions") %}
+
+{% call h3_section(id="distros_deb_ubuntu",title="Debian/Ubuntu/Linux Mint") %}
+
+<img src="{{ base_path }}images/50px-Debian-OpenLogo.svg.png" alt="Debian Logo"
+    class="dist_logo"
+/>
+<img src="{{ base_path }}images/ubuntu-logo.png" alt="Ubuntu Logo"
+    class="dist_logo"
+/>
+
+<p>
+Type <code>apt-get install freecell-solver-bin</code> as root. The version may
+be somewhat old, but hopefully mostly bug-free. Also see the
+<a href="https://packages.debian.org/source/freecell-solver">Debian Package page</a>.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="distros_fedora",title="Fedora") %}
+
+<img src="{{ base_path }}images/fedora-logo.min.svg" alt="Fedora Logo"
+class="dist_logo"
+/>
+
+<p>
+Type <code>dnf install freecell-solver</code> as root. Also see the
+<a href="https://apps.fedoraproject.org/packages/freecell-solver">Fedora Package page</a>.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="distros_mandriva_mageia",title="Mandriva / Mageia") %}
+
+<img src="{{ base_path }}images/100px-Mageia_logo.svg.png" alt="Mageia Logo"
+    class="dist_logo" />
+
+<p>
+Type <code>urpmi freecell-solver</code>. You may need to configure the right
+appropriate networked repositories in the Mageia Control Centre.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="distros_arch",title="Arch Linux") %}
+
+<img src="{{ base_path }}images/Arch_Linux_logo.svg" alt="Arch Linux Logo"
+    class="dist_logo" style="height:50px" />
+
+<p>
+See <a href="https://www.archlinux.org/packages/extra/x86_64/freecell-solver/">the Arch Linux
+package page</a>. <code>pacman -S freecell-solver</code> should work.
+</p>
+
+{% endcall %}
+
+{% call h3_section(id="distros_freebsd",title="FreeBSD") %}
+
+<img src="{{ base_path }}images/Freebsd_logo.svg.png" alt="FreeBSD Logo"
+    class="dist_logo" />
+
+<p>
+See <a href="http://www.freshports.org/games/freecell-solver">the FreeBSD
+Freshports page</a>. Also try <code>pkg install freecell-solver</code>.
+</p>
+
+{% endcall %}
+
+{% endcall %}
+
+{% macro develversion() %}
+
+{% call h2_section(id="devel-versions",title="Development Versions") %}
+
+<table class="downloads">
+
+<tr>
+<td>
+{{ link_to_download_file(fn="freecell-solver-$(RECENT_DEVEL_VERSION).tar.gz") }}
+</td>
+<td>
+The Development version that will lead to Freecell Solver <:{$a="$(RECENT_DEVEL_VERSION)"; my @vers = split(/\./, $a); $vers[1]++; $vers[2] = '0'; print join(".", @vers); }:>.
+</td>
+</tr>
+
+</table>
+
+{% endcall %}
+
+{% endmacro %}
+
+{% call h2_section(id="vcs-version",title="Latest Version from Git (= the Version Control System)") %}
+
+<ul>
+<li>
+<p>
+<a href="http://github.com/shlomif/fc-solve">fc-solve GitHub Repository</a>
+- one can get the latest development version of the code from the GitHub link
+using a <a href="http://en.wikipedia.org/wiki/Git_%28software%29">Git</a>
+client. Please consult the in-repository documentation to get it to build and
+up-and-running.
+</p>
+</li>
+</ul>
+
+{% endcall %}
+
+{% call h2_section(id="download_other_solvers",title="Other Solvers") %}
+
+<ul>
+
+<li>
+{{ link_to_download_file(fn="patsolve-shlomif-3.0.3.tar.bz2") }} -
+see <a href="https://github.com/shlomif/patsolve">the git repository</a>
+for a more up-to-date version.
+</li>
+
+<li>
+<a href="don_woods.html">For Don Woods’ solver access this link.</a>
+</li>
+
+</ul>
+
+{% endcall %}
+
+{% call h2_section(id="docs",title="Documents") %}
+
+{{ fcs_docs.fcs_distribution_documents(base_path) }}
+
+{% endcall %}
+
+{% call h2_section(id="utils",title="Utility Programs") %}
+
+<table class="downloads">
+{% if false %}
+<tr>
+<td>
+<a href="palm_patience_getgame.tar.gz">Palm Pat Dumper</a>
+</td>
+<td>
+Dumps games from Patience 2.5 on PalmOS. You need all the
+usual PalmOS tools to use this. The README tells you where
+you can find Patience 2.5. prc file included.
+</td>
+</tr>
+{% endif %}
+
+<tr>
+<td>
+<a href="xpat2-1.04.patch">xpat2-1.04.patch</a>
+</td>
+<td>
+This is a patch for xpat2 that dumps its games to a file.
+</td>
+</tr>
+
+<tr>
+<td>
+<a href="patience-1.9.patch">patience 1.9 patch</a>
+</td>
+<td>
+Patch for the <a href="http://uebb.cs.tu-berlin.de/~krischan/patience/patience-english.html">"Patience" Tcl implementation</a>.
+</td>
+</tr>
+
+</table>
+
+{% endcall %}
+
+{% call h2_section(id="results-and-data",title="Results and Data") %}
+
+<table class="downloads">
+<tr>
+<td>
+<a href="{{ base_path }}downloads/dbm-fc-solver/dbm-freecell-solver-2fc-results-on-Amadiro-machine.tar.xz">2fc results on Amadiro machine</a>
+</td>
+<td>
+See <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1099">the
+message</a> titled “[Better Version] Final Report for the 2-Freecells-based
+‘DBM’ Freecell Solver”.
+</td>
+</tr>
+</table>
+
+{% endcall %}
+
+{% call h2_section(id="older-stable",title="Older Versions") %}
+
+{% macro ver(major_minor, patch_ver) %}
+<li>
+<p>
+<a href="{{ base_path }}downloads/fc-solve/freecell-solver-{{major_minor}}.{{patch_ver}}.tar.{{ download_suffix }}">Version {{major_minor}}.{{patch_ver}}</a>
+</p>
+</li>
+{% endmacro %}
+
+<ul class="old_vers">
+{% set download_suffix="xz" %}
+{{ ver(major_minor="5.18",patch_ver="0") }}
+{{ ver(major_minor="5.16",patch_ver="0") }}
+{{ ver(major_minor="5.14",patch_ver="0") }}
+{{ ver(major_minor="5.12",patch_ver="0") }}
+{{ ver(major_minor="5.10",patch_ver="0") }}
+{{ ver(major_minor="5.8",patch_ver="0") }}
+{{ ver(major_minor="5.6",patch_ver="0") }}
+{{ ver(major_minor="5.4",patch_ver="0") }}
+{{ ver(major_minor="5.2",patch_ver="0") }}
+{{ ver(major_minor="5.0",patch_ver="0") }}
+{{ ver(major_minor="4.20",patch_ver="0") }}
+{{ ver(major_minor="4.18",patch_ver="0") }}
+{{ ver(major_minor="4.16",patch_ver="0") }}
+{{ ver(major_minor="4.14",patch_ver="1") }}
+{{ ver(major_minor="4.12",patch_ver="1") }}
+{{ ver(major_minor="4.10",patch_ver="0") }}
+{{ ver(major_minor="4.8",patch_ver="0") }}
+{{ ver(major_minor="4.6",patch_ver="1") }}
+{{ ver(major_minor="4.4",patch_ver="0") }}
+{{ ver(major_minor="4.2",patch_ver="0") }}
+{{ ver(major_minor="4.0",patch_ver="2") }}
+{% set download_suffix="bz2" %}
+{{ ver(major_minor="3.26",patch_ver="0") }}
+{{ ver(major_minor="3.24",patch_ver="0") }}
+{{ ver(major_minor="3.22",patch_ver="0") }}
+{{ ver(major_minor="3.20",patch_ver="1") }}
+{{ ver(major_minor="3.18",patch_ver="1") }}
+{{ ver(major_minor="3.16",patch_ver="0") }}
+{{ ver(major_minor="3.14",patch_ver="1") }}
+{{ ver(major_minor="3.12",patch_ver="0") }}
+{{ ver(major_minor="3.10",patch_ver="0") }}
+{{ ver(major_minor="3.8",patch_ver="0") }}
+{{ ver(major_minor="3.6",patch_ver="0") }}
+{{ ver(major_minor="3.4",patch_ver="0") }}
+{{ ver(major_minor="3.2",patch_ver="0") }}
+{{ ver(major_minor="3.0",patch_ver="0") }}
+{{ ver(major_minor="2.42",patch_ver="0") }}
+{{ ver(major_minor="2.40",patch_ver="0") }}
+{{ ver(major_minor="2.38",patch_ver="0") }}
+{{ ver(major_minor="2.36",patch_ver="0") }}
+{{ ver(major_minor="2.34",patch_ver="0") }}
+{{ ver(major_minor="2.32",patch_ver="1") }}
+{{ ver(major_minor="2.30",patch_ver="0") }}
+{{ ver(major_minor="2.28",patch_ver="1") }}
+{% set download_suffix="gz" %}
+{{ ver(major_minor="2.26",patch_ver="0") }}
+{{ ver(major_minor="2.24",patch_ver="0") }}
+{{ ver(major_minor="2.22",patch_ver="0") }}
+{{ ver(major_minor="2.20",patch_ver="0") }}
+{{ ver(major_minor="2.18",patch_ver="0") }}
+{{ ver(major_minor="2.16",patch_ver="0") }}
+{{ ver(major_minor="2.14",patch_ver="0") }}
+{{ ver(major_minor="2.12",patch_ver="0") }}
+{{ ver(major_minor="2.8",patch_ver="14") }}
+{{ ver(major_minor="2.6",patch_ver="3") }}
+{{ ver(major_minor="2.4",patch_ver="3") }}
+{{ ver(major_minor="2.2",patch_ver="6") }}
+{{ ver(major_minor="2.0",patch_ver="2") }}
+{{ ver(major_minor="1.10",patch_ver="4") }}
+{{ ver(major_minor="1.8",patch_ver="3") }}
+{{ ver(major_minor="1.6",patch_ver="4") }}
+{{ ver(major_minor="1.4",patch_ver="6") }}
+{{ ver(major_minor="1.2",patch_ver="0") }}
+{{ ver(major_minor="1.0",patch_ver="2") }}
+{{ ver(major_minor="0.10",patch_ver="0") }}
+{{ ver(major_minor="0.8",patch_ver="1") }}
+{{ ver(major_minor="0.6",patch_ver="2") }}
+{{ ver(major_minor="0.4",patch_ver="2") }}
+{{ ver(major_minor="0.2",patch_ver="1") }}
+</ul>
+
+{% endcall %}
+
+{% endblock %}

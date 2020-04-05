@@ -3,46 +3,87 @@ package FC_Solve::Test::Verify;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw( is_freecell_only );
+use FC_Solve::Paths
+    qw( bin_file is_freecell_only is_without_patsolve samp_board );
+use Path::Tiny qw( path );
 
 # Short for run.
 sub r
 {
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    my ($args, $msg) = @_;
+    my ( $args, $msg ) = @_;
 
     require FC_Solve::GetOutput;
 
-    if (exists $args->{variant} and is_freecell_only())
+    if ( exists $args->{variant} and is_freecell_only() )
     {
-        return Test::More::ok(1, 'skipped due to freecell-only');
+        return Test::More::ok( 1, 'skipped due to freecell-only' );
     }
+    if ( exists( $args->{uses_patsolve} ) and is_without_patsolve() )
+    {
+        return Test::More::ok( 1,
+            q#Test skipped because it uses patsolve on a build without it.# );
+    }
+    if ( defined( my $bb = delete( $args->{samp_board} ) ) )
+    {
+        $args->{board} = samp_board($bb);
+    }
+    my $id = delete $args->{id};
 
-    my $cmd_line = FC_Solve::GetOutput->new($args);
+    my $cmd_line        = FC_Solve::GetOutput->new($args);
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
+    my $contents        = do { local $/; <$fc_solve_output>; };
+    close($fc_solve_output);
+    $contents =~ s/ +$//gm;
+    require Digest::SHA;
+    my $hasher = Digest::SHA->new(256);
+    $hasher->add($contents);
+    my $got_sum = $hasher->hexdigest;
 
+    my $fn = bin_file( [ 't', 'verify-cache', "$id.sha" ] );
+    if ( -e $fn )
+    {
+        return Test::More::is(
+            $got_sum,
+            path($fn)->slurp_raw,
+            "Cached checksum matches."
+        );
+    }
     require Games::Solitaire::Verify::Solution;
+    require Games::Solitaire::Verify::VariantParams;
 
     # Initialise a column
+    open my $in, '<', \$contents;
     my $solution = Games::Solitaire::Verify::Solution->new(
         {
-            input_fh => $fc_solve_output,
-            variant => $cmd_line->variant,
-            ($cmd_line->is_custom ? (variant_params => $args->{variant_params}) : ()),
+            input_fh => $in,
+            variant  => $cmd_line->variant,
+            (
+                $cmd_line->is_custom
+                ? (
+                    variant_params =>
+                        Games::Solitaire::Verify::VariantParams->new(
+                        $args->{variant_params}
+                        )
+                    )
+                : ()
+            ),
         },
     );
 
-    my $verdict = $solution->verify();
-    my $test_verdict = Test::More::ok (!$verdict, $msg);
+    my $verdict      = $solution->verify();
+    my $test_verdict = Test::More::ok( !$verdict, $msg );
 
-    if (!$test_verdict)
+    if ( !$test_verdict )
     {
         require Data::Dumper;
-        Test::More::diag("Verdict == " . Data::Dumper::Dumper($verdict));
+        Test::More::diag( "Verdict == " . Data::Dumper::Dumper($verdict) );
     }
-
-    close($fc_solve_output);
+    else
+    {
+        path($fn)->spew_raw($got_sum);
+    }
 
     return $test_verdict;
 }
@@ -65,30 +106,16 @@ sub run_id
     return _run_test(@{ $args->{data} }{qw(args msg)});
 }
 
+__END__
+
 =head1 COPYRIGHT AND LICENSE
+
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
 
 Copyright (c) 2009 Shlomi Fish
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
 =cut
-

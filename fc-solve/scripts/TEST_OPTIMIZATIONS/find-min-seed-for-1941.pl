@@ -25,10 +25,9 @@ my $scan = q#--method random-dfs -to "01[234567]" -dto2 "7,[0132][4589]"#;
 
 # my $scan = q#--method random-dfs -to "01[234567]" -dto2 "5,01[2345789]"#;
 
-
 FindSeed->find(
     {
-        scan => $scan,
+        scan  => $scan,
         deals => \@deals,
     },
 );

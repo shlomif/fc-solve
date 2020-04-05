@@ -1,0 +1,128 @@
+Specification for a split solver based on FCCs (= Fully connected components):
+==============================================================================
+
+First of all see the file link:fully-connected-components-based-solver-planning.asciidoc[FCC]
+in this directory, for more information about the fully connected components
+analysis based on non-reversible moves.
+
+The purpose of this solver is to run several processes and be able to process
+individual FCCs, output the results to an intermediate file, which will then
+be integrated into the starting points for the next depth of FCCs.
+
+Representation of an FCC fingerprint:
+-------------------------------------
+
+An FCC Fingerprint consists of roughly 52 (for each of the cards), states
+of { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 }
+which together shows which non-reversible moves led to the FCC. The
+fingerprint aims to segment several distinct FCCs into FCC-groups so they
+can be processed separately. It is possible that several different FCCs will
+belong to the same fingerprint, but this will be dealt with by the solving
+process.
+
+In any case, the fingerprint will be identified by a binary vector of those
+52 ternary digits, and the next fingerprints of a derived state will be
+calculated from the original based on non-reversible move.
+
+The process of the solver:
+--------------------------
+
+For each game layout (sorted by their moves depth) in the finalised FCC (after
+the previous depth finished) with its solution, the solver moves by reversible
+moves, until it reaches a new irreversible move. If it reaches a different
+game layout then:
+
+    1. If the reachable layout has the same depth of solution or lower
+    than the initially recorded one, then the initially recorded state will
+    be ignored. (From here called a "consumed state").
+
+    2. If the reachable layout has a greater depth of solution, then
+    the initially recorded one will still be traversed (in order to find
+    potentially shorter paths to the FCC's exit points) but the traversed
+    states of the two boards will only be counted once.
+
+So the solver will keep all the initial states of the FCC-fingerprint's group
+in memory.
+
+Once an irreversible move is reached the solver will record the exit point
+as an output and proceed to find others.
+
+A process' output:
+------------------
+
+The process will output a file with the following:
+
+----------------------------------------------------------------------
+[% initial state %]
+
+[% Count of states in FCC. %]
+
+Consumed States:
+
+[% FOREACH consumed_state in consumed_states %]
+    consumed_state
+[% END FOREACH %]
+
+Reachable (but non-consumed) Initial States:
+
+[% FOREACH state in reachable_states %]
+    state
+[% END FOREACH %]
+
+Derived States: [Separate file - written as we go.]
+
+[% FOREACH d in derived_states %]
+    [% d.fingerprint_of_dest_fcc %] [% d.state %] [% count_of_moves %] [% d.moves_to_states %]
+[% END FOREACH %]
+----------------------------------------------------------------------
+
+After the process ends all the outputs will be merged and the new derived
+states will be calculated for the new fingerprints and the statistics will
+be added to the total.
+
+How a process gets invoked:
+---------------------------
+
+One specifies:
+
+    ./split_fcc_fc_solver \
+        --board [board.txt] \
+        --fingerprint [Modified_Base64 FCC Fingerprint] \
+        --input [fingerprint input-location] \
+        --output [path to output dir]
+
+( The depth can be calculated from the FCC Fingerprint by adding the values. )
+
+At the [fingerprint input-location] location there is a flat file
+containing:
+
+    [% d.state %] [% count_of_moves %] [% d.moves_to_state %]
+
+This is sorted by the count of the moves (and then by
+the lexical order of the states within.).
+
+The solver will write to +[path to output dir]/$INT.temp+ and then rename it
+to +[path to output dir]/$INT+ for each of the states.
+
+Technical note: split_fcc_fc_solver reads the file line by line, puts all
+the states in memory, and records the number of moves, and the offset to the
+line in the file (as a 64-bit integer using ftell() or whatever.).
+
+The process’ internal data structures:
+--------------------------------------
+
+We need:
+
+1. A queue for the to-be-traversed states inside the FCC.
+
+2. A map for the states in the FCC to their parent, move-to-parent, and depth.
+
+3. A map for the FCC entry points with this as value:
+
+    {
+        fcs_bool_t was_consumed;
+        fcs_bool_t was_consumed_recently;
+        fcs_bool_t is_reachable;
+        int depth;
+        int64_t location_in_file;
+    }

@@ -1,12 +1,18 @@
 #!perl -T
 
+use strict;
+use warnings;
+
 use Test::More tests => 4;
 
-BEGIN {
-	use_ok( 'Games::Solitaire::Verify' );  # TEST
-	use_ok( 'Games::Solitaire::Verify::Base' ); # TEST
-	use_ok( 'Games::Solitaire::Verify::Move' ); # TEST
-	use_ok( 'Games::Solitaire::Verify::App::CmdLine::Expand' ); # TEST
+BEGIN
+{
+    use_ok('Games::Solitaire::Verify');                          # TEST
+    use_ok('Games::Solitaire::Verify::Base');                    # TEST
+    use_ok('Games::Solitaire::Verify::Move');                    # TEST
+    use_ok('Games::Solitaire::Verify::App::CmdLine::Expand');    # TEST
 }
 
-diag( "Testing Games::Solitaire::Verify $Games::Solitaire::Verify::VERSION, Perl $], $^X" );
+diag(
+"Testing Games::Solitaire::Verify $Games::Solitaire::Verify::VERSION, Perl $], $^X"
+);

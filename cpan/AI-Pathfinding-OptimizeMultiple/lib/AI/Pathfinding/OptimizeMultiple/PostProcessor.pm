@@ -7,23 +7,23 @@ use 5.012;
 
 use MooX qw/late/;
 
-our $VERSION = '0.0.13';
-
-has _should_do_rle => (isa => 'Bool', is => 'ro', init_arg => 'do_rle', required => 1);
-has _offset_quotas => (isa => 'Bool', is => 'ro', init_arg => 'offset_quotas', required => 1);
+has _should_do_rle =>
+    ( isa => 'Bool', is => 'ro', init_arg => 'do_rle', required => 1 );
+has _offset_quotas =>
+    ( isa => 'Bool', is => 'ro', init_arg => 'offset_quotas', required => 1 );
 
 sub scans_rle
 {
     my $self = shift;
 
-    my @scans_list = @{shift()};
+    my @scans_list = @{ shift() };
 
     my $scan = shift(@scans_list);
 
     my (@a);
-    while (my $next_scan = shift(@scans_list))
+    while ( my $next_scan = shift(@scans_list) )
     {
-        if ($next_scan->scan_idx() == $scan->scan_idx())
+        if ( $next_scan->scan_idx() == $scan->scan_idx() )
         {
             $scan->iters( $scan->iters() + $next_scan->iters() );
         }
@@ -37,7 +37,6 @@ sub scans_rle
     return \@a;
 }
 
-
 sub process
 {
     my $self = shift;
@@ -45,25 +44,26 @@ sub process
     my $scans_orig = shift;
 
     # clone the scans.
-    my $scans = [ map { $_->clone(); } @{$scans_orig}];
+    my $scans = [ map { $_->clone(); } @{$scans_orig} ];
 
-    if ($self->_offset_quotas)
+    if ( $self->_offset_quotas )
     {
-        $scans =
-        [
-            map { my $ret = $_->clone(); $ret->iters($ret->iters()+1); $ret; }
-            @$scans
+        $scans = [
+            map {
+                my $ret = $_->clone();
+                $ret->iters( $ret->iters() + 1 );
+                $ret;
+            } @$scans
         ];
     }
 
-    if ($self->_should_do_rle)
+    if ( $self->_should_do_rle )
     {
         $scans = $self->scans_rle($scans);
     }
 
     return $scans;
 }
-
 
 1;
 
@@ -84,30 +84,5 @@ For internal use.
 =head2 $self->process($scans_orig)
 
 For internal use.
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (c) 2010 Shlomi Fish
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
 
 =cut

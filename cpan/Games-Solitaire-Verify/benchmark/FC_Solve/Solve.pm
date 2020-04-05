@@ -6,11 +6,13 @@ use warnings;
 use lib '../Games-Solitaire-Verify/lib';
 
 use Inline (
-    C => 'DATA',
+    C                 => 'DATA',
     CLEAN_AFTER_BUILD => 0,
-    INC => "-I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH} -I$ENV{FCS_SRC_PATH}/patsolve-shlomif/patsolve",
-    LIBS => "-L" . $ENV{FCS_PATH} . " -lfreecell-solver",
+    INC =>
+"-I$ENV{FCS_PATH}/include -I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}/include -I$ENV{FCS_SRC_PATH} -I$ENV{FCS_SRC_PATH}/patsolve/patsolve/include -I$ENV{FCS_SRC_PATH}/patsolve/patsolve",
+    LIBS    => "-L" . $ENV{FCS_PATH} . " -lfreecell-solver",
     CCFLAGS => "-std=gnu99",
+
     # LDDLFLAGS => "$Config{lddlflags} -L$FindBin::Bin -lfcs_delta_states_test",
     # CCFLAGS => "-L$FindBin::Bin -lfcs_delta_states_test",
     # MYEXTLIB => "$FindBin::Bin/libfcs_delta_states_test.so",
@@ -22,30 +24,31 @@ our @EXPORT_OK = qw(solve fc_solve_init);
 
 use autodie;
 
-use List::MoreUtils qw(true);
+use List::MoreUtils qw/ true /;
 
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::App::CmdLine;
+use Games::Solitaire::Verify::Solution     ();
+use Games::Solitaire::Verify::App::CmdLine ();
 
 sub solve
 {
-    my ($game_params, $board_idx) = @_;
+    my ( $game_params, $board_idx ) = @_;
 
     my $ret = "== $board_idx ==\n";
-    # my $fc_solve_output = `pi-make-microsoft-freecell-board -t $board_idx | fc-solve -p -t -sam -sel @fc_solve_args`;
+
+# my $fc_solve_output = `pi-make-microsoft-freecell-board -t $board_idx | fc-solve -p -t -sam -sel @fc_solve_args`;
     my $fc_solve_output = fc_solve_solve($board_idx);
 
     my $_line_found = sub {
         my ($s) = @_;
 
-        return (($fc_solve_output =~ m{^\Q$s\E}ms) ? 1 : 0);
+        return ( index( $fc_solve_output, $s ) >= 0 );
     };
 
     my $is_solvable = $_line_found->('This game is solveable');
-    my $unsolved = $_line_found->('I could not solve');
+    my $unsolved    = $_line_found->('I could not solve');
     my $intractable = $_line_found->('Iterations count exceeded');
 
-    if (1 != true { $_ } ($is_solvable, $unsolved, $intractable))
+    if ( 1 != true { $_ } ( $is_solvable, $unsolved, $intractable ) )
     {
         die "Game is more than one of solved, unsolvable or intractable!";
     }
@@ -54,7 +57,7 @@ sub solve
 
     if ($is_solvable)
     {
-        open my $input_fh, "<", (\$fc_solve_output)
+        open my $input_fh, "<", ( \$fc_solve_output )
             or die "Cannnot open fc_solve_output.";
         my $varianter = Games::Solitaire::Verify::App::CmdLine->new(
             {
@@ -63,8 +66,8 @@ sub solve
         );
         my $solution = Games::Solitaire::Verify::Solution->new(
             {
-                input_fh => $input_fh,
-                variant => "custom",
+                input_fh       => $input_fh,
+                variant        => "custom",
                 variant_params => $varianter->_variant_params(),
             },
         );
@@ -80,33 +83,35 @@ sub solve
             die "Invalid solution!";
         }
 
-        $sol_len = () = ($fc_solve_output =~ m{^Move}msg);
+        $sol_len = () = ( $fc_solve_output =~ m{\nMove}gms );
     }
 
-    my ($num_iters) = ($fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms);
-    return $ret . "Verdict: " .
-    ($is_solvable ? "Solved"
+    my ($num_iters) = (
+        $fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms );
+    return
+          $ret
+        . "Verdict: "
+        . (
+          $is_solvable ? "Solved"
         : $intractable ? "Intractable"
-        : "Unsolved"
-    )
-    . " ; Iters: $num_iters ; Length: $sol_len\n";
+        :                "Unsolved"
+        ) . " ; Iters: $num_iters ; Length: $sol_len\n";
 }
-
 
 __DATA__
 __C__
 
 #include <string.h>
 #include <stdio.h>
-#include "fcs_cl.h"
+#include "freecell-solver/fcs_conf.h"
+#include "freecell-solver/fcs_cl.h"
 #include "output_to_file.h"
 #include "range_solvers_gen_ms_boards.h"
 
-static char * buffer;
-static size_t size;
+static char buffer[120000];
 static char board_buf[500];
 
-static fc_solve_display_information_context_t my_context;
+static fc_solve_display_information_context my_context;
 
 static void * fcs;
 
@@ -128,7 +133,7 @@ void fc_solve_init(AV * args)
     const int argc = av_len(args) + 1;
     char * argv[argc+1];
 
-    for (int i = 0 ; i < argc ; i++)
+    for (int i = 0 ; i < argc ; ++i)
     {
         SV ** sv = av_fetch(args, i, 0);
         if (!sv)
@@ -158,15 +163,20 @@ void fc_solve_init(AV * args)
         -1,
         NULL
     );
+    get_board__setup_string(board_buf);
 }
 
 SV * fc_solve_solve(int board_num)
 {
-    get_board(board_num, board_buf);
+    get_board_l__without_setup(board_num, board_buf);
     const int err_code = freecell_solver_user_solve_board(fcs, board_buf);
-    buffer = NULL;
-    size = 0;
-    FILE * const output_fh = open_memstream(&buffer , &size);
+#ifdef WRITE_TO_FILE
+    char fn[100];
+    sprintf(fn, "/tmp/fcs%d.sol", board_num);
+    FILE * const output_fh = fopen(fn, "wt");
+#else
+    FILE * const output_fh = fmemopen(buffer , COUNT(buffer), "wt");
+#endif
 
     #if 1
     fc_solve_output_result_to_file(output_fh, fcs, err_code, &my_context);
@@ -178,8 +188,13 @@ SV * fc_solve_solve(int board_num)
 
     freecell_solver_user_recycle(fcs);
 
+#ifdef WRITE_TO_FILE
+    FILE * readfh = fopen(fn, "rt");
+    memset(buffer, '\0', COUNT(buffer));
+    fread(buffer, 1, COUNT(buffer), readfh);
+    fclose(readfh);
+#endif
     SV * const ret = newSVpv(buffer, 0);
-    free(buffer);
 
     return ret;
 }

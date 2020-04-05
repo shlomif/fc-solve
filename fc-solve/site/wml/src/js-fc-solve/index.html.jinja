@@ -1,0 +1,64 @@
+{% extends "template.jinja" %}
+{% block title %}Online Demos of Freecell Solver{% endblock %}
+{% block body %}
+
+
+{% call h2_section(id="about",title="About") %}
+
+<p>
+These are online demos of Freecell Solver that you can run in the convenience
+of your own browser. They require JavaScript to be available, enabled,
+and whitelisted.
+</p>
+
+{% endcall %}
+
+{% call h2_section(id="text-based",title="Solver") %}
+
+<p>
+A functional version of the solver with both an animated, graphical,
+solution display and text output, allowing to
+solve any arbitrary Freecell deal online.
+</p>
+
+<ul class="link_to_online_solver">
+
+<li>
+<p>
+<a href="text/"><strong>Solver</strong></a>
+</p>
+</li>
+
+</ul>
+
+{% endcall %}
+
+{% call h2_section(id="find-deal",title="Freecell Deal Index Finder") %}
+
+<p>
+Find the deal number of a Freecell deal based on its initial layout.
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="find-deal/"><strong>Deal Finder</strong></a>
+</p>
+</li>
+
+</ul>
+
+{% endcall %}
+
+{% call h2_section(id="rich-webui-based",title="Rich Web-UI") %}
+
+<p>
+The Rich Web User-interface version based on
+<a href="https://github.com/shlomif/Solitairey/branches">Solitairey</a>
+is now live at <a href="text/">the solver page</a>.
+</p>
+
+{% endcall %}
+
+{% endblock %}

@@ -42,7 +42,7 @@
 #include <stddef.h>
 #include <assert.h>
 
-#include "rinutils.h"
+#include "rinutils/rinutils.h"
 
 #define DICT_IMPLEMENTATION
 #include "kaz_tree.h"
@@ -63,24 +63,20 @@
 #define right dict_right
 #define parent dict_parent
 #define color dict_color
-#define data dict_data
 
 #define nilnode dict_nilnode
-#define nodecount dict_nodecount
-#define maxcount dict_maxcount
 #define compare dict_compare
-#define allocnode dict_allocnode
-#define freenode dict_free_node
 #define context dict_context
-#define dupes dict_dupes
-
-#define dictptr dict_dictptr
 
 #define dict_root(D) ((D)->nilnode.left)
 #define dict_nil(D) (&(D)->nilnode)
-#define DICT_DEPTH_MAX 64
 
 #ifdef NO_FC_SOLVE
+#define DICT_DEPTH_MAX 64
+#define allocnode dict_allocnode
+#define dupes dict_dupes
+#define dictptr dict_dictptr
+#define freenode dict_free_node
 static dnode_t *dnode_alloc(void *context);
 static void dnode_free(dnode_t *node, void *context);
 #endif
@@ -289,13 +285,13 @@ static int verify_dict_has_node(dnode_t *nil, dnode_t *root, dnode_t *node)
 dict_t *dict_create(dictcount_t maxcount, dict_comp_t comp, void *context)
 #else
 dict_t *fc_solve_kaz_tree_create(dict_comp_t comp, void *context,
-    fcs_meta_compact_allocator_t *meta_allocator)
+    meta_allocator *meta_alloc, void *vunused GCC_UNUSED)
 #endif
 {
     dict_t *dict = (dict_t *)SMALLOC1(dict);
 
     if (dict)
-        dict_init(dict, comp, meta_allocator);
+        dict_init(dict, comp, meta_alloc);
 
     dict->context = context;
 
@@ -347,20 +343,19 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
             }
             else
             case from_left:
-            if (current->right != nil)
-            {
-                came_from = from_parent;
-                next = current->right;
-            }
-            else
-            case from_right:
-            {
-                came_from =
-                    (current == current->parent->left) ? from_left : from_right;
-                next = current->parent;
-                func(current, dict->context);
-            }
-            break;
+                if (current->right != nil)
+                {
+                    came_from = from_parent;
+                    next = current->right;
+                }
+                else
+                case from_right: {
+                    came_from = (current == current->parent->left) ? from_left
+                                                                   : from_right;
+                    next = current->parent;
+                    func(current, dict->context);
+                }
+                break;
         }
 
         current = next;
@@ -375,7 +370,6 @@ static void safe_traverse(dict_t *dict, void (*func)(dnode_t *, void *))
 void fc_solve_kaz_tree_destroy(dict_t *dict)
 {
     assert(dict_isempty(dict));
-
     fc_solve_compact_allocator_finish(&(dict->dict_allocator));
     free(dict);
 }
@@ -390,7 +384,7 @@ void fc_solve_kaz_tree_free_nodes(dict_t *dict)
 /* Removed for fc-solve. */
 #ifdef NO_FC_SOLVE
     safe_traverse(dict, dict->freenode);
-    dict->nodecount = 0;
+    dict->dict_nodecount = 0;
 #endif
     dict->nilnode.left = &dict->nilnode;
     dict->nilnode.right = &dict->nilnode;
@@ -417,8 +411,7 @@ void dict_free(dict_t *dict)
 #ifdef NO_FC_SOLVE
 dict_t *dict_init(dict_t *dict, dictcount_t maxcount, dict_comp_t comp)
 #else
-dict_t *dict_init(dict_t *dict, dict_comp_t comp,
-    fcs_meta_compact_allocator_t *meta_allocator)
+dict_t *dict_init(dict_t *dict, dict_comp_t comp, meta_allocator *meta_alloc)
 #endif
 {
     dict->compare = comp;
@@ -427,14 +420,14 @@ dict_t *dict_init(dict_t *dict, dict_comp_t comp,
     dict->allocnode = dnode_alloc;
     dict->freenode = dnode_free;
 #else
-    fc_solve_compact_allocator_init(&(dict->dict_allocator), meta_allocator);
+    fc_solve_compact_allocator_init(&(dict->dict_allocator), meta_alloc);
     dict->dict_recycle_bin = NULL;
 #endif
 
     dict->context = NULL;
 #ifdef NO_FC_SOLVE
-    dict->nodecount = 0;
-    dict->maxcount = maxcount;
+    dict->dict_nodecount = 0;
+    dict->dict_maxcount = maxcount;
 #endif
     dict->nilnode.left = &dict->nilnode;
     dict->nilnode.right = &dict->nilnode;
@@ -462,8 +455,8 @@ void dict_init_like(dict_t *dict, const dict_t *orig)
 #endif
     dict->context = orig->context;
 #ifdef NO_FC_SOLVE
-    dict->nodecount = 0;
-    dict->maxcount = orig->maxcount;
+    dict->dict_nodecount = 0;
+    dict->dict_maxcount = orig->dict_maxcount;
 #endif
     dict->nilnode.left = &dict->nilnode;
     dict->nilnode.right = &dict->nilnode;
@@ -489,8 +482,8 @@ extern dict_t *dict_init_alloc(dict_t *dict, dictcount_t maxcount,
     dict->freenode = fr;
 #endif
     dict->context = context;
-    dict->nodecount = 0;
-    dict->maxcount = maxcount;
+    dict->dict_nodecount = 0;
+    dict->dict_maxcount = maxcount;
     dict->nilnode.left = &dict->nilnode;
     dict->nilnode.right = &dict->nilnode;
     dict->nilnode.parent = &dict->nilnode;
@@ -863,7 +856,7 @@ dict_ret_key_t fc_solve_kaz_tree_insert(
     node->right = nil;
 
 #ifdef NO_FC_SOLVE
-    dict->nodecount++;
+    ++dict->dict_nodecount;
 #endif
 
     /* red black adjustments */
@@ -1036,7 +1029,7 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
     target->left = NULL;
 
 #ifdef NO_FC_SOLVE
-    dict->nodecount--;
+    --dict->dict_nodecount;
 #endif
 
     assert(verify_bintree(dict));
@@ -1137,13 +1130,13 @@ static dnode_t *fc_solve_kaz_tree_delete(dict_t *dict, dnode_t *target)
 }
 
 #ifdef NO_FC_SOLVE
-static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode, void *data)
+static inline dnode_t *dnode_init(dnode_t *dnode, void *data)
 #else
-static GCC_INLINE dnode_t *dnode_init(dnode_t *dnode)
+static inline dnode_t *dnode_init(dnode_t *dnode)
 #endif
 {
 #ifdef NO_FC_SOLVE
-    dnode->data = data;
+    dnode->dict_data = data;
 #endif
     dnode->parent = NULL;
     dnode->left = NULL;
@@ -1166,7 +1159,7 @@ dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t *dict, dict_key_t key)
     dnode_t *from_bin;
     dnode_t *node;
     dict_ret_key_t ret;
-    fcs_compact_allocator_t *const allocator = &(dict->dict_allocator);
+    compact_allocator *const allocator = &(dict->dict_allocator);
     if ((from_bin = dict->dict_recycle_bin) != NULL)
     {
         node = dict->dict_recycle_bin;
@@ -1209,7 +1202,7 @@ void fc_solve_kaz_tree_delete_free(dict_t *dict, dnode_t *node)
 #endif
 }
 
-dnode_t *fc_solve_kaz_tree_first(dict_t *dict)
+__attribute__((pure)) dnode_t *fc_solve_kaz_tree_first(dict_t *dict)
 {
     dnode_t *nil = dict_nil(dict), *root = dict_root(dict), *left;
 
@@ -1250,7 +1243,8 @@ dnode_t *dict_last(dict_t *dict)
  */
 #endif
 
-dnode_t *fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
+__attribute__((pure)) dnode_t *fc_solve_kaz_tree_next(
+    dict_t *dict, dnode_t *curr)
 {
     dnode_t *nil = dict_nil(dict), *parent, *left;
 
@@ -1314,11 +1308,14 @@ dnode_t *dict_prev(dict_t *dict, dnode_t *curr)
 #ifdef NO_FC_SOLVE
 void dict_allow_dupes(dict_t *dict) { dict->dupes = 1; }
 
-dictcount_t dict_count(dict_t *dict) { return dict->nodecount; }
+dictcount_t dict_count(dict_t *dict) { return dict->dict_nodecount; }
 
-int dict_isempty(dict_t *dict) { return dict->nodecount == 0; }
+int dict_isempty(dict_t *dict) { return dict->dict_nodecount == 0; }
 
-int dict_isfull(dict_t *dict) { return dict->nodecount == dict->maxcount; }
+int dict_isfull(dict_t *dict)
+{
+    return dict->dict_nodecount == dict->dict_maxcount;
+}
 
 int dict_contains(dict_t *dict, dnode_t *node)
 {
@@ -1336,7 +1333,7 @@ dnode_t *const dnode_create(void *const data)
 {
     dnode_t *dnode = (dnode_t *)SMALLOC1(dnode) if (dnode)
     {
-        dnode->data = data;
+        dnode->dict_data = data;
         dnode->parent = NULL;
         dnode->left = NULL;
         dnode->right = NULL;
@@ -1350,11 +1347,11 @@ void dnode_destroy(dnode_t *dnode)
     free(dnode);
 }
 
-void *dnode_get(dnode_t *dnode) { return dnode->data; }
+void *dnode_get(dnode_t *dnode) { return dnode->dict_data; }
 
 const void *dnode_getkey(dnode_t *dnode) { return dnode->key; }
 
-void dnode_put(dnode_t *dnode, void *data) { dnode->data = data; }
+void dnode_put(dnode_t *dnode, void *data) { dnode->dict_data = data; }
 
 int dnode_is_in_a_dict(dnode_t *dnode)
 {
@@ -1401,10 +1398,10 @@ void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)
     dnode_t *nil = &load->nilnode;
 
     assert(!dnode_is_in_a_dict(newnode));
-    assert(dict->nodecount < dict->maxcount);
+    assert(dict->dict_nodecount < dict->dict_maxcount);
 
 #ifndef NDEBUG
-    if (dict->nodecount > 0)
+    if (dict->dict_nodecount > 0)
     {
         if (dict->dupes)
             assert(dict->compare(nil->left->key, key) <= 0);
@@ -1418,7 +1415,7 @@ void dict_load_next(dict_load_t *load, dnode_t *newnode, const void *key)
     nil->right = newnode;
     newnode->left = nil;
 #ifdef NO_FC_SOLVE
-    dict->nodecount++;
+    ++dict->dict_nodecount;
 #endif
 }
 
@@ -1428,7 +1425,7 @@ void dict_load_end(dict_load_t *load)
     dnode_t *tree[DICT_DEPTH_MAX] = {0};
     dnode_t *curr, *dictnil = dict_nil(dict), *loadnil = &load->nilnode, *next;
     dnode_t *complete = 0;
-    dictcount_t fullcount = DICTCOUNT_T_MAX, nodecount = dict->nodecount;
+    dictcount_t fullcount = DICTCOUNT_T_MAX, nodecount = dict->dict_nodecount;
     dictcount_t botrowcount;
     unsigned baselevel = 0, level = 0, i;
 
@@ -1525,7 +1522,7 @@ void dict_merge(dict_t *const dest, dict_t *const source)
         return;
 
 #ifdef NO_FC_SOLVE
-    dest->nodecount = 0;
+    dest->dict_nodecount = 0;
 #endif
     load_begin_internal(&load, dest);
 
@@ -1553,8 +1550,7 @@ void dict_merge(dict_t *const dest, dict_t *const source)
             break;
         }
 
-    copyleft:
-    {
+    copyleft : {
         dnode_t *next = dict_next(dest, leftnode);
 #ifndef NDEBUG
         leftnode->left = NULL; /* suppress assertion in dict_load_next */
@@ -1564,8 +1560,7 @@ void dict_merge(dict_t *const dest, dict_t *const source)
         continue;
     }
 
-    copyright:
-    {
+    copyright : {
         dnode_t *next = dict_next(source, rightnode);
 #ifndef NDEBUG
         rightnode->left = NULL;

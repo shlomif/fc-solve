@@ -43,4 +43,3 @@ bit each).
 
 Upper limit (excluding 1): 16 bits + 28 bits + 32 bits + 48 bits + 24 bits +
 52 bits = 200 bits = 25 bytes.
-

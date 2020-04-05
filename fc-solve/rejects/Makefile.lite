@@ -1,4 +1,3 @@
-
 CC = gcc
 OFLAGS = -Wall -O3
 OLFLAGS = -Wall
@@ -90,5 +89,3 @@ fc-solve: $(OBJECTS)
 
 clean:
 	rm -f *.o $(TARGETS) $(DTARGETS)
-
-

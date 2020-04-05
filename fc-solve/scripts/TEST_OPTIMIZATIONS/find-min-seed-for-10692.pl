@@ -17,20 +17,23 @@ my @deals = (10692);
 my $first_seed = $ENV{FIRST_SEED} || 1;
 my $check_seed = $ENV{CHECK_SEED} || $first_seed;
 
-my $LAST_SEED = ((1 << 31)-1);
-my $iters = 100000;
+my $LAST_SEED = ( ( 1 << 31 ) - 1 );
+my $iters     = 100000;
 my @old_line;
 
 sub handle_seed
 {
     my ($seed) = @_;
-    my @new_line = map { "$seed " . `pi-make-microsoft-freecell-board -t $_ | ../../source/scripts/summarize-fc-solve -- --method random-dfs -to '[01][2345][6789]'  -seed "$seed" -sp r:tf -mi "$iters"` } @deals;
-    my $new = max ( map { f($_) } @new_line);
+    my @new_line = map {
+              "$seed "
+            . `pi-make-microsoft-freecell-board -t $_ | ../../source/scripts/summarize-fc-solve -- --method random-dfs -to '[01][2345][6789]'  -seed "$seed" -sp r:tf -mi "$iters"`
+    } @deals;
+    my $new = max( map { f($_) } @new_line );
 
-    if ($new < $iters)
+    if ( $new < $iters )
     {
         @old_line = @new_line;
-        $iters = $new;
+        $iters    = $new;
     }
     print "$seed @old_line";
 
@@ -38,7 +41,7 @@ sub handle_seed
 }
 
 handle_seed($check_seed);
-for my $seed ($first_seed .. $LAST_SEED)
+for my $seed ( $first_seed .. $LAST_SEED )
 {
     handle_seed($seed);
 }

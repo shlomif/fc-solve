@@ -1,10 +1,8 @@
-#!/usr/bin/perl
-
 use strict;
 use warnings;
 
-use Getopt::Long;
-use Path::Tiny;
+use Getopt::Long qw/ GetOptions /;
+use Path::Tiny qw/ path /;
 
 =head1 NAME
 
@@ -17,21 +15,20 @@ generic documents such as C<README.txt> or C<USAGE.txt>.
 
 =cut
 
-my ($readme_path, $usage_path, $out_path);
+my ( $readme_path, $usage_path, $out_path );
 
 GetOptions(
     'readme=s' => \$readme_path,
-    'usage=s' => \$usage_path,
+    'usage=s'  => \$usage_path,
     'output=s' => \$out_path,
-)
-    or die "Cannot process arguments.";
+) or die "Cannot process arguments.";
 
 my $readme = path($readme_path)->slurp_utf8;
-my $usage = path($usage_path)->slurp_utf8;
+my $usage  = path($usage_path)->slurp_utf8;
 
 $usage =~ s{\A.*?(^The programs *$)}{$1}ms;
 
-my $manify_text = <<'EOF';
+my $MANIFY_TEXT = <<'EOF';
 :doctype: manpage
 
 NAME
@@ -39,38 +36,24 @@ NAME
 fc-solve - automated solver for Freecell and related Solitiare variants
 EOF
 
-my $man_title = 'fc-solve(6)';
+my $TITLE = 'fc-solve(6)';
 
 $readme =~ s/\AFreecell Solver Readme File\n(=+)\n/
-    $man_title . "\n" . '=' x length($man_title) . "\n"/ge;
-$readme =~ s/(:Revision[^\n]*\n)/$1$manify_text/ms;
+    $TITLE . "\n" . '=' x length($TITLE) . "\n"/ge;
+$readme =~ s/(:Revision[^\n]*\n)/$1$MANIFY_TEXT/ms;
 
-path($out_path)->spew_utf8($readme, "\n\n", $usage);
+path($out_path)->spew_utf8( $readme, "\n\n", $usage );
+
+__END__
 
 =head1 COPYRIGHT AND LICENSE
 
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
 Copyright (c) 2000 Shlomi Fish
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
 =cut
-

@@ -23,4 +23,3 @@ seq "$START" "$END" |
         ./fc-solve --game "$GAME" -l "toons-for-twenty-somethings" -mi "${MAX_ITERS//,/}" -p -t -sam > \
         "$(printf "%s/%09d.atomic.sol" "$RESULTS_DIR" "$DEAL")"
 done) | tee -a total_dump.atomic.txt
-

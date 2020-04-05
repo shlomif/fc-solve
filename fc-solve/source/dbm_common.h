@@ -1,31 +1,28 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2012 Shlomi Fish
- */
-/*
- * dbm_common.h - some common definitions (constants/etc.) for the DBM solver.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2012 Shlomi Fish
+// dbm_common.h - some common definitions (constants/etc.) for the DBM solver.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "config.h"
-
 #include "state.h"
 
-typedef enum {
+typedef enum
+{
     FCS_DBM_VARIANT_2FC_FREECELL,
     FCS_DBM_VARIANT_BAKERS_DOZEN,
-} fcs_dbm_variant_type_t;
+} fcs_dbm_variant_type;
 
+#ifndef FCS_DBM_FREECELLS_NUM
 #define FCS_DBM_FREECELLS_NUM 2
+#endif
 
 #ifdef FCS_FREECELL_ONLY
 

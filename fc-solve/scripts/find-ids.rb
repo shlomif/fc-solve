@@ -1,3 +1,13 @@
+# This program should be called with a bunch of C (and possibly C++)
+# source file paths on the command line and it emits the identifiers
+# with their filenames and line numbers (useful for vim's quickfix command
+# or equivalent - see :help :cbuf) in the files, sorted by:
+#
+# 1. Frequency - less frequent identifiers appear first.
+# 2. Lexicographical order.
+#
+# This proved useful for refactoring / code cleanups
+
 ignore_list = IO.read("scripts/ids-whitelist.txt").split(/\s+/)
 
 ignore = Hash.new
@@ -11,10 +21,12 @@ ARGV.each do |fn|
         next
     end
     File.open(fn, "r") do |file|
+        begin
         line_num = 1
         while (l = file.gets)
             l.gsub!(/\/\*.*?\*\//m, "");
             l.gsub!(/(?:"([^\\]|\\.)*?")|(?:'[^'']+?')/m, " ");
+            l.gsub!(/\/\/.*/m, "");
             if (m = /\A(.*?)((?:\/\*)|\z)/m.match(l))
                 before = m[1]
                 open_comment = m[2]
@@ -37,6 +49,10 @@ ARGV.each do |fn|
                     line_num += 1
                 end
             end
+        end
+        rescue ArgumentError
+            puts "#{fn} is malformed UTF8-wise"
+            exit
         end
     end
 end

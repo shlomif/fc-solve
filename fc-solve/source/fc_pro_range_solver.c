@@ -1,104 +1,68 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2000 Shlomi Fish
- */
-/*
- * fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
- * boards and displays the moves counts and the number of moves in their
- * solution.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2000 Shlomi Fish
+// fc_pro_range_solver.c - the FC-Pro range solver. Solves a range of
+// boards and displays the moves counts and the number of moves in their
+// solution.
 #include "default_iter_handler.h"
 #include "range_solvers_gen_ms_boards.h"
 #include "range_solvers_binary_output.h"
 #include "fc_pro_iface_pos.h"
+#include "try_param.h"
+#include "print_time.h"
 
-static GCC_INLINE void fc_pro_get_board(long gamenumber,
-    fcs_state_string_t state_string,
-    fcs_state_keyval_pair_t *pos IND_BUF_T_PARAM(indirect_stacks_buffer))
+static inline void fc_pro_get_board(const fc_solve_ms_deal_idx_type deal_idx,
+    fcs_state_string state_string,
+    fcs_state_keyval_pair *const pos IND_BUF_T_PARAM(indirect_stacks_buffer))
 {
-    get_board(gamenumber, state_string);
+    get_board_l__without_setup(deal_idx, state_string);
     fc_solve_initial_user_state_to_c(
         state_string, pos, 4, 8, 1, indirect_stacks_buffer);
 }
 
 #include "cl_callback_range.h"
+#include "range_solvers.h"
 
-int main(int argc, char *argv[])
+static inline int range_solvers_main(int argc, char *argv[], int arg,
+    fc_solve_ms_deal_idx_type start_board, fc_solve_ms_deal_idx_type end_board,
+    const fc_solve_ms_deal_idx_type stop_at)
 {
     const char *variant = "freecell";
-    fcs_portable_time_t mytime;
-    long long total_num_iters = 0;
-    fcs_bool_t was_total_iterations_limit_per_board_set = FALSE;
+    fcs_iters_int total_num_iters = 0;
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+    bool was_total_iterations_limit_per_board_set = false;
+#endif
     fcs_int_limit_t total_iterations_limit_per_board = -1;
-    binary_output_t binary_output = INIT_BINARY_OUTPUT;
-    int arg = 1;
-
-    if (argc < 4)
-    {
-        fprintf(stderr, "Not Enough Arguments!\n");
-        print_help();
-        exit(-1);
-    }
-    long long start_board = atoll(argv[arg++]);
-    long long end_board = atoll(argv[arg++]);
-    const long long stop_at = atoll(argv[arg++]);
-    if (stop_at <= 0)
-    {
-        fprintf(stderr,
-            "print_step (the third argument) must be greater than 0.\n");
-        print_help();
-        exit(-1);
-    }
+    fcs_binary_output binary_output = INIT_BINARY_OUTPUT;
 
     for (; arg < argc; arg++)
     {
-        if (!strcmp(argv[arg], "--variant"))
+        const char *param;
+        if ((param = TRY_P("--variant")))
         {
-            arg++;
-            if (arg == argc)
+            if (strlen(variant = param) > 50)
             {
-                fprintf(stderr, "--variant came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            variant = argv[arg];
-
-            if (strlen(variant) > 50)
-            {
-                fprintf(stderr, "--variant's argument is too long!\n");
-                print_help();
-                exit(-1);
+#ifndef FCS_WITHOUT_CMD_LINE_HELP
+                help_err("--variant's argument is too long!\n");
+#else
+                return -1;
+#endif
             }
         }
-        else if (!strcmp(argv[arg], "--binary-output-to"))
+        else if ((param = TRY_P("--binary-output-to")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(
-                    stderr, "--binary-output-to came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            binary_output.filename = argv[arg];
+            binary_output.filename = param;
         }
-        else if (!strcmp(argv[arg], "--total-iterations-limit"))
+        else if ((param = TRY_P("--total-iterations-limit")))
         {
-            arg++;
-            if (arg == argc)
-            {
-                fprintf(stderr,
-                    "--total-iterations-limit came without an argument!\n");
-                print_help();
-                exit(-1);
-            }
-            was_total_iterations_limit_per_board_set = TRUE;
-            total_iterations_limit_per_board = atol(argv[arg]);
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
+            was_total_iterations_limit_per_board_set = true;
+            total_iterations_limit_per_board = atol(param);
+#endif
         }
         else
         {
@@ -109,26 +73,38 @@ int main(int argc, char *argv[])
     fc_solve_print_started_at();
     fflush(stdout);
 
-    fc_solve_display_information_context_t display_context =
+    fc_solve_display_information_context display_context =
         INITIAL_DISPLAY_CONTEXT;
     void *const instance = alloc_instance_and_parse(argc, argv, &arg,
-        known_parameters, cmd_line_callback, &display_context, TRUE);
+        known_parameters, cmd_line_callback, &display_context, true);
 
     bin_init(&binary_output, &start_board, &end_board,
         &total_iterations_limit_per_board);
-    const fcs_bool_t variant_is_freecell = (!strcmp(variant, "freecell"));
-    freecell_solver_user_apply_preset(instance, variant);
+    const bool variant_is_freecell = (!strcmp(variant, "freecell"));
+#ifndef FCS_FREECELL_ONLY
+    if (!variant_is_freecell)
+    {
+        freecell_solver_user_apply_preset(instance, variant);
+    }
+#endif
 
+#ifndef FCS_WITHOUT_MAX_NUM_STATES
     if (was_total_iterations_limit_per_board_set)
     {
         freecell_solver_user_limit_iterations_long(
             instance, total_iterations_limit_per_board);
     }
+#endif
 
     char buffer[2000];
-    for (long long board_num = start_board; board_num <= end_board; board_num++)
+    if (variant_is_freecell)
     {
-        fcs_state_keyval_pair_t pos;
+        get_board__setup_string(buffer);
+    }
+    for (fc_solve_ms_deal_idx_type board_num = start_board;
+         board_num <= end_board; board_num++)
+    {
+        fcs_state_keyval_pair pos;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)
         if (variant_is_freecell)
         {
@@ -139,36 +115,41 @@ int main(int argc, char *argv[])
         {
             char command[1000];
 
-            sprintf(command, "make_pysol_freecell_board.py -F -t %lld %s",
+            sprintf(command,
+                "make_pysol_freecell_board.py -F -t " RIN_LL_FMT "%s",
                 board_num, variant);
 
             FILE *const from_make_pysol = popen(command, "r");
-            fread(
-                buffer, sizeof(buffer[0]), COUNT(buffer) - 1, from_make_pysol);
+            if (fread(buffer, sizeof(buffer[0]), COUNT(buffer) - 1,
+                    from_make_pysol) == 0)
+            {
+                abort();
+            }
             pclose(from_make_pysol);
         }
 
-        buffer[COUNT(buffer) - 1] = '\0';
+        LAST(buffer) = '\0';
 
         int num_iters;
         int num_moves;
         int num_fcpro_moves;
-        fcs_moves_processed_t fc_pro_moves = {.moves = NULL};
+        fcs_moves_processed fc_pro_moves = {.moves = NULL};
 
         switch (freecell_solver_user_solve_board(instance, buffer))
         {
         case FCS_STATE_SUSPEND_PROCESS:
-            FCS_PRINT_INTRACTABLE_BOARD(mytime, board_num);
+            fc_solve_print_intractable(board_num);
             num_iters = num_moves = num_fcpro_moves = -1;
             break;
 
         case FCS_STATE_IS_NOT_SOLVEABLE:
-            FCS_PRINT_UNSOLVED_BOARD(mytime, board_num);
+            fc_solve_print_unsolved(board_num);
             num_iters = num_moves = num_fcpro_moves = -2;
             break;
 
         default:
             num_iters = (int)freecell_solver_user_get_num_times_long(instance);
+#ifdef FCS_WITH_MOVES
             num_moves = freecell_solver_user_get_moves_left(instance);
 
             if (variant_is_freecell)
@@ -180,7 +161,7 @@ int main(int argc, char *argv[])
                     &fc_pro_moves, &pos, 4, &moves_seq);
 
                 num_fcpro_moves =
-                    fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
+                    (int)fc_solve_moves_processed_get_moves_left(&fc_pro_moves);
 
                 if (moves_seq.moves)
                 {
@@ -192,6 +173,9 @@ int main(int argc, char *argv[])
             {
                 num_fcpro_moves = num_moves;
             }
+#else
+            num_fcpro_moves = num_moves = -1;
+#endif
             break;
         }
         print_int(&binary_output, num_iters);
@@ -202,7 +186,8 @@ int main(int argc, char *argv[])
         printf("%s\n", "[[Start]]");
         if (fc_pro_moves.moves)
         {
-            fcs_extended_move_t move;
+#ifdef FCS_WITH_MOVES
+            fcs_extended_move move;
             int len = 0;
             while (
                 !fc_solve_moves_processed_get_next_move(&fc_pro_moves, &move))
@@ -211,6 +196,7 @@ int main(int argc, char *argv[])
                 fc_solve_moves_processed_render_move(move, temp_str);
                 printf("%s%c", temp_str, ((((++len) % 10) == 0) ? '\n' : ' '));
             }
+#endif
             fc_solve_moves_processed_free(&fc_pro_moves);
         }
         printf("\n%s\n", "[[End]]");
@@ -219,7 +205,7 @@ int main(int argc, char *argv[])
 
         if (board_num % stop_at == 0)
         {
-            FCS_PRINT_REACHED_BOARD(mytime, board_num, total_num_iters);
+            fc_solve_print_reached(board_num, total_num_iters);
         }
         freecell_solver_user_recycle(instance);
     }

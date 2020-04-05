@@ -162,4 +162,3 @@ No parameters.
 
 A server tells a client that there's nothing more to do and that it should
 quit.
-

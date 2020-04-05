@@ -1,88 +1,92 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2016 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2016 Shlomi Fish
 #pragma once
 
 #define IS_ARG(s) (!strcmp(arg_str, (s)))
+#define IS_ARG_LONG(shrt, lng) (IS_ARG("-" shrt) || IS_ARG("--" lng))
 
-static GCC_INLINE void set_iter_handler(
-    void *const instance, fc_solve_display_information_context_t *const dc)
+static inline void set_iter_handler(void *const instance GCC_UNUSED,
+    fc_solve_display_information_context *const dc GCC_UNUSED)
 {
+#ifndef FCS_WITHOUT_ITER_HANDLER
     freecell_solver_user_set_iter_handler_long(instance, my_iter_handler, dc);
-    dc->debug_iter_output_on = TRUE;
+#endif
 }
 
-static GCC_INLINE fcs_bool_t cmd_line_cb__handle_common(
-    const char *const arg_str, void *const instance,
-    fc_solve_display_information_context_t *const dc)
+static inline bool cmd_line_cb__handle_common(const char *const arg_str,
+    void *const instance, fc_solve_display_information_context *const dc)
 {
-    if (IS_ARG("-i") || IS_ARG("--iter-output"))
+    if (IS_ARG_LONG("i", "iter-output"))
     {
         set_iter_handler(instance, dc);
-        return TRUE;
+        return true;
     }
-    else if (IS_ARG("-s") || IS_ARG("--state-output"))
+    else if (IS_ARG_LONG("s", "state-output"))
     {
         set_iter_handler(instance, dc);
-        dc->debug_iter_state_output = TRUE;
-        return TRUE;
+        dc->debug_iter_state_output = true;
+        return true;
     }
-    else if (IS_ARG("-p") || IS_ARG("--parseable-output"))
+    else if (IS_ARG_LONG("p", "parseable-output"))
     {
 #ifndef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
-        dc->parseable_output = TRUE;
+        dc->parseable_output = true;
 #endif
-        return TRUE;
+        return true;
     }
-    else if (IS_ARG("-c") || IS_ARG("--canonized-order-output"))
+    else if (IS_ARG_LONG("c", "canonized-order-output"))
     {
-        dc->canonized_order_output = TRUE;
-        return TRUE;
+        dc->canonized_order_output = true;
+        return true;
     }
-    else if (IS_ARG("-t") || IS_ARG("--display-10-as-t"))
+    else if (IS_ARG_LONG("t", "display-10-as-t"))
     {
 #ifndef FC_SOLVE_IMPLICIT_T_RANK
-        dc->display_10_as_t = TRUE;
+        dc->display_10_as_t = true;
 #endif
-        return TRUE;
+        return true;
     }
-    else if (IS_ARG("-m") || IS_ARG("--display-moves"))
+    else if (IS_ARG_LONG("m", "display-moves"))
     {
-        dc->display_moves = TRUE;
-        dc->display_states = FALSE;
-        return TRUE;
+        dc->display_moves = true;
+        dc->display_states = false;
+        return true;
     }
-    else if (IS_ARG("-sn") || IS_ARG("--standard-notation"))
+    else if (IS_ARG_LONG("sn", "standard-notation"))
     {
         dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_REGULAR;
-        return TRUE;
+        return true;
     }
-    else if (IS_ARG("-snx") || IS_ARG("--standard-notation-extended"))
+    else if (IS_ARG_LONG("snx", "standard-notation-extended"))
     {
         dc->standard_notation = FC_SOLVE__STANDARD_NOTATION_EXTENDED;
-        return TRUE;
+        return true;
     }
-    else if (IS_ARG("-sam") || IS_ARG("--display-states-and-moves"))
+    else if (IS_ARG_LONG("sam", "display-states-and-moves"))
     {
-        dc->display_moves = TRUE;
-        dc->display_states = TRUE;
-        return TRUE;
+        dc->display_moves = true;
+        dc->display_states = true;
+        return true;
     }
-    else if (IS_ARG("-pi") || IS_ARG("--display-parent-iter"))
+    else if (IS_ARG_LONG("pi", "display-parent-iter"))
     {
-        dc->display_parent_iter_num = TRUE;
-        return TRUE;
+        dc->display_parent_iter_num = true;
+        return true;
     }
-    else if (IS_ARG("-sel") || IS_ARG("--show-exceeded-limits"))
+    else if (IS_ARG_LONG("sel", "show-exceeded-limits"))
     {
-        dc->show_exceeded_limits = TRUE;
-        return TRUE;
+        dc->show_exceeded_limits = true;
+        return true;
     }
-    return FALSE;
+    else if (IS_ARG_LONG("hoi", "hint-on-intractable"))
+    {
+        dc->hint_on_intract = true;
+        return true;
+    }
+    return false;
 }

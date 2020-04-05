@@ -6,24 +6,26 @@ use warnings;
 use base 'Shlomif::FCS::CalcMetaScan::Base';
 
 use vars (qw(@fields %fields_map));
-@fields = (qw(
-    cmd_line
-    id
-    used
-));
+@fields = (
+    qw(
+        cmd_line
+        id
+        used
+        )
+);
 
-%fields_map = (map { $_ => 1 } @fields);
+%fields_map = ( map { $_ => 1 } @fields );
 
-__PACKAGE__->mk_acc_ref(\@fields);
+__PACKAGE__->mk_acc_ref( \@fields );
 
 sub _init
 {
     my $self = shift;
     my (%args) = @_;
     $self->used(0);
-    foreach my $field (grep {exists($fields_map{$_})} keys(%args))
+    foreach my $field ( grep { exists( $fields_map{$_} ) } keys(%args) )
     {
-        $self->$field($args{$field});
+        $self->$field( $args{$field} );
     }
 
     return 0;
@@ -52,35 +54,21 @@ sub data_file_path
 {
     my $self = shift;
 
-    return "./data/" . $self->id() .  ".data.bin";
+    return "./data/" . $self->id() . ".data.bin";
 }
-
-=head1 COPYRIGHT AND LICENSE
-
-Copyright (c) 2010 Shlomi Fish
-
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-=cut
 
 1;
 
+__END__
+
+=head1 COPYRIGHT AND LICENSE
+
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
+Copyright (c) 2010 Shlomi Fish
+
+=cut

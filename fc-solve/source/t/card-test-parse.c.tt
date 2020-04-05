@@ -1,11 +1,9 @@
 /* vim:syn=tt2
 */
-#include <tap.h>
-#include <string.h>
+#include "rinutils/rin_cmocka.h"
+#include "card.c"
 
-#include "../card.c"
-
-static int main_tests(void)
+static void main_tests(void **state GCC_UNUSED)
 {
 [%- SET num_tests = 0 -%]
 [% IF implicit_t %]
@@ -22,28 +20,28 @@ static int main_tests(void)
             _   suit.value
             _   '"') -%]
     {
-        fcs_card_t mycard;
+        fcs_card mycard;
 
         mycard = fc_solve_card_parse_str([% card_string %]);
         /* TEST */
         [%- SET num_tests = num_tests + 1 %]
-        ok (fcs_card_suit(mycard) == [% suit.idx %],
-            "Parsing the suit of card " [% card_string %]);
+        assert_int_equal (fcs_card_suit(mycard), [% suit.idx %]);
+            // "Parsing the suit of card " [% card_string %]);
         /* TEST */
         [%- SET num_tests = num_tests + 1 %]
-        ok (fcs_card_rank(mycard) == [% rank.idx %],
-            "Parsing the rank of card " [% card_string %]);
+        assert_int_equal (fcs_card_rank(mycard), [% rank.idx %]);
+            // "Parsing the rank of card " [% card_string %]);
     }
 [% END %]
 [% END %]
 [% END %]
-
-    return 0;
 }
 
 int main(void)
 {
-  plan_tests([% num_tests %]);
-  main_tests();
-  return exit_status();
+  // plan([% num_tests %]);
+  const struct CMUnitTest tests[]={
+    cmocka_unit_test(main_tests),
+    };
+  return cmocka_run_group_tests(tests, NULL, NULL);
 }

@@ -6,11 +6,13 @@ use warnings;
 use MooX qw/late/;
 use List::MoreUtils qw/any/;
 
-use HTML::Spelling::Site::Finder;
+use HTML::Spelling::Site::Finder ();
 
-my @prunes =
-(
+my @prunes = (
     qr#\Adest/js/jquery-ui/#,
+    qr#\Adest/js/yui-unpack/#,
+
+    # qr#\A dest/book--freecell-solver--evolution-of-a-c-program/#msx,
 );
 
 sub list_htmls
@@ -29,4 +31,3 @@ sub list_htmls
 }
 
 1;
-

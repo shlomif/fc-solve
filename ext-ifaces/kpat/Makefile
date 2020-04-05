@@ -13,4 +13,3 @@ get_preset.o: get_preset.c
 
 cl_chop.o: $(FCS_DIR)/cl_chop.c
 	gcc -g -c -I../../fc-solve/source $<
-

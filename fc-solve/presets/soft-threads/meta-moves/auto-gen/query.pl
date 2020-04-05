@@ -12,9 +12,7 @@ use FC_Solve::TimePresets;
 
 my $with_len = 0;
 
-GetOptions(
-    "l!" => \$with_len,
-);
+GetOptions( "l!" => \$with_len, );
 
 my $scan_id = shift(@ARGV)
     or die "scan_id not specified on command line.";
@@ -29,12 +27,13 @@ if ($with_len)
 {
     my $at = sub {
         my ($field_idx) = @_;
-        return $input_obj->get_scans_lens_iters_pdls()->{$scan_id}->at($board_idx-$start_board, 0, $field_idx);
+        return $input_obj->get_scans_lens_iters_pdls()->{$scan_id}
+            ->at( $board_idx - $start_board, 0, $field_idx );
     };
-    print map { $at->($_) , "\n" } (0, 1);
+    print map { $at->($_), "\n" } ( 0, 1 );
 }
 else
 {
-    print $input_obj->get_scans_iters_pdls()->{$scan_id}->at($board_idx-$start_board), "\n";
+    print $input_obj->get_scans_iters_pdls()->{$scan_id}
+        ->at( $board_idx - $start_board ), "\n";
 }
-

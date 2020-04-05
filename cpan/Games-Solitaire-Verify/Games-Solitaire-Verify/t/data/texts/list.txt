@@ -1,0 +1,8 @@
+3.all_in_a_row.board
+3.all_in_a_row.sol
+4.golf-wrap-ranks.sol
+4.golf.board
+5.golf.board
+5.golf.sol
+6.black_hole.board
+6.black_hole.sol

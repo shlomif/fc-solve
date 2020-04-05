@@ -20,16 +20,16 @@ if test -n "${THEME}" ; then
     theme="${THEME}"
 fi
 
+deals_dir="run-variant-sequence--deals"
+if ! test -d "$deals_dir"
+then
+    mkdir -p "$deals_dir"
+    gen-multiple-pysol-layouts --dir "$deals_dir" --ms --prefix '' --suffix .board --game "$variant" seq 1 100000
+fi
+
 max_iters="${MAX_ITERS:-1500000}"
 
 export FREECELL_SOLVER_QUIET=1
 
-seq "$start" "$end" |  \
-(while read deal ; do
-    echo "${deal}:"
-    ./board_gen/make_pysol_freecell_board.py $ms -t "$deal" "$variant" |
-        ./fc-solve --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" |
-        tail -3 ;
-    date +"T=%s.%N"
-done) | tee -a total_dump.txt
-
+`which time` -a -o run-variant-sequence.time ./fc-solve-multi --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" $(eval echo "$deals_dir"/{$start..$end}.board) \
+ >> total_dump.txt

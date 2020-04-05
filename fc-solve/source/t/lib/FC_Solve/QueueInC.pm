@@ -3,8 +3,6 @@ package FC_Solve::QueueInC;
 use strict;
 use warnings;
 
-use Config;
-
 use FC_Solve::InlineWrap (
     C => <<'EOF',
 #define FCS_DBM_USE_OFFLOADING_QUEUE
@@ -13,7 +11,7 @@ use FC_Solve::InlineWrap (
 
 typedef struct
 {
-    fcs_offloading_queue_t q;
+    fcs_offloading_queue q;
 } QueueInC;
 
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue_id) {
@@ -21,7 +19,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue
 
         New(42, s, 1, QueueInC);
 
-        fcs_offloading_queue__init(&(s->q), strdup(offload_dir_path), queue_id);
+        fcs_offloading_queue__init(&(s->q), savepv(offload_dir_path), queue_id);
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::QueueInC");
         sv_setiv(obj, (IV)s);
@@ -29,21 +27,21 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue
         return obj_ref;
 }
 
-static GCC_INLINE QueueInC * deref(SV * const obj) {
+static inline QueueInC * deref(SV * const obj) {
     return (QueueInC*)SvIV(SvRV(obj));
 }
 
-static GCC_INLINE fcs_offloading_queue_t * q(SV * const obj) {
+static inline fcs_offloading_queue * q(SV * const obj) {
     return &(deref(obj)->q);
 }
 
 void insert(SV* obj, int item_i) {
-    fcs_offloading_queue_item_t item = (fcs_offloading_queue_item_t)item_i;
+    offloading_queue_item item = (offloading_queue_item)item_i;
     fcs_offloading_queue__insert(q(obj), &item);
 }
 
 SV* extract(SV* obj) {
-    fcs_offloading_queue_item_t item;
+    offloading_queue_item item;
 
     return (fcs_offloading_queue__extract(q(obj), &item))
     ? newSViv((int)item)
@@ -51,20 +49,20 @@ SV* extract(SV* obj) {
 }
 
 long get_num_inserted(SV* obj) {
-    return q(obj)->num_inserted;
+    return q(obj)->stats.num_inserted;
 }
 
 long get_num_items_in_queue(SV* obj) {
-    return q(obj)->num_items_in_queue;
+    return q(obj)->stats.num_items_in_queue;
 }
 
 long get_num_extracted(SV* obj) {
-    return q(obj)->num_extracted;
+    return q(obj)->stats.num_extracted;
 }
 
 void DESTROY(SV* obj) {
   QueueInC * s = deref(obj);
-  free(s->q.offload_dir_path);
+  Safefree(s->q.offload_dir_path);
   fcs_offloading_queue__destroy(&s->q);
   Safefree(s);
 }
@@ -74,10 +72,13 @@ EOF
 
 sub new
 {
-    my ($class, $args) = @_;
+    my ( $class, $args ) = @_;
 
-    return FC_Solve::QueueInC::_proto_new($args->{num_items_per_page}, $args->{offload_dir_path}, ($args->{queue_id} || 0));
+    return FC_Solve::QueueInC::_proto_new(
+        $args->{num_items_per_page},
+        $args->{offload_dir_path},
+        ( $args->{queue_id} || 0 )
+    );
 }
 
 1;
-

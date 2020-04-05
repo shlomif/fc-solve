@@ -1,31 +1,66 @@
+addons:
+    apt:
+        update: true
+        packages:
+            - asciidoc
+            - cmake
+            - cmake-data
+            - cpanminus
+            - dbtoepub
+            - docbook-xsl
+            - docbook-xsl-ns
+            - gperf
+            - libapr1-dev
+            - libc6-dbg
+            - libcmocka-dev
+            - libdb5.3-dev
+            - libgd-dev
+            - libgmp-dev
+            - libgoogle-perftools-dev
+            - libhunspell-dev
+            - libperl-dev
+            - lynx
+            - mercurial
+            - ninja-build
+            - perl
+            - python3
+            - python3-pip
+            - python3-setuptools
+            - silversearcher-ag
+            - strip-nondeterminism
+            - valgrind
+            - xsltproc
 os: linux
-dist: trusty
-before_install:
-    - sudo apt-get update -qq
-    - sudo apt-get install -y cpanminus gperf libgmp-dev mercurial python3 python3-setuptools perl libperl-dev silversearcher-ag valgrind
-      # For cmake-3.x - probably not needed in trusty.
-      # - sudo add-apt-repository ppa:george-edison55/precise-backports -y
-    - sudo apt-get update -q
-    - sudo apt-get install -y cmake cmake-data ninja-build python3-pip
-install:
-    - ( cd fc-solve/source && hg clone -u make-code-suitable-for-fc-solve https://bitbucket.org/shlomif/patsolve-shlomif )
-      # - sudo easy_install3 pip
-    - sudo -H python3 -m pip install random2
-    - sudo -H `which python3` -m pip install random2
-    - which python3
-      # - /usr/bin/env python3 -m sys -m random2 -c 'print(sys.executable)'
-      # Temporary workaround for a problem in running the Inline::C test
-      # suite with latest EU::MM - install Inline::C with no tests.
-      #     - https://github.com/ingydotnet/inline-c-pm/issues/49 .
-    - sudo cpanm --notest Inline::C
-    - sudo cpanm Carp Cwd Data::Dumper Digest::SHA Env::Path File::Path File::Spec File::Which Games::Solitaire::Verify Games::Solitaire::Verify::Solution Inline Inline::C IPC::Open2 lib List::MoreUtils parent Path::Tiny Storable strict String::ShellQuote Template Test::Data::Split Test::Data::Split::Backend::Hash Test::Data::Split::Backend::ValidateHash Test::Differences Test::More Test::TrailingSpace Text::Sprintf::Named Test::RunValgrind Test::Trap warnings YAML::XS
-    - wget http://web-cpan.shlomifish.org/downloads/libtap-1.12.0.tar.bz2
-    - tar -xvf libtap-1.12.0.tar.bz2
-    - ( mkdir B && cd B && cmake ../libtap-1.12.0 && make && sudo make install )
-    - ( a="$(pwd)"; mkdir B2 && cd B2 && hg clone https://bitbucket.org/shlomif/shlomif-cmake-modules && cd shlomif-cmake-modules/shlomif-cmake-modules && cp -f "$(pwd)"/Shlomif_Common.cmake "$a"/fc-solve/source/cmake/ )
-
-perl:
-    - "5.22"
+# dist: trusty
+# dist: xenial
+dist: bionic
+go:
+    - '1.11.x'
+language: c
 python:
-    - "3.5"
-script: "export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 ; cd fc-solve/source && perl scripts/multi_config_tests.pl"
+    - '3.6'
+before_install:
+    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-before-install.bash ; fi
+install:
+    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; elif test "$WHAT" = "buildproc"; then . fc-solve/scripts/ci-docker-test--install.bash ; fi
+perl:
+    - "5.24"
+script:
+    - if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl ../scripts/docker-test.pl ; fi
+sudo: required
+cache:
+    ccache: true
+    directories:
+        - $HOME/fc-solve-tests-reruns-cache
+        - $HOME/perl_modules
+        - fc-solve/source/avl-2.0.3
+matrix:
+    include:
+        - os: linux
+          env:
+              - WHAT=normal
+        - os: linux
+          env:
+              - WHAT=buildproc
+services:
+    - docker

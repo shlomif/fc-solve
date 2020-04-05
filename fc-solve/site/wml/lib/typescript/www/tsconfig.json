@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "esModuleInterop": true,
+      "module": "amd",
+      "moduleResolution": "node",
+      "noImplicitReturns": true,
+      "outDir": "../../../lib/out-babel/js",
+      "paths": {
+          "big-integer": ["node_modules/big-integer/BigInteger.d.ts"],
+          "qunit": ["node_modules/@types/qunit"]
+      },
+      "target":"es6"
+  },
+  "include": ["../../../src/ts/**/*.ts"]
+}

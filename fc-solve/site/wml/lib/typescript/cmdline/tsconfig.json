@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+      "baseUrl": ".",
+      "esModuleInterop": true,
+      "module": "commonjs",
+      "moduleResolution": "node",
+      "noImplicitReturns": true,
+      "outDir": "../../../lib/for-node/js",
+      "paths": {
+          "big-integer": ["node_modules/big-integer/BigInteger.d.ts"],
+          "qunit": ["../../../node_modules/@types/qunit"]
+      },
+      "target":"es6"
+  },
+  "include": ["../../../src/ts/**/*.ts"]
+}

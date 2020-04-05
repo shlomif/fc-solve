@@ -26,11 +26,12 @@
  * (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  * THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+#pragma once
 
-#ifndef	FC_SOLVE__SYS_TREE_H
-#define	FC_SOLVE__SYS_TREE_H
-
+#include "rinutils/unused.h"
+#ifndef _WIN32
 #include <sys/cdefs.h>
+#endif
 
 /*
  * This file defines data structures for different types of trees:
@@ -381,7 +382,7 @@ struct {								\
 #define	RB_PROTOTYPE(name, type, field, cmp)				\
 	RB_PROTOTYPE_INTERNAL(name, type, field, cmp,)
 #define	RB_PROTOTYPE_STATIC(name, type, field, cmp)			\
-	RB_PROTOTYPE_INTERNAL(name, type, field, cmp, __unused static)
+	RB_PROTOTYPE_INTERNAL(name, type, field, cmp, GCC_UNUSED static)
 #define RB_PROTOTYPE_INTERNAL(name, type, field, cmp, attr)		\
 attr void name##_RB_INSERT_COLOR(struct name *, struct type *);		\
 attr void name##_RB_REMOVE_COLOR(struct name *, struct type *, struct type *);\
@@ -400,7 +401,7 @@ attr struct type *name##_RB_MINMAX(struct name *, int);			\
 #define	RB_GENERATE(name, type, field, cmp)				\
 	RB_GENERATE_INTERNAL(name, type, field, cmp,)
 #define	RB_GENERATE_STATIC(name, type, field, cmp)			\
-	RB_GENERATE_INTERNAL(name, type, field, cmp, __unused static)
+	RB_GENERATE_INTERNAL(name, type, field, cmp, GCC_UNUSED static)
 #define RB_GENERATE_INTERNAL(name, type, field, cmp, attr)		\
 attr void								\
 name##_RB_INSERT_COLOR(struct name *head, struct type *elm)		\
@@ -623,7 +624,7 @@ name##_RB_INSERT(struct name *head, struct type *elm)			\
 }									\
 									\
 /* Finds the node with the same key as elm */				\
-attr struct type *							\
+attr struct type *	__attribute__((pure))	\
 name##_RB_FIND(struct name *head, struct type *elm)			\
 {									\
 	struct type *tmp = RB_ROOT(head);				\
@@ -761,5 +762,3 @@ name##_RB_MINMAX(struct name *head, int val)				\
 	for ((x) = RB_MAX(name, head);					\
 	    ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL);	\
 	     (x) = (y))
-
-#endif	/* FC_SOLVE__SYS_TREE_H_ */

@@ -2,7 +2,8 @@
 
 ## Dependencies:
 
-1. [Latemp](https://bitbucket.org/shlomif/latemp) and
+1. [Latemp](https://github.com/thewml/latemp) , python3
+and [Jinja2](http://jinja.pocoo.org/),
 [Website Meta Language](https://bitbucket.org/shlomif/website-meta-language) .
 2. [Emscripten](https://kripken.github.io/emscripten-site/)
 3. [CMake](https://cmake.org/)
@@ -13,13 +14,18 @@
 
 ## Build procedure.
 
-1. `./gen-helpers.pl`
-2. `make`
-3. `make test`
-4. `make PROD=1`
+1. `perl gen-helpers`
+2. `bash bin/install-npm-deps.sh`
+3. `make`
+4. `make test`
+5. `make PROD=1`
+
+To upload, use:
+
+1. `make upload`
+2. `make PROD=1 upload`
 
 ## Assets.
 
 The assets (downloads/tarballs/etc.) for this site are kept in a
 separate repository: http://github.com/shlomif/fc-solve-site-assets
-

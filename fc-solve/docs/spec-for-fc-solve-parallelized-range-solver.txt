@@ -69,4 +69,3 @@ The structure is:
     },
 
 <tt>%COUNTS_HASH</tt> maps each datum to the number of times it appeared. So for example, if there were 100 solutions with 230 iterations, and 50 ones with 2019 iterations, then <tt>%COUNTS_HASH</tt> would be <tt>( 230 => 100, 2019 => 50, )</tt>.
-

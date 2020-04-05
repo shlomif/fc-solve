@@ -13,7 +13,6 @@ use FC_Solve::InlineWrap (
 #include "state.h"
 #include "state.c"
 #include "card.c"
-#include "inline.h"
 
 SV * non_parsable_state_as_string(char * input_state_string) {
 #ifdef FC_SOLVE_IMPLICIT_PARSABLE_OUTPUT
@@ -21,7 +20,7 @@ SV * non_parsable_state_as_string(char * input_state_string) {
 #else
     char ret[4096];
 
-    fcs_state_keyval_pair_t state;
+    fcs_state_keyval_pair state;
     DECLARE_IND_BUF_T(indirect_stacks_buffer);
     fc_solve_initial_user_state_to_c(
         input_state_string,
@@ -32,7 +31,7 @@ SV * non_parsable_state_as_string(char * input_state_string) {
         indirect_stacks_buffer
         );
 
-    fcs_state_locs_struct_t locs;
+    fcs_state_locs_struct locs;
     fc_solve_init_locs (&locs);
 
     fc_solve_state_as_string(
@@ -42,9 +41,9 @@ SV * non_parsable_state_as_string(char * input_state_string) {
         PASS_FREECELLS(4)
         PASS_STACKS(8)
         PASS_DECKS(1)
-        FC_SOLVE__PASS_PARSABLE(FALSE)
-        , FALSE
-        PASS_T(FALSE)
+        FC_SOLVE__PASS_PARSABLE(false)
+        , false
+        PASS_T(false)
     );
 
     return newSVpv(ret, 0);
@@ -68,9 +67,9 @@ package main;
 EOF
 
     # TEST
-    if (!defined($output_s))
+    if ( !defined($output_s) )
     {
-        ok (1, "Skipping for this version.");
+        ok( 1, "Skipping for this version." );
     }
     else
     {

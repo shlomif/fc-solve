@@ -8,41 +8,29 @@ use parent 'Games::Solitaire::Verify::Base';
 use YAML::XS qw(DumpFile LoadFile);
 use FC_Solve::Paths qw( is_freecell_only is_without_flares );
 
-use String::ShellQuote;
-use Carp;
+use Carp ();
 
 use Test::More;
-use FC_Solve::ShaAndLen;
+use FC_Solve::ShaAndLen ();
 use FC_Solve::GetOutput ();
 
-__PACKAGE__->mk_acc_ref([qw(
-    digests_storage_fn
-    digests_storage
-    trim_stats
-    )]);
-
-sub new
-{
-    my $class = shift;
-    my $self = {};
-
-    bless $self, $class;
-
-    $self->_init(@_);
-
-    return $self;
-}
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            digests_storage_fn
+            digests_storage
+            trim_stats
+            )
+    ]
+);
 
 sub _init
 {
-    my $self = shift;
-    my $args = shift;
-
-    $self->digests_storage_fn($args->{data_filename});
-    $self->digests_storage(LoadFile($self->digests_storage_fn()));
-    $self->trim_stats($args->{trim_stats});
-
-    return 0;
+    my ( $self, $args ) = @_;
+    $self->digests_storage_fn( $args->{data_filename} );
+    $self->digests_storage( LoadFile( $self->digests_storage_fn() ) );
+    $self->trim_stats( $args->{trim_stats} );
+    return;
 }
 
 sub end
@@ -50,71 +38,70 @@ sub end
     my $self = shift;
 
     # Make sure we do it only once.
-    if (defined($self->digests_storage_fn()))
+    if ( defined( $self->digests_storage_fn() ) )
     {
-        DumpFile($self->digests_storage_fn(), $self->digests_storage());
-        $self->digests_storage_fn(undef());
+        DumpFile( $self->digests_storage_fn(), $self->digests_storage() );
+        $self->digests_storage_fn( undef() );
     }
 }
 
 sub should_fill_in_id
 {
-    my $self = shift;
+    my ( $self, $id ) = @_;
 
-    my $id = shift;
-
-    return
-    (
-        exists($self->digests_storage->{digests}->{$id})
-        ?  (($ENV{'FCS_DIGESTS_REPLACE_IDS'} || "") =~ m{\Q,$id,\E} )
-        :  (($ENV{'FCS_DIGESTS_FILL_IDS'} || "") =~ m{\Q,$id,\E} )
+    return (
+        exists( $self->digests_storage->{digests}->{$id} )
+        ? ( ( $ENV{'FCS_DIGESTS_REPLACE_IDS'} || "" ) =~ m{\Q,$id,\E} )
+        : ( ( $ENV{'FCS_DIGESTS_FILL_IDS'} || "" ) =~ m{\Q,$id,\E} )
     );
 }
 
 # Short for a test to verify a solution.
 sub vtest
 {
-    my $self = shift;
-    my $args = shift;
-    my $msg = shift;
+    my ( $self, $args, $msg ) = @_;
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
-    if (exists($args->{variant}) and is_freecell_only())
+    if ( exists( $args->{variant} ) and is_freecell_only() )
     {
-        return ok(1, q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#);
+        return ok( 1,
+q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#
+        );
     }
-    if ($args->{with_flares} and is_without_flares())
+    if ( $args->{with_flares} and is_without_flares() )
     {
-        return ok(1, q#Test skipped because it uses flares, and we are running on a build without flares.#);
-    }
-
-    if (! $args->{id})
-    {
-        Carp::confess("ID not specified");
+        return ok( 1,
+q#Test skipped because it uses flares, and we are running on a build without flares.#
+        );
     }
 
     my $id = $args->{id};
-
-    my $output_file = $args->{output_file};
+    if ( !$id )
+    {
+        Carp::confess 'ID not specified';
+    }
+    my $output_file      = $args->{output_file};
     my $complete_command = $args->{complete_command};
 
     my $fc_solve_output;
-
     if ($complete_command)
     {
         open $fc_solve_output, "$complete_command |"
-            or Carp::confess "Error! Could not open the complete command pipeline";
+            or Carp::confess
+            'Error! Could not open the complete command pipeline';
     }
-    elsif (! $output_file)
+    elsif ( !$output_file )
     {
         $fc_solve_output = FC_Solve::GetOutput->new($args)->open_cmd_line->{fh};
     }
     else
     {
-        local $args->{theme} = ['-o', $output_file, @{$args->{theme} || [qw(-l gi)]}];
-        if (system(FC_Solve::GetOutput->new($args)->calc_cmd_line->{cmd_line}))
+        local $args->{theme} =
+            [ '-o', $output_file, @{ $args->{theme} || [qw(-l gi)] } ];
+        my @cmd = FC_Solve::GetOutput->new($args)->calc_cmd_line->{cmd_line};
+        if ( system(@cmd) )
         {
-            Carp::confess "Error: could not execute the fc-solve pipeline.";
+            Carp::confess 'Error: could not execute the fc-solve pipeline.';
         }
         open $fc_solve_output, "<", $output_file
             or Carp::confess("Could not open file for reading - $!");
@@ -122,9 +109,9 @@ sub vtest
 
     my $sha = FC_Solve::ShaAndLen->new();
 
-    if ($ENV{'FCS_DUMP_SOLS'})
+    if ( $ENV{'FCS_DUMP_SOLS'} )
     {
-        open my $out, ">", "$id.SOLUTION.txt"
+        open my $out, '>', "$id.SOLUTION.txt"
             or die "Cannot open '$id.txt' for writing";
 
         local $/;
@@ -132,13 +119,13 @@ sub vtest
 
         close($out);
 
-        return ok(1, $msg);
+        return ok( 1, $msg );
     }
     $sha->add_processed_slurp(
         $fc_solve_output,
         sub {
             my $s = shift;
-            if ($self->trim_stats)
+            if ( $self->trim_stats )
             {
                 $s =~ s/^(This game is solveable\.\n).*/$1/ms;
             }
@@ -147,41 +134,47 @@ sub vtest
         }
     );
 
-    close ($fc_solve_output);
+    close($fc_solve_output);
 
     if ($output_file)
     {
         unlink($output_file);
     }
 
-    if ($self->should_fill_in_id($id))
+    my $dump = 0;
+    if ( $self->should_fill_in_id($id) )
     {
-        $self->digests_storage->{digests}->{$id} =
-        {
-            'len' => $sha->len(),
+        $self->digests_storage->{digests}->{$id} = {
+            'len'       => $sha->len(),
             'hexdigest' => $sha->hexdigest(),
-        }
+        };
+        $dump = 1;
     }
     my $info = $self->digests_storage->{digests}->{$id};
 
-    my $test_verdict = ok (
-        ($sha->hexdigest() eq $info->{'hexdigest'}) &&
-        ($sha->len() eq $info->{'len'})
-        , $msg);
+    my $test_verdict = ok(
+        ( $sha->hexdigest() eq $info->{'hexdigest'} )
+            && ( $sha->len() eq $info->{'len'} ),
+        $msg
+    );
 
-    if (!$test_verdict)
+    if ( !$test_verdict )
     {
-        diag( "Expected Digest: " . $info->{'hexdigest'}. "\n"
-            . "Got Digest: " . $sha->hexdigest() . "\n"
-            . "Expected Len: " . $info->{'len'} . "\n"
-            . "Got Len: " . $sha->len(). "\n"
-        );
+        diag(<<"EOF");
+Expected Digest: $info->{hexdigest}
+Got Digest: @{[$sha->hexdigest()]}
+Expected Len: $info->{len}
+Got Len: @{[$sha->len()]}
+EOF
     }
 
     close($fc_solve_output);
 
+    if ($dump)
+    {
+        $self->end;
+    }
     return $test_verdict;
 }
 
 1;
-

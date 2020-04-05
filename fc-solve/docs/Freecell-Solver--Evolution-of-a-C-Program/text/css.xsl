@@ -7,4 +7,3 @@
 <xsl:param name="html.stylesheet" select="'book.css'"/>
 
 </xsl:stylesheet>
-

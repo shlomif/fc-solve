@@ -1,125 +1,181 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
+use 5.014;
 use strict;
 use warnings;
-
 use autodie;
 
-# use File::Which;
-# use File::Basename;
-use Cwd;
-use File::Spec;
-use File::Copy;
-use File::Path;
-use Getopt::Long;
-use Env::Path;
-use Path::Tiny qw( path );
-use File::Basename qw( basename dirname );
-# use Time::HiRes qw(time);
+use Getopt::Long qw/ GetOptions /;
+use Env::Path ();
+use Path::Tiny qw/ path /;
+use File::Basename qw/ basename /;
+use CHI ();
 
-
-my $bindir = dirname( __FILE__ );
-my $abs_bindir = File::Spec->rel2abs($bindir);
+my $glob_was_set = 0;
+my $rerun        = 0;
+my $bindir       = path(__FILE__)->parent;
+my $abs_bindir   = $bindir->absolute;
+my %progs;
 
 # Whether to use prove instead of runprove.
 my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
-my $num_jobs = $ENV{TEST_JOBS};
+my $num_jobs  = $ENV{TEST_JOBS};
+my $KEY       = 'FC_SOLVE__TESTS_RERUNS_CACHE_DATA_DIR';
+my $cache     = CHI->new(
+    driver => 'File',
+    root_dir =>
+        ( $ENV{$KEY} || ( ( $ENV{TMPDIR} || '/tmp' ) . '/fc-solve1temp' ) )
+);
+require lib;
+lib->import("$abs_bindir/t/lib");
+require FC_Solve::Test::Valgrind::Data;
+require FC_Solve::Paths::Base;
 
 sub _is_parallized
 {
-    return ($use_prove && $num_jobs);
+    return ( $use_prove && $num_jobs );
 }
 
 sub _calc_prove
 {
-    return ['prove', (defined($num_jobs) ? sprintf("-j%d", $num_jobs) : ())];
+    return [ 'prove',
+        ( defined($num_jobs) ? sprintf( "-j%d", $num_jobs ) : () ) ];
 }
+
+my $exit_success;
 
 sub run_tests
 {
     my $tests = shift;
 
-    exec(($use_prove ? @{_calc_prove()} : 'runprove'), @$tests);
+    my @cmd = ( ( $use_prove ? @{ _calc_prove() } : 'runprove' ), @$tests );
+    if (0)
+    {
+        @cmd = (
+            ( $use_prove ? @{ _calc_prove() } : 'runprove' ),
+            '-v', grep { /build-proc/ || /\.py\z/ } @$tests
+        );
+    }
+    if ( $ENV{RUN_TESTS_VERBOSE} )
+    {
+        print "Running [@cmd]\n";
+    }
+
+    # Workaround for Windows spawning-SNAFU.
+    my $exit_code = system(@cmd);
+    if ( !$exit_code and $rerun > 0 and ( !$glob_was_set ) )
+    {
+        foreach my $prog ( keys %progs )
+        {
+            $cache->set( $progs{$prog}, 1, '100 days' );
+        }
+    }
+    exit( $exit_success ? 0 : $exit_code ? (-1) : 0 );
 }
 
 my $tests_glob = "*.{t.exe,py,t}";
+my $exclude_re_s;
+my $force_rebuild = delete( $ENV{REBUILD} );
 
+my @execute;
 GetOptions(
-    '--glob=s' => \$tests_glob,
-    '--prove!' => \$use_prove,
-    '--jobs|j=n' => \$num_jobs,
-) or die "--glob='tests_glob'";
+    '--exclude-re=s' => \$exclude_re_s,
+    '--execute|e=s'  => \@execute,
+    '--exit0!'       => \$exit_success,
+    '--glob=s'       => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
+    '--prove!'       => \$use_prove,
+    '--rebuild!'     => \$force_rebuild,
+    '--jobs|j=n'     => \$num_jobs,
+) or die "Wrong opts - $!";
+my %binaries;
+%progs =
+    map { $_ => +{ binaries => {}, } }
+    map {
+    FC_Solve::Paths::Base::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } )
+    } values %{ FC_Solve::Test::Valgrind::Data->get_hash };
+
+use Digest::SHA ();
+if ( $FC_Solve::Paths::Base::IS_WIN || $force_rebuild )
+{
+    ++$rerun;
+}
+else
+{
+    foreach my $prog ( keys %progs )
+    {
+        say $prog;
+        die if !-e $prog;
+        foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
+        {
+            say "bin $prog $bin";
+            $progs{$prog}{binaries}{$bin} //= (
+                $binaries{$bin} //= do
+                {
+                    Digest::SHA->new(256)->addfile($bin)->b64digest;
+                }
+            );
+        }
+        my $val = $cache->get( $progs{$prog} );
+        if ( !$val )
+        {
+            ++$rerun;
+        }
+    }
+}
+$glob_was_set ||= $exclude_re_s;
+
+sub myglob
+{
+    return glob( shift . "/$tests_glob" );
+}
 
 {
-    my $fcs_path = Cwd::getcwd();
-    local $ENV{FCS_PATH} = $fcs_path;
-    local $ENV{FCS_SRC_PATH} = $abs_bindir;
+    my $fcs_path = Path::Tiny->cwd;
+    local $ENV{FCS_PATH}                = $fcs_path;
+    local $ENV{FCS_SRC_PATH}            = $abs_bindir;
+    local $ENV{PYTHONDONTWRITEBYTECODE} = '1';
 
-    local $ENV{FCS_TEST_TAGS} = join ' ', sort { $a cmp $b} (path(
-        File::Spec->catdir(
-            File::Spec->curdir(), "t", "TAGS.txt"
-        )
-    )->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g);
+    local $ENV{FCS_TEST_TAGS} = join ' ',
+        sort { $a cmp $b }
+        ( path('.')->child(qw/t TAGS.txt/)->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g );
 
-    my $testing_preset_rc;
+    my $preset_dest     = path('.')->child( "t", "Presets" );
+    my $preset_src      = $abs_bindir->child("Presets");
+    my $pset_files_dest = $preset_dest->child("presets");
+    my $pset_files_src  = $preset_src->child("presets");
+    $pset_files_dest->mkpath;
+    foreach my $f ( path($pset_files_src)->children(qr{\.sh\z}) )
     {
-        my $preset_dest = File::Spec->catdir(
-            File::Spec->curdir(), "t", "Presets"
-        );
-        my $preset_src = File::Spec->catfile(
-            $abs_bindir, "Presets"
-        );
-        my $pset_files_dest = File::Spec->catdir($preset_dest, "presets");
-        my $pset_files_src  = File::Spec->catdir($preset_src, "presets");
-        mkpath($pset_files_dest);
-        opendir (my $d, $pset_files_src);
-        while (defined(my $f = readdir($d)))
-        {
-            if ($f =~ m{\.sh\z})
-            {
-                copy(
-                    File::Spec->catfile($pset_files_src, $f),
-                    File::Spec->catfile($pset_files_dest, $f)
-                );
-            }
-        }
-        closedir($d);
-
-        my $files_dest_abs = File::Spec->rel2abs(File::Spec->catfile($pset_files_dest, "STUB.TXT"));
-
-        $files_dest_abs =~ s{STUB\.TXT\z}{};
-
-        $testing_preset_rc = File::Spec->rel2abs(File::Spec->catfile($preset_dest, "presetrc"));
-
-        open my $in, "<", File::Spec->catfile($fcs_path, "Presets", "presetrc");
-        open my $out, ">", $testing_preset_rc;
-        while (my $line = <$in>)
-        {
-            $line =~ s{\A(dir=)(.*)}{$1$files_dest_abs\n}ms;
-            print {$out} $line;
-        }
-        close($in);
-        close($out);
+        $f->copy( $pset_files_dest->child( $f->basename ) );
     }
 
+    my $files_dest_abs = $pset_files_dest->child("STUB.TXT")->absolute;
+
+    $files_dest_abs =~ s{STUB\.TXT\z}{};
+
+    my $testing_preset_rc = $preset_dest->child("presetrc")->absolute;
+    $testing_preset_rc->spew_utf8(
+        $fcs_path->child( "Presets", "presetrc" )->slurp_utf8 =~
+            s{^(dir=)([^\n]*)}{$1$files_dest_abs}gmrs );
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
-    local $ENV{FREECELL_SOLVER_QUIET} = 1;
+    local $ENV{FREECELL_SOLVER_QUIET}    = 1;
     Env::Path->PATH->Prepend(
-        File::Spec->catdir(Cwd::getcwd(), "board_gen"),
-        File::Spec->catdir($abs_bindir, "t", "scripts"),
+        Path::Tiny->cwd->child("board_gen"),
+        $abs_bindir->child( "t", "scripts" ),
     );
 
-    Env::Path->CPATH->Prepend(
-        $abs_bindir,
-    );
+    Env::Path->CPATH->Prepend( $abs_bindir, );
 
-    Env::Path->LD_LIBRARY_PATH->Prepend(
-        $fcs_path
-    );
+    Env::Path->LD_LIBRARY_PATH->Prepend($fcs_path);
+    if ($FC_Solve::Paths::Base::IS_WIN)
+    {
+        # For the shared objects.
+        Env::Path->PATH->Append($fcs_path);
+    }
 
-    my $foo_lib_dir = File::Spec->catdir($abs_bindir, "t", "lib");
-    foreach my $add_lib (Env::Path->PERL5LIB(), Env::Path->PYTHONPATH())
+    my $foo_lib_dir = $abs_bindir->child( "t", "lib" );
+    foreach my $add_lib ( Env::Path->PERL5LIB(), Env::Path->PYTHONPATH() )
     {
         $add_lib->Append($foo_lib_dir);
     }
@@ -127,133 +183,120 @@ GetOptions(
     my $get_config_fn = sub {
         my $basename = shift;
 
-        return
-        File::Spec->rel2abs(
-            File::Spec->catdir(
-                $bindir,
-                "t", "config", $basename
-            ),
-        )
-        ;
+        return $bindir->child( "t", "config", $basename )->absolute;
     };
+    local $ENV{CMOCKA_MESSAGE_OUTPUT} = 'TAP';
 
-    local $ENV{HARNESS_ALT_INTRP_FILE} =
-        $get_config_fn->("alternate-interpreters.yml");
+    local $ENV{HARNESS_ALT_INTRP_FILE} = $get_config_fn->(
+        $FC_Solve::Paths::Base::IS_WIN
+        ? "alternate-interpreters--mswin.yml"
+        : "alternate-interpreters.yml"
+    );
 
     local $ENV{HARNESS_TRIM_FNS} = 'keep:1';
 
-    local $ENV{HARNESS_PLUGINS} = join(' ', qw(
-        BreakOnFailure ColorSummary ColorFileVerdicts AlternateInterpreters
-        TrimDisplayedFilenames
-        )
+    local $ENV{HARNESS_PLUGINS} = join(
+        ' ', qw(
+            BreakOnFailure ColorSummary ColorFileVerdicts AlternateInterpreters
+            TrimDisplayedFilenames
+            )
     );
 
-    my $is_ninja = (-e "build.ninja");
+    my $is_ninja = ( -e "build.ninja" );
+    my $MAKE     = $FC_Solve::Paths::Base::IS_WIN ? 'gmake' : 'make';
     if ($is_ninja)
     {
-        system("ninja", "boards");
+        system( "ninja", "boards" );
     }
     else
     {
-        if (system("make", "-s", "boards"))
+        if ( system( $MAKE, "-s", "boards" ) )
         {
-            die "make failed";
+            die "$MAKE failed";
         }
     }
 
     chdir("t");
 
-    if (! $is_ninja)
+    if ( !$is_ninja )
     {
-        if (system("make", "-s"))
+        if ( system( $MAKE, "-s" ) )
         {
-            die "make failed";
+            die "$MAKE failed";
         }
     }
 
-    # Cancelled because it is done by the build system.
-    # if (! glob('t/valgrind--*.t'))
-    # {
-        # my $start = time();
-        # system($^X, "$abs_bindir/scripts/generate-individual-valgrind-test-scripts.pl");
-        # my $end = time();
-        # print "StartGen=$start\nEndGen=$end\n";
-    # }
-
     # Put the valgrind tests last, because they take a long time.
     my @tests =
-        sort
-        {
-            (
-                (($a =~ /valgrind/) <=> ($b =~ /valgrind/))
-                    *
-                (_is_parallized() ? -1 : 1)
-            )
-                ||
-            (basename($a) cmp basename($b))
-                ||
-            ($a cmp $b)
-        }
-        (glob("t/$tests_glob"),glob("./$tests_glob"),
-            (
-                ($fcs_path ne $abs_bindir)
-                ? (glob("$abs_bindir/t/t/$tests_glob"))
-                : ()
-            ),
-        )
-        ;
+        sort {
+        ( ( ( $a =~ /valgrind/ ) <=> ( $b =~ /valgrind/ ) ) *
+                ( _is_parallized() ? -1 : 1 ) )
+            || ( basename($a) cmp basename($b) )
+            || ( $a cmp $b )
+        } (
+        myglob('t'),
+        myglob('.'),
+        (
+              ( $fcs_path ne $abs_bindir )
+            ? ( myglob("$abs_bindir/t/t") )
+            : ()
+        ),
+        );
 
-    if (! $ENV{FCS_TEST_BUILD})
+    if ( defined($exclude_re_s) )
+    {
+        my $re = qr/$exclude_re_s/ms;
+        @tests = grep { basename($_) !~ $re } @tests;
+    }
+    @tests = grep { basename($_) !~ /\A(?:lextab|yacctab)\.py\z/ } @tests;
+
+    if ( !$ENV{FCS_TEST_BUILD} )
     {
         @tests = grep { !/build-process/ } @tests;
     }
 
-    if ($ENV{FCS_TEST_WITHOUT_VALGRIND})
+    if ( $ENV{FCS_TEST_WITHOUT_VALGRIND} or ( $rerun == 0 ) )
     {
         @tests = grep { !/valgrind/ } @tests;
     }
-
+    if ( $rerun == 0 )
     {
-        print STDERR "FCS_PATH = $ENV{FCS_PATH}\n";
-        print STDERR "FCS_SRC_PATH = $ENV{FCS_SRC_PATH}\n";
-        if ($ENV{FCS_TEST_SHELL})
+        @tests = grep { !/(?:cmpdigest|verify)--/ } @tests;
+    }
+
+    print STDERR <<"EOF";
+FCS_PATH = $ENV{FCS_PATH}
+FCS_SRC_PATH = $ENV{FCS_SRC_PATH}
+FCS_TEST_TAGS = <$ENV{FCS_TEST_TAGS}>
+EOF
+
+    if ( $ENV{FCS_TEST_SHELL} )
+    {
+        system( $ENV{SHELL} );
+    }
+    elsif (@execute)
+    {
+        if ( system(@execute) )
         {
-            system("bash");
+            die "execute failed";
         }
-        else
-        {
-            run_tests(\@tests);
-        }
+    }
+    else
+    {
+        run_tests( \@tests );
     }
 }
 
+__END__
 
 =head1 COPYRIGHT AND LICENSE
 
+This file is part of Freecell Solver. It is subject to the license terms in
+the COPYING.txt file found in the top-level directory of this distribution
+and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+Freecell Solver, including this file, may be copied, modified, propagated,
+or distributed except according to the terms contained in the COPYING file.
+
 Copyright (c) 2000 Shlomi Fish
 
-Permission is hereby granted, free of charge, to any person
-obtaining a copy of this software and associated documentation
-files (the "Software"), to deal in the Software without
-restriction, including without limitation the rights to use,
-copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the
-Software is furnished to do so, subject to the following
-conditions:
-
-The above copyright notice and this permission notice shall be
-included in all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
-EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
-OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
-NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
-HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
-WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
-OTHER DEALINGS IN THE SOFTWARE.
-
-
-
 =cut
-

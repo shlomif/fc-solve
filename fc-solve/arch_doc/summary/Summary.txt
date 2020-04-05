@@ -269,9 +269,9 @@ Overview of the core modules:
     This module contains the user API. It manages a sequence of instances
     that can be used to solve a board, and then recycled to solve another.
     It uses intrface.c to perform its operations, and do the actual
-    configuring and solving. It supplies the file fcs_user.h which
-    contains one function for doing any given operation, and these functions
-    are implemented in lib.c.
+    configuring and solving. It supplies the file freecell-solver/fcs_user.h
+    which contains one function for doing any given operation, and these
+    functions are implemented in lib.c.
 
     cmd_line.c:
     -----------

@@ -1,4 +1,3 @@
-
 all: compile
 
 compile: build
@@ -40,4 +39,3 @@ upload:
 	rsync -a --progress -v Makefile "$${HOMEPAGE_SSH_PATH}/Files/files/code/fcs/Makefile"
 
 .PHONY: download all compile build download fcs_trunk
-

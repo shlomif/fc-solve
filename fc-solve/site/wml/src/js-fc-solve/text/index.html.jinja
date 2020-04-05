@@ -1,0 +1,279 @@
+{% extends "template.jinja" %}
+{% import "Inc/js_fc_solve.jinja" as jsfcs %}
+{% block title %}Online Freecell solver{% endblock %}
+{% block page_extra_head_elements %}
+{{ jsfcs.page_extra_head_elements(base_path) }}
+{% endblock %}
+{% block body %}
+
+
+
+{% macro gen_desc() %}
+<p>
+An online solver for
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
+card solitaire game, and <a href="#other_games">several related solitaire games</a>. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
+</p>
+<section class="h2 note" id="ms_fc_w10_note">
+    <header><h2>Note to Microsoft Windows 10's FreeCell Users!</h2></header>
+    {{ msfreecell_note }}
+    <button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
+</section>
+{% endmacro %}
+
+{% macro emscripten_common(incs, subject) %}
+{{ jsfcs.emscripten_common__header(base_path, subject, gen_desc()) }}
+<script>
+{{ jsfcs.set_up_requirejs(base_path)}}
+require(['./solver-freecell'], function (solver) {
+    {{ incs }} {
+    {{ jsfcs.set_up_tabs()}}
+    web_fc_solve_ui.set_up(solver);
+    $( "#output_tabs" ).tabs();
+});
+});
+</script>
+
+{% endmacro %}
+{{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell)" , subject="Solver" ) }}
+<div id="fc_solve_tabs" class="fc_solve_tabs">
+
+<ul>
+<li><a href="#fc_solve_tabs__numbered_deal">Solve a Numbered Deal</a></li>
+<li><a href="#fc_solve_tabs__any_board">Solve any Board</a></li>
+</ul>
+
+<div id="fc_solve_tabs__numbered_deal" class="tab">
+
+<p class="first">
+<label for="deal_number">Enter an MS Freecell Deal:</label>
+<input type="text" id="deal_number" size="12" class="phoenix" />
+<button id="populate_input" title="Populate Input with a Windows Freecell Numbered Deal">Populate</button><br />
+</p>
+
+<div class="fcs_common">
+
+{{ jsfcs.stdin_and_buttons(main_id="run_do_solve",main_text="Solve!")}}
+<br />
+<label for="preset">Solving method:</label>
+<select id="preset" class="phoenix">
+<option value="lg" selected="selected">“Looking Glass” (fastest on average)</option>
+<option value="ve">“Video Editing” (short solutions)</option>
+<option value="obf">“One Big Family” (fast on average)</option>
+<option value="default">Default</option>
+</select>
+
+</div>
+
+</div>
+
+<div id="fc_solve_tabs__any_board" class="tab">
+
+<p class="first">
+Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distro/README.html">fc-solve format</a>:<br />
+</p>
+
+<div class="fcs_common">
+</div>
+
+</div>
+
+</div>
+
+<div class="diags_wrap">
+
+<p id="status_wrap">
+
+<strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
+
+</p>
+
+<div class="hide" id="board_parse__wrap">
+<h2>Board Input Parsing Errors:</h2>
+<div id="board_parse_error"></div>
+</div>
+
+</div>
+
+<div id="fcs_advanced">
+{{ games1 }}
+{{ fc_listbox }}
+{{ cols_listbox }}
+<br />
+<label for="string_params">String Parameters:</label><br />
+<textarea class="emscripten phoenix" id="string_params" cols="50" rows="15"></textarea>
+<p>
+(Format as a preset file, with backslashes at the end of lines. See the
+<a href="{{ base_path }}docs/">online documentation</a> for information regarding syntax.)
+</p>
+</div>
+
+{% macro output_opt(id_base, value, title, sel=false) %}
+<input name="unicode_suits" id="unicode_suits__{{ id_base }}" type="radio" title="{{ title }}" class="phoenix" value="{{ value }}" {%if sel %} checked="checked"{%endif%}/><label for="unicode_suits__{{ id_base }}">{{ title }}</label><br />
+{% endmacro %}
+
+{% macro output_controls() %}
+<div class="out_controls">
+
+<input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
+<fieldset>
+<legend>Cards display</legend>
+{{ output_opt(id_base="ascii",value="0",title="ASCII",sel="true") }}
+{{ output_opt(id_base="unisuits",value="1",title="Unicode Suits") }}
+{{ output_opt(id_base="unicards",value="2",title="Unicode Cards") }}
+</fieldset>
+<br />
+<button id="clear_output" title="Clear the Output Box">Clear Output</button>
+</div>
+
+{% endmacro %}
+
+
+<label id="output_label" for="output">Output:</label>
+
+<div id="output_tabs" class="output_tabs">
+<ul>
+<li><a href="#output_tabs__animated">Animated</a></li>
+<li><a href="#output_tabs__text">Text</a></li>
+</ul>
+<div id="output_tabs__animated" class="tab">
+<div class="solitairey_body_margin">
+<div class="solitairey_body" id="solitairey_body">
+
+{% if false %}
+
+<img src="loading.gif" class="loading hidden" alt="Loading" />
+<button id="redeal">Redeal</button>
+<span style="color:white;">Deal Number:</span> <input id="deal_num_shlomify" size="30" name="deal_num_shlomify" readonly="readonly"/>
+	<div id="game-chooser">
+        <button id="close-chooser">Return to game</button>
+	</div>
+	<img src="loading.gif" class="loading hidden" alt="Loading" />
+	<div class="chromestore hidden">
+		<a class="hide">[Hide]</a>
+        <a href="https://chrome.google.com/webstore/detail/dofbnmhnoodmmlhflbcihicmbnhhinhp">
+            <img alt="Chrome Web Store" src="ChromeWebStore_Badge_v2_206x58.png" />
+        </a>
+	</div>
+
+{% endif %}
+
+</div>
+</div>
+</div>
+<div id="output_tabs__text" class="tab">
+<div class="output_form">
+{{ output_controls() }}
+
+<div id="dynamic_output"></div>
+<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
+
+</div>
+</div>
+</div>
+<br />
+
+{{ jsfcs.fc_solve_bookmark__form() }}
+
+<h2 id="how_to_use">How to Use</h2>
+
+<p>
+Enter a board in <a href="#stdin">the input text area</a> in
+<a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
+Solver’s input format</a> with each line of input representing a column (or
+stack) of cards. Freecells and foundations can also be specified. Numbered
+layouts (compatible with
+<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Microsoft
+Windows FreeCell</a>, FreeCell Pro and compatible
+Freecell implementations) can be input using the
+<a href="#deal_number">deal number feature</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
+run the solver, and assuming it was successful, you will be able to preview
+an <a href="#solitairey_body">animated solution</a> or read
+and/or copy the output from <a href="#output">the output box</a>.
+</p>
+
+<p>
+Enjoy!
+</p>
+
+<h3 id="other_games">Solving other, similar, games</h3>
+
+<p>
+Select the game from <a href="#game_type_label">the drop-down</a>.
+</p>
+
+<h2 id="technology">Technology</h2>
+
+{{ jsfcs.fc_solve_jsfcs__credits__common()}}
+
+<li>
+<p>
+<a href="http://code.google.com/p/joose-js/">Joose</a> - an object oriented
+programming system for JavaScript (inspired by
+<a href="http://moose.iinteractive.com/">Perl's Moose</a>). <b>Note:</b>
+it is no longer used here due to not being compatible with Node.js and
+non-browser environments.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://getfirebug.com/">Firebug</a> - a web development tool for
+Firefox, that provides a JavaScript debugger, a CSS manipulation tool, DOM
+introspection and more. (The Opera web browser's Opera Dragonfly does something
+similar for Opera, and is also useful.)
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://www.google.com/webfonts">Google Web Fonts</a> - provides an
+attractive font for the button leading to this page.
+</p>
+</li>
+</ul>
+
+<h2 id="credits">Credits</h2>
+<ul>
+
+<li>
+<p>
+<a href="https://github.com/kripken">Alon Zakai</a> - writing
+<a href="https://github.com/kripken/emscripten">emscripten</a>, the
+LLVM-to-JavaScript compiler that was used to prepare this page, based
+on the original C (gnu99) source, and answering some bug reports and questions
+I filed about it.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://garage-coding.com/">Stefan Petrea</a> - inspired the
+implementation of the populate-with-sample-board button.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://en.wikipedia.org/wiki/User:Amire80">Amir Aharoni</a> - tipped
+me regarding integrating <code>@font-face</code> into my CSS.
+</p>
+</li>
+
+<li>
+<p>
+<a href="mailto:ari.i.becker@gmail.com">Ari Becker</a> - tipped me regarding
+unsolvable deals.
+</p>
+</li>
+
+</ul>
+
+{% endblock %}

@@ -1,89 +1,68 @@
-/* Copyright (c) 2011 Shlomi Fish
- *
- * Permission is hereby granted, free of charge, to any person
- * obtaining a copy of this software and associated documentation
- * files (the "Software"), to deal in the Software without
- * restriction, including without limitation the rights to use,
- * copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the
- * Software is furnished to do so, subject to the following
- * conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
- * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
- * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- * HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY,
- * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
- * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
- * OTHER DEALINGS IN THE SOFTWARE.
- */
-/*
- * A test for the bit reader and writer.
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2011 Shlomi Fish
+// A test for the bit reader and writer.
+#include "rinutils/rin_cmocka.h"
+#include "freecell-solver/fcs_conf.h"
+#include "rinutils/unused.h"
+#include "rinutils/bit_rw.h"
 
-#include <string.h>
-#include <stdio.h>
-
-#include <tap.h>
-#include "../bit_rw.h"
-
-static int main_tests(void)
+static void main_tests(void **state GCC_UNUSED)
 {
     {
         unsigned char buffer[10];
-        fc_solve_bit_writer_t writer;
+        rin_bit_writer writer;
 
-        fc_solve_bit_writer_init(&writer, buffer);
+        rin_bit_writer_init_and_clear(&writer, buffer);
 
-        fc_solve_bit_writer_write(&writer, 4, 5);
-        fc_solve_bit_writer_write(&writer, 2, 1);
-
-        /* TEST
-         * */
-        ok (buffer[0] == (5 | (1 << 4)), "Write works.");
-
-        fc_solve_bit_writer_write(&writer, 4, (2 | (3 << 2)));
+        rin_bit_writer_write(&writer, 4, 5);
+        rin_bit_writer_write(&writer, 2, 1);
 
         /* TEST
          * */
-        ok (buffer[0] == (5 | (1 << 4) | (2 << 6)), "Extra write works.");
+        assert_int_equal(buffer[0], (5 | (1 << 4))); // "Write works."
+
+        rin_bit_writer_write(&writer, 4, (2 | (3 << 2)));
 
         /* TEST
          * */
-        ok (buffer[1] == 3, "Extra byte write works.");
+        assert_int_equal(
+            buffer[0], (5 | (1 << 4) | (2 << 6))); // "Extra write works."
+
+        /* TEST
+         * */
+        assert_int_equal(buffer[1], 3); // "Extra byte write works."
 
         {
-            fc_solve_bit_reader_t reader;
+            rin_bit_reader reader;
 
-            fc_solve_bit_reader_init(&reader, buffer);
-
-            /* TEST
-             * */
-            ok (fc_solve_bit_reader_read(&reader, 4) == 5,
-                    "reader 1");
+            rin_bit_reader_init(&reader, buffer);
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 2) == 1,
-                    "reader 2");
+            assert_int_equal(rin_bit_reader_read(&reader, 4), 5); // "reader 1"
 
             /* TEST
              * */
-            ok (fc_solve_bit_reader_read(&reader, 4) == (2 | (3 << 2)),
-                    "reader 3");
+            assert_int_equal(rin_bit_reader_read(&reader, 2), 1); // "reader 2"
+
+            /* TEST
+             * */
+            assert_int_equal(rin_bit_reader_read(&reader, 4),
+                (2 | (3 << 2))); // "reader 3"
         }
     }
-
-    return 0;
 }
 
 int main(void)
 {
-    plan_tests(6);
-    main_tests();
-    return exit_status();
+    // plan([% num_tests %]);
+    const struct CMUnitTest tests[] = {
+        cmocka_unit_test(main_tests),
+    };
+    return cmocka_run_group_tests(tests, NULL, NULL);
 }

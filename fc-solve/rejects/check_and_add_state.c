@@ -108,4 +108,3 @@ static GCC_INLINE void fc_solve_cache_talon(
         existing_state_val = pos_ptr->val;
         is_state_new = FALSE;
     }
-
