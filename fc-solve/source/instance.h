@@ -567,7 +567,7 @@ struct fc_solve_instance_struct
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     GHashTable *hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    hash_table hash;
+    hash_table *hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fcs_states_google_hash_handle hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
@@ -577,7 +577,7 @@ struct fc_solve_instance_struct
 #if defined(INDIRECT_STACK_STATES)
 // The storage mechanism for the stacks
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    hash_table stacks_hash;
+    hash_table *stacks_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_table *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)

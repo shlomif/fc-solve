@@ -16,24 +16,27 @@
     This function "rehashes" a hash. I.e: it increases the size of its
     hash table, allowing for smaller chains, and faster lookup.
   */
-static inline void fc_solve_hash_rehash(hash_table *const hash)
+static inline void fc_solve_hash_rehash(hash_table **const hash)
 {
-    const_AUTO(old_size, hash->size);
+    const_AUTO(old_size, hash[0]->size);
 
     const_AUTO(new_size, old_size << 1);
 
     /* Check for overflow. */
     if (new_size < old_size)
     {
-        hash->max_num_elems_before_resize = FCS_INT_LIMIT_MAX;
+        hash[0]->max_num_elems_before_resize = FCS_INT_LIMIT_MAX;
         return;
     }
 
     const size_t new_size_bitmask = new_size - 1;
 
-    const_SLOT(entries, hash);
-    hash_table_entry *const new_entries =
-        calloc(new_size, sizeof(new_entries[0]));
+    hash_table_entry *entries = hash[0]->entries;
+    const_AUTO(size_entries, new_size * sizeof(hash_table_entry));
+    hash_table *const new_hash = malloc(sizeof(*new_hash) + size_entries);
+    *new_hash = **hash;
+    hash_table_entry *const new_entries = new_hash->entries;
+    memset(new_entries, '\0', size_entries);
 
     /* Copy the items to the new hash while not allocating them again */
     for (size_t i = 0; i < old_size; i++)
@@ -61,13 +64,13 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
     };
 
     /* Free the entries of the old hash */
-    free(hash->entries);
+    free(*hash);
 
     /* Copy the new hash to the old one */
-    hash->entries = new_entries;
-    hash->size = new_size;
-    hash->size_bitmask = new_size_bitmask;
-    fcs_hash_set_max_num_elems(hash, new_size);
+    new_hash->size = new_size;
+    new_hash->size_bitmask = new_size_bitmask;
+    fcs_hash_set_max_num_elems(new_hash, new_size);
+    *hash = new_hash;
 }
 
 /*
@@ -75,7 +78,7 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
 static inline void *fc_solve_hash_insert(
-    hash_table *const hash, void *const key,
+    hash_table **const hash_ptr, void *const key,
 #ifdef FCS_RCS_STATES
     void *const key_id,
 #endif
@@ -86,6 +89,7 @@ static inline void *fc_solve_hash_insert(
 #endif
 )
 {
+    var_AUTO(hash, *hash_ptr);
 #if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
     const_SLOT(hash_type, hash);
 #endif
@@ -190,7 +194,7 @@ static inline void *fc_solve_hash_insert(
 
     if ((++(hash->num_elems)) > hash->max_num_elems_before_resize)
     {
-        fc_solve_hash_rehash(hash);
+        fc_solve_hash_rehash(hash_ptr);
     }
 
     return NULL;

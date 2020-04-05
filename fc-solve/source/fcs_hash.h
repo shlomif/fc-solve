@@ -63,8 +63,6 @@ typedef int (*hash_compare_function)(const void *const, const void *const);
 
 typedef struct
 {
-    /* The vector of the hash table itself */
-    hash_table_entry *entries;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     /* The list of vacant items as freed by the garbage collector. Use
      * if before allocating more. */
@@ -97,6 +95,8 @@ typedef struct
 #ifdef FCS_RCS_STATES
     struct fc_solve_instance_struct *instance;
 #endif
+    /* The vector of the hash table itself */
+    hash_table_entry entries[];
 } hash_table;
 
 static inline void fcs_hash_set_max_num_elems(
@@ -106,7 +106,7 @@ static inline void fcs_hash_set_max_num_elems(
 }
 
 static inline void fc_solve_hash_init(
-    meta_allocator *const meta_alloc, hash_table *const hash,
+    meta_allocator *const meta_alloc, hash_table **const hash_ptr,
 #ifdef FCS_INLINED_HASH_COMPARISON
     const enum FCS_INLINED_HASH_DATA_TYPE hash_type
 #else
@@ -119,8 +119,11 @@ static inline void fc_solve_hash_init(
 #endif
 )
 {
-    const typeof(hash->size) initial_hash_size = 2048;
+    const typeof(hash_ptr[0]->size) initial_hash_size = 2048;
 
+    const_AUTO(size_entries, initial_hash_size * sizeof(hash_table_entry));
+    hash_table *const hash = malloc(sizeof(*hash) + size_entries);
+    *hash_ptr = hash;
     hash->size = initial_hash_size;
     hash->size_bitmask = initial_hash_size - 1;
     fcs_hash_set_max_num_elems(hash, initial_hash_size);
@@ -130,8 +133,7 @@ static inline void fc_solve_hash_init(
     /* Allocate a table of size entries */
     /* Initialize all the cells of the hash table to NULL, which indicate
        that the end of each chain is right at the start. */
-    hash->entries =
-        (hash_table_entry *)calloc(initial_hash_size, sizeof(hash->entries[0]));
+    memset(hash->entries, '\0', size_entries);
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
     hash->list_of_vacant_items = NULL;
@@ -156,11 +158,11 @@ static inline void fc_solve_hash_recycle(hash_table *const hash)
     hash->num_elems = 0;
 }
 
-static inline void fc_solve_hash_free(hash_table *const hash)
+static inline void fc_solve_hash_free(hash_table **const hash)
 {
-    fc_solve_compact_allocator_finish(&(hash->allocator));
-    free(hash->entries);
-    hash->entries = NULL;
+    fc_solve_compact_allocator_finish(&(hash[0]->allocator));
+    free(hash[0]);
+    hash[0] = NULL;
 }
 
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
@@ -169,7 +171,7 @@ static inline void fc_solve_hash_foreach(hash_table *const hash,
     void *const context)
 {
     const_SLOT(size, hash);
-    var_AUTO(entries, hash->entries);
+    hash_table_entry *entries = hash->entries;
     for (size_t i = 0; i < size; ++i)
     {
         hash_item **item = &(entries[i].first_item);

@@ -688,11 +688,11 @@ static inline void recycle_inst(fcs_instance *const instance)
 {
     fc_solve_finish_instance(instance);
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_recycle(&(instance->hash));
+    fc_solve_hash_recycle(instance->hash);
 #endif
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    fc_solve_hash_recycle(&(instance->stacks_hash));
+    fc_solve_hash_recycle(instance->stacks_hash);
 #endif
 #endif
 #ifdef FCS_WITH_MOVES
@@ -1010,7 +1010,7 @@ static inline void free_states(fcs_instance *const instance)
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     /* Now let's recycle the states. */
     fc_solve_hash_foreach(
-        &(instance->hash), free_states_should_delete, ((void *)instance));
+        instance->hash, free_states_should_delete, ((void *)instance));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     /* Now let's recycle the states. */
     fc_solve_states_google_hash_foreach(
