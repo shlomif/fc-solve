@@ -16,16 +16,17 @@ extern "C" {
 #include "rinutils/portable_time.h"
 #include "freecell-solver/fcs_limit.h"
 
-#define FCS_B_AT_FMT "Board No. " RIN_LL_FMT " at " RIN_TIME_FMT
+#define FCS_B_AT_FMT "Board No. " RIN_ULL_FMT " at " RIN_TIME_FMT
 
-static inline void fc_solve_print_intractable(const long long board_num)
+static inline void fc_solve_print_intractable(
+    const unsigned long long board_num)
 {
     const_AUTO(mytime, rinutils_get_time());
     printf("Intractable " FCS_B_AT_FMT "\n", board_num,
         RIN_TIME__GET_BOTH(mytime));
 }
 
-static inline void fc_solve_print_unsolved(const long long board_num)
+static inline void fc_solve_print_unsolved(const unsigned long long board_num)
 {
     const_AUTO(mytime, rinutils_get_time());
     printf(
@@ -38,13 +39,14 @@ static inline void fc_solve_print_started_at(void)
     printf("Started at " RIN_TIME_FMT "\n", RIN_TIME__GET_BOTH(mytime));
 }
 
-static inline void fc_solve_print_reached_no_iters(const long long board_num)
+static inline void fc_solve_print_reached_no_iters(
+    const unsigned long long board_num)
 {
     const_AUTO(mytime, rinutils_get_time());
     printf("Reached " FCS_B_AT_FMT "\n", board_num, RIN_TIME__GET_BOTH(mytime));
 }
 static inline void fc_solve_print_reached(
-    const long long board_num, const fcs_iters_int total_num_iters)
+    const unsigned long long board_num, const fcs_iters_int total_num_iters)
 {
     const_AUTO(mytime, rinutils_get_time());
     printf("Reached " FCS_B_AT_FMT " (total_num_iters=" RIN_ULL_FMT ")\n",

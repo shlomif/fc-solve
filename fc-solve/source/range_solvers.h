@@ -49,7 +49,7 @@ static inline bool range_solvers__solve(char *const state_string,
         break;
 #ifdef FCS_RANGE_SOLVERS_PRINT_SOLVED
     case FCS_STATE_WAS_SOLVED:
-        printf("Solved Board No. " RIN_LL_FMT "\n", board_num);
+        printf("Solved Board No. " RIN_ULL_FMT "\n", board_num);
         break;
 #endif
     }
@@ -72,9 +72,12 @@ int main(int argc, char *argv[])
 #endif
     }
     int arg = 1;
-    const fc_solve_ms_deal_idx_type next_board_num = atoll(argv[arg++]);
-    const fc_solve_ms_deal_idx_type end_board = atoll(argv[arg++]);
-    const fc_solve_ms_deal_idx_type stop_at = atoll(argv[arg++]);
+    const fc_solve_ms_deal_idx_type next_board_num =
+        (fc_solve_ms_deal_idx_type)atoll(argv[arg++]);
+    const fc_solve_ms_deal_idx_type end_board =
+        (fc_solve_ms_deal_idx_type)atoll(argv[arg++]);
+    const fc_solve_ms_deal_idx_type stop_at =
+        (fc_solve_ms_deal_idx_type)atoll(argv[arg++]);
 
     if (stop_at <= 0)
     {

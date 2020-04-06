@@ -113,19 +113,19 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
     *by_rank_ptr |= (new_count << (suit_times_two));
 }
 
-#define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count, moved_card)              \
+#define COMMIT_NEW_STATE_WITH_COUNT(src, dest, count_init, moved_card)         \
     {                                                                          \
-                                                                               \
-        if (count)                                                             \
+        const size_t count_constant = (count_init);                            \
+        if (count_constant)                                                    \
         {                                                                      \
             fc_solve_add_to_irrev_moves_bitmask(                               \
                 &(ptr_new_state->which_irreversible_moves_bitmask),            \
-                moved_card, count);                                            \
+                moved_card, count_constant);                                   \
         }                                                                      \
         ptr_new_state->parent = parent_ptr;                                    \
         ptr_new_state->move = MAKE_MOVE((src), (dest));                        \
                                                                                \
-        ptr_new_state->core_irreversible_moves_count = (count);                \
+        ptr_new_state->core_irreversible_moves_count = (count_constant);       \
         /* Finally, enqueue the new state. */                                  \
         ptr_new_state->next = (*derived_list);                                 \
         (*derived_list) = ptr_new_state;                                       \

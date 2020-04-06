@@ -116,10 +116,10 @@ static inline void bin_init(fcs_binary_output *const bin,
         {
             long long temp = 0;
             read_int_wrapper(in, &temp);
-            *start_board_ptr = temp;
+            *start_board_ptr = (fc_solve_ms_deal_idx_type)temp;
             temp = 0;
             read_int_wrapper(in, &temp);
-            *end_board_ptr = temp;
+            *end_board_ptr = (fc_solve_ms_deal_idx_type)temp;
             {
                 long long val;
                 read_int_wrapper(in, &val);
@@ -133,7 +133,8 @@ static inline void bin_init(fcs_binary_output *const bin,
                 exit_error(
                     "%s", "Output file has an invalid length. Terminating.\n");
             }
-            *start_board_ptr += (file_len - 12) / 4;
+            *start_board_ptr +=
+                (fc_solve_ms_deal_idx_type)((file_len - 12) / 4);
             if (*start_board_ptr >= *end_board_ptr)
             {
                 exit_error("%s",

@@ -69,7 +69,7 @@ static inline void write_request(const fc_solve_ms_deal_idx_type end_board,
          * Coverity Scan scanner complains about quota_end being uninitialized
          * when passed to write() so we initialize it here as well.
          * */
-        req = (request_type){.board_num = -1, .quota_end = -1};
+        req = (request_type){.board_num = ULLONG_MAX, .quota_end = ULLONG_MAX};
     }
     else
     {
@@ -126,7 +126,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
         else if ((param = TRY_P("--worker-step")))
         {
-            board_num_step = atoll(param);
+            board_num_step = (fc_solve_ms_deal_idx_type)atoll(param);
         }
         else
         {
@@ -168,7 +168,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             get_board__setup_string(state_string);
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)) ==
                        sizeof(req) &&
-                   req.board_num != -1)
+                   req.board_num != ULLONG_MAX)
             {
                 response_type response = {
                     .num_iters = 0,

@@ -167,10 +167,12 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                 while (true)
                 {
                     const_AUTO(c, *(++s));
+#pragma GCC diagnostic push
                     switch (c)
                     {
                     case '\"':
                         ++s;
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
                     case '\0':
                         goto after_quote;
 
@@ -208,6 +210,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                 }
             after_quote:
                 break;
+#pragma GCC diagnostic pop
 
             case '#':
 

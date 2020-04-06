@@ -24,8 +24,11 @@
 #include "split_cmd_line.h"
 
 #include "prefix.h"
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wimplicit-fallthrough"
 #include "cmd_line_enum.h"
 #include "cmd_line_inc.h"
+#pragma GCC diagnostic pop
 
 static inline void nullify_newline(char *const line)
 {

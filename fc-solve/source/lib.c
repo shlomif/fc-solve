@@ -2797,8 +2797,10 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         switch (item->type)
         {
         case FLARES_PLAN_RUN_COUNT_ITERS:
-            item->initial_quota = normalize_iters_quota((typeof(
-                item->initial_quota))(flares_iters_factor * item->count_iters));
+            item->initial_quota =
+                normalize_iters_quota((typeof(item->initial_quota))(
+                    flares_iters_factor *
+                    (typeof(flares_iters_factor))item->count_iters));
             break;
 
         case FLARES_PLAN_CHECKPOINT:
@@ -3761,7 +3763,7 @@ int DLLEXPORT freecell_solver_user_set_unrecognized_cmd_line_flag(
     return 0;
 }
 
-DLLEXPORT fc_solve_unrecognized_flag_status_type
+DLLEXPORT fc_solve_unrecognized_flag_status_type __attribute__((pure))
 freecell_solver_user_get_unrecognized_cmd_line_flag_status(
     void *const api_instance, const int flag_idx)
 {
