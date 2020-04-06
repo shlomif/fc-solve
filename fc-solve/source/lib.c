@@ -523,7 +523,7 @@ static inline void start_process_with_board(fcs_instance *const instance,
         g_hash_table_new(fc_solve_hash_function, fc_solve_state_compare_equal);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 #ifdef FCS_RCS_STATES
-    instance->hash.instance = instance;
+    instance->hash->instance = instance;
 #endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     instance->hash = fc_solve_states_google_hash_new();
