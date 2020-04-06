@@ -62,24 +62,18 @@ static inline void write_request(const fc_solve_ms_deal_idx_type end_board,
     fc_solve_ms_deal_idx_type *const next_board_num_ptr,
     const fcs_worker *const worker)
 {
-    request_type req;
     if ((*next_board_num_ptr) > end_board)
     {
-        /* We only absolutely need to initialize .board_num here, but the
-         * Coverity Scan scanner complains about quota_end being uninitialized
-         * when passed to write() so we initialize it here as well.
-         * */
-        req = (request_type){.board_num = ULLONG_MAX, .quota_end = ULLONG_MAX};
+        close(worker->parent_to_child_pipe[WRITE_FD]);
+        return;
     }
-    else
+    request_type req;
+    req.board_num = *(next_board_num_ptr);
+    if (((*next_board_num_ptr) += board_num_step) > end_board)
     {
-        req.board_num = *(next_board_num_ptr);
-        if (((*next_board_num_ptr) += board_num_step) > end_board)
-        {
-            (*next_board_num_ptr) = end_board + 1;
-        }
-        req.quota_end = (*next_board_num_ptr) - 1;
+        (*next_board_num_ptr) = end_board + 1;
     }
+    req.quota_end = (*next_board_num_ptr) - 1;
     const_AUTO(
         ret, write(worker->parent_to_child_pipe[WRITE_FD], &req, sizeof(req)));
     if (ret != sizeof(req))
@@ -167,8 +161,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
             fcs_state_string state_string;
             get_board__setup_string(state_string);
             while (read(w.parent_to_child_pipe[READ_FD], &req, sizeof(req)) ==
-                       sizeof(req) &&
-                   req.board_num != ULLONG_MAX)
+                   sizeof(req))
             {
                 response_type response = {
                     .num_iters = 0,
