@@ -3,7 +3,7 @@ use strict;
 use warnings;
 
 use Test::More;
-use AI::Pathfinding::OptimizeMultiple::App::CmdLine;
+use AI::Pathfinding::OptimizeMultiple::App::CmdLine ();
 
 use vars qw($trap);
 

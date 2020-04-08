@@ -9,9 +9,9 @@ use Test::More tests => 4;
 
 use Test::Differences qw(eq_or_diff);
 
-use PDL;
+use PDL (qw/ pdl /);
 
-use AI::Pathfinding::OptimizeMultiple;
+use AI::Pathfinding::OptimizeMultiple ();
 
 # TEST:$c=0;
 sub test_based_on_data

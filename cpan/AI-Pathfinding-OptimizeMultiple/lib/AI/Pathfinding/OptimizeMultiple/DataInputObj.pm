@@ -9,7 +9,7 @@ use MooX qw/late/;
 
 use File::Path qw(mkpath);
 
-use AI::Pathfinding::OptimizeMultiple::Scan;
+use AI::Pathfinding::OptimizeMultiple::Scan ();
 
 use PDL              (qw( pdl ));
 use PDL::IO::FastRaw (qw( readfraw writefraw ));
