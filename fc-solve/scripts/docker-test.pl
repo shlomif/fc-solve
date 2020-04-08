@@ -1,17 +1,18 @@
 #! /usr/bin/env perl
-#
-# Short description for docker-test.pl
-#
-# Author Shlomi Fish <shlomif@cpan.org>
-# Version 0.0.1
-# Copyright (C) 2019 Shlomi Fish <shlomif@cpan.org>
-#
+
 use strict;
 use warnings;
 use 5.014;
 use autodie;
 
-use Path::Tiny qw/ path tempdir tempfile cwd /;
+use Path::Tiny qw/ path /;
+use Docker::CLI::Wrapper::Container v0.0.4 ();
+
+my $SYS       = "fedora:32";
+my $CONTAINER = "fcsfed";
+my $obj       = Docker::CLI::Wrapper::Container->new(
+    { container => $CONTAINER, sys => $SYS, },
+);
 
 sub do_system
 {
@@ -27,13 +28,10 @@ sub do_system
 
 my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
-my $SYS       = "fedora:32";
-my $CONTAINER = "fcsfed";
-do_system( { cmd => [ 'docker', 'pull', $SYS ] } );
-do_system(
-    { cmd => [ 'docker', 'run', "-t", "-d", "--name", $CONTAINER, $SYS, ] } );
-do_system( { cmd => [ 'docker', 'cp', "../source",  "fcsfed:source", ] } );
-do_system( { cmd => [ 'docker', 'cp', "../scripts", "fcsfed:scripts", ] } );
+$obj->clean_up();
+$obj->run_docker();
+$obj->docker( { cmd => [ 'cp', "../source",  "fcsfed:source", ] } );
+$obj->docker( { cmd => [ 'cp', "../scripts", "fcsfed:scripts", ] } );
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
 curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
@@ -47,10 +45,8 @@ make
 FCS_TEST_BUILD=1 perl ../source/run-tests.pl --glob='build*.t'
 EOSCRIPTTTTTTT
 
-do_system(
-    { cmd => [ 'docker', 'exec', $CONTAINER, 'bash', '-c', $script, ] } );
-do_system( { cmd => [ 'docker', 'stop', $CONTAINER, ] } );
-do_system( { cmd => [ 'docker', 'rm',   $CONTAINER, ] } );
+$obj->exe_bash_code( { code => $script, } );
+$obj->clean_up();
 
 __END__
 
