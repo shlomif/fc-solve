@@ -8,4 +8,4 @@
 set -e -x
 cpanm local::lib
 eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
-cpanm --notest Path::Tiny
+cpanm --notest Docker::CLI::Wrapper::Container Path::Tiny
