@@ -6,6 +6,7 @@ use 5.014;
 use autodie;
 
 use Path::Tiny qw/ path tempdir tempfile cwd /;
+use Docker::CLI::Wrapper::Container v0.0.4 ();
 
 sub do_system
 {
@@ -22,8 +23,11 @@ sub do_system
 my @deps;    #= map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
 
 # path("freecell-solver.spec.in")->lines_utf8;
-my $SYS                   = "debian:sid";
-my $CONTAINER             = "pypi-pysol-cards--deb--test-build";
+my $SYS       = "debian:sid";
+my $CONTAINER = "pypi-pysol-cards--deb--test-build";
+my $obj       = Docker::CLI::Wrapper::Container->new(
+    { container => $CONTAINER, sys => $SYS, },
+);
 my $USER                  = "mygbp";
 my $HOMEDIR               = "/home/$USER";
 my $PYPI_BASE             = "pysol-cards";
@@ -31,9 +35,8 @@ my $VER                   = '0.8.7';
 my $SRC_ROOT_DIR          = $PYPI_BASE;
 my $SRC_ROOT_DIR_fullpath = "$HOMEDIR/$SRC_ROOT_DIR";
 
-do_system( { cmd => [ 'docker', 'pull', $SYS ] } );
-do_system(
-    { cmd => [ 'docker', 'run', "-t", "-d", "--name", $CONTAINER, $SYS, ] } );
+$obj->clean_up();
+$obj->run_docker();
 my $REPO = 'fortune-mod';
 my $URL  = "https://salsa.debian.org/shlomif-guest/$REPO";
 
@@ -61,24 +64,19 @@ sudo usermod -a -G sudo "$USER"
 echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
 EOSCRIPTTTTTTT
 
-do_system(
-    { cmd => [ 'docker', 'exec', $CONTAINER, 'bash', '-c', $script, ] } );
+$obj->exe_bash_code( { code => $script, } );
 
 if (0)
 {
-    do_system(
-        { cmd => [ 'docker', 'cp', "./$REPO", "$CONTAINER:$HOMEDIR/$REPO", ] }
-    );
+    $obj->docker(
+        { cmd => [ 'cp', "./$REPO", "$CONTAINER:$HOMEDIR/$REPO", ] } );
 }
 
 sub _docker_chown
 {
-    do_system(
+    $obj->exe_bash_code(
         {
-            cmd => [
-                'docker', 'exec', $CONTAINER, 'bash', '-c',
-                "$BASH_SAFETY chown -R $USER:$USER $HOMEDIR",
-            ]
+            code => "$BASH_SAFETY chown -R $USER:$USER $HOMEDIR",
         }
     );
     return;
@@ -86,12 +84,9 @@ sub _docker_chown
 
 if ( -e $PYPI_BASE )
 {
-    do_system(
+    $obj->docker(
         {
-            cmd => [
-                'docker',      'cp',
-                $SRC_ROOT_DIR, "$CONTAINER:$SRC_ROOT_DIR_fullpath",
-            ]
+            cmd => [ 'cp', $SRC_ROOT_DIR, "$CONTAINER:$SRC_ROOT_DIR_fullpath", ]
         }
     );
     _docker_chown();
@@ -100,12 +95,10 @@ $BASH_SAFETY
 ( cd $SRC_ROOT_DIR_fullpath/$PYPI_BASE-$VER && dpkg-buildpackage -us -uc ) 2>&1 | tee ~/"$LOG_FN"
 EOSCRIPTTTTTTT
 
-    do_system(
+    $obj->exe_bash_code(
         {
-            cmd => [
-                'docker',   'exec', '--user', $USER,
-                $CONTAINER, 'bash', '-c',     $script,
-            ]
+            user => $USER,
+            code => $script,
         }
     );
 
@@ -114,11 +107,12 @@ $BASH_SAFETY
 apt-get -y install $SRC_ROOT_DIR_fullpath/*.deb
 EOSCRIPTTTTTTT
 
-    do_system(
+    $obj->exe_bash_code(
         {
-            cmd => [ 'docker', 'exec', $CONTAINER, 'bash', '-c', $script, ]
+            code => $script,
         }
     );
+
 }
 else
 {
@@ -136,29 +130,22 @@ done
 ( py2dsp $PYPI_BASE --root $SRC_ROOT_DIR_fullpath ) 2>&1 | tee ~/"$LOG_FN"
 EOSCRIPTTTTTTT
 
-    do_system(
+    $obj->exe_bash_code(
         {
-            cmd => [
-                'docker',   'exec', '--user', $USER,
-                $CONTAINER, 'bash', '-c',     $script,
-            ]
+            user => $USER,
+            code => $script,
         }
     );
-    do_system(
-        { cmd => [ 'docker', 'cp', "$CONTAINER:$HOMEDIR/$LOG_FN", $LOG_FN, ] }
-    );
+    $obj->docker(
+        { cmd => [ 'cp', "$CONTAINER:$HOMEDIR/$LOG_FN", $LOG_FN, ] } );
 
-    do_system(
+    $obj->docker(
         {
-            cmd => [
-                'docker',                            'cp',
-                "$CONTAINER:$SRC_ROOT_DIR_fullpath", $SRC_ROOT_DIR,
-            ]
+            cmd => [ 'cp', "$CONTAINER:$SRC_ROOT_DIR_fullpath", $SRC_ROOT_DIR, ]
         }
     );
 }
-do_system( { cmd => [ 'docker', 'stop', $CONTAINER, ] } );
-do_system( { cmd => [ 'docker', 'rm',   $CONTAINER, ] } );
+$obj->clean_up();
 
 __END__
 
