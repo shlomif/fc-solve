@@ -28,7 +28,7 @@ MACRO(my_board_gen_prog myprog tgt)
         PROGRAMS
             "${_dest}"
         DESTINATION
-            "bin"
+            "${BINDIR}"
     )
 ENDMACRO()
 
@@ -83,7 +83,7 @@ INSTALL(
     TARGETS
         "pi-make-microsoft-freecell-board"
     DESTINATION
-        "bin"
+        "${BINDIR}"
 )
 
 ADD_CUSTOM_TARGET(
