@@ -34,7 +34,7 @@ int main(int argc, char *argv[])
     const char *const deal_s = argv[arg];
 
     const fc_solve_ms_deal_idx_type gamenumber =
-        ((arg < argc) ? (fc_solve_ms_deal_idx_type)atoll(deal_s) : 1);
+        ((arg < argc) ? fcs_str2msdeal(deal_s) : 1);
     const fc_solve_ms_deal_idx_type MAX = ((1ULL << 33) - 1);
     const fc_solve_ms_deal_idx_type MIN = 1;
     if (gamenumber < MIN || gamenumber > MAX)

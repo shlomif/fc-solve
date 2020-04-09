@@ -73,11 +73,9 @@ int main(int argc, char *argv[])
     }
     int arg = 1;
     const fc_solve_ms_deal_idx_type next_board_num =
-        (fc_solve_ms_deal_idx_type)atoll(argv[arg++]);
-    const fc_solve_ms_deal_idx_type end_board =
-        (fc_solve_ms_deal_idx_type)atoll(argv[arg++]);
-    const fc_solve_ms_deal_idx_type stop_at =
-        (fc_solve_ms_deal_idx_type)atoll(argv[arg++]);
+        fcs_str2msdeal(argv[arg++]);
+    const fc_solve_ms_deal_idx_type end_board = fcs_str2msdeal(argv[arg++]);
+    const fc_solve_ms_deal_idx_type stop_at = fcs_str2msdeal(argv[arg++]);
 
     if (stop_at <= 0)
     {

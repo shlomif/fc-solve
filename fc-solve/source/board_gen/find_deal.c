@@ -69,7 +69,7 @@ extern DLLEXPORT const char *fc_solve_user__find_deal__run(
 {
     find_deal *const obj = obj_ptr;
     sprintf(obj->ret, RIN_LL_FMT,
-        fc_solve_find_deal_in_range((fc_solve_ms_deal_idx_type)atoll(start),
-            (fc_solve_ms_deal_idx_type)atoll(end), obj->ints));
+        fc_solve_find_deal_in_range(
+            fcs_str2msdeal(start), fcs_str2msdeal(end), obj->ints));
     return obj->ret;
 }

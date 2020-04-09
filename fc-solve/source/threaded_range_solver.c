@@ -112,7 +112,7 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
         }
         else if ((param = TRY_P("--worker-step")))
         {
-            board_num_step = (fc_solve_ms_deal_idx_type)atoll(param);
+            board_num_step = fcs_str2msdeal(param);
         }
         else
         {

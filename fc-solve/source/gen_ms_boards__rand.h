@@ -18,6 +18,11 @@ extern "C" {
 
 typedef unsigned long long fc_solve_ms_deal_idx_type;
 
+static inline fc_solve_ms_deal_idx_type fcs_str2msdeal(const char *const str)
+{
+    return ((fc_solve_ms_deal_idx_type)atoll(str));
+}
+
 typedef uint32_t microsoft_rand_uint;
 
 typedef unsigned long long microsoft_rand;
