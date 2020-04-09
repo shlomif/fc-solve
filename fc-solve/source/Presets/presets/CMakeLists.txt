@@ -30,5 +30,5 @@ INSTALL(
         "video-editing.sh"
         "yellow-brick-road.sh"
     DESTINATION
-        "${PRESETS_DATA_DIR}"
+        "${RELATIVE_PRESETS_DATA_DIR}"
 )

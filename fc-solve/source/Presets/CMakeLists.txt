@@ -1,9 +1,10 @@
 SET (suf "/presets/")
-SET (PRESETS_DATA_DIR "${RELATIVE_PKGDATADIR}${suf}")
+SET (PRESETS_DATA_DIR "${PKGDATADIR}${suf}")
+SET (RELATIVE_PRESETS_DATA_DIR "${RELATIVE_PKGDATADIR}${suf}")
 IF (WIN32 AND NOT UNIX)
     # We need to put an actual $ followed by { and EXE_DIRNAME so we
     # escape it.
-    SET (PRESETS_DATA_DIR "\${EXE_DIRNAME}/../${PRESETS_DATA_DIR}")
+    SET (PRESETS_DATA_DIR "\${EXE_DIRNAME}/../${RELATIVE_PRESETS_DATA_DIR}")
 ENDIF ()
 
 CONFIGURE_FILE(
@@ -19,4 +20,3 @@ INSTALL(
 )
 
 ADD_SUBDIRECTORY ("presets")
-
