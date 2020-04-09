@@ -17,7 +17,7 @@ if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
 
-plan tests => 15;
+plan tests => 18;
 
 # Change directory to the Freecell Solver base distribution directory.
 my $src_path = path( $ENV{"FCS_SRC_PATH"} );
@@ -48,12 +48,42 @@ sub test_cmd
 
 {
     my $temp_dir        = Path::Tiny->tempdir;
+    my $build_dir       = $temp_dir->child("build-dir")->absolute;
+    my $install_dir     = $temp_dir->child("fc-solve--install-dir")->absolute;
+    my $run_dir         = $temp_dir->child("myuuuu-run-dir")->absolute;
     my $before_temp_cwd = Path::Tiny->cwd->absolute;
 
-    chdir($temp_dir);
+    $build_dir->mkpath;
+    chdir($build_dir);
 
-    # TEST
-    test_cmd( [ "cmake", $src_path ], "cmake succeeded" );
+    {
+        local %ENV = %ENV;
+        delete $ENV{FREECELL_SOLVER_PRESETRC};
+
+        # TEST
+        test_cmd( [ "cmake", "-DCMAKE_INSTALL_PREFIX=$install_dir", $src_path ],
+            "cmake succeeded" );
+
+        # TEST
+        test_cmd( [ "make", "boards" ] );
+
+        # TEST
+        test_cmd( [ "make", "install" ] );
+
+        $run_dir->mkpath;
+        chdir($run_dir);
+
+        # TEST
+        test_cmd(
+            [
+                $install_dir->child( "bin", "fc-solve" ),
+                "-l", "lg", $build_dir->child("24.board")
+            ]
+        );
+
+    }
+
+    chdir($build_dir);
 
     # TEST
     test_cmd( [ "make", "package_source" ],
