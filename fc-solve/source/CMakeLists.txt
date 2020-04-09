@@ -4,13 +4,8 @@ PROJECT(freecell-solver C CXX)
 INCLUDE ("${CMAKE_SOURCE_DIR}/cmake/shlomif_common_bootstrap.cmake")
 SHLOMIF_COMMON_SETUP("${private_mod_path}")
 INCLUDE(GNUInstallDirs)
-SET(BINDIR "${CMAKE_INSTALL_BINDIR}")
-SET(DATADIR "${CMAKE_INSTALL_DATADIR}")
-SET(DOCDIR "${CMAKE_INSTALL_DOCDIR}")
-SET(INCLUDEDIR "${CMAKE_INSTALL_INCLUDEDIR}")
-SET(LIBDIR "${CMAKE_INSTALL_LIBDIR}")
 SET (PKGDATADIR_SUBDIR "freecell-solver")
-SET (RELATIVE_PKGDATADIR "${DATADIR}/${PKGDATADIR_SUBDIR}")
+SET (RELATIVE_PKGDATADIR "${CMAKE_INSTALL_DATADIR}/${PKGDATADIR_SUBDIR}")
 SET (PKGDATADIR "${CMAKE_INSTALL_FULL_DATADIR}/${PKGDATADIR_SUBDIR}")
 
 # Introduces VERSION , CPACK_PACKAGE_VERSION_MAJOR,
@@ -172,7 +167,7 @@ IF (NOT DISABLE_APPLYING_RPATH)
     SET(CMAKE_BUILD_WITH_INSTALL_RPATH FALSE)
 
     # the RPATH to be used when installing
-    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${LIBDIR}")
+    SET(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}")
 
     # add the automatically determined parts of the RPATH
     # which point to directories outside the build tree to the install RPATH
@@ -644,7 +639,7 @@ ENDMACRO()
 
 MACRO(FCS_ADD_EXEC target)
     FCS_ADD_EXEC_NO_INSTALL(${ARGV})
-    INSTALL (TARGETS ${target} DESTINATION "${BINDIR}")
+    INSTALL (TARGETS ${target} DESTINATION "${CMAKE_INSTALL_BINDIR}")
 ENDMACRO()
 
 
@@ -760,7 +755,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
     ENDMACRO()
     MACRO (DBM_EXE_INSTALL exe c_file)
         DBM_EXE(${ARGV})
-        INSTALL (TARGETS ${exe} DESTINATION "${BINDIR}")
+        INSTALL (TARGETS ${exe} DESTINATION "${CMAKE_INSTALL_BINDIR}")
     ENDMACRO()
 
     DBM_EXE_INSTALL(dbm-fc-solver dbm_solver.c)
@@ -886,8 +881,8 @@ CONFIGURE_FILE(
 
 INSTALL(
     TARGETS ${FREECELL_SOLVER_LIBS}
-    LIBRARY DESTINATION "${LIBDIR}"
-    ARCHIVE DESTINATION "${LIBDIR}"
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    ARCHIVE DESTINATION "${CMAKE_INSTALL_LIBDIR}"
 )
 
 IF (WIN32 AND NOT UNIX)
@@ -897,7 +892,7 @@ IF (WIN32 AND NOT UNIX)
 
     INSTALL(
         TARGETS "freecell-solver"
-        DESTINATION "${BINDIR}"
+        DESTINATION "${CMAKE_INSTALL_BINDIR}"
     )
 ENDIF ()
 
@@ -912,10 +907,10 @@ INSTALL(
         ${docs_to_install}
         "README.win32.txt"
     DESTINATION
-        "${DOCDIR}"
+        "${CMAKE_INSTALL_DOCDIR}"
 )
 
-SET (dest "${INCLUDEDIR}/freecell-solver")
+SET (dest "${CMAKE_INSTALL_INCLUDEDIR}/freecell-solver")
 INSTALL(
     FILES
         "include/freecell-solver/fcs_conf.h"
@@ -942,7 +937,7 @@ INSTALL(
     FILES
         "${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc"
     DESTINATION
-        "${LIBDIR}/pkgconfig"
+        "${CMAKE_INSTALL_LIBDIR}/pkgconfig"
 )
 
 # Rebuild config.h if ver.txt has changed.
