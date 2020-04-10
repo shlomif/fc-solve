@@ -103,7 +103,7 @@ static inline bool read_preset(const char *const preset_name,
         }
         while (1)
         {
-            char line[8192];
+            char line[MAX_PATH_LEN];
             if (fgets(line, sizeof(line), f) == NULL)
             {
                 break;
