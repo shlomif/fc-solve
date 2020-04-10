@@ -5,7 +5,7 @@ use warnings;
 
 use Template ();
 use Path::Tiny qw/ path /;
-use FindBin;
+use FindBin ();
 
 sub rank_normalize
 {

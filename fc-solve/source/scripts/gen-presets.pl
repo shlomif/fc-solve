@@ -4,10 +4,10 @@ use strict;
 use warnings;
 
 use Getopt::Long qw/ GetOptions /;
-use Template;
-use FindBin ();
+use Template ();
+use FindBin  ();
 use lib "$FindBin::Bin/../t/lib";
-use FC_Solve::MoveFuncs;
+use FC_Solve::MoveFuncs ();
 
 my $declared_move_funcs = FC_Solve::MoveFuncs::declared_move_funcs();
 my $aliases             = FC_Solve::MoveFuncs::aliases();

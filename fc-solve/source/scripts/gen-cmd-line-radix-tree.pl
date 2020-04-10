@@ -2,7 +2,7 @@ use strict;
 use warnings;
 use autodie;
 
-use FindBin;
+use FindBin ();
 use Path::Tiny qw/ path /;
 
 my %strings_to_opts_map;

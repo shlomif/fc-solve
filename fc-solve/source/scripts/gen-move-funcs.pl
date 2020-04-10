@@ -3,7 +3,7 @@ use warnings;
 use Path::Tiny qw/ path /;
 use FindBin ();
 use lib "$FindBin::Bin/../t/lib";
-use FC_Solve::MoveFuncs;
+use FC_Solve::MoveFuncs ();
 
 my $move_funcs          = FC_Solve::MoveFuncs::move_funcs();
 my $declared_move_funcs = FC_Solve::MoveFuncs::declared_move_funcs();

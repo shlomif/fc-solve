@@ -3,8 +3,8 @@
 use strict;
 use warnings;
 
-use Getopt::Long;
-use IO::All;
+use Getopt::Long qw / GetOptions /;
+use IO::All qw/ io /;
 
 use List::Util qw(min);
 
@@ -14,7 +14,7 @@ use MyInput;
 
 my $with_len = 0;
 
-GetOptions( "l!" => \$with_len, );
+GetOptions( "l!" => \$with_len, ) or die $!;
 
 my ( $scan_id, $board_idx ) = @ARGV;
 

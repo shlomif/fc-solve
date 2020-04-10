@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use MyInput;
+use MyInput ();
 
 my $opt = ( ( $ARGV[0] eq "--gen-bat" ) ? shift : "" );
 

@@ -4,10 +4,10 @@ use strict;
 use warnings;
 use autodie;
 
-use FindBin;
+use FindBin ();
 use lib "$FindBin::Bin/../t/lib";
 
-use FC_Solve::SplitTests;
+use FC_Solve::SplitTests ();
 
 my $module = 'FC_Solve::Test::Verify';
 FC_Solve::SplitTests->gen(

@@ -3,8 +3,7 @@
 use strict;
 use warnings;
 
-use IO::File;
-use List::Util qw(first);
+use List::Util qw( first );
 
 my $log_fn = "iters-by-quotas.txt";
 
