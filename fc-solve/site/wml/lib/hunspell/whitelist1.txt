@@ -1108,6 +1108,7 @@ Scaleway
 ShareAlike
 Sinan
 Stannered
+Sturmlechner
 Tzafrir
 Unur
 Yotam
@@ -1115,6 +1116,7 @@ burtleburtle
 coz
 debondt
 der
+dirs
 don_woods
 freecellgamesolutions
 h6ex
@@ -1231,6 +1233,7 @@ ABI
 DD-MMM-YYYY
 FCS_DEAL_ONLY_UP_TO_2G
 FCS_STATE_SOFT_SUSPEND_PROCESS
+GNUInstallDirs
 Golf_
 MAX_NUM_DECKS
 PACKAGE_VERSION

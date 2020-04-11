@@ -153,3 +153,6 @@ failures.
 * *Participants on* https://bugs.kde.org/show_bug.cgi?id=405187 ( Jonathan
 Ryshpan, coz, Dan Ciarniello, Clifford Snow ) - reporting some issues with
 kpat which inspired some bug fixes in Freecell Solver.
+
+* https://github.com/a17r[Andreas Sturmlechner] - contributed to converting
+the build system to GNU install dirs.

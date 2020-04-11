@@ -1,8 +1,17 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2020-02-12
+:Date: 2020-04-11
 :Revision: $Id$
+
+Version 5.22.0: (04-Apr-2020)
+-----------------------------
+
+1. Convert the CMake build system to use GNUInstallDirs .
+
+2. Extract a deal integer type.
+
+3. Avoid compiler warnings and check for some dependencies.
 
 Version 5.20.1: (03-Mar-2020)
 -----------------------------
