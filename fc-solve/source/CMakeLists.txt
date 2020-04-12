@@ -902,10 +902,13 @@ IF (UNIX AND FCS_BUILD_DOCS)
     INSTALL_MAN ("${fc_solve_manpage}" 6)
 ENDIF ()
 
+IF(WIN32)
+    SET (docs_to_install ${docs_to_install} README.win32.txt)
+ENDIF ()
+
 INSTALL(
     FILES
         ${docs_to_install}
-        "README.win32.txt"
     DESTINATION
         "${CMAKE_INSTALL_DOCDIR}"
 )
