@@ -17,7 +17,7 @@ if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
 
-plan tests => 18;
+plan tests => 20;
 
 # Change directory to the Freecell Solver base distribution directory.
 my $src_path = path( $ENV{"FCS_SRC_PATH"} );
@@ -80,6 +80,19 @@ sub test_cmd
                 "-l", "lg", $build_dir->child("24.board")
             ]
         );
+
+        # TEST*2
+        foreach my $doc_basename (qw/README USAGE/)
+        {
+            ok(
+                scalar(
+                    -f $install_dir->child(
+                        "share", "doc", "freecell-solver", $doc_basename
+                    )
+                ),
+                "'$doc_basename' document was installed."
+            );
+        }
 
     }
 
