@@ -902,14 +902,6 @@ IF (UNIX AND FCS_BUILD_DOCS)
     INSTALL_MAN ("${fc_solve_manpage}" 6)
 ENDIF ()
 
-INSTALL(
-    FILES
-        ${docs_to_install}
-        "README.win32.txt"
-    DESTINATION
-        "${CMAKE_INSTALL_DOCDIR}"
-)
-
 SET (dest "${CMAKE_INSTALL_INCLUDEDIR}/freecell-solver")
 INSTALL(
     FILES
@@ -1055,6 +1047,18 @@ FOREACH(_file ${_docfiles})
     SET(_full_file "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
     LIST(APPEND docs_to_install ${_full_file})
 ENDFOREACH()
+
+IF (WIN32 AND NOT UNIX)
+    LIST(APPEND docs_to_install "README.win32.txt")
+ENDIF ()
+
+INSTALL(
+    FILES
+        ${docs_to_install}
+    DESTINATION
+        "${CMAKE_INSTALL_DOCDIR}"
+)
+
 
 MACRO(TRAIL_SPACE_COPY_TARGET TARGET_NAME SOURCE DEST)
     ADD_CUSTOM_COMMAND(
