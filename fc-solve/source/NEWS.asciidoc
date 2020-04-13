@@ -1,8 +1,15 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2020-04-11
+:Date: 2020-04-13
 :Revision: $Id$
+
+Version 5.22.1: (13-Apr-2020)
+-----------------------------
+
+1. Fix the installation of the documents, and make sure that +README.win32.txt+
+only gets installed on MS Windows.
+( https://github.com/shlomif/fc-solve/pull/37 )
 
 Version 5.22.0: (04-Apr-2020)
 -----------------------------

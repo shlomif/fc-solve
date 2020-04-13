@@ -1285,6 +1285,7 @@ unrecognized
 userland
 usleep
 v0
+win32
 xxHash
 xxh3
 
