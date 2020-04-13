@@ -1041,25 +1041,6 @@ SET (_docfiles "AUTHORS.asciidoc" "COPYING.asciidoc" "HACKING.asciidoc"
     "USAGE.asciidoc" "${_fc_solve_txt}"
 )
 
-SET (docs_to_install)
-FOREACH(_file ${_docfiles})
-    GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
-    SET(_full_file "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
-    LIST(APPEND docs_to_install ${_full_file})
-ENDFOREACH()
-
-IF (WIN32 AND NOT UNIX)
-    LIST(APPEND docs_to_install "README.win32.txt")
-ENDIF ()
-
-INSTALL(
-    FILES
-        ${docs_to_install}
-    DESTINATION
-        "${CMAKE_INSTALL_DOCDIR}"
-)
-
-
 MACRO(TRAIL_SPACE_COPY_TARGET TARGET_NAME SOURCE DEST)
     ADD_CUSTOM_COMMAND(
         OUTPUT "${DEST}"
@@ -1074,6 +1055,28 @@ MACRO(TRAIL_SPACE_COPY_TARGET TARGET_NAME SOURCE DEST)
         DEPENDS "${DEST}"
     )
 ENDMACRO()
+
+FOREACH(_file ${_docfiles})
+    IF (NOT "${_file}" STREQUAL "${_fc_solve_txt}")
+        GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
+        SET(_in "${_file_we}")
+        SET(_html_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.html")
+        SET(_full_file "${CMAKE_CURRENT_SOURCE_DIR}/${_file}")
+        SET(_docbook_out "${CMAKE_CURRENT_SOURCE_DIR}/${_file_we}.xml")
+        SET (_file_we_full "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
+        ADD_CUSTOM_COMMAND(
+            OUTPUT "${_file_we_full}"
+            COMMAND "${CMAKE_COMMAND}" -E copy "${_full_file}" "${_file_we_full}"
+            DEPENDS "${_full_file}"
+            COMMENT "copy AsciiDoc to non-\".txt\" file"
+        )
+        SET (target "txt__${_file_we}_build")
+        ADD_CUSTOM_TARGET(${target} ALL echo -n
+            DEPENDS "${_file_we}"
+        )
+    ENDIF ()
+ENDFOREACH()
+
 IF(ASCIIDOC_FOUND)
 
     SET (_pdf_targets)
@@ -1131,15 +1134,9 @@ IF(ASCIIDOC_FOUND)
         )
 
         SET (_file_we_full "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
-        ADD_CUSTOM_COMMAND(
-            OUTPUT "${_file_we_full}"
-            COMMAND cp -f "${_full_file}" "${_file_we_full}"
-            DEPENDS "${_full_file}"
-            COMMENT "copy AsciiDoc to non-\".txt\" file"
-        )
 
         ADD_CUSTOM_TARGET(${target} ALL echo -n
-            DEPENDS ${htmls} "${_docbook_out}" "${_file_we}"
+            DEPENDS ${htmls} "${_docbook_out}"
         )
 
         ADD_CUSTOM_TARGET(${_in}_pdf echo -n
@@ -1258,6 +1255,24 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
         TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
     ENDIF ()
 ENDIF ()
+
+SET (docs_to_install)
+FOREACH(_file ${_docfiles})
+    GET_FILENAME_COMPONENT(_file_we ${_file} NAME_WE)
+    SET(_full_file "${CMAKE_CURRENT_BINARY_DIR}/${_file_we}")
+    LIST(APPEND docs_to_install ${_full_file})
+ENDFOREACH()
+
+IF (WIN32 AND NOT UNIX)
+    LIST(APPEND docs_to_install "README.win32.txt")
+ENDIF ()
+
+INSTALL(
+    FILES
+        ${docs_to_install}
+    DESTINATION
+        "${CMAKE_INSTALL_DOCDIR}"
+)
 
 INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}/include" "${CMAKE_CURRENT_SOURCE_DIR}/${patsolve_dir}")
 INCLUDE("${private_mod_path}/xxhash_wrapper_bootstrap.cmake")
