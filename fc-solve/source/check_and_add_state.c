@@ -272,6 +272,10 @@ static inline void fc_solve_cache_stacks(
             g_tree_insert(instance->stacks_tree, (gpointer) * (current_stack),
                 (gpointer) * (current_stack));
         }
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+        cached_stack = OB_table_insert_loc(
+            &instance->stacks_obt_hash, *(current_stack))[0];
+        REPLACE_WITH_CACHED(cached_stack != (*current_stack));
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
         cached_stack = g_hash_table_lookup(
             instance->stacks_hash, (gconstpointer) * (current_stack));
