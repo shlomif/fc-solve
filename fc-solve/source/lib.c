@@ -492,8 +492,22 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
     instance->initial_cards_under_sequences_value = cards_under_sequences;
 }
 
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT) ||                           \
+     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
 #include "wrap_xxhash.h"
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+static size_t mystackshash(union param p, const void *a)
+{
+    return DO_XXH(a, (*(const unsigned char *)a) + 1);
+}
+static bool mycmp_stacks(
+    union param p, const void *const v_s1, const void *const v_s2)
+{
+    return !fc_solve_stack_compare_for_comparison(v_s1, v_s2);
+}
+#endif
+
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
 static size_t myhash(union param p, const void *a)
 {
     return DO_XXH(a, sizeof(fcs_state));
@@ -502,6 +516,8 @@ static bool mycomp(union param p, const void *const s1, const void *const s2)
 {
     return (!memcmp(s1, s2, sizeof(fcs_state)));
 }
+#endif
+
 #endif
 
 // This function associates a board with an fcs_instance and
@@ -560,6 +576,10 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     instance->stacks_tree = rbinit(cmp_stacks_w_context, NULL);
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+    instance->stacks_obt_hash.comp = mycmp_stacks;
+    instance->stacks_obt_hash.hash = mystackshash;
+    OB_table_init(&instance->stacks_obt_hash, 10000);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
     instance->stacks_tree = g_tree_new(fc_solve_stack_compare_for_comparison);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
