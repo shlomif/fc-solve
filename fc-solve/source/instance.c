@@ -580,6 +580,8 @@ void fc_solve_finish_instance(fcs_instance *const instance)
     // fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_states_google_hash_free(instance->hash);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    OB_table_clear(&instance->obt_hash);
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif
