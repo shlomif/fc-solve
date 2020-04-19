@@ -164,6 +164,7 @@ extern "C" {
 #cmakedefine HAVE_STRNDUP
 #cmakedefine HAVE_VASPRINTF
 #cmakedefine FCS_USE_INT128_FOR_VAR_BASE
+#cmakedefine FCS_ENABLE_SECONDARY_HASH_VALUE
 #define FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING ${FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING}
 
 /* Version number of package */
