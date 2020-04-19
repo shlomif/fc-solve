@@ -207,6 +207,12 @@ static inline void alloc_instance(
     OB_table_init(&instance->obt_hash, 10000);
 #endif
 #ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+    memset(&instance->stacks_obt_hash, '\0', sizeof(instance->stacks_obt_hash));
+    instance->stacks_obt_hash.comp = mycmp_stacks;
+    instance->stacks_obt_hash.hash = mystackshash;
+    OB_table_init(&instance->stacks_obt_hash, 10000);
+#endif
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
     fc_solve_hash_init(meta_alloc, &(instance->stacks_hash),
 #ifdef FCS_INLINED_HASH_COMPARISON
@@ -590,10 +596,6 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     instance->stacks_tree = rbinit(cmp_stacks_w_context, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
-    memset(&instance->stacks_obt_hash, '\0', sizeof(instance->stacks_obt_hash));
-    instance->stacks_obt_hash.comp = mycmp_stacks;
-    instance->stacks_obt_hash.hash = mystackshash;
-    OB_table_init(&instance->stacks_obt_hash, 10000);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
     instance->stacks_tree = g_tree_new(fc_solve_stack_compare_for_comparison);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
@@ -744,6 +746,9 @@ static inline void recycle_inst(fcs_instance *const instance)
     fc_solve_hash_recycle(&(instance->hash));
 #endif
 #ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+    OB_table_recycle(&(instance->stacks_obt_hash));
+#endif
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     fc_solve_hash_recycle(&(instance->stacks_hash));
 #endif
@@ -3636,6 +3641,9 @@ static MYINLINE void user_free_resources(fcs_user *const user)
         fc_solve_hash_free(&(instance->hash));
 #endif
 #ifdef INDIRECT_STACK_STATES
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+        OB_table_clear(&instance->stacks_obt_hash);
+#endif
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
         fc_solve_hash_free(&(instance->stacks_hash));
 #endif
