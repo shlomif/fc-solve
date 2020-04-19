@@ -492,6 +492,18 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
     instance->initial_cards_under_sequences_value = cards_under_sequences;
 }
 
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+#include "wrap_xxhash.h"
+static size_t myhash(union param p, const void *a)
+{
+    return DO_XXH(a, sizeof(fcs_state));
+}
+static bool mycomp(union param p, const void *const s1, const void *const s2)
+{
+    return (!memcmp(s1, s2, sizeof(fcs_state)));
+}
+#endif
+
 // This function associates a board with an fcs_instance and
 // does other initialisations. After it, you must call resume_instance()
 // repeatedly.
@@ -529,6 +541,10 @@ static inline void start_process_with_board(fcs_instance *const instance,
     instance->hash = fc_solve_states_google_hash_new();
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
 /* Do nothing because it is allocated elsewhere. */
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    instance->obt_hash.comp = mycomp;
+    instance->obt_hash.hash = myhash;
+    OB_table_init(&instance->obt_hash, 10000);
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif

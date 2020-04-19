@@ -58,6 +58,10 @@ extern "C" {
 #include "fcs_hash.h"
 #endif
 
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT))
+#include "OB_table.h"
+#endif
+
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH) ||              \
     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
 #include "google_hash.h"
@@ -556,6 +560,8 @@ struct fc_solve_instance_struct
 // the checked states.
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     struct rbtree *tree;
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    struct OB_table obt_hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Pvoid_t judy_array;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)

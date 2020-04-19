@@ -93,7 +93,7 @@ SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
     "Maximal Number of Initial Cards in a Stack")
 SET (MAX_NUM_DECKS 1 CACHE STRING "Maximal Number of Decks (must be 1)")
 SET (MAX_NUM_BENCHMARK_THREADS 4 CACHE STRING "Maximal Number of Threads to Use When Benchmarking")
-SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
+SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_OBT" CACHE STRING "The State Storage Type")
 SET (FCS_STACK_STORAGE "FCS_STACK_STORAGE_INTERNAL_HASH" CACHE STRING "The Stack Storage Type")
 SET (FCS_RCS_CACHE_STORAGE "FCS_RCS_CACHE_STORAGE_KAZ_TREE" CACHE STRING "The LRU Cache Type of for FCS_RCS_STATES.")
 SET (FCS_WHICH_COLUMNS_GOOGLE_HASH "FCS_WHICH_COLUMNS_GOOGLE_HASH__SPARSE" CACHE STRING "The Columns' Google Hash Type")
@@ -208,6 +208,15 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils_dir}")
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
+
+# Clone the ob_table repository with the appropriate tag.
+SET (dir "OB_table")
+IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${dir}")
+    EXECUTE_PROCESS(COMMAND "git" "clone" "-b" "rename-header-to-avoid-clash-w-system-headers" https://github.com/shlomif/OB_table "${dir}"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
+    )
+ENDIF ()
+SET(obt_dir "${dir}")
 
 find_package(Rinutils)
 IF ("${Rinutils_FOUND}")
@@ -420,6 +429,12 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_GOOGLE_DENSE_HASH") OR
     SET (SKIP_VALGRIND 1)
 ENDIF ()
 
+IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_OBT")
+    )
+
+    add_lib_mods("${obt_dir}/OB_table.c")
+    INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}")
+ENDIF ()
 # Search for libredblack if appropriate.
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_LIBREDBLACK_TREE") OR
     ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_LIBREDBLACK_TREE"))
