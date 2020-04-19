@@ -77,6 +77,40 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
 #endif
 };
 
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT) ||                           \
+     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
+#include "wrap_xxhash.h"
+
+static inline void OB_table_recycle(struct OB_table *t)
+{
+    memset((t->table), '\0', t->cap * sizeof(t->table[0]));
+    t->n = 0;
+}
+
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+static size_t mystackshash(union param p, const void *a)
+{
+    return DO_XXH(a, (*(const unsigned char *)a) + 1);
+}
+static bool mycmp_stacks(
+    union param p, const void *const v_s1, const void *const v_s2)
+{
+    return !fc_solve_stack_compare_for_comparison(v_s1, v_s2);
+}
+#endif
+
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+static size_t myhash(union param p, const void *a)
+{
+    return DO_XXH(a, sizeof(fcs_state));
+}
+static bool mycomp(union param p, const void *const s1, const void *const s2)
+{
+    return (!memcmp(s1, s2, sizeof(fcs_state)));
+}
+#endif
+
+#endif
 // This function allocates a Freecell Solver instance struct and set the
 // default values in it. After the call to this function, the program can
 // set parameters in it which are different from the default.
@@ -165,6 +199,11 @@ static inline void alloc_instance(
 #endif
 #endif
     );
+#endif
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    instance->obt_hash.comp = mycomp;
+    instance->obt_hash.hash = myhash;
+    OB_table_init(&instance->obt_hash, 10000);
 #endif
 #ifdef INDIRECT_STACK_STATES
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
@@ -492,34 +531,6 @@ static inline void update_initial_cards_val(fcs_instance *const instance)
     instance->initial_cards_under_sequences_value = cards_under_sequences;
 }
 
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT) ||                           \
-     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
-#include "wrap_xxhash.h"
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
-static size_t mystackshash(union param p, const void *a)
-{
-    return DO_XXH(a, (*(const unsigned char *)a) + 1);
-}
-static bool mycmp_stacks(
-    union param p, const void *const v_s1, const void *const v_s2)
-{
-    return !fc_solve_stack_compare_for_comparison(v_s1, v_s2);
-}
-#endif
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
-static size_t myhash(union param p, const void *a)
-{
-    return DO_XXH(a, sizeof(fcs_state));
-}
-static bool mycomp(union param p, const void *const s1, const void *const s2)
-{
-    return (!memcmp(s1, s2, sizeof(fcs_state)));
-}
-#endif
-
-#endif
-
 // This function associates a board with an fcs_instance and
 // does other initialisations. After it, you must call resume_instance()
 // repeatedly.
@@ -555,12 +566,12 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #endif
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     instance->hash = fc_solve_states_google_hash_new();
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-/* Do nothing because it is allocated elsewhere. */
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+#if 0
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
     OB_table_init(&instance->obt_hash, 10000);
+#endif
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif
@@ -723,6 +734,9 @@ static inline void recycle_ht(fcs_hard_thread *const hard_thread)
 static inline void recycle_inst(fcs_instance *const instance)
 {
     fc_solve_finish_instance(instance);
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    OB_table_recycle(&(instance->obt_hash));
+#endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_recycle(&(instance->hash));
 #endif
@@ -3612,6 +3626,9 @@ static MYINLINE void user_free_resources(fcs_user *const user)
         {
             fc_solve_finish_instance(instance);
         }
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+        OB_table_clear(&instance->obt_hash);
+#endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
         fc_solve_hash_free(&(instance->hash));
 #endif
