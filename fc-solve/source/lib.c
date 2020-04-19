@@ -201,9 +201,9 @@ static inline void alloc_instance(
     );
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
-    instance->obt_hash.n = 0;
     OB_table_init(&instance->obt_hash, 10000);
 #endif
 #ifdef INDIRECT_STACK_STATES
@@ -569,9 +569,9 @@ static inline void start_process_with_board(fcs_instance *const instance,
     instance->hash = fc_solve_states_google_hash_new();
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
 #if 0
+    memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
-    instance->obt_hash.n = 0;
     OB_table_init(&instance->obt_hash, 10000);
 #endif
 #else
@@ -590,9 +590,9 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
     instance->stacks_tree = rbinit(cmp_stacks_w_context, NULL);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+    memset(&instance->stacks_obt_hash, '\0', sizeof(instance->stacks_obt_hash));
     instance->stacks_obt_hash.comp = mycmp_stacks;
     instance->stacks_obt_hash.hash = mystackshash;
-    instance->stacks_obt_hash.n = 0;
     OB_table_init(&instance->stacks_obt_hash, 10000);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
     instance->stacks_tree = g_tree_new(fc_solve_stack_compare_for_comparison);
