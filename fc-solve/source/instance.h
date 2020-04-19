@@ -584,6 +584,8 @@ struct fc_solve_instance_struct
 // The storage mechanism for the stacks
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
     hash_table stacks_hash;
+#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+    struct OB_table stacks_obt_hash;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     fcs_libavl2_stacks_tree_table *stacks_tree;
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
