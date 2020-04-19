@@ -212,7 +212,7 @@ ENDIF ()
 # Clone the ob_table repository with the appropriate tag.
 SET (dir "OB_table")
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${dir}")
-    EXECUTE_PROCESS(COMMAND "git" "clone" "-b" "rename-header-to-avoid-clash-w-system-headers" https://github.com/shlomif/OB_table "${dir}"
+    EXECUTE_PROCESS(COMMAND "git" "clone" "-b" "shlomify-changes--remove-param" https://github.com/shlomif/OB_table "${dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()

@@ -88,23 +88,19 @@ static inline void OB_table_recycle(struct OB_table *t)
 }
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
-static size_t mystackshash(union param p, const void *a)
+static size_t mystackshash(const void *a)
 {
     return DO_XXH(a, (*(const unsigned char *)a) + 1);
 }
-static bool mycmp_stacks(
-    union param p, const void *const v_s1, const void *const v_s2)
+static bool mycmp_stacks(const void *const v_s1, const void *const v_s2)
 {
     return !fc_solve_stack_compare_for_comparison(v_s1, v_s2);
 }
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
-static size_t myhash(union param p, const void *a)
-{
-    return DO_XXH(a, sizeof(fcs_state));
-}
-static bool mycomp(union param p, const void *const s1, const void *const s2)
+static size_t myhash(const void *a) { return DO_XXH(a, sizeof(fcs_state)); }
+static bool mycomp(const void *const s1, const void *const s2)
 {
     return (!memcmp(s1, s2, sizeof(fcs_state)));
 }
