@@ -599,7 +599,7 @@ void fc_solve_finish_instance(fcs_instance *const instance)
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
-    OB_table_clear(&instance->stacks_obt_hash);
+    // OB_table_clear(&instance->stacks_obt_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_columns_google_hash_free(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
