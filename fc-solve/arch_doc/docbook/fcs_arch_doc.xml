@@ -349,9 +349,7 @@
                     An optimised hash implementations. This hash maps keys to
                     values. It stores the hash function values next to the
                     keys, so two keys can be first compared with their hash
-                    values, before the costly full comparison is done. It also
-                    uses a secondary hash to speed up the detection of two
-                    keys with identical primary hash values.
+                    values, before the costly full comparison is done.
                 </para>
                 <para>
                     Not all the functions of the hash Abstract Data Type (ADT)

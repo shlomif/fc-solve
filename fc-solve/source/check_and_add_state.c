@@ -74,17 +74,12 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
  * Returns NULL if the key is new and the key/val pair was inserted.
  * Returns the existing key if the key is not new (= a truthy pointer).
  */
-static inline void *fc_solve_hash_insert(
-    hash_table *const hash, void *const key,
+static inline void *fc_solve_hash_insert(hash_table *const hash,
+    void *const key,
 #ifdef FCS_RCS_STATES
     void *const key_id,
 #endif
-    const fcs_hash_value hash_value
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    ,
-    const fcs_hash_value secondary_hash_value
-#endif
-)
+    const fcs_hash_value hash_value)
 {
 #if defined(FCS_INLINED_HASH_COMPARISON) && defined(INDIRECT_STACK_STATES)
     const_SLOT(hash_type, hash);
@@ -146,11 +141,7 @@ static inline void *fc_solve_hash_insert(
                 We first compare the hash values, because it is faster than
                 comparing the entire data structure.
             */
-            if ((item->hash_value == hash_value)
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-                && (item->secondary_hash_value == secondary_hash_value)
-#endif
-                && MY_HASH_COMPARE())
+            if ((item->hash_value == hash_value) && MY_HASH_COMPARE())
             {
                 return item->key;
             }
@@ -183,9 +174,6 @@ static inline void *fc_solve_hash_insert(
         .key = key,
         .hash_value = hash_value,
         .next = NULL,
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-        .secondary_hash_value = secondary_hash_value,
-#endif
     };
 
     if ((++(hash->num_elems)) > hash->max_num_elems_before_resize)
@@ -254,29 +242,9 @@ static inline void fc_solve_cache_stacks(
 
         void *cached_stack;
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-        /* Calculate the hash value for the stack */
-        /* This hash function was ripped from the Perl source code.
-         * (It is not derived work however). */
-        fcs_hash_value hash_value_int = 0;
-        {
-            const int8_t *s_ptr = (int8_t *)(*(current_stack));
-            const int8_t *s_end = s_ptr + fcs_col_len(s_ptr) + 1;
-            while (s_ptr < s_end)
-            {
-                hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-            }
-            hash_value_int += (hash_value_int >> 5);
-        }
-#endif
 
-        cached_stack = fc_solve_hash_insert(
-            &(instance->stacks_hash), column, DO_XXH(*(current_stack), col_len)
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-                                                  ,
-            hash_value_int
-#endif
-        );
+        cached_stack = fc_solve_hash_insert(&(instance->stacks_hash), column,
+            DO_XXH(*(current_stack), col_len));
         REPLACE_WITH_CACHED(cached_stack);
 
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
@@ -457,30 +425,13 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
       */
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    fcs_hash_value hash_value_int = 0;
-    {
-        const int8_t *s_ptr = (int8_t *)new_state_key;
-        const int8_t *s_end = s_ptr + sizeof(*new_state_key);
-        while (s_ptr < s_end)
-        {
-            hash_value_int += (hash_value_int << 5) + *(s_ptr++);
-        }
-        hash_value_int += (hash_value_int >> 5);
-    }
-#endif
 #ifdef FCS_RCS_STATES
 #define A new_state->val, new_state->key
 #else
 #define A FCS_STATE_kv_to_collectible(new_state)
 #endif
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-#define B , hash_value_int
-#else
-#define B
-#endif
     return HANDLE_existing_void(fc_solve_hash_insert(
-        &(instance->hash), A, DO_XXH(new_state_key, sizeof(*new_state_key)) B));
+        &(instance->hash), A, DO_XXH(new_state_key, sizeof(*new_state_key))));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     void *existing_void;
     if (!fc_solve_states_google_hash_insert(instance->hash,

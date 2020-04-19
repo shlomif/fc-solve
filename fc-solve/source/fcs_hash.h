@@ -32,13 +32,6 @@ struct fc_solve_hash_symlink_item_struct
     /* We also store the hash value corresponding to this key for faster
        comparisons */
     fcs_hash_value hash_value;
-#ifdef FCS_ENABLE_SECONDARY_HASH_VALUE
-    /*
-     * We also store a secondary hash value, which is not used for indexing,
-     * but is used to speed up comparison.
-     * */
-    fcs_hash_value secondary_hash_value;
-#endif
     /* The next item in the list */
     struct fc_solve_hash_symlink_item_struct *next;
 };

@@ -103,7 +103,6 @@ option (FCS_DISABLE_SIMPLE_SIMON "Exclude being able to solve Simple Simon from 
 option (FCS_WITH_TEST_SUITE "Also build and run the test suite." ON)
 option (FCS_LINK_TO_STATIC "Link to the static library.")
 SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY "4" CACHE STRING "The hard-coded number of freecells (4, 2, etc.). Usually ignored")
-option (FCS_ENABLE_SECONDARY_HASH_VALUE "Enable the secondary hash value calculation and track-keeping. Seems to slow things down.")
 option (FCS_WITH_CONTEXT_VARIABLE "Enable the context (extra void *) as passed to the comparison functions, etc." ON)
 option (FCS_INLINED_HASH_COMPARISON "Use more compact tokens for moves internally (makes things slower)" ON)
 option (FCS_AVOID_TCMALLOC "Avoid linking against Google's tcmalloc")

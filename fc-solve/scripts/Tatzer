@@ -39,7 +39,6 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'omit-frame'                => 'OPTIMIZATION_OMIT_FRAME_POINTER',
     'print-solved'              => 'FCS_RANGE_SOLVERS_PRINT_SOLVED',
     'rcs'                       => 'FCS_ENABLE_RCS_STATES',
-    'secondary'                 => 'FCS_ENABLE_SECONDARY_HASH_VALUE',
     'single-ht'                 => 'FCS_SINGLE_HARD_THREAD',
     'static'                    => 'FCS_LINK_TO_STATIC',
     'tracemem'                  => 'FCS_TRACE_MEM',

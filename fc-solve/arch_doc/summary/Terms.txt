@@ -69,11 +69,6 @@ Reparent - let's suppose state DEST has been derived from state SRC. If
 the SRC.depth+1 is less than DEST.depth than DEST's parent will be reassigned
 to SRC. (if reparenting is enabled)
 
-Secondary Hash - a hash value that is calculated for every state that is not
-used to determine the location of the element in the hash table, but that is
-used for comparison. That is done in order to avoid needlessly comparing two
-different states with the same hash value.
-
 Soft DFS - A depth-first search scan that does not utilize procedural
 recursion. In Freecell Solver, this utilizes a stack of records, each
 containing the current state, the current test, the list of derived states,
