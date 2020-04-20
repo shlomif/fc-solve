@@ -236,18 +236,24 @@ if ( defined $SEED )
     exec( "bash", $FN );
 }
 
+my $ARCH = $ENV{FC_SOLVE__MULT_CONFIG_TESTS__GCC_ARCH} // 'n2';
 foreach my $rec (
-    { id => "c2",  a => "core2", },
-    { id => "ci7", a => "corei7-avx", },
-    { id => "n2",  a => "native", },
-    { id => "p4",  a => "pentium4" },
-    { id => "x64", a => "x86-64" },
+    { id => "c2",              a => "core2", },
+    { id => "ci7",             a => "corei7-avx", },
+    { id => "n2",              a => "native", },
+    { id => "p4",              a => "pentium4" },
+    { id => "x64",             a => "x86-64" },
+    { id => "preferred-arch-", a => [$ARCH], },
     )
 {
-    my $id   = $rec->{id};
-    my $arch = $rec->{a};
+    my $id      = $rec->{id};
+    my $arch    = $rec->{a};
+    my $is_pref = ( ref($arch) eq 'ARRAY' );
 
-    $themes{$id} = [ "--arch=$arch", "--prefix=$HOME/apps/fcs", ];
+    if ( not $is_pref )
+    {
+        $themes{$id} = [ "--arch=$arch", "--prefix=$HOME/apps/fcs", ];
+    }
 
     my $def = sub {
         my ( $suffix, $theme ) = @_;
@@ -262,6 +268,13 @@ foreach my $rec (
         my ( $suffix, $theme ) = @_;
         return $def->( $suffix, [ '-l', $id . 'bb', @$theme ] );
     };
+    if ($is_pref)
+    {
+        $bb_def = $id_def = sub {
+            my ( $suffix, $theme ) = @_;
+            return $def->( $suffix, [ '-l', $arch->[0] . $suffix ] );
+        };
+    }
 
     # Benchmark for freecell only
     $id_def->( b => 'fc_bench' );

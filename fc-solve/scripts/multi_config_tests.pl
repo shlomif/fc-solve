@@ -411,14 +411,12 @@ elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
     die "LIBAVL2_SOURCE_DIR is invalid.";
 }
 
-# This is just to test that the reporting is working fine.
-# run_cmd('false', {cmd => [qw(false)],});
-# my $ARCH = 'x64';
-my $ARCH = $ENV{FC_SOLVE__MULT_CONFIG_TESTS__GCC_ARCH} // 'n2';
-
 sub gen_ARCH_theme
 {
-    return [ '-l', $ARCH . shift(), '--states-type=INDIRECT_STACK_STATES' ];
+    return [
+        '-l', "preferred-arch-" . shift(),
+        '--states-type=INDIRECT_STACK_STATES'
+    ];
 }
 
 # Load the b or t suffixes.
