@@ -81,6 +81,18 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
 #include "wrap_xxhash.h"
 
+static inline void fcs_states_OB_table_recycle(struct fcs_states_OB_table *t)
+{
+#if 0
+    memset((t->table), '\0', t->cap * sizeof(t->table[0]));
+    t->n = 0;
+#else
+    fcs_states_OB_table_clear(t);
+    fcs_states_OB_table_init(t, 10000);
+#endif
+}
+
+#if 0
 static inline void OB_table_recycle(struct OB_table *t)
 {
 #if 0
@@ -91,6 +103,8 @@ static inline void OB_table_recycle(struct OB_table *t)
     OB_table_init(t, 10000);
 #endif
 }
+#endif
+
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
 static size_t mystackshash(const void *a)
@@ -205,7 +219,7 @@ static inline void alloc_instance(
     memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
-    OB_table_init(&instance->obt_hash, 10000);
+    fcs_states_OB_table_init(&instance->obt_hash, 10000);
 #endif
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
@@ -579,7 +593,7 @@ static inline void start_process_with_board(fcs_instance *const instance,
     memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
-    OB_table_init(&instance->obt_hash, 10000);
+    fcs_states_OB_table_init(&instance->obt_hash, 10000);
 #endif
 #else
 #error FCS_STATE_STORAGE is not defined
@@ -741,7 +755,7 @@ static inline void recycle_inst(fcs_instance *const instance)
 {
     fc_solve_finish_instance(instance);
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
-    OB_table_recycle(&(instance->obt_hash));
+    fcs_states_OB_table_recycle(&(instance->obt_hash));
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
     fc_solve_hash_recycle(&(instance->hash));
@@ -3636,7 +3650,7 @@ static MYINLINE void user_free_resources(fcs_user *const user)
             fc_solve_finish_instance(instance);
         }
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
-        OB_table_clear(&instance->obt_hash);
+        fcs_states_OB_table_clear(&instance->obt_hash);
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
         fc_solve_hash_free(&(instance->hash));

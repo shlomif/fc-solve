@@ -59,7 +59,12 @@ extern "C" {
 #endif
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT))
-#include "OB_table.h"
+#include "wrap_xxhash.h"
+static size_t fcs_states_myhash(const void *a)
+{
+    return DO_XXH(a, sizeof(fcs_state));
+}
+#include "OB_table.c"
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH) ||              \
@@ -561,7 +566,7 @@ struct fc_solve_instance_struct
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     struct rbtree *tree;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
-    struct OB_table obt_hash;
+    struct fcs_states_OB_table obt_hash;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     Pvoid_t judy_array;
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
