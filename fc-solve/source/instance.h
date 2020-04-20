@@ -58,13 +58,17 @@ extern "C" {
 #include "fcs_hash.h"
 #endif
 
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT))
+#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
 #include "wrap_xxhash.h"
 static size_t fcs_states_myhash(const void *a)
 {
     return DO_XXH(a, sizeof(fcs_state));
 }
-#include "OB_table.c"
+#include "states_ob/OB_table.c"
+#endif
+
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
+#include "OB_table.h"
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH) ||              \
