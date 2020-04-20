@@ -215,6 +215,9 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${dir}")
     EXECUTE_PROCESS(COMMAND "git" "clone" "-b" "shlomify-changes--remove-param" https://github.com/shlomif/OB_table "${dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
+    EXECUTE_PROCESS(COMMAND "perl" "prefix_filter.pl"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/${dir}"
+    )
 ENDIF ()
 SET(obt_dir "${dir}")
 
@@ -432,7 +435,9 @@ ENDIF ()
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_OBT") OR
     ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_OBT"))
 
-    add_lib_mods("${obt_dir}/OB_table.c")
+    # add_lib_mods("${obt_dir}/OB_table.c")
+    add_lib_mods("${obt_dir}/states_ob/OB_sentinel.c")
+    INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}/states_ob")
     INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}")
 ENDIF ()
 

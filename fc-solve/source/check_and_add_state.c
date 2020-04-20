@@ -481,7 +481,8 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
         existing_void == new_state_void ? NULL : existing_void);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
     const_AUTO(new_state_void, FCS_STATE_kv_to_collectible(new_state));
-    void **newvar = OB_table_insert_loc(&instance->obt_hash, new_state_void);
+    void **newvar =
+        fcs_states_OB_table_insert_loc(&instance->obt_hash, new_state_void);
     void *existing_void = newvar[0];
     return HANDLE_existing_void(
         existing_void == new_state_void ? NULL : existing_void);
