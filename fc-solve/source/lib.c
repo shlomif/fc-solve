@@ -83,8 +83,13 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
 
 static inline void OB_table_recycle(struct OB_table *t)
 {
+#if 0
     memset((t->table), '\0', t->cap * sizeof(t->table[0]));
     t->n = 0;
+#else
+    OB_table_clear(t);
+    OB_table_init(t, 10000);
+#endif
 }
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
