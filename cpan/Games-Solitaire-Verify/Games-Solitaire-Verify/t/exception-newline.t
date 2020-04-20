@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 2;
+use Test::More;
 
 use vars qw/ $trap /;
 eval
@@ -10,7 +10,11 @@ eval
 
 if ($@)
 {
-    plan 'skip_all' => "No Test::Trap!";
+    plan 'skip_all' => "Failed to load Test::Trap . Skipping.";
+}
+else
+{
+    plan tests => 2;
 }
 
 {
