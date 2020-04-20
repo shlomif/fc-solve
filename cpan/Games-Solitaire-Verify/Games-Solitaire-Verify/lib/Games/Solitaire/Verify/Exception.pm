@@ -133,7 +133,10 @@ use Exception::Class (
 package Games::Solitaire::Verify::Exception;
 
 use overload q#""# => sub {
-    return shift()->error() . "\n";
+    my $self = shift;
+    my $err  = $self->error();
+    $err =~ s/([^\n])\z/$1\n/ms;
+    return $err;
 };
 
 =head1 SYNOPSIS
