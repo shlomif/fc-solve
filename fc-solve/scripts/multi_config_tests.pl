@@ -416,9 +416,14 @@ elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
 # my $ARCH = 'x64';
 my $ARCH = $ENV{FC_SOLVE__MULT_CONFIG_TESTS__GCC_ARCH} // 'n2';
 
+sub gen_ARCH_theme
+{
+    return [ '-l', $ARCH . shift(), '--states-type=INDIRECT_STACK_STATES' ];
+}
+
 # Load the b or t suffixes.
-my @LB = ( '-l', $ARCH . 'b' );
-my @LT = ( '-l', $ARCH . 't' );
+my @LB = @{ gen_ARCH_theme('b') };
+my @LT = @{ gen_ARCH_theme('t') };
 
 sub reg_tatzer_test
 {
@@ -483,22 +488,44 @@ reg_test(
 );
 my $TRUE = 1;
 reg_test(
-    { blurb => "build_only: no iter-handler", randomly_avoid => $TRUE, },
+    {
+        blurb          => "build_only: no iter-handler",
+        randomly_avoid => $TRUE,
+    },
     {
         do_not_test => 1,
         tatzer_args => [ @LB, qw(-l extra_speed --without-iter-handler) ]
     }
 );
-reg_test( "Plain CMake Default", { cmake_args => [], run_perltidy => 1, } );
 reg_test(
-    { blurb      => "Non-Debondt Delta States", randomly_avoid => $TRUE, },
+    "Plain CMake Default",
+    {
+        cmake_args   => [],
+        run_perltidy => 1,
+    }
+);
+reg_test(
+    {
+        blurb          => "Non-Debondt Delta States",
+        randomly_avoid => $TRUE,
+    },
     { cmake_args => ['-DFCS_DISABLE_DEBONDT_DELTA_STATES=1'] }
 );
-reg_tatzer_test( { blurb => "--rcs", randomly_avoid => $TRUE, }, qw(--rcs) );
+reg_tatzer_test(
+    {
+        blurb          => "--rcs",
+        randomly_avoid => $TRUE,
+    },
+    qw(--rcs)
+);
 
 reg_lt_test(
-    { blurb => "libavl2 with COMPACT_STATES", randomly_avoid => $TRUE, },
-    qw(--states-type=COMPACT_STATES --libavl2-p=prb) );
+    {
+        blurb          => "libavl2 with COMPACT_STATES",
+        randomly_avoid => $TRUE,
+    },
+    qw(--states-type=COMPACT_STATES --libavl2-p=prb)
+);
 
 reg_lt_test(
     {
@@ -509,31 +536,56 @@ reg_lt_test(
 );
 
 reg_lt_test(
-    { blurb => "libavl2 with INDIRECT_STATES", randomly_avoid => $TRUE, },
-    qw(--libavl2-p=prb), );
+    {
+        blurb          => "libavl2 with INDIRECT_STACK_STATES",
+        randomly_avoid => $TRUE,
+    },
+    qw(--libavl2-p=prb),
+);
 
-reg_tatzer_test( { blurb => "without-depth-field", randomly_avoid => $TRUE, },
-    qw(--without-depth-field) );
 reg_tatzer_test(
-    { blurb => "without-depth-field and rcs", randomly_avoid => $TRUE, },
-    qw(--without-depth-field --rcs) );
-reg_lt_test( { blurb => "No FCS_SINGLE_HARD_THREAD", randomly_avoid => $TRUE, },
-    '--nosingle-ht' );
-
-reg_lt_test( { blurb => "dbm apr_hash", randomly_avoid => $TRUE, },
-    '--dbmtree=apr_hash' );
+    {
+        blurb          => "without-depth-field",
+        randomly_avoid => $TRUE,
+    },
+    qw(--without-depth-field)
+);
+reg_tatzer_test(
+    {
+        blurb          => "without-depth-field and rcs",
+        randomly_avoid => $TRUE,
+    },
+    qw(--without-depth-field --rcs)
+);
 reg_lt_test(
-    { blurb => "Break Backward Compatibility #1", randomly_avoid => $TRUE, },
-    '--break-back-compat-1' );
+    {
+        blurb          => "No FCS_SINGLE_HARD_THREAD",
+        randomly_avoid => $TRUE,
+    },
+    '--nosingle-ht'
+);
+
+reg_lt_test(
+    {
+        blurb          => "dbm apr_hash",
+        randomly_avoid => $TRUE,
+    },
+    '--dbmtree=apr_hash'
+);
+reg_lt_test(
+    {
+        blurb          => "Break Backward Compatibility #1",
+        randomly_avoid => $TRUE,
+    },
+    '--break-back-compat-1'
+);
 
 reg_test(
     {
         blurb          => "Freecell-only (as well as Break Backcompat)",
         randomly_avoid => $TRUE,
     },
-    {
-        tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only), ],
-    }
+    { tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only), ], }
 );
 
 {

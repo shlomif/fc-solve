@@ -158,7 +158,9 @@ my %themes = (
     bench => [
         qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1 --enable-inc-solving=0)
     ],
-    fc_bench => [qw( -l bench --fc-only --without-fc-pro --nobuild-docs )],
+    fc_bench => [
+        qw( -l bench --fc-only --without-fc-pro --nobuild-docs --states-type=COMPACT_STATES )
+    ],
     mem_reduction_settings => [
         qw(
             --rcs --with-compact-moves --without-depth-field
