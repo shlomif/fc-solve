@@ -432,8 +432,8 @@ ENDIF ()
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_OBT") OR
     ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_OBT"))
 
-    add_lib_mods("${obt_dir}/OB_table.c")
-    INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}")
+    add_lib_mods("${obt_dir}/source/table.c")
+    INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}/include")
 ENDIF ()
 
 # Search for libredblack if appropriate.

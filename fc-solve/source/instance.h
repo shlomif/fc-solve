@@ -59,7 +59,7 @@ extern "C" {
 #endif
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT))
-#include "OB_table.h"
+#include "OB_table/table.h"
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH) ||              \
