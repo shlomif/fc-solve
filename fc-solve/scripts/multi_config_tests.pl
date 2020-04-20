@@ -411,17 +411,9 @@ elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
     die "LIBAVL2_SOURCE_DIR is invalid.";
 }
 
-sub gen_ARCH_theme
-{
-    return [
-        '-l', "preferred-arch-" . shift(),
-        '--states-type=INDIRECT_STACK_STATES'
-    ];
-}
-
 # Load the b or t suffixes.
-my @LB = @{ gen_ARCH_theme('b') };
-my @LT = @{ gen_ARCH_theme('t') };
+my @LB = qw(-l citest-arch-b);
+my @LT = qw(-l citest-arch-t);
 
 sub reg_tatzer_test
 {
@@ -466,7 +458,7 @@ reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
 reg_test(
     "-l n2t with --disable-patsolve",
     {
-        tatzer_args        => [ @LT, '--disable-patsolve' ],
+        tatzer_args        => [ '-l', 'citest-disable-patsolve', ],
         extra_test_command => [
             (
                 map { ; ( "--execute", $_ ) } (

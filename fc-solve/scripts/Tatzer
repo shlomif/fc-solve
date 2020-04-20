@@ -154,8 +154,13 @@ sub _set_to_google_hash
 }
 
 my %themes = (
-    tt    => [qw(-r --notest-suite --static)],
-    bench => [
+    'citest-arch-b' =>
+        [qw(-l preferred-arch-b --states-type=INDIRECT_STACK_STATES)],
+    'citest-arch-t' =>
+        [qw(-l preferred-arch-t --states-type=INDIRECT_STACK_STATES)],
+    'citest-disable-patsolve' => [qw(-l citest-arch-t --disable-patsolve)],
+    tt                        => [qw(-r --notest-suite --static)],
+    bench                     => [
         qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1 --enable-inc-solving=0)
     ],
     fc_bench => [
