@@ -1,5 +1,10 @@
 Revision history for Games-Solitaire-Verify
 
+0.2302  2020-04-20
+        - Try to Fix "You tried to plan twice" error in t/exception-newline.t .
+            - https://github.com/shlomif/fc-solve/issues/39
+            - Thanks to SREZIC !
+
 0.2301  2020-04-20
         - Emit trailing newline in Exception::Class errors so the shell
         will not swallow them, and instead display them.
