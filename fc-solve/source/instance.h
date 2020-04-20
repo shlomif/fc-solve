@@ -58,7 +58,8 @@ extern "C" {
 #include "fcs_hash.h"
 #endif
 
-#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT))
+#if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT) ||                           \
+     (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
 #include "OB_table/table.h"
 #endif
 
