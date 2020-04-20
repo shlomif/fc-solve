@@ -420,9 +420,6 @@ elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
     die "LIBAVL2_SOURCE_DIR is invalid.";
 }
 
-# Load the b or t suffixes.
-my @LB = qw(-l citest-arch-b);
-
 sub reg_tatzer_test
 {
     my $blurb = shift;
@@ -442,7 +439,7 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
-reg_tatzer_test( "Default", () );
+reg_theme_test( "Default", 'empty', );
 
 sub disabling_website_build_for_now
 {
@@ -466,7 +463,7 @@ reg_tatzer_test( "--fc-only wo break back compat", qw(--fc-only) );
 reg_test(
     "-l n2t with --disable-patsolve",
     {
-        tatzer_args        => [ '-l', 'citest-disable-patsolve', ],
+        tatzer_theme       => 'citest-disable-patsolve',
         extra_test_command => [
             (
                 map { ; ( "--execute", $_ ) } (
@@ -480,8 +477,8 @@ reg_test(
 reg_test(
     "build_only: maximum speed preset",
     {
-        do_not_test => 1,
-        tatzer_args => [ @LB, qw(-l extra_speed --disable-err-strs) ]
+        do_not_test  => 1,
+        tatzer_theme => 'citest-max-speed',
     }
 );
 my $TRUE = 1;
@@ -491,8 +488,8 @@ reg_test(
         randomly_avoid => $TRUE,
     },
     {
-        do_not_test => 1,
-        tatzer_args => [ @LB, qw(-l extra_speed --without-iter-handler) ]
+        do_not_test  => 1,
+        tatzer_theme => 'citest-speed-noiter',
     }
 );
 reg_test(

@@ -154,6 +154,10 @@ sub _set_to_google_hash
 }
 
 my %themes = (
+    'empty'               => [],
+    'citest-speed-noiter' => [qw(-l citest-extra-speed --without-iter-handler)],
+    'citest-max-speed'    => [qw(-l citest-extra-speed --disable-err-strs)],
+    'citest-extra-speed'  => [qw(-l citest-arch-b -l extra_speed)],
     'citest-arch-b' =>
         [qw(-l preferred-arch-b --states-type=INDIRECT_STACK_STATES)],
     'citest-arch-t' =>
