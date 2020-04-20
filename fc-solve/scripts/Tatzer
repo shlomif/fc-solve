@@ -158,9 +158,19 @@ my %themes = (
         [qw(-l preferred-arch-b --states-type=INDIRECT_STACK_STATES)],
     'citest-arch-t' =>
         [qw(-l preferred-arch-t --states-type=INDIRECT_STACK_STATES)],
+    'citest-bbc'              => [qw(-l citest-arch-t --break-back-compat-1)],
     'citest-disable-patsolve' => [qw(-l citest-arch-t --disable-patsolve)],
-    tt                        => [qw(-r --notest-suite --static)],
-    bench                     => [
+    'citest-nosingle-ht'      => [qw(-l citest-arch-t --nosingle-ht)],
+    'citest-apr_hash'         => [qw(-l citest-arch-t --dbmtree=apr_hash)],
+    'citest-fc-nocompat' =>
+        [qw(-l citest-arch-t --break-back-compat-1 --fc-only)],
+    'citest-compact-t' => [qw(-l preferred-arch-t)],
+    'citest-avl-INDIRECT_STACK_STATES' =>
+        [qw(-l citest-arch-t --libavl2-p=prb)],
+    'citest-avl-COMPACT_STATES' => [qw(-l citest-compact-t --libavl2-p=prb)],
+    'citest-avl-COMPACT_STATES-rcs' => [qw(-l citest-avl-COMPACT_STATES --rcs)],
+    tt                              => [qw(-r --notest-suite --static)],
+    bench                           => [
         qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1 --enable-inc-solving=0)
     ],
     fc_bench => [

@@ -218,15 +218,24 @@ sub run_tests
         return;
     }
     my $tatzer_args       = $args->{'tatzer_args'};
+    my $tatzer_theme      = $args->{'tatzer_theme'};
     my $cmake_args        = $args->{'cmake_args'};
     my $prepare_dist_args = $args->{'prepare_dist_args'};
     my $website_args      = $args->{'website_args'};
 
-    if ( 1 != grep { $_ }
-        ( $tatzer_args, $cmake_args, $prepare_dist_args, $website_args ) )
+    if (
+        1 != grep { $_ } (
+            $tatzer_args,       $tatzer_theme, $cmake_args,
+            $prepare_dist_args, $website_args
+        )
+        )
     {
         die
 "One and only one of tatzer_args or cmake_args or prepare_dist_args must be specified.";
+    }
+    if ($tatzer_theme)
+    {
+        $tatzer_args = [ '-l', $tatzer_theme, ];
     }
 
     my $build_path = _calc_build_path($idx);
@@ -413,7 +422,6 @@ elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
 
 # Load the b or t suffixes.
 my @LB = qw(-l citest-arch-b);
-my @LT = qw(-l citest-arch-t);
 
 sub reg_tatzer_test
 {
@@ -421,10 +429,10 @@ sub reg_tatzer_test
     return reg_test( $blurb, { tatzer_args => [@_] } );
 }
 
-sub reg_lt_test
+sub reg_theme_test
 {
     my $blurb = shift;
-    return reg_tatzer_test( $blurb, @LT, @_ );
+    return reg_test( $blurb, { tatzer_theme => shift(), }, );
 }
 
 sub reg_prep
@@ -509,28 +517,28 @@ reg_tatzer_test(
     qw(--rcs)
 );
 
-reg_lt_test(
+reg_theme_test(
     {
         blurb          => "libavl2 with COMPACT_STATES",
         randomly_avoid => $TRUE,
     },
-    qw(--states-type=COMPACT_STATES --libavl2-p=prb)
+    'citest-avl-COMPACT_STATES',
 );
 
-reg_lt_test(
+reg_theme_test(
     {
         blurb          => "libavl2 with COMPACT_STATES and --rcs",
         randomly_avoid => $TRUE,
     },
-    qw(--states-type=COMPACT_STATES --libavl2-p=prb --rcs),
+    'citest-avl-COMPACT_STATES-rcs',
 );
 
-reg_lt_test(
+reg_theme_test(
     {
         blurb          => "libavl2 with INDIRECT_STACK_STATES",
         randomly_avoid => $TRUE,
     },
-    qw(--libavl2-p=prb),
+    'citest-avl-INDIRECT_STACK_STATES',
 );
 
 reg_tatzer_test(
@@ -547,27 +555,27 @@ reg_tatzer_test(
     },
     qw(--without-depth-field --rcs)
 );
-reg_lt_test(
+reg_theme_test(
     {
         blurb          => "No FCS_SINGLE_HARD_THREAD",
         randomly_avoid => $TRUE,
     },
-    '--nosingle-ht'
+    'citest-nosingle-ht',
 );
 
-reg_lt_test(
+reg_theme_test(
     {
         blurb          => "dbm apr_hash",
         randomly_avoid => $TRUE,
     },
-    '--dbmtree=apr_hash'
+    'citest-apr_hash',
 );
-reg_lt_test(
+reg_theme_test(
     {
         blurb          => "Break Backward Compatibility #1",
         randomly_avoid => $TRUE,
     },
-    '--break-back-compat-1'
+    'citest-bbc',
 );
 
 reg_test(
@@ -575,7 +583,7 @@ reg_test(
         blurb          => "Freecell-only (as well as Break Backcompat)",
         randomly_avoid => $TRUE,
     },
-    { tatzer_args => [ @LT, qw(--break-back-compat-1 --fc-only), ], }
+    { tatzer_theme => 'citest-fc-nocompat', },
 );
 
 {
