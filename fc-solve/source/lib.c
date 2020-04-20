@@ -81,18 +81,7 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
 #include "wrap_xxhash.h"
 
-static inline void fcs_states_OB_table_recycle(struct fcs_states_OB_table *t)
-{
-#if 0
-    memset((t->table), '\0', t->cap * sizeof(t->table[0]));
-    t->n = 0;
-#else
-    fcs_states_OB_table_clear(t);
-    fcs_states_OB_table_init(t, 10000);
-#endif
-}
-
-#if 0
+#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
 static inline void OB_table_recycle(struct OB_table *t)
 {
 #if 0
@@ -103,10 +92,6 @@ static inline void OB_table_recycle(struct OB_table *t)
     OB_table_init(t, 10000);
 #endif
 }
-#endif
-
-
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
 static size_t mystackshash(const void *a)
 {
     return DO_XXH(a, (*(const unsigned char *)a) + 1);
@@ -118,6 +103,16 @@ static bool mycmp_stacks(const void *const v_s1, const void *const v_s2)
 #endif
 
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+static inline void fcs_states_OB_table_recycle(struct fcs_states_OB_table *t)
+{
+#if 0
+    memset((t->table), '\0', t->cap * sizeof(t->table[0]));
+    t->n = 0;
+#else
+    fcs_states_OB_table_clear(t);
+    fcs_states_OB_table_init(t, 10000);
+#endif
+}
 static size_t myhash(const void *a) { return DO_XXH(a, sizeof(fcs_state)); }
 static bool mycomp(const void *const s1, const void *const s2)
 {
