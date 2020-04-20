@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2301  2020-04-20
+        - Emit trailing newline in Exception::Class errors so the shell
+        will not swallow them, and instead display them.
+
 0.2300  2020-03-06
         - Avoid implicit symbol imports
             - https://perl-begin.org/tutorials/bad-elements/#non_explicitly_imported_symbols

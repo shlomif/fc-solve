@@ -130,6 +130,12 @@ use Exception::Class (
 
 );
 
+package Games::Solitaire::Verify::Exception;
+
+use overload q#""# => sub {
+    return shift()->error() . "\n";
+};
+
 =head1 SYNOPSIS
 
     use Games::Solitaire::Verify::Exception;
