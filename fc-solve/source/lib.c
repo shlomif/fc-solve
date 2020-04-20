@@ -84,7 +84,7 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
 static inline void OB_table_recycle(struct OB_table *t)
 {
-#if 0
+#ifdef FCS_OBT__USE_MEMSET_ FOR_RECYCLE
     memset((t->table), '\0', t->cap * sizeof(t->table[0]));
     t->n = 0;
 #else
@@ -105,7 +105,7 @@ static bool mycmp_stacks(const void *const v_s1, const void *const v_s2)
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
 static inline void fcs_states_OB_table_recycle(struct fcs_states_OB_table *t)
 {
-#if 0
+#ifdef FCS_OBT__USE_MEMSET_ FOR_RECYCLE
     memset((t->table), '\0', t->cap * sizeof(t->table[0]));
     t->n = 0;
 #else
