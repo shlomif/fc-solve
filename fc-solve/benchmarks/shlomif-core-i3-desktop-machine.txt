@@ -1820,3 +1820,41 @@ Finished at 1581270653.913798 (total_num_iters=5886704)
 </DUMP>
 
     ( DUMPS-1581270650-p/dump004 )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 4 4 x Several Times
+forking solver and threaded solver
+commit f213d60f3fe282222156b6cf0855a40fb5e1b167
+(commit Date:   Mon Apr 20 23:23:57 2020 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+gcc 7.3.0 ( /home/shlomif/apps/prog/gcc-7.3.0/bin/gcc )
+tcmalloc from mageia.
+Without strip.
+
+2.52526593208313s
+
+    Highlight: converting the fc-only "Tatzer" themes to use
+    COMPACT_STATES instead of INDIRECT_STACK_STATES .
+
+<DUMP>
+Started at 1587386659.786149
+Reached Board No. 4000 at 1587386660.090267
+Reached Board No. 8000 at 1587386660.388812
+Reached Board No. 12000 at 1587386660.694323
+Reached Board No. 16000 at 1587386661.083330
+Unsolved Board No. 11982 at 1587386661.239350
+Reached Board No. 20000 at 1587386661.422504
+Reached Board No. 24000 at 1587386661.698053
+Reached Board No. 28000 at 1587386661.989522
+Reached Board No. 32000 at 1587386662.306795
+Finished at 1587386662.311415 (total_num_iters=5886704)
+</DUMP>
+
+    ( DUMPS-1587386658-t/dump004 )
