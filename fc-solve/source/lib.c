@@ -79,17 +79,23 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT) ||                           \
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
+#ifdef SHLOMIF_BITWISE
+//#if 1
+static const size_t OB_TABLE_INIT_SIZE = (1 << 14);
+#else
+static const size_t OB_TABLE_INIT_SIZE = 10000;
+#endif
 #include "wrap_xxhash.h"
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
 static inline void OB_table_recycle(struct OB_table *t)
 {
-#ifdef FCS_OBT__USE_MEMSET_ FOR_RECYCLE
+#ifdef FCS_OBT__USE_MEMSET_FOR_RECYCLE
     memset((t->table), '\0', t->cap * sizeof(t->table[0]));
     t->n = 0;
 #else
     OB_table_clear(t);
-    OB_table_init(t, 10000);
+    OB_table_init(t, OB_TABLE_INIT_SIZE);
 #endif
 }
 static size_t mystackshash(const void *a)
@@ -105,12 +111,12 @@ static bool mycmp_stacks(const void *const v_s1, const void *const v_s2)
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
 static inline void fcs_states_OB_table_recycle(struct fcs_states_OB_table *t)
 {
-#ifdef FCS_OBT__USE_MEMSET_ FOR_RECYCLE
+#ifdef FCS_OBT__USE_MEMSET_FOR_RECYCLE
     memset((t->table), '\0', t->cap * sizeof(t->table[0]));
     t->n = 0;
 #else
     fcs_states_OB_table_clear(t);
-    fcs_states_OB_table_init(t, 10000);
+    fcs_states_OB_table_init(t, OB_TABLE_INIT_SIZE);
 #endif
 }
 static size_t myhash(const void *a) { return DO_XXH(a, sizeof(fcs_state)); }
@@ -214,14 +220,14 @@ static inline void alloc_instance(
     memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
-    fcs_states_OB_table_init(&instance->obt_hash, 10000);
+    fcs_states_OB_table_init(&instance->obt_hash, OB_TABLE_INIT_SIZE);
 #endif
 #ifdef INDIRECT_STACK_STATES
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
     memset(&instance->stacks_obt_hash, '\0', sizeof(instance->stacks_obt_hash));
     instance->stacks_obt_hash.comp = mycmp_stacks;
     instance->stacks_obt_hash.hash = mystackshash;
-    OB_table_init(&instance->stacks_obt_hash, 10000);
+    OB_table_init(&instance->stacks_obt_hash, OB_TABLE_INIT_SIZE);
 #endif
 #if FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH
     fc_solve_hash_init(meta_alloc, &(instance->stacks_hash),
@@ -588,7 +594,7 @@ static inline void start_process_with_board(fcs_instance *const instance,
     memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
-    fcs_states_OB_table_init(&instance->obt_hash, 10000);
+    fcs_states_OB_table_init(&instance->obt_hash, OB_TABLE_INIT_SIZE);
 #endif
 #else
 #error FCS_STATE_STORAGE is not defined
