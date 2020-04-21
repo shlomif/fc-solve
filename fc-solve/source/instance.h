@@ -64,7 +64,7 @@ static size_t fcs_states_myhash(const void *a)
 {
     return DO_XXH(a, sizeof(fcs_state));
 }
-#include "states_ob/OB_table.c"
+#include "states_ob/source/table.c"
 #endif
 
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)

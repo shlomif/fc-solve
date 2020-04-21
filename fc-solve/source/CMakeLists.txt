@@ -436,12 +436,13 @@ IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_OBT") OR
     ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_OBT"))
 
     IF ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_OBT")
-        add_lib_mods("${obt_dir}/OB_sentinel.c")
-        add_lib_mods("${obt_dir}/OB_table.c")
+        add_lib_mods("${obt_dir}/sentinel.c")
+        add_lib_mods("${obt_dir}/table.c")
     ENDIF ()
-    add_lib_mods("${obt_dir}/states_ob/OB_sentinel.c")
+    add_lib_mods("${obt_dir}/states_ob/source/sentinel.c")
     # INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}/states_ob")
     INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}")
+    INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${obt_dir}/include")
 ENDIF ()
 
 # Search for libredblack if appropriate.
