@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2303  2020-04-22
+        - Hyperlink URLs in the documentation.
+        - Get rid of old and stale perl-POD sections.
+
 0.2302  2020-04-20
         - Try to Fix "You tried to plan twice" error in t/exception-newline.t .
             - https://github.com/shlomif/fc-solve/issues/39
