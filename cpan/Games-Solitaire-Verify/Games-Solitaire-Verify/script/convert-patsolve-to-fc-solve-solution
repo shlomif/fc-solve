@@ -3,9 +3,10 @@
 use strict;
 use warnings;
 
-use Games::Solitaire::Verify::App::CmdLine::From_Patsolve;
+use Games::Solitaire::Verify::App::CmdLine::From_Patsolve ();
 
-my $app = Games::Solitaire::Verify::App::CmdLine::From_Patsolve->new({argv => \@ARGV});
+my $app = Games::Solitaire::Verify::App::CmdLine::From_Patsolve->new(
+    { argv => \@ARGV } );
 
 $app->run();
 
@@ -54,36 +55,6 @@ What empty stacks can be filled by.
 =head2 --sequence-move [limited|unlimited]
 
 Whether the sequence move is limited or unlimited.
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-games-solitaire-verifysolution at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Games-Solitaire-Verify>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Games::Solitaire::Verify
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Games-Solitaire-Verify>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Games-Solitaire-Verify>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Games-Solitaire-Verify>
-
-=back
 
 =head1 AUTHORS
 
