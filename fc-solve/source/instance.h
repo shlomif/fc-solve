@@ -58,6 +58,7 @@ extern "C" {
 #include "fcs_hash.h"
 #endif
 
+#define SHLOMIFY_BITWISE
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
 #include "wrap_xxhash.h"
 static size_t fcs_states_myhash(const void *a)

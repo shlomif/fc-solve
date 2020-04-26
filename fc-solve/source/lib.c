@@ -79,9 +79,9 @@ static const fcs_stats initial_stats = {.num_checked_states = 0,
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT) ||                           \
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT))
-#ifdef SHLOMIF_BITWISE
+#ifdef SHLOMIFY_BITWISE
 //#if 1
-static const size_t OB_TABLE_INIT_SIZE = (1 << 14);
+static const size_t OB_TABLE_INIT_SIZE = (1 << 10);
 #else
 static const size_t OB_TABLE_INIT_SIZE = 10000;
 #endif
