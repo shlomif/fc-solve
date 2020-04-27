@@ -176,7 +176,8 @@ DETECT_MOVE:
             {
                 return $map->("$s-$s");
             }
-            my ( $start, $end ) = $s =~ /\A(\S\S)-(\S\S)\z/;
+            my ( $start, $end ) = $s =~ /\A(\S\S)-(\S\S)\z/
+                or die "wrong found_moves <<$s>>!";
             my $sc =
                 Games::Solitaire::Verify::Card->new( { string => $start } );
             my $ec = Games::Solitaire::Verify::Card->new( { string => $end } );
