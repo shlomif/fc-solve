@@ -315,6 +315,30 @@ DETECT_MOVE:
             );
             last DETECT_MOVE;
         }
+        if ( my ( $src_col_idx, $dest_col_idx ) =
+            $move_s =~ /\A([1-8])([1-8])\z/ )
+        {
+            --$src_col_idx;
+            --$dest_col_idx;
+            if ( $src_card ne
+                $self->_st->get_column($src_col_idx)->top->to_string )
+            {
+                die "wrong move stack to stack - $move_line";
+            }
+            if (
+                $dest ne $self->_st->get_column($dest_col_idx)->top->to_string )
+            {
+                die "wrong move stack to stack - $move_line";
+            }
+
+            $self->_perform_and_output_move(
+                sprintf(
+                    "Move %d cards from stack %d to stack %d",
+                    1, $src_col_idx, $dest_col_idx,
+                ),
+            );
+            last DETECT_MOVE;
+        }
 
         ...;
     }
