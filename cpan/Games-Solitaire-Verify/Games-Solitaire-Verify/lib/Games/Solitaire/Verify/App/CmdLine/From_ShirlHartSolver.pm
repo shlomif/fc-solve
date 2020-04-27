@@ -74,10 +74,8 @@ DETECT_MOVE:
         my ( $src_char, $dest_char ) = @src_dest;
         if ( defined( my $src_col_idx = $try_col->($src_char) ) )
         {
-            if ( my ( undef, $dest_fc_idx ) =
-                $move_s =~ /\A($COL_RE)($FREECELL_RE)\z/ )
+            if ( defined( my $dest_fc_idx = $try_fc->($dest_char) ) )
             {
-                $dest_fc_idx = $fc{$dest_fc_idx};
                 if ( $dest ne 'f' )
                 {
                     die "wrong move to freecell - $move_line";
@@ -96,10 +94,8 @@ DETECT_MOVE:
                 );
                 last DETECT_MOVE;
             }
-            if ( my ( undef, $dest_col_idx ) =
-                $move_s =~ /\A($COL_RE)($COL_RE)\z/ )
+            if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
             {
-                --$dest_col_idx;
                 $src_card = substr( $src_card, 0, 2 );
                 my $col = $self->_st->get_column($src_col_idx);
                 my $idx = first { $col->pos($_)->to_string eq $src_card }
@@ -123,7 +119,7 @@ DETECT_MOVE:
                 last DETECT_MOVE;
             }
 
-            if ( my ( undef, ) = $move_s =~ /\A($COL_RE)(?:h)\z/ )
+            if ( $dest_char eq 'h' )
             {
                 if ( $src_card ne
                     $self->_st->get_column($src_col_idx)->top->to_string )
@@ -144,8 +140,7 @@ DETECT_MOVE:
         }
         elsif ( defined( my $src_fc_idx = $try_fc->($src_char) ) )
         {
-
-            if ( my ( undef, ) = $move_s =~ /\A($FREECELL_RE)(?:h)\z/ )
+            if ( $dest_char eq 'h' )
             {
                 if ( $src_card ne
                     $self->_st->get_freecell($src_fc_idx)->to_string )
@@ -164,10 +159,8 @@ DETECT_MOVE:
                 last DETECT_MOVE;
             }
 
-            if ( my ( undef, $dest_col_idx ) =
-                $move_s =~ /\A($FREECELL_RE)($COL_RE)\z/ )
+            if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
             {
-                --$dest_col_idx;
                 if ( $src_card ne
                     $self->_st->get_freecell($src_fc_idx)->to_string )
                 {
