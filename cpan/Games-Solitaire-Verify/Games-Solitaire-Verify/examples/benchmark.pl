@@ -5,10 +5,10 @@ use warnings;
 
 use autodie;
 
-use List::MoreUtils qw(first_index true);
+use List::Util qw( first );
 
-use Games::Solitaire::Verify::Solution;
-use Games::Solitaire::Verify::App::CmdLine;
+use Games::Solitaire::Verify::Solution     ();
+use Games::Solitaire::Verify::App::CmdLine ();
 
 if ( $ARGV[0] =~ m{\A-h|--help\z} )
 {
@@ -27,7 +27,7 @@ EOF
 
 my @args = @ARGV;
 
-my $separator = first_index { $_ eq '--' } @args;
+my $separator = first { $args[$_] eq '--' } keys @args;
 if ( $separator < 0 )
 {
     die
@@ -55,7 +55,7 @@ foreach my $board_idx ( 1 .. $LAST_INDEX )
     my $unsolved    = $_line_found->('I could not solve');
     my $intractable = $_line_found->('Iterations count exceeded');
 
-    if ( 1 != true { $_ } ( $is_solvable, $unsolved, $intractable ) )
+    if ( 1 != scalar( grep { $_ } ( $is_solvable, $unsolved, $intractable ) ) )
     {
         die "Game is more than one of solved, unsolvable or intractable!";
     }

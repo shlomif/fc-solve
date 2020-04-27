@@ -137,7 +137,9 @@ use overload q#""# => sub {
     my $err  = $self->error();
     $err =~ s/([^\n])\z/$1\n/ms;
     return $err;
-};
+    },
+    'bool'     => sub { return 1; },
+    'fallback' => 1;
 
 =head1 SYNOPSIS
 

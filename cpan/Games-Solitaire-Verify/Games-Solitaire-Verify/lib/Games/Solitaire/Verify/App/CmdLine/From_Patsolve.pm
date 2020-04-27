@@ -6,7 +6,7 @@ use autodie;
 
 use parent 'Games::Solitaire::Verify::FromOtherSolversBase';
 
-use List::MoreUtils qw(firstidx);
+use List::Util qw(first);
 
 __PACKAGE__->mk_acc_ref(
     [
@@ -27,18 +27,18 @@ sub _perform_move
     if ( my ($src_card_s) = $move_line =~ /\A(.[HCDS]) to temp\z/ )
     {
         my $src_col_idx = $self->_find_col_card($src_card_s);
-        if ( $src_col_idx < 0 )
+        if ( not defined($src_col_idx) )
         {
             die "Cannot find card.";
         }
 
-        my $dest_fc_idx = firstidx
+        my $dest_fc_idx = first
         {
             !defined( $self->_st->get_freecell($_) )
         }
         ( 0 .. $self->_st->num_freecells - 1 );
 
-        if ( $dest_fc_idx < 0 )
+        if ( not defined($dest_fc_idx) )
         {
             die "No empty freecell.";
         }
@@ -61,7 +61,7 @@ sub _perform_move
     elsif ( ($src_card_s) = $move_line =~ /\A(.[HCDS]) to empty pile\z/ )
     {
         my $dest_col_idx = $self->_find_empty_col;
-        if ( $dest_col_idx < 0 )
+        if ( not defined($dest_col_idx) )
         {
             die "Cannot find empty col.";
         }
@@ -75,7 +75,7 @@ sub _perform_move
         $move_line =~ /\A(.[HCDS]) to (.[HCDS])\z/ )
     {
         my $dest_col_idx = $self->_find_col_card($dest_card_s);
-        if ( $dest_col_idx < 0 )
+        if ( not defined($dest_col_idx) )
         {
             die "Cannot find card <$dest_card_s>.";
         }

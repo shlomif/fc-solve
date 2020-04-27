@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use autodie;
 
-use List::MoreUtils qw(firstidx);
+use List::Util qw(first);
 use Path::Tiny qw/ path /;
 
 use parent 'Games::Solitaire::Verify::Base';
@@ -193,7 +193,7 @@ sub _find_col_card
 {
     my ( $self, $card_s ) = @_;
 
-    return firstidx
+    return first
     {
         my $col = $self->_st->get_column($_);
         ( $col->len == 0 ) ? 0 : $col->top->fast_s eq $card_s
@@ -205,7 +205,7 @@ sub _find_empty_col
 {
     my ($self) = @_;
 
-    return firstidx
+    return first
     {
         $self->_st->get_column($_)->len == 0
     }
@@ -215,7 +215,7 @@ sub _find_empty_col
 sub _find_fc_card
 {
     my ( $self, $card_s ) = @_;
-    my $dest_fc_idx = firstidx
+    return first
     {
         my $card = $self->_st->get_freecell($_);
         defined($card) ? ( $card->fast_s eq $card_s ) : 0;
@@ -229,10 +229,10 @@ sub _find_card_src_string
 
     my $src_col_idx = $self->_find_col_card($src_card_s);
 
-    if ( $src_col_idx < 0 )
+    if ( not defined $src_col_idx )
     {
         my $src_fc_idx = $self->_find_fc_card($src_card_s);
-        if ( $src_fc_idx < 0 )
+        if ( not defined($src_fc_idx) )
         {
             die "Cannot find card <$src_card_s>.";
         }

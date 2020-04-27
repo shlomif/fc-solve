@@ -122,6 +122,7 @@ sub _init
     {
         return $self->_from_fcs_string( $args->{fcs_string} );
     }
+    return;
 }
 
 =head1 METHODS

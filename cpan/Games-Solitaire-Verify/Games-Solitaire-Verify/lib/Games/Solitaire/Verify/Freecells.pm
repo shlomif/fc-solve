@@ -15,8 +15,6 @@ use parent 'Games::Solitaire::Verify::Base';
 use Games::Solitaire::Verify::Exception ();
 use Games::Solitaire::Verify::Card      ();
 
-use List::Util qw(first);
-
 # _s is the string.
 __PACKAGE__->mk_acc_ref(
     [
