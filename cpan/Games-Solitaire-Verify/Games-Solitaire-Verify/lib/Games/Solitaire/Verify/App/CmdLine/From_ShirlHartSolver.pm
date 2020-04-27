@@ -452,7 +452,7 @@ DETECT_MOVE:
         while ( $count > 0 )
         {
             $count = 0;
-            foreach my $suit ( keys %suits )
+            foreach my $suit ( sort( keys %suits ) )
             {
                 my @src_s;
                 eval {
