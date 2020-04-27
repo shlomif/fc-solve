@@ -1,5 +1,8 @@
 Revision history for Games-Solitaire-Verify
 
+0.2401  2020-04-27
+        - Refactoring and cleanups.
+
 0.2400  2020-04-27
         - Add lib/Games/Solitaire/Verify/App/CmdLine/From_ShirlHartSolver.pm
 
