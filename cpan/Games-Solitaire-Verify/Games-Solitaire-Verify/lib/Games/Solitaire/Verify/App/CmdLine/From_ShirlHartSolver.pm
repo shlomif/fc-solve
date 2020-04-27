@@ -11,6 +11,7 @@ use Games::Solitaire::Verify::Solution         ();
 use Games::Solitaire::Verify::State::LaxParser ();
 use Games::Solitaire::Verify::Move             ();
 
+use List::Util qw(first);
 use List::MoreUtils qw(firstidx);
 
 use Getopt::Long qw(GetOptionsFromArray);
@@ -320,13 +321,20 @@ DETECT_MOVE:
         {
             --$src_col_idx;
             --$dest_col_idx;
-            if ( $src_card ne
-                $self->_st->get_column($src_col_idx)->top->to_string )
+            $src_card = substr( $src_card, 0, 2 );
+            my $col = $self->_st->get_column($src_col_idx);
+            my $idx = first { $col->pos($_)->to_string eq $src_card }
+            ( 0 .. $col->len - 1 );
+            if ( !defined $idx )
             {
                 die "wrong move stack to stack - $move_line";
             }
+            my $dcol = $self->_st->get_column($dest_col_idx);
             if (
-                $dest ne $self->_st->get_column($dest_col_idx)->top->to_string )
+                $dest eq 'e'
+                ? ( $dcol->len() > 0 )
+                : ( $dest ne $dcol->top->to_string )
+                )
             {
                 die "wrong move stack to stack - $move_line";
             }
@@ -334,13 +342,76 @@ DETECT_MOVE:
             $self->_perform_and_output_move(
                 sprintf(
                     "Move %d cards from stack %d to stack %d",
-                    1, $src_col_idx, $dest_col_idx,
+                    $col->len() - $idx,
+                    $src_col_idx, $dest_col_idx,
                 ),
             );
             last DETECT_MOVE;
         }
 
-        ...;
+        if ( my ( $src_col_idx, ) = $move_s =~ /\A([1-8])(?:h)\z/ )
+        {
+            --$src_col_idx;
+            if ( $src_card ne
+                $self->_st->get_column($src_col_idx)->top->to_string )
+            {
+                die "wrong move stack to foundations - $move_line";
+            }
+            if ( $dest ne 'h' )
+            {
+                die "wrong move stack to foundations - $move_line";
+            }
+
+            $self->_perform_and_output_move(
+                sprintf( "Move a card from stack %d to the foundations",
+                    $src_col_idx ),
+            );
+            last DETECT_MOVE;
+        }
+
+        if ( my ( $src_fc_idx, ) = $move_s =~ /\A([a-d])(?:h)\z/ )
+        {
+            $src_fc_idx = $fc{$src_fc_idx};
+            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
+            {
+                die "wrong move fc to foundations - $move_line";
+            }
+            if ( $dest ne 'h' )
+            {
+                die "wrong move fc to foundations - $move_line";
+            }
+
+            $self->_perform_and_output_move(
+                sprintf( "Move a card from freecell %d to the foundations",
+                    $src_fc_idx ),
+            );
+            last DETECT_MOVE;
+        }
+
+        if ( my ( $src_fc_idx, $dest_col_idx ) =
+            $move_s =~ /\A([a-d])([1-8])\z/ )
+        {
+            $src_fc_idx = $fc{$src_fc_idx};
+            --$dest_col_idx;
+            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
+            {
+                die "wrong move freecell to stack - $move_line";
+            }
+            if (
+                $dest ne $self->_st->get_column($dest_col_idx)->top->to_string )
+            {
+                die "wrong move freecell to stack - $move_line";
+            }
+
+            $self->_perform_and_output_move(
+                sprintf(
+                    "Move a card from freecell %d to stack %d",
+                    $src_fc_idx, $dest_col_idx,
+                ),
+            );
+            last DETECT_MOVE;
+        }
+        die "wrong move - $move_line";
     }
 
     if ( length $found_moves )
