@@ -5,6 +5,7 @@ use warnings;
 use autodie;
 
 use List::MoreUtils qw(firstidx);
+use Path::Tiny qw/ path /;
 
 use parent 'Games::Solitaire::Verify::Base';
 
@@ -139,21 +140,6 @@ sub _get_buffer
     return ${ $self->_buffer_ref };
 }
 
-sub _slurp
-{
-    my $filename = shift;
-
-    open my $in, '<', $filename
-        or die "Cannot open '$filename' for slurping - $!";
-
-    local $/;
-    my $contents = <$in>;
-
-    close($in);
-
-    return $contents;
-}
-
 sub _read_initial_state
 {
     my $self = shift;
@@ -161,7 +147,7 @@ sub _read_initial_state
     $self->_st(
         Games::Solitaire::Verify::State::LaxParser->new(
             {
-                string           => scalar( _slurp( $self->_filename ) ),
+                string           => path( $self->_filename )->slurp_raw,
                 variant          => 'custom',
                 'variant_params' => $self->_variant_params(),
             }
