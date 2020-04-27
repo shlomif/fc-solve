@@ -287,6 +287,8 @@ converting from Shirl Hart's solver's solutions to fc-solve ones.
 This is a a modulino for
 converting from Shirl Hart's solver's solutions to fc-solve ones.
 
+L<https://github.com/shlomif/shirl-hart-freecell-solver/> .
+
 =head1 METHODS
 
 =head2 run()
