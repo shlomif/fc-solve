@@ -11,6 +11,7 @@ use List::Util qw(first);
 __PACKAGE__->mk_acc_ref(
     [
         qw(
+            _move_was_performed
             _input_move_index
             _st
             _filename
@@ -24,9 +25,147 @@ __PACKAGE__->mk_acc_ref(
 my $COL_RE      = qr/[1-8]/;
 my $FREECELL_RE = qr/[abcd]/;
 
+sub _perform_and_output_move_wrapper
+{
+    my $self = shift;
+
+    $self->_perform_and_output_move(shift);
+    return $self->_move_was_performed(1);
+}
+
+sub _analyze_shirl_hart_move
+{
+    my ( $self, $src_char, $dest_char, $move_line, $src_card, $dest ) = @_;
+    my %fc                = ( a => 0, b => 1, c => 2, d => 3 );
+    my $is_valid_dest_col = sub {
+        my ($dest_col_idx) = @_;
+        my $dcol = $self->_st->get_column($dest_col_idx);
+        return (
+            $dest eq 'e'
+            ? ( $dcol->len() > 0 )
+            : ( $dest ne $dcol->top->to_string )
+        );
+    };
+    my $try_col = sub {
+        my $c = shift;
+        if ( $c =~ /\A$COL_RE\z/ )
+        {
+            return $c - 1;
+        }
+        return undef;
+    };
+    my $try_fc = sub {
+        my $c = shift;
+        return $fc{$c};
+    };
+    if ( defined( my $src_col_idx = $try_col->($src_char) ) )
+    {
+        if ( defined( my $dest_fc_idx = $try_fc->($dest_char) ) )
+        {
+            if ( $dest ne 'f' )
+            {
+                die "wrong move to freecell - $move_line";
+            }
+            if ( $src_card ne
+                $self->_st->get_column($src_col_idx)->top->to_string )
+            {
+                die "wrong move to freecell - $move_line";
+            }
+
+            return $self->_perform_and_output_move_wrapper(
+                sprintf(
+                    "Move a card from stack %d to freecell %d",
+                    $src_col_idx, $dest_fc_idx,
+                ),
+            );
+        }
+        if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
+        {
+            $src_card = substr( $src_card, 0, 2 );
+            my $col = $self->_st->get_column($src_col_idx);
+            my $idx = first { $col->pos($_)->to_string eq $src_card }
+            ( 0 .. $col->len - 1 );
+            if ( !defined $idx )
+            {
+                die "wrong move stack to stack - $move_line";
+            }
+            if ( $is_valid_dest_col->($dest_col_idx) )
+            {
+                die "wrong move stack to stack - $move_line";
+            }
+
+            return $self->_perform_and_output_move_wrapper(
+                sprintf(
+                    "Move %d cards from stack %d to stack %d",
+                    $col->len() - $idx,
+                    $src_col_idx, $dest_col_idx,
+                ),
+            );
+        }
+
+        if ( $dest_char eq 'h' )
+        {
+            if ( $src_card ne
+                $self->_st->get_column($src_col_idx)->top->to_string )
+            {
+                die "wrong move stack to foundations - $move_line";
+            }
+            if ( $dest ne 'h' )
+            {
+                die "wrong move stack to foundations - $move_line";
+            }
+
+            return $self->_perform_and_output_move_wrapper(
+                sprintf( "Move a card from stack %d to the foundations",
+                    $src_col_idx ),
+            );
+        }
+    }
+    elsif ( defined( my $src_fc_idx = $try_fc->($src_char) ) )
+    {
+        if ( $dest_char eq 'h' )
+        {
+            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
+            {
+                die "wrong move fc to foundations - $move_line";
+            }
+            if ( $dest ne 'h' )
+            {
+                die "wrong move fc to foundations - $move_line";
+            }
+
+            return $self->_perform_and_output_move_wrapper(
+                sprintf( "Move a card from freecell %d to the foundations",
+                    $src_fc_idx ),
+            );
+        }
+
+        if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
+        {
+            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
+            {
+                die "wrong move freecell to stack - $move_line";
+            }
+            if ( $is_valid_dest_col->($dest_col_idx) )
+            {
+                die "wrong move freecell to stack - $move_line";
+            }
+
+            return $self->_perform_and_output_move_wrapper(
+                sprintf(
+                    "Move a card from freecell %d to stack %d",
+                    $src_fc_idx, $dest_col_idx,
+                ),
+            );
+        }
+    }
+    die "wrong move - $move_line";
+}
+
 sub _perform_move
 {
     my ( $self, $move_line ) = @_;
+    $self->_move_was_performed(0);
 
     my @fields = ( split /\|/, $move_line, -1 );
     if ( @fields != 5 )
@@ -41,147 +180,15 @@ sub _perform_move
 
     my ( $move_s, $src_card, $dest, $found_moves ) = @fields;
 
-    my %fc       = ( a => 0, b => 1, c => 2, d => 3 );
     my @src_dest = ( $move_s =~ /(.)/gms );
     if ( @src_dest != 2 )
     {
         die "bad length in move <<$move_s>>!";
     }
-DETECT_MOVE:
-    {
-        my $is_valid_dest_col = sub {
-            my ($dest_col_idx) = @_;
-            my $dcol = $self->_st->get_column($dest_col_idx);
-            return (
-                $dest eq 'e'
-                ? ( $dcol->len() > 0 )
-                : ( $dest ne $dcol->top->to_string )
-            );
-        };
-        my $try_col = sub {
-            my $c = shift;
-            if ( $c =~ /\A$COL_RE\z/ )
-            {
-                return $c - 1;
-            }
-            return undef;
-        };
-        my $try_fc = sub {
-            my $c = shift;
-            return $fc{$c};
-        };
-
-        my ( $src_char, $dest_char ) = @src_dest;
-        if ( defined( my $src_col_idx = $try_col->($src_char) ) )
-        {
-            if ( defined( my $dest_fc_idx = $try_fc->($dest_char) ) )
-            {
-                if ( $dest ne 'f' )
-                {
-                    die "wrong move to freecell - $move_line";
-                }
-                if ( $src_card ne
-                    $self->_st->get_column($src_col_idx)->top->to_string )
-                {
-                    die "wrong move to freecell - $move_line";
-                }
-
-                $self->_perform_and_output_move(
-                    sprintf(
-                        "Move a card from stack %d to freecell %d",
-                        $src_col_idx, $dest_fc_idx,
-                    ),
-                );
-                last DETECT_MOVE;
-            }
-            if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
-            {
-                $src_card = substr( $src_card, 0, 2 );
-                my $col = $self->_st->get_column($src_col_idx);
-                my $idx = first { $col->pos($_)->to_string eq $src_card }
-                ( 0 .. $col->len - 1 );
-                if ( !defined $idx )
-                {
-                    die "wrong move stack to stack - $move_line";
-                }
-                if ( $is_valid_dest_col->($dest_col_idx) )
-                {
-                    die "wrong move stack to stack - $move_line";
-                }
-
-                $self->_perform_and_output_move(
-                    sprintf(
-                        "Move %d cards from stack %d to stack %d",
-                        $col->len() - $idx,
-                        $src_col_idx, $dest_col_idx,
-                    ),
-                );
-                last DETECT_MOVE;
-            }
-
-            if ( $dest_char eq 'h' )
-            {
-                if ( $src_card ne
-                    $self->_st->get_column($src_col_idx)->top->to_string )
-                {
-                    die "wrong move stack to foundations - $move_line";
-                }
-                if ( $dest ne 'h' )
-                {
-                    die "wrong move stack to foundations - $move_line";
-                }
-
-                $self->_perform_and_output_move(
-                    sprintf( "Move a card from stack %d to the foundations",
-                        $src_col_idx ),
-                );
-                last DETECT_MOVE;
-            }
-        }
-        elsif ( defined( my $src_fc_idx = $try_fc->($src_char) ) )
-        {
-            if ( $dest_char eq 'h' )
-            {
-                if ( $src_card ne
-                    $self->_st->get_freecell($src_fc_idx)->to_string )
-                {
-                    die "wrong move fc to foundations - $move_line";
-                }
-                if ( $dest ne 'h' )
-                {
-                    die "wrong move fc to foundations - $move_line";
-                }
-
-                $self->_perform_and_output_move(
-                    sprintf( "Move a card from freecell %d to the foundations",
-                        $src_fc_idx ),
-                );
-                last DETECT_MOVE;
-            }
-
-            if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
-            {
-                if ( $src_card ne
-                    $self->_st->get_freecell($src_fc_idx)->to_string )
-                {
-                    die "wrong move freecell to stack - $move_line";
-                }
-                if ( $is_valid_dest_col->($dest_col_idx) )
-                {
-                    die "wrong move freecell to stack - $move_line";
-                }
-
-                $self->_perform_and_output_move(
-                    sprintf(
-                        "Move a card from freecell %d to stack %d",
-                        $src_fc_idx, $dest_col_idx,
-                    ),
-                );
-                last DETECT_MOVE;
-            }
-        }
-        die "wrong move - $move_line";
-    }
+    my ( $src_char, $dest_char ) = @src_dest;
+    $self->_analyze_shirl_hart_move( $src_char, $dest_char, $move_line,
+        $src_card, $dest );
+    die "wrong move - $move_line" if not $self->_move_was_performed;
     $self->_perform_autoflush_to_foundation_moves( $found_moves, $move_line );
 
     $self->_input_move_index( $self->_input_move_index + 1 );
