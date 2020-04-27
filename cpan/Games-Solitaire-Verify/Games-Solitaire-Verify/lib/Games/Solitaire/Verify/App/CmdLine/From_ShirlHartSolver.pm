@@ -182,81 +182,84 @@ DETECT_MOVE:
         }
         die "wrong move - $move_line";
     }
+    $self->_perform_autoflush_to_foundation_moves( $found_moves, $move_line );
 
-    if ( length $found_moves )
-    {
-        my $map;
-        my %suits;
-        $map = sub {
-            my $s = shift;
-            if ( length($s) == 2 )
-            {
-                return $map->("$s-$s");
-            }
-            my ( $start, $end ) = $s =~ /\A(\S\S)-(\S\S)\z/
-                or die "wrong found_moves <<$s>>!";
-            my $sc =
-                Games::Solitaire::Verify::Card->new( { string => $start } );
-            my $ec = Games::Solitaire::Verify::Card->new( { string => $end } );
-            if ( $sc->suit ne $ec->suit )
-            {
-                die "uiui";
-            }
-            if ( exists $suits{ $sc->suit } )
-            {
-                die "duplicate";
-            }
-            if ( $sc->rank > $ec->rank )
-            {
-                die "foo";
-            }
-            $suits{ $sc->suit } = { start => $sc, end => $ec };
-            return;
-        };
-        foreach my $f ( split /;/, $found_moves, -1 )
-        {
-            $map->($f);
-        }
-        my $count = 1;
-    FOUNDATION:
-        while ( $count > 0 )
-        {
-            $count = 0;
-            foreach my $suit ( sort( keys %suits ) )
-            {
-                my @src_s;
-                eval {
-                    @src_s =
-                        $self->_find_card_src_string(
-                        $suits{$suit}->{start}->to_string );
-                };
-                if ( !$@ )
-                {
-                    ++$count;
-                    my $rank = $suits{$suit}->{start}->rank;
-                    if ( $rank == $suits{$suit}->{end}->rank )
-                    {
-                        delete $suits{$suit};
-                    }
-                    else
-                    {
-                        $suits{$suit}->{start}->rank( 1 + $rank );
-                    }
-                    $self->_perform_and_output_move(
-                        sprintf( "Move a card from %s to the foundations",
-                            $src_s[1] ),
-                    );
-                    next FOUNDATION;
-                }
-            }
-        }
-        if (%suits)
-        {
-            die "cannot move to foundations - $move_line";
-        }
-    }
     $self->_input_move_index( $self->_input_move_index + 1 );
     return;
+}
+
+sub _perform_autoflush_to_foundation_moves
+{
+    my ( $self, $found_moves, $move_line ) = @_;
+    return if ( not length $found_moves );
+    my $map;
+    my %suits;
+    $map = sub {
+        my $s = shift;
+        if ( length($s) == 2 )
+        {
+            return $map->("$s-$s");
+        }
+        my ( $start, $end ) = $s =~ /\A(\S\S)-(\S\S)\z/
+            or die "wrong found_moves <<$s>>!";
+        my $sc = Games::Solitaire::Verify::Card->new( { string => $start } );
+        my $ec = Games::Solitaire::Verify::Card->new( { string => $end } );
+        if ( $sc->suit ne $ec->suit )
+        {
+            die "uiui";
+        }
+        if ( exists $suits{ $sc->suit } )
+        {
+            die "duplicate";
+        }
+        if ( $sc->rank > $ec->rank )
+        {
+            die "foo";
+        }
+        $suits{ $sc->suit } = { start => $sc, end => $ec };
+        return;
+    };
+    foreach my $f ( split /;/, $found_moves, -1 )
+    {
+        $map->($f);
+    }
+    my $count = 1;
+FOUNDATION:
+    while ( $count > 0 )
+    {
+        $count = 0;
+        foreach my $suit ( sort( keys %suits ) )
+        {
+            my @src_s;
+            eval {
+                @src_s =
+                    $self->_find_card_src_string(
+                    $suits{$suit}->{start}->to_string );
+            };
+            if ( !$@ )
+            {
+                ++$count;
+                my $rank = $suits{$suit}->{start}->rank;
+                if ( $rank == $suits{$suit}->{end}->rank )
+                {
+                    delete $suits{$suit};
+                }
+                else
+                {
+                    $suits{$suit}->{start}->rank( 1 + $rank );
+                }
+                $self->_perform_and_output_move(
+                    sprintf( "Move a card from %s to the foundations",
+                        $src_s[1] ),
+                );
+                next FOUNDATION;
+            }
+        }
+    }
+    if (%suits)
+    {
+        die "cannot move to foundations - $move_line";
+    }
 }
 
 sub _process_main
