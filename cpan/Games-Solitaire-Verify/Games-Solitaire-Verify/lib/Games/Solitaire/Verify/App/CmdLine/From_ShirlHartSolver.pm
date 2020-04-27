@@ -36,8 +36,8 @@ sub _perform_and_output_move_wrapper
 sub _analyze_shirl_hart_move
 {
     my ( $self, $src_char, $dest_char, $move_line, $src_card, $dest ) = @_;
-    my %fc                = ( a => 0, b => 1, c => 2, d => 3 );
-    my $is_valid_dest_col = sub {
+    my %fc                  = ( a => 0, b => 1, c => 2, d => 3 );
+    my $is_invalid_dest_col = sub {
         my ($dest_col_idx) = @_;
         my $dcol = $self->_st->get_column($dest_col_idx);
         return (
@@ -89,7 +89,7 @@ sub _analyze_shirl_hart_move
             {
                 die "wrong move stack to stack - $move_line";
             }
-            if ( $is_valid_dest_col->($dest_col_idx) )
+            if ( $is_invalid_dest_col->($dest_col_idx) )
             {
                 die "wrong move stack to stack - $move_line";
             }
@@ -146,7 +146,7 @@ sub _analyze_shirl_hart_move
             {
                 die "wrong move freecell to stack - $move_line";
             }
-            if ( $is_valid_dest_col->($dest_col_idx) )
+            if ( $is_invalid_dest_col->($dest_col_idx) )
             {
                 die "wrong move freecell to stack - $move_line";
             }
