@@ -238,22 +238,21 @@ FOUNDATION:
         foreach my $suit ( sort( keys %suits ) )
         {
             my @src_s;
-            eval {
-                @src_s =
-                    $self->_find_card_src_string(
-                    $suits{$suit}->{start}->to_string );
-            };
+            my $rec   = $suits{$suit};
+            my $start = $rec->{start};
+            eval { @src_s = $self->_find_card_src_string(
+                    $start->to_string ); };
             if ( !$@ )
             {
                 ++$count;
-                my $rank = $suits{$suit}->{start}->rank;
-                if ( $rank == $suits{$suit}->{end}->rank )
+                my $rank = $start->rank;
+                if ( $rank == $rec->{end}->rank )
                 {
                     delete $suits{$suit};
                 }
                 else
                 {
-                    $suits{$suit}->{start}->rank( 1 + $rank );
+                    $start->rank( 1 + $rank );
                 }
                 $self->_perform_and_output_move(
                     sprintf( "Move a card from %s to the foundations",
