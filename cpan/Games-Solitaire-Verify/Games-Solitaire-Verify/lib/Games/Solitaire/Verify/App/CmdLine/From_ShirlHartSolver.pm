@@ -21,6 +21,9 @@ __PACKAGE__->mk_acc_ref(
     ]
 );
 
+my $COL_RE      = qr/[1-8]/;
+my $FREECELL_RE = qr/[abcd]/;
+
 sub _perform_move
 {
     my ( $self, $move_line ) = @_;
@@ -52,7 +55,7 @@ DETECT_MOVE:
         };
 
         if ( my ( $src_col_idx, $dest_fc_idx ) =
-            $move_s =~ /\A([1-8])([abcd])\z/ )
+            $move_s =~ /\A($COL_RE)($FREECELL_RE)\z/ )
         {
             --$src_col_idx;
             $dest_fc_idx = $fc{$dest_fc_idx};
@@ -75,7 +78,7 @@ DETECT_MOVE:
             last DETECT_MOVE;
         }
         if ( my ( $src_col_idx, $dest_col_idx ) =
-            $move_s =~ /\A([1-8])([1-8])\z/ )
+            $move_s =~ /\A($COL_RE)($COL_RE)\z/ )
         {
             --$src_col_idx;
             --$dest_col_idx;
@@ -102,7 +105,7 @@ DETECT_MOVE:
             last DETECT_MOVE;
         }
 
-        if ( my ( $src_col_idx, ) = $move_s =~ /\A([1-8])(?:h)\z/ )
+        if ( my ( $src_col_idx, ) = $move_s =~ /\A($COL_RE)(?:h)\z/ )
         {
             --$src_col_idx;
             if ( $src_card ne
@@ -122,7 +125,7 @@ DETECT_MOVE:
             last DETECT_MOVE;
         }
 
-        if ( my ( $src_fc_idx, ) = $move_s =~ /\A([a-d])(?:h)\z/ )
+        if ( my ( $src_fc_idx, ) = $move_s =~ /\A($FREECELL_RE)(?:h)\z/ )
         {
             $src_fc_idx = $fc{$src_fc_idx};
             if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
@@ -142,7 +145,7 @@ DETECT_MOVE:
         }
 
         if ( my ( $src_fc_idx, $dest_col_idx ) =
-            $move_s =~ /\A([a-d])([1-8])\z/ )
+            $move_s =~ /\A($FREECELL_RE)($COL_RE)\z/ )
         {
             $src_fc_idx = $fc{$src_fc_idx};
             --$dest_col_idx;
