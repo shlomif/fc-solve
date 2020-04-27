@@ -6,11 +6,6 @@ use autodie;
 
 use parent 'Games::Solitaire::Verify::FromOtherSolversBase';
 
-use Games::Solitaire::Verify::VariantsMap      ();
-use Games::Solitaire::Verify::Solution         ();
-use Games::Solitaire::Verify::State::LaxParser ();
-use Games::Solitaire::Verify::Move             ();
-
 use List::Util qw(first);
 
 __PACKAGE__->mk_acc_ref(
@@ -276,8 +271,8 @@ FIRST_lines:
 
 =head1 NAME
 
-Games::Solitaire::Verify::App::CmdLine::From_Patsolve - a modulino for
-converting from patsolve solutions to fc-solve ones.
+Games::Solitaire::Verify::App::CmdLine::From_ShirlHartSolver - a modulino for
+converting from Shirl Hart's solver's solutions to fc-solve ones.
 
 =head1 SYNOPSIS
 
@@ -286,7 +281,7 @@ converting from patsolve solutions to fc-solve ones.
 =head1 DESCRIPTION
 
 This is a a modulino for
-converting from patsolve solutions to fc-solve ones.
+converting from Shirl Hart's solver's solutions to fc-solve ones.
 
 =head1 METHODS
 
