@@ -41,6 +41,16 @@ sub _perform_move
     my %fc = ( a => 0, b => 1, c => 2, d => 3 );
 DETECT_MOVE:
     {
+        my $is_valid_dest_col = sub {
+            my ($dest_col_idx) = @_;
+            my $dcol = $self->_st->get_column($dest_col_idx);
+            return (
+                $dest eq 'e'
+                ? ( $dcol->len() > 0 )
+                : ( $dest ne $dcol->top->to_string )
+            );
+        };
+
         if ( my ( $src_col_idx, $dest_fc_idx ) =
             $move_s =~ /\A([1-8])([abcd])\z/ )
         {
@@ -77,12 +87,7 @@ DETECT_MOVE:
             {
                 die "wrong move stack to stack - $move_line";
             }
-            my $dcol = $self->_st->get_column($dest_col_idx);
-            if (
-                $dest eq 'e'
-                ? ( $dcol->len() > 0 )
-                : ( $dest ne $dcol->top->to_string )
-                )
+            if ( $is_valid_dest_col->($dest_col_idx) )
             {
                 die "wrong move stack to stack - $move_line";
             }
@@ -145,8 +150,7 @@ DETECT_MOVE:
             {
                 die "wrong move freecell to stack - $move_line";
             }
-            if (
-                $dest ne $self->_st->get_column($dest_col_idx)->top->to_string )
+            if ( $is_valid_dest_col->($dest_col_idx) )
             {
                 die "wrong move freecell to stack - $move_line";
             }
