@@ -62,6 +62,7 @@ my %TRUE_BOOL_OPTS = (
 my %INT_OPTS = (
     'enable-inc-solving'    => 'FCS_CMD_LINE_ENABLE_INCREMENTAL_SOLVING',
     'max-bench-threads-num' => 'MAX_NUM_BENCHMARK_THREADS',
+    'max-num-init-cards'    => 'MAX_NUM_INITIAL_CARDS_IN_A_STACK',
     'max-rank'              => 'FCS_MAX_RANK',
     'nfc'                   => 'FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY',
     'num-stacks'            => 'MAX_NUM_STACKS',
@@ -178,7 +179,7 @@ my %themes = (
         qw(-l tt --omit-frame --without-visited-iter --single-ht --break-back-compat-1 --enable-inc-solving=0)
     ],
     fc_bench => [
-        qw( -l bench --fc-only --without-fc-pro --nobuild-docs --states-type=COMPACT_STATES )
+        qw( -l bench --fc-only --without-fc-pro --nobuild-docs --states-type=COMPACT_STATES --max-num-init-cards=7 )
     ],
     mem_reduction_settings => [
         qw(
