@@ -28,11 +28,14 @@ extern "C" {
 #include "internal_move_struct.h"
 #include "indirect_buffer.h"
 
-#if MAX_NUM_INITIAL_CARDS_IN_A_STACK + 12 > (MAX_NUM_DECKS * 52)
-#define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_DECKS * 52)
+#define FCS_MAX_NUM_STACK_CARDS1 (MAX_NUM_INITIAL_CARDS_IN_A_STACK + 12)
+#define FCS_MAX_NUM_STACK_CARDS2 (MAX_NUM_DECKS * 52)
+#if FCS_MAX_NUM_STACK_CARDS1 > FCS_MAX_NUM_STACK_CARDS2
+#define MAX_NUM_CARDS_IN_A_STACK FCS_MAX_NUM_STACK_CARDS2
 #else
-#define MAX_NUM_CARDS_IN_A_STACK (MAX_NUM_INITIAL_CARDS_IN_A_STACK + 12)
+#define MAX_NUM_CARDS_IN_A_STACK FCS_MAX_NUM_STACK_CARDS1
 #endif
+#define FCS_CARDS_COL_WIDTH (MAX_NUM_CARDS_IN_A_STACK + 1)
 
 #ifndef FCS_MAX_NUM_SCANS_BUCKETS
 #define FCS_MAX_NUM_SCANS_BUCKETS 4
@@ -63,8 +66,8 @@ typedef fcs_card fcs_state_foundation;
 
 typedef struct
 {
-    fcs_card data[MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1) +
-                  MAX_NUM_FREECELLS + 4 * MAX_NUM_DECKS];
+    fcs_card data[MAX_NUM_STACKS * FCS_CARDS_COL_WIDTH + MAX_NUM_FREECELLS +
+                  4 * MAX_NUM_DECKS];
 } fcs_state;
 
 /*
@@ -83,11 +86,11 @@ typedef struct
 typedef char fcs_locs_type;
 
 #define fcs_state_get_col(state, col_idx)                                      \
-    ((state).data + ((col_idx) * (MAX_NUM_CARDS_IN_A_STACK + 1)))
+    ((state).data + ((col_idx)*FCS_CARDS_COL_WIDTH))
 #define fcs_freecell_card(state, f)                                            \
-    ((state).data[(MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1)) + (f)])
+    ((state).data[(MAX_NUM_STACKS * FCS_CARDS_COL_WIDTH) + (f)])
 #define fcs_foundation_value(state, d)                                         \
-    ((state).data[((MAX_NUM_STACKS * (MAX_NUM_CARDS_IN_A_STACK + 1)) +         \
+    ((state).data[((MAX_NUM_STACKS * FCS_CARDS_COL_WIDTH) +                    \
                       MAX_NUM_FREECELLS) +                                     \
                   (d)])
 
@@ -803,7 +806,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
         }
 
         var_AUTO(col, fcs_state_get_col(out, s));
-        for (int c = 0; c < MAX_NUM_CARDS_IN_A_STACK; c++)
+        for (int c = 0; c < MAX_NUM_CARDS_IN_A_STACK; ++c)
         {
             /* Move to the next card */
             if (c != 0)

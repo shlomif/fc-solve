@@ -20,10 +20,10 @@ static inline int fcs_stack_compare(const void *s1, const void *s2)
 
 #ifdef COMPACT_STATES
 
-#define DECLARE_TEMP_STACK() char temp_stack[MAX_NUM_CARDS_IN_A_STACK + 1]
+#define DECLARE_TEMP_STACK() char temp_stack[FCS_CARDS_COL_WIDTH]
 #define STACK_COMPARE(a, b) (fcs_stack_compare((a), (b)))
-#define GET_STACK(c) (state_key->data + (c) * (MAX_NUM_CARDS_IN_A_STACK + 1))
-#define COPY_STACK(d, s) (memcpy(d, s, (MAX_NUM_CARDS_IN_A_STACK + 1)))
+#define GET_STACK(c) (state_key->data + (c)*FCS_CARDS_COL_WIDTH)
+#define COPY_STACK(d, s) (memcpy(d, s, FCS_CARDS_COL_WIDTH))
 
 #elif defined(INDIRECT_STACK_STATES)
 
