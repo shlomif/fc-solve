@@ -54,6 +54,17 @@ sub _analyze_shirl_hart_move
         }
         return undef;
     };
+    my $try_foundation = sub {
+        if ( $dest_char eq 'h' )
+        {
+            if ( $dest ne 'h' )
+            {
+                die "wrong move foundations - $move_line";
+            }
+            return 1;
+        }
+        return;
+    };
     my $try_fc = sub {
         my $c = shift;
         return $fc{$c};
@@ -103,14 +114,10 @@ sub _analyze_shirl_hart_move
             );
         }
 
-        if ( $dest_char eq 'h' )
+        if ( $try_foundation->() )
         {
             if ( $src_card ne
                 $self->_st->get_column($src_col_idx)->top->to_string )
-            {
-                die "wrong move stack to foundations - $move_line";
-            }
-            if ( $dest ne 'h' )
             {
                 die "wrong move stack to foundations - $move_line";
             }
@@ -123,17 +130,12 @@ sub _analyze_shirl_hart_move
     }
     elsif ( defined( my $src_fc_idx = $try_fc->($src_char) ) )
     {
-        if ( $dest_char eq 'h' )
+        if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
         {
-            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
-            {
-                die "wrong move fc to foundations - $move_line";
-            }
-            if ( $dest ne 'h' )
-            {
-                die "wrong move fc to foundations - $move_line";
-            }
-
+            die "wrong freecell card - $move_line";
+        }
+        if ( $try_foundation->() )
+        {
             return $self->_perform_and_output_move_wrapper(
                 sprintf( "Move a card from freecell %d to the foundations",
                     $src_fc_idx ),
@@ -142,10 +144,6 @@ sub _analyze_shirl_hart_move
 
         if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
         {
-            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
-            {
-                die "wrong move freecell to stack - $move_line";
-            }
             if ( $is_invalid_dest_col->($dest_col_idx) )
             {
                 die "wrong move freecell to stack - $move_line";
