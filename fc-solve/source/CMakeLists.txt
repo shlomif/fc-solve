@@ -78,7 +78,7 @@ SET(CPACK_PACKAGE_EXECUTABLES
 )
 
 SET (STATES_TYPE "INDIRECT_STACK_STATES" CACHE STRING
-    "States Type ('INDIRECT_STACK_STATES', or 'COMPACT_STATES'). No need to usually change.")
+    "States Type ('INDIRECT_STACK_STATES', or 'COMPACT_STATES'). COMPACT_STATES may yield faster code especially given 64-bit architectures, a small MAX_NUM_INITIAL_CARDS_IN_A_STACK , etc.")
 option (FCS_ENABLE_RCS_STATES "Whether to use RCS-like states (requires a STATES_TYPE of COMPACT_STATES")
 option (FCS_ENABLE_DBM_SOLVER "Whether to build the DBM solver" ON)
 SET (FCS_DBM_BACKEND "kaztree" CACHE STRING "Type of DBM backend.")
@@ -90,7 +90,7 @@ SET (FCS_MAX_RANK 13 CACHE STRING "Maximal rank - should be 13")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
 SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
 SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
-    "Maximal Number of Initial Cards in a Stack")
+    "Maximal Number of Initial Cards in a Stack. 7 is a better value if you only wish to solve Freecell")
 SET (MAX_NUM_DECKS 1 CACHE STRING "Maximal Number of Decks (must be 1)")
 SET (MAX_NUM_BENCHMARK_THREADS 4 CACHE STRING "Maximal Number of Threads to Use When Benchmarking")
 SET (FCS_STATE_STORAGE "FCS_STATE_STORAGE_INTERNAL_HASH" CACHE STRING "The State Storage Type")
