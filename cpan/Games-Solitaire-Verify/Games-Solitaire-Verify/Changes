@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2402  2020-04-28
+        - Add a Perl-Critic check.
+        - Refactoring and cleanups.
+
 0.2401  2020-04-27
         - Refactoring and cleanups.
 
