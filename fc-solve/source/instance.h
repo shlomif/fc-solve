@@ -900,8 +900,6 @@ static inline bool fcs_get_calc_real_depth(const fcs_instance *const instance)
 #ifdef FCS_WITH_MOVES
 extern void fc_solve_trace_solution(fcs_instance *const instance);
 #endif
-extern void fc_solve_finish_instance(fcs_instance *const instance);
-
 #ifdef __cplusplus
 }
 #endif
