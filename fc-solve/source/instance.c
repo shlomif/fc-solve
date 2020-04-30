@@ -80,10 +80,10 @@ static inline void soft_thread_clean_soft_dfs(
     DFS_VAR(soft_thread, dfs_max_depth) = 0;
 }
 
+#ifndef FCS_ZERO_FREECELLS_MODE
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fcs_soft_thread *const soft_thread)
 {
-#ifndef FCS_ZERO_FREECELLS_MODE
     const_AUTO(
         by_depth_moves, soft_thread->by_depth_moves_order.by_depth_moves);
     const_AUTO(num, soft_thread->by_depth_moves_order.num);
@@ -96,13 +96,11 @@ extern void fc_solve_free_soft_thread_by_depth_move_array(
 
     free(by_depth_moves);
     soft_thread->by_depth_moves_order.by_depth_moves = NULL;
-#endif
 }
 
 static inline void accumulate_tests_by_ptr(
     size_t *const moves_order, fcs_moves_order *const st_tests_order)
 {
-#ifndef FCS_ZERO_FREECELLS_MODE
     const fcs_moves_group *group_ptr = st_tests_order->groups;
     const fcs_moves_group *const groups_end = group_ptr + st_tests_order->num;
     for (; group_ptr < groups_end; ++group_ptr)
@@ -114,8 +112,8 @@ static inline void accumulate_tests_by_ptr(
             *moves_order |= (1 << (test_ptr->idx));
         }
     }
-#endif
 }
+#endif
 
 static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
     const foreach_st_callback_choice callback_choice, void *const context)
