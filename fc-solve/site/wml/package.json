@@ -46,14 +46,18 @@
     "tslint-plugin-prettier": "^2.3.0",
     "typescript": "^3.8.3",
     "uglify-es": "^3.3.10",
-    "yarn": "^1.22.4"
+    "yarn": "^1.22.4",
+    "snyk": "^1.316.1"
   },
   "devDependencies": {
     "eslint": "^6.8.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "snyk-protect": "snyk protect",
+    "prepare": "npm run snyk-protect"
   },
   "author": "Shlomi Fish",
-  "license": "MIT"
+  "license": "MIT",
+  "snyk": true
 }
