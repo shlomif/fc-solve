@@ -1152,8 +1152,8 @@ static inline bool was_pruned(const bool enable_pruning,
         return false;
     }
     the_soft_dfs_info->move_func_list_idx = the_moves_list->num;
-#ifndef FCS_ZERO_FREECELLS_MODE
     fc_solve_derived_states_list_add_state(derived_list, derived, 0);
+#ifndef FCS_ZERO_FREECELLS_MODE
     if (the_soft_dfs_info->derived_states_random_indexes_max_size < 1)
     {
         the_soft_dfs_info->derived_states_random_indexes_max_size = 1;
