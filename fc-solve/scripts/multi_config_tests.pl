@@ -439,6 +439,15 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+reg_test(
+    {
+        blurb => "zero freecells mode",
+    },
+    {
+        tatzer_theme => 'zerofcmode',
+        runtest_args => [ '--tests-dir', '../scripts/zerofc-mode-tests/t/' ],
+    },
+);
 reg_theme_test( "Default", 'empty', );
 
 sub disabling_website_build_for_now
