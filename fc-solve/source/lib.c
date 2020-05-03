@@ -1253,6 +1253,8 @@ static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
 
     case FCS_NO_SHUFFLING:
         break;
+    case FCS_PERFORM_ALL_MOVE_FUNCS:
+        break;
     }
 }
 
