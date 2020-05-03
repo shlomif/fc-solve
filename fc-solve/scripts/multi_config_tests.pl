@@ -448,6 +448,16 @@ reg_test(
         runtest_args => [ '--tests-dir', '../scripts/zerofc-mode-tests/t/' ],
     },
 );
+reg_test(
+    {
+        blurb => "zero freecells mode sample solution",
+    },
+    {
+        tatzer_theme => 'zerofcmode_with_moves',
+        runtest_args =>
+            [ '--tests-dir', '../scripts/zerofc-mode-tests/solution-t/', ],
+    },
+);
 reg_theme_test( "Default", 'empty', );
 
 sub disabling_website_build_for_now
