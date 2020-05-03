@@ -214,6 +214,12 @@ my %themes = (
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
     zerofcst   => [qw(-l zerofc --dbm-single-thread --dbmtree=apr_hash)],
     zerofcmode => [qw(-l zerofcst --zero-freecells-mode)],
+    zerofcmode_with_moves =>
+        [qw(-l n2t --zero-freecells-mode --nfc=0 --fc-only)],
+    foo => [
+        qw(-l zerofcmode --no-disable-moves-track --no-break-back-compat-2 --no-break-back-compat-2 --no-without-max-num-states --no-disable-num-stored-states --without-visited-iter),
+        qw( --no-hard-code-reparent-states  --no-hard-code-calc-real-depth -l testing ),
+    ],
 );
 
 my $SEED_KEY = 'FCS_THEME_RAND';
@@ -260,12 +266,30 @@ if ( defined $SEED )
 
 my $ARCH = $ENV{FC_SOLVE__MULT_CONFIG_TESTS__GCC_ARCH} // 'n2';
 foreach my $rec (
-    { id => "c2",              a => "core2", },
-    { id => "ci7",             a => "corei7-avx", },
-    { id => "n2",              a => "native", },
-    { id => "p4",              a => "pentium4" },
-    { id => "x64",             a => "x86-64" },
-    { id => "preferred-arch-", a => [$ARCH], },
+    {
+        id => "c2",
+        a  => "core2",
+    },
+    {
+        id => "ci7",
+        a  => "corei7-avx",
+    },
+    {
+        id => "n2",
+        a  => "native",
+    },
+    {
+        id => "p4",
+        a  => "pentium4"
+    },
+    {
+        id => "x64",
+        a  => "x86-64"
+    },
+    {
+        id => "preferred-arch-",
+        a  => [$ARCH],
+    },
     )
 {
     my $id      = $rec->{id};
@@ -314,9 +338,8 @@ foreach my $rec (
     $bb_def->( t => [qw(-l testing)] );
 
     # For use by PySolFC
-    $bb_def->(
-        _pysol => [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ]
-    );
+    $bb_def->( _pysol =>
+            [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ] );
 }
 
 my @new_argv = @ARGV;
