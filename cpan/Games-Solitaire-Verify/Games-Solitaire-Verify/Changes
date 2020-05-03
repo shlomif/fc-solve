@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2403  2020-05-03
+        - Reduce the minimal --severity of Perl-Critic to 1.
+            - explicit return values.
+
 0.2402  2020-04-28
         - Add a Perl-Critic check.
         - Refactoring and cleanups.
