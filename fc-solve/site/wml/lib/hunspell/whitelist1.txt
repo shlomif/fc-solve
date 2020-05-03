@@ -1233,6 +1233,7 @@ ABI
 DD-MMM-YYYY
 FCS_DEAL_ONLY_UP_TO_2G
 FCS_STATE_SOFT_SUSPEND_PROCESS
+FCS_ZERO_FREECELLS_MODE
 GNUInstallDirs
 Golf_
 MAX_NUM_DECKS
@@ -1275,6 +1276,7 @@ msi
 obf
 pysol-cards
 rinutils
+runtimes
 show_bug
 solution_moves
 sp

@@ -594,6 +594,10 @@ hand, if one specifies something like "=asw(5,0,5,0,0,5)", then the numbers
 inside the parentheses will be treated as weights for the same ordering
 function used by the +-asw+ flag (see below).
 
+If the order specifier is "=all()" then all the moves in the group will
+be run, even if some derived states have been yielded by earlier moves
+in the group. ( This was added in version 5.24.0. )
+
 [id="depth-tests-order2_flag"]
 -dto2 [Min Depth],[Moves' Order] , --depth-tests-order2 [Min Depth],[Moves' Order]
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
