@@ -4,7 +4,7 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-04-13
 :Revision: $Id$
 
-Version 5.24.0: (03-May-2020)
+Version 5.24.0: (04-May-2020)
 -----------------------------
 
 1. Add the "=all()" moves order specifier.
