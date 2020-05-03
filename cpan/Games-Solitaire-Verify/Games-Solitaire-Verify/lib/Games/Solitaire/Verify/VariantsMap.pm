@@ -214,7 +214,7 @@ sub get_variant_by_id
 
     if ( !exists( $map->{$id} ) )
     {
-        return;
+        return undef;
     }
     else
     {

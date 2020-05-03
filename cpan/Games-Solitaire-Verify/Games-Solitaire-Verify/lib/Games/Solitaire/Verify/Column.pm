@@ -66,7 +66,7 @@ sub _from_string
 
     $self->_recalc;
 
-    return;
+    return ();
 }
 
 sub _init
@@ -82,7 +82,7 @@ sub _init
         $self->_cards( $args->{cards} );
 
         $self->_recalc;
-        return;
+        return ();
     }
     else
     {
@@ -163,7 +163,7 @@ sub append_cards
     my ( $S, $c ) = @_;
     push @{ $S->_cards() }, @$c;
     $S->_recalc;
-    return;
+    return ();
 }
 
 =head2 $base_column->append($column_with_more_cards)
@@ -196,7 +196,7 @@ sub push
 
     $self->_recalc;
 
-    return;
+    return ();
 }
 
 =head2 my $card_at_top = $column->pop()
@@ -249,7 +249,7 @@ sub _recalc
     $self->_s(
         join( ' ', ':', ( map { $_->fast_s() } @{ $self->_cards() } ) ) );
 
-    return;
+    return ();
 }
 
 sub to_string

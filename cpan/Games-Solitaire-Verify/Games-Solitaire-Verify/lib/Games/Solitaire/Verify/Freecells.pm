@@ -87,7 +87,7 @@ sub _init
         return $self->_input_from_string( $args->{string} );
     }
 
-    return;
+    return ();
 }
 
 sub _parse_freecell_card
@@ -148,7 +148,7 @@ sub assign
         2, ( defined($card) ? $card->fast_s : '  ' )
     );
 
-    return;
+    return ();
 }
 
 =head2 $self->to_string()
@@ -190,7 +190,7 @@ sub clear
 
     $self->assign( $pos, undef() );
 
-    return;
+    return ();
 }
 
 =head2 $board->clone()
