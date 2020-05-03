@@ -214,11 +214,8 @@ my %themes = (
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
     zerofcst   => [qw(-l zerofc --dbm-single-thread --dbmtree=apr_hash)],
     zerofcmode => [qw(-l zerofcst --zero-freecells-mode)],
-    zerofcmode_with_moves =>
-        [qw(-l n2t --zero-freecells-mode --nfc=0 --fc-only)],
-    foo => [
-        qw(-l zerofcmode --no-disable-moves-track --no-break-back-compat-2 --no-break-back-compat-2 --no-without-max-num-states --no-disable-num-stored-states --without-visited-iter),
-        qw( --no-hard-code-reparent-states  --no-hard-code-calc-real-depth -l testing ),
+    zerofcmode_with_moves => [
+        qw(-l zerofcmode --no-disable-moves-track --no-disable-num-stored-states),
     ],
 );
 
