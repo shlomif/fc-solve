@@ -1829,14 +1829,6 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             continue;
         }
 
-        /*
-         * Call the resume or solving function that is specific
-         * to each scan
-         *
-         * This switch-like construct calls for declaring a class
-         * that will abstract a scan. But it's not critical since
-         * I don't support user-defined scans.
-         * */
         if (!STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED))
         {
             init_dfs(soft_thread);
@@ -1873,15 +1865,13 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_INITIALIZED);
         }
         ret = solve(soft_thread);
-        /*
-         * I use <= instead of == because it is possible that
-         * there will be a few more iterations than what this
-         * thread was allocated, due to the fact that
-         * check_and_add_state is only called by the test
-         * functions.
-         *
-         * It's a kludge, but it works.
-         * */
+        // We use <= instead of == because it is possible that
+        // there will be a few more iterations than what this
+        // thread was allocated, due to the fact that
+        // check_and_add_state is only called by the test
+        // functions.
+        //
+        // It's a kludge, but it works.
         if (NUM_CHECKED_STATES >=
             HT_FIELD(hard_thread, ht__max_num_checked_states))
         {

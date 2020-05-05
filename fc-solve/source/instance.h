@@ -409,45 +409,36 @@ struct fc_solve_soft_thread_struct
             // The (temporary) max depth of the Soft-DFS scans)
             ssize_t dfs_max_depth;
 
-            /*
-             * Soft-DFS uses a stack of fcs_soft_dfs_stack_item s.
-             *
-             * derived_states_list - a list of states to be checked next.
-             * Not all of them will be checked because it is possible that
-             * future states already visited them.
-             *
-             * current_state_index - the index of the last checked state
-             * in depth i.
-             *
-             * move_func_list_idx - the index of the move list that is
-             * performed. FCS performs each move separately, so
-             * states_to_check and friends will not be overpopulated.
-             *
-             * num_vacant_stacks - the number of unoccpied stacks that
-             * correspond
-             * to solution_states.
-             *
-             * num_vacant_freecells - ditto for the freecells.
-             *
-             * */
+            // Soft-DFS uses a stack of fcs_soft_dfs_stack_item s.
+            //
+            // derived_states_list - a list of states to be checked next.
+            // Not all of them will be checked because it is possible that
+            // future states already visited them.
+            //
+            // current_state_index - the index of the last checked state
+            // in depth i.
+            //
+            // move_func_list_idx - the index of the move list that is
+            // performed. FCS performs each move separately, so
+            // states_to_check and friends will not be overpopulated.
+            //
+            // num_vacant_stacks - the number of unoccpied stacks that
+            // correspond
+            // to solution_states.
+            //
+            // num_vacant_freecells - ditto for the freecells.
             fcs_soft_dfs_stack_item *soft_dfs_info;
 
-            /* The depth of the DFS stacks */
+            // The depth of the DFS stacks
             ssize_t depth;
 
-            /*
-             * A pseudo-random number generator for use in the random-DFS
-             * scan
-             * */
             fcs_rand_gen rand_gen;
 
             // The initial seed of this random number generator
             fcs_rand_gen rand_seed;
 
 #ifndef FCS_ZERO_FREECELLS_MODE
-            /*
-             * The moves to be performed in a preprocessed form.
-             * */
+            // The moves to be performed in a preprocessed form.
             fcs_moves_by_depth_array moves_by_depth;
 #endif
 
@@ -460,37 +451,25 @@ struct fc_solve_soft_thread_struct
             {
                 struct
                 {
-                    /*
-                     * A linked list that serves as the queue for the BFS
-                     * scan.
-                     * */
+                    // A linked list that serves as the queue for the BFS
+                    // scan.
                     fcs_states_linked_list_item *bfs_queue;
-                    /*
-                     * The last item in the linked list, so new items can be
-                     * added at
-                     * it, thus making it a queue.
-                     * */
+                    // The last item in the linked list, so new items can be
+                    // added at it, thus making it a queue.
                     fcs_states_linked_list_item *bfs_queue_last_item;
-                    /*
-                     * A linked list of items that were freed from
-                     * the queue and should be reused before allocating new
-                     * items.
-                     * */
+                    // A linked list of items that were freed from
+                    // the queue and should be reused before allocating new
+                    // items.
                     fcs_states_linked_list_item *recycle_bin;
                 } brfs;
                 struct
                 {
-                    /*
-                     * The priority queue of the BeFS scan
-                     * */
                     pri_queue pqueue;
                     fcs_state_weighting weighting;
                 } befs;
             } meth;
-            /*
-             * The first state to be checked by the scan. It is a kind of
-             * bootstrap for the algorithm.
-             * */
+            // The first state to be checked by the scan. It is a kind of
+            // bootstrap for the algorithm.
             fcs_collectible_state *first_state_to_check;
         } befs;
     } method_specific;
@@ -518,14 +497,10 @@ struct fc_solve_soft_thread_struct
 #endif
 
 #ifndef FCS_DISABLE_PATSOLVE
-    /*
-     * The patsolve soft_thread that is associated with this soft_thread.
-     * */
+    // The patsolve soft_thread that is associated with this soft_thread.
     struct fc_solve__patsolve_thread_struct *pats_scan;
 #endif
-    /*
-     * Differentiates between SOFT_DFS and RANDOM_DFS.
-     * */
+    // Differentiates between SOFT_DFS and RANDOM_DFS.
     bool master_to_randomize;
     bool is_befs;
 #ifdef FCS_WITH_MOVES
