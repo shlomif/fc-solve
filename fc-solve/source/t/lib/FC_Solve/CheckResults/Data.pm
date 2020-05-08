@@ -164,6 +164,20 @@ __PACKAGE__->populate(
             },
             msg => "Simple Simon #1 using an --next-instance",
         },
+        'freecell164_zero_freecells' => {
+            args => {
+                id      => "freecell164_zero_freecells",
+                deal    => 164,
+                msdeals => 1,
+                theme   => [
+                    "--freecells-num", "0",
+                    "--method",        "random-dfs",
+                    "-sp",             "r:tf",
+                    "-to",             "[0AB]=all()",
+                ],
+            },
+            msg => "Freecell MS 164 zero freecells variant",
+        },
         'freecell254076_l_by' => {
             args => {
                 id      => "freecell254076_l_by",
