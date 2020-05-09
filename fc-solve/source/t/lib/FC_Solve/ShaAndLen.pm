@@ -20,8 +20,7 @@ sub _hasher
 sub new
 {
     my $class = shift;
-    my $self  = {};
-    bless $self, $class;
+    my $self  = bless {}, $class;
     $self->_init(@_);
     return $self;
 }
