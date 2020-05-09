@@ -1,5 +1,6 @@
 package FC_Solve::ShaAndLen;
 
+use 5.014;
 use strict;
 use warnings;
 
