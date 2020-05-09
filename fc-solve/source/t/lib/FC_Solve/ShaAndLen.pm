@@ -35,12 +35,21 @@ sub _init
     return;
 }
 
+sub ref_add
+{
+    my ( $self, $str ) = @_;
+
+    $self->_len( $self->_len() + length($$str) );
+    $self->_hasher->add($$str);
+
+    return;
+}
+
 sub add
 {
     my ( $self, $str ) = @_;
 
-    $self->_len( $self->_len() + length($str) );
-    $self->_hasher->add($str);
+    return $self->ref_add( \$str );
 
     return;
 }
@@ -69,9 +78,11 @@ sub add_file
 sub add_processed_slurp
 {
     my ( $self, $fh, $cb ) = @_;
-    return $self->add(
+    return $self->ref_add(
         scalar $cb->(
-            do { local $/; scalar <$fh>; }
+            \(
+                do { local $/; scalar <$fh>; }
+            ),
         )
     );
 }
