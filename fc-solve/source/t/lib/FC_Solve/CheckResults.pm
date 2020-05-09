@@ -56,6 +56,9 @@ sub should_fill_in_id
     );
 }
 
+my $TRIM_NEEDLE     = qq(\nThis game is solveable.\n);
+my $TRIM_NEEDLE_LEN = length($TRIM_NEEDLE);
+
 # Short for a test to verify a solution.
 sub vtest
 {
@@ -127,7 +130,12 @@ q#Test skipped because it uses flares, and we are running on a build without fla
             my $s = shift;
             if ( $self->trim_stats )
             {
-                $s =~ s/^(This game is solveable\.\n).*/$1/ms;
+                my $pos = rindex( $s, $TRIM_NEEDLE );
+                if ( $pos < 0 )
+                {
+                    die "wrong pos";
+                }
+                substr( $s, $pos + $TRIM_NEEDLE_LEN ) = '';
             }
             $s =~ s/ +(\n)/$1/g;
             return $s;
