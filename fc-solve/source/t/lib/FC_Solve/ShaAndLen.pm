@@ -5,16 +5,17 @@ use warnings;
 
 use Digest::SHA ();
 
-use parent 'Games::Solitaire::Verify::Base';
+sub _hasher
+{
+    my $self = shift;
 
-__PACKAGE__->mk_acc_ref(
-    [
-        qw(
-            _len
-            _hasher
-            )
-    ]
-);
+    if (@_)
+    {
+        $self->{_hasher} = shift;
+    }
+
+    return $self->{_hasher};
+}
 
 sub new
 {
@@ -29,8 +30,8 @@ sub _init
 {
     my ( $self, $args ) = @_;
 
-    $self->_len(0);
-    $self->_hasher( Digest::SHA->new(256) );
+    $self->{_len} = 0;
+    $self->_hasher( Digest::SHA->new( $args->{name} // 256 ) );
 
     return;
 }
@@ -39,7 +40,7 @@ sub ref_add
 {
     my ( $self, $str ) = @_;
 
-    $self->_len( $self->_len() + length($$str) );
+    $self->{_len} += length($$str);
     $self->_hasher->add($$str);
 
     return;
@@ -56,7 +57,7 @@ sub add
 
 sub len
 {
-    return shift->_len();
+    return shift->{_len};
 }
 
 sub hexdigest
