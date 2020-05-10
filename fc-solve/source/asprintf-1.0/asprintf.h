@@ -13,9 +13,7 @@ WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER IN AN
 ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT OF
 OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 */
-
-#ifndef INSANE_ASPRINTF_H
-#define INSANE_ASPRINTF_H
+#pragma once
 
 #ifndef __cplusplus
 #include <stdarg.h>
@@ -32,6 +30,4 @@ int asprintf(char **strp, const char *fmt, ...);
 
 #ifdef __cplusplus
 }
-#endif
-
 #endif
