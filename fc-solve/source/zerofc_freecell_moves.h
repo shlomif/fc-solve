@@ -46,12 +46,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves)
                 deck * 4 + fcs_card_suit(card));
 
             sfs_check_state_end();
-// #ifdef FCS_BREAK_BACKWARD_COMPAT_2
-#if 0
-            return;
-#else
             break;
-#endif
         }
     }
     const int num_cards_in_col_threshold = CALC_num_cards_in_col_threshold();

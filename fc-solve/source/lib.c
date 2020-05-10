@@ -33,6 +33,45 @@ static void verify_state_sanity(const fcs_state *const ptr_state)
 }
 #endif
 
+static
+#ifdef FCS_SINGLE_HARD_THREAD
+    inline
+#endif
+    void
+    fc_solve_instance__init_hard_thread(
+#ifndef FCS_SINGLE_HARD_THREAD
+        fcs_instance *const instance,
+#endif
+        fcs_hard_thread *const hard_thread)
+{
+#ifndef FCS_SINGLE_HARD_THREAD
+    hard_thread->instance = instance;
+#endif
+
+    HT_FIELD(hard_thread, num_soft_threads) = 0;
+
+    HT_FIELD(hard_thread, soft_threads) = NULL;
+
+    fc_solve_new_soft_thread(hard_thread);
+#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
+    HT_FIELD(hard_thread, prelude_as_string) = NULL;
+#endif
+    HT_FIELD(hard_thread, prelude) = NULL;
+    HT_FIELD(hard_thread, prelude_num_items) = 0;
+
+    fc_solve_reset_hard_thread(hard_thread);
+    fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
+#ifdef FCS_SINGLE_HARD_THREAD
+        hard_thread->meta_alloc
+#else
+        instance->meta_alloc
+#endif
+    );
+
+#ifdef FCS_WITH_MOVES
+    HT_FIELD(hard_thread, reusable_move_stack) = fcs_move_stack__new();
+#endif
+}
 #ifndef FCS_SINGLE_HARD_THREAD
 static inline fcs_soft_thread *new_hard_thread(fcs_instance *const instance)
 {

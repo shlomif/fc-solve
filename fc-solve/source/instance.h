@@ -790,12 +790,6 @@ extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);
 extern void fc_solve_soft_thread_init_befs_or_bfs(
     fcs_soft_thread *const soft_thread);
 
-extern void fc_solve_instance__init_hard_thread(
-#ifndef FCS_SINGLE_HARD_THREAD
-    fcs_instance *const instance,
-#endif
-    fcs_hard_thread *const hard_thread);
-
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fcs_soft_thread *const soft_thread);
 
