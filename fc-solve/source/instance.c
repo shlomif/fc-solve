@@ -203,7 +203,7 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 #endif
 }
 
-#ifndef FCS_SINGLE_HARD_THREAD
+#if !(defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_WITH_MOVES))
 static inline
 #endif
     void

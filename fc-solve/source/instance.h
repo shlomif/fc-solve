@@ -139,8 +139,10 @@ typedef void (*fc_solve_solve_for_state_move_func)(
 #define NUM_CHECKED_STATES                                                     \
     (HT_INSTANCE(hard_thread)->i__stats.num_checked_states)
 typedef struct fc_solve_instance_struct fcs_hard_thread;
+#if (defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_WITH_MOVES))
 extern void fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
     struct fc_solve_soft_thread_struct *const soft_thread);
+#endif
 #else
 #define HT_FIELD(hard_thread, field) (hard_thread)->field
 #define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
