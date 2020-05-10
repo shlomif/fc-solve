@@ -11,7 +11,7 @@ use FC_Solve::ShaAndLen ();
 {
     my $string = "HelloWorld";
 
-    my $sha = FC_Solve::ShaAndLen->new( { name => 256, }, );
+    my $sha = FC_Solve::ShaAndLen->new( { name => 'SHA-256', }, );
 
     $sha->add($string);
 
@@ -27,7 +27,7 @@ use FC_Solve::ShaAndLen ();
 }
 
 {
-    my $sha = FC_Solve::ShaAndLen->new( { name => 256, }, );
+    my $sha = FC_Solve::ShaAndLen->new( { name => 'SHA-256', }, );
 
     $sha->add("Hello");
     $sha->ref_add( \"World" );
@@ -45,7 +45,7 @@ use FC_Solve::ShaAndLen ();
 
 SKIP:
 {
-    my $sha = FC_Solve::ShaAndLen->new( { name => 256, }, );
+    my $sha = FC_Solve::ShaAndLen->new( { name => 'SHA-256', }, );
     my $FN  = samp_sol('fcs-freecell-24.txt');
 
     if ( !-e $FN )

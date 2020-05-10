@@ -4,7 +4,7 @@ use 5.014;
 use strict;
 use warnings;
 
-use Digest::SHA ();
+use Digest ();
 
 sub _hasher
 {
@@ -32,7 +32,7 @@ sub _init
 
     $self->{_len} = 0;
     $self->_hasher(
-        Digest::SHA->new(
+        Digest->new(
             $args->{name}
                 // ( die "->{name} must be specified in Data::DigestAndLen!" )
         )

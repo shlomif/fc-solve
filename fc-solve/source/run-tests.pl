@@ -102,7 +102,7 @@ my %binaries;
     FC_Solve::Paths::Base::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } )
     } values %{ FC_Solve::Test::Valgrind::Data->get_hash };
 
-use Digest::SHA ();
+use Digest ();
 if ( $FC_Solve::Paths::Base::IS_WIN || $force_rebuild )
 {
     ++$rerun;
@@ -119,7 +119,7 @@ else
             $progs{$prog}{binaries}{$bin} //= (
                 $binaries{$bin} //= do
                 {
-                    Digest::SHA->new(256)->addfile($bin)->b64digest;
+                    Digest->new('SHA-256')->addfile($bin)->b64digest;
                 }
             );
         }

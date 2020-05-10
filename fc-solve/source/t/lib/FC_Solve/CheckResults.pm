@@ -110,7 +110,7 @@ q#Test skipped because it uses flares, and we are running on a build without fla
             or Carp::confess("Could not open file for reading - $!");
     }
 
-    my $sha = FC_Solve::ShaAndLen->new( { name => 256, }, );
+    my $sha = FC_Solve::ShaAndLen->new( { name => 'SHA-256', }, );
 
     if ( $ENV{'FCS_DUMP_SOLS'} )
     {
