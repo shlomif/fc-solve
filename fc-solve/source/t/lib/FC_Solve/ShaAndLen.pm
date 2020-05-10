@@ -31,7 +31,12 @@ sub _init
     my ( $self, $args ) = @_;
 
     $self->{_len} = 0;
-    $self->_hasher( Digest::SHA->new( $args->{name} // 256 ) );
+    $self->_hasher(
+        Digest::SHA->new(
+            $args->{name}
+                // ( die "->{name} must be specified in Data::DigestAndLen!" )
+        )
+    );
 
     return;
 }
