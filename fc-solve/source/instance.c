@@ -382,9 +382,6 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
     instance->solution_moves = fcs_move_stack__new();
 
     const_AUTO(solution_moves_ptr, &(instance->solution_moves));
-/*
- * Handle the case if it's patsolve.
- * */
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(solving_soft_thread, instance);
     if (solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)

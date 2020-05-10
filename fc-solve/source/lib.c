@@ -1954,11 +1954,11 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
         }
 
         const bool was_solved = (ret == FCS_STATE_WAS_SOLVED);
-#if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
-        instance->solving_soft_thread = soft_thread;
-#endif
         if (was_solved || instance__check_exceeded_stats(instance))
         {
+#if (defined(FCS_WITH_MOVES) && (!defined(FCS_DISABLE_PATSOLVE)))
+            instance->solving_soft_thread = soft_thread;
+#endif
             return ret;
         }
     }
@@ -4749,7 +4749,6 @@ freecell_solver_user_get_lib_version(void *api_instance GCC_UNUSED)
 #endif
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-/* TODO : optionally Remove from the API */
 DLLEXPORT __attribute__((pure)) const char *
 freecell_solver_user_get_current_soft_thread_name(void *const api_instance)
 {
