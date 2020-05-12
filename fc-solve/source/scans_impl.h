@@ -121,15 +121,15 @@ typedef int fcs_depth;
 
 static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
 {
-#ifdef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
+    return (FCS_S_DEPTH(ptr_state));
+#else
     register fcs_depth ret = 0;
     while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
     {
         ++ret;
     }
     return ret;
-#else
-    return (FCS_S_DEPTH(ptr_state));
 #endif
 }
 
@@ -313,7 +313,7 @@ static inline pq_rating befs_rate_state(
         FCS_ASSIGN_STATE_KEY();                                                \
     }
 
-#if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
+#if defined(FCS_WITH_DEPTH_FIELD) &&                                           \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
 /*
  * The calculate_real_depth() inline function traces the path of the state
