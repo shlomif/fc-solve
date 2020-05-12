@@ -422,8 +422,15 @@ $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/js: %:
 real_all: \
 	$(D)/dondorf $(D)/green.jpg $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/js $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/loading.gif $(D)/layouts
 
+SRC_pngs__BASE := $(filter $(D)/%.png,$(IMAGES))
+SRC_pngs__webps := $(SRC_pngs__BASE:%.png=%.webp)
+$(SRC_pngs__webps): %.webp: %.png
+	gm convert $< $@
+
 real_all: \
 	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(dest_jinjas)
+
+real_all: $(SRC_pngs__webps)
 
 browser-tests: all
 	qunit-puppeteer 'https://www.shlomifish.org/fc-solve-temp/js-fc-solve/automated-tests/'

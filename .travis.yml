@@ -9,6 +9,7 @@ addons:
             - dbtoepub
             - docbook-xsl
             - docbook-xsl-ns
+            - graphicsmagick
             - gperf
             - libapr1-dev
             - libc6-dbg
