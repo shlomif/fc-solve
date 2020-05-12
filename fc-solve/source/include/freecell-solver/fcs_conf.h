@@ -26,6 +26,10 @@ extern "C" {
 #define FCS_WITH_NI
 #endif
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
+#define FCS_WITH_DEPTH_FIELD
+#endif
+
 #ifndef FCS_DISABLE_MOVES_TRACKING
 #define FCS_WITH_MOVES
 #endif

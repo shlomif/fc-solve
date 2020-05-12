@@ -627,7 +627,7 @@ static inline void start_process_with_board(fcs_instance *const instance,
             .stacks_copy_on_write_flags = ~0,
 #endif
 // Initialize the state to be a base state for the game tree
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
             .depth = 0,
 #endif
 #ifdef FCS_WITH_MOVES
@@ -1337,7 +1337,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 #ifndef FCS_ZERO_FREECELLS_MODE
     ssize_t by_depth_max_depth, by_depth_min_depth;
 #endif
-#if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
+#if defined(FCS_WITH_DEPTH_FIELD) &&                                           \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
