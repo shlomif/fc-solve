@@ -32,6 +32,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'disable-simple-simon'      => 'FCS_DISABLE_SIMPLE_SIMON',
     'fc-only'                   => 'FCS_FREECELL_ONLY',
     'hard-code-calc-real-depth' => 'FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE',
+    'hard-code-depth-field'     => 'FCS_HARD_CODE_STATE_DEPTH_FIELD',
     'hard-code-reparent-states' => 'FCS_HARD_CODE_REPARENT_STATES_AS_FALSE',
     'hard-code-scans-synergy'   => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
     'hard-code-sp-rtf'          => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
@@ -196,7 +197,7 @@ my %themes = (
     ],
     extra_speed2 => [
         qw(-l n2b),
-        qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler --unsafe --break-back-compat-2)
+        qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler --unsafe --break-back-compat-2 --hard-code-depth-field),
     ],
     extra_speed3 =>
         [qw(-l extra_speed2 --no-without-max-num-states --nohard-code-theme)],

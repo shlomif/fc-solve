@@ -54,6 +54,7 @@ extern "C" {
  * used a little, but otherwise is not needed for the run-time
  * operation.
  * */
+#cmakedefine FCS_HARD_CODE_STATE_DEPTH_FIELD
 #cmakedefine FCS_WITHOUT_DEPTH_FIELD
 #cmakedefine FCS_WITHOUT_CMD_LINE_HELP
 #cmakedefine FCS_WITHOUT_ITER_HANDLER
