@@ -141,6 +141,7 @@ option (FCS_DISABLE_STATE_VALIDITY_CHECK "Disable the state validity check. May 
 option (FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE "Make scan synergy as always true. Reduces functionality but may make things faster.")
 option (FCS_HARD_CODE_REPARENT_STATES_AS_FALSE "Make reparent states as always false. Reduces functionality but may make things faster.")
 option (FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE "Make calc-real-depth as always false. Reduces functionality but may make things faster.")
+option (FCS_HARD_CODE_STATE_DEPTH_FIELD "Make the game graph's states/positions' depth fields always be 0. Reduces functionality but may make things faster.")
 option (FCS_WITHOUT_EXPORTED_RESUME_SOLUTION "Don't export resume_solution. Breaks compat but may make things faseer. Enable at your own risk.")
 option (FCS_ENABLE_PRUNE__R_TF__UNCOND "Hard code -sp as 'r:tf' (may be useful for speedup but breaks functionality.)")
 option (FCS_ZERO_FREECELLS_MODE "Special zero freecells -to '0AB' mode (may be useful for speedup but breaks functionality.)")
@@ -148,6 +149,10 @@ option (FCS_USE_PRECOMPILED_CMD_LINE_THEME "Hard code a command line theme as ge
 option (FCS_AVOID_INT128 "Avoid using GCC's __int128 extension (used for debugging)")
 option (FCS_RANGE_SOLVERS_PRINT_SOLVED "Print solved boards.")
 option (FCS_DBM_SINGLE_THREAD "single threaded DBM solvers")
+
+IF (FCS_HARD_CODE_STATE_DEPTH_FIELD)
+    SET(FCS_WITHOUT_DEPTH_FIELD "1")
+ENDIF()
 
 IF (NOT DISABLE_APPLYING_RPATH)
     ### This is to set the RPATH correctly, so when installed under a prefix
