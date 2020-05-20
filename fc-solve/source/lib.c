@@ -266,8 +266,10 @@ static inline void alloc_instance(
 #endif
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
     memset(&instance->obt_hash, '\0', sizeof(instance->obt_hash));
+#if 1
     instance->obt_hash.comp = mycomp;
     instance->obt_hash.hash = myhash;
+#endif
     fcs_states_OB_table_init(&instance->obt_hash, OB_TABLE_INIT_SIZE);
 #endif
 #ifdef INDIRECT_STACK_STATES
@@ -833,6 +835,8 @@ static void fc_solve_finish_instance(fcs_instance *const instance)
     // fc_solve_hash_free(&(instance->hash));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     fc_solve_states_google_hash_free(instance->hash);
+#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
+    // OB_table_clear(&instance->obt_hash);
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif
