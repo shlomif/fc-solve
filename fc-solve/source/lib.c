@@ -1046,10 +1046,10 @@ static inline bool fcs__is_state_a_dead_end(
          (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)))
 #define free_states(i)
 #else
+#ifndef FCS_ZERO_FREECELLS_MODE
 static inline void free_states_handle_soft_dfs_soft_thread(
     fcs_soft_thread *const soft_thread)
 {
-#ifndef FCS_ZERO_FREECELLS_MODE
     var_AUTO(soft_dfs_info, DFS_VAR(soft_thread, soft_dfs_info));
     const_AUTO(end_soft_dfs_info, soft_dfs_info + DFS_VAR(soft_thread, depth));
 
@@ -1082,8 +1082,8 @@ static inline void free_states_handle_soft_dfs_soft_thread(
         soft_dfs_info->derived_states_list.num_states =
             (size_t)(dest_rand_index_ptr - rand_indexes);
     }
-#endif
 }
+#endif
 
 static bool free_states_should_delete(void *const key, void *const context)
 {
@@ -1117,7 +1117,9 @@ static inline void free_states(fcs_instance *const instance)
         {
             if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
             {
+#ifndef FCS_ZERO_FREECELLS_MODE
                 free_states_handle_soft_dfs_soft_thread(soft_thread);
+#endif
             }
             else if (soft_thread->is_befs)
             {
@@ -2679,8 +2681,9 @@ static inline fcs_soft_thread *api_soft_thread(void *const api_instance)
 }
 
 int DLLEXPORT freecell_solver_user_set_depth_tests_order(
-    void *const api_instance, const int min_depth,
-    const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
+    void *const api_instance GCC_UNUSED, const int min_depth GCC_UNUSED,
+    const char *const moves_order GCC_UNUSED FCS__PASS_ERR_STR(
+        char **const error_string GCC_UNUSED))
 {
 #ifndef FCS_ZERO_FREECELLS_MODE
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
@@ -4667,8 +4670,9 @@ void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 
 #ifdef FCS_WITH_MOVES
 int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
-    void *const api_instance,
-    const char *const moves_order FCS__PASS_ERR_STR(char **const error_string))
+    void *const api_instance GCC_UNUSED,
+    const char *const moves_order GCC_UNUSED FCS__PASS_ERR_STR(
+        char **const error_string GCC_UNUSED))
 {
 #ifndef FCS_ZERO_FREECELLS_MODE
     var_AUTO(obj, active_obj(api_instance));
@@ -4864,7 +4868,7 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
 
 #ifdef FCS_COMPILE_DEBUG_FUNCTIONS
 int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
-    void *const api_instance GCC_UNUSED, char **const error_string)
+    void *const api_instance GCC_UNUSED, char **const error_string GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
     fcs_user *const user = (fcs_user *)api_instance;
@@ -4946,7 +4950,8 @@ fc_solve_user_INTERNAL_get_flares_plan_item_iters_count(
 }
 
 int DLLEXPORT __attribute__((pure))
-fc_solve_user_INTERNAL_get_num_by_depth_tests_order(void *const api_instance)
+fc_solve_user_INTERNAL_get_num_by_depth_tests_order(
+    void *const api_instance GCC_UNUSED)
 {
 #ifndef FCS_ZERO_FREECELLS_MODE
     return (int)api_soft_thread(api_instance)->by_depth_moves_order.num;
@@ -4957,7 +4962,7 @@ fc_solve_user_INTERNAL_get_num_by_depth_tests_order(void *const api_instance)
 
 int DLLEXPORT __attribute__((pure))
 fc_solve_user_INTERNAL_get_by_depth_tests_max_depth(
-    void *const api_instance, const int depth_idx)
+    void *const api_instance GCC_UNUSED, const int depth_idx GCC_UNUSED)
 {
 #ifndef FCS_ZERO_FREECELLS_MODE
     return (int)api_soft_thread(api_instance)
