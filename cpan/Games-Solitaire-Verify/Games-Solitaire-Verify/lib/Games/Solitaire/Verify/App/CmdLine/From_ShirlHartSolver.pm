@@ -54,6 +54,7 @@ sub _analyze_shirl_hart_move
         }
         return undef;
     };
+<<<<<<< HEAD
     my $try_foundation = sub {
         if ( $dest_char eq 'h' )
         {
@@ -65,6 +66,8 @@ sub _analyze_shirl_hart_move
         }
         return;
     };
+=======
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
     my $try_fc = sub {
         my $c = shift;
         return $fc{$c};
@@ -114,13 +117,24 @@ sub _analyze_shirl_hart_move
             );
         }
 
+<<<<<<< HEAD
         if ( $try_foundation->() )
+=======
+        if ( $dest_char eq 'h' )
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
         {
             if ( $src_card ne
                 $self->_st->get_column($src_col_idx)->top->to_string )
             {
                 die "wrong move stack to foundations - $move_line";
             }
+<<<<<<< HEAD
+=======
+            if ( $dest ne 'h' )
+            {
+                die "wrong move stack to foundations - $move_line";
+            }
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
 
             return $self->_perform_and_output_move_wrapper(
                 sprintf( "Move a card from stack %d to the foundations",
@@ -130,12 +144,26 @@ sub _analyze_shirl_hart_move
     }
     elsif ( defined( my $src_fc_idx = $try_fc->($src_char) ) )
     {
+<<<<<<< HEAD
         if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
         {
             die "wrong freecell card - $move_line";
         }
         if ( $try_foundation->() )
         {
+=======
+        if ( $dest_char eq 'h' )
+        {
+            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
+            {
+                die "wrong move fc to foundations - $move_line";
+            }
+            if ( $dest ne 'h' )
+            {
+                die "wrong move fc to foundations - $move_line";
+            }
+
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
             return $self->_perform_and_output_move_wrapper(
                 sprintf( "Move a card from freecell %d to the foundations",
                     $src_fc_idx ),
@@ -144,6 +172,13 @@ sub _analyze_shirl_hart_move
 
         if ( defined( my $dest_col_idx = $try_col->($dest_char) ) )
         {
+<<<<<<< HEAD
+=======
+            if ( $src_card ne $self->_st->get_freecell($src_fc_idx)->to_string )
+            {
+                die "wrong move freecell to stack - $move_line";
+            }
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
             if ( $is_invalid_dest_col->($dest_col_idx) )
             {
                 die "wrong move freecell to stack - $move_line";

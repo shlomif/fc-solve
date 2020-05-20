@@ -17,6 +17,7 @@ Shirl Hart's freecell solver solutions to Freecell Solver's.
 
 =head1 SYNOPSIS
 
+<<<<<<< HEAD
     $ convert-shirl-hart-solver-to-fc-solve-solution -g freecell 24.board ./24.shirl-hart.sol > 24.sol
     $ verify-solitaire-solution -g freecell ./24.sol
 
@@ -25,6 +26,11 @@ Shirl Hart's freecell solver solutions to Freecell Solver's.
 
 See L<https://github.com/shlomif/shirl-hart-freecell-solver/> .
 
+=======
+    $ convert-patsolve-to-fc-solve-solution -g freecell 24.board ./24.shirl-hart.sol > 24.sol
+    $ verify-solitaire-solution -g freecell ./24.sol
+
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
 =head1 COMMAND LINE OPTIONS
 
 =head2 -g [variant]

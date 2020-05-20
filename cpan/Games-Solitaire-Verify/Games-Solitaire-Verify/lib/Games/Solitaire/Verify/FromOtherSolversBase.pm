@@ -4,7 +4,11 @@ use strict;
 use warnings;
 use autodie;
 
+<<<<<<< HEAD
 use List::Util qw(first);
+=======
+use List::MoreUtils qw(firstidx);
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
 use Path::Tiny qw/ path /;
 
 use parent 'Games::Solitaire::Verify::Base';
@@ -193,7 +197,11 @@ sub _find_col_card
 {
     my ( $self, $card_s ) = @_;
 
+<<<<<<< HEAD
     return first
+=======
+    return firstidx
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
     {
         my $col = $self->_st->get_column($_);
         ( $col->len == 0 ) ? 0 : $col->top->fast_s eq $card_s
@@ -205,7 +213,11 @@ sub _find_empty_col
 {
     my ($self) = @_;
 
+<<<<<<< HEAD
     return first
+=======
+    return firstidx
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
     {
         $self->_st->get_column($_)->len == 0
     }
@@ -215,7 +227,11 @@ sub _find_empty_col
 sub _find_fc_card
 {
     my ( $self, $card_s ) = @_;
+<<<<<<< HEAD
     return first
+=======
+    my $dest_fc_idx = firstidx
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
     {
         my $card = $self->_st->get_freecell($_);
         defined($card) ? ( $card->fast_s eq $card_s ) : 0;
@@ -229,10 +245,17 @@ sub _find_card_src_string
 
     my $src_col_idx = $self->_find_col_card($src_card_s);
 
+<<<<<<< HEAD
     if ( not defined $src_col_idx )
     {
         my $src_fc_idx = $self->_find_fc_card($src_card_s);
         if ( not defined($src_fc_idx) )
+=======
+    if ( $src_col_idx < 0 )
+    {
+        my $src_fc_idx = $self->_find_fc_card($src_card_s);
+        if ( $src_fc_idx < 0 )
+>>>>>>> a6759b51c5ba03266d1420faff00e086fd18f3e5
         {
             die "Cannot find card <$src_card_s>.";
         }
