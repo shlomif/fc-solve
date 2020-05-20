@@ -12,10 +12,7 @@
 
 #if ((FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH) ||                 \
      (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH))
-/*
-    This function "rehashes" a hash. I.e: it increases the size of its
-    hash table, allowing for smaller chains, and faster lookup.
-  */
+// Increase the size, for smaller chains, and faster lookup.
 static inline void fc_solve_hash_rehash(hash_table *const hash)
 {
     const_AUTO(old_size, hash->size);
@@ -42,25 +39,16 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
         /* traverse the chain item by item */
         while (item != NULL)
         {
-            /* The place in the new hash table */
             const size_t place = item->hash_value & new_size_bitmask;
-
-            /* Store the next item in the linked list in a safe place,
-               so we can retrieve it after the assignment */
             hash_item *const next_item = item->next;
             /* It is placed in front of the first element in the chain,
                so it should link to it */
             item->next = new_entries[place].first_item;
-
-            /* Make it the first item in its chain */
             new_entries[place].first_item = item;
-
-            /* Move to the next item this one. */
             item = next_item;
         }
     };
 
-    /* Free the entries of the old hash */
     free(hash->entries);
 
     /* Copy the new hash to the old one */
@@ -70,10 +58,8 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
     fcs_hash_set_max_num_elems(hash, new_size);
 }
 
-/*
- * Returns NULL if the key is new and the key/val pair was inserted.
- * Returns the existing key if the key is not new (= a truthy pointer).
- */
+// Returns NULL if the key is new and the key/val pair was inserted.
+// Returns the existing key if the key is not new (= a truthy pointer).
 static inline void *fc_solve_hash_insert(hash_table *const hash,
     void *const key,
 #ifdef FCS_RCS_STATES
