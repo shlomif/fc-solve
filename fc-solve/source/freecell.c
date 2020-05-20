@@ -11,17 +11,6 @@
 #include "freecell.h"
 #include "meta_move_funcs_helpers.h"
 
-#define CALC_POSITIONS_BY_RANK()                                               \
-    const int8_t *const positions_by_rank =                                    \
-        fc_solve_calc_positions_by_rank_location(soft_thread);                 \
-    const int suit_positions_by_rank_step = POS_BY_RANK_MAP(POS_BY_RANK_STEP)
-
-#define POS_BY_RANK_MAP(x) ((x) << 1)
-
-#ifdef FCS_BREAK_BACKWARD_COMPAT_2
-#define RAR
-#endif
-
 /*
  * Throughout this code the following local variables are used to quickly
  * access the instance's members:
@@ -36,6 +25,17 @@ DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
 #endif
 
 #ifndef FCS_ZERO_FREECELLS_MODE
+#define CALC_POSITIONS_BY_RANK()                                               \
+    const int8_t *const positions_by_rank =                                    \
+        fc_solve_calc_positions_by_rank_location(soft_thread);                 \
+    const int suit_positions_by_rank_step = POS_BY_RANK_MAP(POS_BY_RANK_STEP)
+
+#define POS_BY_RANK_MAP(x) ((x) << 1)
+
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define RAR
+#endif
+
 static inline int find_empty_stack(fcs_kv_state raw_state_raw,
     const int start_from, const int local_stacks_num)
 {
