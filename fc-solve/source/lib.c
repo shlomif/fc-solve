@@ -1170,10 +1170,12 @@ static void increase_dfs_max_depth(fcs_soft_thread *const soft_thread)
     DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
 }
 
+#ifndef FCS_ZERO_FREECELLS_MODE
 static inline ssize_t get_depth(const moves_by_depth_unit *curr_by_depth_unit)
 {
     return curr_by_depth_unit->max_depth;
 }
+#endif
 
 static inline bool was_pruned(const bool enable_pruning,
     fcs_collectible_state *ptr_state, fcs_soft_thread *const soft_thread,
@@ -1248,6 +1250,7 @@ static inline fcs_moves_group_kind dfs_run_moves(
     return local_shuffling_type;
 }
 
+#ifndef FCS_ZERO_FREECELLS_MODE
 static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
     fcs_instance *const instance GCC_UNUSED, const size_t num_states,
     const fcs_moves_group_kind local_shuffling_type,
@@ -1324,6 +1327,7 @@ static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
         break;
     }
 }
+#endif
 
 // dfs_solve() is the event loop of the Random-DFS scan. DFS, which is
 // recursive in nature, is handled here without procedural recursion by using
@@ -1383,6 +1387,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     the_moves_list.num = 1;
 #endif
     TRACE0("Before depth loop");
+#ifndef FCS_ZERO_FREECELLS_MODE
 #define RECALC_BY_DEPTH_LIMITS()                                               \
     {                                                                          \
         by_depth_max_depth = get_depth(curr_by_depth_unit);                    \
@@ -1391,6 +1396,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                                  : get_depth(curr_by_depth_unit - 1);          \
         the_moves_list = curr_by_depth_unit->move_funcs;                       \
     }
+#endif
 
     fcs_iters_int *const instance_num_checked_states_ptr =
         &(instance->i__stats.num_checked_states);
@@ -2518,15 +2524,21 @@ static NI_INLINE void user_next_instance(fcs_user *const user)
 
 #ifdef FCS_WITH_ERROR_STRS
 #define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
+#else
+#define ALLOC_ERROR_STRING(var, s)
+#endif
+
+#ifndef FCS_ZERO_FREECELLS_MODE
+#ifdef FCS_WITH_ERROR_STRS
 #define SET_ERROR_VAR(var, s) *(var) = (((s)[0]) ? strdup(s) : NULL)
 static inline void clear_error(fcs_user *const user)
 {
     user->error_string[0] = '\0';
 }
 #else
-#define ALLOC_ERROR_STRING(var, s)
 #define SET_ERROR_VAR(var, s)
 #define clear_error(user)
+#endif
 #endif
 
 #ifdef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2577,7 +2589,10 @@ static MYINLINE void user_initialize(fcs_user *const user)
         user->unrecognized_cmd_line_options[i] = NULL;
     }
 #endif
+
+#ifndef FCS_ZERO_FREECELLS_MODE
     clear_error(user);
+#endif
     user_next_instance(user);
 }
 
@@ -2978,7 +2993,9 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         }
     }
     INSTANCES_LOOP_END()
+#ifndef FCS_ZERO_FREECELLS_MODE
     clear_error(user);
+#endif
 
     return FCS_COMPILE_FLARES_RET_OK;
 }
@@ -4853,7 +4870,9 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     fcs_user *const user = (fcs_user *)api_instance;
     const fcs_compile_flares_ret ret = user_compile_all_flares_plans(user);
 #ifdef FCS_WITH_ERROR_STRS
+#ifndef FCS_ZERO_FREECELLS_MODE
     SET_ERROR_VAR(error_string, user->error_string);
+#endif
 #else
     *error_string = NULL;
 #endif
