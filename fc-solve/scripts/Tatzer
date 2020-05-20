@@ -257,6 +257,7 @@ if ( defined $SEED )
         }
     }
     my $FN = "run-t-$SEED.bash";
+    @subset = grep { not /libavl/i } @subset;
     path($FN)->spew_utf8("$^X $0 @subset\n");
     delete $ENV{$SEED_KEY};
     exec( "bash", $FN );
