@@ -54,6 +54,7 @@ extern "C" {
  * used a little, but otherwise is not needed for the run-time
  * operation.
  * */
+#cmakedefine FCS_HARD_CODE_STATE_DEPTH_FIELD
 #cmakedefine FCS_WITHOUT_DEPTH_FIELD
 #cmakedefine FCS_WITHOUT_CMD_LINE_HELP
 #cmakedefine FCS_WITHOUT_ITER_HANDLER
@@ -161,6 +162,8 @@ extern "C" {
 #define FCS_RCS_CACHE_STORAGE_KAZ_TREE 1
 
 #define FCS_RCS_CACHE_STORAGE ${FCS_RCS_CACHE_STORAGE}
+
+#cmakedefine FCS_ZERO_FREECELLS_MODE
 
 #cmakedefine HAVE_STRNCASECMP
 #cmakedefine HAVE_STRNDUP

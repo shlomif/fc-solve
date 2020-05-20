@@ -1,5 +1,5 @@
 [PerlCritic]
-argv = --theme freenode --severity 3
+argv = --theme freenode --severity 1
 select = {t,lib,scripts}/**/*.{pl,pm,t} {t,lib,scripts}/*.{pl,pm,t}
 
 [PerlTidy]

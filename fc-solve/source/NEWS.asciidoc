@@ -4,6 +4,18 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-04-13
 :Revision: $Id$
 
+Version 5.24.0: (04-May-2020)
+-----------------------------
+
+1. Add the "=all()" moves order specifier.
+
+2. Add the FCS_ZERO_FREECELLS_MODE compile macro.
+
+3. Update the compile time CMake descriptions for optimizing
+runtimes on more modern CPUs.
+
+4. Remove support for the secondary hash value.
+
 Version 5.22.1: (13-Apr-2020)
 -----------------------------
 

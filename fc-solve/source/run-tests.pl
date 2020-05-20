@@ -76,6 +76,7 @@ sub run_tests
 my $tests_glob = "*.{t.exe,py,t}";
 my $exclude_re_s;
 my $force_rebuild = delete( $ENV{REBUILD} );
+my $tests_dir;
 
 my @execute;
 GetOptions(
@@ -86,7 +87,14 @@ GetOptions(
     '--prove!'       => \$use_prove,
     '--rebuild!'     => \$force_rebuild,
     '--jobs|j=n'     => \$num_jobs,
+    '--tests-dir=s'  => \$tests_dir,
 ) or die "Wrong opts - $!";
+
+if ( defined $tests_dir )
+{
+    $tests_dir = path($tests_dir)->absolute;
+}
+
 my %binaries;
 %progs =
     map { $_ => +{ binaries => {}, } }
@@ -94,7 +102,7 @@ my %binaries;
     FC_Solve::Paths::Base::exe_fn( $_->{args}->{prog} // die %{ $_->{args} } )
     } values %{ FC_Solve::Test::Valgrind::Data->get_hash };
 
-use Digest::SHA ();
+use Digest ();
 if ( $FC_Solve::Paths::Base::IS_WIN || $force_rebuild )
 {
     ++$rerun;
@@ -111,7 +119,7 @@ else
             $progs{$prog}{binaries}{$bin} //= (
                 $binaries{$bin} //= do
                 {
-                    Digest::SHA->new(256)->addfile($bin)->b64digest;
+                    Digest->new('SHA-256')->addfile($bin)->b64digest;
                 }
             );
         }
@@ -234,13 +242,15 @@ sub myglob
             || ( basename($a) cmp basename($b) )
             || ( $a cmp $b )
         } (
-        myglob('t'),
-        myglob('.'),
-        (
-              ( $fcs_path ne $abs_bindir )
-            ? ( myglob("$abs_bindir/t/t") )
-            : ()
-        ),
+        defined($tests_dir) ? ( myglob($tests_dir) )
+        : (
+            myglob('t'),
+            myglob('.'),
+            (
+                  ( $fcs_path ne $abs_bindir ) ? ( myglob("$abs_bindir/t/t") )
+                : ()
+            ),
+        )
         );
 
     if ( defined($exclude_re_s) )

@@ -99,7 +99,7 @@ sub _out
 
     $self->_output_fh()->print($text);
 
-    return;
+    return ();
 }
 
 sub _out_line
@@ -134,7 +134,7 @@ sub _assign_read_new_state
     }
     $self->_st($new_state);
 
-    return;
+    return ();
 }
 
 sub _read_state
@@ -173,7 +173,7 @@ sub _read_state
     }
     $self->_out_line($line);
 
-    return;
+    return ();
 }
 
 sub _read_move
@@ -217,7 +217,7 @@ sub _read_move
         )
     );
 
-    return;
+    return ();
 }
 
 =begin notes
@@ -308,14 +308,14 @@ sub _apply_move
 
         # Initialised to the null sub.
         my $output_state_promise = sub {
-            return;
+            return ();
         };
 
         my $past_first_output_state_promise = sub {
             $self->_out(
                 "\n" . $self->_st->to_string . "\n\n====================\n\n" );
 
-            return;
+            return ();
         };
 
         my $add_move = sub {
@@ -344,7 +344,7 @@ sub _apply_move
 
             $output_state_promise = $past_first_output_state_promise;
 
-            return;
+            return ();
         };
 
         my $move_using_freecells = sub {
@@ -366,7 +366,7 @@ sub _apply_move
                 );
             }
 
-            return;
+            return ();
         };
 
         my $recursive_move;
@@ -380,7 +380,7 @@ sub _apply_move
                 #    $num_cards_moved_at_each_stage[$depth] -
                 #    $num_cards_moved_at_each_stage[$depth-1]
                 #);
-                return;
+                return ();
             }
             else
             {
@@ -417,7 +417,7 @@ sub _apply_move
                     @running_empty_cols =
                         ( sort { $a <=> $b } @running_empty_cols, $s->{dest} );
                 }
-                return;
+                return ();
             }
         };
 
@@ -439,7 +439,7 @@ sub _apply_move
         }
     }
 
-    return;
+    return ();
 }
 
 =head2 $solution->verify()
@@ -489,7 +489,7 @@ sub verify
         ref $err ? $err->rethrow : die $err;
     }
 
-    return;
+    return ();
 }
 
 1;    # End of Games::Solitaire::Verify::Solution::ExpandMultiCardMoves

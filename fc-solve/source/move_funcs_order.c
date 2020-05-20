@@ -103,6 +103,11 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                     moves_order->groups[moves_order->num - 1].shuffling_type =
                         FCS_WEIGHTING;
                 }
+                else if (string_starts_with(string + i, "all", open_paren))
+                {
+                    moves_order->groups[moves_order->num - 1].shuffling_type =
+                        FCS_PERFORM_ALL_MOVE_FUNCS;
+                }
 #ifndef FCS_UNSAFE
                 else
                 {

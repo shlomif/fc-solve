@@ -1,0 +1,1 @@
+./board_gen/pi-make-microsoft-freecell-board -t 164 | ./fc-solve --freecells-num 0 -to '[0AB]=all()' -sam -p -t -sel -sp r:tf --method random-dfs | tee ../scripts/ms164_zerofc_mode_expected-sample-sol.txt | sha256sum | perl -lanE 'say $F[0]' | tee ../scripts/ms164_zerofc_mode_expected-sample-sol.txt.sha256

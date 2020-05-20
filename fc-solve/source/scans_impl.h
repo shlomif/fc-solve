@@ -121,15 +121,19 @@ typedef int fcs_depth;
 
 static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
 {
-#ifdef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
+    return (FCS_S_DEPTH(ptr_state));
+#else
+#ifdef FCS_HARD_CODE_STATE_DEPTH_FIELD
+    return 0;
+#else
     register fcs_depth ret = 0;
     while ((ptr_state = FCS_S_PARENT(ptr_state)) != NULL)
     {
         ++ret;
     }
     return ret;
-#else
-    return (FCS_S_DEPTH(ptr_state));
+#endif
 #endif
 }
 
@@ -189,8 +193,13 @@ static inline pq_rating befs_rate_state(
     fcs_seq_cards_power_type cards_under_sequences = 0;
     fcs_seq_cards_power_type seqs_over_renegade_cards = 0;
 
+// #ifdef FCS_HARD_CODE_STATE_DEPTH_FIELD
+#if 0
+    fc_solve_weighting_float sum = 0;
+#else
     fc_solve_weighting_float sum =
         (max(0, negated_depth) * weighting->depth_factor);
+#endif
     const_PTR(
         num_cards_out_lookup_table, weighting->num_cards_out_lookup_table);
     if ((bool)num_cards_out_lookup_table[1])
@@ -313,7 +322,7 @@ static inline pq_rating befs_rate_state(
         FCS_ASSIGN_STATE_KEY();                                                \
     }
 
-#if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
+#if defined(FCS_WITH_DEPTH_FIELD) &&                                           \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
 /*
  * The calculate_real_depth() inline function traces the path of the state

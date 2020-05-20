@@ -15,6 +15,9 @@ digests:
   forecell1099default:
     hexdigest: 72d59d2525556110e52bdd353f85620ebb61d19e29bf7facf09ac541e36b54d9
     len: 28481
+  freecell164_zero_freecells:
+    hexdigest: 28f14295251b0a37b0e04d78e5e94b2b541305cc4468358fc77527c3a8375eab
+    len: 53783
   freecell1941:
     hexdigest: ab8bf38f4fbcc1ac253e193f8aeaa3682e84b1367baef867442ce32d809c899e
     len: 21837

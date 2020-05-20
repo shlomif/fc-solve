@@ -227,7 +227,7 @@ struct fcs_state_extra_info_struct
     fcs_move_stack *moves_to_parent;
 #endif
 
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
     int depth;
 #endif
 
@@ -401,7 +401,7 @@ static inline void FCS_STATE_collectible_to_kv(
 #define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
 #define FCS_S_VISITED(s) FCS_S_ACCESSOR(s, visited)
 #define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
 #define FCS_S_DEPTH(s) FCS_S_ACCESSOR(s, depth)
 #endif
 #ifndef FCS_WITHOUT_VISITED_ITER
@@ -605,7 +605,7 @@ static inline void fc_solve_state_init_proto(fcs_state_keyval_pair *const state
 #ifdef FCS_WITH_MOVES
     state->info.moves_to_parent = NULL;
 #endif
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
     state->info.depth = 0;
 #endif
     state->info.visited = 0;

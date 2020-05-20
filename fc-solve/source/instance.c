@@ -8,7 +8,9 @@
 // instance.c - instance/hard_thread/soft_thread functions for Freecell Solver.
 #include "instance_for_lib.h"
 #include "instance.h"
+#ifndef FCS_ZERO_FREECELLS_MODE
 #include "move_funcs_order.h"
+#endif
 #include "preset.h"
 #include "scans.h"
 
@@ -58,14 +60,18 @@ static inline void soft_thread_clean_soft_dfs(
     for (; info_ptr < max_info_ptr; ++info_ptr)
     {
         free(info_ptr->derived_states_list.states);
+#ifndef FCS_ZERO_FREECELLS_MODE
         free(info_ptr->derived_states_random_indexes);
+#endif
     }
     for (; info_ptr < dfs_max_info_ptr; ++info_ptr)
     {
         if (likely(info_ptr->derived_states_list.states))
         {
             free(info_ptr->derived_states_list.states);
+#ifndef FCS_ZERO_FREECELLS_MODE
             free(info_ptr->derived_states_random_indexes);
+#endif
         }
     }
 
@@ -74,6 +80,7 @@ static inline void soft_thread_clean_soft_dfs(
     DFS_VAR(soft_thread, dfs_max_depth) = 0;
 }
 
+#ifndef FCS_ZERO_FREECELLS_MODE
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fcs_soft_thread *const soft_thread)
 {
@@ -106,6 +113,7 @@ static inline void accumulate_tests_by_ptr(
         }
     }
 }
+#endif
 
 static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
     const foreach_st_callback_choice callback_choice, void *const context)
@@ -121,11 +129,15 @@ static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
         break;
 
     case FOREACH_SOFT_THREAD_ACCUM_TESTS_ORDER:
+#ifndef FCS_ZERO_FREECELLS_MODE
         accumulate_tests_by_ptr((size_t *)context,
             &(soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order));
+#endif
         break;
 
-    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS: {
+    case FOREACH_SOFT_THREAD_DETERMINE_SCAN_COMPLETENESS:
+#ifndef FCS_ZERO_FREECELLS_MODE
+    {
         size_t moves_order = 0;
 
         accumulate_tests_by_ptr(&moves_order,
@@ -134,6 +146,7 @@ static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
         STRUCT_SET_FLAG_TO(soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN,
             (moves_order == *(size_t *)context));
     }
+#endif
     break;
     }
 }
@@ -190,7 +203,7 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 #endif
 }
 
-#ifndef FCS_SINGLE_HARD_THREAD
+#if !(defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_WITH_MOVES))
 static inline
 #endif
     void
@@ -207,11 +220,14 @@ static inline
                         .dfs_max_depth = 0,
                         .soft_dfs_info = NULL,
                         .depth = 0,
+#ifndef FCS_ZERO_FREECELLS_MODE
+
                         .moves_by_depth =
                             {
                                 .num_units = 0,
                                 .by_depth_units = NULL,
                             },
+#endif
                         .rand_seed = 24,
                     },
                 .befs =
@@ -235,12 +251,17 @@ static inline
                             },
                     },
             },
+
+#ifndef FCS_ZERO_FREECELLS_MODE
+
         .by_depth_moves_order =
             {
                 .num = 1,
                 .by_depth_moves =
                     SMALLOC1(soft_thread->by_depth_moves_order.by_depth_moves),
             },
+#endif
+
         .is_befs = false,
 #ifdef FCS_WITH_MOVES
         .is_optimize_scan = false,
@@ -258,49 +279,16 @@ static inline
         .pats_scan = NULL,
 #endif
     };
+#ifndef FCS_ZERO_FREECELLS_MODE
     soft_thread->by_depth_moves_order.by_depth_moves[0] =
         (typeof(soft_thread->by_depth_moves_order.by_depth_moves[0])){
             .max_depth = SSIZE_MAX,
             .moves_order = moves_order_dup(
                 &(fcs_st_instance(soft_thread)->instance_moves_order)),
         };
+#endif
 
     fc_solve_reset_soft_thread(soft_thread);
-}
-
-void fc_solve_instance__init_hard_thread(
-#ifndef FCS_SINGLE_HARD_THREAD
-    fcs_instance *const instance,
-#endif
-    fcs_hard_thread *const hard_thread)
-{
-#ifndef FCS_SINGLE_HARD_THREAD
-    hard_thread->instance = instance;
-#endif
-
-    HT_FIELD(hard_thread, num_soft_threads) = 0;
-
-    HT_FIELD(hard_thread, soft_threads) = NULL;
-
-    fc_solve_new_soft_thread(hard_thread);
-#ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-    HT_FIELD(hard_thread, prelude_as_string) = NULL;
-#endif
-    HT_FIELD(hard_thread, prelude) = NULL;
-    HT_FIELD(hard_thread, prelude_num_items) = 0;
-
-    fc_solve_reset_hard_thread(hard_thread);
-    fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
-#ifdef FCS_SINGLE_HARD_THREAD
-        hard_thread->meta_alloc
-#else
-        instance->meta_alloc
-#endif
-    );
-
-#ifdef FCS_WITH_MOVES
-    HT_FIELD(hard_thread, reusable_move_stack) = fcs_move_stack__new();
-#endif
 }
 
 typedef struct
@@ -394,9 +382,6 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
     instance->solution_moves = fcs_move_stack__new();
 
     const_AUTO(solution_moves_ptr, &(instance->solution_moves));
-/*
- * Handle the case if it's patsolve.
- * */
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(solving_soft_thread, instance);
     if (solving_soft_thread->super_method_type == FCS_SUPER_METHOD_PATSOLVE)
@@ -552,85 +537,6 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
     }
 }
 #endif
-
-// This function should be called after the user has retrieved the results
-// generated by the scan, as it will destroy them.
-void fc_solve_finish_instance(fcs_instance *const instance)
-{
-// De-allocate the state collection
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
-    rbdestroy(instance->tree);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_states_tree_destroy(instance->tree, NULL);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_KAZ_TREE)
-    fc_solve_kaz_tree_free_nodes(instance->tree);
-    fc_solve_kaz_tree_destroy(instance->tree);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_TREE)
-    g_tree_destroy(instance->tree);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
-    Word_t rc_word;
-#ifdef JERR
-#undef JERR
-#define JERR ((Word_t)(-1))
-#endif
-    JHSFA(rc_word, instance->judy_array);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
-    g_hash_table_destroy(instance->hash);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    // fc_solve_hash_free(&(instance->hash));
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    fc_solve_states_google_hash_free(instance->hash);
-#elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_OBT)
-    // OB_table_clear(&instance->obt_hash);
-#else
-#error FCS_STATE_STORAGE is not defined
-#endif
-
-// De-allocate the stack collection while free()'ing the stacks in the process
-#ifdef INDIRECT_STACK_STATES
-#if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_INTERNAL_HASH)
-    // fc_solve_hash_free(&(instance->stacks_hash));
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
-    fcs_libavl2_stacks_tree_destroy(instance->stacks_tree, NULL);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBREDBLACK_TREE)
-    rbdestroy(instance->stacks_tree);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_TREE)
-    g_tree_destroy(instance->stacks_tree);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GLIB_HASH)
-    g_hash_table_destroy(instance->stacks_hash);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_OBT)
-    // OB_table_clear(&instance->stacks_obt_hash);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_GOOGLE_DENSE_HASH)
-    fc_solve_columns_google_hash_free(instance->stacks_hash);
-#elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
-    Word_t cache_rc_word;
-    JHSFA(cache_rc_word, instance->stacks_judy_array);
-#else
-#error FCS_STACK_STORAGE is not set to a good value.
-#endif
-#endif
-
-#if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
-    instance->db->close(instance->db, 0);
-#endif
-
-#ifdef FCS_RCS_STATES
-
-#if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
-    Word_t rcs_rc_word;
-    JLFA(rcs_rc_word, instance->rcs_states_cache.states_values_to_keys_map);
-#elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-    fc_solve_kaz_tree_free_nodes(instance->rcs_states_cache.kaz_tree);
-    fc_solve_kaz_tree_destroy(instance->rcs_states_cache.kaz_tree);
-#else
-#error Unknown FCS_RCS_CACHE_STORAGE
-#endif
-    fc_solve_compact_allocator_finish(
-        &(instance->rcs_states_cache.states_values_to_keys_allocator));
-#endif
-    fc_solve_foreach_soft_thread(
-        instance, FOREACH_SOFT_THREAD_CLEAN_SOFT_DFS, NULL);
-}
 
 fcs_soft_thread *fc_solve_new_soft_thread(fcs_hard_thread *const hard_thread)
 {

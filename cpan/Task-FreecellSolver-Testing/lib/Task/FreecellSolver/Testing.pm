@@ -16,6 +16,7 @@ Freecell Solver test suite.
 use Carp                     ();
 use Cwd                      ();
 use Data::Dumper             ();
+use Digest                   ();
 use Digest::SHA              ();
 use Env::Path                ();
 use File::Path               ();

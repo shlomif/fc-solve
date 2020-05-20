@@ -153,8 +153,10 @@ typedef void (*fc_solve_solve_for_state_move_func)(
 #define NUM_CHECKED_STATES                                                     \
     (HT_INSTANCE(hard_thread)->i__stats.num_checked_states)
 typedef struct fc_solve_instance_struct fcs_hard_thread;
+#if (defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_WITH_MOVES))
 extern void fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
     struct fc_solve_soft_thread_struct *const soft_thread);
+#endif
 #else
 #define HT_FIELD(hard_thread, field) (hard_thread)->field
 #define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
@@ -168,7 +170,10 @@ extern bool fc_solve_check_and_add_state(
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
 extern guint fc_solve_hash_function(gconstpointer key);
 #endif
+
+#ifndef FCS_ZERO_FREECELLS_MODE
 #include "move_funcs_maps.h"
+#endif
 
 /* HT_LOOP == hard threads' loop - macros to abstract it. */
 #ifdef FCS_SINGLE_HARD_THREAD
@@ -215,6 +220,7 @@ typedef enum
     FCS_NO_SHUFFLING,
     FCS_RAND,
     FCS_WEIGHTING,
+    FCS_PERFORM_ALL_MOVE_FUNCS,
 } fcs_moves_group_kind;
 
 typedef union {
@@ -233,7 +239,9 @@ typedef struct
 typedef struct
 {
     uint_fast32_t num;
+#ifndef FCS_ZERO_FREECELLS_MODE
     fcs_moves_group *groups;
+#endif
 } fcs_moves_order;
 
 typedef struct
@@ -362,8 +370,10 @@ typedef struct
     size_t move_func_list_idx;
     size_t current_state_index;
     size_t move_func_idx;
+#ifndef FCS_ZERO_FREECELLS_MODE
     size_t derived_states_random_indexes_max_size;
     rating_with_index *derived_states_random_indexes;
+#endif
     fcs__positions_by_rank positions_by_rank;
 } fcs_soft_dfs_stack_item;
 
@@ -397,12 +407,14 @@ struct fc_solve_soft_thread_struct
     // state-specific flags.
     fastest_type_for_num_soft_threads__unsigned id;
 
+#ifndef FCS_ZERO_FREECELLS_MODE
     // The moves' order indicates which move funcs to run.
     struct
     {
         size_t num;
         fcs_by_depth_moves_order *by_depth_moves;
     } by_depth_moves_order;
+#endif
 
     fcs_super_method_type super_method_type;
 
@@ -413,45 +425,39 @@ struct fc_solve_soft_thread_struct
             // The (temporary) max depth of the Soft-DFS scans)
             ssize_t dfs_max_depth;
 
-            /*
-             * Soft-DFS uses a stack of fcs_soft_dfs_stack_item s.
-             *
-             * derived_states_list - a list of states to be checked next.
-             * Not all of them will be checked because it is possible that
-             * future states already visited them.
-             *
-             * current_state_index - the index of the last checked state
-             * in depth i.
-             *
-             * move_func_list_idx - the index of the move list that is
-             * performed. FCS performs each move separately, so
-             * states_to_check and friends will not be overpopulated.
-             *
-             * num_vacant_stacks - the number of unoccpied stacks that
-             * correspond
-             * to solution_states.
-             *
-             * num_vacant_freecells - ditto for the freecells.
-             *
-             * */
+            // Soft-DFS uses a stack of fcs_soft_dfs_stack_item s.
+            //
+            // derived_states_list - a list of states to be checked next.
+            // Not all of them will be checked because it is possible that
+            // future states already visited them.
+            //
+            // current_state_index - the index of the last checked state
+            // in depth i.
+            //
+            // move_func_list_idx - the index of the move list that is
+            // performed. FCS performs each move separately, so
+            // states_to_check and friends will not be overpopulated.
+            //
+            // num_vacant_stacks - the number of unoccpied stacks that
+            // correspond
+            // to solution_states.
+            //
+            // num_vacant_freecells - ditto for the freecells.
             fcs_soft_dfs_stack_item *soft_dfs_info;
 
-            /* The depth of the DFS stacks */
+            // The depth of the DFS stacks
             ssize_t depth;
 
-            /*
-             * A pseudo-random number generator for use in the random-DFS
-             * scan
-             * */
             fcs_rand_gen rand_gen;
 
             // The initial seed of this random number generator
             fcs_rand_gen rand_seed;
 
-            /*
-             * The moves to be performed in a preprocessed form.
-             * */
+#ifndef FCS_ZERO_FREECELLS_MODE
+            // The moves to be performed in a preprocessed form.
             fcs_moves_by_depth_array moves_by_depth;
+#endif
+
         } soft_dfs;
         struct
         {
@@ -461,37 +467,25 @@ struct fc_solve_soft_thread_struct
             {
                 struct
                 {
-                    /*
-                     * A linked list that serves as the queue for the BFS
-                     * scan.
-                     * */
+                    // A linked list that serves as the queue for the BFS
+                    // scan.
                     fcs_states_linked_list_item *bfs_queue;
-                    /*
-                     * The last item in the linked list, so new items can be
-                     * added at
-                     * it, thus making it a queue.
-                     * */
+                    // The last item in the linked list, so new items can be
+                    // added at it, thus making it a queue.
                     fcs_states_linked_list_item *bfs_queue_last_item;
-                    /*
-                     * A linked list of items that were freed from
-                     * the queue and should be reused before allocating new
-                     * items.
-                     * */
+                    // A linked list of items that were freed from
+                    // the queue and should be reused before allocating new
+                    // items.
                     fcs_states_linked_list_item *recycle_bin;
                 } brfs;
                 struct
                 {
-                    /*
-                     * The priority queue of the BeFS scan
-                     * */
                     pri_queue pqueue;
                     fcs_state_weighting weighting;
                 } befs;
             } meth;
-            /*
-             * The first state to be checked by the scan. It is a kind of
-             * bootstrap for the algorithm.
-             * */
+            // The first state to be checked by the scan. It is a kind of
+            // bootstrap for the algorithm.
             fcs_collectible_state *first_state_to_check;
         } befs;
     } method_specific;
@@ -519,14 +513,10 @@ struct fc_solve_soft_thread_struct
 #endif
 
 #ifndef FCS_DISABLE_PATSOLVE
-    /*
-     * The patsolve soft_thread that is associated with this soft_thread.
-     * */
+    // The patsolve soft_thread that is associated with this soft_thread.
     struct fc_solve__patsolve_thread_struct *pats_scan;
 #endif
-    /*
-     * Differentiates between SOFT_DFS and RANDOM_DFS.
-     * */
+    // Differentiates between SOFT_DFS and RANDOM_DFS.
     bool master_to_randomize;
     bool is_befs;
 #ifdef FCS_WITH_MOVES
@@ -820,12 +810,6 @@ extern int fc_solve_compare_lru_cache_keys(const void *, const void *, void *);
 extern void fc_solve_soft_thread_init_befs_or_bfs(
     fcs_soft_thread *const soft_thread);
 
-extern void fc_solve_instance__init_hard_thread(
-#ifndef FCS_SINGLE_HARD_THREAD
-    fcs_instance *const instance,
-#endif
-    fcs_hard_thread *const hard_thread);
-
 extern void fc_solve_free_soft_thread_by_depth_move_array(
     fcs_soft_thread *const soft_thread);
 
@@ -833,16 +817,20 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 {
     const_SLOT(num, orig);
     fcs_moves_order ret = (fcs_moves_order){.num = num,
-        .groups = memdup(orig->groups,
-            sizeof(orig->groups[0]) *
-                ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))};
-
+#ifndef FCS_ZERO_FREECELLS_MODE
+        .groups = memdup(
+            orig->groups, sizeof(orig->groups[0]) *
+                              ((num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY))
+#endif
+    };
+#ifndef FCS_ZERO_FREECELLS_MODE
     for (size_t i = 0; i < num; ++i)
     {
         ret.groups[i].move_funcs = memdup(ret.groups[i].move_funcs,
             sizeof(ret.groups[i].move_funcs[0]) *
                 ((ret.groups[i].num & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
     }
+#endif
 
     return ret;
 }
@@ -888,6 +876,7 @@ extern void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 
 static inline void moves_order__free(fcs_moves_order *moves_order)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     const_SLOT(groups, moves_order);
     const_SLOT(num, moves_order);
     for (size_t group_idx = 0; group_idx < num; ++group_idx)
@@ -896,6 +885,7 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     }
     free(groups);
     moves_order->groups = NULL;
+#endif
     moves_order->num = 0;
 }
 
@@ -918,8 +908,6 @@ static inline bool fcs_get_calc_real_depth(const fcs_instance *const instance)
 #ifdef FCS_WITH_MOVES
 extern void fc_solve_trace_solution(fcs_instance *const instance);
 #endif
-extern void fc_solve_finish_instance(fcs_instance *const instance);
-
 #ifdef __cplusplus
 }
 #endif

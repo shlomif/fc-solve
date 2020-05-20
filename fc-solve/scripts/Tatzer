@@ -32,6 +32,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'disable-simple-simon'      => 'FCS_DISABLE_SIMPLE_SIMON',
     'fc-only'                   => 'FCS_FREECELL_ONLY',
     'hard-code-calc-real-depth' => 'FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE',
+    'hard-code-depth-field'     => 'FCS_HARD_CODE_STATE_DEPTH_FIELD',
     'hard-code-reparent-states' => 'FCS_HARD_CODE_REPARENT_STATES_AS_FALSE',
     'hard-code-scans-synergy'   => 'FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE',
     'hard-code-sp-rtf'          => 'FCS_ENABLE_PRUNE__R_TF__UNCOND',
@@ -51,6 +52,7 @@ my %BOOL_OPTS_WITH_FALSE_DEFAULTS = (
     'without-iter-handler'      => 'FCS_WITHOUT_ITER_HANDLER',
     'without-trim'              => 'FCS_WITHOUT_TRIM_MAX_STORED_STATES',
     'without-visited-iter'      => 'FCS_WITHOUT_VISITED_ITER',
+    'zero-freecells-mode'       => 'FCS_ZERO_FREECELLS_MODE',
 );
 
 my %TRUE_BOOL_OPTS = (
@@ -195,7 +197,7 @@ my %themes = (
     ],
     extra_speed2 => [
         qw(-l n2b),
-        qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler --unsafe --break-back-compat-2)
+        qw(-l extra_speed --hard-code-theme --disable-ni --without-help --without-iter-handler --unsafe --break-back-compat-2 --hard-code-depth-field),
     ],
     extra_speed3 =>
         [qw(-l extra_speed2 --no-without-max-num-states --nohard-code-theme)],
@@ -212,6 +214,10 @@ my %themes = (
     zerofc     => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
     zerofcst   => [qw(-l zerofc --dbm-single-thread --dbmtree=apr_hash)],
+    zerofcmode => [qw(-l zerofcst --zero-freecells-mode)],
+    zerofcmode_with_moves => [
+        qw(-l zerofcmode --no-disable-moves-track --no-disable-num-stored-states),
+    ],
 );
 
 my $SEED_KEY = 'FCS_THEME_RAND';
@@ -258,12 +264,30 @@ if ( defined $SEED )
 
 my $ARCH = $ENV{FC_SOLVE__MULT_CONFIG_TESTS__GCC_ARCH} // 'n2';
 foreach my $rec (
-    { id => "c2",              a => "core2", },
-    { id => "ci7",             a => "corei7-avx", },
-    { id => "n2",              a => "native", },
-    { id => "p4",              a => "pentium4" },
-    { id => "x64",             a => "x86-64" },
-    { id => "preferred-arch-", a => [$ARCH], },
+    {
+        id => "c2",
+        a  => "core2",
+    },
+    {
+        id => "ci7",
+        a  => "corei7-avx",
+    },
+    {
+        id => "n2",
+        a  => "native",
+    },
+    {
+        id => "p4",
+        a  => "pentium4"
+    },
+    {
+        id => "x64",
+        a  => "x86-64"
+    },
+    {
+        id => "preferred-arch-",
+        a  => [$ARCH],
+    },
     )
 {
     my $id      = $rec->{id};
@@ -312,9 +336,8 @@ foreach my $rec (
     $bb_def->( t => [qw(-l testing)] );
 
     # For use by PySolFC
-    $bb_def->(
-        _pysol => [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ]
-    );
+    $bb_def->( _pysol =>
+            [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ] );
 }
 
 my @new_argv = @ARGV;

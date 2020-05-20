@@ -16,10 +16,13 @@ extern "C" {
 #endif
 #include "scans_impl.h"
 #include "preset.h"
+#ifndef FCS_ZERO_FREECELLS_MODE
 #include "move_funcs_order.h"
+#endif
 
 static inline void fcs_free_moves_list(fcs_soft_thread *const soft_thread)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     /* Free the BeFS data. */
     free(BEFS_M_VAR(soft_thread, moves_list));
     BEFS_M_VAR(soft_thread, moves_list) = NULL;
@@ -46,6 +49,7 @@ static inline void fcs_free_moves_list(fcs_soft_thread *const soft_thread)
     }
     free(arr->by_depth_units);
     arr->by_depth_units = NULL;
+#endif
 }
 
 #ifdef FCS_WITH_MOVES
@@ -69,7 +73,10 @@ static inline void fc_solve_free_instance_soft_thread_callback(
 {
     st_free_pq(soft_thread);
     fcs_free_moves_list(soft_thread);
+#ifndef FCS_ZERO_FREECELLS_MODE
     fc_solve_free_soft_thread_by_depth_move_array(soft_thread);
+#endif
+
 #ifndef FCS_DISABLE_PATSOLVE
     const_SLOT(pats_scan, soft_thread);
 

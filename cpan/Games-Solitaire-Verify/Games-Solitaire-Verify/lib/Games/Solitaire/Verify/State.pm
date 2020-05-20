@@ -83,7 +83,7 @@ sub set_freecells
 
     $self->_freecells($freecells);
 
-    return;
+    return ();
 }
 
 sub _assign_freecells_from_string
@@ -100,7 +100,7 @@ sub _assign_freecells_from_string
         )
     );
 
-    return;
+    return ();
 }
 
 =head2 $self->add_column($columns)
@@ -116,7 +116,7 @@ sub add_column
 
     push @{ $self->_columns() }, $col;
 
-    return;
+    return ();
 }
 
 =head2 $self->set_foundations($foundations);
@@ -132,7 +132,7 @@ sub set_foundations
 
     $self->_foundations($foundations);
 
-    return;
+    return ();
 }
 
 sub _get_suits_seq
@@ -191,7 +191,7 @@ sub _from_string
         );
     }
 
-    return;
+    return ();
 }
 
 sub _fill_non_custom_variant
@@ -213,7 +213,7 @@ sub _fill_non_custom_variant
     $self->_variant_params($params);
     $self->_variant($variant);
 
-    return;
+    return ();
 }
 
 sub _set_variant
@@ -233,7 +233,7 @@ sub _set_variant
         $self->_fill_non_custom_variant($variant);
     }
 
-    return;
+    return ();
 }
 
 sub _init
@@ -249,7 +249,7 @@ sub _init
     {
         return $self->_from_string( $args->{string} );
     }
-    return;
+    return ();
 }
 
 =head2 $state->get_freecell($index)
@@ -305,7 +305,7 @@ sub increment_foundation_value
 
     $self->_foundations()->increment( $suit, $idx );
 
-    return;
+    return ();
 }
 
 =head2 $board->num_decks()
@@ -881,7 +881,7 @@ sub verify_contents
             die Games::Solitaire::Verify::Exception::State::ExtraCards->new(
                 cards => [$card], );
         }
-        return;
+        return ();
     };
     for my $fc ( 0 .. $self->num_freecells - 1 )
     {
@@ -924,7 +924,7 @@ sub verify_contents
             cards => [], );
     }
 
-    return;
+    return ();
 }
 
 =head2 $self->to_string()

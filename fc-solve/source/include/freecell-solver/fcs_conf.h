@@ -26,6 +26,13 @@ extern "C" {
 #define FCS_WITH_NI
 #endif
 
+#ifndef FCS_WITHOUT_DEPTH_FIELD
+#define FCS_WITH_DEPTH_FIELD
+#ifdef FCS_HARD_CODE_STATE_DEPTH_FIELD
+#error Cannot have both FCS_HARD_CODE_STATE_DEPTH_FIELD and FCS_WITH_DEPTH_FIELD
+#endif
+#endif
+
 #ifndef FCS_DISABLE_MOVES_TRACKING
 #define FCS_WITH_MOVES
 #endif
@@ -50,6 +57,10 @@ extern "C" {
 #ifndef FCS_INT_BIT_SIZE_LOG2
 #define FCS_INT_BIT_SIZE_LOG2                                                  \
     ((sizeof(int) == 8) ? 6 : (sizeof(int) == 2) ? 4 : 5)
+#endif
+
+#if defined(FCS_ZERO_FREECELLS_MODE) && (MAX_NUM_FREECELLS != 0)
+#error FCS_ZERO_FREECELLS_MODE requires zero freecells
 #endif
 
 #if defined(FCS_RCS_STATES) && (!defined(COMPACT_STATES))

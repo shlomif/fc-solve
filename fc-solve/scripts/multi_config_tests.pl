@@ -177,7 +177,8 @@ sub _calc_build_path
     return Path::Tiny->cwd->parent->child("build-$idx");
 }
 
-my $CWD = Path::Tiny->cwd;
+my $CWD         = Path::Tiny->cwd;
+my $WEBSITE_DIR = "$CWD/../site/wml";
 
 sub _chdir_run
 {
@@ -271,7 +272,7 @@ sub run_tests
     }
     elsif ($website_args)
     {
-        my $DIR = "$CWD/../site/wml";
+        my $DIR = $WEBSITE_DIR;
         my $PATH_PREFIX =
             $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER}
             ? "$CWD/../scripts/dockerized-emscripten/:"
@@ -439,13 +440,38 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+reg_test(
+    {
+        blurb => "zero freecells mode",
+    },
+    {
+        tatzer_theme => 'zerofcmode',
+        runtest_args => [ '--tests-dir', '../scripts/zerofc-mode-tests/t/' ],
+    },
+);
+reg_test(
+    {
+        blurb => "zero freecells mode sample solution",
+    },
+    {
+        tatzer_theme => 'zerofcmode_with_moves',
+        runtest_args =>
+            [ '--tests-dir', '../scripts/zerofc-mode-tests/solution-t/', ],
+    },
+);
 reg_theme_test( "Default", 'empty', );
 
-sub disabling_website_build_for_now
+sub enable_website_build_for_now
 {
+    my $NODE_DIR = "$WEBSITE_DIR/node_modules";
+    if ( !-d "$NODE_DIR/param-case" )
+    {
+        die
+"node dir $NODE_DIR appears to be missing! Tests will probably fail.";
+    }
     reg_test( 'Website #1', { website_args => [] } );
 }
-disabling_website_build_for_now();
+enable_website_build_for_now();
 
 reg_test(
     "No int128",

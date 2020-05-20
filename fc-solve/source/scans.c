@@ -286,7 +286,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
     {
         fc_solve_initialize_bfs_queue(soft_thread);
     }
-
+#ifndef FCS_ZERO_FREECELLS_MODE
     if (!BEFS_M_VAR(soft_thread, moves_list))
     {
         size_t num = 0;
@@ -308,6 +308,8 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
         BEFS_M_VAR(soft_thread, moves_list) = moves_list;
         BEFS_M_VAR(soft_thread, moves_list_end) = moves_list + num;
     }
+#endif
+
     BEFS_M_VAR(soft_thread, first_state_to_check) =
         FCS_STATE_keyval_pair_to_collectible(
             &fcs_st_instance(soft_thread)->state_copy);
@@ -374,7 +376,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
 
-#if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
+#if defined(FCS_WITH_DEPTH_FIELD) &&                                           \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
@@ -636,7 +638,7 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
 /* Make sure depth is consistent with the game graph.
  * I.e: the depth of every newly discovered state is derived from
  * the state from which it was discovered. */
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
     (FCS_S_DEPTH(raw_ptr_new_state))++;
 #endif
     /* Mark this state as a state that was not yet visited */
@@ -660,7 +662,7 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
 {
     const_SLOT(hard_thread, soft_thread);
     const_AUTO(instance, HT_INSTANCE(hard_thread));
-#if !defined(FCS_WITHOUT_DEPTH_FIELD) &&                                       \
+#if defined(FCS_WITH_DEPTH_FIELD) &&                                           \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
@@ -687,7 +689,7 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
             fcs_compact_alloc_release(&(HT_FIELD(hard_thread, allocator)));
         }
 
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
         calculate_real_depth(
             calc_real_depth, FCS_STATE_kv_to_collectible(&existing_state));
 #endif
@@ -719,7 +721,7 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
                 ptr_state->num_active_children++;
             }
             existing_state.val->parent = INFO_STATE_PTR(&raw_state_raw);
-#ifndef FCS_WITHOUT_DEPTH_FIELD
+#ifdef FCS_WITH_DEPTH_FIELD
             existing_state.val->depth = ptr_state->depth + 1;
 #endif
         }

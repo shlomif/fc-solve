@@ -208,11 +208,7 @@ static inline void *fc_solve_hash_insert(hash_table *const hash,
 static inline void fc_solve_cache_stacks(
     fcs_hard_thread *const hard_thread, fcs_kv_state *const new_state)
 {
-#ifdef FCS_SINGLE_HARD_THREAD
-#define instance hard_thread
-#else
-    fcs_instance *const instance = hard_thread->instance;
-#endif
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
     STACKS__SET_PARAMS();
     register fcs_state *const new_state_key = new_state->key;
     register fcs_state_extra_info *const new_state_info = new_state->val;
@@ -302,9 +298,6 @@ static inline void fc_solve_cache_stacks(
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
     }
-#ifdef FCS_SINGLE_HARD_THREAD
-#undef instance
-#endif
 }
 
 #else /* #ifdef INDIRECT_STACK_STATES */
@@ -411,11 +404,7 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
  * */
 #define new_state_key (new_state->key)
 
-#ifdef FCS_SINGLE_HARD_THREAD
-#define instance hard_thread
-#else
-    fcs_instance *const instance = hard_thread->instance;
-#endif
+    fcs_instance *const instance = HT_INSTANCE(hard_thread);
     fc_solve_cache_stacks(hard_thread, new_state);
     fc_solve_canonize_state(new_state_key PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
             PASS_STACKS(INSTANCE_STACKS_NUM));
@@ -529,6 +518,3 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
 #error Unknown FCS_STATE_STORAGE. Please define it to a valid value.
 #endif
 }
-#ifdef FCS_SINGLE_HARD_THREAD
-#undef instance
-#endif

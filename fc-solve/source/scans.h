@@ -142,6 +142,7 @@ static inline void add_to_move_funcs_list(
     fcs_move_func **const out_move_funcs_list, size_t *const num_so_far,
     const fcs_move_func *const indexes, const size_t count_to_add)
 {
+#ifndef FCS_ZERO_FREECELLS_MODE
     size_t num = *num_so_far;
     fcs_move_func *const move_funcs_list =
         SREALLOC(*out_move_funcs_list, num + count_to_add);
@@ -152,6 +153,7 @@ static inline void add_to_move_funcs_list(
 
     *out_move_funcs_list = move_funcs_list;
     *num_so_far = num;
+#endif
 }
 
 extern int fc_solve_sfs_check_state_begin(fcs_hard_thread *const,

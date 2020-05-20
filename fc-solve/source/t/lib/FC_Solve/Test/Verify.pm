@@ -36,8 +36,8 @@ sub r
     my $contents        = do { local $/; <$fc_solve_output>; };
     close($fc_solve_output);
     $contents =~ s/ +$//gm;
-    require Digest::SHA;
-    my $hasher = Digest::SHA->new(256);
+    require Digest;
+    my $hasher = Digest->new('SHA-256');
     $hasher->add($contents);
     my $got_sum = $hasher->hexdigest;
 

@@ -48,7 +48,6 @@ static inline size_t calc_max_simple_simon_seq_move(const int num_empty_cols)
 #define ptr_new_state &(pass_new_state)
 #define state_key (*ptr_state_key)
 #define new_state_key (*(pass_new_state.key))
-#define state (state_key)
 
 #define sfs_check_state_begin()                                                \
     fc_solve_sfs_check_state_begin(hard_thread, &pass_new_state,               \
@@ -174,6 +173,72 @@ static inline void fc_solve_move_sequence_function(
  * TODO : implement it for FCS_ES_FILLED_BY_KINGS_ONLY
  * */
 #define MOVE_FUNCS__should_not_empty_columns() IS_FILLED_BY_NONE()
+
+#define MOVE_FUNCS__define_common()                                            \
+    tests_define_accessors();                                                  \
+    MOVE_FUNCS__define_seqs_built_by();                                        \
+    MOVE_FUNCS__define_empty_stacks_fill()
+
+#ifdef FCS_FREECELL_ONLY
+
+#define MOVE_FUNCS__define_seqs_built_by()
+#define MOVE_FUNCS__define_empty_stacks_fill()
+#define PASS_sequences_are_built_by(param)
+#include "pos_by_rank__freecell.h"
+#define POS_BY_RANK_STEP (2)
+#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
+    const_AUTO(pos_pos, pos_by_rank__freecell[(int)src_card]);                 \
+    const int8_t *pos_idx_to_check = &positions_by_rank[pos_pos.start];        \
+    const int8_t *const last_pos_idx = &positions_by_rank[pos_pos.end];        \
+                                                                               \
+    for (; pos_idx_to_check < last_pos_idx;                                    \
+         pos_idx_to_check += suit_positions_by_rank_step)
+
+#else
+
+#define MOVE_FUNCS__define_seqs_built_by()                                     \
+    const int sequences_are_built_by =                                         \
+        GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance);
+#define MOVE_FUNCS__define_empty_stacks_fill()                                 \
+    const int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
+#define PASS_sequences_are_built_by(param) , param
+#define POS_BY_RANK_STEP                                                       \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
+            ? 1                                                                \
+            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
+#define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
+            ? 0                                                                \
+            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                \
+                  ? fcs_card_suit(card)                                        \
+                  : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
+
+#define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
+    const int8_t *pos_idx_to_check = &positions_by_rank[(                      \
+        FCS_POS_BY_RANK_WIDTH * (fcs_card_rank(src_card)))];                   \
+    const int8_t *const last_pos_idx =                                         \
+        pos_idx_to_check + FCS_POS_BY_RANK_WIDTH;                              \
+                                                                               \
+    for (pos_idx_to_check += POS_BY_RANK_MAP(                                  \
+             FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
+         pos_idx_to_check < last_pos_idx;                                      \
+         pos_idx_to_check += suit_positions_by_rank_step)
+
+#endif
+
+#define SET_empty_stack_idx(empty_stack_idx)                                   \
+    stack_i empty_stack_idx;                                                   \
+    for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;              \
+         empty_stack_idx++)                                                    \
+    {                                                                          \
+        if (fcs_state_col_is_empty(state_key, empty_stack_idx))                \
+        {                                                                      \
+            break;                                                             \
+        }                                                                      \
+    }
+
+#define CALC_num_cards_in_col_threshold()                                      \
+    (MOVE_FUNCS__should_not_empty_columns() ? 1 : 0)
 
 #ifdef __cplusplus
 }

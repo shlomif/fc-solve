@@ -125,7 +125,7 @@ sub _read_state
         die "No ======== separator";
     }
 
-    return;
+    return ();
 }
 
 sub _read_move
@@ -159,7 +159,7 @@ sub _read_move
         )
     );
 
-    return;
+    return ();
 }
 
 sub _apply_move
@@ -174,7 +174,7 @@ sub _apply_move
         );
     }
 
-    return;
+    return ();
 }
 
 =head2 $solution->verify()
@@ -224,7 +224,7 @@ sub verify
         ref $err ? $err->rethrow : die $err;
     }
 
-    return;
+    return ();
 }
 
 1;    # End of Games::Solitaire::Verify::Solution

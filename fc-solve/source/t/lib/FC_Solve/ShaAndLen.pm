@@ -1,26 +1,27 @@
 package FC_Solve::ShaAndLen;
 
+use 5.014;
 use strict;
 use warnings;
 
-use Digest::SHA ();
+use Digest ();
 
-use parent 'Games::Solitaire::Verify::Base';
+sub _hasher
+{
+    my $self = shift;
 
-__PACKAGE__->mk_acc_ref(
-    [
-        qw(
-            _len
-            _hasher
-            )
-    ]
-);
+    if (@_)
+    {
+        $self->{_hasher} = shift;
+    }
+
+    return $self->{_hasher};
+}
 
 sub new
 {
     my $class = shift;
-    my $self  = {};
-    bless $self, $class;
+    my $self  = bless {}, $class;
     $self->_init(@_);
     return $self;
 }
@@ -29,8 +30,23 @@ sub _init
 {
     my ( $self, $args ) = @_;
 
-    $self->_len(0);
-    $self->_hasher( Digest::SHA->new(256) );
+    $self->{_len} = 0;
+    $self->_hasher(
+        Digest->new(
+            $args->{name}
+                // ( die "->{name} must be specified in Data::DigestAndLen!" )
+        )
+    );
+
+    return;
+}
+
+sub ref_add
+{
+    my ( $self, $str ) = @_;
+
+    $self->{_len} += length($$str);
+    $self->_hasher->add($$str);
 
     return;
 }
@@ -39,15 +55,14 @@ sub add
 {
     my ( $self, $str ) = @_;
 
-    $self->_len( $self->_len() + length($str) );
-    $self->_hasher->add($str);
+    return $self->ref_add( \$str );
 
     return;
 }
 
 sub len
 {
-    return shift->_len();
+    return shift->{_len};
 }
 
 sub hexdigest
@@ -69,9 +84,11 @@ sub add_file
 sub add_processed_slurp
 {
     my ( $self, $fh, $cb ) = @_;
-    return $self->add(
+    return $self->ref_add(
         scalar $cb->(
-            do { local $/; scalar <$fh>; }
+            \(
+                do { local $/; scalar <$fh>; }
+            ),
         )
     );
 }
