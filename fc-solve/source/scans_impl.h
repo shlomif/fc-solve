@@ -119,7 +119,7 @@ static inline void fc_solve_initialize_befs_rater(
 
 typedef int fcs_depth;
 
-static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
+static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state GCC_UNUSED)
 {
 #ifdef FCS_WITH_DEPTH_FIELD
     return (FCS_S_DEPTH(ptr_state));

@@ -116,7 +116,8 @@ static inline void accumulate_tests_by_ptr(
 #endif
 
 static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
-    const foreach_st_callback_choice callback_choice, void *const context)
+    const foreach_st_callback_choice callback_choice,
+    void *const context GCC_UNUSED)
 {
     switch (callback_choice)
     {
