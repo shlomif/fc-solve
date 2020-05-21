@@ -240,11 +240,23 @@ if ( defined $SEED )
             }
             else
             {
+                $flag =~ s/\A--no-?/--/;
                 $k{$flag} = 1;
             }
         }
     }
-    my @k = sort { $a cmp $b } keys %k;
+
+    sub _map_flag
+    {
+        my $flag = shift;
+        if ( my ($key) = $flag =~ /\A--(.*)/ms )
+        {
+            if ( exists $TRUE_BOOL_OPTS{$key} ) { return "--no-$key"; }
+        }
+        return $flag;
+    }
+    my @k = sort { $a cmp $b } map { _map_flag($_) }
+        keys %k;
 
     require Math::Random::MT;
     my $gen = Math::Random::MT->new($SEED);
