@@ -8,7 +8,6 @@ unrefactored_original()
     curl ${base_url}/zstd-1.4.4-2-x86_64.pkg.tar.xz -o zstd-1.4.4-2-x86_64.pkg.tar.xz
     pacman -U --noconfirm libzstd-1.4.4-2-x86_64.pkg.tar.xz pacman-5.2.1-6-x86_64.pkg.tar.xz zstd-1.4.4-2-x86_64.pkg.tar.xz
     rm libzstd-1.4.4-2-x86_64.pkg.tar.xz pacman-5.2.1-6-x86_64.pkg.tar.xz zstd-1.4.4-2-x86_64.pkg.tar.xz
-    exit 0
 }
 unrefactored_original
 exit 0
