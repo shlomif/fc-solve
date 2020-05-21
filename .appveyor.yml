@@ -8,6 +8,7 @@ install:
     - choco install ag
     - choco install strawberryperl
     - dir
+    - cd
     - c:\msys64\usr\bin\bash -l "fc-solve/scripts/ci-appveyor-upgrade-msys2.bash"
     - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm ${MSYS_PACKAGES}"
     - if not exist C:\libtap mkdir C:\libtap
