@@ -19,6 +19,7 @@
 #ifdef FCS_ZERO_FREECELLS_MODE
 #include "zerofc_freecell_moves.h"
 #endif
+#define FCS_GLOBAL_fcs_user
 
 #ifdef DEBUG
 static void verify_state_sanity(const fcs_state *const ptr_state)
@@ -2250,6 +2251,13 @@ typedef struct
 #endif
 } fcs_user;
 
+#ifdef FCS_GLOBAL_fcs_user
+static fcs_user the_fcs_user;
+#define getuser(api_instance) (&the_fcs_user)
+#else
+#define getuser(api_instance) ((fcs_user *)api_instance)
+#endif
+
 static inline fcs_instance *user_obj(fcs_user *const user)
 {
     return &(ACTIVE_FLARE(user)->obj);
@@ -2257,7 +2265,7 @@ static inline fcs_instance *user_obj(fcs_user *const user)
 
 static inline fcs_instance *active_obj(void *const api_instance)
 {
-    return user_obj((fcs_user *)api_instance);
+    return user_obj(getuser(api_instance));
 }
 
 static inline fcs_instance_item *curr_inst(fcs_user *const user)
@@ -2368,7 +2376,7 @@ static void iter_handler_wrapper(void *const api_instance,
     void *lp_instance GCC_UNUSED, fcs_kv_state *const ptr_state,
     const fcs_int_limit_t parent_iter_num)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     standalone_state_ptrs state_raw = {
         .key = ptr_state->key,
@@ -2410,7 +2418,7 @@ static inline void set_any_iter_handler(void *const api_instance,
 #endif
     void *const iter_handler_context)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     user->long_iter_handler = long_iter_handler;
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2600,9 +2608,14 @@ static MYINLINE void user_initialize(fcs_user *const user)
 
 void DLLEXPORT *freecell_solver_user_alloc(void)
 {
+#ifdef FCS_GLOBAL_fcs_user
+    user_initialize(&the_fcs_user);
+    return &the_fcs_user;
+#else
     fcs_user *const ret = (fcs_user *)SMALLOC1(ret);
     user_initialize(ret);
     return (void *)ret;
+#endif
 }
 
 #ifndef FCS_FREECELL_ONLY
@@ -2610,7 +2623,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
     void *const api_instance, const char *const preset_name)
 {
     const fcs_preset *new_preset_ptr;
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     const_AUTO(
         status1, fc_solve_get_preset_by_name(preset_name, &new_preset_ptr));
@@ -2640,7 +2653,7 @@ int DLLEXPORT freecell_solver_user_apply_preset(
 void DLLEXPORT freecell_solver_user_limit_iterations_long(
     void *const api_instance, const fcs_int_limit_t max_iters)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     if (max_iters < 0)
     {
         user->current_iterations_limit = -1;
@@ -2670,7 +2683,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations(
 void DLLEXPORT freecell_solver_user_limit_current_instance_iterations(
     void *const api_instance, const int max_iters)
 {
-    curr_inst((fcs_user *)api_instance)->limit = max_iters;
+    curr_inst(getuser(api_instance))->limit = max_iters;
 }
 #endif
 #endif
@@ -3628,7 +3641,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 int DLLEXPORT freecell_solver_user_resume_solution(void *const api_instance)
 {
     const fc_solve_solve_process_ret_t ret =
-        resume_solution((fcs_user *)api_instance);
+        resume_solution(getuser(api_instance));
     return (int)ret;
 }
 #endif
@@ -3636,7 +3649,7 @@ int DLLEXPORT freecell_solver_user_resume_solution(void *const api_instance)
 int DLLEXPORT freecell_solver_user_solve_board(
     void *const api_instance, const char *const state_as_string)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     if (!duplicate_string(user->state_string_copy, state_as_string))
     {
@@ -3698,7 +3711,7 @@ static inline flare_item *calc_moves_flare(fcs_user *const user)
 int DLLEXPORT freecell_solver_user_get_next_move(
     void *const api_instance, fcs_move_t *const user_move)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     if (!((user->ret_code == FCS_STATE_WAS_SOLVED) ||
             (user->ret_code == FCS_STATE_SUSPEND_PROCESS)))
@@ -3728,7 +3741,7 @@ DLLEXPORT void freecell_solver_user_current_state_stringify(void *api_instance,
     char *const output_string FC_SOLVE__PASS_PARSABLE(int parseable_output),
     int canonized_order_output FC_SOLVE__PASS_T(int display_10_as_t))
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 #ifndef HARD_CODED_ALL
     var_AUTO(instance, user_obj(user));
 #endif
@@ -3816,9 +3829,11 @@ static MYINLINE void user_free_resources(fcs_user *const user)
 
 void DLLEXPORT freecell_solver_user_free(void *const api_instance)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     user_free_resources(user);
+#ifndef FCS_GLOBAL_fcs_user
     free(user);
+#endif
 }
 
 int DLLEXPORT __attribute__((pure))
@@ -3944,7 +3959,7 @@ int DLLEXPORT freecell_solver_user_set_unrecognized_cmd_line_flag(
         return 1;
     }
 
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     free(user->unrecognized_cmd_line_options[flag_idx]);
     user->unrecognized_cmd_line_options[flag_idx] = (val ? strdup(val) : NULL);
 
@@ -3960,7 +3975,7 @@ freecell_solver_user_get_unrecognized_cmd_line_flag_status(
         return FC_SOLVE__FLAG_STATUS__ERROR;
     }
 
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     const_AUTO(ret, user->unrecognized_cmd_line_options[flag_idx]);
     return (
         ret ? FC_SOLVE__FLAG_STATUS__VALID : FC_SOLVE__FLAG_STATUS__IS_NULL);
@@ -3974,7 +3989,7 @@ DLLEXPORT char *freecell_solver_user_get_unrecognized_cmd_line_flag(
         return NULL;
     }
 
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     const_AUTO(ret, user->unrecognized_cmd_line_options[flag_idx]);
     return strdup(ret ? ret : "");
 }
@@ -3992,7 +4007,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
         return 1;
     }
 
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     user->common_preset.game_params.freecells_num =
         (fcs_game_limit)freecells_num;
     apply_game_params_for_all_instances(user);
@@ -4027,7 +4042,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
         return 1;
     }
 
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     user->common_preset.game_params.stacks_num = (fcs_game_limit)stacks_num;
     apply_game_params_for_all_instances(user);
 
@@ -4056,7 +4071,7 @@ int DLLEXPORT __attribute__((const)) freecell_solver_user_set_num_stacks(
 int DLLEXPORT freecell_solver_user_set_num_decks(
     void *api_instance, int decks_num)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     if ((decks_num < 0) || (decks_num > MAX_NUM_DECKS))
     {
@@ -4129,7 +4144,7 @@ freecell_solver_user_set_game(void *const api_instance, const int freecells_num,
 fcs_iters_int DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_num_times_long(void *api_instance)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     return get_num_times_long(user);
 }
 
@@ -4155,7 +4170,7 @@ freecell_solver_user_get_limit_iterations(void *const api_instance GCC_UNUSED)
 int DLLEXPORT freecell_solver_user_get_moves_left(
     void *const api_instance GCC_UNUSED)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
         const flare_item *const flare = calc_moves_flare(user);
@@ -4180,7 +4195,7 @@ DLLEXPORT extern void freecell_solver_user_stringify_move_w_state(
     void *const api_instance, char *const output_string, const fcs_move_t move,
     const int standard_notation)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     fc_solve_move_to_string_w_state(
         output_string, &(user->running_state), move, standard_notation);
@@ -4260,7 +4275,7 @@ void freecell_solver_user_get_invalid_state_error_into_string(
 #endif
 )
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     const_AUTO(ret, user->state_validity_ret);
     switch (ret)
@@ -4328,7 +4343,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     {
         return 1;
     }
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     user->common_preset.game_params.game_flags &= (~0x3);
     user->common_preset.game_params.game_flags |= sequences_are_built_by;
@@ -4343,7 +4358,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
 int DLLEXPORT freecell_solver_user_set_sequence_move(
     void *const api_instance, const int unlimited_sequence_move)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     user->common_preset.game_params.game_flags &= (~(1 << 4));
     user->common_preset.game_params.game_flags |=
@@ -4493,7 +4508,7 @@ void DLLEXPORT freecell_solver_user_set_random_seed(
 fcs_int_limit_t DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     return user->iterations_board_started_at.num_states_in_collection +
            OBJ_STATS(user).num_states_in_collection -
@@ -4562,7 +4577,7 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 #ifdef FCS_SINGLE_HARD_THREAD
     return freecell_solver_user_next_soft_thread(api_instance);
 #else
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     fcs_soft_thread *const soft_thread = new_hard_thread(user_obj(user));
 
@@ -4611,7 +4626,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
     const freecell_solver_str_t name GCC_UNUSED)
 {
     flare_item *const flare =
-        curr_inst((fcs_user *)api_instance)->end_of_flares - 1;
+        curr_inst(getuser(api_instance))->end_of_flares - 1;
     strncpy(flare->name, name, COUNT(flare->name));
     LAST(flare->name) = '\0';
 }
@@ -4621,7 +4636,7 @@ void DLLEXPORT freecell_solver_user_set_flare_name(
 int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
     void *const api_instance, const char *const prelude)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     fcs_hard_thread *const hard_thread = user->soft_thread->hard_thread;
 
     free(HT_FIELD(hard_thread, prelude_as_string));
@@ -4633,7 +4648,7 @@ int DLLEXPORT freecell_solver_user_set_hard_thread_prelude(
 void DLLEXPORT fc_solve_user_set_ht_compiled_prelude(void *const api_instance,
     const size_t num, const fc_solve_prelude_item *const prelude)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     fcs_hard_thread *const hard_thread = user->soft_thread->hard_thread;
 
     HT_FIELD(hard_thread, prelude_num_items) = num;
@@ -4647,7 +4662,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
     void *const api_instance GCC_UNUSED,
     const char *const flares_plan_string GCC_UNUSED)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     const_AUTO(instance_item, curr_inst(user));
     free(instance_item->flares_plan_string);
     instance_item->flares_plan_string =
@@ -4660,7 +4675,7 @@ int DLLEXPORT freecell_solver_user_set_flares_plan(
 
 void DLLEXPORT freecell_solver_user_recycle(void *api_instance)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     INSTANCES_LOOP_START()
     user__recycle_instance_item(user, instance_item);
@@ -4738,7 +4753,7 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 #ifdef FCS_WITH_NI
 int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 {
-    user_next_instance((fcs_user *)api_instance);
+    user_next_instance(getuser(api_instance));
 
     return 0;
 }
@@ -4747,7 +4762,7 @@ int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 #ifdef FCS_WITH_FLARES
 int DLLEXPORT freecell_solver_user_next_flare(void *const api_instance)
 {
-    user_next_flare((fcs_user *)api_instance);
+    user_next_flare(getuser(api_instance));
 
     return 0;
 }
@@ -4756,7 +4771,7 @@ int DLLEXPORT freecell_solver_user_next_flare(void *const api_instance)
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 int DLLEXPORT freecell_solver_user_reset(void *const api_instance)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     user_free_resources(user);
     user_initialize(user);
     return 0;
@@ -4802,7 +4817,7 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
     {
         return -1;
     }
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     FLARES_LOOP_START()
     flare->obj.rcs_states_cache.max_num_elements_in_cache = limit;
@@ -4818,7 +4833,7 @@ int DLLEXPORT freecell_solver_user_set_cache_limit(
 int DLLEXPORT freecell_solver_user_get_moves_sequence(
     void *const api_instance, fcs_moves_sequence_t *const moves_seq)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     if (user->ret_code != FCS_STATE_WAS_SOLVED)
     {
         return -2;
@@ -4837,7 +4852,7 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
     void *api_instance GCC_UNUSED,
     const char *const new_flares_choice_string GCC_UNUSED)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     if (!strcmp(new_flares_choice_string, "fc_solve"))
     {
@@ -4860,7 +4875,7 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
 DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     void *const api_instance GCC_UNUSED, const double new_factor GCC_UNUSED)
 {
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
 
     user->flares_iters_factor = new_factor;
 }
@@ -4871,7 +4886,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
     void *const api_instance GCC_UNUSED, char **const error_string GCC_UNUSED)
 {
 #ifdef FCS_WITH_FLARES
-    fcs_user *const user = (fcs_user *)api_instance;
+    fcs_user *const user = getuser(api_instance);
     const fcs_compile_flares_ret ret = user_compile_all_flares_plans(user);
 #ifdef FCS_WITH_ERROR_STRS
 #ifndef FCS_ZERO_FREECELLS_MODE
