@@ -346,7 +346,7 @@ All in all: a lot of added usability!
     {
         'html' => '
 <p>
-There is now <a href="./pysol/">PySol Integration with Freecell Solver</a>
+There is now <a href="../pysol/">PySol Integration with Freecell Solver</a>
 available here. This enables receiving hints from Freecell Solver and seeing
 demos of it while within PySol.
 </p>
@@ -359,21 +359,21 @@ demos of it while within PySol.
     {
         'html' => '
 <p>
-The <a href="download.html">Downloads</a> are now working again. Plus,
+The <a href="../download.html">Downloads</a> are now working again. Plus,
 several new pages were added or updated in the site:
 </p>
 
 <ol>
 <li>
-<a href="./current-status.html">The Current Status Page</a> answers
+<a href="../current-status.html">The Current Status Page</a> answers
 the question "Is Freecell Solver dead?".
 </li>
 <li>
-Several new items were added to <a href="./to-do.html">the "To
+Several new items were added to <a href="../to-do.html">the "To
 Do List" page</a>. It now also features a table of contents.
 </li>
 <li>
-There is now <a href="./getting-credit.html">a page
+There is now <a href="../getting-credit.html">a page
 about Giving or Getting Academic Credit for working on Freecell
 Solver</a>.
 </li>
@@ -444,7 +444,7 @@ behaviour or API in any way.
 
 <p>
 This release (like previous ones) is available from
-<a href="download.html">the download page</a>. Next on our agenda is getting
+<a href="../download.html">the download page</a>. Next on our agenda is getting
 a binary package for Microsoft Windows out-of-the-door, and more code cleanups,
 optimisations and enhancements.
 </p>
