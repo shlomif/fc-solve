@@ -432,5 +432,12 @@ real_all: \
 
 real_all: $(SRC_pngs__webps)
 
+FAVICON := $(D)/favicon.ico
+
+$(FAVICON): ../../source/fc-solve.ico
+	$(call COPY)
+
+real_all: $(FAVICON)
+
 browser-tests: all
 	qunit-puppeteer 'https://www.shlomifish.org/fc-solve-temp/js-fc-solve/automated-tests/'
