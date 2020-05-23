@@ -1,10 +1,14 @@
 #pragma once
-static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
-    const fcs_soft_thread *const soft_thread GCC_UNUSED,
+#define CALC_FOUNDATION_ARG()                                                  \
+    const fcs_soft_thread *const soft_thread GCC_UNUSED
+#define CALC_FOUNDATION__calc_sequences_are_built_by()                         \
+    FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));    \
+    MOVE_FUNCS__define_seqs_built_by()
+static inline int_fast32_t __attribute__((pure))
+calc_foundation_to_put_card_on(CALC_FOUNDATION_ARG(),
     const fcs_state *const ptr_state, const fcs_card card)
 {
-    FCS_ON_NOT_FC_ONLY(const_AUTO(instance, fcs_st_instance(soft_thread)));
-    MOVE_FUNCS__define_seqs_built_by();
+    CALC_FOUNDATION__calc_sequences_are_built_by();
     const fcs_card rank = fcs_card_rank(card);
     const fcs_card suit = fcs_card_suit(card);
     const int_fast32_t rank_min_1 = rank - 1;
