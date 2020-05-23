@@ -1077,6 +1077,7 @@ static inline bool fcs_is_parent_card(
 {
     return fc_solve_is_parent_buf[(size_t)parent][(size_t)child];
 }
+#define FCS__SEQS_ARE_BUILT_BY_RANK() false
 
 #else
 
@@ -1093,6 +1094,9 @@ static inline bool fcs_is_parent_card__helper(const fcs_card child,
 }
 #define fcs_is_parent_card(child, parent)                                      \
     fcs_is_parent_card__helper(child, parent, sequences_are_built_by)
+
+#define FCS__SEQS_ARE_BUILT_BY_RANK()                                          \
+    (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
 
 #endif
 
@@ -1136,10 +1140,3 @@ static inline void fcs_state_push(
     var_AUTO(col, fcs_state_get_col(*state, col_idx));
     fcs_col_push_card(col, card);
 }
-
-#ifdef FCS_FREECELL_ONLY
-#define FCS__SEQS_ARE_BUILT_BY_RANK() false
-#else
-#define FCS__SEQS_ARE_BUILT_BY_RANK()                                          \
-    (sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)
-#endif
