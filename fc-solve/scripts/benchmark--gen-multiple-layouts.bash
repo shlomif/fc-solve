@@ -81,8 +81,8 @@ deals as individual NNN.board files in a directory.
 EOF
 
 # wrapper shell_loop
-wrapper python_gen
 wrapper pypy_gen
 wrapper c_gen
 wrapper rust_gen
+wrapper python_gen
 wrapper perl_gen
