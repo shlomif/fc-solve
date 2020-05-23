@@ -135,40 +135,7 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-static inline __attribute__((pure)) int calc_foundation_to_put_card_on(
-    const fcs_dbm_variant_type local_variant GCC_UNUSED,
-    fcs_state *const ptr_state, const fcs_card card)
-{
-    FCS_ON_NOT_FC_ONLY(
-        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY());
-    const fcs_card rank = fcs_card_rank(card);
-    const fcs_card suit = fcs_card_suit(card);
-    for (uint_fast32_t deck = 0; deck < INSTANCE_DECKS_NUM; ++deck)
-    {
-        if (fcs_foundation_value(*ptr_state, (deck << 2) + suit) == rank - 1)
-        {
-            uint_fast32_t other_deck_idx;
-
-            for (other_deck_idx = 0; other_deck_idx < (INSTANCE_DECKS_NUM << 2);
-                 ++other_deck_idx)
-            {
-                if (fcs_foundation_value(*ptr_state, other_deck_idx) <
-                    rank - 2 -
-                        (FCS__SEQS_ARE_BUILT_BY_RANK()
-                                ? 0
-                                : ((other_deck_idx & 0x1) == (suit & 0x1))))
-                {
-                    break;
-                }
-            }
-            if (other_deck_idx == (INSTANCE_DECKS_NUM << 2))
-            {
-                return (int)((deck << 2) + suit);
-            }
-        }
-    }
-    return -1;
-}
+#include "calc_found0.h"
 
 typedef struct
 {
