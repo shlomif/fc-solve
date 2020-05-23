@@ -39,6 +39,8 @@ sub src_filenames
 
     return [
         $self->main_base . '.c',
+        'calc_found0.h',
+        'calc_found1.h',
         'card.c',
         'dbm_cache.h',
         'dbm_calc_derived.h',
