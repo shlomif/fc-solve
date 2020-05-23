@@ -135,7 +135,12 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
     COMMIT_NEW_STATE_WITH_COUNT(                                               \
         src, dest, ((is_reversible) ? 0 : 1), moved_card)
 
-#include "calc_found0.h"
+#define CALC_FOUNDATION_ARG()                                                  \
+    const fcs_dbm_variant_type local_variant GCC_UNUSED
+#define CALC_FOUNDATION__calc_sequences_are_built_by()                         \
+    FCS_ON_NOT_FC_ONLY(                                                        \
+        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY())
+#include "calc_foundation.h"
 
 typedef struct
 {

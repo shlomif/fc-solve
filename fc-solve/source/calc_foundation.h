@@ -1,9 +1,4 @@
 #pragma once
-#define CALC_FOUNDATION_ARG()                                                  \
-    const fcs_dbm_variant_type local_variant GCC_UNUSED
-#define CALC_FOUNDATION__calc_sequences_are_built_by()                         \
-    FCS_ON_NOT_FC_ONLY(                                                        \
-        const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY())
 static inline int_fast32_t __attribute__((pure))
 calc_foundation_to_put_card_on(CALC_FOUNDATION_ARG(),
     const fcs_state *const ptr_state, const fcs_card card)
