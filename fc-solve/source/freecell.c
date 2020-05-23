@@ -669,11 +669,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
      * Note that it does not involve moving cards lower than king   *
      * to empty stacks                                              */
 
-#ifdef RAR2__cancelled
-    for (stack_i stack_idx = LOCAL_STACKS_NUM - 1; stack_idx >= 0; --stack_idx)
-#else
-    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
-#endif
+    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
     {
         col_seqs_iter iter = col_seqs_iter__create(&state_key,
             stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
@@ -935,11 +931,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
         {
             continue;
         }
-#ifdef RAR2__cancelled
-        for (int dest_fc = LOCAL_FREECELLS_NUM - 1; dest_fc >= 0; --dest_fc)
-#else
         for (int dest_fc = 0; dest_fc < LOCAL_FREECELLS_NUM; ++dest_fc)
-#endif
         {
             if (dest_fc == fc)
             {
@@ -968,12 +960,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                 (stack_i)dest_fc, (stack_i)empty_stack_idx);
             sfs_check_state_end();
         }
-#ifdef RAR2__cancelled
-        for (stack_i stack_idx = LOCAL_STACKS_NUM - 1; stack_idx >= 0;
-             --stack_idx)
-#else
         for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
-#endif
         {
             col_seqs_iter iter = col_seqs_iter__create(&state_key,
                 stack_idx PASS_sequences_are_built_by(sequences_are_built_by));
