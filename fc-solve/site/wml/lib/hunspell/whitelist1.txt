@@ -1336,6 +1336,7 @@ pkg
 
 5-freecells
 Alfille
+Dominus
 HPC
 NNN
 NRG
