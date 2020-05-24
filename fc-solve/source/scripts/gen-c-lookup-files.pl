@@ -309,16 +309,26 @@ emit(
     },
 );
 
-my @board_gen_lookup = (
-    contents => [
-        map {
-            my $i   = $_;
-            my $col = ( $i & ( 8 - 1 ) );
-            3 *
-                ( $col * 7 - ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) + ( $i >> 3 ) )
-        } 0 .. ( 52 - 1 )
-    ],
-);
+{
+    my @_board_gen_lookup = (
+        contents => [
+            map {
+                my $i   = $_;
+                my $col = ( $i & ( 8 - 1 ) );
+                3 * ( $col * 7 -
+                        ( ( $col > 4 ) ? ( $col - 4 ) : 0 ) +
+                        ( $i >> 3 ) )
+            } 0 .. ( 52 - 1 )
+        ],
+    );
+
+    sub _board_gen_lookup_array
+    {
+        my ($opts) = @_;
+        return _array( { @_board_gen_lookup, %{$opts}, } );
+    }
+
+}
 my @board_gen_lookup_args = (
     basename       => 'board_gen_lookup1',
     header_headers => [],
@@ -329,11 +339,10 @@ emit(
         @board_gen_lookup_args,
         is_rust => 1,
         static  => 0,
-        _array(
+        _board_gen_lookup_array(
             {
                 decl    => 'OFFSET_BY_I: [usize;52]',
                 is_rust => 1,
-                @board_gen_lookup,
             }
         ),
     }
@@ -341,10 +350,9 @@ emit(
 emit(
     {
         @board_gen_lookup_args,
-        _array(
+        _board_gen_lookup_array(
             {
                 decl => 'size_t offset_by_i',
-                @board_gen_lookup,
             }
         ),
     }
