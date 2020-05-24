@@ -329,31 +329,43 @@ emit(
     }
 
 }
-my @board_gen_lookup_args = (
-    basename       => 'board_gen_lookup1',
-    header_headers => [],
-    static         => $true,
-);
-emit(
+{
+    my @board_gen_lookup_args = (
+        basename       => 'board_gen_lookup1',
+        header_headers => [],
+    );
+
+    sub _emit_board_gen_lookup
     {
-        @board_gen_lookup_args,
-        is_rust => 1,
-        static  => 0,
-        _board_gen_lookup_array(
+        my ($args) = @_;
+        my $is_rust = ( $args->{is_rust} // $false );
+        return emit(
             {
-                decl    => 'OFFSET_BY_I: [usize;52]',
-                is_rust => 1,
+                @board_gen_lookup_args,
+                is_rust => $is_rust,
+                static  => ( $args->{static} ),
+                _board_gen_lookup_array(
+                    {
+                        decl    => $args->{decl},
+                        is_rust => $is_rust,
+                    }
+                ),
             }
-        ),
+        );
+    }
+}
+_emit_board_gen_lookup(
+    {
+        is_rust => $true,
+        static  => $false,
+        decl    => 'OFFSET_BY_I: [usize;52]',
     }
 );
-emit(
+_emit_board_gen_lookup(
     {
-        @board_gen_lookup_args,
-        _board_gen_lookup_array(
-            {
-                decl => 'size_t offset_by_i',
-            }
-        ),
+        is_rust => $false,
+        static  => $true,
+        decl    => 'size_t offset_by_i',
     }
 );
+
