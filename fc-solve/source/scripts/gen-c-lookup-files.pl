@@ -226,10 +226,11 @@ sub _array
     my $DECL     = $args->{decl};
     my $is_rust  = $args->{is_rust};
     my $contents = $args->{contents};
+    my $type     = $args->{type};
     my $len      = @$contents;
     return (
-        decl           => ( "${DECL}" . ( $is_rust ? "" : "[$len]" ) ),
-        contents       => $contents,
+        decl     => ( "${DECL}" . ( $is_rust ? ": [$type;$len]" : "[$len]" ) ),
+        contents => $contents,
         header_headers => [ q/<stddef.h>/, ],
     );
 }
@@ -348,6 +349,7 @@ emit(
                     {
                         decl    => $args->{decl},
                         is_rust => $is_rust,
+                        type    => ( $args->{type} // '' ),
                     }
                 ),
             }
@@ -358,7 +360,8 @@ _emit_board_gen_lookup(
     {
         is_rust => $true,
         static  => $false,
-        decl    => 'OFFSET_BY_I: [usize;52]',
+        decl    => 'OFFSET_BY_I',
+        type    => "usize",
     }
 );
 _emit_board_gen_lookup(
