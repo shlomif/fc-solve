@@ -339,17 +339,17 @@ emit(
     sub _emit_board_gen_lookup
     {
         my ($args) = @_;
-        my $is_rust = ( $args->{is_rust} // $false );
+        my @is_rust = ( is_rust => $args->{is_rust}, );
         return emit(
             {
                 @board_gen_lookup_args,
-                is_rust => $is_rust,
-                static  => ( $args->{static} ),
+                @is_rust,
+                static => ( $args->{static} ),
                 _board_gen_lookup_array(
                     {
-                        decl    => $args->{decl},
-                        is_rust => $is_rust,
-                        type    => ( $args->{type} // '' ),
+                        decl => $args->{decl},
+                        @is_rust,
+                        type => ( $args->{type} // '' ),
                     }
                 ),
             }
