@@ -105,12 +105,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
                 deck * 4 + fcs_card_suit(card));
 
             sfs_check_state_end();
-// #ifdef FCS_BREAK_BACKWARD_COMPAT_2
-#if 0
-            return;
-#else
             break;
-#endif
         }
     }
 }
@@ -159,12 +154,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
                 deck * 4 + fcs_card_suit(card));
 
             sfs_check_state_end();
-// #ifdef FCS_BREAK_BACKWARD_COMPAT_2
-#if 0
-            return;
-#else
             break;
-#endif
         }
     }
 }
