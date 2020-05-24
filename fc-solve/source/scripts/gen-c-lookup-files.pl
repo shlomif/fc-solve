@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 use 5.014;
 use strict;
@@ -83,29 +83,37 @@ foreach my $parent_suit (@SUITS)
     }
 }
 
-sub _get_start_array
-{
-    my ($opts) = @_;
-    return $opts->{lang} eq 'rust' ? '[' : '{';
-}
+package Code::Gen::Emitter;
 
-sub _get_end_array
-{
-    my ($opts) = @_;
-    return $opts->{lang} eq 'rust' ? ']' : '}';
-}
+use Moo;
 
-sub _perl2c_code
+has lang        => ( is => 'ro', required => 1 );
+has start_array => (
+    is      => 'lazy',
+    default => sub {
+        return shift()->lang eq 'rust' ? '[' : '{';
+    }
+);
+has end_array => (
+    is      => 'lazy',
+    default => sub {
+        return shift()->lang eq 'rust' ? ']' : '}';
+    }
+);
+
+sub data2code
 {
-    my ( $opts, $val ) = @_;
+    my ( $self, $val ) = @_;
     return (
         ( ref($val) eq "ARRAY" )
-        ? ( _get_start_array($opts)
-                . join( ',', map { _perl2c_code( $opts, $_ ) } @$val )
-                . _get_end_array($opts) )
+        ? ( $self->start_array()
+                . join( ',', map { $self->data2code($_) } @$val )
+                . $self->end_array() )
         : $val
     );
 }
+
+package main;
 
 sub emit
 {
@@ -131,9 +139,9 @@ sub emit
 
     };
     my $code =
-          "$DECL = "
-        . _perl2c_code( { lang => ( $is_rust ? 'rust' : 'c' ), }, $contents, )
-        . ";\n";
+        "$DECL = "
+        . Code::Gen::Emitter->new( { lang => ( $is_rust ? 'rust' : 'c' ), } )
+        ->data2code( $contents, ) . ";\n";
     if ($is_rust)
     {
         path("$bn.rs")
