@@ -87,17 +87,23 @@ package Code::Gen::Emitter;
 
 use Moo;
 
-has lang        => ( is => 'ro', required => 1 );
+has lang     => ( is => 'ro', required => 1 );
+has _is_rust => (
+    is      => 'lazy',
+    default => sub {
+        return shift()->lang eq 'rust';
+    },
+);
 has start_array => (
     is      => 'lazy',
     default => sub {
-        return shift()->lang eq 'rust' ? '[' : '{';
+        return shift()->_is_rust() ? '[' : '{';
     }
 );
 has end_array => (
     is      => 'lazy',
     default => sub {
-        return shift()->lang eq 'rust' ? ']' : '}';
+        return shift()->_is_rust() ? ']' : '}';
     }
 );
 
