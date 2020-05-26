@@ -87,8 +87,8 @@ package Code::Gen::Emitter;
 
 use Moo;
 
-has lang     => ( is => 'ro', required => 1 );
-has _is_rust => (
+has lang    => ( is => 'ro', required => 1 );
+has is_rust => (
     is      => 'lazy',
     default => sub {
         return shift()->lang eq 'rust';
@@ -97,13 +97,13 @@ has _is_rust => (
 has start_array => (
     is      => 'lazy',
     default => sub {
-        return shift()->_is_rust() ? '[' : '{';
+        return shift()->is_rust() ? '[' : '{';
     }
 );
 has end_array => (
     is      => 'lazy',
     default => sub {
-        return shift()->_is_rust() ? ']' : '}';
+        return shift()->is_rust() ? ']' : '}';
     }
 );
 
@@ -125,10 +125,10 @@ sub emit
 {
     my ( $args, ) = @_;
 
-    my $is_rust   = $args->{is_rust};
-    my $bn        = $args->{basename};
-    my $DECL      = ( ( $is_rust ? "pub " : "" ) . "const " . $args->{decl} );
-    my $is_static = $args->{static};
+    my $obj  = Code::Gen::Emitter->new( { lang => ( $args->{lang} // 'c' ), } );
+    my $bn   = $args->{basename};
+    my $DECL = ( ( $obj->is_rust() ? "pub " : "" ) . "const " . $args->{decl} );
+    my $is_static      = $args->{static};
     my $header_headers = $args->{header_headers};
     my $contents       = $args->{contents};
     my $types          = $args->{typedefs} // '';
@@ -144,11 +144,8 @@ sub emit
                 . join( '', @$text ) );
 
     };
-    my $code =
-        "$DECL = "
-        . Code::Gen::Emitter->new( { lang => ( $is_rust ? 'rust' : 'c' ), } )
-        ->data2code( $contents, ) . ";\n";
-    if ($is_rust)
+    my $code = "$DECL = " . $obj->data2code( $contents, ) . ";\n";
+    if ( $obj->is_rust )
     {
         path("$bn.rs")
             ->spew_utf8(
@@ -224,13 +221,14 @@ sub _array
 {
     my ($args)   = @_;
     my $DECL     = $args->{decl};
-    my $is_rust  = $args->{is_rust};
+    my $lang     = $args->{lang} // 'c';
     my $contents = $args->{contents};
     my $type     = $args->{type};
     my $len      = @$contents;
     return (
-        decl     => ( "${DECL}" . ( $is_rust ? ": [$type;$len]" : "[$len]" ) ),
-        contents => $contents,
+        decl =>
+            ( "${DECL}" . ( $lang eq 'rust' ? ": [$type;$len]" : "[$len]" ) ),
+        contents       => $contents,
         header_headers => [ q/<stddef.h>/, ],
     );
 }
@@ -339,16 +337,16 @@ emit(
     sub _emit_board_gen_lookup
     {
         my ($args) = @_;
-        my @is_rust = ( is_rust => $args->{is_rust}, );
+        my @lang = ( lang => ( $args->{lang} // 'c' ), );
         return emit(
             {
                 @board_gen_lookup_args,
-                @is_rust,
+                @lang,
                 static => ( $args->{static} ),
                 _board_gen_lookup_array(
                     {
                         decl => $args->{decl},
-                        @is_rust,
+                        @lang,
                         type => ( $args->{type} // '' ),
                     }
                 ),
@@ -358,17 +356,17 @@ emit(
 }
 _emit_board_gen_lookup(
     {
-        is_rust => $true,
-        static  => $false,
-        decl    => 'OFFSET_BY_I',
-        type    => "usize",
+        lang   => 'rust',
+        static => $false,
+        decl   => 'OFFSET_BY_I',
+        type   => "usize",
     }
 );
 _emit_board_gen_lookup(
     {
-        is_rust => $false,
-        static  => $true,
-        decl    => 'size_t offset_by_i',
+        lang   => 'c',
+        static => $true,
+        decl   => 'size_t offset_by_i',
     }
 );
 
