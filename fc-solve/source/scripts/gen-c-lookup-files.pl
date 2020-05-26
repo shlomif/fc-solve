@@ -139,7 +139,7 @@ sub emit
     my $obj  = Code::Gen::Emitter->new( { lang => ( $args->{lang} // 'c' ), } );
     my $bn   = $args->{basename};
     my $DECL = ( ( $obj->is_rust() ? "pub " : "" ) . "const " . $args->{decl} );
-    my $is_static      = $args->{static};
+    my $is_static      = $args->{is_static};
     my $header_headers = $args->{header_headers};
     my $contents       = $args->{contents};
     my $types          = $args->{typedefs} // '';
@@ -185,7 +185,7 @@ emit(
                 [ map { make_card( $_, $s ) } reverse( 1 .. $MAX_RANK ) ]
             } @SUITS
         ],
-        static => $true,
+        is_static => $true,
     }
 );
 
@@ -197,7 +197,7 @@ sub emit_lookup
             basename => $basename,
             decl => qq#bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
             header_headers => [ q/<stdbool.h>/, ],
-            static         => $is_static,
+            is_static      => $is_static,
             contents       => [
                 map {
                     my $parent = $_;
@@ -353,7 +353,7 @@ emit(
             {
                 @board_gen_lookup_args,
                 @lang,
-                static => ( $args->{static} ),
+                is_static => ( $args->{is_static} ),
                 _board_gen_lookup_array(
                     {
                         decl => $args->{decl},
@@ -367,17 +367,17 @@ emit(
 }
 _emit_board_gen_lookup(
     {
-        lang   => 'rust',
-        static => $false,
-        decl   => 'OFFSET_BY_I',
-        type   => "usize",
+        lang      => 'rust',
+        is_static => $false,
+        decl      => 'OFFSET_BY_I',
+        type      => "usize",
     }
 );
 _emit_board_gen_lookup(
     {
-        lang   => 'c',
-        static => $true,
-        decl   => 'size_t offset_by_i',
+        lang      => 'c',
+        is_static => $true,
+        decl      => 'size_t offset_by_i',
     }
 );
 
