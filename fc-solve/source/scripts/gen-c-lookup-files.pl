@@ -94,16 +94,27 @@ has is_rust => (
         return shift()->lang eq 'rust';
     },
 );
+
+my %lang_map = (
+    'c' => {
+        start_array => '{',
+        end_array   => '}',
+    },
+    'rust' => {
+        start_array => '[',
+        end_array   => ']',
+    },
+);
 has start_array => (
     is      => 'lazy',
     default => sub {
-        return shift()->is_rust() ? '[' : '{';
+        return $lang_map{ shift()->lang() }{start_array};
     }
 );
 has end_array => (
     is      => 'lazy',
     default => sub {
-        return shift()->is_rust() ? ']' : '}';
+        return $lang_map{ shift()->lang() }{end_array};
     }
 );
 
