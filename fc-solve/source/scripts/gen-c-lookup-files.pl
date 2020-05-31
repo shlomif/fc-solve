@@ -4,6 +4,56 @@ use 5.014;
 use strict;
 use warnings;
 use autodie;
+
+package Code::Gen::Emitter;
+
+use Moo;
+
+has lang    => ( is => 'ro', required => 1 );
+has is_rust => (
+    is      => 'lazy',
+    default => sub {
+        return shift()->lang eq 'rust';
+    },
+);
+
+my %lang_map = (
+    'c' => {
+        start_array => '{',
+        end_array   => '}',
+    },
+    'rust' => {
+        start_array => '[',
+        end_array   => ']',
+    },
+);
+has start_array => (
+    is      => 'lazy',
+    default => sub {
+        return $lang_map{ shift()->lang() }{start_array};
+    }
+);
+has end_array => (
+    is      => 'lazy',
+    default => sub {
+        return $lang_map{ shift()->lang() }{end_array};
+    }
+);
+
+sub data2code
+{
+    my ( $self, $val ) = @_;
+    return (
+        ( ref($val) eq "ARRAY" )
+        ? ( $self->start_array()
+                . join( ',', map { $self->data2code($_) } @$val )
+                . $self->end_array() )
+        : $val
+    );
+}
+
+package main;
+
 use Path::Tiny qw/ path /;
 
 my $false = 0;
@@ -82,55 +132,6 @@ foreach my $parent_suit (@SUITS)
         }
     }
 }
-
-package Code::Gen::Emitter;
-
-use Moo;
-
-has lang    => ( is => 'ro', required => 1 );
-has is_rust => (
-    is      => 'lazy',
-    default => sub {
-        return shift()->lang eq 'rust';
-    },
-);
-
-my %lang_map = (
-    'c' => {
-        start_array => '{',
-        end_array   => '}',
-    },
-    'rust' => {
-        start_array => '[',
-        end_array   => ']',
-    },
-);
-has start_array => (
-    is      => 'lazy',
-    default => sub {
-        return $lang_map{ shift()->lang() }{start_array};
-    }
-);
-has end_array => (
-    is      => 'lazy',
-    default => sub {
-        return $lang_map{ shift()->lang() }{end_array};
-    }
-);
-
-sub data2code
-{
-    my ( $self, $val ) = @_;
-    return (
-        ( ref($val) eq "ARRAY" )
-        ? ( $self->start_array()
-                . join( ',', map { $self->data2code($_) } @$val )
-                . $self->end_array() )
-        : $val
-    );
-}
-
-package main;
 
 sub emit
 {
