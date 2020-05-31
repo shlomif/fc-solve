@@ -14,17 +14,11 @@
 extern "C" {
 #endif
 
-#include <pthread.h>
-
 /*
  * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
  * to improve CPU utilisations of the various worker threads and possibly
  * overall performance.
  * #define FCS_DBM_USE_RWLOCK 1 */
-
-#ifdef FCS_DBM_USE_RWLOCK
-#include <pthread/rwlock_fcfs.h>
-#endif
 
 #include "rinutils/rinutils.h"
 
@@ -44,7 +38,13 @@ static inline void fcs_condvar__wait_on(
 }
 static inline void fcs_condvar_signal(GCC_UNUSED fcs_condvar *const cond) {}
 static inline void fcs_condvar_broadcast(GCC_UNUSED fcs_condvar *const cond) {}
-#elif defined(FCS_DBM_USE_RWLOCK)
+#else
+#include <pthread.h>
+#if defined(FCS_DBM_USE_RWLOCK)
+
+#ifdef FCS_DBM_USE_RWLOCK
+#include <pthread/rwlock_fcfs.h>
+#endif
 
 typedef pthread_rwlock_fcfs_t *fcs_lock;
 static inline void fcs_lock_lock(fcs_lock *const lock)
@@ -113,6 +113,7 @@ static inline void fcs_condvar_broadcast(fcs_condvar *const cond)
 {
     pthread_cond_broadcast(cond);
 }
+#endif
 #endif
 
 #ifdef __cplusplus

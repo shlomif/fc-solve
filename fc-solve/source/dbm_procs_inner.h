@@ -12,7 +12,9 @@ typedef struct
 {
     dbm_solver_thread thread;
     thread_arg arg;
+#ifndef FCS_DBM_SINGLE_THREAD
     pthread_t id;
+#endif
 } main_thread_item;
 
 static inline main_thread_item *dbm__calc_threads(
