@@ -18,6 +18,7 @@ has [ 'mem', 'num_hours', 'num_threads' ] =>
     ( is => 'ro', isa => 'Int', required => 1 );
 has ['num_freecells'] => ( is => 'ro', isa => 'Int',           default  => 4, );
 has 'deals'           => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
+has 'deal_num_width'  => ( is => 'ro', isa => 'Int',           default  => 0 );
 
 sub main_base
 {
@@ -119,6 +120,17 @@ sub src_rinutils_filenames
     ];
 }
 
+sub _zero_pad
+{
+    my ( $self, $deal_idx ) = @_;
+
+    my $deal_num_width = $self->deal_num_width;
+
+    return $deal_num_width > 0
+        ? sprintf( "%0${deal_num_width}d", $deal_idx )
+        : $deal_idx;
+}
+
 sub run
 {
     my $self = shift;
@@ -187,9 +199,10 @@ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
     my @deals = @{ $self->deals };
     foreach my $deal_idx (@deals)
     {
+        my $padded = $self->_zero_pad($deal_idx);
         if (
             system(
-qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > $dest_dir/$deal_idx.board}
+qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > $dest_dir/$padded.board}
             ) != 0
             )
         {
@@ -255,7 +268,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
 
     io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
-DEALS = @deals
+DEALS = @{[map { $self->_zero_pad( $_) } @deals]}
 
 DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
