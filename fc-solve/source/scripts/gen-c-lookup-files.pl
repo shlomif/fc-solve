@@ -27,17 +27,31 @@ my %lang_map = (
         end_array   => ']',
     },
 );
+has lang_record => (
+    is      => 'lazy',
+    default => sub {
+        return $lang_map{ shift()->lang() };
+    },
+);
+
+sub lookup_lang_field
+{
+    my ( $self, $field ) = @_;
+
+    return $self->lang_record()->{$field};
+}
+
 has start_array => (
     is      => 'lazy',
     default => sub {
-        return $lang_map{ shift()->lang() }{start_array};
-    }
+        return shift()->lookup_lang_field('start_array');
+    },
 );
 has end_array => (
     is      => 'lazy',
     default => sub {
-        return $lang_map{ shift()->lang() }{end_array};
-    }
+        return shift()->lookup_lang_field('end_array');
+    },
 );
 
 sub data2code
