@@ -12,4 +12,5 @@ use PrepareAppAws;
 my @deals =
     path("../B/freecell-pro-impossible-deals/logs/intractable1.txt")->lines_raw;
 chomp @deals;
-PrepareAppAws->new( { deals => [@deals], deal_num_width => 11, } )->run;
+PrepareAppAws->new(
+    { deals => [@deals], deal_num_width => 11, disable_threading => 1, } )->run;
