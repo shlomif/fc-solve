@@ -19,6 +19,7 @@ has [ 'mem', 'num_hours', 'num_threads' ] =>
 has ['num_freecells'] => ( is => 'ro', isa => 'Int',           default  => 4, );
 has 'deals'           => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
 has 'deal_num_width'  => ( is => 'ro', isa => 'Int',           default  => 0 );
+has 'disable_threading' => ( is => 'ro', isa => 'Bool', default => '' );
 
 sub main_base
 {
@@ -265,6 +266,9 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     my $num_cpus    = $num_threads;
     my $mem         = $self->mem;
     my $march_flag  = $self->march_flag;
+    my $lib_pthread = $self->disable_threading ? "" : " -lpthread ";
+    my $no_threads_flag =
+        $self->disable_threading ? " -DFCS_DBM_SINGLE_THREAD=1 " : "";
 
     io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
@@ -278,7 +282,7 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
-CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
+CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags $no_threads_flag -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
@@ -287,7 +291,7 @@ JOBS_STAMP = jobs/STAMP
 all: \$(TARGET) \$(JOBS)
 
 \$(TARGET): \$(MODULES)
-\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -Bstatic -lm -lpthread -ltcmalloc
+\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -Bstatic -lm $lib_pthread -ltcmalloc
 \tstrip \$\@
 
 \$(MODULES): %.o: %.c
