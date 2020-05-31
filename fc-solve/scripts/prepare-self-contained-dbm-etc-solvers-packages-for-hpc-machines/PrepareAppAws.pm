@@ -7,9 +7,10 @@ use Getopt::Long qw/ GetOptions /;
 use MooX qw/ late /;
 use PrepareCommon ();
 
-has 'fcc_solver'    => ( is => 'ro', isa => 'Bool',          default  => '' );
-has 'num_freecells' => ( is => 'ro', isa => 'Int',           default  => 4 );
-has 'deals'         => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
+has 'fcc_solver'     => ( is => 'ro', isa => 'Bool',          default  => '' );
+has 'num_freecells'  => ( is => 'ro', isa => 'Int',           default  => 4 );
+has 'deals'          => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
+has 'deal_num_width' => ( is => 'ro', isa => 'Int',           default  => 0 );
 
 sub run
 {
@@ -65,16 +66,17 @@ sub run
     }
     return PrepareCommon->new(
         {
-            fcc_solver    => scalar( $self->fcc_solver ),
-            depth_dbm     => $depth_dbm,
-            dest_dir_base => $dest_dir_base,
-            flto          => $flto,
-            num_threads   => $num_threads,
-            mem           => $mem,
-            num_hours     => $num_hours,
-            march_flag    => $march_flag,
-            deals         => $self->deals,
-            num_freecells => $self->num_freecells
+            fcc_solver     => scalar( $self->fcc_solver ),
+            depth_dbm      => $depth_dbm,
+            dest_dir_base  => $dest_dir_base,
+            flto           => $flto,
+            num_threads    => $num_threads,
+            mem            => $mem,
+            num_hours      => $num_hours,
+            march_flag     => $march_flag,
+            deals          => $self->deals,
+            num_freecells  => $self->num_freecells,
+            deal_num_width => $self->deal_num_width,
         }
     )->run;
 }
