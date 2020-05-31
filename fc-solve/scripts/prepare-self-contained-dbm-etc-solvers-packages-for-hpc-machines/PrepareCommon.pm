@@ -132,6 +132,8 @@ sub _zero_pad
         : $deal_idx;
 }
 
+my $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE = 1;
+
 sub run
 {
     my $self = shift;
@@ -266,7 +268,12 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     my $num_cpus    = $num_threads;
     my $mem         = $self->mem;
     my $march_flag  = $self->march_flag;
-    my $lib_pthread = $self->disable_threading ? "" : " -lpthread ";
+    my $lib_pthread = (
+        (
+            $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE
+                || ( !$self->disable_threading )
+        ) ? " -lpthread " : ''
+    );
     my $no_threads_flag =
         $self->disable_threading ? " -DFCS_DBM_SINGLE_THREAD=1 " : "";
 
