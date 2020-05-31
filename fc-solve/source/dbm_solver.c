@@ -400,20 +400,29 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 {
     const_AUTO(threads,
         dbm__calc_threads(instance, init_state, num_threads, init_thread));
-    for (size_t i = 0; i < num_threads; i++)
+    if (num_threads == 1)
     {
-        if (pthread_create(&(threads[i].id), NULL, instance_run_solver_thread,
-                &(threads[i].arg)))
+        instance_run_solver_thread(&(threads[0].arg));
+    }
+#ifndef FCS_DBM_SINGLE_THREAD
+    else
+    {
+        for (size_t i = 0; i < num_threads; i++)
         {
-            exit_error("Worker Thread No. %lu Initialization failed!\n",
-                (unsigned long)i);
+            if (pthread_create(&(threads[i].id), NULL,
+                    instance_run_solver_thread, &(threads[i].arg)))
+            {
+                exit_error("Worker Thread No. %lu Initialization failed!\n",
+                    (unsigned long)i);
+            }
+        }
+
+        for (size_t i = 0; i < num_threads; i++)
+        {
+            pthread_join(threads[i].id, NULL);
         }
     }
-
-    for (size_t i = 0; i < num_threads; i++)
-    {
-        pthread_join(threads[i].id, NULL);
-    }
+#endif
 
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }

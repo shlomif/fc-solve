@@ -19,6 +19,7 @@ static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
     {
         instance_run_solver_thread(&(threads[0].arg));
     }
+#ifndef FCS_DBM_SINGLE_THREAD
     else
     {
         for (size_t i = 0; i < num_threads; i++)
@@ -36,6 +37,7 @@ static inline void dbm__spawn_threads(dbm_solver_instance *const instance,
             pthread_join(threads[i].id, NULL);
         }
     }
+#endif
     TRACE("Finished running threads for curr_depth=%lu\n",
         (unsigned long)instance->curr_depth);
 }

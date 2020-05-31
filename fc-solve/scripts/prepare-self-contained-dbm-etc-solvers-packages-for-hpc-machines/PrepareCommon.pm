@@ -133,7 +133,7 @@ sub _zero_pad
         : $deal_idx;
 }
 
-my $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE = 1;
+my $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE = 0;
 
 sub run
 {
