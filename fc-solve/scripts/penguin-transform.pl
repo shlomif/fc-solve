@@ -23,20 +23,30 @@ if ( $BASE_RANK_IDX < 0 )
 my $REV = $ENV{PENGUIN_REVERSE};
 if ($REV)
 {
-    $BASE_RANK_IDX = ( 13 - $BASE_RANK_IDX );
+    $BASE_RANK_IDX = ( ( @RANKS - $BASE_RANK_IDX ) % @RANKS );
 }
 
-my %MAP = ( map { $RANKS[$_] => $RANKS[ ( $_ + 1 ) % @RANKS ] } keys @RANKS );
-
+if ( $BASE_RANK_IDX != 0 )
 {
-    local $/;
-    my $text = <ARGV>;
-    for my $i ( 1 .. $BASE_RANK_IDX )
+    my %MAP = (
+        map { $RANKS[$_] => $RANKS[ ( $_ + $BASE_RANK_IDX ) % @RANKS ] }
+            keys @RANKS
+    );
+
     {
+        local $/;
+        my $text = <ARGV>;
         $text =~ s#([$S])($SUITS_RE)#$MAP{$1}.$2#eg;
         $text =~ s#($SUITS_RE)-([$S])#$1.'-'.$MAP{$2}#eg;
+        print $text;
     }
-    print $text;
+}
+else
+{
+    while ( my $l = <ARGV> )
+    {
+        print $l;
+    }
 }
 
 __END__
