@@ -199,8 +199,8 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
             }
             /* Get the top card in the stack */
             const fcs_card card = fcs_col_get_card(col, cards_num - 1);
-            const int dest_foundation =
-                calc_foundation_to_put_card_on(local_variant, &the_state, card);
+            const_AUTO(dest_foundation, calc_foundation_to_put_card_on(
+                                            local_variant, &the_state, card));
             if (dest_foundation >= 0)
             {
                 const_AUTO(is_reversible, FROM_COL_IS_REVERSIBLE_MOVE());
@@ -230,8 +230,9 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
             const fcs_card card = fcs_freecell_card(the_state, fc);
             if (fcs_card_is_valid(card))
             {
-                const int dest_foundation = calc_foundation_to_put_card_on(
-                    local_variant, &the_state, card);
+                const_AUTO(
+                    dest_foundation, calc_foundation_to_put_card_on(
+                                         local_variant, &the_state, card));
                 if (dest_foundation >= 0)
                 {
                     num_cards_moved++;
