@@ -380,11 +380,9 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+#ifndef FCS_SCANS_SYNERGY_IS_HARD_CODED
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-#endif
 #endif
     const_AUTO(soft_thread_id, soft_thread->id);
     const bool is_a_complete_scan =
@@ -674,11 +672,9 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #if !defined(FCS_HARD_CODE_REPARENT_STATES_AS_FALSE) &&                        \
-    !defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE)
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+    !defined(FCS_SCANS_SYNERGY_IS_HARD_CODED)
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-#endif
 #endif
     fcs_kv_state existing_state;
 

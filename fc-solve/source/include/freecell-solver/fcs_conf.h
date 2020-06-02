@@ -82,6 +82,11 @@ extern "C" {
 #define freecell_solver_user_set_pruning(...)
 #endif
 
+#if defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE) ||                           \
+    defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE)
+#define FCS_SCANS_SYNERGY_IS_HARD_CODED
+#endif
+
 #ifdef __cplusplus
 };
 #endif

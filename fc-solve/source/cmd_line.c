@@ -599,8 +599,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         case FCS_OPT_SCANS_SYNERGY: /* STRINGS=--scans-synergy; */
         {
             PROCESS_OPT_ARG();
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+#ifndef FCS_SCANS_SYNERGY_IS_HARD_CODED
             int value;
 
             if (!strcmp((*arg), "none"))
@@ -618,7 +617,6 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
 
             freecell_solver_user_set_scans_synergy(instance, value);
-#endif
 #endif
         }
         break;

@@ -189,10 +189,8 @@ static inline void alloc_instance(
         .FCS_RUNTIME_TO_REPARENT_STATES_REAL = false,
         .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = false,
 #endif
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+#ifndef FCS_SCANS_SYNERGY_IS_HARD_CODED
         .FCS_RUNTIME_SCANS_SYNERGY = true,
-#endif
 #endif
 #ifdef FCS_RCS_STATES
         .rcs_states_cache.max_num_elements_in_cache = 10000,
@@ -1351,11 +1349,9 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+#ifndef FCS_SCANS_SYNERGY_IS_HARD_CODED
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
-#endif
 #endif
 
     const bool is_a_complete_scan =
@@ -4738,15 +4734,13 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 }
 #endif
 
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
-#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+#ifndef FCS_SCANS_SYNERGY_IS_HARD_CODED
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
     void *const api_instance, const int synergy)
 {
     STRUCT_SET_FLAG_TO(
         active_obj(api_instance), FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
-#endif
 #endif
 
 #ifdef FCS_WITH_NI
