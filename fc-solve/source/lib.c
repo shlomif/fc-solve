@@ -190,7 +190,9 @@ static inline void alloc_instance(
         .FCS_RUNTIME_TO_REPARENT_STATES_PROTO = false,
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
         .FCS_RUNTIME_SCANS_SYNERGY = true,
+#endif
 #endif
 #ifdef FCS_RCS_STATES
         .rcs_states_cache.max_num_elements_in_cache = 10000,
@@ -1034,11 +1036,13 @@ static void verify_soft_dfs_stack(fcs_soft_thread *soft_thread)
 #define VERIFY_PTR_STATE_AND_DERIVED_TRACE0(no_use)
 #endif
 
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
 static inline bool fcs__is_state_a_dead_end(
     const fcs_collectible_state *const ptr_state)
 {
     return (FCS_S_VISITED(ptr_state) & FCS_VISITED_DEAD_END);
 }
+#endif
 
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
@@ -1348,8 +1352,10 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
 #endif
 
     const bool is_a_complete_scan =
@@ -1588,7 +1594,10 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 
             VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
-            if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
+            if (
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+                (!fcs__is_state_a_dead_end(single_derived_state)) &&
+#endif
                 (!is_scan_visited(single_derived_state, soft_thread_id)))
             {
                 BUMP_NUM_CHECKED_STATES();
@@ -1946,8 +1955,11 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
  * */
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
             if (STRUCT_QUERY_FLAG(
-                    soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) &&
-                (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY)))
+                    soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN)
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+                && (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY))
+#endif
+            )
             {
                 return FCS_STATE_IS_NOT_SOLVEABLE;
             }
@@ -4727,12 +4739,14 @@ void DLLEXPORT freecell_solver_user_set_reparent_states(
 #endif
 
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
 void DLLEXPORT freecell_solver_user_set_scans_synergy(
     void *const api_instance, const int synergy)
 {
     STRUCT_SET_FLAG_TO(
         active_obj(api_instance), FCS_RUNTIME_SCANS_SYNERGY, synergy);
 }
+#endif
 #endif
 
 #ifdef FCS_WITH_NI

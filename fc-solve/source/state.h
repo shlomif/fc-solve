@@ -238,6 +238,7 @@ struct fcs_state_extra_info_struct
     fcs_iters_int visited_iter;
 #endif
 
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     /*
      * This is the number of direct children of this state which were not
      * yet declared as dead ends. Once this counter reaches zero, this
@@ -247,6 +248,7 @@ struct fcs_state_extra_info_struct
      * unlikely that a state will have more than 64K active children.
      * */
     unsigned short num_active_children;
+#endif
 
     /*
      * This field contains global, scan-independant flags, which are used
@@ -397,7 +399,9 @@ static inline void FCS_STATE_collectible_to_kv(
 
 #define FCS_S_NEXT(s) FCS_S_ACCESSOR(s, parent)
 #define FCS_S_PARENT(s) FCS_S_ACCESSOR(s, parent)
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
 #define FCS_S_NUM_ACTIVE_CHILDREN(s) FCS_S_ACCESSOR(s, num_active_children)
+#endif
 #define FCS_S_MOVES_TO_PARENT(s) FCS_S_ACCESSOR(s, moves_to_parent)
 #define FCS_S_VISITED(s) FCS_S_ACCESSOR(s, visited)
 #define FCS_S_SCAN_VISITED(s) FCS_S_ACCESSOR(s, scan_visited)
@@ -612,7 +616,9 @@ static inline void fc_solve_state_init_proto(fcs_state_keyval_pair *const state
 #ifndef FCS_WITHOUT_VISITED_ITER
     state->info.visited_iter = 0;
 #endif
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     state->info.num_active_children = 0;
+#endif
     memset(state->info.scan_visited, '\0', sizeof(state->info.scan_visited));
 #ifdef INDIRECT_STACK_STATES
     state->info.stacks_copy_on_write_flags = 0;
@@ -957,7 +963,9 @@ enum
 {
     FCS_VISITED_IN_SOLUTION_PATH = 0x1,
     FCS_VISITED_IN_OPTIMIZED_PATH = 0x2,
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     FCS_VISITED_DEAD_END = 0x4,
+#endif
     FCS_VISITED_ALL_TESTS_DONE = 0x8,
     FCS_VISITED_GENERATED_BY_PRUNING = 0x10,
 };

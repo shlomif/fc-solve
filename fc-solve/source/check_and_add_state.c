@@ -330,7 +330,9 @@ static inline void upon_new_state(fcs_instance *const instance GCC_UNUSED,
     /* The new state was not found in the cache, and it was already inserted */
     if (likely(parent_state))
     {
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
         (FCS_S_NUM_ACTIVE_CHILDREN(parent_state))++;
+#endif
 #ifdef FCS_WITH_MOVES
         /* If parent_val is defined, so is moves_to_parent */
         new_state_info->moves_to_parent = fc_solve_move_stack_compact_allocate(

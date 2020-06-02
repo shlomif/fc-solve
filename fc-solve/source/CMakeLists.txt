@@ -139,6 +139,7 @@ option (FCS_DISABLE_NUM_STORED_STATES "Disable the num-stored-states functionali
 option (FCS_DISABLE_ERROR_STRINGS "Disables passing/setting the error strings - breaks a lot of compatibility - enable at your own risk.")
 option (FCS_DISABLE_STATE_VALIDITY_CHECK "Disable the state validity check. May make things faster but breaks some compatibilty. Enable at your own risk.")
 option (FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE "Make scan synergy as always true. Reduces functionality but may make things faster.")
+option (FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE "Make scan synergy as always false. Reduces functionality but may make things faster.")
 option (FCS_HARD_CODE_REPARENT_STATES_AS_FALSE "Make reparent states as always false. Reduces functionality but may make things faster.")
 option (FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE "Make calc-real-depth as always false. Reduces functionality but may make things faster.")
 option (FCS_HARD_CODE_STATE_DEPTH_FIELD "Make the game graph's states/positions' depth fields always be 0. Reduces functionality but may make things faster.")

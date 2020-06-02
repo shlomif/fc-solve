@@ -365,6 +365,7 @@ static inline void calculate_real_depth(
  *
  * */
 
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
 static inline void mark_as_dead_end__proto(
     fcs_collectible_state *const ptr_state_input)
 {
@@ -392,11 +393,16 @@ static inline void mark_as_dead_end__proto(
         }
     }
 }
+#endif
 
 #ifdef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
 #define MARK_AS_DEAD_END(state)                                                \
     {                                                                          \
         mark_as_dead_end__proto(state);                                        \
+    }
+#elif defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE)
+#define MARK_AS_DEAD_END(state)                                                \
+    {                                                                          \
     }
 #else
 #define MARK_AS_DEAD_END(state)                                                \

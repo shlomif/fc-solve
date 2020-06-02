@@ -381,8 +381,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     const bool calc_real_depth = fcs_get_calc_real_depth(instance);
 #endif
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
 #endif
     const_AUTO(soft_thread_id, soft_thread->id);
     const bool is_a_complete_scan =
@@ -462,7 +464,10 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
                       (temp_visited & FCS_VISITED_IN_OPTIMIZED_PATH))
                 :
 #endif
-                ((temp_visited & FCS_VISITED_DEAD_END) ||
+                (
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
+                    (temp_visited & FCS_VISITED_DEAD_END) ||
+#endif
                     (is_scan_visited(PTR_STATE, soft_thread_id))))
         {
             goto next_state;
@@ -644,7 +649,9 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
     /* Mark this state as a state that was not yet visited */
     FCS_S_VISITED(raw_ptr_new_state) = 0;
     /* It's a newly created state which does not have children yet. */
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     FCS_S_NUM_ACTIVE_CHILDREN(raw_ptr_new_state) = 0;
+#endif
     memset(&(FCS_S_SCAN_VISITED(raw_ptr_new_state)), '\0',
         sizeof(FCS_S_SCAN_VISITED(raw_ptr_new_state)));
     fcs_move_stack_reset(moves);
@@ -668,8 +675,10 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
 #endif
 #if !defined(FCS_HARD_CODE_REPARENT_STATES_AS_FALSE) &&                        \
     !defined(FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE)
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
     const bool scans_synergy =
         STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_SCANS_SYNERGY);
+#endif
 #endif
     fcs_kv_state existing_state;
 
@@ -711,6 +720,7 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
             existing_state.val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(hard_thread, moves);
 #endif
+#ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_FALSE
             if (!(existing_state.val->visited & FCS_VISITED_DEAD_END))
             {
                 if ((--(FCS_S_NUM_ACTIVE_CHILDREN(
@@ -721,6 +731,7 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
                 ptr_state->num_active_children++;
             }
             existing_state.val->parent = INFO_STATE_PTR(&raw_state_raw);
+#endif
 #ifdef FCS_WITH_DEPTH_FIELD
             existing_state.val->depth = ptr_state->depth + 1;
 #endif
