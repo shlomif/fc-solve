@@ -12,6 +12,13 @@ has 'disable_threading' => ( is => 'ro', isa => 'Bool', default => '' );
 has 'num_freecells'     => ( is => 'ro', isa => 'Int',  default => 4 );
 has 'deals'          => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
 has 'deal_num_width' => ( is => 'ro', isa => 'Int',           default  => 0 );
+has compiler         => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => sub {
+        return ( $ENV{CC} // 'gcc' );
+    },
+);
 
 sub run
 {
@@ -72,6 +79,7 @@ sub run
     return PrepareCommon->new(
         {
             fcc_solver        => scalar( $self->fcc_solver ),
+            compiler          => $self->compiler,
             depth_dbm         => $depth_dbm,
             dest_dir_base     => $dest_dir_base,
             flto              => $flto,
