@@ -11,6 +11,14 @@ use MooX qw/ late /;
 
 has 'depth_dbm'  => ( is => 'ro', isa => 'Bool', required => 1 );
 has 'fcc_solver' => ( is => 'ro', isa => 'Bool', default  => 0 );
+has compiler     => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => sub {
+        return ( $ENV{CC} // 'gcc' );
+    },
+);
+
 has [ 'dest_dir_base', 'march_flag' ] =>
     ( is => 'ro', isa => 'Str', required => 1 );
 has 'flto' => ( is => 'ro', isa => 'Bool', required => 1 );
@@ -269,6 +277,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     my $num_cpus    = $num_threads;
     my $mem         = $self->mem;
     my $march_flag  = $self->march_flag;
+    my $compiler    = $self->compiler;
     my $lib_pthread = (
         (
             $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE
@@ -290,6 +299,7 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
+CC = $compiler
 CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags $no_threads_flag -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
 MODULES = @modules
 
@@ -299,11 +309,11 @@ JOBS_STAMP = jobs/STAMP
 all: \$(TARGET) \$(JOBS)
 
 \$(TARGET): \$(MODULES)
-\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -Bstatic -lm $lib_pthread -ltcmalloc
+\t\$(CC) \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -Bstatic -lm $lib_pthread -ltcmalloc
 \tstrip \$\@
 
 \$(MODULES): %.o: %.c
-\tgcc -c \$(CFLAGS) -o \$\@ \$<
+\t\$(CC) -c \$(CFLAGS) -o \$\@ \$<
 
 \$(JOBS_STAMP):
 \tmkdir -p jobs
