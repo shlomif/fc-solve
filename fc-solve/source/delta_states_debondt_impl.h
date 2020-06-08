@@ -56,11 +56,11 @@ static inline void fc_solve_delta_stater_init(fcs_delta_stater *const self,
     if (IS_BAKERS_DOZEN())
     {
 #pragma GCC diagnostic push
-        for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
-        {
 #ifndef __clang__
 #pragma GCC diagnostic ignored "-Waggressive-loop-optimizations"
 #endif
+        for (size_t col_idx = 0; col_idx < self->num_columns; ++col_idx)
+        {
             const_AUTO(col, fcs_state_get_col(*init_state, col_idx));
             const int col_len = fcs_col_len(col);
 

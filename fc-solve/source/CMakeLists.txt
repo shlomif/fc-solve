@@ -88,7 +88,7 @@ SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
 SET (FCS_MAX_RANK 13 CACHE STRING "Maximal rank - should be 13")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
-SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
+SET (MAX_NUM_STACKS 13 CACHE STRING "Maximal Number of Stacks")
 SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
     "Maximal Number of Initial Cards in a Stack. 7 is a better value if you only wish to solve Freecell")
 SET (MAX_NUM_DECKS 1 CACHE STRING "Maximal Number of Decks (must be 1)")
