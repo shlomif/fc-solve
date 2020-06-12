@@ -93,7 +93,7 @@ int main(int argc, char *argv[])
     fwrite(s, OUTPUT_LEN, 1, f);
     fclose(f);
 #else
-    const int fh = creat(filename, 0644);
+    const int fh = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     get_board_l__without_setup(board_num, s);
     write(fh, s, OUTPUT_LEN);
     close(fh);
