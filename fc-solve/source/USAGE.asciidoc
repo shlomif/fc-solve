@@ -815,7 +815,7 @@ Running Several Scans in Parallel
 Starting from Version 2.4.0, Freecell Solver can run several scans in
 parallel on the same state collection. Each scan resides in its own
 "Soft Thread". By specifying several soft threads on the command line
-one can create use several parallel scans. Once one of the scans
+one can create and run several task-switched scans. Once one of the scans
 reaches a solution, the solution will be displayed.
 
 [id="next-soft-thread_flag"]

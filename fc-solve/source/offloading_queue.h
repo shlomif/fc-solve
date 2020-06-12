@@ -254,7 +254,7 @@ static inline void fcs_offloading_queue_page__offload(
     fcs_offloading_queue_page__calc_filename(
         page, page_filename, offload_dir_path);
 #ifdef RINUTILS__IS_UNIX
-    const int f = creat(page_filename, 0644);
+    const int f = open(page_filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     myassert(write(f, page->data, FCS_OFFLOADING_Q_DATA_SIZE) ==
              FCS_OFFLOADING_Q_DATA_SIZE);
     close(f);
