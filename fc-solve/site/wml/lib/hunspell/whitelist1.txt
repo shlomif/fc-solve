@@ -1340,6 +1340,7 @@ Dominus
 HPC
 NNN
 NRG
+Solvitaire
 gen_ms_boards__rand
 mis-attributed
 num_columns
