@@ -10,7 +10,8 @@ from os.path import basename, join
 
 from fc_solve_find_index_s2ints import CardRenderer
 
-from make_pysol_freecell_board import Game, RandomBase
+from make_pysol_freecell_board import Game
+from pysol_cards.random import RandomBase
 
 
 class GenMulti:
