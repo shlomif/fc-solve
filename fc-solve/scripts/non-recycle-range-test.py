@@ -16,9 +16,9 @@ import sys
 
 from FC_Solve import FC_Solve
 
-from fc_solve_find_index_s2ints import CardRenderer
-
-from make_pysol_freecell_board import Game, RandomBase
+from pysol_cards.cards import CardRenderer
+from pysol_cards.deal_game import Game
+from pysol_cards.random import RandomBase
 
 
 class GenMulti:
