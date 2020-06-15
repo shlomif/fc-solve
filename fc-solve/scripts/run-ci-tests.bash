@@ -21,8 +21,7 @@ skip_emscripten_tests__disable_me_after_fixing_the_emcc_issue()
 {
     export SKIP_EMCC='1'
 }
-# Do not disable for now as it is before a fix exists.
-skip_emscripten_tests__disable_me_after_fixing_the_emcc_issue
+# skip_emscripten_tests__disable_me_after_fixing_the_emcc_issue
 export FC_SOLVE__MULT_CONFIG_TESTS__TRACE=1 SKIP_SPELL_CHECK=1
 which dbtoepub
 export DBTOEPUB="/usr/bin/ruby $(which dbtoepub)"
