@@ -141,16 +141,21 @@ $(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cp -f "$<" "$@"
 
-PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
+PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 perl bin/post-incs-v2.pl --mode=minify \
+               --minifier-conf=bin/html-min-cli-config-file.conf \
+               --source-dir=$1 \
+               --dest-dir=$1 \
+               --
 
 jinja_rend := bin/jinja-render.py
 jinja_bases := $(shell cat lib/make/jinja.txt)
 dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
-prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
+# prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
 
 $(dest_jinjas): $(jinja_rend) lib/template.jinja
 	python3 $(jinja_rend)
-	@$(PROCESS_ALL_INCLUDES) $(dest_jinjas) $(prod_dest_jinjas)
+	@$(call PROCESS_ALL_INCLUDES,dest) $(jinja_bases)
+	@$(call PROCESS_ALL_INCLUDES,dest-prod) $(jinja_bases)
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
