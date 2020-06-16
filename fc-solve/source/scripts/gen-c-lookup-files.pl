@@ -16,7 +16,8 @@ has is_rust => (
         return shift()->lang eq 'rust';
     },
 );
-has typedefs => ( is => 'ro', required => 1 );
+has typedefs       => ( is => 'ro', required => 1 );
+has header_headers => ( is => 'ro', required => 1 );
 
 my %lang_map = (
     'c' => {
@@ -34,6 +35,13 @@ has lang_record => (
         return $lang_map{ shift()->lang() };
     },
 );
+
+sub calc_headers_code
+{
+    my ($self) = @_;
+
+    return join( '', map { qq{#include $_\n} } @{ $self->header_headers } );
+}
 
 sub calc_typedefs_code
 {
@@ -161,15 +169,15 @@ sub emit
 
     my $obj = Code::Gen::Emitter->new(
         {
-            lang     => ( $args->{lang}     // 'c' ),
-            typedefs => ( $args->{typedefs} // '' ),
+            header_headers => ( $args->{header_headers} // ( die "foo" ) ),
+            lang           => ( $args->{lang}           // 'c' ),
+            typedefs       => ( $args->{typedefs}       // '' ),
         }
     );
     my $bn   = $args->{basename};
     my $DECL = ( ( $obj->is_rust() ? "pub " : "" ) . "const " . $args->{decl} );
-    my $is_static      = $args->{is_static};
-    my $header_headers = $args->{header_headers};
-    my $contents       = $args->{contents};
+    my $is_static = $args->{is_static};
+    my $contents  = $args->{contents};
 
     my $header_fn = "$bn.h";
 
@@ -177,7 +185,7 @@ sub emit
         my $text = shift;
         path($header_fn)
             ->spew_utf8( "#pragma once\n"
-                . join( '', map { qq{#include $_\n} } @$header_headers )
+                . $obj->calc_headers_code()
                 . $obj->calc_typedefs_code()
                 . join( '', @$text ) );
 
@@ -212,7 +220,8 @@ emit(
                 [ map { make_card( $_, $s ) } reverse( 1 .. $MAX_RANK ) ]
             } @SUITS
         ],
-        is_static => $true,
+        header_headers => [],
+        is_static      => $true,
     }
 );
 
@@ -407,4 +416,3 @@ _emit_board_gen_lookup(
         decl      => 'size_t offset_by_i',
     }
 );
-
