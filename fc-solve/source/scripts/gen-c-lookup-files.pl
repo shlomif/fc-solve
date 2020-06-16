@@ -234,13 +234,13 @@ emit(
 
 sub emit_lookup
 {
-    my ( $array_name, $basename, $lookup_ref, $is_static ) = @_;
+    my ( $array_name, $basename, $lookup_ref, ) = @_;
     return emit(
         {
             basename => $basename,
             decl => qq#bool ${array_name}[$NUM_PARENT_CARDS][$NUM_CHILD_CARDS]#,
             header_headers => [ q/<stdbool.h>/, ],
-            is_static      => $is_static,
+            is_static      => $false,
             contents       => [
                 map {
                     my $parent = $_;
