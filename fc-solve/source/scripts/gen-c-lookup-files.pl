@@ -43,6 +43,16 @@ sub calc_headers_code
     return join( '', map { qq{#include $_\n} } @{ $self->header_headers } );
 }
 
+sub calc_c_header_start
+{
+    my ($self) = @_;
+
+    return
+          "#pragma once\n"
+        . $self->calc_headers_code()
+        . $self->calc_typedefs_code();
+}
+
 sub calc_typedefs_code
 {
     my ($self) = @_;
@@ -184,10 +194,7 @@ sub emit
     my $out_header = sub {
         my $text = shift;
         path($header_fn)
-            ->spew_utf8( "#pragma once\n"
-                . $obj->calc_headers_code()
-                . $obj->calc_typedefs_code()
-                . join( '', @$text ) );
+            ->spew_utf8( $obj->calc_c_header_start() . join( '', @$text ) );
 
     };
     my $code = "$DECL = " . $obj->data2code( $contents, ) . ";\n";
