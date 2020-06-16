@@ -16,6 +16,7 @@ has is_rust => (
         return shift()->lang eq 'rust';
     },
 );
+has typedefs => ( is => 'ro', required => 1 );
 
 my %lang_map = (
     'c' => {
@@ -33,6 +34,13 @@ has lang_record => (
         return $lang_map{ shift()->lang() };
     },
 );
+
+sub calc_typedefs_code
+{
+    my ($self) = @_;
+
+    return $self->typedefs();
+}
 
 sub lookup_lang_field
 {
@@ -151,13 +159,17 @@ sub emit
 {
     my ( $args, ) = @_;
 
-    my $obj  = Code::Gen::Emitter->new( { lang => ( $args->{lang} // 'c' ), } );
+    my $obj = Code::Gen::Emitter->new(
+        {
+            lang     => ( $args->{lang}     // 'c' ),
+            typedefs => ( $args->{typedefs} // '' ),
+        }
+    );
     my $bn   = $args->{basename};
     my $DECL = ( ( $obj->is_rust() ? "pub " : "" ) . "const " . $args->{decl} );
     my $is_static      = $args->{is_static};
     my $header_headers = $args->{header_headers};
     my $contents       = $args->{contents};
-    my $types          = $args->{typedefs} // '';
 
     my $header_fn = "$bn.h";
 
@@ -166,7 +178,7 @@ sub emit
         path($header_fn)
             ->spew_utf8( "#pragma once\n"
                 . join( '', map { qq{#include $_\n} } @$header_headers )
-                . $types
+                . $obj->calc_typedefs_code()
                 . join( '', @$text ) );
 
     };
