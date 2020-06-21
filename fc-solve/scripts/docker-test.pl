@@ -14,18 +14,6 @@ my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, },
 );
 
-sub do_system
-{
-    my ($args) = @_;
-
-    my $cmd = $args->{cmd};
-    print "Running [@$cmd]\n";
-    if ( system(@$cmd) )
-    {
-        die "Running [@$cmd] failed!";
-    }
-}
-
 my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
 $obj->clean_up();
