@@ -164,8 +164,7 @@ sub get_foundations_bits
 
     return [
         map { [ 4 => $self->_derived_state->get_foundation_value( $_, 0 ) ] }
-            @suits
-    ];
+            @suits ];
 }
 
 sub _get_suit_bit
