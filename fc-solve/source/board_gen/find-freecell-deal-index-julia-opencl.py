@@ -37,6 +37,8 @@ const sum_kernel = "
       i[gid] = ((((r[gid] = (r[gid]* 214013 + 2531011)) >> 16) & 0x7fff) % 52);
     }}
 "
+p = cl.Program(ctx, source=sum_kernel) |> cl.build!
+k = cl.Kernel(p, "sum")
 is_right = false
 mystart = 1
 while (! is_right)
@@ -48,8 +50,6 @@ while (! is_right)
     r_buff = cl.Buffer(UInt32, ctx, (:r, :copy), hostbuf=r)
     i_buff = cl.Buffer(UInt32, ctx, (:r, :copy), hostbuf=i)
 
-    p = cl.Program(ctx, source=sum_kernel) |> cl.build!
-    k = cl.Kernel(p, "sum")
 
     queue(k, size(r), nothing, r_buff, i_buff)
 
