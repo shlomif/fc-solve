@@ -34,23 +34,21 @@ const sum_kernel = "
                      __global unsigned int *i)
     {{
       int gid = get_global_id(0);
-      i[gid] = ((((r[gid] = (r[gid]* 214013 + 2531011)) >> 16) & 0x7fff) % 52);
+      i[gid] = ((((r[gid] = (r[gid]*214013 + 2531011)) >> 16) & 0x7fff) % 52);
     }}
 "
 p = cl.Program(ctx, source=sum_kernel) |> cl.build!
 k = cl.Kernel(p, "sum")
 is_right = false
 mystart = 1
+myints = [{myints}]
 while (! is_right)
     r = Array{{UInt32}}(UnitRange{{UInt32}}(mystart:mystart+{bufsize}-1))
     i = zeros(UInt32, {bufsize})
 
-    myints = [{myints}]
 
     r_buff = cl.Buffer(UInt32, ctx, (:r, :copy), hostbuf=r)
     i_buff = cl.Buffer(UInt32, ctx, (:r, :copy), hostbuf=i)
-
-
     queue(k, size(r), nothing, r_buff, i_buff)
 
     r = cl.read(queue, r_buff)
@@ -59,9 +57,10 @@ while (! is_right)
     for myiterint in 1:{bufsize}
         if i[myiterint] == {first_int}
             global is_right = true
+            rr = r[myiterint]
             for n in 51:-1:2
-                r[myiterint] = ((r[myiterint] * 214013 + 2531011) & 0xFFFFFFFF)
-                if ( ((r[myiterint] >> 16) & 0x7fff) % n != myints[n])
+                rr = ((rr * 214013 + 2531011) & 0xFFFFFFFF)
+                if ( ((rr >> 16) & 0x7fff) % n != myints[n])
                     global is_right = false
                     break
                 end
