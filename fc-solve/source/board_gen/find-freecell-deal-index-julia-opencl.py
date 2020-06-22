@@ -21,21 +21,22 @@ def _to_bytes(s):
 
 def find_ret(ints):
     first_int = ints.pop(0)
+    assert len(ints) == 50
     with open("test.jl", "wt") as f:
         f.write('''
 
 using OpenCL
 
 const sum_kernel = "
-   __kernel void sum(__global uint32_t *r,
-                     __global uint32_t *i)
+   __kernel void sum(__global unsigned int *r,
+                     __global unsigned int *i)
     {{
       int gid = get_global_id(0);
       i[gid] = ((((r[gid] = (r[gid]* 214013 + 2531011)) >> 16) & 0x7fff) % 52);
     }}
 "
-r = 1:50_000
-i = zeros(UInt32, 50_000)
+r = Array{{UInt32}}(UnitRange{{UInt32}}(1:50000))
+i = zeros(UInt32, 50000)
 
 myints = [{myints}]
 device, ctx, queue = cl.create_compute_context()
@@ -51,24 +52,24 @@ queue(k, size(r), nothing, r_buff, i_buff)
 r = cl.read(queue, r_buff)
 i = cl.read(queue, i_buff)
 
-for ii in 1:50_000
-    if i[ii] == {first_int}
-        is_right = True
-        for n in 51:2:-1
-            r[ii] = (r[ii] * 214013 + 2531011)
-            if ((r[ii] >> 16) & 0x7fff) % n != myints[n]
-                is_right = False
+for myiterint in 1:50000
+    if i[myiterint] == {first_int}
+        is_right = true
+        for n in 51:-1:2
+            r[myiterint] = ((r[myiterint] * 214013 + 2531011) & 0xFFFFFFFF)
+            if ( ((r[myiterint] >> 16) & 0x7fff) % n != myints[n])
+                is_right = false
                 break
             end
         end
         if is_right
-            @show ii
+            @show myiterint
             break
         end
     end
 end
 '''.format(first_int=first_int,
-           myints=",".join(list(reversed([str(x) for x in ints]))))
+           myints=",".join(['0']+list(reversed([str(x) for x in ints]))))
           )
     return 0
 
