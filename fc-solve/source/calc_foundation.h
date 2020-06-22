@@ -14,7 +14,7 @@ calc_foundation_to_put_card_on(CALC_FOUNDATION_ARG(),
         const stack_i ret_val = ((deck << 2) | suit);
         if (fcs_foundation_value(*ptr_state, ret_val) == rank_min_1)
         {
-/* Always put on the foundation if it is built-by-suit */
+// Always put on the foundation if it is built-by-suit
 #ifndef FCS_FREECELL_ONLY
             if (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)
             {

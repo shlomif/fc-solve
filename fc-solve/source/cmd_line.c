@@ -61,7 +61,7 @@ static inline bool read_preset(const char *const preset_name,
     {
         // When passing NULL to GetModuleHandle, it returns handle of exe itself
         GetModuleFileName(hModule, windows_exe_dir, (sizeof(windows_exe_dir)));
-        /* Remove the basename and keep only the dirname. */
+        // Remove the basename and keep only the dirname.
         char *s = windows_exe_dir + strlen(windows_exe_dir) - 1;
         while ((s > windows_exe_dir) && (!((*s == '/') || (*s == '\\'))))
         {
@@ -241,7 +241,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
     freecell_solver_str_t *arg = &(argv[start_arg]);
     for (; arg < arg_argc; arg++)
     {
-        /* First check for the parameters that the user recognizes */
+        // First check for the parameters that the user recognizes
         if (known_parameters)
         {
             var_AUTO(known_param, known_parameters);
@@ -658,13 +658,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                     f = NULL;
                 }
 
-                /* Try to open from the local path */
+                // Try to open from the local path
                 if (!f)
                 {
                     f = fopen(s, "rt");
                 }
 
-                /* If we still could not open it return an error */
+                // If we still could not open it return an error
                 if (!f)
                 {
                     RET_ERR_STR(error_string,
@@ -710,7 +710,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                             freecell_solver_user_set_unrecognized_cmd_line_flag(
                                 instance, 0, args_man.argv[*last_arg]);
                         }
-                        /* So we don't give a last_arg to the read file.*/
+                        // So we don't give a last_arg to the read file.
                         *last_arg = (int)(arg - 1 - &(argv[0]));
                         fc_solve_args_man_free(&args_man);
                         return ret;
@@ -766,10 +766,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
                 s = (*arg);
             }
 
-            /* Note: passing (*arg) instead of s to the
-             * set_depth_tests_order is likely wrong, but when doing
-             * it right, the tests fail.
-             * */
+            // Note: passing (*arg) instead of s to the
+            // set_depth_tests_order is likely wrong, but when doing
+            // it right, the tests fail.
             if (freecell_solver_user_set_depth_tests_order(instance, min_depth,
                     ((opt == FCS_OPT_DEPTH_TESTS_ORDER_2) ? s : (*arg))
                         FCS__PASS_ERR_STR(&fcs_user_errstr)))

@@ -40,9 +40,7 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
     return (((fcs_dbm *)store)->kaz_tree);
 }
 
-/*
- * Returns true if the key was added (it didn't already exist.)
- * */
+// Returns true if the key was added (it didn't already exist.)
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     const fcs_encoded_state_buffer *key, fcs_dbm_record *const parent,
     const bool should_modify_parent GCC_UNUSED)
@@ -50,11 +48,10 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     fcs_dbm_record record_on_stack;
 
-    /* This memset() call is done to please valgrind and for general
-     * good measure. It is not absolutely necessary (but should not
-     * hurt much). It is needed due to struct padding and alignment
-     * issues.
-     * */
+    // This memset() call is done to please valgrind and for general
+    // good measure. It is not absolutely necessary (but should not
+    // hurt much). It is needed due to struct padding and alignment
+    // issues.
     memset(&record_on_stack, '\0', sizeof(record_on_stack));
 #endif
 

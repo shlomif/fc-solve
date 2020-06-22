@@ -15,9 +15,6 @@
 #include "dbm_calc_derived.h"
 #include "render_state.h"
 
-/*
- * The char * returned is malloc()ed and should be free()ed.
- */
 DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     const fcs_dbm_variant_type local_variant, const char *init_state_str_proto,
     int *const num_out_derived_states,
@@ -81,8 +78,6 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
             .which_irreversible_moves_bitmask =
                 iter->which_irreversible_moves_bitmask};
         FCS__RENDER_STATE(debug_ret[idx].state_string, &(iter->state.s), &locs);
-        /* TODO : Put something meaningful there by passing it to the function.
-         */
         ++idx;
         iter = iter->next;
     }
@@ -106,9 +101,7 @@ DLLEXPORT void fc_solve_user_INTERNAL_free_derived_states(
     free(derived_states);
 }
 
-/*
- * The char * returned is malloc()ed and should be free()ed.
- */
+// ret_state_s is malloc()ed
 DLLEXPORT int fc_solve_user_INTERNAL_perform_horne_prune(
     const fcs_dbm_variant_type local_variant, const char *init_state_str_proto,
     char **ret_state_s)

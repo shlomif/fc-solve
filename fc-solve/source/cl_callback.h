@@ -61,7 +61,7 @@ int main(const int argc, char **const argv)
     }
 
     const fcs_user_state_str user_state = read_state(f);
-/* Win32 Does not have those signals */
+// Win32 Does not have those signals
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);
     signal(SIGUSR2, select_signal_handler);

@@ -5,10 +5,8 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * dbm_calc_derived.h - contains functions to calculate the derived states
- * from a certain position.
- */
+// dbm_calc_derived.h - contains functions to calculate the derived states
+// from a certain position.
 #pragma once
 
 #ifdef __cplusplus
@@ -126,7 +124,6 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
         ptr_new_state->move = MAKE_MOVE((src), (dest));                        \
                                                                                \
         ptr_new_state->core_irreversible_moves_count = (count_constant);       \
-        /* Finally, enqueue the new state. */                                  \
         ptr_new_state->next = (*derived_list);                                 \
         (*derived_list) = ptr_new_state;                                       \
     }
@@ -171,7 +168,7 @@ static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
             : fcs_is_parent_card(card, fcs_col_get_card(col, cards_num - 2)))
 #define COUNT_NON_REV(is_reversible) ((is_reversible) ? 1 : 2)
 
-/* Returns the number of amortized irreversible moves performed. */
+// Returns the number of amortized irreversible moves performed.
 static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr,
     fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
@@ -197,7 +194,6 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
             {
                 continue;
             }
-            /* Get the top card in the stack */
             const fcs_card card = fcs_col_get_card(col, cards_num - 1);
             const_AUTO(dest_foundation, calc_foundation_to_put_card_on(
                                             local_variant, &the_state, card));
@@ -208,8 +204,8 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
                 {
                     count_additional_irrev_moves++;
                 }
-                /* We can safely move it. */
-                num_cards_moved++;
+                // We can safely move it.
+                ++num_cards_moved;
                 fc_solve_add_to_irrev_moves_bitmask(
                     which_irreversible_moves_bitmask, card,
                     COUNT_NON_REV(is_reversible));
@@ -235,11 +231,9 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
                                          local_variant, &the_state, card));
                 if (dest_foundation >= 0)
                 {
-                    num_cards_moved++;
+                    ++num_cards_moved;
                     fc_solve_add_to_irrev_moves_bitmask(
                         which_irreversible_moves_bitmask, card, 1);
-
-                    /* We can put it there */
 
                     fcs_empty_freecell(the_state, fc);
                     fcs_increment_foundation(the_state, dest_foundation);
@@ -251,27 +245,24 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
 #endif
     } while (num_cards_moved);
 
-    /* modify moves_seq in-place. */
+    // Modify moves_seq in-place.
     if (count_moves_so_far && moves_seq)
     {
         fcs_fcc_moves_list_item **iter = &(moves_seq->moves_list);
 
-        /* Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
-         * to point at the place to either write the new moves or
-         * alternatively (on parity) on the pointer to allocate a new
-         * list_item for the moves.
-         *
-         * If count is 0, then we should move 0.
-         * If count is 1, then we should move 0.
-         * .
-         * .
-         * .
-         * If count is 7, then we should move 0.
-         * If count is 8, then we should move 1 time.
-         *
-         * to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
-         *
-         * */
+        // Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
+        // to point at the place to either write the new moves or
+        // alternatively (on parity) on the pointer to allocate a new
+        // list_item for the moves.
+        //
+        // If count is 0, then we should move 0.
+        // If count is 1, then we should move 0.
+        // .
+        // .
+        // If count is 7, then we should move 0.
+        // If count is 8, then we should move 1 time.
+        //
+        // to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
         const size_t count = moves_seq->count;
         for (size_t pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
              pos += FCS_FCC_NUM_MOVES_IN_ITEM)
@@ -351,7 +342,7 @@ static inline bool instance_solver_thread_calc_derived_states(
         return true;
     }
 
-    /* Move top stack cards to foundations. */
+    // Move top stack cards to foundations.
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
@@ -362,7 +353,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             has_empty_stack = true;
             continue;
         }
-        /* Get the top card in the stack */
+        // Get the top card in the stack
         const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
         const_AUTO(suit, fcs_card_suit(card));
         for (stack_i deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
@@ -372,7 +363,6 @@ static inline bool instance_solver_thread_calc_derived_states(
             {
                 continue;
             }
-            /* We can put it there */
             BEGIN_NEW_STATE()
 
             fcs_state_pop_col_top(&new_state, stack_idx);
@@ -405,7 +395,6 @@ static inline bool instance_solver_thread_calc_derived_states(
             }
             BEGIN_NEW_STATE()
 
-            /* We can put it there */
             fcs_empty_freecell(new_state, fc_idx);
             fcs_increment_foundation(new_state, deck * 4 + suit);
 
@@ -419,7 +408,7 @@ static inline bool instance_solver_thread_calc_derived_states(
     const int cards_num_min_limit =
         ((local_variant == FCS_DBM_VARIANT_BAKERS_DOZEN) ? 1 : 0);
 
-    /* Move stack card on top of a parent */
+    // Move stack card on top of a parent
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
@@ -437,7 +426,6 @@ static inline bool instance_solver_thread_calc_derived_states(
             {
                 continue;
             }
-            /* Let's move it */
             BEGIN_NEW_STATE()
 
             fcs_state_pop_col_top(&new_state, stack_idx);
@@ -464,7 +452,6 @@ static inline bool instance_solver_thread_calc_derived_states(
             {
                 continue;
             }
-            /* Let's move it */
             BEGIN_NEW_STATE()
 
             fcs_state_push(&new_state, ds, card);
@@ -477,21 +464,19 @@ static inline bool instance_solver_thread_calc_derived_states(
 
     if ((local_variant != FCS_DBM_VARIANT_BAKERS_DOZEN) && has_empty_stack)
     {
-        /* Stack Card to Empty Stack */
+        // Stack Card to Empty Stack
         for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
             const_AUTO(cards_num, fcs_col_len(col));
-            /* Bug fix: if there's only one card in a column, there's no
-             * point moving it to a new empty column.
-             * */
+            // Bug fix: if there's only one card in a column, there's no
+            // point moving it to a new empty column.
             if (cards_num <= 1)
             {
                 continue;
             }
 
             const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
-            /* Let's move it */
             BEGIN_NEW_STATE()
 
             fcs_state_pop_col_top(&new_state, stack_idx);
@@ -502,7 +487,7 @@ static inline bool instance_solver_thread_calc_derived_states(
         }
 
 #if MAX_NUM_FREECELLS > 0
-        /* Freecell card -> Empty Stack. */
+        // Freecell card -> Empty Stack.
         for (stack_i fc_idx = 0; fc_idx < LOCAL_FREECELLS_NUM; fc_idx++)
         {
             const_AUTO(card, fcs_freecell_card(the_state, fc_idx));
@@ -525,7 +510,7 @@ static inline bool instance_solver_thread_calc_derived_states(
 #if MAX_NUM_FREECELLS > 0
     if (empty_fc_idx >= 0)
     {
-        /* Stack Card to Empty Freecell */
+        // Stack Card to Empty Freecell
         for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
         {
             const_AUTO(col, fcs_state_get_col(the_state, stack_idx));
@@ -535,7 +520,6 @@ static inline bool instance_solver_thread_calc_derived_states(
                 continue;
             }
             const_AUTO(card, fcs_col_get_card(col, cards_num - 1));
-            /* Let's move it */
             BEGIN_NEW_STATE()
 
             fcs_state_pop_col_top(&new_state, stack_idx);
@@ -547,9 +531,8 @@ static inline bool instance_solver_thread_calc_derived_states(
         }
     }
 #endif
-    /* Perform Horne's Prune on all the states,
-     * or just set their num irreversible moves counts.
-     * */
+    // Perform Horne's Prune on all the states,
+    // or just set their num irreversible moves counts.
     for (var_AUTO(derived_iter, *derived_list); derived_iter;
          derived_iter = derived_iter->next)
     {
