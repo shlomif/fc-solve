@@ -22,11 +22,13 @@ def _to_bytes(s):
 def find_ret(ints):
     first_int = ints.pop(0)
     first_int |= (ints.pop(0) << 6)
+    first_int |= (ints.pop(0) << 12)
+    first_int |= (ints.pop(0) << 18)
 
     def _myrand(mod):
         return ('((((r[gid] = (r[gid]*214013 + 2531011))' +
                 ' >> 16) & 0x7fff) % {})').format(mod)
-    assert len(ints) == 49
+    assert len(ints) == 47
     with open("test.jl", "wt") as f:
         f.write('''
 
@@ -41,6 +43,8 @@ const sum_kernel = "
       int gid = get_global_id(0);
       i[gid] = {_myrand[52]};
       i[gid] |= ({_myrand[51]} << 6);
+      i[gid] |= ({_myrand[50]} << 12);
+      i[gid] |= ({_myrand[49]} << 18);
     }}
 "
 p = cl.Program(ctx, source=sum_kernel) |> cl.build!
@@ -64,7 +68,7 @@ while (! is_right)
         if i[myiterint] == {first_int}
             global is_right = true
             rr = r[myiterint]
-            for n in 50:-1:2
+            for n in 48:-1:2
                 rr = ((rr * 214013 + 2531011) & 0xFFFFFFFF)
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
                     global is_right = false
@@ -84,8 +88,13 @@ while (! is_right)
     end
 end
 '''.format(first_int=first_int,
-           bufsize=100000,
-           _myrand={52: _myrand(52), 51: _myrand(51)},
+           bufsize=300000,
+           _myrand={
+               52: _myrand(52),
+               51: _myrand(51),
+               50: _myrand(50),
+               49: _myrand(49),
+            },
            limit=((1 << 31)-1),
            myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
           )
