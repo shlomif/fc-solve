@@ -102,7 +102,7 @@ static inline void fc_solve_get_column_encoding_composite(
         --num_cards_in_seq;
     }
 
-    /* Prepare the encoding. */
+    // Prepare the encoding.
     rin_bit_writer bit_w;
     rin_bit_writer_init_and_clear(&bit_w, ret->enc);
 
@@ -126,7 +126,7 @@ static inline void fc_solve_get_column_encoding_composite(
     ret->end = bit_w.current;
     ret->bit_in_char_idx = bit_w.bit_in_char_idx;
 
-    /* Calculate the type. */
+    // Calculate the type.
     ret->type = ((col_len == 0) ? COL_TYPE_EMPTY
                                 : num_orig_cards ? COL_TYPE_HAS_ORIG
                                                  : COL_TYPE_ENTIRELY_NON_ORIG);
@@ -145,7 +145,7 @@ static inline void fc_solve_get_freecells_encoding(
         freecells[i] = fcs_freecell_card(*derived, i);
     }
 
-    /* Sort the freecells using selection-sort. */
+    // Sort the freecells using selection-sort.
     for (size_t i = 0; i < num_freecells; ++i)
     {
         size_t min_idx = i;
@@ -225,18 +225,16 @@ static void fc_solve_delta_stater_encode_composite(
         fc_solve_get_column_encoding_composite(self, i, &(cols[i]));
     }
 
-    /*
-     * Move the empty columns to the front, but only within the
-     * entirely_non_orig
-     * That's because the orig columns should be preserved in their own
-     * place.
-     * */
+    // Move the empty columns to the front, but only within the
+    // entirely_non_orig
+    // That's because the orig columns should be preserved in their own
+    // place.
     fc_solve_delta__promote_empty_cols(num_columns, cols_indexes, cols);
 
     int new_non_orig_cols_indexes[MAX_NUM_STACKS];
     int new_non_orig_cols_indexes_count = 0;
 
-    /* Filter the new_non_orig_cols_indexes */
+    // Filter the new_non_orig_cols_indexes
     for (size_t i = 0; i < num_columns; ++i)
     {
         if (cols[cols_indexes[i]].type == COL_TYPE_ENTIRELY_NON_ORIG)
@@ -246,7 +244,7 @@ static void fc_solve_delta_stater_encode_composite(
         }
     }
 
-/* Sort the new_non_orig_cols_indexes_count using insertion-sort. */
+// Sort the new_non_orig_cols_indexes_count using insertion-sort.
 #define COMP_BY(idx)                                                           \
     (fcs_card2char(fcs_col_get_card(fcs_state_get_col((*derived), (idx)), 0)))
 #define ITEM_IDX(idx) (new_non_orig_cols_indexes[idx])
@@ -289,7 +287,7 @@ static void fc_solve_delta_stater_encode_composite(
     }
 }
 
-/* ret must be an empty state. */
+// ret must be an empty state.
 static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     rin_bit_reader *const bit_r, fcs_state *const ret)
 {
@@ -302,7 +300,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
     const_SLOT(bits_per_orig_cards_in_column, self);
 
     int foundations[4] = {14, 14, 14, 14};
-    /* Read the Freecells. */
+    // Read the Freecells.
 
 #if MAX_NUM_FREECELLS > 0
     const_SLOT(num_freecells, self);

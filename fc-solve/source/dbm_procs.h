@@ -5,9 +5,8 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * dbm_procs.h - common procedures for dbm_solver.c and depth_dbm_solver.c.
- */
+
+// dbm_procs.h - common procedures for dbm_solver.c and depth_dbm_solver.c.
 #pragma once
 
 #include "dbm_move_to_string.h"
@@ -104,7 +103,7 @@ static inline void pre_cache_offload_and_destroy(fcs_pre_cache *const pre_cache,
     fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
     cache_populate_from_pre_cache(cache, pre_cache);
 
-    /* Now reset the pre_cache. */
+    // Now reset the pre_cache.
     fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
 }
@@ -162,7 +161,7 @@ static inline bool instance_check_multiple_keys(
 #endif
 )
 {
-    /* Small optimization in case the list is empty. */
+    // Small optimization in case the list is empty.
     if (batch_size == 1 && !lists[0])
     {
         return false;
@@ -236,7 +235,7 @@ static inline void instance_debug_out_state(
     fc_solve_init_locs(&locs);
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
     const_AUTO(local_variant, instance->common.variant);
-    /* Handle item. */
+    // Handle item.
     fc_solve_delta_stater_decode_into_state(
         &global_delta_stater, enc_state->s, &state, indirect_stacks_buffer);
 
@@ -285,10 +284,8 @@ static inline void mark_and_sweep_old_states(
     dict_t *const kaz_tree GCC_UNUSED, const size_t curr_depth GCC_UNUSED)
 {
 #ifndef FCS_NO_DBM_AVL
-    /* Now that we are about to ascend to a new depth, let's
-     * mark-and-sweep
-     * the old states, some of which are no longer of interest.
-     * */
+    // Now that we are about to descend to a new depth, let's
+    // mark-and-sweep the old states, some of which are no longer of interest.
     FILE *const out_fh = instance->common.out_fh;
     TRACE("Start mark-and-sweep cleanup for curr_depth=%lu\n",
         (unsigned long)curr_depth);

@@ -5,15 +5,14 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * depth_dbm_solver.c - a specialised solver that offloads the states'
- * collection to an on-disk DBM database such as Berkeley DB or Google's
- * LevelDB. Has been adapted to be completely in-memory. It makes use of
- * delta_states.c for a very compact storage.
- *
- * In addition, this solver implements the scheme in:
- * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1135
- */
+
+// depth_dbm_solver.c - a specialised solver that offloads the states'
+// collection to an on-disk DBM database such as Berkeley DB or Google's
+// LevelDB. Has been adapted to be completely in-memory. It makes use of
+// delta_states.c for a very compact storage.
+//
+// In addition, this solver implements the scheme in:
+// https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1135
 
 #include "dbm_solver_head.h"
 

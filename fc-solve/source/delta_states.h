@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
- * delta_states.h - header file for common functions to the delta_states
- * functionality.
- */
+
+// delta_states.h - header file for common functions to the delta_states
+// functionality.
 #pragma once
 
 #ifdef __cplusplus
@@ -137,7 +136,7 @@ static inline void fcs_dbm_record_increment_refcount(fcs_dbm_record *const rec)
     fcs_dbm_record_set_refcount(rec, fcs_dbm_record_get_refcount(rec) + 1);
 }
 
-/* Returns the new value so we can tell if it is zero. */
+// Returns the new value so we can tell if it is zero.
 static inline uint8_t fcs_dbm_record_decrement_refcount(
     fcs_dbm_record *const rec)
 {

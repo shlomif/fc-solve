@@ -102,7 +102,6 @@ static void trace_solution(dbm_solver_instance *const instance,
 {
     fprintf(out_fh, "%s\n", "Success!");
     fflush(out_fh);
-/* Now trace the solution */
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_encoded_state_buffer *trace;
     size_t trace_num;

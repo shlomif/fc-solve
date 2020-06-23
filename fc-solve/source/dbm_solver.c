@@ -293,7 +293,7 @@ static bool populate_instance_with_intermediate_input_line(
         s_ptr += 3;
 
         const_AUTO(move, (fcs_fcc_move)hex_digits);
-        /* Apply the move. */
+        // Apply the move.
         stack_i src = (move & 0xF);
         stack_i dest = ((move >> 4) & 0xF);
 
@@ -365,10 +365,8 @@ static bool populate_instance_with_intermediate_input_line(
 #endif
         ++instance->common.num_states_in_collection;
 
-        /* We need to do the round-trip from encoding back
-         * to decoding, because the order can change after
-         * the encoding.
-         * */
+        // We need to do the round-trip from encoding back to decoding, because
+        // the order can change after the encoding.
         fc_solve_delta_stater_decode_into_state(delta, running_key.s,
             &running_state, running_indirect_stacks_buffer);
         FCS__OUTPUT_STATE(
@@ -427,7 +425,7 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
-/* Returns if the process should terminate. */
+// Returns whether the process should terminate.
 static bool handle_and_destroy_instance_solution(
     dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {

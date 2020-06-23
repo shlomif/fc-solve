@@ -52,7 +52,7 @@ static inline void free_thread(dbm_solver_thread *const thread)
     fc_solve_meta_compact_allocator_finish(&(thread->thread_meta_alloc));
 }
 
-/* Returns if the process should terminate. */
+// Returns whether the process should terminate.
 static bool handle_and_destroy_instance_solution(
     dbm_solver_instance *const instance, fcs_delta_stater *const delta)
 {

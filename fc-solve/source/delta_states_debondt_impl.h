@@ -193,7 +193,7 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
             }
             const_AUTO(top_card, fcs_col_get_card(col, 0));
 
-            /* Skip Aces which were already set. */
+            // Skip Aces which were already set.
             if (fcs_card_rank(top_card) != 1)
             {
                 SET_CARD_STATE(top_card, OPT__BAKERS_DOZEN__ORIG_POS);
@@ -204,7 +204,7 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
                 const fcs_card parent_card = fcs_col_get_card(col, pos - 1);
                 const fcs_card this_card = fcs_col_get_card(col, pos);
 
-                /* Skip Aces which were already set. */
+                // Skip Aces which were already set.
                 if (fcs_card_rank(this_card) != 1)
                 {
                     SET_CARD_STATE(
@@ -252,13 +252,11 @@ static void fc_solve_delta_stater_encode_composite(fcs_delta_stater *const self,
         }
     }
 
-    /*
-     * All cards should be determined now - let's encode.
-     *
-     * The foundations have already been encoded.
-     *
-     * Skip encoding the aces, and the kings are encoded with less bits.
-     */
+    // All cards should be determined now - let's encode.
+    //
+    // The foundations have already been encoded.
+    //
+    // Skip encoding the aces, and the kings are encoded with less bits.
     const int top_rank_for_iter = get_top_rank_for_iter(local_variant);
     for (int rank = 2; rank <= top_rank_for_iter; ++rank)
     {
@@ -373,7 +371,7 @@ static void fc_solve_delta_stater_decode(fcs_delta_stater *const self,
         }
     }
 
-    /* Process the kings: */
+    // Process the kings:
     if (IS_BAKERS_DOZEN())
     {
         for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; ++suit_idx)
