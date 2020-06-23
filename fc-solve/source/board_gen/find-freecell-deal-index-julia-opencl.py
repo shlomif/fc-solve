@@ -36,6 +36,8 @@ using OpenCL
 
 device, ctx, queue = cl.create_compute_context()
 
+const bufsize = {bufsize}
+
 const sum_kernel = "
    __kernel void sum(__global unsigned int *r,
                      __global unsigned int *i)
@@ -53,8 +55,8 @@ is_right = false
 mystart = 1
 myints = [{myints}]
 while (! is_right)
-    r = Array{{UInt32}}(UnitRange{{UInt32}}(mystart:mystart+{bufsize}-1))
-    i = zeros(UInt32, {bufsize})
+    r = Array{{UInt32}}(UnitRange{{UInt32}}(mystart:mystart+bufsize-1))
+    i = zeros(UInt32, bufsize)
 
 
     r_buff = cl.Buffer(UInt32, ctx, (:r, :copy), hostbuf=r)
@@ -64,7 +66,7 @@ while (! is_right)
     r = cl.read(queue, r_buff)
     i = cl.read(queue, i_buff)
 
-    for myiterint in 1:{bufsize}
+    for myiterint in 1:bufsize
         if i[myiterint] == {first_int}
             global is_right = true
             rr = r[myiterint]
@@ -82,7 +84,7 @@ while (! is_right)
         end
     end
 
-    global mystart += {bufsize}
+    global mystart += bufsize
     if mystart > {limit}
         break
     end
