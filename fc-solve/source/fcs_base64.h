@@ -1,18 +1,14 @@
-/*
- * This Base64 implementation is adapted from:
- *
- * http://stackoverflow.com/a/6782480/7709
- *
- * */
+// This Base64 implementation is adapted from:
+//
+// http://stackoverflow.com/a/6782480/7709
 
 #pragma once
 
 #include <stdint.h>
 #include "rinutils/rinutils.h"
 
-/* We modified the encoding table to have '_' instead of '/',
- * which interferes with UNIX paths.
- * */
+// We modified the encoding table to have '_' instead of '/',
+// which interferes with UNIX paths.
 
 static const char encoding_table[] = {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H',
     'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W',
@@ -29,9 +25,9 @@ static inline void build_decoding_table(void)
 }
 
 static void base64_encode(const unsigned char *data, const size_t input_length,
-    char *encoded_data, /* Should have enough space, we got rid of
-   malloc()s to avoid memory fragmentation. */
-    size_t *const output_length)
+    // Must have adequate space, we got rid of malloc()s to avoid memory
+    // fragmentation.
+    char *encoded_data, size_t *const output_length)
 {
     *output_length = 4 * ((input_length + 2) / 3);
 

@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2013 Shlomi Fish
-/*
- * depth_multi_queue.h - header file for the depth-based / depth-tracking
- * multi-queue which can handle more than one starting point.
- */
+
+// depth_multi_queue.h - header file for the depth-based / depth-tracking
+// multi-queue which can handle more than one starting point.
 
 #pragma once
 
@@ -24,11 +23,6 @@ typedef struct
     const char *offload_dir_path;
     fcs_queue_stats stats;
     long min_depth, max_depth, max_depth_margin;
-    /*
-     * page_to_write_to, page_for_backup and page_to_read_from always
-     * point to the two "pages" below, but they can be swapped and
-     * page_for_backup may be NULL.
-     */
     fcs_offloading_queue *queues_by_depth;
     long next_queue_id;
 #ifndef FCS_DBM_USE_OFFLOADING_QUEUE

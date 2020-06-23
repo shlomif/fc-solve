@@ -152,11 +152,11 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                 (unsigned long)idx);
 
         case 0: {
-            /* I'm the child. */
+            // I'm the child.
             const_AUTO(w, workers[idx]);
             close(w.parent_to_child_pipe[WRITE_FD]);
             close(w.child_to_parent_pipe[READ_FD]);
-            /* I'm one of the slaves */
+            // I'm one of the workers
             request_type req;
             fcs_state_string state_string;
             get_board__setup_string(state_string);
@@ -179,7 +179,6 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
                     abort();
                 }
             }
-            /* Cleanup */
             freecell_solver_user_free(instance);
             close(w.child_to_parent_pipe[WRITE_FD]);
             close(w.parent_to_child_pipe[READ_FD]);
@@ -187,7 +186,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
 
         default:
-            /* I'm the parent. */
+            // I'm the parent.
             close(workers[idx].parent_to_child_pipe[READ_FD]);
             close(workers[idx].child_to_parent_pipe[WRITE_FD]);
             break;
@@ -196,7 +195,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     freecell_solver_user_free(instance);
 
-/* I'm the master. */
+// I'm the master.
 #ifdef USE_EPOLL
     const int epollfd = epoll_create1(0);
     if (epollfd == -1)
@@ -268,7 +267,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         }
 #else
         fd_set readers = initial_readers;
-        /* I'm the master. */
+        // I'm the master.
         const int select_ret = select(mymax, &readers, NULL, NULL, NULL);
 
         if (select_ret == -1)
@@ -283,8 +282,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
                 if (FD_ISSET(fd, &readers))
                 {
-                    /* FD_ISSET can be set on EOF, so we check if
-                     * read failed. */
+                    // FD_ISSET can be set on EOF, so we check if read failed.
                     transaction(&(workers[idx]), fd, end_board, board_num_step,
                         &next_board_num);
                 }

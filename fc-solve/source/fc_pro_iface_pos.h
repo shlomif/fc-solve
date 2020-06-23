@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
- * fc_pro_iface_pos.h - generate solutions in standard notation, with
- * implicit (and not included) Horne/Raymond prune moves.
- */
+
+// fc_pro_iface_pos.h - generate solutions in standard notation, with
+// implicit (and not included) Horne/Raymond prune moves.
 #pragma once
 
 #ifdef __cplusplus

@@ -11,14 +11,12 @@
 #include "freecell.h"
 #include "meta_move_funcs_helpers.h"
 
-/*
- * Throughout this code the following local variables are used to quickly
- * access the instance's members:
- *
- * LOCAL_STACKS_NUM - the number of stacks in the state
- * LOCAL_FREECELLS_NUM - the number of freecells in the state
- * sequences_are_built_by - the type of sequences of this board.
- * */
+// Throughout this code the following local variables are used to quickly
+// access the instance's members:
+//
+// LOCAL_STACKS_NUM - the number of stacks in the state
+// LOCAL_FREECELLS_NUM - the number of freecells in the state
+// sequences_are_built_by - the type of sequences of this board.
 
 #if MAX_NUM_FREECELLS == 0
 DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
@@ -66,10 +64,8 @@ static inline void sort_derived_states(
         }
     }
 }
-/*
- * This function tries to move stack cards that are present at the
- * top of stacks to the foundations.
- * */
+// This function tries to move stack cards that are present at the
+// top of stacks to the foundations.
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
 {
     tests_define_accessors();
@@ -83,7 +79,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
         {
             continue;
         }
-        /* Get the top card in the stack */
+        // Get the top card in the stack
         const fcs_card card = fcs_col_get_card(col, cards_num - 1);
         for (size_t deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
@@ -92,7 +88,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_top_stack_cards_to_founds)
             {
                 continue;
             }
-            /* We can put it there */
             sfs_check_state_begin();
 
             my_copy_stack(stack_idx);
@@ -143,7 +138,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_founds)
             {
                 continue;
             }
-            /* We can put it there */
             sfs_check_state_begin();
 
             fcs_empty_freecell(new_state_key, fc);
@@ -165,10 +159,9 @@ typedef struct
     int src_idx;
     bool is_col;
 } empty_two_cols_ret;
-/*
- * This function empties two stacks from the new state
- * into freeeclls and empty columns
- */
+
+// This function empties two stacks from the new state into freeeclls and empty
+// columns
 static inline empty_two_cols_ret empty_two_cols_from_new_state(
     const fcs_soft_thread *const soft_thread GCC_UNUSED,
     fcs_kv_state *const kv_ptr_new_state SFS__PASS_MOVE_STACK(
@@ -209,8 +202,8 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
                 }
             }
 
-            /* Find a vacant freecell */
-            for (; dest_fc_idx < LOCAL_FREECELLS_NUM; dest_fc_idx++)
+            // Find a vacant freecell
+            for (; dest_fc_idx < LOCAL_FREECELLS_NUM; ++dest_fc_idx)
             {
                 if (fcs_freecell_is_empty(*new_key, dest_fc_idx))
                 {
@@ -219,7 +212,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
             }
             if (dest_fc_idx == LOCAL_FREECELLS_NUM)
             {
-                /*  Move on to the stacks. */
+                // Move on to the stacks.
                 break;
             }
 
@@ -248,7 +241,7 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
     }
 
     int put_cards_in_col_idx = 0;
-    /* Fill the free stacks with the cards below them */
+    // Fill the free stacks with the cards below them
     while (1)
     {
         while ((*col_num_cards) == 0)
@@ -260,7 +253,6 @@ static inline empty_two_cols_ret empty_two_cols_from_new_state(
             }
         }
 
-        /*  Find a vacant stack */
         put_cards_in_col_idx = find_empty_stack(
             *kv_ptr_new_state, put_cards_in_col_idx, LOCAL_STACKS_NUM);
 
@@ -305,20 +297,13 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 #endif
 
     CALC_POSITIONS_BY_RANK();
-    /* Let's try to put cards in the freecells on top of stacks */
+    // Let's try to put cards in the freecells on top of stacks
 
-    /* Scan the freecells */
     for (stack_i fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
     {
         const fcs_card src_card = fcs_freecell_card(state_key, fc);
 
-        /* If the freecell is not empty and dest_card is its parent
-         * */
-        if (!(
-                /* The Cell should not be empty. */
-                fcs_card_is_valid(src_card) &&
-                /* We cannot put a king anywhere. */
-                (!fcs_card_is_king(src_card))))
+        if (!(fcs_card_is_valid(src_card) && (!fcs_card_is_king(src_card))))
         {
             continue;
         }
@@ -333,15 +318,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
 
             const_AUTO(dest_col, fcs_state_get_col(state_key, ds));
             const int dest_cards_num = fcs_col_len(dest_col);
-            /* Let's check if we can put it there */
+            // Let's check if we can put it there
 
-            /* Check if the destination card is already below a
-             * suitable card */
+            // Check if the destination card is already below a suitable card
             const int_fast32_t next_dc = dc + 1;
-/* If dest_cards_num == next_dc then
- * dest_cards_num - next_dc == 0 <= 0 so the other check
- * cab be skipped.
- * */
+// If dest_cards_num == next_dc then dest_cards_num - next_dc == 0 <= 0 so the
+// other check can be skipped.
 
 // We don't need this check because the positions_by_rank
 // already filters the fcs_is_parent_card check for us.
@@ -359,29 +341,25 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_on_top_of_stacks)
             {
                 continue;
             }
-            /* We can move it */
             sfs_check_state_begin();
 
-            /* Fill the freecells with the top cards */
+            // Fill the freecells with the top cards
             my_copy_stack(ds);
             const int cols_indexes[3] = {(int)ds, -1, -1};
             empty_two_cols_from_new_state(soft_thread,
                 ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
                 (int)(dest_cards_num - dc - 1), 0);
 
-            /* Now put the freecell card on top of the stack */
+            // Now put the freecell card on top of the stack
             fcs_state_push(&new_state_key, (stack_i)ds, src_card);
             fcs_empty_freecell(new_state_key, fc);
             fcs_move_stack_non_seq_push(
                 moves, FCS_MOVE_TYPE_FREECELL_TO_STACK, fc, (stack_i)ds);
 
 #ifdef FLUT
-            /*
-             * This is to preserve the order that the
-             * initial (non-optimized) version of the
-             * function used - for backwards-compatibility
-             * and consistency.
-             * */
+            // This is to preserve the order that the initial (non-optimized)
+            // version of the function used - for backwards-compatibility and
+            // consistency.
             state_context_value =
                 (int)(((stack_i)ds << 16U) | ((255 - (stack_i)dc) << 8U) | fc);
 #endif
@@ -407,23 +385,20 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
     const size_t derived_start_idx = derived_states_list->num_states;
 #endif
 
-    /* Now let's check if a card that is under some other cards can be placed
-     * in the foundations. */
-
+    // Now let's check if a card that is under some other cards can be placed in
+    // the foundations.
     const_AUTO(num_vacant_slots_plus_1, num_vacant_slots + 1);
 
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         var_AUTO(col, fcs_state_get_col(state_key, stack_idx));
         const int cards_num = fcs_col_len(col);
-        /*
-         * We starts from cards_num-2 because the top card is already covered
-         * by move_top_stack_cards_to_founds.
-         *
-         * Some math:
-         * num_vacant_slots >= cards_num - (c + 1)
-         * c >= cards_num - num_vacant_slots - 1
-         * */
+        // We start from cards_num-2 because the top card is already covered
+        // by move_top_stack_cards_to_founds.
+        //
+        // Some math:
+        // num_vacant_slots >= cards_num - (c + 1)
+        // c >= cards_num - num_vacant_slots - 1
         const int c_bottom = max0(cards_num - num_vacant_slots_plus_1);
         for (int c = cards_num - 2; c >= c_bottom; c--)
         {
@@ -437,7 +412,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_non_top_stack_cards_to_founds)
                 {
                     continue;
                 }
-                /* We can move it */
                 sfs_check_state_begin();
                 my_copy_stack(stack_idx);
                 const int cols_indexes[3] = {(int)stack_idx, -1, -1};
@@ -483,10 +457,8 @@ DECLARE_MOVE_FUNCTION(
     const fcs_game_limit num_vacant_slots_plus_1 =
         calc_num_vacant_slots(soft_thread, tests__is_filled_by_any_card()) + 1;
 
-    /*
-     * Now let's try to move a stack card to a parent card which is found
-     * on the same stack.
-     * */
+    // Now let's try to move a stack card to a parent card which is found
+    // on the same stack.
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         var_AUTO(col, fcs_state_get_col(state_key, stack_idx));
@@ -495,25 +467,21 @@ DECLARE_MOVE_FUNCTION(
 
         for (int c = start_dc + 2; c < cards_num; c++)
         {
-            /* Find a card which this card can be put on; */
-
+            // Find a card which this card can be put on
             const fcs_card card = fcs_col_get_card(col, c);
 
-            /* Do not move cards that are already found above a suitable
-             * parent */
+            // Do not move cards that are already found above a suitable parent
             const int below_c = c - 1;
             if (fcs_is_parent_card(card, fcs_col_get_card(col, below_c)))
             {
                 continue;
             }
-/*
- * Some math:
- * (dest_cards_num - next_dc <= num_vacant_slots)
- * dest_cards_num - dc - 1 <= num_vacant_slots
- * dc >= dest_cards_num - num_vacant_slots - 1
- * */
+// Some math:
+// (dest_cards_num - next_dc <= num_vacant_slots)
+// dest_cards_num - dc - 1 <= num_vacant_slots
+// dc >= dest_cards_num - num_vacant_slots - 1
 #define ds stack_idx
-            /* Check if it can be moved to something on the same stack */
+            // Check if it can be moved to a target on the same stack
             for (int dc = start_dc; dc < below_c; dc++)
             {
                 const fcs_card dest_card = fcs_col_get_card(col, dc);
@@ -526,7 +494,6 @@ DECLARE_MOVE_FUNCTION(
                 {
                     continue;
                 }
-                /* We can move it */
                 sfs_check_state_begin();
 
                 my_copy_stack(ds);
