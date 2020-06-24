@@ -22,13 +22,6 @@ typedef void *fcs_states_google_hash_handle;
 
 extern fcs_states_google_hash_handle fc_solve_states_google_hash_new(void);
 
-/*
- * Returns 0 if the key is new and the key/val pair was inserted.
- *      - in that case *existing_key / *existing_val will be set to key
- *      and val respectively.
- * Returns 1 if the key is not new and *existing_key / *existing_val
- * was set to it.
- */
 extern bool fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle hash, void *key, void **existing_key);
 
@@ -46,13 +39,6 @@ typedef void *fcs_columns_google_hash_handle;
 
 extern fcs_columns_google_hash_handle fc_solve_columns_google_hash_new(void);
 
-/*
- * Returns 0 if the key is new and the key/val pair was inserted.
- *      - in that case *existing_key / *existing_val will be set to key
- *      and val respectively.
- * Returns 1 if the key is not new and *existing_key / *existing_val
- * was set to it.
- */
 extern bool fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle hash, void *key, void **existing_key);
 

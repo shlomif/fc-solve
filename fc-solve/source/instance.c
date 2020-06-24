@@ -14,27 +14,24 @@
 #include "preset.h"
 #include "scans.h"
 
-/*
-    General use of this interface:
-    1. fc_solve_alloc_instance()
-    2. Set the parameters of the game
-    3. If you wish to revert, go to step #11.
-    4. fc_solve_init_instance()
-    5. Call fc_solve_solve_instance() with the initial board.
-    6. If it returns FCS_STATE_SUSPEND_PROCESS and you wish to proceed,
-       then increase the iteration limit and call
-       fc_solve_resume_instance().
-    7. Repeat Step #6 zero or more times.
-    8. If the solving was successful you can use the move stacks or the
-       intermediate stacks. (Just don't destroy them in any way).
-    9. Call fc_solve_finish_instance().
-    10. Call fc_solve_free_instance().
-
-    The library functions inside lib.c (a.k.a fcs_user()) give an
-    easier approach for embedding Freecell Solver into your library. The
-    intent of this comment is to document the code, rather than to be
-    a guideline for the end-user.
-*/
+// General use of this interface:
+// 1. fc_solve_alloc_instance()
+// 2. Set the parameters of the game
+// 3. If you wish to revert, go to step #11.
+// 4. fc_solve_init_instance()
+// 5. Call fc_solve_solve_instance() with the initial board.
+// 6. If it returns FCS_STATE_SUSPEND_PROCESS and you wish to proceed,
+//    then increase the iteration limit and call
+//    fc_solve_resume_instance().
+// 7. Repeat Step #6 zero or more times.
+// 8. If the solving was successful you can use the move stacks or the
+//    intermediate stacks. (Just don't destroy them in any way).
+// 9. Call fc_solve_finish_instance().
+// 10. Call fc_solve_free_instance().
+// The library functions inside lib.c (a.k.a fcs_user()) give an
+// easier approach for embedding Freecell Solver into your library. The
+// intent of this comment is to document the code, rather than to be
+// a guideline for the end-user.
 
 static const fcs_default_weights fc_solve_default_befs_weights = {
     .weights = {0.5, 0, 0.3, 0, 0.2, 0}};
@@ -510,17 +507,16 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
     {
         fcs_collectible_state *s1 = instance->final_state;
 
-        /* Retrace the step from the current state to its parents */
+        // Retrace the path from the current state to its parents
         while (FCS_S_PARENT(s1) != NULL)
         {
-            /* Mark the state as part of the non-optimized solution */
+            // Mark the state as part of the non-optimized solution
             FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
 
-            /* Each state->parent_state stack has an implicit CANONIZE
-             * move. */
+            // Each state->parent_state stack has an implicit CANONIZE move.
             fcs_move_stack_push(solution_moves_ptr, canonize_move);
 
-            /* Merge the move stack */
+            // Merge the move stack
             const fcs_move_stack *const stack = FCS_S_MOVES_TO_PARENT(s1);
             const fcs_internal_move *const moves = stack->moves;
             for (long move_idx = (long)stack->num_moves - 1; move_idx >= 0;
@@ -528,12 +524,10 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             {
                 fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
             }
-            /* Duplicate the state to a freshly malloced memory */
 
-            /* Move to the parent state */
             s1 = FCS_S_PARENT(s1);
         }
-        /* There's one more state than there are move stacks */
+        // There's one more state than there are move stacks
         FCS_S_VISITED(s1) |= FCS_VISITED_IN_SOLUTION_PATH;
     }
 }

@@ -76,14 +76,13 @@ extern "C" {
 #include "pqueue.h"
 #include "meta_alloc.h"
 
-/* We need 2 chars per card - one for the column_idx and one
- * for the card_idx.
- *
- * We also need it times 13 for each of the ranks.
- *
- * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
- * (-1,-1) (= end) padding.
- * */
+// We need 2 chars per card - one for the column_idx and one
+// for the card_idx.
+//
+// We also need it times 13 for each of the ranks.
+//
+// We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+// (-1,-1) (= end) padding.
 #define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
 // We don't keep track of kings
@@ -120,10 +119,8 @@ typedef struct fcs_states_linked_list_item_struct
     struct fcs_states_linked_list_item_struct *next;
 } fcs_states_linked_list_item;
 
-/*
- * Declare these structures because they will be used within
- * fc_solve_instance, and they will contain a pointer to it.
- * */
+// Declare these structures because they will be used within
+// fc_solve_instance, and they will contain a pointer to it.
 struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
@@ -161,7 +158,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
 #include "move_funcs_maps.h"
 #endif
 
-/* HT_LOOP == hard threads' loop - macros to abstract it. */
+// HT_LOOP == hard threads' loop - macros to abstract it.
 #ifdef FCS_SINGLE_HARD_THREAD
 
 #define HT_LOOP_START() fcs_hard_thread *const hard_thread = instance;
@@ -174,7 +171,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
     for (; hard_thread < end_hard_thread; ++hard_thread)
 #endif
 
-/* ST_LOOP == soft threads' loop - macros to abstract it. */
+// ST_LOOP == soft threads' loop - macros to abstract it.
 #define ST_LOOP_START()                                                        \
     fcs_soft_thread *const ht_soft_threads =                                   \
         HT_FIELD(hard_thread, soft_threads);                                   \
@@ -287,19 +284,15 @@ struct fc_solve_hard_thread_struct
     struct fc_solve_soft_thread_struct *soft_threads;
 
 #ifndef FCS_SINGLE_HARD_THREAD
-    /*
-     * The hard thread count of how many states he checked himself. The
-     * instance num_checked_states can be confusing because other threads
-     * modify it too.
-     *
-     * Thus, the soft thread switching should be done based on this variable
-     * */
+    // The hard thread count of how many states he checked himself. The
+    // instance num_checked_states can be misleading because other threads
+    // modify it too.
+    //
+    // Thus, the soft thread switching should be done based on this variable
     fcs_iters_int ht__num_checked_states;
 
 #endif
-    /*
-     * The maximal limit for num_checked_states.
-     * */
+    // The maximal limit for num_checked_states.
     fcs_iters_int ht__max_num_checked_states;
 
     // The index for the soft-thread that is currently processed
@@ -314,10 +307,8 @@ struct fc_solve_hard_thread_struct
     fcs_move_stack reusable_move_stack;
 #endif
 
-    /*
-     * This is a buffer used to temporarily store the stacks of the
-     * duplicated state.
-     * */
+    // This is a buffer used to temporarily store the stacks of the
+    // duplicated state.
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     size_t prelude_num_items;
@@ -340,8 +331,6 @@ struct fc_solve_hard_thread_struct
     char *prelude_as_string;
 #endif
 };
-
-/********************************************/
 
 typedef struct
 {
@@ -523,16 +512,14 @@ struct fc_solve_instance_struct
 
     fcs_stats i__stats;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    /*
-     * Limit for the maximal number of checked states.
-     * max_num_checked_states is useful because it can limit the amount of
-     * consumed memory (and time).
-     *
-     * This is the effective number that enables the process to work without
-     * checking if it's zero.
-     *
-     * Normally should be used instead.
-     * */
+    // Limit for the maximal number of checked states.
+    // max_num_checked_states is useful because it can limit the amount of
+    // consumed memory (and time).
+    //
+    // This is the effective number that enables the process to work without
+    // checking if it's zero.
+    //
+    // Normally should be used instead.
     fcs_iters_int effective_max_num_checked_states;
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES

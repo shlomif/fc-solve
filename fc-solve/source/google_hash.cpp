@@ -1,12 +1,10 @@
-/*
- * This file is part of Freecell Solver. It is subject to the license terms in
- * the COPYING.txt file found in the top-level directory of this distribution
- * and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
- * Freecell Solver, including this file, may be copied, modified, propagated,
- * or distributed except according to the terms contained in the COPYING file.
- *
- * Copyright (c) 2010 Shlomi Fish
- */
+// This file is part of Freecell Solver. It is subject to the license terms in
+// the COPYING.txt file found in the top-level directory of this distribution
+// and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
+// Freecell Solver, including this file, may be copied, modified, propagated,
+// or distributed except according to the terms contained in the COPYING file.
+//
+// Copyright (c) 2010 Shlomi Fish
 // google_hash.cpp - module file for Google's dense_hash_map as adapted
 // for Freecell Solver.
 #include "google_hash.h"
@@ -33,12 +31,11 @@ using google::dense_hash_set; // namespace where class lives by default
 using google::sparse_hash_set; // namespace where class lives by default
 #endif
 
-typedef unsigned long int ub4; /* unsigned 4-byte quantities */
+typedef unsigned long int ub4; // unsigned 4+ bytes quantities
 typedef unsigned char ub1;
 
-static inline ub4 perl_hash_function(register const ub1 *s_ptr, /* the key */
-    register const ub4 length /* the length of the key */
-)
+static inline ub4 perl_hash_function(
+    register const ub1 *s_ptr, register const ub4 length)
 {
     register ub4 hash_value_int = 0;
     register const ub1 *s_end = s_ptr + length;
@@ -90,13 +87,11 @@ extern "C" fcs_states_google_hash_handle fc_solve_states_google_hash_new()
     return (fcs_states_google_hash_handle)(ret);
 }
 
-/*
- * Returns 0 if the key is new and the key/val pair was inserted.
- *      - in that case *existing_key / *existing_val will be set to key
- *      and val respectively.
- * Returns 1 if the key is not new and *existing_key / *existing_val
- * was set to it.
- */
+// Returns 0 if the key is new and the key/val pair was inserted.
+//      - in that case *existing_key / *existing_val will be set to key
+//      and val respectively.
+// Returns 1 if the key is not new and *existing_key / *existing_val
+// was set to it.
 extern "C" bool fc_solve_states_google_hash_insert(
     fcs_states_google_hash_handle void_hash, void *key, void **existing_key)
 {
@@ -104,7 +99,7 @@ extern "C" bool fc_solve_states_google_hash_insert(
     std::pair<StatesGoogleHash::iterator, bool> result =
         hash->insert((char *)key);
 
-    /* If an insertion took place. */
+    // If an insertion took place.
     if (result.second)
     {
         *existing_key = NULL;
@@ -184,13 +179,11 @@ extern "C" fcs_columns_google_hash_handle fc_solve_columns_google_hash_new()
     return (fcs_columns_google_hash_handle)(ret);
 }
 
-/*
- * Returns 0 if the key is new and the key/val pair was inserted.
- *      - in that case *existing_key / *existing_val will be set to key
- *      and val respectively.
- * Returns 1 if the key is not new and *existing_key / *existing_val
- * was set to it.
- */
+// Returns 0 if the key is new and the key/val pair was inserted.
+//      - in that case *existing_key / *existing_val will be set to key
+//      and val respectively.
+// Returns 1 if the key is not new and *existing_key / *existing_val
+// was set to it.
 extern "C" bool fc_solve_columns_google_hash_insert(
     fcs_columns_google_hash_handle void_hash, void *key, void **existing_key)
 {
@@ -198,7 +191,7 @@ extern "C" bool fc_solve_columns_google_hash_insert(
     std::pair<ColumnsGoogleHash::iterator, bool> result =
         hash->insert((char *)key);
 
-    /* If an insertion took place. */
+    // If an insertion took place.
     if (result.second)
     {
         *existing_key = NULL;
