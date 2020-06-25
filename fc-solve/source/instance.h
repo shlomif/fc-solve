@@ -621,12 +621,10 @@ struct fc_solve_instance_struct
     // Soft-Threads.
     fcs_moves_order instance_moves_order;
 
-    /*
-     * A counter that determines how many of the hard threads that belong
-     * to this hard thread have already finished. If it becomes
-     * num_hard_threads the instance terminates.
-     * */
-    uint_fast32_t num_hard_threads_finished;
+    // Counts how many of the hard threads that belong
+    // to this instance have already finished. If it becomes
+    // num_hard_threads the instance terminates.
+    uint_fast32_t finished_hard_threads_count;
 
 #ifdef FCS_WITH_MOVES
     // The moves for the optimization scan, as specified by the user.
@@ -645,37 +643,30 @@ struct fc_solve_instance_struct
 #endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
-    /*
-     * The debug_iter_output variables provide a programmer programmable way
-     * to debug the algorithm while it is running. This works well for DFS
-     * and Soft-DFS scans but at present support for BeFS and BFS is not
-     * too good, as its hard to tell which state came from which parent
-     * state.
-     *
-     * debug_iter_output_func is a pointer to the function that performs the
-     * debugging. If NULL, this feature is not used.
-     *
-     * debug_iter_output_context is a user-specified context for it, that
-     * may include data that is not included in the instance structure.
-     *
-     * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
-     * */
+    // The debug_iter_output variables provide a programmable way
+    // to debug the algorithm while it is running. This works well for DFS
+    // and Soft-DFS scans but at present support for BeFS and BFS is not
+    // too good, as it's hard to tell which state came from which parent
+    // state.
+    //
+    // debug_iter_output_func is a pointer to the function that performs the
+    // debugging. If NULL, this feature is not used.
+    //
+    // debug_iter_output_context is a user-specified context for it, that
+    // may include data that is not included in the instance structure.
+    //
+    // This feature is used by the "-s" and "-i" flags of fc-solve-debug.
     instance_debug_iter_output_func debug_iter_output_func;
     void *debug_iter_output_context;
 #endif
 
-    /*
-     * The next ID to allocate for a soft-thread.
-     * */
     fastest_type_for_num_soft_threads__unsigned next_soft_thread_id;
 
-    /* This is the initial state */
+    // This is the initial state
     fcs_state_keyval_pair state_copy;
 
 #ifdef FCS_WITH_MOVES
-    /* This is the final state that the scan recommends to the
-     * interface
-     * */
+    // This is the final state that the scan recommends to the interface
     fcs_collectible_state *final_state;
 
     // A move stack that contains the moves leading to the solution.
@@ -712,7 +703,6 @@ struct fc_solve_instance_struct
 #define DFS_VAR(soft_thread, var) (soft_thread)->method_specific.soft_dfs.var
 #define BEFS_VAR(soft_thread, var)                                             \
     (soft_thread)->method_specific.befs.meth.befs.var
-/* M is Methods-common. */
 #define BEFS_M_VAR(soft_thread, var) (soft_thread)->method_specific.befs.var
 #define BRFS_VAR(soft_thread, var)                                             \
     (soft_thread)->method_specific.befs.meth.brfs.var
@@ -750,7 +740,7 @@ static inline int update_col_cards_under_sequences(
     const int sequences_are_built_by,
 #endif
     const fcs_const_cards_column col,
-    int d /* One less than cards_num of col. */
+    int d // One less than cards_num of col
 )
 {
     fcs_card this_card = fcs_col_get_card(col, d);
@@ -807,8 +797,8 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 extern fcs_soft_thread *fc_solve_new_soft_thread(
     fcs_hard_thread *const hard_thread);
 
-/* This is the commmon code from fc_solve_instance__init_hard_thread() and
- * recycle_hard_thread() */
+// This is the commmon code from fc_solve_instance__init_hard_thread() and
+// recycle_hard_thread()
 static inline void fc_solve_reset_hard_thread(
     fcs_hard_thread *const hard_thread)
 {
@@ -837,12 +827,6 @@ typedef enum
 extern void fc_solve_foreach_soft_thread(fcs_instance *const instance,
     const foreach_st_callback_choice callback_choice, void *const context);
 
-/*
-    This function is the last function that should be called in the
-    sequence of operations on instance, and it is meant for de-allocating
-    whatever memory was allocated by alloc_instance().
-  */
-
 static inline void moves_order__free(fcs_moves_order *moves_order)
 {
 #ifndef FCS_ZERO_FREECELLS_MODE
@@ -858,7 +842,6 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     moves_order->num = 0;
 }
 
-/***********************************************************/
 #define MOVE_FUNC_ARGS                                                         \
     fcs_soft_thread *const soft_thread GCC_UNUSED,                             \
         fcs_kv_state raw_state_raw GCC_UNUSED,                                 \

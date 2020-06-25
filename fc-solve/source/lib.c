@@ -179,7 +179,7 @@ static inline void alloc_instance(
 #ifndef FCS_WITHOUT_ITER_HANDLER
         .debug_iter_output_func = NULL,
 #endif
-        .num_hard_threads_finished = 0,
+        .finished_hard_threads_count = 0,
 /* Make the 1 the default, because otherwise scans will not cooperate
  * with one another. */
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
@@ -828,7 +828,7 @@ static inline void recycle_inst(fcs_instance *const instance)
     instance_free_solution_moves(instance);
 #endif
     instance->i__stats = initial_stats;
-    instance->num_hard_threads_finished = 0;
+    instance->finished_hard_threads_count = 0;
 #ifdef FCS_SINGLE_HARD_THREAD
     recycle_ht(instance);
 #ifdef FCS_WITH_MOVES
@@ -1936,7 +1936,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             if (++(HT_FIELD(hard_thread, num_soft_threads_finished)) ==
                 num_soft_threads)
             {
-                ++instance->num_hard_threads_finished;
+                ++instance->finished_hard_threads_count;
             }
 /*
  * Check if this thread is a complete scan and if so,
@@ -2014,13 +2014,13 @@ static inline fc_solve_solve_process_ret_t resume_instance(
 #define NUM_HARD_THREADS() (instance->num_hard_threads)
 #endif
         /*
-         * instance->num_hard_threads_finished signals to us that
+         * instance->finished_hard_threads_count signals to us that
          * all the incomplete soft threads terminated. It is necessary
          * in case the scan only contains incomplete threads.
          *
          * I.e: 01235 and 01246, where no thread contains all tests.
          * */
-        while (instance->num_hard_threads_finished < NUM_HARD_THREADS())
+        while (instance->finished_hard_threads_count < NUM_HARD_THREADS())
         {
 /*
  * A loop on the hard threads.
@@ -2053,7 +2053,7 @@ static inline fc_solve_solve_process_ret_t resume_instance(
         /*
          * If all the incomplete scans finished, then terminate.
          * */
-        if (instance->num_hard_threads_finished == NUM_HARD_THREADS())
+        if (instance->finished_hard_threads_count == NUM_HARD_THREADS())
         {
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
         }
