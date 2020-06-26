@@ -523,9 +523,9 @@ struct fc_solve_instance_struct
     fcs_iters_int effective_max_num_checked_states;
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-    fcs_int_limit_t effective_max_num_states_in_collection;
+    fcs_iters_int effective_max_num_states_in_collection;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fcs_int_limit_t effective_trim_states_in_collection_from;
+    fcs_iters_int effective_trim_states_in_collection_from;
 #endif
 #endif
     fcs_seq_cards_power_type initial_cards_under_sequences_value;
@@ -805,7 +805,7 @@ static inline void fc_solve_reset_hard_thread(
 #ifndef FCS_SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) = 0;
 #endif
-    HT_FIELD(hard_thread, ht__max_num_checked_states) = FCS_INT_LIMIT_MAX;
+    HT_FIELD(hard_thread, ht__max_num_checked_states) = FCS_ITERS_INT_MAX;
     HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
 

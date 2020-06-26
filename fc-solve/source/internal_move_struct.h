@@ -33,20 +33,18 @@ typedef fcs_move_t fcs_internal_move;
 #endif
 
 #ifdef FCS_USE_COMPACT_MOVE_TOKENS
-#define fcs_int_move_set_src(move, value) (move).src = ((unsigned int)(value));
-#define fcs_int_move_set_dest(move, value)                                     \
-    (move).dest = ((unsigned int)(value));
-#define fcs_int_move_set_type(move, value)                                     \
-    (move).type = ((unsigned int)(value));
+#define fcs_int_move_set_src(move, value) (move).src = ((unsigned int)(value))
+#define fcs_int_move_set_dest(move, value) (move).dest = ((unsigned int)(value))
+#define fcs_int_move_set_type(move, value) (move).type = ((unsigned int)(value))
 #define fcs_int_move_set_num_cards_in_seq(move, value)                         \
-    (move).num_cards_in_seq = ((unsigned int)(value));
+    (move).num_cards_in_seq = ((unsigned int)(value))
 
 #define fcs_int_move_get_src(move) ((move).src)
 #define fcs_int_move_get_dest(move) ((move).dest)
 #define fcs_int_move_get_type(move) ((move).type)
 #define fcs_int_move_get_num_cards_in_seq(move) ((move).num_cards_in_seq)
 
-#else /* Not FCS_USE_COMPACT_MOVE_TOKENS */
+#else
 
 #define fcs_int_move_set_src(move, value)                                      \
     fcs_move_set_src_stack((move), (value))

@@ -21,11 +21,9 @@ extern "C" {
 
 static inline void fcs_free_moves_list(fcs_soft_thread *const soft_thread)
 {
-    /* Free the BeFS data. */
     free(BEFS_M_VAR(soft_thread, moves_list));
     BEFS_M_VAR(soft_thread, moves_list) = NULL;
 
-    /* Free the DFS data. */
     fcs_moves_by_depth_array *const arr =
         &(DFS_VAR(soft_thread, moves_by_depth));
     const_SLOT(num_units, arr);

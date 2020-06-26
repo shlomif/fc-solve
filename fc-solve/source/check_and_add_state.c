@@ -22,7 +22,7 @@ static inline void fc_solve_hash_rehash(hash_table *const hash)
     // Check for overflow.
     if (new_size < old_size)
     {
-        hash->max_num_elems_before_resize = FCS_INT_LIMIT_MAX;
+        hash->max_num_elems_before_resize = SIZE_MAX;
         return;
     }
 

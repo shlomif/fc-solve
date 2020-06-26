@@ -75,8 +75,8 @@ static
 #ifndef FCS_SINGLE_HARD_THREAD
 static inline fcs_soft_thread *new_hard_thread(fcs_instance *const instance)
 {
-    /* Make sure we are not exceeding the maximal number of soft threads
-     * for an instance. */
+    // Make sure we are not exceeding the maximal number of soft threads
+    // for an instance.
     if (instance->next_soft_thread_id == MAX_NUM_SCANS)
     {
         return NULL;
@@ -85,9 +85,8 @@ static inline fcs_soft_thread *new_hard_thread(fcs_instance *const instance)
     instance->hard_threads =
         SREALLOC(instance->hard_threads, instance->num_hard_threads + 1);
 
-    /* Since we SREALLOC()ed the hard_threads, their addresses changed,
-     * so we need to update it.
-     * */
+    // Since we SREALLOC()ed the hard_threads, their addresses changed,
+    // so we need to update them.
     HT_LOOP_START()
     {
         ST_LOOP_START() { soft_thread->hard_thread = hard_thread; }
@@ -134,14 +133,14 @@ static inline void alloc_instance(
         .meta_alloc = meta_alloc,
         .i__stats = initial_stats,
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-        .effective_max_num_checked_states = FCS_INT_LIMIT_MAX,
+        .effective_max_num_checked_states = FCS_ITERS_INT_MAX,
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
         .active_num_states_in_collection = 0,
-        .effective_trim_states_in_collection_from = FCS_INT_LIMIT_MAX,
+        .effective_trim_states_in_collection_from = FCS_ITERS_INT_MAX,
 #endif
-        .effective_max_num_states_in_collection = FCS_INT_LIMIT_MAX,
+        .effective_max_num_states_in_collection = FCS_ITERS_INT_MAX,
 #endif
         .instance_moves_order =
             {
@@ -180,8 +179,6 @@ static inline void alloc_instance(
         .debug_iter_output_func = NULL,
 #endif
         .finished_hard_threads_count = 0,
-/* Make the 1 the default, because otherwise scans will not cooperate
- * with one another. */
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
         .FCS_RUNTIME_CALC_REAL_DEPTH = false,
 #endif
@@ -240,7 +237,6 @@ static inline void alloc_instance(
 #endif
 #endif
 
-/****************************************/
 #ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__init_hard_thread(instance);
 #else
@@ -317,22 +313,16 @@ static inline void set_next_soft_thread(fcs_hard_thread *const hard_thread,
     uint_fast32_t *const st_idx_ptr)
 {
     (*st_idx_ptr) = scan_idx;
-    /*
-     * Calculate a soft thread-wise limit for this hard
-     * thread to run.
-     * */
     HT_FIELD(hard_thread, ht__max_num_checked_states) =
         NUM_CHECKED_STATES + quota;
 }
 
 static inline void init_instance(fcs_instance *const instance)
 {
-    /* Initialize the state packs */
     HT_LOOP_START()
     {
-/* The pointer to instance may change as the flares array get resized
- * so the pointers need to be reassigned to it.
- * */
+// The pointer to instance may change as the flares array get resized
+// so the pointers need to be reassigned to it.
 #ifndef FCS_SINGLE_HARD_THREAD
         hard_thread->instance = instance;
 #else
@@ -359,19 +349,14 @@ static inline void init_instance(fcs_instance *const instance)
 #ifdef FCS_WITH_MOVES
     if (!STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET))
     {
-        /*
-         *
-         * What this code does is convert the bit map of
-         * total_move_funcs_bitmask
-         * to a valid tests order.
-         *
-         * */
+        // What this code does is convert the bit map of
+        // total_move_funcs_bitmask to a valid moves order.
         size_t num_move_funcs = 0;
         fcs_move_func *move_funcs =
             SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
 
         for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
-             bit_idx++, total_move_funcs_bitmask >>= 1)
+             ++bit_idx, total_move_funcs_bitmask >>= 1)
         {
             if ((total_move_funcs_bitmask & 0x1) != 0)
             {
@@ -429,8 +414,8 @@ static inline void init_instance(fcs_instance *const instance)
 static guint fc_solve_glib_hash_stack_hash_function(gconstpointer key)
 {
     guint hash_value_int = 0;
-    /* This hash function was ripped from the Perl source code.
-     * (It is not derived work however). */
+    // This hash function was ripped from the Perl source code.
+    // (It is not derived work however).
     const char *s_ptr = (const char *)key;
     const char *const s_end = s_ptr + fcs_col_len((const fcs_card *)key) + 1;
     while (s_ptr < s_end)
@@ -557,7 +542,6 @@ static inline void start_process_with_board(fcs_instance *const instance,
     instance->initial_non_canonized_state = initial_non_canonized_state;
 #endif
 
-/* Initialize the data structure that will manage the state collection */
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_LIBREDBLACK_TREE)
     instance->tree =
         rbinit(STATE_STORAGE_TREE_COMPARE(), STATE_STORAGE_TREE_CONTEXT());
@@ -582,16 +566,12 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
     instance->hash = fc_solve_states_google_hash_new();
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-/* Do nothing because it is allocated elsewhere. */
+// Do nothing because it is allocated elsewhere.
 #else
 #error FCS_STATE_STORAGE is not defined
 #endif
 
-    /****************************************************/
-
 #ifdef INDIRECT_STACK_STATES
-/* Initialize the data structure that will manage the stack
-   collection */
 #if (FCS_STACK_STORAGE == FCS_STACK_STORAGE_LIBAVL2_TREE)
     instance->stacks_tree =
         fcs_libavl2_stacks_tree_create(cmp_stacks_w_context, NULL, NULL);
@@ -613,10 +593,8 @@ static inline void start_process_with_board(fcs_instance *const instance,
 #endif
 #endif
 
-    /***********************************************/
-
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_DB_FILE)
-    /* Not working - ignore */
+    // Not working; ignore
     db_open(
         NULL, DB_BTREE, O_CREAT | O_RDWR, 0777, NULL, NULL, &(instance->db));
 #endif
@@ -891,10 +869,8 @@ static inline void setup_opt_thread__helper(
     STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 }
 
-/*
-    This function optimizes the solution path using a BFS scan on the
-    states in the solution path.
-*/
+// This function optimizes the solution path using a BFS scan on the
+// states in the solution path.
 #ifdef FCS_SINGLE_HARD_THREAD
 static inline fc_solve_solve_process_ret_t optimize_solution(
     fcs_instance *const instance)
@@ -915,9 +891,8 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
     {
         fc_solve_init_soft_thread(instance, optimization_soft_thread);
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-        /* Copy enable_pruning from the thread that reached the solution,
-         * because otherwise -opt in conjunction with -sp r:tf will fail.
-         * */
+        // Copy enable_pruning from the thread that reached the solution,
+        // because otherwise -opt in conjunction with -sp r:tf will fail.
         optimization_soft_thread->enable_pruning =
             instance->hard_thread.soft_threads[instance->hard_thread.st_idx]
                 .enable_pruning;
@@ -926,9 +901,9 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
     }
 
     setup_opt_thread__helper(instance, optimization_soft_thread);
-    /* Instruct the optimization hard thread to run indefinitely AFA it
-     * is concerned */
-    instance->hard_thread.ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
+    // Instruct the optimization hard thread to run indefinitely as
+    // far as it is concerned
+    instance->hard_thread.ht__max_num_checked_states = FCS_ITERS_INT_MAX;
     return fc_solve_befs_or_bfs_do_solve(optimization_soft_thread);
 }
 #undef soft_thread
@@ -977,7 +952,7 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
     setup_opt_thread__helper(instance, soft_thread);
     /* Instruct the optimization hard thread to run indefinitely AFA it
      * is concerned */
-    optimization_thread->ht__max_num_checked_states = FCS_INT_LIMIT_MAX;
+    optimization_thread->ht__max_num_checked_states = FCS_ITERS_INT_MAX;
     return fc_solve_befs_or_bfs_do_solve(soft_thread);
 }
 #endif
@@ -2571,7 +2546,7 @@ static MYINLINE void user_initialize(fcs_user *const user)
 #endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     user->current_iterations_limit = -1;
-    user->effective_current_iterations_limit = FCS_INT_LIMIT_MAX;
+    user->effective_current_iterations_limit = FCS_ITERS_INT_MAX;
     user->current_soft_iterations_limit = -1;
 #endif
 
@@ -2644,7 +2619,7 @@ void DLLEXPORT freecell_solver_user_limit_iterations_long(
     if (max_iters < 0)
     {
         user->current_iterations_limit = -1;
-        user->effective_current_iterations_limit = FCS_INT_LIMIT_MAX;
+        user->effective_current_iterations_limit = FCS_ITERS_INT_MAX;
     }
     else
     {
@@ -3341,7 +3316,7 @@ static inline bool set_upper_limit(
 
     instance->effective_max_num_checked_states =
         ((mymin < 0)
-                ? FCS_INT_LIMIT_MAX
+                ? FCS_ITERS_INT_MAX
                 : (instance->i__stats.num_checked_states +
                       (fcs_iters_int)mymin -
                       user->iterations_board_started_at.num_checked_states));
@@ -4513,7 +4488,7 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     void *api_instance, fcs_int_limit_t max_num_states)
 {
     active_obj(api_instance)->effective_max_num_states_in_collection =
-        ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
+        ((max_num_states < 0) ? FCS_ITERS_INT_MAX : max_num_states);
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -4530,7 +4505,7 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void *const api_instance GCC_UNUSED, const long max_num_states GCC_UNUSED)
 {
     active_obj(api_instance)->effective_trim_states_in_collection_from =
-        ((max_num_states < 0) ? FCS_INT_LIMIT_MAX : max_num_states);
+        ((max_num_states < 0) ? FCS_ITERS_INT_MAX : max_num_states);
 }
 #endif
 #endif
