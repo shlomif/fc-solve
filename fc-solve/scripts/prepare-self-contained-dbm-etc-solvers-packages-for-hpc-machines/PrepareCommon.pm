@@ -192,15 +192,6 @@ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
             io("$dest_dir/include/freecell-solver/$fn");
     }
 
-    foreach my $fn (
-        'rwlock.c',              'queue.c',
-        'pthread/rwlock_fcfs.h', 'pthread/rwlock_fcfs_queue.h'
-        )
-    {
-        io("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads/$fn") >
-            io("$dest_dir/$fn");
-    }
-
     for my $fn ("prepare_vendu_deal.bash")
     {
         io("$BIN_DIR/$fn") > io("$dest_dir/$fn");
