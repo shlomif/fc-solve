@@ -935,9 +935,8 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
         soft_thread = optimization_thread->soft_threads;
 
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-        /* Copy enable_pruning from the thread that reached the solution,
-         * because otherwise -opt in conjunction with -sp r:tf will fail.
-         * */
+        // Copy enable_pruning from the thread that reached the solution,
+        // because otherwise -opt in conjunction with -sp r:tf will fail.
         soft_thread->enable_pruning =
             old_hard_thread->soft_threads[old_hard_thread->st_idx]
                 .enable_pruning;
@@ -950,8 +949,8 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
     }
 
     setup_opt_thread__helper(instance, soft_thread);
-    /* Instruct the optimization hard thread to run indefinitely AFA it
-     * is concerned */
+    // Instruct the optimization hard thread to run indefinitely as
+    // far as it is concerned.
     optimization_thread->ht__max_num_checked_states = FCS_ITERS_INT_MAX;
     return fc_solve_befs_or_bfs_do_solve(soft_thread);
 }
@@ -1032,11 +1031,9 @@ static inline void free_states_handle_soft_dfs_soft_thread(
     {
         const_AUTO(rand_indexes, soft_dfs_info->derived_states_random_indexes);
 
-        /*
-         * We start from current_state_index instead of current_state_index+1
-         * because that is the next state to be checked - it is referenced
-         * by current_state_index++ instead of ++current_state_index .
-         * */
+        // We start from current_state_index instead of current_state_index+1
+        // because that is the next state to be checked - it is referenced
+        // by current_state_index++ instead of ++current_state_index .
         rating_with_index *dest_rand_index_ptr =
             rand_indexes + soft_dfs_info->current_state_index;
         const rating_with_index *rand_index_ptr = dest_rand_index_ptr;
@@ -1082,10 +1079,8 @@ static bool free_states_should_delete(void *const key, void *const context)
 
 static inline void free_states(fcs_instance *const instance)
 {
-    /* First of all, let's make sure the soft_threads will no longer
-     * traverse to the freed states that are currently dead ends.
-     * */
-
+    // First of all, let's make sure the soft_threads will no longer
+    // traverse to the freed states that are currently dead ends.
     HT_LOOP_START()
     {
         ST_LOOP_START()
@@ -1118,12 +1113,11 @@ static inline void free_states(fcs_instance *const instance)
         }
     }
 
+    // Now let's recycle the states.
 #if (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
-    /* Now let's recycle the states. */
     fc_solve_hash_foreach(
         &(instance->hash), free_states_should_delete, ((void *)instance));
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GOOGLE_DENSE_HASH)
-    /* Now let's recycle the states. */
     fc_solve_states_google_hash_foreach(
         instance->hash, free_states_should_delete, ((void *)instance));
 #endif
@@ -1202,7 +1196,7 @@ static inline fcs_moves_group_kind dfs_run_moves(
     fc_solve_sfs_zerofc_0AB_atomic_all_moves(soft_thread, pass, derived_list);
     ++the_soft_dfs_info->move_func_list_idx;
 #else
-    /* Always do the first test */
+    // Always do the first test
     const_AUTO(local_shuffling_type,
         the_moves_list->groups[the_soft_dfs_info->move_func_list_idx]
             .shuffling_type);
@@ -1213,7 +1207,7 @@ static inline fcs_moves_group_kind dfs_run_moves(
             .move_funcs[the_soft_dfs_info->move_func_idx]
             .f(soft_thread, pass, derived_list);
 
-        /* Move the counter to the next test */
+        // Move the counter to the next test
         if ((++the_soft_dfs_info->move_func_idx) ==
             the_moves_list->groups[the_soft_dfs_info->move_func_list_idx].num)
         {
@@ -1240,15 +1234,9 @@ static inline void dfs_shuffle_states(fcs_soft_thread *const soft_thread,
     {
         rand_array[i].rating_with_index__idx = (int)i;
     }
-    /* If we just conducted the tests for a random group -
-     * randomize. Else - keep those indexes as the unity vector.
-     *
-     * Also, do not randomize if this is a pure soft-DFS scan.
-     *
-     * Also, do not randomize/sort if there's only one derived
-     * state or less, because in that case, there is nothing
-     * to reorder.
-     * */
+    // Do not randomize/sort if there's only one derived
+    // state or less, because in that case, there is nothing
+    // to reorder.
     if (num_states <= 1)
     {
         return;
@@ -1408,25 +1396,25 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
             // be changed
             the_soft_dfs_info = &(DFS_VAR(soft_thread, soft_dfs_info)[DEPTH()]);
             dfs_max_depth = DFS_VAR(soft_thread, dfs_max_depth);
-            /* This too has to be re-synced */
+            // This too has to be re-synced
             derived_list = &the_soft_dfs_info->derived_states_list;
         }
 
         TRACE0("Before current_state_index check");
-        /* All the resultant states in the last test conducted were covered */
+        // All the resultant states in the last test conducted were covered
         if (the_soft_dfs_info->current_state_index == derived_list->num_states)
         {
-            /* Check if we already tried all the tests here. */
+            // Check if we already tried all the tests here.
             if (the_soft_dfs_info->move_func_list_idx == the_moves_list.num)
             {
-                /* Backtrack to the previous depth. */
+                // Backtrack to the previous depth.
                 if (is_a_complete_scan)
                 {
                     FCS_S_VISITED(PTR_STATE) |= FCS_VISITED_ALL_TESTS_DONE;
                     MARK_AS_DEAD_END(PTR_STATE);
                 }
 
-                /* Set it now in case DEPTH() == 0 and we break */
+                // Set it now in case DEPTH() == 0 and we break
                 if (unlikely(--DEPTH() < 0))
                 {
                     break;
@@ -1448,14 +1436,14 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 }
 #endif
 
-                continue; /* Just to make sure depth is not -1 now */
+                continue; // Just to make sure depth is not -1 now
             }
 
             derived_list->num_states = 0;
 
             TRACE0("Before iter_handler");
-            /* If this is the first test, then count the number of unoccupied
-               freecells and stacks and check if we are done. */
+            // If this is the first test, then count the number of unoccupied
+            // freecells and stacks and check if we are done.
             if ((the_soft_dfs_info->move_func_idx == 0) &&
                 (the_soft_dfs_info->move_func_list_idx == 0))
             {
@@ -1489,7 +1477,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                     const fcs_game_limit num_vacant_stacks =
                         count_num_vacant_stacks(
                             LOCAL_STACKS_NUM, &FCS_SCANS_the_state);
-                    /* Check if we have reached the empty state */
+                    // Check if we have reached the empty state
                     if (unlikely((num_vacant_stacks == LOCAL_STACKS_NUM) &&
                                  (num_vacant_freecells == LOCAL_FREECELLS_NUM)))
                     {
@@ -1498,11 +1486,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                         TRACE0("Returning FCS_STATE_WAS_SOLVED");
                         return FCS_STATE_WAS_SOLVED;
                     }
-                    /*
-                        Cache num_vacant_freecells and num_vacant_stacks in
-                       their appropriate stacks, so they won't be calculated
-                       over and over again.
-                      */
+                    // Cache num_vacant_freecells and num_vacant_stacks.
                     soft_thread->num_vacant_freecells = num_vacant_freecells;
                     soft_thread->num_vacant_stacks = num_vacant_stacks;
                     fc_solve__calc_positions_by_rank_data(soft_thread,
@@ -1678,7 +1662,6 @@ static inline void init_dfs(fcs_soft_thread *const soft_thread)
                 add_to_move_funcs_list(&tests_list, &num,
                     tests_order_groups[group_idx].move_funcs,
                     tests_order_groups[group_idx].num);
-                /* TODO : convert to C99 struct initializers. */
                 const_AUTO(tests_list_struct_ptr,
                     &(moves_list_of_lists->groups[moves_list_of_lists->num++]));
 
@@ -1709,11 +1692,8 @@ static inline void init_dfs(fcs_soft_thread *const soft_thread)
 #endif
 }
 
-/*
- * Switch to the next soft thread in the hard thread,
- * since we are going to call continue and this is
- * a while loop
- * */
+// Switch to the next soft thread in the hard thread, since we are going to call
+// continue and this is a while loop
 static inline void switch_to_next_soft_thread(
     fcs_hard_thread *const hard_thread,
     const fastest_type_for_num_soft_threads__unsigned num_soft_threads,
@@ -1797,9 +1777,9 @@ static inline fc_solve_solve_process_ret_t solve(
     }
 }
 
-/* instance__check_exceeded_stats() cannot be an inline function because if
- * it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
- * Linux). */
+// instance__check_exceeded_stats() cannot be an inline function because if
+// it is, the code becomes considerably slower (at least on gcc-5.4.0 on x86-64
+// Linux).
 #ifdef FCS_WITHOUT_MAX_NUM_STATES
 #define instance__check_exceeded_stats(instance) false
 #else
@@ -1827,10 +1807,8 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
     fcs_instance *const instance = hard_thread->instance;
 #endif
     uint_fast32_t *const st_idx_ptr = &(HT_FIELD(hard_thread, st_idx));
-    /*
-     * Again, making sure that not all of the soft_threads in this
-     * hard thread are finished.
-     * */
+    // Again, making sure that not all of the soft_threads in this
+    // hard thread finished.
 
     fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
     const_AUTO(num_soft_threads, HT_FIELD(hard_thread, num_soft_threads));
@@ -1840,9 +1818,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
     while (HT_FIELD(hard_thread, num_soft_threads_finished) < num_soft_threads)
     {
         fcs_soft_thread *const soft_thread = &(soft_threads[*st_idx_ptr]);
-        /*
-         * Move to the next thread if it's already finished
-         * */
+        // Move to the next thread if it's already finished
         if (STRUCT_QUERY_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED))
         {
             switch_to_next_soft_thread(hard_thread, num_soft_threads,
@@ -1901,10 +1877,8 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
                 soft_threads, prelude, prelude_num_items, st_idx_ptr);
         }
 
-        /*
-         * It this thread indicated that the scan was finished,
-         * disable the thread or even stop searching altogether.
-         * */
+        // It this thread indicated that the scan was finished,
+        // disable the thread or even stop searching altogether.
         if (ret == FCS_STATE_IS_NOT_SOLVEABLE)
         {
             STRUCT_TURN_ON_FLAG(soft_thread, FCS_SOFT_THREAD_IS_FINISHED);
@@ -1913,12 +1887,10 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             {
                 ++instance->finished_hard_threads_count;
             }
-/*
- * Check if this thread is a complete scan and if so,
- * terminate the search. Note that if the scans synergy is set,
- * then we may still need to continue running the other threads
- * which may have blocked some positions / states in the graph.
- * */
+// Check if this thread is a complete scan and if so,
+// terminate the search. Note that if the scans synergy is set,
+// then we may still need to continue running the other threads
+// which may have blocked some positions / states in the graph.
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
             if (STRUCT_QUERY_FLAG(
                     soft_thread, FCS_SOFT_THREAD_IS_A_COMPLETE_SCAN) &&
@@ -1929,9 +1901,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
             else
 #endif
             {
-                /*
-                 * Else, make sure ret is something more sensible
-                 * */
+                // Else, make sure ret is something more sensible
                 ret = FCS_STATE_SUSPEND_PROCESS;
             }
         }
@@ -1952,18 +1922,16 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 #undef instance
 #endif
 
-/* Resume a solution process that was stopped in the middle */
+// Resume a solution process that was stopped in the middle
 static inline fc_solve_solve_process_ret_t resume_instance(
     fcs_instance *const instance)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_SUSPEND_PROCESS;
-/*
- * If the optimization thread is defined, it means we are in the
- * optimization phase of the total scan. In that case, just call
- * its scanning function.
- *
- * Else, proceed with the normal total scan.
- * */
+// If the optimization thread is defined, it means we are in the
+// optimization phase of the total scan. In that case, just call
+// its scanning function.
+//
+// Else, proceed with the normal total scan.
 #ifdef FCS_WITH_MOVES
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
@@ -1988,21 +1956,17 @@ static inline fc_solve_solve_process_ret_t resume_instance(
         fcs_hard_thread *hard_thread = instance->current_hard_thread;
 #define NUM_HARD_THREADS() (instance->num_hard_threads)
 #endif
-        /*
-         * instance->finished_hard_threads_count signals to us that
-         * all the incomplete soft threads terminated. It is necessary
-         * in case the scan only contains incomplete threads.
-         *
-         * I.e: 01235 and 01246, where no thread contains all tests.
-         * */
+        // instance->finished_hard_threads_count signals to us that
+        // all the incomplete soft threads terminated. It is necessary
+        // in case the scan only contains incomplete threads.
+        //
+        // I.e: 01235 and 01246, where no thread contains all tests.
         while (instance->finished_hard_threads_count < NUM_HARD_THREADS())
         {
-/*
- * A loop on the hard threads.
- * Note that we do not initialize instance->ht_idx because:
- * 1. It is initialized before the first call to this function.
- * 2. It is reset to zero below.
- * */
+// A loop on the hard threads.
+// Note that we do not initialize instance->ht_idx because:
+// 1. It is initialized before the first call to this function.
+// 2. It is reset to zero below.
 #ifndef FCS_SINGLE_HARD_THREAD
             for (; hard_thread < end_of_hard_threads; ++hard_thread)
 #endif
@@ -2025,9 +1989,7 @@ static inline fc_solve_solve_process_ret_t resume_instance(
         instance->current_hard_thread = hard_thread;
 #endif
 
-        /*
-         * If all the incomplete scans finished, then terminate.
-         * */
+        // If all the incomplete scans finished, then terminate.
         if (instance->finished_hard_threads_count == NUM_HARD_THREADS())
         {
             ret = FCS_STATE_IS_NOT_SOLVEABLE;
@@ -2049,11 +2011,9 @@ static inline fc_solve_solve_process_ret_t resume_instance(
 #undef hard_thread
 #endif
 
-/* A flare is an alternative scan algorithm to be tried. All flares in
- * a single instance are being evaluated and then one picks the shortest
- * solution out of all of them. (see fc-solve/docs/flares-functional-spec.txt )
- * */
-
+// A flare is an alternative scan algorithm to be tried. All flares in
+// a single instance are being evaluated and then one picks the shortest
+// solution out of all of them. (see fc-solve/docs/flares-functional-spec.txt )
 typedef struct
 {
     fcs_instance obj;
@@ -2063,8 +2023,8 @@ typedef struct
 #elif defined(FCS_WITH_MOVES)
 #define SET_flare_ret(flare, val) (val)
 #endif
-    /* Whether the instance is ready to be input with (i.e:
-     * was recycled already.) */
+    // Whether the instance is ready to be input with (i.e: was recycled
+    // already.)
     bool instance_is_ready;
 #ifdef FCS_WITH_FLARES
     char name[30];
@@ -2125,16 +2085,14 @@ typedef struct
     flares_plan_item *plan;
     size_t num_plan_items, current_plan_item_idx;
     char *flares_plan_string;
-    /*
-     * The default flares_plan_compiled is "False", which means that the
-     * flares_plan_string was set and needs to be processed. Once
-     * the compile function is called, it is set to "True" and it is set
-     * to "False" if the flares_plan_string is set to a different value.
-     *
-     * Upon starting to run, one checks if flares_plan_compiled is false
-     * and if so, compiles the flares plan, and sets the flares_plan_compiled
-     * string to true.
-     */
+    // The default flares_plan_compiled is "False", which means that the
+    // flares_plan_string was set and needs to be processed. Once
+    // the compile function is called, it is set to "True" and it is set
+    // to "False" if the flares_plan_string is set to a different value.
+    //
+    // Upon starting to run, one checks if flares_plan_compiled is false
+    // and if so, compiles the flares plan, and sets the flares_plan_compiled
+    // string to true.
     bool flares_plan_compiled;
     bool all_plan_items_finished_so_far;
 #else
@@ -2148,11 +2106,9 @@ typedef struct
 typedef struct
 {
 #ifdef FCS_WITH_NI
-    /*
-     * This is a list of several consecutive instances that are run
-     * one after the other in case the previous ones could not solve
-     * the board
-     * */
+    // This is a list of several consecutive instances that are run
+    // one after the other in case the previous ones could not solve
+    // the board
     fcs_instance_item *current_instance, *instances_list,
         *end_of_instances_list;
 #else
@@ -2495,7 +2451,7 @@ static NI_INLINE void user_next_instance(fcs_user *const user)
     };
 #endif
 
-    /* ret_code and limit are set at user_next_flare(). */
+    // ret_code and limit are set at user_next_flare().
     user_next_flare(user);
 }
 
@@ -2818,9 +2774,9 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
     flare_item *const flares = instance_item->flares;
     const_SLOT(end_of_flares, instance_item);
 
-    /* If the plan string is NULL or empty, then set the plan
-     * to run only the first flare indefinitely. (And then have
-     * an implicit checkpoint for good measure.) */
+    // If the plan string is NULL or empty, then set the plan
+    // to run only the first flare indefinitely. (And then have
+    // an implicit checkpoint for good measure.)
     if ((!instance_item->flares_plan_string) ||
         (!instance_item->flares_plan_string[0]))
     {
@@ -2831,7 +2787,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         instance_item->num_plan_items = 2;
         instance_item->plan =
             SMALLOC(instance_item->plan, instance_item->num_plan_items);
-        /* Set to the first flare. */
+        // Set to the first flare.
         instance_item->plan[0] = create_plan_item(
             FLARES_PLAN_RUN_INDEFINITELY, instance_item->flares, -1);
         instance_item->plan[1] =
@@ -2841,7 +2797,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         continue;
     }
 
-    /* Tough luck - gotta parse the string. ;-) */
+    // Tough luck - gotta parse the string. ;-)
     const char *item_end;
     const char *item_start = instance_item->flares_plan_string;
     if (instance_item->plan)
@@ -2861,7 +2817,7 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
 
         if (string_starts_with(item_start, "Run", cmd_end))
         {
-            /* It's a Run item - handle it. */
+            // It's a Run item - handle it.
             const int_fast32_t count_iters = atoi(++cmd_end);
             const char *at_sign = cmd_end;
             while ((*at_sign) && isdigit(*at_sign))
@@ -2877,11 +2833,8 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
             }
             const char *const after_at_sign = at_sign + 1;
 
-            /*
-             * Position item_end at the end of item (designated by
-             * ",")
-             * or alternatively the end of the string.
-             * */
+            // Position item_end at the end of item (designated by
+            // ",") or alternatively the end of the string.
             if (!((item_end = strchr(after_at_sign, ','))))
             {
                 item_end = strchr(after_at_sign, '\0');
@@ -3015,13 +2968,11 @@ static void user__recycle_instance_item(
 #endif
     {
         recycle_flare(flare);
-        /*
-         * We have to initialize init_num_checked_states to 0 here, because it
-         * may
-         * not get initialized again, and now the num_checked_states of the
-         * instance
-         * is equal to 0.
-         * */
+        // We have to initialize init_num_checked_states to 0 here, because it
+        // may
+        // not get initialized again, and now the num_checked_states of the
+        // instance
+        // is equal to 0.
         user->init_num_checked_states = initial_stats;
 
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -3060,7 +3011,7 @@ static inline fcs_move_t internal_move_to_user_move(
 {
     fcs_move_t user_move;
 
-    /* Convert the internal_move to a user move. */
+    // Convert the internal_move to a user move.
     fcs_move_set_src_stack(user_move, fcs_int_move_get_src(internal_move));
     fcs_move_set_dest_stack(user_move, fcs_int_move_get_dest(internal_move));
     fcs_move_set_type(user_move, fcs_int_move_get_type(internal_move));
@@ -3074,7 +3025,7 @@ static inline fcs_internal_move user_move_to_internal_move(
 {
     fcs_internal_move internal_move;
 
-    /* Convert the internal_move to a user move. */
+    // Convert the internal_move to a user move.
     fcs_int_move_set_src(internal_move, fcs_move_get_src_stack(user_move));
     fcs_int_move_set_dest(internal_move, fcs_move_get_dest_stack(user_move));
     fcs_int_move_set_type(internal_move, fcs_move_get_type(user_move));
@@ -3246,10 +3197,8 @@ static inline bool start_flare(
 #ifdef FCS_WITH_MOVES
     fc_solve_init_locs(&(user->initial_state_locs));
     user->state_locs = user->initial_state_locs;
-    /* running_state and initial_non_canonized_state are
-     * normalized states. So We're duplicating
-     * state to it before user->state is canonized.
-     * */
+    // running_state and initial_non_canonized_state are normalized states. So
+    // We're duplicating state to it before user->state is canonized.
     FCS_STATE__DUP_keyval_pair(user->running_state, user->state);
 #endif
 #if defined(FCS_WITH_FLARES) || !defined(FCS_DISABLE_PATSOLVE)
@@ -3385,17 +3334,16 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         if (instance_item->current_plan_item_idx ==
             instance_item->num_plan_items)
         {
-            /*
-             * If all the plan items finished so far, it means this instance
-             * cannot be reused, because it will always yield a cannot
-             * be found result. So instead of looping infinitely,
-             * move to the next instance, or exit. */
+            // If all the plan items finished so far, it means this instance
+            // cannot be reused, because it will always yield a cannot
+            // be found result. So instead of looping infinitely,
+            // move to the next instance, or exit. */
             if (instance_item->all_plan_items_finished_so_far)
             {
                 user__recycle_instance_item(user, instance_item);
                 BUMP_CURR_INST();
             }
-            /* Otherwise - restart the plan again. */
+            // Otherwise - restart the plan again.
             else
             {
                 instance_item->all_plan_items_finished_so_far = true;
@@ -4250,10 +4198,8 @@ void freecell_solver_user_get_invalid_state_error_into_string(
 
     case FCS_STATE_VALIDITY__MISSING_CARD:
     case FCS_STATE_VALIDITY__EXTRA_CARD: {
-        /*
-         * user->state_validity_card is only valid for these states,
-         * so we should call fc_solve_card_stringify on there only.
-         * */
+        // user->state_validity_card is only valid for these states,
+        // so we should call fc_solve_card_stringify on there only.
         char card_str[4];
 #ifdef FCS_WITH_MOVES
         fc_solve_card_stringify(
@@ -4376,8 +4322,6 @@ double DLLEXPORT __attribute__((pure)) fc_solve_user_INTERNAL_get_befs_weight(
 
 #endif
 
-/* TODO : Add an compile-time option to remove the iteration handler and all
- * related code. */
 #ifndef FCS_WITHOUT_ITER_HANDLER
 void DLLEXPORT freecell_solver_user_set_iter_handler_long(void *api_instance,
     freecell_solver_user_long_iter_handler_t long_iter_handler,

@@ -5,20 +5,17 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * lock.h - macros/functions for locking.
- */
+// lock.h - macros/functions for locking.
 #pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-/*
- * Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
- * to improve CPU utilisations of the various worker threads and possibly
- * overall performance.
- * #define FCS_DBM_USE_RWLOCK 1 */
+// Define FCS_DBM_USE_RWLOCK to use the pthread FCFS RWLock which appears
+// to improve CPU utilisations of the various worker threads and possibly
+// overall performance.
+// #define FCS_DBM_USE_RWLOCK 1
 
 #include "rinutils/rinutils.h"
 
