@@ -14,6 +14,7 @@
 extern "C" {
 #endif
 
+#include "freecell-solver/fcs_back_compat.h"
 #include "gen_ms_boards__rand.h"
 #include "board_gen_lookup1.h"
 
@@ -61,7 +62,12 @@ static inline void get_board_l__without_setup(
     CARD deck[52]; /* deck of 52 unique cards */
 
     /* shuffle cards */
-
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define FCS_BOARD_GEN__SWAP_SUITS 1
+#endif
+#ifdef FCS_BOARD_GEN__SWAP_SUITS
+    CARD black_mask = 4, red_mask = 0;
+#endif
     for (size_t i = 0; i < 52; ++i) /* put unique card in each deck loc. */
     {
         deck[i] = i;
@@ -80,7 +86,29 @@ static inline void get_board_l__without_setup(
         const microsoft_rand_uint j =
             microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;
 #endif
-        card_to_string(&ret[offset_by_i[i]], deck[j]);
+        CARD card = deck[j];
+#ifdef FCS_BOARD_GEN__SWAP_SUITS
+        CARD suit = SUIT(card);
+        if (suit == 0 || suit == 3)
+        {
+            if (black_mask == 4)
+            {
+                black_mask = (suit);
+            }
+            card ^= black_mask;
+        }
+#if 1
+        else
+        {
+            if (red_mask == 4)
+            {
+                red_mask = ((suit == 1) ? (1 ^ 2) : 0);
+            }
+            card ^= red_mask;
+        }
+#endif
+#endif
+        card_to_string(&ret[offset_by_i[i]], card);
         deck[j] = deck[--num_cards_left];
     }
 }
