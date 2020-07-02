@@ -109,6 +109,9 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     const fc_solve_ms_deal_idx_type end_board,
     const fc_solve_ms_deal_idx_type stop_at)
 {
+#ifdef FCS_BOARD_GEN__SWAP_SUITS
+    fcs_init_get_board_strategy(&global_strategy);
+#endif
     size_t num_workers = 3;
     fc_solve_ms_deal_idx_type board_num_step = 1;
     for (; arg < argc; ++arg)

@@ -17,7 +17,7 @@ def main():
                 os.putenv('FCS_SWAP_BLACK', str(FCS_SWAP_BLACK))
                 for FCS_SWAP_RED in range(4):
                     os.putenv('FCS_SWAP_RED', str(FCS_SWAP_RED))
-                    fn = (("FCS_SWAP_COLOR={}--FCS_SWAP_BLACK={}--" +
+                    fn = (("noloadlg--FCS_SWAP_COLOR={}--FCS_SWAP_BLACK={}--" +
                            "FCS_SWAP_RED={}--" +
                            "count_deals={}.report.txt").format(
                             FCS_SWAP_COLOR,
@@ -27,7 +27,7 @@ def main():
                     with open(fn, 'wt') as f:
                         output = subprocess.getoutput(
                                 ('./freecell-solver-multi-thread-solve 1 ' +
-                                 '{} 4000 -l lg').format(count_deals))
+                                 '{} 4000').format(count_deals))
                         print(fn, output, fn)
                         f.write(output)
 

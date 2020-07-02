@@ -70,17 +70,24 @@ typedef struct
 
 static fcs_get_board_strategy_type global_strategy;
 
-static int fcs_int_getenv(const char *name)
+static inline int fcs_int_getenv(const char *name)
 {
     const char *const val = getenv(name);
     return (val ? atoi(val) : 0);
 }
 
-static void fcs_init_get_board_strategy(fcs_get_board_strategy_type *const dest)
+static inline void fcs_init_get_board_strategy(
+    fcs_get_board_strategy_type *const dest)
 {
+#if 1
+    dest->whens[WHICH_COLOR] = FCS_SWAP_LOWER_FIRST;
+    dest->whens[WHICH_BLACK] = FCS_SWAP_ALWAYS;
+    dest->whens[WHICH_RED] = FCS_SWAP_NEVER;
+#else
     dest->whens[WHICH_COLOR] = fcs_int_getenv("FCS_SWAP_COLOR");
     dest->whens[WHICH_BLACK] = fcs_int_getenv("FCS_SWAP_BLACK");
     dest->whens[WHICH_RED] = fcs_int_getenv("FCS_SWAP_RED");
+#endif
 }
 #endif
 
