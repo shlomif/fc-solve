@@ -44,6 +44,46 @@ static inline void get_board__setup_string(char *const ret)
                 "XX XX XX XX XX XX\n");
 }
 
+#ifdef FCS_BREAK_BACKWARD_COMPAT_2
+#define FCS_BOARD_GEN__SWAP_SUITS 1
+#endif
+#ifdef FCS_BOARD_GEN__SWAP_SUITS
+typedef enum
+{
+    FCS_SWAP_NEVER = 0,
+    FCS_SWAP_ALWAYS,
+    FCS_SWAP_LOWER_FIRST,
+    FCS_SWAP_HIGHER_FIRST,
+} fcs_get_board_when_to_swap;
+
+typedef enum
+{
+    WHICH_COLOR = 0,
+    WHICH_BLACK,
+    WHICH_RED,
+} fcs_get_board_which_swapper;
+
+typedef struct
+{
+    fcs_get_board_when_to_swap whens[3];
+} fcs_get_board_strategy_type;
+
+static fcs_get_board_strategy_type global_strategy;
+
+static int fcs_int_getenv(const char *name)
+{
+    const char *const val = getenv(name);
+    return (val ? atoi(val) : 0);
+}
+
+static void fcs_init_get_board_strategy(fcs_get_board_strategy_type *const dest)
+{
+    dest->whens[WHICH_COLOR] = fcs_int_getenv("FCS_SWAP_COLOR");
+    dest->whens[WHICH_BLACK] = fcs_int_getenv("FCS_SWAP_BLACK");
+    dest->whens[WHICH_RED] = fcs_int_getenv("FCS_SWAP_RED");
+}
+#endif
+
 static inline void get_board_l__without_setup(
 #ifdef FCS_DEAL_ONLY_UP_TO_2G
     const fc_solve_ms_deal_idx_type seedx
@@ -62,11 +102,17 @@ static inline void get_board_l__without_setup(
     CARD deck[52]; /* deck of 52 unique cards */
 
     /* shuffle cards */
-#ifdef FCS_BREAK_BACKWARD_COMPAT_2
-#define FCS_BOARD_GEN__SWAP_SUITS 1
-#endif
 #ifdef FCS_BOARD_GEN__SWAP_SUITS
-    CARD black_mask = 4, red_mask = 0;
+    CARD color_mask = (global_strategy.whens[WHICH_COLOR] <= FCS_SWAP_ALWAYS
+                           ? global_strategy.whens[WHICH_COLOR]
+                           : 4);
+    CARD black_mask = (global_strategy.whens[WHICH_BLACK] <= FCS_SWAP_ALWAYS
+                           ? (global_strategy.whens[WHICH_BLACK] * 3)
+                           : 4);
+    CARD red_mask = (global_strategy.whens[WHICH_RED] <= FCS_SWAP_ALWAYS
+                         ? (global_strategy.whens[WHICH_RED] * 3)
+                         : 4);
+    // CARD black_mask = 4, red_mask = 0;
 #endif
     for (size_t i = 0; i < 52; ++i) /* put unique card in each deck loc. */
     {
@@ -89,24 +135,34 @@ static inline void get_board_l__without_setup(
         CARD card = deck[j];
 #ifdef FCS_BOARD_GEN__SWAP_SUITS
         CARD suit = SUIT(card);
+        if (color_mask == 4)
+        {
+            color_mask =
+                ((global_strategy.whens[WHICH_COLOR] ==
+                     FCS_SWAP_HIGHER_FIRST) == (suit == 0 || suit == 3));
+        }
+        card ^= color_mask;
+        suit = SUIT(card);
         if (suit == 0 || suit == 3)
         {
             if (black_mask == 4)
             {
-                black_mask = (suit);
+                black_mask = ((global_strategy.whens[WHICH_BLACK] ==
+                                  FCS_SWAP_HIGHER_FIRST) == (suit == 0)) *
+                             3;
             }
             card ^= black_mask;
         }
-#if 1
         else
         {
             if (red_mask == 4)
             {
-                red_mask = ((suit == 1) ? (1 ^ 2) : 0);
+                red_mask = ((global_strategy.whens[WHICH_RED] ==
+                                FCS_SWAP_HIGHER_FIRST) == (suit == 1)) *
+                           3;
             }
             card ^= red_mask;
         }
-#endif
 #endif
         card_to_string(&ret[offset_by_i[i]], card);
         deck[j] = deck[--num_cards_left];

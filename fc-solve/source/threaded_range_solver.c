@@ -98,6 +98,9 @@ static inline int range_solvers_main(int argc, char *argv[], const int par__arg,
 #else
     arg = par__arg;
 #endif
+#ifdef FCS_BOARD_GEN__SWAP_SUITS
+    fcs_init_get_board_strategy(&global_strategy);
+#endif
     next_board_num = par__next_board_num;
     past_end_board = 1 + par__end_board;
     stop_at = par__stop_at;
