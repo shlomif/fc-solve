@@ -751,8 +751,9 @@ times faster</a> and I naturally find a 24 factor performance decrease
 unacceptable.
 </p>
 
-<h3 id="algo">How does Freecell Solver solve Freecell? Which algorithm
-does it use?</h3>
+{% endcall %}
+
+{% call h3_section(id="algo",title="How does Freecell Solver solve Freecell? Which algorithm does it use?") %}
 
 <p>
 The exact algorithm used by “fc-solve” can be configured using the various
@@ -798,8 +799,9 @@ different deals in different threads or processes.
 
 </ol>
 
-<h3 id="input">How does Freecell Solver read the cards and board layout? What
-kind of input does it accept?</h3>
+{% endcall %}
+
+{% call h3_section(id="input",title="How does Freecell Solver read the cards and board layout? What kind of input does it accept?") %}
 
 <p>
 The API of the solver accepts a textual representation in a certain well-formed
@@ -818,14 +820,15 @@ seems to be the approach taken by the <a href="https://www.youtube.com/watch?v=o
 
 <p>
 Note that Freecell Solver also ships with some programs that generate the
-initial deals of some popular Solitaire implementations, and some
-<a href="links.html#front_ends">implementations of Solitaire</a> provide
-integration with Freecell Solver, that provides it with automated input, and
-also uses its moves output to display the solution.
+initial deals of some popular Solitaire implementations. Moreover, some
+<a href="links.html#front_ends">implementations of Solitaire</a> have
+integrated Freecell Solver, which in turn make them input the board to
+the solver and use its moves' output to display the solution graphically.
 </p>
 
-<h3 id="deal_11982">I found a solution for MS Deal No. 11,982 - should I
-report it to you?</h3>
+{% endcall %}
+
+{% call h3_section(id="deal_11982",title="I found a solution for MS Deal No. 11,982 - should I report it to you?") %}
 
 <p>
 That deal was found to be impossible by most human
