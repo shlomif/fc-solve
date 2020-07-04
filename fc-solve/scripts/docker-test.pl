@@ -20,9 +20,13 @@ $obj->clean_up();
 $obj->run_docker();
 $obj->docker( { cmd => [ 'cp', "../source",  "fcsfed:source", ] } );
 $obj->docker( { cmd => [ 'cp', "../scripts", "fcsfed:scripts", ] } );
+
+my $REMOVED_SANITY_CHECK = <<'EOF';
+curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
+EOF
+
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
-curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
 sudo pip3 install --prefix=/usr freecell_solver
 pip3 install --user freecell_solver
