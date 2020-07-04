@@ -154,7 +154,7 @@ class FC_Solve_UI {
                 err_s = '<ul class="err_s">' + err_s + "</ul>";
             }
             parse_error_control.html(err_s);
-            $(".err_s button.loc").click(function() {
+            $(".err_s button.loc").click(function () {
                 const button = $(this);
                 function _n(cl) {
                     return parseInt(button.find(cl).text(), 10);
@@ -257,7 +257,7 @@ class FC_Solve_UI {
             html += "</ol>\n";
             that._set_html_output(html);
 
-            $("#dynamic_output").on("click", "button.expand_move", function(
+            $("#dynamic_output").on("click", "button.expand_move", function (
                 event,
             ) {
                 const button = $(this);
