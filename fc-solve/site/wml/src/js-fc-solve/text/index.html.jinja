@@ -176,7 +176,7 @@ Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distr
 
 {{ jsfcs.fc_solve_bookmark__form() }}
 
-<h2 id="how_to_use">How to Use</h2>
+{% call h2_section( id="how_to_use", title="How to Use" ) %}
 
 <p>
 Enter a board in <a href="#stdin">the input text area</a> in
@@ -197,13 +197,17 @@ and/or copy the output from <a href="#output">the output box</a>.
 Enjoy!
 </p>
 
-<h3 id="other_games">Solving other, similar, games</h3>
+{% call h3_section( id="other_games", title="Solving other, similar, games" ) %}
 
 <p>
 Select the game from <a href="#game_type_label">the drop-down</a>.
 </p>
 
-<h2 id="technology">Technology</h2>
+{% endcall %}
+
+{% endcall %}
+
+{% call h2_section( id="technology", title="Technology" ) %}
 
 {{ jsfcs.fc_solve_jsfcs__credits__common()}}
 
@@ -240,7 +244,10 @@ attractive font for the button leading to this page.
 </li>
 </ul>
 
-<h2 id="credits">Credits</h2>
+{% endcall %}
+
+{% call h2_section( id="credits", title="Credits" ) %}
+
 <ul>
 
 <li>
@@ -275,5 +282,7 @@ unsolvable deals.
 </li>
 
 </ul>
+
+{% endcall %}
 
 {% endblock %}
