@@ -32,7 +32,7 @@ if $force || test \! -e "$xlsx"; then
 	cat "$tsv" | (perl -nalE 'say join",",@F[0,2]') | csv2chart xlsx -o "$xlsx" --title "fc-solve Benchmark" --width 1200 --height 600
 fi
 ods="$base.ods"
-if $force || test \! -e "$ols"; then
+if $force || test \! -e "$ods"; then
 	ssconvert "$xlsx" "$ods"
 fi
 gnum="$base.gnumeric"
