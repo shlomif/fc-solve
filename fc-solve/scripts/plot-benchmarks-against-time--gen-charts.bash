@@ -1,12 +1,16 @@
 #!/usr/bin/env bash
 set -e -x
 force="${SSCONV_TEST_FORCE:-false}"
+mode="show"
 while test $# -gt 0; do
 	flag="$1"
 	shift
 	arg="$1"
 	shift
 	case "$flag" in
+	--mode)
+		mode="$arg"
+		;;
 	--viewer)
 		SSCONV_TEST_VIEWER="$arg"
 		;;
@@ -52,6 +56,19 @@ else
 	exit 1
 fi
 
+if test "$mode" = "pack"; then
+	repo="ssconvert-svg-dims-bug"
+	mkdir "$repo"
+	(cd "$repo" && git init .)
+	files="$tsv $xlsx"
+	cp $files $0 "$repo"/
+	files="$files $(basename "$0")"
+	(cd "$repo" && git add $files)
+	(cd "$repo" && git ci -m "first version")
+	(cd "$repo" && git remote add origin "https://github.com/shlomif/$repo")
+	(cd "$repo" && git push -u origin master --force)
+	exit 0
+fi
 svg="$base.svg"
 mv -f "$svgtemp0" "$svg"
 viewer="${SSCONV_TEST_VIEWER:-inkscape}"
