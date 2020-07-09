@@ -994,6 +994,13 @@ That put aside, Freecell is a degenerate case where the number of ranks is
 fixed at 13 (ace-to-king).
 </p>
 
+<p>
+One implication of Generalised Freecell's NP-completeness is that one can devise an algorithm
+to solve it, that while possibly requiring exponential time,
+<a href="https://cs.stackexchange.com/questions/110923/can-any-np-complete-problem-be-solved-using-at-most-polynomial-space-but-while">will
+only require polynomial space</a> (e.g by reducing the algorithm to <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem">3SAT</a>).
+</p>
+
 {% endcall %}
 
 {% call h3_section(id="what_is_pysol",title="What is PySol? What is PySol FC? Are they solvers as well?") %}

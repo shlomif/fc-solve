@@ -1334,6 +1334,7 @@ pkg
 
 ==== In: dest/faq.html
 
+3SAT
 5-freecells
 Alfille
 Dominus
