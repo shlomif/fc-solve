@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2009 Shlomi Fish
-/*
- * simpsim.h - header file of the Simple Simon move functions
- * ("solve-for-state"/"sfs").
- */
+
+// simpsim.h - header file of the Simple Simon move functions
+// ("solve-for-state"/"sfs").
 #pragma once
 
 #ifdef __cplusplus
