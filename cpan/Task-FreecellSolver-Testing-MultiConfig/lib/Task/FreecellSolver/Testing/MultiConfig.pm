@@ -28,17 +28,21 @@ the Freecell Solver multi-config test suite.
 
 =pkg Dist::Zilla::PluginBundle::SHLOMIF
 
+=pkg HTML::Spelling::Site::Whitelist
+
+=pkg Perl::Critic::Freenode
+
 =pkg Pod::Weaver::PluginBundle::SHLOMIF
 
 =pkg Pod::Weaver::Section::Support
 
-=pkg HTML::Spelling::Site::Whitelist
-
-=pkg Test::Pod::Coverage
+=pkg Task::FreecellSolver::Testing
 
 =pkg Test::HTML::Recursive::DeprecatedTags
 
-=pkg Task::FreecellSolver::Testing
+=pkg Test::Perl::Critic::Policy
+
+=pkg Test::Pod::Coverage
 
 =head1 AUTHOR
 
