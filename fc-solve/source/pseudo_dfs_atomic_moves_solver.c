@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * pseudo_dfs_atomic_moves_solver.c - a specialised solver that runs a
- * pseudo-DFS scan. See ../docs/distributed-pseudo-dfs-solver-spec.txt
- */
+
+// pseudo_dfs_atomic_moves_solver.c - a specialised solver that runs a
+// pseudo-DFS scan. See ../docs/distributed-pseudo-dfs-solver-spec.txt
 
 // #define FCS_LRU_KEY_IS_STATE
 #include <rinutils/longlong.h>
@@ -67,7 +66,6 @@ typedef struct
     fcs_pseudo_dfs_lru_cache cache;
 
     unsigned long pre_cache_max_count;
-    /* The stack */
     ssize_t stack_depth, max_stack_depth;
     pseudo_dfs_stack_item *stack;
     unsigned long count_num_processed;
@@ -130,7 +128,7 @@ static inline void instance__inspect_new_state(
 
     stack_item->count_next_states = 0;
     stack_item->next_state_idx = 0;
-    /* Now recycle the derived_list */
+    // Now recycle the derived_list
     while (derived_list)
     {
         fc_solve_canonize_state(&(derived_list->state.s)PASS_FREECELLS(
@@ -223,7 +221,7 @@ static inline void instance_run(dbm_solver_instance *const instance)
             const int idx = (stack_item->next_state_idx)++;
             if (idx == stack_item->count_next_states)
             {
-                /* Demote from the current depth. */
+                // Demote from the current depth.
                 for (int i = 0; i < stack_item->count_next_states; i++)
                 {
                     delete_state(&(instance->store), &(instance->cache),
@@ -325,10 +323,8 @@ int main(int argc GCC_UNUSED, char *argv[])
                 &count_num_processed) == 1)
         {
             instance__load_coords_from_fh(&instance, last_line_fh);
-            /*
-             * instance__inspect_new_state increments count_num_processed
-             * so let's set it after loading the coordinates.
-             * */
+            // instance__inspect_new_state increments count_num_processed
+            // so let's set it after loading the coordinates.
             instance.count_num_processed = count_num_processed;
         }
     }

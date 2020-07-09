@@ -128,7 +128,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     STACK_SOURCE_LOOP_START(13)
     fcs_card *start_card_ptr = &fcs_col_get_card(col, col_len - FCS_MAX_RANK);
     size_t suit = 0;
-    /* Check if the top 13 cards are a sequence */
+    // Check if the top 13 cards are a sequence
     for (; suit < FCS_NUM_SUITS; ++suit)
     {
         if (!memcmp(start_card_ptr, simple_simon_rank_seqs[suit],
@@ -139,7 +139,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     }
     if (suit < FCS_NUM_SUITS)
     {
-        /* We can move this sequence up there */
+        // We can move this sequence up there
         sfs_check_state_begin();
 
         my_copy_stack(source_stack_idx);

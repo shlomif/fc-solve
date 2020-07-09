@@ -41,7 +41,7 @@ int main(const int argc, char **const argv)
     {
         output_fh = stdout;
     }
-/* Win32 Does not have those signals */
+// Win32 Does not have those signals
 #ifndef WIN32
     signal(SIGUSR1, command_signal_handler);
     signal(SIGUSR2, select_signal_handler);

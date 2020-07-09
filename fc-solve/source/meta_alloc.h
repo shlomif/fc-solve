@@ -65,7 +65,7 @@ static inline void fc_solve_compact_allocator_extend(
     allocator->max_ptr = new_data + FCS_METAALLOC_ALLOCED_SIZE;
 }
 
-/* To be called after the meta_alloc was set. */
+// Call this after allocator->meta was initialized
 static inline void fc_solve_compact_allocator_init_helper(
     compact_allocator *const allocator)
 {
@@ -90,7 +90,7 @@ extern void fc_solve_compact_allocator_init(
 static inline void *fcs_compact_alloc_ptr(
     compact_allocator *const allocator, const size_t how_much_proto)
 {
-    /* Round ptr to the next pointer boundary */
+    // Round ptr to the next pointer boundar
     const size_t how_much =
         how_much_proto +
         ((sizeof(char *) - ((how_much_proto) & (sizeof(char *) - 1))) &

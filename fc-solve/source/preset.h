@@ -36,7 +36,7 @@ extern fc_solve_preset_ret_code_t fc_solve_get_preset_by_name(
 
 #define fcs_duplicate_preset(d, s) ((d) = (s))
 
-#endif /* FCS_FREECELL_ONLY */
+#endif // FCS_FREECELL_ONLY
 
 #ifdef __cplusplus
 }

@@ -5,9 +5,7 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
- * pruner-main.c : pruning solver.
- */
+// pruner-main.c : pruning solver.
 #include "cl_callback.h"
 #include "iter_handler_base.h"
 
@@ -29,7 +27,7 @@ static void my_iter_handler(void *const user_instance GCC_UNUSED,
             ptr_state FC_SOLVE__PASS_PARSABLE(true),
             false FC_SOLVE__PASS_T(true));
         printf("%s\n---------------\n\n\n", state_string);
-        /* Now pass it to a secondary user_instance prune it. */
+        // Now pass it to a secondary user_instance prune it.
         void *const pruner = freecell_solver_user_alloc();
 #ifndef HARD_CODED_NUM_FREECELLS
         freecell_solver_user_set_num_freecells(pruner, 2);

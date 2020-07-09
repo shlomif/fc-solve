@@ -238,10 +238,9 @@ static inline void fcs_offloading_queue_page__read_next_from_disk(
     fclose(f);
 #endif
 
-    /* We need to set this limit because it's a read-only page that we
-     * retrieve from the disk and otherwise ->can_extract() will return
-     * false for most items.
-     * */
+    // We need to set this limit because it's a read-only page that we
+    // retrieve from the disk and otherwise ->can_extract() will return
+    // false for most items.
     page->write_to_idx = NUM_ITEMS_PER_PAGE;
 
     unlink(page_filename);
@@ -270,11 +269,9 @@ typedef struct
     const char *offload_dir_path;
     fcs_queue_stats stats;
     long id;
-    /*
-     * page_idx_to_write_to, page_idx_for_backup and page_idx_to_read_from
-     * always point to the two "pages" below, but they can be swapped and
-     * page_idx_for_backup may be NULL.
-     */
+    // page_idx_to_write_to, page_idx_for_backup and page_idx_to_read_from
+    // always point to the two "pages" below, but they can be swapped and
+    // page_idx_for_backup may be NULL.
     int_fast32_t page_idx_to_write_to, page_idx_for_backup,
         page_idx_to_read_from;
     off_q_page pages[2];
@@ -343,11 +340,10 @@ static inline bool fcs_offloading_queue__extract(
     if (!fcs_offloading_queue_page__can_extract(
             queue->pages + queue->page_idx_to_read_from))
     {
-        /* Cannot really happen due to the num_items_in_queue check.
-         *
-         * if (queue->_page_idx_to_read_from->page_index ==
-         *     queue->_page_idx_to_write_to->page_index)
-         */
+        // Cannot really happen due to the num_items_in_queue check.
+        //
+        // if (queue->_page_idx_to_read_from->page_index ==
+        //     queue->_page_idx_to_write_to->page_index)
         if (queue->pages[queue->page_idx_to_read_from].page_index + 1 ==
             queue->pages[queue->page_idx_to_write_to].page_index)
         {

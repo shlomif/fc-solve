@@ -5,10 +5,8 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * pseudo_dfs_cache.h - contains the implementation of the cache for
- * the pseudo_dfs solver.
- */
+// pseudo_dfs_cache.h - contains the implementation of the cache for
+// the pseudo_dfs solver.
 #pragma once
 
 #ifdef __cplusplus
@@ -27,10 +25,9 @@ typedef fcs_encoded_state_buffer fcs_pdfs_key;
 typedef struct fcs_pdfs_key_info_struct
 {
     fcs_pdfs_key key;
-    /* lower_pri and higher_pri form a doubly linked list.
-     *
-     * pri == priority.
-     * */
+    // lower_pri and higher_pri form a doubly linked list.
+    //
+    // pri == priority.
     struct fcs_pdfs_key_info_struct *lower_pri, *higher_pri;
 } fcs_pdfs_cache_key_info;
 
@@ -93,7 +90,7 @@ static inline bool fcs_pdfs_cache_does_key_exist(
     }
     else
     {
-        /* First - promote this key to the top of the cache. */
+        // First - promote this key to the top of the cache.
         if (existing->higher_pri)
         {
             existing->higher_pri->lower_pri = existing->lower_pri;
@@ -104,7 +101,7 @@ static inline bool fcs_pdfs_cache_does_key_exist(
             else
             {
                 cache->lowest_pri = existing->higher_pri;
-                /* Bug fix: keep the chain intact. */
+                // Bug fix: keep the chain intact.
                 existing->higher_pri->lower_pri = NULL;
             }
             cache->highest_pri->higher_pri = existing;

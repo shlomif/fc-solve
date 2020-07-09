@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2009 Shlomi Fish
-/*
- * scans.h - header file for the scans.c - Best-First-Search and Soft-DFS
- * scans.
- */
+
+// scans.h - header file for the scans.c - Best-First-Search and Soft-DFS
+// scans.
 #pragma once
 
 #ifdef __cplusplus
@@ -80,16 +79,15 @@ static inline void fc_solve__calc_positions_by_rank_data(
         FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
                                GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 
-        /* We need 2 chars per card - one for the column_idx and one
-         * for the card_idx.
-         *
-         * We also need it times 13 for each of the ranks.
-         *
-         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-         * (-1,-1) (= end) padding.             * */
-        /* Populate positions_by_rank by looping over the stacks and
-         * indices looking for the cards and filling them. */
-
+        // We need 2 chars per card - one for the column_idx and one
+        // for the card_idx.
+        //
+        // We also need it times 13 for each of the ranks.
+        //
+        // We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+        // (-1,-1) (= end) padding.
+        // Populate positions_by_rank by looping over the stacks and
+        // indices looking for the cards and filling them.
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
             const_AUTO(dest_col, fcs_state_get_col(state_key, ds));

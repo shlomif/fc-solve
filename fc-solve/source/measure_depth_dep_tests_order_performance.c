@@ -67,7 +67,6 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     const fc_solve_ms_deal_idx_type end_board,
     const fc_solve_ms_deal_idx_type stop_at GCC_UNUSED)
 {
-    /* char buffer[2048]; */
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     fcs_int_limit_t iters_limit = 100000;
 #endif

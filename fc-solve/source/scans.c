@@ -16,7 +16,7 @@
 
 #include "scans_impl.h"
 
-/* GCC does not handle inline functions as well as macros. */
+// GCC does not handle inline functions as well as macros.
 #define kv_calc_depth(ptr_state)                                               \
     calc_depth(FCS_STATE_kv_to_collectible(ptr_state))
 
@@ -71,7 +71,7 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
         }
         else
         {
-            /* A new state. */
+            // A new state.
             if (cache->recycle_bin)
             {
                 new_cache_state = cache->recycle_bin;
@@ -167,23 +167,22 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
                 (*next_move)PASS_FREECELLS(LOCAL_FREECELLS_NUM)
                     PASS_STACKS(LOCAL_STACKS_NUM));
         }
-        /* The state->parent_state moves stack has an implicit canonize
-         * suffix move. */
+        // The state->parent_state moves stack has an implicit canonize
+        // suffix move.
         fc_solve_canonize_state(pass_key PASS_FREECELLS(LOCAL_FREECELLS_NUM)
                 PASS_STACKS(LOCAL_STACKS_NUM));
 
-        /* Promote new_cache_state to the head of the priority list. */
+        // Promote new_cache_state to the head of the priority list.
         if (!cache->lowest_pri)
         {
-            /* It's the only state. */
+            // It's the only state.
             cache->lowest_pri = new_cache_state;
             cache->highest_pri = new_cache_state;
         }
         else
         {
-            /* First remove the state from its place in the doubly-linked
-             * list by linking its neighbours together.
-             * */
+            // First remove the state from its place in the doubly-linked
+            // list by linking its neighbours together.
             if (new_cache_state->higher_pri)
             {
                 new_cache_state->higher_pri->lower_pri =
@@ -195,13 +194,13 @@ fcs_state *fc_solve_lookup_state_key_from_val(fcs_instance *const instance,
                 new_cache_state->lower_pri->higher_pri =
                     new_cache_state->higher_pri;
             }
-            /* Bug fix: make sure that ->lowest_pri is always valid. */
+            // Bug fix: make sure that ->lowest_pri is always valid.
             else if (new_cache_state->higher_pri)
             {
                 cache->lowest_pri = new_cache_state->higher_pri;
             }
 
-            /* Now promote it to be the highest. */
+            // Now promote it to be the highest.
             cache->highest_pri->higher_pri = new_cache_state;
             new_cache_state->lower_pri = cache->highest_pri;
             new_cache_state->higher_pri = NULL;
@@ -265,8 +264,8 @@ static inline void fc_solve_initialize_bfs_queue(
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
 
-    /* Initialize the BFS queue. We have one dummy element at the beginning
-       in order to make operations simpler. */
+    // Initialize the BFS queue. We have one dummy element at the beginning
+    // in order to make operations simpler.
     my_brfs_queue = NEW_BRFS_QUEUE_ITEM();
     my_brfs_queue_last_item = my_brfs_queue->next = NEW_BRFS_QUEUE_ITEM();
     my_brfs_queue_last_item->next = NULL;
@@ -278,7 +277,7 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
     if (soft_thread->is_befs)
     {
 #define WEIGHTING(soft_thread) (&(BEFS_VAR(soft_thread, weighting)))
-        /* Initialize the priotity queue of the BeFS scan */
+        // Initialize the priority queue of the BeFS scan
         fc_solve_pq_init(&(BEFS_VAR(soft_thread, pqueue)));
         fc_solve_initialize_befs_rater(soft_thread, WEIGHTING(soft_thread));
     }
@@ -342,7 +341,7 @@ static inline void befs__insert_derived_states(
         }
         else
         {
-            /* Enqueue the new state. */
+            // Enqueue the new state.
             fcs_states_linked_list_item *last_item_next;
 
             if (my_brfs_recycle_bin)
@@ -562,7 +561,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         fcs_collectible_state *new_ptr_state;
         if (is_befs)
         {
-            /* It is an BeFS scan */
+            // It is an BeFS scan
             fc_solve_pq_pop(pqueue, &(new_ptr_state));
         }
         else
@@ -595,10 +594,8 @@ my_return_label:
     return error_code;
 }
 
-/*
- * These functions are used by the move functions in freecell.c and
- * simpsim.c.
- * */
+// These functions are used by the move functions in freecell.c and
+// simpsim.c.
 int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
     fcs_kv_state *const out_new_state_out,
     fcs_kv_state raw_state_raw SFS__PASS_MOVE_STACK(
@@ -625,25 +622,24 @@ int fc_solve_sfs_check_state_begin(fcs_hard_thread *const hard_thread,
 #ifdef FCS_RCS_STATES
 #define INFO_STATE_PTR(kv_ptr) ((kv_ptr)->val)
 #else
-/* TODO : That's very hacky - get rid of it. */
+// TODO : That's very hacky - get rid of it.
 #define INFO_STATE_PTR(kv_ptr) ((fcs_state_keyval_pair *)((kv_ptr)->key))
 #endif
-    /* Some BeFS and BFS parameters that need to be initialized in
-     * the derived state.
-     * */
+    // Some BeFS and BFS parameters that need to be initialized in
+    // the derived state.
     FCS_S_PARENT(raw_ptr_new_state) = INFO_STATE_PTR(&raw_state_raw);
 #ifdef FCS_WITH_MOVES
     FCS_S_MOVES_TO_PARENT(raw_ptr_new_state) = moves;
 #endif
-/* Make sure depth is consistent with the game graph.
- * I.e: the depth of every newly discovered state is derived from
- * the state from which it was discovered. */
+// Make sure depth is consistent with the game graph.
+// I.e: the depth of every newly discovered state is derived from
+// the state from which it was discovered.
 #ifdef FCS_WITH_DEPTH_FIELD
     (FCS_S_DEPTH(raw_ptr_new_state))++;
 #endif
-    /* Mark this state as a state that was not yet visited */
+    // Mark this state as a state that was not yet visited
     FCS_S_VISITED(raw_ptr_new_state) = 0;
-    /* It's a newly created state which does not have children yet. */
+    // It's a newly created state which does not have children yet.
     FCS_S_NUM_ACTIVE_CHILDREN(raw_ptr_new_state) = 0;
     memset(&(FCS_S_SCAN_VISITED(raw_ptr_new_state)), '\0',
         sizeof(FCS_S_SCAN_VISITED(raw_ptr_new_state)));
@@ -694,12 +690,11 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
             calc_real_depth, FCS_STATE_kv_to_collectible(&existing_state));
 #endif
 
-/* Re-parent the existing state to this one.
- *
- * What it means is that if the depth of the state if it
- * can be reached from this one is lower than what it
- * already have, then re-assign its parent to this state.
- * */
+// Re-parent the existing state to this one.
+
+// What it means is that if the depth of the state if it
+// can be reached from this one is lower than what it
+// already have, then re-assign its parent to this state.
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
 #define ptr_state (raw_state_raw.val)
         if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL) &&
@@ -707,7 +702,7 @@ extern fcs_collectible_state *fc_solve_sfs_check_state_end(
                 kv_calc_depth(&raw_state_raw) + 1))
         {
 #ifdef FCS_WITH_MOVES
-            /* Make a copy of "moves" because "moves" will be destroyed */
+            // Make a copy of "moves" because "moves" will be destroyed
             existing_state.val->moves_to_parent =
                 fc_solve_move_stack_compact_allocate(hard_thread, moves);
 #endif
