@@ -310,7 +310,7 @@ static inline fcs_kv_state FCS_STATE_keyval_pair_to_kv(
     return (const fcs_kv_state){.key = &(s->s), .val = &(s->info)};
 }
 
-/* Always the same. */
+// Always the same.
 #define fcs_duplicate_kv_state(ptr_dest, ptr_src)                              \
     {                                                                          \
         *((ptr_dest)->key) = *((ptr_src)->key);                                \
@@ -442,10 +442,7 @@ extern int fc_solve_state_compare_equal(const void *, const void *);
 extern int fc_solve_state_compare_with_context(
     const void *, const void *, fcs_compare_context);
 
-/*
- * Convert an entire card to its user representation.
- *
- * */
+// Convert an entire card to its user representation.
 extern void fc_solve_card_stringify(
     const fcs_card card, char *const str PASS_T(const bool t));
 
@@ -455,13 +452,10 @@ extern void fc_solve_card_stringify(
 #define FC_SOLVE_MAP_CHAR(c) (toupper(c))
 #endif
 
-/*
- * This function converts a string containing a suit letter (that is
- * one of H,S,D,C) into its suit ID.
- *
- * The suit letter may come somewhat after the beginning of the string.
- *
- * */
+// This function converts a string containing a suit letter (that is
+// one of H,S,D,C) into its suit ID.
+//
+// The suit letter may come somewhat after the beginning of the string.
 static inline __attribute__((pure)) fcs_card fcs_str2suit(const char *suit)
 {
     while (true)
@@ -484,12 +478,8 @@ static inline __attribute__((pure)) fcs_card fcs_str2suit(const char *suit)
     }
 }
 
-/*
- * This function converts a card number from its user representation
- * (e.g: "A", "K", "9") to its card number that can be used by
- * the program.
- * */
-
+// This function converts a card number from its user representation
+// (e.g: "A", "K", "9") to its card number that can be used by the program.
 static inline __attribute__((pure)) fcs_card fcs_str2rank(const char *string)
 {
     while (1)
@@ -540,10 +530,8 @@ static inline __attribute__((pure)) fcs_card fcs_str2rank(const char *string)
         }
     }
 }
-/*
- * This function converts an entire card from its string representations
- * (e.g: "AH", "KS", "8D"), to a fcs_card data type.
- * */
+// This function converts an entire card from its string representations
+// (e.g: "AH", "KS", "8D"), to a fcs_card data type.
 static inline __attribute__((pure)) fcs_card fc_solve_card_parse_str(
     const char *const str)
 {
@@ -641,7 +629,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
     bool first_line = true;
 
 #define out (out_state->s)
-/* Handle the end of string - shouldn't happen */
+// Handle the end of string - shouldn't happen
 #ifdef FCS_BREAK_BACKWARD_COMPAT_2
 #define HANDLE_EOS()                                                           \
     {                                                                          \
@@ -663,7 +651,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
     size_t s;
     for (s = 0; s < STACKS_NUM__VAL; ++s)
     {
-        /* Move to the next stack */
+        // Move to the next stack
         if (!first_line)
         {
             while ((*str) != '\n')
@@ -752,8 +740,8 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
                 ++str;
                 while (*str == '-')
                     ++str;
-                /* Workaround for fcs_str2rank's willingness
-                 * to designate the string '0' as 10. */
+                // Workaround for fcs_str2rank's willingness to designate the
+                // string '0' as 10.
                 const int c = ((str[0] == '0') ? 0 : fcs_str2rank(str));
                 while ((*str != ' ') && (*str != '\t') && (*str != '\n') &&
                        (*str != '\r'))
@@ -772,8 +760,8 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
             continue;
         }
 
-        /* Handle columns that start with an initial colon, so we can
-         * input states from -p -t mid-play. */
+        // Handle columns that start with an initial colon, so we can input
+        // states from -p -t mid-play.
         if ((*str) == ':')
         {
             ++str;
@@ -782,7 +770,7 @@ static inline bool fc_solve_initial_user_state_to_c_proto(
         var_AUTO(col, fcs_state_get_col(out, s));
         for (int c = 0; c < MAX_NUM_CARDS_IN_A_STACK; ++c)
         {
-            /* Move to the next card */
+            // Move to the next card
             if (c != 0)
             {
                 while (((*str) != ' ') && ((*str) != '\t') &&
@@ -853,7 +841,6 @@ static inline state_validity_ret fc_solve_check_state_validity(
 
     const fcs_state *const state = &(state_pair->s);
 
-    /* Initialize all card_counts to 0 */
     for (int suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
         for (int c = 1; c <= FCS_MAX_RANK; c++)
@@ -862,8 +849,8 @@ static inline state_validity_ret fc_solve_check_state_validity(
         }
     }
 
-    /* Mark the card_counts in the decks */
-    for (size_t suit_idx = 0; suit_idx < (DECKS_NUM__VAL << 2); suit_idx++)
+    // Mark the card_counts in the decks
+    for (size_t suit_idx = 0; suit_idx < (DECKS_NUM__VAL << 2); ++suit_idx)
     {
         for (int c = 1; c <= fcs_foundation_value(*state, suit_idx); c++)
         {
@@ -873,7 +860,7 @@ static inline state_validity_ret fc_solve_check_state_validity(
 
 #if MAX_NUM_FREECELLS > 0
     // Mark the card_counts in the freecells
-    for (size_t f = 0; f < FREECELLS_NUM__VAL; f++)
+    for (size_t f = 0; f < FREECELLS_NUM__VAL; ++f)
     {
         const fcs_card card = fcs_freecell_card(*state, f);
         if (fcs_card_is_valid(card))
@@ -883,8 +870,8 @@ static inline state_validity_ret fc_solve_check_state_validity(
     }
 #endif
 
-    /* Mark the card_counts in the columns */
-    for (size_t s = 0; s < STACKS_NUM__VAL; s++)
+    // Mark the card_counts in the columns
+    for (size_t s = 0; s < STACKS_NUM__VAL; ++s)
     {
         const_AUTO(col, fcs_state_get_col(*state, s));
         const int col_len = fcs_col_len(col);
@@ -896,12 +883,11 @@ static inline state_validity_ret fc_solve_check_state_validity(
                 *misplaced_card = fc_solve_empty_card;
                 return FCS_STATE_VALIDITY__EMPTY_SLOT;
             }
-            card_counts[fcs_card_suit(card)][fcs_card_rank(card)]++;
+            ++card_counts[fcs_card_suit(card)][fcs_card_rank(card)];
         }
     }
 
-    /* Now check if there are extra or missing card_counts */
-
+    // Now check if there are extra or missing card_counts
     for (size_t suit_idx = 0; suit_idx < FCS_NUM_SUITS; suit_idx++)
     {
         for (size_t rank = 1; rank <= FCS_MAX_RANK; rank++)
@@ -997,13 +983,12 @@ static inline int fc_solve_stack_compare_for_canonize(
             return fc_solve_card_compare(s1[1], s2[1]);
         }
     }
-    /*
-     * The reason I do the stack length comparisons after the card-by-card
-     * comparison is to maintain correspondence with
-     * fcs_stack_compare_for_stack_sort, and with the one card comparison
-     * of the other state representation mechanisms.
-     * */
-    /* For some reason this code is faster than s1[0]-s2[0] */
+    // The reason I do the stack length comparisons after the card-by-card
+    // comparison is to maintain correspondence with
+    // fcs_stack_compare_for_stack_sort, and with the one card comparison
+    // of the other state representation mechanisms.
+
+    // For some reason this code is faster than s1[0]-s2[0]
     if (s1[0] < s2[0])
     {
         return -1;
@@ -1026,13 +1011,10 @@ static inline void set_scan_visited(
         (1 << ((scan_id) & ((1 << (FCS_CHAR_BIT_SIZE_LOG2)) - 1)));
 }
 
-/*
- * This macro determines if child can be placed above parent.
- *
- * The variable sequences_are_built_by has to be initialized to
- * the sequences_are_built_by member of the instance.
- *
- * */
+// This macro determines if child can be placed above parent.
+//
+// The variable sequences_are_built_by has to be initialized to
+// the sequences_are_built_by member of the instance.
 
 #ifdef FCS_FREECELL_ONLY
 
