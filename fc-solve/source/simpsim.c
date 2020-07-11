@@ -967,4 +967,4 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-#endif /* #ifdef FCS_DISABLE_SIMPLE_SIMON */
+#endif // #ifdef FCS_DISABLE_SIMPLE_SIMON

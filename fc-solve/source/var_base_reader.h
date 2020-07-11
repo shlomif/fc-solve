@@ -15,7 +15,7 @@ typedef struct
 {
     var_base_int data;
 #ifndef FCS_USE_INT128_FOR_VAR_BASE
-    /* To avoid memory fragmentation, we keep those here and re use them. */
+    // To avoid memory fragmentation, we keep those here and re use them.
     var_base_int data_byte_offset;
     var_base_int r;
 #endif

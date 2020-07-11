@@ -22,19 +22,16 @@ static void main_tests(void **state GCC_UNUSED)
         rin_bit_writer_write(&writer, 4, 5);
         rin_bit_writer_write(&writer, 2, 1);
 
-        /* TEST
-         * */
+        // TEST
         assert_int_equal(buffer[0], (5 | (1 << 4))); // "Write works."
 
         rin_bit_writer_write(&writer, 4, (2 | (3 << 2)));
 
-        /* TEST
-         * */
+        // TEST
         assert_int_equal(
             buffer[0], (5 | (1 << 4) | (2 << 6))); // "Extra write works."
 
-        /* TEST
-         * */
+        // TEST
         assert_int_equal(buffer[1], 3); // "Extra byte write works."
 
         {
@@ -42,16 +39,13 @@ static void main_tests(void **state GCC_UNUSED)
 
             rin_bit_reader_init(&reader, buffer);
 
-            /* TEST
-             * */
+            // TEST
             assert_int_equal(rin_bit_reader_read(&reader, 4), 5); // "reader 1"
 
-            /* TEST
-             * */
+            // TEST
             assert_int_equal(rin_bit_reader_read(&reader, 2), 1); // "reader 2"
 
-            /* TEST
-             * */
+            // TEST
             assert_int_equal(rin_bit_reader_read(&reader, 4),
                 (2 | (3 << 2))); // "reader 3"
         }

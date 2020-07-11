@@ -56,8 +56,7 @@ static void main_tests(void **state GCC_UNUSED)
             }
         }
 
-        /* TEST
-         * */
+        // TEST
         assert_true(all_good); // "All compare_records were successful.");
     }
 }

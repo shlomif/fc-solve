@@ -114,8 +114,9 @@ static void delta_stater1_tests(void **state GCC_UNUSED)
 
         // TEST
         assert_int_equal(enc.enc[0],
-            (6 /* 3 bits of orig len. */ |
-                (0 << 3) /*  4 bits of derived len. */)); // "fc_solve_get_column_encoding_composite()
+            (6             // 3 bits of orig len.
+                | (0 << 3) //  4 bits of derived len.
+                ));        // "fc_solve_get_column_encoding_composite()
         // test 1 - byte
         // 0"
 
@@ -129,11 +130,10 @@ static void delta_stater1_tests(void **state GCC_UNUSED)
 
         // TEST
         assert_int_equal(enc.enc[0],
-            (3 /* 3 bits of orig len. */ |
-                (1 << 3) /*  4 bits of derived len. */ |
-                (SUIT_DS
-                    << (3 +
-                           4)) /* 1 bit of suit. */)); // "fc_solve_get_column_encoding_composite()
+            (3 |                       // 3 bits of orig len.
+                (1 << 3)               //  4 bits of derived len.
+                | (SUIT_DS << (3 + 4)) // 1 bit of suit.
+                )); // "fc_solve_get_column_encoding_composite()
         // test 2 - byte 0"
 
         // TEST*$test_bitcount
@@ -149,18 +149,17 @@ static void delta_stater1_tests(void **state GCC_UNUSED)
         card_9S = make_card(9, 3);
         // TEST
         assert_int_equal(enc.enc[0],
-            (0 /* 3 bits of orig len. */ |
-                (1 << 3) /*  4 bits of derived len. */ |
-                ((card_9S & 0x1)
-                    << (3 +
-                           4)) /* 1 bit of init_card. */)); // "fc_solve_get_column_encoding_composite()
+            (0                                 // 3 bits of orig len.
+                | (1 << 3)                     //  4 bits of derived len.
+                | ((card_9S & 0x1) << (3 + 4)) // 1 bit of init_card.
+                )); // "fc_solve_get_column_encoding_composite()
         // col 5 - byte
         // 0"
 
         // TEST
         assert_int_equal(enc.enc[1],
-            (card_9S >>
-                1) /* Remaining 5 bits of card. */); // "fc_solve_get_column_encoding_composite()
+            (card_9S >> 1) // Remaining 5 bits of card.
+        );                 // "fc_solve_get_column_encoding_composite()
         // col 5 - byte 1"
 
         // TEST*$test_bitcount
@@ -177,14 +176,16 @@ static void delta_stater1_tests(void **state GCC_UNUSED)
         rin_bit_reader_init(&bit_r, enc);
 
         fc_solve_get_freecells_encoding(&delta, &bit_w);
+        const fcs_card card_8D = make_card(8, 2);
+        const fcs_card card_QD = make_card(12, 2);
 
         // TEST
         assert_int_equal((fcs_card)rin_bit_reader_read(&bit_r, 6),
-            make_card(8, 2) /* 8D */); // "First freecell is 8D."
+            card_8D); // "First freecell is 8D."
 
         // TEST
         assert_int_equal((fcs_card)rin_bit_reader_read(&bit_r, 6),
-            make_card(12, 2)); // "Second freecell is QD."
+            card_QD); // "Second freecell is QD."
 
         // TEST
         assert_true(bit_r.current == bit_w.current &&
@@ -406,10 +407,10 @@ static void main_tests__delta1(void **state GCC_UNUSED)
     // TEST
     assert_true((!memcmp(
         first_enc_state.s, second_enc_state.s, sizeof(first_enc_state))));
-    /*
+#if 0
        "Make sure encode_composite avoids permutations of empty columns "
-       "and completely-non-original states.");
-       */
+       "and completely-non-original states."
+#endif
     fc_solve_delta_stater_release(&delta);
 }
 

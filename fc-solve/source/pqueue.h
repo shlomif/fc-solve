@@ -114,9 +114,7 @@ static inline void fc_solve_pq_push(
     // with the comparison operator flipped...
 
     while (
-        (i == PQ_FIRST_ENTRY ? (FC_SOLVE_PQUEUE_MaxRating) /* return biggest
-                                                              possible rating if
-                                                              first element */
+        (i == PQ_FIRST_ENTRY ? (FC_SOLVE_PQUEUE_MaxRating)
                              : (fcs_pq_rating(elems[PQ_PARENT_INDEX(i)]))) < r)
     {
         elems[i] = elems[PQ_PARENT_INDEX(i)];
