@@ -487,8 +487,6 @@ DECLARE_MOVE_FUNCTION(
                 const fcs_card dest_card = fcs_col_get_card(col, dc);
                 const int next_dc = dc + 1;
                 if ((!fcs_is_parent_card(card, dest_card)) ||
-                    /* Corresponding cards - see if it is feasible to move
-                       the source to the destination. */
                     fcs_is_parent_card(
                         fcs_col_get_card(col, next_dc), dest_card))
                 {
@@ -501,7 +499,7 @@ DECLARE_MOVE_FUNCTION(
                 const empty_two_cols_ret last_dest =
                     empty_two_cols_from_new_state(soft_thread,
                         ptr_new_state SFS__PASS_MOVE_STACK(moves), cols_indexes,
-                        /* We're moving one extra card */
+                        // We're moving one extra card
                         cards_num - c, 0);
 
                 empty_two_cols_from_new_state(soft_thread,
@@ -622,9 +620,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
 #endif
 
     CALC_POSITIONS_BY_RANK();
-    /* Now let's try to move a card from one stack to the other     *
-     * Note that it does not involve moving cards lower than king   *
-     * to empty stacks                                              */
+    // Now let's try to move a card from one stack to the other
+    // Note that it does not involve moving cards lower than king
+    // to empty stacks
 
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; ++stack_idx)
     {
@@ -638,10 +636,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
             }
             const int_fast16_t col_num_cards =
                 iter.col_len_minus_1 - iter.seq_end;
-            /* Find a card which this card can be put on; */
+            // Find a card which this card can be put on
 
             const fcs_card card = fcs_col_get_card(iter.col, iter.c);
-            /* Skip if it's a King - nothing to put it on. */
+            // Skip if it's a King - nothing to put it on.
             if (unlikely(fcs_card_is_king(card)))
             {
                 continue;
@@ -674,12 +672,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                     (int)dest_cards_num, col_num_cards);
                 fcs_move_sequence((stack_i)ds, stack_idx,
                     (stack_i)(iter.seq_end - iter.c + 1));
-                /*
-                 * This is to preserve the order that the
-                 * initial (non-optimized) version of the
-                 * function used - for backwards-compatibility
-                 * and consistency.
-                 * */
+                // This is to preserve the order that the initial
+                // (non-optimized) version of the function used - for
+                // backwards-compatibility and consistency.
 #ifndef CLAP
                 state_context_value =
                     (int)((((((stack_idx << 8) | (stack_i)iter.c) << 8) |
@@ -717,7 +712,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
     const size_t max_sequence_len = (size_t)calc_max_sequence_move(
         num_vacant_freecells, num_vacant_stacks - 1);
 
-    /* Now try to move sequences to empty stacks */
+    // Now try to move sequences to empty stacks
     const int ds = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
@@ -734,8 +729,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
             if (iter.seq_end == iter.col_len_minus_1)
             {
                 stack_i c = (stack_i)iter.c;
-                /* One stack is the destination stack, so we have one     *
-                 * less stack in that case                                */
+                // One stack is the destination stack, so we have one less stack
+                // in that case
                 while (
                     (max_sequence_len < (stack_i)iter.col_len - c) && (c > 0))
                 {
@@ -774,7 +769,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 {
                     continue;
                 }
-                /* We can move it */
+                // We can move it
                 const long seq_start = ({
                     const long max_seq_move = (long)calc_max_sequence_move(
                         num_vacant_freecells - freecells_to_fill,
@@ -791,7 +786,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
                 }
                 sfs_check_state_begin();
 
-                /* Fill the freecells with the top cards */
+                // Fill the freecells with the top cards
                 my_copy_stack(stack_idx);
                 const int cols_indexes[3] = {(int)stack_idx, -1, -1};
                 const empty_two_cols_ret empty_ret =
@@ -814,7 +809,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_sequences_to_free_stacks)
 }
 
 #if MAX_NUM_FREECELLS > 0
-/* Let's try to put cards that occupy freecells on an empty stack */
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
 {
     tests_define_accessors();
