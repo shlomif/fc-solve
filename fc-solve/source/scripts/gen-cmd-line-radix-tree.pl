@@ -38,22 +38,22 @@ my @enum = ($UNREC);
 open my $module, "<", "$FindBin::Bin/../cmd_line.c";
 SEARCH_FOR_SWITCH: while ( my $line = <$module> )
 {
-    if ( $line =~ m{\A(\s*)/\* OPT-PARSE-START \*/} )
+    if ( $line =~ m{\A(\s*)// OPT-PARSE-START} )
     {
         while ( $line = <$module> )
         {
-            if ( $line =~ m{\A */\* OPT-PARSE-END \*/} )
+            if ( $line =~ m{\A *// OPT-PARSE-END} )
             {
                 last SEARCH_FOR_SWITCH;
             }
             if ( my ( $opt, $strings ) =
                 $line =~
-                m{\A *case (FCS_OPT_\w+): /\* STRINGS=([^;]+);(?: \*/)? *\n?\z}
-                )
+                m{\A *case (FCS_OPT_\w+): *// STRINGS=([^;]+); *\n?\z} )
             {
-                my @s = split( /\|/, $strings );
-                %strings_to_opts_map =
-                    ( %strings_to_opts_map, ( map { $_ => $opt } @s ), );
+                foreach my $str ( split( /\|/, $strings ) )
+                {
+                    $strings_to_opts_map{$str} = $opt;
+                }
                 push @enum, $opt;
             }
         }

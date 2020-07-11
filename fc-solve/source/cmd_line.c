@@ -266,7 +266,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
         }
 
-        /* OPT-PARSE-START */
+        // OPT-PARSE-START
         const int opt = ({
             const_AUTO(p, (*arg));
             const_AUTO(word, in_word_set(p, strlen(p)));
@@ -279,18 +279,18 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             *last_arg = (int)(arg - &(argv[0]));
             return FCS_CMD_LINE_UNRECOGNIZED_OPTION;
 
-        case FCS_OPT_MAX_DEPTH: /* STRINGS=-md|--max-depth; */
+        case FCS_OPT_MAX_DEPTH: // STRINGS=-md|--max-depth;
             PROCESS_OPT_ARG();
             break;
 
-        case FCS_OPT_MAX_ITERS: /* STRINGS=-mi|--max-iters; */
+        case FCS_OPT_MAX_ITERS: // STRINGS=-mi|--max-iters;
             PROCESS_OPT_ARG();
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
             freecell_solver_user_limit_iterations_long(instance, atol((*arg)));
 #endif
             break;
 
-        case FCS_OPT_TESTS_ORDER: /* STRINGS=-to|--tests-order; */
+        case FCS_OPT_TESTS_ORDER: // STRINGS=-to|--tests-order;
             PROCESS_OPT_ARG();
 
             if (freecell_solver_user_set_depth_tests_order(instance, 0,
@@ -301,7 +301,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             break;
 
-        case FCS_OPT_FREECELLS_NUM: /* STRINGS=--freecells-num; */
+        case FCS_OPT_FREECELLS_NUM: // STRINGS=--freecells-num;
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_FREECELLS
             if (freecell_solver_user_set_num_freecells(instance, atoi(*arg)) !=
@@ -316,7 +316,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_STACKS_NUM: /* STRINGS=--stacks-num; */
+        case FCS_OPT_STACKS_NUM: // STRINGS=--stacks-num;
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_STACKS
             if (freecell_solver_user_set_num_stacks(instance, atoi(*arg)) != 0)
@@ -330,7 +330,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_DECKS_NUM: /* STRINGS=--decks-num; */
+        case FCS_OPT_DECKS_NUM: // STRINGS=--decks-num;
             PROCESS_OPT_ARG();
 #ifndef HARD_CODED_NUM_DECKS
             if (freecell_solver_user_set_num_decks(instance, atoi(*arg)) != 0)
@@ -344,8 +344,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_SEQUENCES_ARE_BUILT_BY: /* STRINGS=--sequences-are-built-by;
-                                              */
+        case FCS_OPT_SEQUENCES_ARE_BUILT_BY: // STRINGS=--sequences-are-built-by;
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
@@ -359,14 +358,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_SEQUENCE_MOVE: /* STRINGS=--sequence-move; */
+        case FCS_OPT_SEQUENCE_MOVE: // STRINGS=--sequence-move;
             PROCESS_OPT_ARG();
             FCS_ON_NOT_FC_ONLY(freecell_solver_user_set_sequence_move(
                 instance, !strcmp((*arg), "unlimited")));
             break;
 
-        case FCS_OPT_EMPTY_STACKS_FILLED_BY: /* STRINGS=--empty-stacks-filled-by;
-                                              */
+        case FCS_OPT_EMPTY_STACKS_FILLED_BY: // STRINGS=--empty-stacks-filled-by;
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
@@ -380,7 +378,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_GAME: /* STRINGS=--game|--preset|-g; */
+        case FCS_OPT_GAME: // STRINGS=--game|--preset|-g;
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
@@ -421,7 +419,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_METHOD: /* STRINGS=-me|--method; */
+        case FCS_OPT_METHOD: // STRINGS=-me|--method;
         {
             int int_method;
             PROCESS_OPT_ARG();
@@ -458,7 +456,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_BEFS_WEIGHTS: /* STRINGS=-asw|--a-star-weights; */
+        case FCS_OPT_BEFS_WEIGHTS: // STRINGS=-asw|--a-star-weights;
         {
             PROCESS_OPT_ARG();
             double befs_weights[FCS_NUM_BEFS_WEIGHTS];
@@ -473,18 +471,18 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_OPTIMIZE_SOLUTION: /* STRINGS=-opt|--optimize-solution; */
+        case FCS_OPT_OPTIMIZE_SOLUTION: // STRINGS=-opt|--optimize-solution;
 #ifdef FCS_WITH_MOVES
             freecell_solver_user_set_solution_optimization(instance, 1);
 #endif
             break;
 
-        case FCS_OPT_SEED: /* STRINGS=-seed; */
+        case FCS_OPT_SEED: // STRINGS=-seed;
             PROCESS_OPT_ARG();
             freecell_solver_user_set_random_seed(instance, atoi(*arg));
             break;
 
-        case FCS_OPT_MAX_STORED_STATES: /* STRINGS=-mss|--max-stored-states; */
+        case FCS_OPT_MAX_STORED_STATES: // STRINGS=-mss|--max-stored-states;
             PROCESS_OPT_ARG();
 
 #ifndef FCS_DISABLE_NUM_STORED_STATES
@@ -493,8 +491,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_TRIM_MAX_STORED_STATES: /* STRINGS=-tmss|--trim-max-stored-states;
-                                              */
+        case FCS_OPT_TRIM_MAX_STORED_STATES: // STRINGS=-tmss|--trim-max-stored-states;
             PROCESS_OPT_ARG();
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
@@ -504,20 +501,20 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_NEXT_INSTANCE: /* STRINGS=-ni|--next-instance; */
+        case FCS_OPT_NEXT_INSTANCE: // STRINGS=-ni|--next-instance;
 #ifdef FCS_WITH_NI
             freecell_solver_user_next_instance(instance);
 #endif
             break;
 
-        case FCS_OPT_NEXT_FLARE: /* STRINGS=-nf|--next-flare; */
+        case FCS_OPT_NEXT_FLARE: // STRINGS=-nf|--next-flare;
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_next_flare(instance);
 #endif
             break;
 
-        case FCS_OPT_NEXT_SOFT_THREAD: /* STRINGS=-nst|--next-soft-thread; */
-        case FCS_OPT_NEXT_HARD_THREAD: /* STRINGS=-nht|--next-hard-thread; */
+        case FCS_OPT_NEXT_SOFT_THREAD: // STRINGS=-nst|--next-soft-thread;
+        case FCS_OPT_NEXT_HARD_THREAD: // STRINGS=-nht|--next-hard-thread;
             if (
 #ifdef FCS_SINGLE_HARD_THREAD
                 freecell_solver_user_next_soft_thread(instance)
@@ -533,57 +530,55 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             break;
 
-        case FCS_OPT_SOFT_THREAD_STEP: /* STRINGS=-step|--soft-thread-step; */
+        case FCS_OPT_SOFT_THREAD_STEP: // STRINGS=-step|--soft-thread-step;
             PROCESS_OPT_ARG();
             freecell_solver_user_set_soft_thread_step(instance, atoi(*arg));
             break;
 
-        case FCS_OPT_REPARENT_STATES: /* STRINGS=--reparent-states; */
+        case FCS_OPT_REPARENT_STATES: // STRINGS=--reparent-states;
 #ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
             freecell_solver_user_set_reparent_states(instance, 1);
 #endif
             break;
 
-        case FCS_OPT_CALC_REAL_DEPTH: /* STRINGS=--calc-real-depth; */
+        case FCS_OPT_CALC_REAL_DEPTH: // STRINGS=--calc-real-depth;
 #ifndef FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE
             freecell_solver_user_set_calc_real_depth(instance, 1);
 #endif
             break;
 
-        case FCS_OPT_ST_NAME: /* STRINGS=--st-name; */
+        case FCS_OPT_ST_NAME: // STRINGS=--st-name;
             PROCESS_OPT_ARG();
             freecell_solver_user_set_soft_thread_name(instance, (*arg));
             break;
 
-        case FCS_OPT_FLARE_NAME: /* STRINGS=--flare-name; */
+        case FCS_OPT_FLARE_NAME: // STRINGS=--flare-name;
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flare_name(instance, (*arg));
 #endif
             break;
 
-        case FCS_OPT_PRELUDE: /* STRINGS=--prelude; */
+        case FCS_OPT_PRELUDE: // STRINGS=--prelude;
             PROCESS_OPT_ARG();
             freecell_solver_user_set_hard_thread_prelude(instance, (*arg));
             break;
 
-        case FCS_OPT_FLARES_PLAN: /* STRINGS=--flares-plan; */
+        case FCS_OPT_FLARES_PLAN: // STRINGS=--flares-plan;
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_plan(instance, (*arg));
 #endif
             break;
 
-        case FCS_OPT_FLARES_ITERS_FACTOR: /* STRINGS=-fif|--flares-iters-factor;
-                                           */
+        case FCS_OPT_FLARES_ITERS_FACTOR: // STRINGS=-fif|--flares-iters-factor;
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
             freecell_solver_user_set_flares_iters_factor(instance, atof(*arg));
 #endif
             break;
 
-        case FCS_OPT_OPTIMIZATION_TESTS_ORDER: /* STRINGS=-opt-to|--optimization-tests-order;
-                                                */
+        case FCS_OPT_OPTIMIZATION_TESTS_ORDER: // STRINGS=-opt-to|--optimization-tests-order;
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_MOVES
             if (freecell_solver_user_set_optimization_scan_tests_order(
@@ -596,7 +591,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_SCANS_SYNERGY: /* STRINGS=--scans-synergy; */
+        case FCS_OPT_SCANS_SYNERGY: // STRINGS=--scans-synergy;
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_HARD_CODE_SCANS_SYNERGY_AS_TRUE
@@ -621,13 +616,13 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_RESET: /* STRINGS=--reset; */
+        case FCS_OPT_RESET: // STRINGS=--reset;
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
             freecell_solver_user_reset(instance);
 #endif
             break;
 
-        case FCS_OPT_READ_FROM_FILE: /* STRINGS=--read-from-file; */
+        case FCS_OPT_READ_FROM_FILE: // STRINGS=--read-from-file;
             PROCESS_OPT_ARG();
 
             if (file_nesting_count != 0)
@@ -720,7 +715,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             }
             break;
 
-        case FCS_OPT_LOAD_CONFIG: /* STRINGS=-l|--load-config; */
+        case FCS_OPT_LOAD_CONFIG: // STRINGS=-l|--load-config;
         {
             PROCESS_OPT_ARG();
 
@@ -745,9 +740,8 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_DEPTH_TESTS_ORDER: /* STRINGS=-dto|--depth-tests-order; */
-        case FCS_OPT_DEPTH_TESTS_ORDER_2: /* STRINGS=-dto2|--depth-tests-order2;
-                                           */
+        case FCS_OPT_DEPTH_TESTS_ORDER:   // STRINGS=-dto|--depth-tests-order;
+        case FCS_OPT_DEPTH_TESTS_ORDER_2: // STRINGS=-dto2|--depth-tests-order2;
         {
             PROCESS_OPT_ARG();
             int min_depth = 0;
@@ -779,7 +773,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_SET_PRUNING: /* STRINGS=-sp|--set-pruning; */
+        case FCS_OPT_SET_PRUNING: // STRINGS=-sp|--set-pruning;
             PROCESS_OPT_ARG();
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
             if (freecell_solver_user_set_pruning(
@@ -792,7 +786,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_CACHE_LIMIT: /* STRINGS=--cache-limit; */
+        case FCS_OPT_CACHE_LIMIT: // STRINGS=--cache-limit;
             PROCESS_OPT_ARG();
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 #ifdef FCS_RCS_STATES
@@ -801,7 +795,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_FLARES_CHOICE: /* STRINGS=--flares-choice; */
+        case FCS_OPT_FLARES_CHOICE: // STRINGS=--flares-choice;
             PROCESS_OPT_ARG();
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
@@ -814,7 +808,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #endif
             break;
 
-        case FCS_OPT_PATSOLVE_X_PARAM: /* STRINGS=--patsolve-x-param; */
+        case FCS_OPT_PATSOLVE_X_PARAM: // STRINGS=--patsolve-x-param;
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_DISABLE_PATSOLVE
@@ -835,7 +829,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         }
         break;
 
-        case FCS_OPT_PATSOLVE_Y_PARAM: /* STRINGS=--patsolve-y-param; */
+        case FCS_OPT_PATSOLVE_Y_PARAM: // STRINGS=--patsolve-y-param;
         {
             PROCESS_OPT_ARG();
 #ifndef FCS_DISABLE_PATSOLVE
@@ -858,7 +852,7 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
         break;
         }
 
-    /* OPT-PARSE-END */
+    // OPT-PARSE-END
     end_of_arg_loop:;
     }
 
