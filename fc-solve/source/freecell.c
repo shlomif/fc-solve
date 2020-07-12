@@ -834,7 +834,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
         {
             continue;
         }
-        /* We can move it */
         sfs_check_state_begin();
 
         my_copy_stack(empty_stack_idx);
@@ -847,10 +846,9 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_freecell_cards_to_empty_stack)
     }
 }
 
-/* Let's try to put cards that occupy freecells on an empty stack and
- * immediately put a child card on top. See:
-https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
- * */
+// Let's try to put cards that occupy freecells on an empty stack and
+// immediately put a child card on top. See:
+// https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/584
 DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
 {
     MOVE_FUNCS__define_common();
@@ -922,7 +920,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_fc_to_empty_and_put_on_top)
                     continue;
                 }
                 const long col_num_cards = iter.col_len_minus_1 - iter.seq_end;
-                /* Find a card which this card can be put on; */
+                // Find a card which this card can be put on
 
                 const fcs_card card = fcs_col_get_card(iter.col, iter.c);
                 if (!unlikely(fcs_is_parent_card(card, src_card)))
