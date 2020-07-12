@@ -972,21 +972,19 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 #endif
 
     CALC_POSITIONS_BY_RANK();
-    /* This time try to move cards that are already on top of a parent to a
-     * different parent */
+    // This time try to move cards that are already on top of a parent to a
+    // different parent
 
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
     {
         var_AUTO(col, fcs_state_get_col(state_key, stack_idx));
         const int cards_num = fcs_col_len(col);
 
-        /*
-         * If there's only one card in the column, then it won't be above a
-         * parent, so there's no sense in moving it.
-         *
-         * If there are no cards in the column, then there's nothing to do
-         * here, and the algorithm will be confused
-         * */
+        // If there's only one card in the column, then it won't be above a
+        // parent, so there's no sense in moving it.
+        //
+        // If there are no cards in the column, then there's nothing to do
+        // here, and the algorithm will be confused
         if (cards_num < 2)
         {
             continue;
@@ -994,20 +992,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
 
         fcs_card upper_card = fcs_col_get_card(col, cards_num - 1);
 
-        /*
-         * min_card_height is the minimal height of the card that is above
-         * a true parent.
-         *
-         * It must be:
-         *
-         * 1. >= 1 - because the height 0 should not be moved.
-         *
-         * 2. <= cards_num-1 - because the height 0
-         */
         int min_card_height;
         fcs_card lower_card;
         for (min_card_height = cards_num - 2; min_card_height >= 0;
-             upper_card = lower_card, min_card_height--)
+             upper_card = lower_card, --min_card_height)
         {
             lower_card = fcs_col_get_card(col, min_card_height);
             if (!fcs_is_parent_card(upper_card, lower_card))
@@ -1017,10 +1005,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
         }
         min_card_height += 2;
 
-        for (int c = min_card_height; c < cards_num; c++)
+        for (int c = min_card_height; c < cards_num; ++c)
         {
-            /* Find a card which this card can be put on; */
-
             const fcs_card card = fcs_col_get_card(col, c);
             FCS_POS_IDX_TO_CHECK_START_LOOP(card)
             {
@@ -1034,16 +1020,12 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                 var_AUTO(dest_col, fcs_state_get_col(state_key, ds));
                 const int dest_cards_num = fcs_col_len(dest_col);
 
-/* Corresponding cards - see if it is feasible to move
-   the source to the destination. */
+                // Corresponding cards - see if it is feasible to move the
+                // source to the destination.
 
-// We don't need this check because the positions_by_rank
-// already filters the fcs_is_parent_card check for us.
 #ifdef FCS_POS_BY_RANK__ENABLE_PARENT_CHECK
                 const_AUTO(dest_card, fcs_col_get_card(dest_col, dc));
-                /* Don't move if there's a sequence of cards in the
-                 * destination.
-                 * */
+                // Don't move if there's a sequence of cards in the destination.
                 if ((dc + 1 < dest_cards_num) &&
                     fcs_is_parent_card(
                         fcs_col_get_card(dest_col, dc + 1), dest_card))
@@ -1072,7 +1054,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
                     continue;
                 }
 
-                /* We can move it */
                 sfs_check_state_begin();
                 // Fill the freecells with the top cards
                 copy_two_stacks(stack_idx, ds);
@@ -1113,10 +1094,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
     const fcs_game_limit num_vacant_freecells =
         soft_thread->num_vacant_freecells;
 
-    /* Now, let's try to empty an entire stack into the freecells, so other
-     * cards can
-     * inhabit it */
-
+    // Now, let's try to empty an entire col into the freecells, so other
+    // cards can inhabit it
     if ((!num_vacant_freecells) || soft_thread->num_vacant_stacks)
     {
         return;
@@ -1130,20 +1109,18 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
         {
             continue;
         }
-        /* We can empty it */
         sfs_check_state_begin();
 
         my_copy_stack(stack_idx);
 
         const_AUTO(new_src_col, fcs_state_get_col(new_state_key, stack_idx));
 
-        stack_i b = 0;
-        for (int c = 0; c < cards_num; ++c, ++b)
+        stack_i fc_idx = 0;
+        for (int c = 0; c < cards_num; ++c, ++fc_idx)
         {
-            /* Find a vacant freecell */
-            for (; b < LOCAL_FREECELLS_NUM; ++b)
+            for (; fc_idx < LOCAL_FREECELLS_NUM; ++fc_idx)
             {
-                if (fcs_freecell_is_empty(new_state_key, b))
+                if (fcs_freecell_is_empty(new_state_key, fc_idx))
                 {
                     break;
                 }
@@ -1151,10 +1128,10 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_empty_stack_into_freecells)
             fcs_card top_card;
             fcs_col_pop_card(new_src_col, top_card);
 
-            fcs_put_card_in_freecell(new_state_key, b, top_card);
+            fcs_put_card_in_freecell(new_state_key, fc_idx, top_card);
 
             fcs_move_stack_non_seq_push(
-                moves, FCS_MOVE_TYPE_STACK_TO_FREECELL, stack_idx, b);
+                moves, FCS_MOVE_TYPE_STACK_TO_FREECELL, stack_idx, fc_idx);
         }
 
         sfs_check_state_end();
@@ -1182,9 +1159,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         var_AUTO(col, fcs_state_get_col(state_key, stack_idx));
         const int cards_num = fcs_col_len(col);
 
-        /* Bug fix: if there's only one card in a column, there's no
-         * point moving it to a new empty column.
-         * */
+        // Bug fix: if there's only one card in a column, there's no
+        // point moving it to a new empty column.
         if (cards_num <= 1)
         {
             continue;
@@ -1195,7 +1171,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_empty_stack)
         {
             continue;
         }
-        /* Let's move it */
         sfs_check_state_begin();
         copy_two_stacks(stack_idx, empty_stack_idx);
         fcs_state_pop_col_top(&new_state_key, stack_idx);
@@ -1289,7 +1264,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_card_to_freecell)
         }
         const fcs_card card = fcs_col_get_card(col, cards_num - 1);
 
-        /* Let's move it */
         sfs_check_state_begin();
 
         my_copy_stack(stack_idx);
@@ -1330,7 +1304,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_parent)
             {
                 continue;
             }
-            /* Let's move it */
             sfs_check_state_begin();
 
             my_copy_stack(ds);
@@ -1358,7 +1331,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_atomic_move_freecell_card_to_empty_stack)
         return;
     }
 
-    /* Find a vacant stack */
     const int ds = find_empty_stack(raw_state_raw, 0, LOCAL_STACKS_NUM);
 
     for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
@@ -1418,7 +1390,6 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             {
                 continue;
             }
-            /* Get the top card in the stack */
             const fcs_card card = fcs_col_get_card(col, cards_num - 1);
 
             const_AUTO(dest_foundation, CALC_FOUNDATION_TO_PUT_CARD_ON());
@@ -1426,7 +1397,6 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             {
                 continue;
             }
-            /* We can safely move it. */
             num_cards_moved = true;
 
             my_copy_stack(stack_idx);
@@ -1438,8 +1408,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
         }
 
 #if MAX_NUM_FREECELLS > 0
-        /* Now check the same for the free cells */
-        for (int fc = 0; fc < LOCAL_FREECELLS_NUM; fc++)
+        for (int fc = 0; fc < LOCAL_FREECELLS_NUM; ++fc)
         {
             const fcs_card card = fcs_freecell_card(new_state_key, fc);
             if (fcs_card_is_empty(card))
@@ -1473,12 +1442,10 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
     register const_AUTO(ptr_next_state,
         fc_solve_sfs_check_state_end(soft_thread,
             sfs_check_state_end__arg & pass_new_state FCS__pass_moves(moves)));
-    /*
-     * Set the GENERATED_BY_PRUNING flag uncondtionally. It won't
-     * hurt if it's already there, and if it's a state that was
-     * found by other means, we still shouldn't prune it, because
-     * it is already "prune-perfect".
-     * */
+    // Set the GENERATED_BY_PRUNING flag unconditionally. It won't
+    // hurt if it's already there, and if it's a state that was
+    // found by other means, we still shouldn't prune it, because
+    // it is already "prune-perfect".
     FCS_S_VISITED(ptr_next_state) |= FCS_VISITED_GENERATED_BY_PRUNING;
     return ptr_next_state;
 }
