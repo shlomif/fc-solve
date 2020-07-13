@@ -236,7 +236,7 @@ MACRO(add_gen_c)
     LIST(APPEND _gen_c_files ${ARGV})
 ENDMACRO ()
 
-SET (MOVE_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
+SET (MOVE_FUNCS_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
 SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
 SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
@@ -247,7 +247,7 @@ ADD_CUSTOM_COMMAND(
     OUTPUT "${presets_gen_output}"
     COMMAND "${PERL_EXECUTABLE}"
     ARGS ${presets_gen_args}
-    DEPENDS "${presets_gen}" "${MOVE_GEN_MOD}"
+    DEPENDS "${presets_gen}" "${MOVE_FUNCS_GEN_MOD}"
 )
 SET (ENV{FCS_MAX_RANK} "${FCS_MAX_RANK}")
 SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
@@ -314,19 +314,19 @@ IF (NOT ("${_retcode}" STREQUAL "0"))
     MESSAGE(FATAL_ERROR "${_cmd} failed!")
 ENDIF ()
 
-SET (MOVE_C move_funcs_maps.c)
-SET (MOVE_H move_funcs_maps.h)
-SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-move-funcs.pl")
+SET (MOVE_FUNCS_C move_funcs_maps.c)
+SET (MOVE_FUNCS_H move_funcs_maps.h)
+SET (MOVE_FUNCS_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-move-funcs.pl")
 
-add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}")
+add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_C}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_H}")
 
 ADD_CUSTOM_COMMAND(
     OUTPUT
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}"
-    COMMAND "${PERL_EXECUTABLE}" "${MOVE_GEN}"
-    DEPENDS "${MOVE_GEN}" "${MOVE_GEN_MOD}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_C}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_H}"
+    COMMAND "${PERL_EXECUTABLE}" "${MOVE_FUNCS_GEN}"
+    DEPENDS "${MOVE_FUNCS_GEN}" "${MOVE_FUNCS_GEN_MOD}"
 )
 
 ADD_CUSTOM_TARGET(
@@ -360,7 +360,7 @@ ENDMACRO()
 
 IF (NOT "${FCS_ZERO_FREECELLS_MODE}")
     # add_lib_mods(fcs_is_ss_false_parent.c)
-    add_lib_mods("${MOVE_C}" move_funcs_order.c)
+    add_lib_mods("${MOVE_FUNCS_C}" move_funcs_order.c)
 ENDIF ()
 IF (NOT "${FCS_DISABLE_SIMPLE_SIMON}")
     # add_lib_mods(fcs_is_ss_false_parent.c)
