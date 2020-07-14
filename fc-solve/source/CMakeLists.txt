@@ -211,7 +211,8 @@ ENDIF ()
 SET (pats_dir "patsolve")
 
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
-    EXECUTE_PROCESS(COMMAND "git" "clone" "https://github.com/shlomif/patsolve.git" "${pats_dir}"
+    EXECUTE_PROCESS(
+        COMMAND "git" "clone" "https://github.com/shlomif/patsolve.git" "${pats_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
@@ -219,7 +220,8 @@ ENDIF ()
 # Clone the rinutils repository with the appropriate tag.
 SET (rinutils_dir "rinutils")
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils_dir}")
-    EXECUTE_PROCESS(COMMAND "git" "clone" "-b" "0.2.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
+    EXECUTE_PROCESS(
+        COMMAND "git" "clone" "-b" "0.2.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
@@ -262,7 +264,7 @@ SET (is_parent_output
     "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
     "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.c" "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.h"
     ${rate_state_output}
-    )
+)
 add_gen_c(${is_parent_output})
 ADD_CUSTOM_COMMAND(
     OUTPUT ${is_parent_output}
@@ -285,7 +287,7 @@ SET (patsolve_modules
     "${p_dir}/pat.c"
     "${p_dir}/patsolve.c"
     "${p_dir}/tree.c"
-    )
+)
 
 FIND_PROGRAM(_GPERF "gperf")
 
@@ -465,10 +467,8 @@ SET (WITH_JUDY )
 # Search for Judy ( http://judy.sourceforge.net/ ) if appropriate.
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_JUDY") OR
     ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_JUDY") OR
-    (FCS_RCS_STATES AND ("${FCS_RCS_CACHE_STORAGE}" STREQUAL "FCS_RCS_CACHE_STORAGE_JUDY")
-    )
+    (FCS_RCS_STATES AND ("${FCS_RCS_CACHE_STORAGE}" STREQUAL "FCS_RCS_CACHE_STORAGE_JUDY"))
 )
-
     FIND_LIBRARY(LIBJUDY_LIB Judy)
 
     SET (WITH_JUDY 1)
@@ -587,7 +587,7 @@ SET (FREECELL_SOLVER_LIBS)
 ADD_LIBRARY (freecell-solver
     SHARED
     ${FREECELL_SOLVER_LIB_MODULES} ${FREECELL_SOLVER_LIB_HEADERS}
-    )
+)
 
 LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver")
 IF (BUILD_STATIC_LIBRARY)
@@ -620,11 +620,11 @@ ENDIF ()
 ADD_LIBRARY (fcs_gen_ms_freecell_boards
     SHARED
     gen_boards_lib.c
-    )
+)
 
 SET_TARGET_PROPERTIES(freecell-solver
     PROPERTIES VERSION 0.6.0 SOVERSION 0
-    )
+)
 
 FIND_LIBM()
 SET(LIBTCMALLOC_LIB_LIST)
@@ -637,9 +637,7 @@ IF ((NOT (FCS_AVOID_TCMALLOC)) AND (NOT (FCS_WITH_TEST_SUITE)) AND ( NOT ((CMAKE
     # This gives better performance for the threaded programs.
     FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
 
-    IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-        # Do nothing.
-    ELSE()
+    IF(NOT ("${LIBTCMALLOC_LIB}" STREQUAL "LIBTCMALLOC_LIB-NOTFOUND"))
         SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
     ENDIF()
 ENDIF ()
@@ -793,9 +791,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
 
     FOREACH (TGT ${dbm_solvers})
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB} ${APR_LIBRARIES})
-        SET_TARGET_PROPERTIES("${TGT}"
-            PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
-        )
+        SET_TARGET_PROPERTIES("${TGT}" PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}")
     ENDFOREACH ()
 ELSE ()
     gen_error_exe( depth-dbm-fc-solver )
@@ -876,28 +872,28 @@ ENDWHILE ()
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/config.h
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/fcs_back_compat.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/fcs_back_compat.h
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/prefix.h
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.spec.in
     ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.spec
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/lib${CPACK_PACKAGE_NAME}.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc
     @ONLY
-    )
+)
 
 INSTALL(
     TARGETS ${FREECELL_SOLVER_LIBS}
@@ -1124,7 +1120,7 @@ IF(ASCIIDOC_FOUND)
                     -o ${_html_out} "${_full_file}"
                 DEPENDS "${_full_file}"
                 COMMENT "Asciidoc ${_in}"
-                )
+            )
             LIST (APPEND htmls "${_html_out}")
         ENDIF ()
 
@@ -1140,7 +1136,7 @@ IF(ASCIIDOC_FOUND)
                 --backend=docbook ${TO_DOCBOOK_EXTRA_FLAGS} -o ${_docbook_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc->DocBook ${_in}"
-            )
+        )
 
         SET (_pdf "${_file_we}.pdf")
 
@@ -1265,13 +1261,13 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
         SHARED
         ${DBM_FCC_COMMON}
         dbm_calc_derived_test.c
-        )
+    )
     TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
     IF ()
         ADD_LIBRARY(fcs_fcc_brfs_test
             SHARED
             ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
-            )
+        )
         TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
     ENDIF ()
 ENDIF ()
