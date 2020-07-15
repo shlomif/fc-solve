@@ -621,3 +621,20 @@ immediately puts a child card on top.
 * Try using +try_lock()+ instead of +lock()+ for mutexes where appropriate
 and see if it improves performance.
 
+* Write a better initial board/initial layout validation code for the online
+solver (at least initially):
+** Exact number of playstacks. (requires introspection).
+** Number of Freecells not exceeded. (requires introspection).
+** missing/extra cards.
+** whitespace gaps.
+** invalid characters.
+** misformatting of the format.
+** DONE: 2020-07-15
+
+* Work on HYBRID_STACKS_STATES where if the stacks are shorter than 8 cards,
+then one can store them in the normally pointer bytes, by specifying whether
+the stack is a pointer or a direct stack using the low bit. (An improvement
+to INDIRECT_STACK_STATES).
+** It was attempted in a branch and made performance worse.
+** COMPACT_STATES is better for +Tatzer -l extra_speed2+ benchmarks anyway
+** DONE: 2020-07-15

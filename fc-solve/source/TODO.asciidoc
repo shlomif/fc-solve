@@ -12,15 +12,6 @@ Pressing
 Non-pressing
 ------------
 
-* Write a better initial board/initial layout validation code for the online
-solver (at least initially]):
-** Exact number of playstacks. (requires introspection).
-** Number of Freecells not exceeded. (requires introspection).
-** missing/extra cards.
-** whitespace gaps.
-** invalid characters.
-** misformatting of the format.
-
 * Investigate whether one can optimize +forking_range_solver.c+ by making the
 requests and responses shorter.
 ** Eliminate reporting the iterations.
@@ -44,8 +35,8 @@ card was moved from (using a colored →) and where it was placed.
 ** Create a GUI version.
 
 * If +-opt+ is specified for the flare, then make sure that if the flares
-loop stop it when it's doing the optimization scan, then the optimization scan
-goes on until it ends.
+loop tries to preempt it when it's doing the optimization scan,
+then the optimization scan should proceed to run until it ends.
 ** Not sure about it.
 
 * Implement more of Kevin Atkinson's Common Lisp solver's atomic move types,
@@ -182,11 +173,6 @@ total-number-of-cards-in-the-foundations or maximal foundation value.
 
 * Set up a +-dto2+ like scheme for +--method a-star+ where we change the tests
 order based on the depth/etc.
-
-* Work on HYBRID_STACKS_STATES where if the stacks are shorter than 8 cards,
-then one can store them in the normally pointer bytes, by specifying whether
-the stack is a pointer or a direct stack using the low bit. (An improvement
-to INDIRECT_STACK_STATES).
 
 [id="to_be_considered"]
 To be considered

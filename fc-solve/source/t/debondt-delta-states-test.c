@@ -68,7 +68,7 @@ static void main_tests(void **state GCC_UNUSED)
     }
 
     // More encode_composite tests - this time from the output of:
-    // pi-make-microsoft-freecell-board -t 24 | \
+    // pi-make-microsoft-freecell-board -t 24 |
     //      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
     {
         fcs_state_keyval_pair init_state, derived_state;
