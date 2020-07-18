@@ -22,18 +22,11 @@ sub cleanup_docbook
 
     # It's a kludge
     $$str_ref =~ s/[ \t]+$//gms;
-    $$str_ref =~ s#<head profile="">#<head>#g;
-    $$str_ref =~
-s# (?:xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"|xml:space="preserve")([ >]|/>)#$1#g;
-    $$str_ref =~ s{ type="(?:1|disc)"}{}g;
-    $$str_ref =~ s{<hr[^/]*/>}{<hr />}g;
-    $$str_ref =~ s{ target="_top"}{}g;
-    $$str_ref =~ s{ shape="rect"}{}g;
+    $$str_ref =~ s{ type="1"}{}g;
+
     $$str_ref =~ s{ align="left"}{}g;
     $$str_ref =~ s{ align="right"}{}g;
     $$str_ref =~ s{ valign="top"}{}g;
-    $$str_ref =~ s{ border="0"}{}g;
-    $$str_ref =~ s{ summary="[^"]*"}{}g;
 
     return;
 }
