@@ -68,12 +68,15 @@ TC 4C 2S 5D 3S 6H
                 i += 1
             return True
 
+        with open(os.environ['FCS_SRC_PATH']+'/t/data/sample-boards/' +
+                  'zero-freecells-4080477571.mid.fc.board', 'rt') as fh:
+            input_board = fh.read()
+
         self.mytest_generic(
             [prog, '--freecells-num', '0', '-to', '0AB', '-sp', 'r:tf',
              '-i', '-s', '-p', '-t', '-sam', '-sel',
              '--iter-output-step', '1', '-mi', '1000', '-'],
-            open(os.environ['FCS_SRC_PATH']+'/t/data/sample-boards/' +
-                 'zero-freecells-4080477571.mid.fc.board', 'rt').read(),
+            input_board,
             no_dups,
             "no duplicates in zero freecells board",
         )
