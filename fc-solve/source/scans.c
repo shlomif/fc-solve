@@ -320,17 +320,11 @@ static inline void befs__insert_derived_states(
     fcs_derived_states_list derived, pri_queue *const pqueue,
     fcs_states_linked_list_item **queue_last_item)
 {
-    fcs_collectible_state *const init_state_collect =
-        FCS_STATE_keyval_pair_to_collectible(&(instance->state_copy));
     fcs_derived_states_list_item *derived_iter, *derived_end;
     for (derived_end = (derived_iter = derived.states) + derived.num_states;
          derived_iter < derived_end; derived_iter++)
     {
         const_AUTO(scans_ptr_new_state, derived_iter->state_ptr);
-        if (scans_ptr_new_state == init_state_collect)
-        {
-            continue;
-        }
         if (is_befs)
         {
 #ifdef FCS_RCS_STATES

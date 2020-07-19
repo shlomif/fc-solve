@@ -1305,9 +1305,6 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
-    fcs_collectible_state *const init_state_collect =
-        FCS_STATE_keyval_pair_to_collectible(&(instance->state_copy));
-
 #ifndef FCS_ZERO_FREECELLS_MODE
     ssize_t by_depth_max_depth, by_depth_min_depth;
 #endif
@@ -1388,6 +1385,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
     RECALC_BY_DEPTH_LIMITS();
 #endif
 
+    set_scan_visited(PTR_STATE, soft_thread_id);
     // The main loop. We exit out of it when DEPTH() is decremented below zero.
     while (1)
     {
@@ -1552,8 +1550,7 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 
             VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
-            if ((single_derived_state != init_state_collect) &&
-                (!fcs__is_state_a_dead_end(single_derived_state)) &&
+            if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
                 (!is_scan_visited(single_derived_state, soft_thread_id)))
             {
                 BUMP_NUM_CHECKED_STATES();
