@@ -625,6 +625,9 @@ static inline void start_process_with_board(fcs_instance *const instance,
         instance->hard_threads,
 #endif
         &pass_copy, &no_use);
+#if 0
+    instance->state_copy.info.visited |= FCS_VISITED_DEAD_END;
+#endif
 
 #ifndef FCS_SINGLE_HARD_THREAD
     instance->current_hard_thread = instance->hard_threads;
@@ -1302,6 +1305,8 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 {
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;
     fcs_instance *const instance = HT_INSTANCE(hard_thread);
+    fcs_collectible_state *const init_state_collect =
+        FCS_STATE_keyval_pair_to_collectible(&(instance->state_copy));
 
 #ifndef FCS_ZERO_FREECELLS_MODE
     ssize_t by_depth_max_depth, by_depth_min_depth;
@@ -1547,7 +1552,8 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 
             VERIFY_PTR_STATE_AND_DERIVED_TRACE0("Verify [Before BUMP]");
 
-            if ((!fcs__is_state_a_dead_end(single_derived_state)) &&
+            if ((single_derived_state != init_state_collect) &&
+                (!fcs__is_state_a_dead_end(single_derived_state)) &&
                 (!is_scan_visited(single_derived_state, soft_thread_id)))
             {
                 BUMP_NUM_CHECKED_STATES();
