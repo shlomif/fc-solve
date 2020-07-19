@@ -625,9 +625,6 @@ static inline void start_process_with_board(fcs_instance *const instance,
         instance->hard_threads,
 #endif
         &pass_copy, &no_use);
-#if 0
-    instance->state_copy.info.visited |= FCS_VISITED_DEAD_END;
-#endif
 
 #ifndef FCS_SINGLE_HARD_THREAD
     instance->current_hard_thread = instance->hard_threads;
