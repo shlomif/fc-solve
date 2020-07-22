@@ -337,7 +337,7 @@ T2_SVGS__MIN := $(T2_SVGS__BASE:%.svg=%.min.svg)
 T2_SVGS__svgz := $(T2_SVGS__BASE:%.svg=%.svgz)
 
 $(T2_SVGS__MIN): %.min.svg: %.svg
-	minify --svg-decimals 3 -o $@ $<
+	minify --svg-precision 5 -o $@ $<
 
 $(T2_SVGS__svgz): %.svgz: %.min.svg
 	gzip --best -n < $< > $@
