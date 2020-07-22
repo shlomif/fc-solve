@@ -352,32 +352,60 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
     else
     {
         mkdir($build_path);
-        _chdir_run(
-            $build_path,
-            sub {
-                if ($tatzer_args)
-                {
-                    $run->( "Tatzer", [ '../scripts/Tatzer', @$tatzer_args ] );
+        if ( $args->{'cmake-B'} )
+        {
+            my $bpath = "$build_path/build";
+            mkdir($bpath);
+            _chdir_run(
+                $build_path,
+                sub {
+                    $run->(
+                        "cmake",
+                        [
+                            'cmake',     '-B',
+                            'build',     '-S',
+                            '../source', @$cmake_args,
+                        ]
+                    );
+                    $run->( "build", [ 'cmake', '--build', 'build', ] );
                 }
-                else
-                {
-                    $run->( "cmake", [ 'cmake', @$cmake_args, '../source' ] );
+            );
+        }
+        else
+        {
+            _chdir_run(
+                $build_path,
+                sub {
+                    if ($tatzer_args)
+                    {
+                        $run->(
+                            "Tatzer", [ '../scripts/Tatzer', @$tatzer_args ]
+                        );
+                    }
+                    else
+                    {
+                        $run->(
+                            "cmake", [ 'cmake', @$cmake_args, '../source' ]
+                        );
+                    }
+                    $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
+                    my $run_test = sub {
+                        my ($cmd_line) = @_;
+                        $run->(
+                            "test", [ $^X, "$CWD/run-tests.pl", @$cmd_line, ]
+                        );
+                    };
+                    if ( not $args->{do_not_test} )
+                    {
+                        $run_test->( [ @{ $args->{runtest_args} // [] } ] );
+                    }
+                    if ( my $exe = $args->{extra_test_command} )
+                    {
+                        $run_test->($exe);
+                    }
                 }
-                $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
-                my $run_test = sub {
-                    my ($cmd_line) = @_;
-                    $run->( "test", [ $^X, "$CWD/run-tests.pl", @$cmd_line, ] );
-                };
-                if ( not $args->{do_not_test} )
-                {
-                    $run_test->( [ @{ $args->{runtest_args} // [] } ] );
-                }
-                if ( my $exe = $args->{extra_test_command} )
-                {
-                    $run_test->($exe);
-                }
-            }
-        );
+            );
+        }
         $build_path->remove_tree( { safe => $SAFE } );
     }
 
@@ -440,6 +468,13 @@ sub reg_prep
         { prepare_dist_args => { base => $base, args => [] } } );
 }
 
+reg_test(
+    "cmake -B -S [GH#47]",
+    {
+        'cmake-B'  => 1,
+        cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ]
+    }
+);
 reg_test(
     {
         blurb => "zero freecells mode",
