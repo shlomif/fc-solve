@@ -1241,6 +1241,7 @@ Golf_
 MAX_NUM_DECKS
 PACKAGE_VERSION
 Refactorings
+antonio-rojas
 appveyor
 asciidoc
 cffi
