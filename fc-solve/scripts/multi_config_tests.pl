@@ -154,8 +154,10 @@ my $SAFE = $FALSE;
 my %skip_indices;
 my @tests;
 
+my $IS_TRAVIS_CI = ( exists( $ENV{TRAVIS} ) && ( $ENV{TRAVIS} eq 'true' ) );
+
 my @TRAVIS_CI_SKIP_FAILING_TESTS = (
-      ( exists( $ENV{TRAVIS} ) && ( $ENV{TRAVIS} eq 'true' ) )
+    $IS_TRAVIS_CI
     ? ( runtest_args => [qw%--exclude-re valgrind--dbm_fc_solver_1%], )
     : ()
 );
@@ -368,10 +370,23 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                             '../source',       @$cmake_args,
                         ]
                     );
-                    $run->(
-                        "cmake build stage",
-                        [ 'cmake', '--build', $inner_build_path, ]
-                    );
+                    my @CMAKE_VER = (
+                        scalar(`cmake --version`) =~
+                            /\Acmake\s+version\s+([0-9]+)\.([0-9]+)/i );
+
+                    # Fails with old cmake on travis.
+                    if (
+                        ( not $IS_TRAVIS_CI )
+                        or (   ( $CMAKE_VER[0] > 3 )
+                            or ( $CMAKE_VER[0] == 3 and $CMAKE_VER[1] >= 15 ) )
+                        )
+                    {
+                        $run->(
+                            "cmake build stage",
+                            [ 'cmake', '--build', $inner_build_path, ]
+                        );
+                    }
+                    return;
                 }
             );
         }
