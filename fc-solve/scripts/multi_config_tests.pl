@@ -354,20 +354,24 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
         mkdir($build_path);
         if ( $args->{'cmake-B'} )
         {
-            my $bpath = "$build_path/build";
+            my $inner_build_path = "inner_build_dir";
+            my $bpath            = "$build_path/$inner_build_path";
             mkdir($bpath);
             _chdir_run(
                 $build_path,
                 sub {
                     $run->(
-                        "cmake",
+                        "cmake config stage",
                         [
-                            'cmake',     '-B',
-                            'build',     '-S',
-                            '../source', @$cmake_args,
+                            'cmake',           '-B',
+                            $inner_build_path, '-S',
+                            '../source',       @$cmake_args,
                         ]
                     );
-                    $run->( "build", [ 'cmake', '--build', 'build', ] );
+                    $run->(
+                        "cmake build stage",
+                        [ 'cmake', '--build', $inner_build_path, ]
+                    );
                 }
             );
         }
@@ -469,7 +473,7 @@ sub reg_prep
 }
 
 reg_test(
-    "cmake -B -S [GH#47]",
+    "cmake -B -S ( GH#47 )",
     {
         'cmake-B'  => 1,
         cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ]

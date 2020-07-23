@@ -3,8 +3,9 @@ addons:
         update: true
         packages:
             - asciidoc
-            - cmake
-            - cmake-data
+            # Avoid downgrading cmake from 3.12.x to 3.10.x
+            # - cmake
+            # - cmake-data
             - cpanminus
             - dbtoepub
             - docbook-xsl
