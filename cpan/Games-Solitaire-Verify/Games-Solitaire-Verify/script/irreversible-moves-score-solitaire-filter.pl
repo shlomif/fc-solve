@@ -1,10 +1,18 @@
 #! /usr/bin/env perl
 #
-# Short description for calc_irreversible_rank.pl
+# irreversible-moves-score-solitaire-filter.pl
+#
+# Filters the output of "fc-solve -s -i -p -t -sam -sel" to
+# display an extra header for each state with the "rank"/"score"
+# of irreversible moves, which are:
+#
+# 1. Moving a card to the foundation.
+# 2. Moving a card away from a non-parent (where it was lying at the
+# start of the game).
 #
 # Author Shlomi Fish <shlomif@cpan.org>
-# Version 0.0.1
-# Copyright (C) 2020 Shlomi Fish <shlomif@cpan.org>
+# Copyright (C) 2020 Shlomi Fish <shlomif@cpan.org>.
+# Under the MIT / Expat license.
 #
 use strict;
 use warnings;
