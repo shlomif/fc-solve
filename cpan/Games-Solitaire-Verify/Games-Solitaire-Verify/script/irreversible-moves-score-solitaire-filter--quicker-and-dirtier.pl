@@ -69,8 +69,7 @@ while ( my $l = <ARGV> )
             or die "line $.";
         my ($cols) = $s =~ /((?:\n:[^\n]*)+)/ms
             or die "line $.";
-        my $count = 0;
-        --$count for $cols =~ /$par_re/g;
+        my $count = -( () = $cols =~ /$par_re/g );
         $founds =~ s#$r_qr\K#$count += $ranks{$1};#eg;
         print( $s =~ s/^Scan:[^\n]*\n\K/IrrevRank: $count\n/mrs );
         $s = "";
