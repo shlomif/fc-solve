@@ -26,7 +26,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     %*ENV{"CFLAGS"}="-Werror" ~ (($g && $rb) ?? " $SLIGHTLY-WRONG-GCC-FLAG-SEE-man-gcc"  !! "");
     %*ENV{"SOURCE_DATE_EPOCH"}="0";
     my $cmd ="../scripts/Tatzer && make -j5";
-    $cmd ~= " && perl ../source/run-tests.pl" if $t;
+    $cmd ~= " && (set -e -x; if perl ../source/run-tests.pl --should-skip-tests ; then true ; else perl ../source/run-tests.pl ; fi )" if $t;
     if $rb
     {
         %*ENV{"REPRODUCIBLE_BUILDS"}="1";
