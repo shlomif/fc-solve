@@ -79,17 +79,19 @@ my $force_rebuild = delete( $ENV{REBUILD} );
 my $tests_dir;
 
 my @execute;
-my $should_skip = 0;
+my $should_skip  = 0;
+my $custom_tests = 0;
 GetOptions(
-    '--should-skip-tests!' => \$should_skip,
-    '--exclude-re=s'       => \$exclude_re_s,
-    '--execute|e=s'        => \@execute,
-    '--exit0!'             => \$exit_success,
-    '--glob=s'             => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
-    '--prove!'             => \$use_prove,
-    '--rebuild!'           => \$force_rebuild,
-    '--jobs|j=n'           => \$num_jobs,
-    '--tests-dir=s'        => \$tests_dir,
+    '--custom-tests-suite!' => \$custom_tests,
+    '--should-skip-tests!'  => \$should_skip,
+    '--exclude-re=s'        => \$exclude_re_s,
+    '--execute|e=s'         => \@execute,
+    '--exit0!'              => \$exit_success,
+    '--glob=s'              => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
+    '--prove!'              => \$use_prove,
+    '--rebuild!'            => \$force_rebuild,
+    '--jobs|j=n'            => \$num_jobs,
+    '--tests-dir=s'         => \$tests_dir,
 ) or die "Wrong opts - $!";
 
 if ( defined $tests_dir )
@@ -150,7 +152,7 @@ sub myglob
         )
     );
     my $tests_may_fail = ( exists $TEST_TAGS{'tests_may_fail'} );
-    if ( not defined($tests_dir) )
+    if ( !$custom_tests )
     {
         if ($should_skip)
         {

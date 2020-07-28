@@ -500,7 +500,10 @@ reg_test(
     },
     {
         tatzer_theme => 'zerofcmode',
-        runtest_args => [ '--tests-dir', '../scripts/zerofc-mode-tests/t/' ],
+        runtest_args => [
+            '--custom-tests-suite', '--tests-dir',
+            '../scripts/zerofc-mode-tests/t/'
+        ],
     },
 );
 reg_test(
@@ -509,8 +512,10 @@ reg_test(
     },
     {
         tatzer_theme => 'zerofcmode_with_moves',
-        runtest_args =>
-            [ '--tests-dir', '../scripts/zerofc-mode-tests/solution-t/', ],
+        runtest_args => [
+            '--custom-tests-suite', '--tests-dir',
+            '../scripts/zerofc-mode-tests/solution-t/',
+        ],
     },
 );
 reg_theme_test( "Default", 'empty', );
