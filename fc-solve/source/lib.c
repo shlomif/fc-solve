@@ -4432,7 +4432,8 @@ void DLLEXPORT freecell_solver_user_limit_num_states_in_collection_long(
     void *api_instance, fcs_int_limit_t max_num_states)
 {
     active_obj(api_instance)->effective_max_num_states_in_collection =
-        ((max_num_states < 0) ? FCS_ITERS_INT_MAX : max_num_states);
+        ((max_num_states < 0) ? FCS_ITERS_INT_MAX
+                              : (fcs_iters_int)max_num_states);
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -4449,7 +4450,8 @@ DLLEXPORT extern void freecell_solver_set_stored_states_trimming_limit(
     void *const api_instance GCC_UNUSED, const long max_num_states GCC_UNUSED)
 {
     active_obj(api_instance)->effective_trim_states_in_collection_from =
-        ((max_num_states < 0) ? FCS_ITERS_INT_MAX : max_num_states);
+        ((max_num_states < 0) ? FCS_ITERS_INT_MAX
+                              : (fcs_iters_int)max_num_states);
 }
 #endif
 #endif

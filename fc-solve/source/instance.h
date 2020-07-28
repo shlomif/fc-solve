@@ -96,7 +96,7 @@ typedef struct
 {
     fcs_iters_int num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-    fcs_int_limit_t num_states_in_collection;
+    fcs_iters_int num_states_in_collection;
 #endif
 } fcs_stats;
 
@@ -259,7 +259,7 @@ typedef struct
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
     compact_allocator states_values_to_keys_allocator;
-    fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
+    fcs_iters_int count_elements_in_cache, max_num_elements_in_cache;
 
     fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
 } fcs_lru_cache;
@@ -595,7 +595,7 @@ struct fc_solve_instance_struct
 // It gives a rough estimate of the memory occupied by the instance.
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fcs_int_limit_t active_num_states_in_collection;
+    fcs_iters_int active_num_states_in_collection;
 #endif
 #endif
 
