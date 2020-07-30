@@ -4414,9 +4414,10 @@ freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 {
     fcs_user *const user = (fcs_user *)api_instance;
 
-    return user->iterations_board_started_at.num_states_in_collection +
-           OBJ_STATS(user).num_states_in_collection -
-           user->init_num_checked_states.num_states_in_collection;
+    return (fcs_int_limit_t)(
+        user->iterations_board_started_at.num_states_in_collection +
+        OBJ_STATS(user).num_states_in_collection -
+        user->init_num_checked_states.num_states_in_collection);
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
