@@ -1366,6 +1366,7 @@ msi
 rinutils
 solv
 transpose-freecell-board
+v6
 
 ==== In: dest/js-fc-solve/find-deal/index.html
 
