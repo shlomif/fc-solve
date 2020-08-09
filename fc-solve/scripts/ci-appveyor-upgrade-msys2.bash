@@ -8,7 +8,7 @@ curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.ta
 
 # pacman-key --verify msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz{.sig,}
 pacman-key --verify msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
-pacman -U msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
+pacman -U --noconfirm msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
 
 if false
 then
