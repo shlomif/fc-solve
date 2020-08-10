@@ -98,7 +98,7 @@ static inline void fc_solve_pq_push(
 
     if (i > pq->max_size)
     {
-        pq->elems = SREALLOC(pq->elems, (pq->max_size += 256) + 1);
+        pq->elems = SREALLOC(pq->elems, (pq->max_size <<= 1) + 1);
     }
 
     const_SLOT(elems, pq);

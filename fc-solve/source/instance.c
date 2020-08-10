@@ -540,9 +540,11 @@ fcs_soft_thread *fc_solve_new_soft_thread(fcs_hard_thread *const hard_thread)
         return NULL;
     }
 
+#if 0
     HT_FIELD(hard_thread, soft_threads) =
         SREALLOC(HT_FIELD(hard_thread, soft_threads),
             HT_FIELD(hard_thread, num_soft_threads) + 1);
+#endif
 
     fcs_soft_thread *ret;
 

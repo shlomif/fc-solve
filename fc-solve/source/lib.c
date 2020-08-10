@@ -50,7 +50,8 @@ static
 
     HT_FIELD(hard_thread, num_soft_threads) = 0;
 
-    HT_FIELD(hard_thread, soft_threads) = NULL;
+    HT_FIELD(hard_thread, soft_threads) =
+        SMALLOC(HT_FIELD(hard_thread, soft_threads), MAX_NUM_SCANS);
 
     fc_solve_new_soft_thread(hard_thread);
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
@@ -1129,14 +1130,18 @@ static inline void free_states(fcs_instance *const instance)
 #define SOFT_DFS_DEPTH_GROW_BY 64
 static void increase_dfs_max_depth(fcs_soft_thread *const soft_thread)
 {
-    const_AUTO(new_dfs_max_depth,
-        DFS_VAR(soft_thread, dfs_max_depth) + SOFT_DFS_DEPTH_GROW_BY);
+    var_AUTO(new_dfs_max_depth, DFS_VAR(soft_thread, dfs_max_depth) << 1);
+    if (!new_dfs_max_depth)
+    {
+        new_dfs_max_depth = 16;
+    }
     DFS_VAR(soft_thread, soft_dfs_info) = SREALLOC(
         DFS_VAR(soft_thread, soft_dfs_info), (size_t)new_dfs_max_depth);
     memset(DFS_VAR(soft_thread, soft_dfs_info) +
                DFS_VAR(soft_thread, dfs_max_depth),
         '\0',
-        SOFT_DFS_DEPTH_GROW_BY * sizeof(*DFS_VAR(soft_thread, soft_dfs_info)));
+        (new_dfs_max_depth - DFS_VAR(soft_thread, dfs_max_depth)) *
+            sizeof(*DFS_VAR(soft_thread, soft_dfs_info)));
 
     DFS_VAR(soft_thread, dfs_max_depth) = new_dfs_max_depth;
 }
@@ -1509,8 +1514,20 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
             if (num_states >
                 the_soft_dfs_info->derived_states_random_indexes_max_size)
             {
-                the_soft_dfs_info->derived_states_random_indexes_max_size =
-                    num_states;
+                if ((the_soft_dfs_info
+                            ->derived_states_random_indexes_max_size <<= 1) <
+                    num_states)
+                {
+                    the_soft_dfs_info->derived_states_random_indexes_max_size =
+                        8;
+                    while ((the_soft_dfs_info
+                                   ->derived_states_random_indexes_max_size) <
+                           num_states)
+                    {
+                        the_soft_dfs_info
+                            ->derived_states_random_indexes_max_size <<= 1;
+                    }
+                }
                 the_soft_dfs_info->derived_states_random_indexes = SREALLOC(
                     the_soft_dfs_info->derived_states_random_indexes,
                     the_soft_dfs_info->derived_states_random_indexes_max_size);

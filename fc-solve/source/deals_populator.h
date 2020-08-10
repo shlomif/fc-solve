@@ -25,8 +25,7 @@ static inline void deals_range__append(
 {
     if (num_deals == max_num_deals)
     {
-        deals_ranges_array =
-            SREALLOC(deals_ranges_array, max_num_deals += 1000);
+        deals_ranges_array = SREALLOC(deals_ranges_array, max_num_deals <<= 1);
         if (!deals_ranges_array)
         {
             exit_error("Number of deals exceeded %ld!\n", (long)max_num_deals);
@@ -49,6 +48,7 @@ static inline void deals_range__append(
 static inline int populate_deals_from_argv(
     const int argc, char *argv[], int arg)
 {
+    deals_ranges_array = SMALLOC(deals_ranges_array, (max_num_deals = 8));
     while (arg < argc && (strcmp(argv[arg], "--")))
     {
         if (!strcmp(argv[arg], "seq"))

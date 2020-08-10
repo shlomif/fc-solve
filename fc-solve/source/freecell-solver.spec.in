@@ -113,10 +113,6 @@ fi
 perl "$src"/run-tests.pl
 
 %install
-if test -d build
-then
-    cd build
-fi
 #make_install
 %cmake_install
 find %{buildroot} -name *.a -delete
