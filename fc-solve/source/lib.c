@@ -1511,26 +1511,22 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
                 local_shuffling_type, &the_moves_list, pass, derived_list);
 #ifndef FCS_ZERO_FREECELLS_MODE
             const_AUTO(num_states, derived_list->num_states);
-            if (num_states >
-                the_soft_dfs_info->derived_states_random_indexes_max_size)
+            var_AUTO(derived_states_random_indexes_max_size,
+                the_soft_dfs_info->derived_states_random_indexes_max_size);
+            if (num_states > derived_states_random_indexes_max_size)
             {
-                if ((the_soft_dfs_info
-                            ->derived_states_random_indexes_max_size <<= 1) <
-                    num_states)
+                if (!derived_states_random_indexes_max_size)
                 {
-                    the_soft_dfs_info->derived_states_random_indexes_max_size =
-                        8;
-                    while ((the_soft_dfs_info
-                                   ->derived_states_random_indexes_max_size) <
-                           num_states)
-                    {
-                        the_soft_dfs_info
-                            ->derived_states_random_indexes_max_size <<= 1;
-                    }
+                    derived_states_random_indexes_max_size = 4;
+                }
+                while (
+                    (derived_states_random_indexes_max_size <<= 1) < num_states)
+                {
                 }
                 the_soft_dfs_info->derived_states_random_indexes = SREALLOC(
                     the_soft_dfs_info->derived_states_random_indexes,
-                    the_soft_dfs_info->derived_states_random_indexes_max_size);
+                    (the_soft_dfs_info->derived_states_random_indexes_max_size =
+                            derived_states_random_indexes_max_size));
             }
             dfs_shuffle_states(soft_thread, instance, num_states,
                 local_shuffling_type, rand_gen,
