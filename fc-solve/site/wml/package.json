@@ -29,7 +29,7 @@
     "flatted": "^3.0.4",
     "html-minifier": "^4.0.0",
     "jquery": "^3.5.1",
-    "lodash": "^4.17.19",
+    "lodash": "^4.17.20",
     "minimist": "^1.2.5",
     "node-qunit": "^1.0.0",
     "npm": "^6.14.7",
