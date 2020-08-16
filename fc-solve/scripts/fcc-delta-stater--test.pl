@@ -4,6 +4,11 @@ use strict;
 use warnings;
 use autodie;
 
+use List::Util qw/ max /;
+
+STDOUT->autoflush(1);
+STDERR->autoflush(1);
+
 # use Test::More tests => 56;
 # use Test::Differences qw/ eq_or_diff /;
 
@@ -20,6 +25,8 @@ use FC_Solve::VarBaseDigitsWriter::XS     ();
 my $RANK_J = 11;
 my $RANK_Q = 12;
 my $RANK_K = 13;
+
+my $maxlen = 0;
 
 sub mytest
 {
@@ -40,8 +47,9 @@ sub mytest
     # TEST
     # ok( $delta, 'Object was initialized correctly.' );
 
+    my $was_printed = '';
     open my $exe_fh,
-qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l lg|#;
+qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l lg --freecells-num 0|#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -74,20 +82,26 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
                     length
                 ]
                 } @{ $delta->encode_composite() };
+
             die if @x != 2;
 
+            $was_printed = 1;
             print( $DEAL_IDX , ":", join( ",", map { $_->[0] } @x ) );
             print "\n";
-            if ( $x[1][1] > 10 )
+            my $this_len = $x[1][1];
+            if ( $this_len > 8 )
             {
                 $DB::single = 1;
                 die "exceeded len in deal $DEAL_IDX";
             }
+            $maxlen = max( $maxlen, $this_len );
         }
     }
+    print "max_len = $maxlen\n" if $was_printed;
+    return;
 }
 
-foreach my $DEAL_IDX ( 1 .. 300 )
+foreach my $DEAL_IDX ( 1 .. 32_000 )
 {
     mytest($DEAL_IDX);
 }

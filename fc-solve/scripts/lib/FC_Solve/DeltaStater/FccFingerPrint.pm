@@ -6,6 +6,7 @@ use warnings;
 use parent 'FC_Solve::DeltaStater::DeBondt';
 
 use Carp ();
+use List::Util qw/ max /;
 
 use Games::Solitaire::Verify::Card        ();
 use Games::Solitaire::Verify::Column      ();
@@ -31,30 +32,66 @@ my $FOUNDATION_BASE = $RANK_KING + 1;
 my $ORIG_POS                         = 0;
 my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
 my $IN_FOUNDATIONS                   = 2;
-my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
-my $state_opt_next = 0;
-my %STATES_OPTS;
-{
 
-    sub _add
+# my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
+my %states__with_positive_freecells_count;
+my %states__with_zero_freecells_count;
+foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1/)
+{
+    $states__with_positive_freecells_count{$state} =
+        ( ( max( values(%states__with_positive_freecells_count) ) // -1 ) + 1 );
+    if ( $state ne 'ABOVE_FREECELL' )
     {
-        $STATES_OPTS{"@_"} = $state_opt_next++;
+        $states__with_zero_freecells_count{$state} =
+            ( ( max( values(%states__with_zero_freecells_count) ) // -1 ) + 1 );
     }
-    _add( $LOWEST_CARD,    $LOWEST_CARD );
-    _add( $LOWEST_CARD,    $ABOVE_FREECELL );
-    _add( $ABOVE_FREECELL, $LOWEST_CARD );
-    _add( $ABOVE_FREECELL, $ABOVE_FREECELL );
-    _add( $LOWEST_CARD,    $PARENT_0 );
-    _add( $LOWEST_CARD,    $PARENT_1 );
-    _add( $ABOVE_FREECELL, $PARENT_0 );
-    _add( $ABOVE_FREECELL, $PARENT_1 );
-    _add( $PARENT_0,       $LOWEST_CARD );
-    _add( $PARENT_1,       $LOWEST_CARD );
-    _add( $PARENT_0,       $ABOVE_FREECELL );
-    _add( $PARENT_1,       $ABOVE_FREECELL );
-    _add( $PARENT_0,       $PARENT_1 );
-    _add( $PARENT_1,       $PARENT_0 );
 }
+my %STATES_OPTS__zero;
+my %STATES_OPTS__positive;
+my %positive_rec = (
+    in => \%states__with_positive_freecells_count,
+    in_base =>
+        ( ( max( values(%states__with_positive_freecells_count) ) // -1 ) + 1 ),
+    STATES_OPTS    => \%STATES_OPTS__positive,
+    state_opt_next => 0,
+);
+my %zero_rec = (
+    in => \%states__with_zero_freecells_count,
+    in_base =>
+        ( ( max( values(%states__with_zero_freecells_count) ) // -1 ) + 1 ),
+    STATES_OPTS    => \%STATES_OPTS__zero,
+    state_opt_next => 0,
+);
+foreach my $rec ( \%positive_rec, \%zero_rec )
+{
+    my $_add = sub {
+        my @input = @_;
+        die if @input != 2;
+        my @s = ( grep { !exists $rec->{in}->{$_} } @input );
+        die if grep { $_ ne 'ABOVE_FREECELL' } @s;
+        if ( not @s )
+        {
+            $rec->{STATES_OPTS}->{ join " ", @{ $rec->{in} }{@input} } =
+                $rec->{state_opt_next}++;
+        }
+    };
+    $_add->( 'LOWEST_CARD',    'LOWEST_CARD' );
+    $_add->( 'LOWEST_CARD',    'ABOVE_FREECELL' );
+    $_add->( 'ABOVE_FREECELL', 'LOWEST_CARD' );
+    $_add->( 'ABOVE_FREECELL', 'ABOVE_FREECELL' );
+    $_add->( 'LOWEST_CARD',    'PARENT_0' );
+    $_add->( 'LOWEST_CARD',    'PARENT_1' );
+    $_add->( 'ABOVE_FREECELL', 'PARENT_0' );
+    $_add->( 'ABOVE_FREECELL', 'PARENT_1' );
+    $_add->( 'PARENT_0',       'LOWEST_CARD' );
+    $_add->( 'PARENT_1',       'LOWEST_CARD' );
+    $_add->( 'PARENT_0',       'ABOVE_FREECELL' );
+    $_add->( 'PARENT_1',       'ABOVE_FREECELL' );
+    $_add->( 'PARENT_0',       'PARENT_1' );
+    $_add->( 'PARENT_1',       'PARENT_0' );
+}
+
+die if $zero_rec{state_opt_next} ne 7;
 
 my $OPT_TOPMOST              = 0;
 my $OPT_DONT_CARE            = $OPT_TOPMOST;
@@ -89,6 +126,11 @@ sub _init
     return;
 }
 
+my $zero_fc_variant =
+    Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+
+$zero_fc_variant->num_freecells(0);
+
 sub _calc_state_obj_generic
 {
     my ( $self, $args ) = @_;
@@ -96,7 +138,9 @@ sub _calc_state_obj_generic
         ? ( die "unimpl" )
         : Games::Solitaire::Verify::State->new(
         {
-            %{$args}, variant => 'freecell'
+            variant        => 'custom',
+            variant_params => $zero_fc_variant,
+            %{$args},
         },
         );
 }
@@ -134,6 +178,10 @@ sub encode_composite
 
     my $derived = $self->_derived_state;
 
+    my $variant_states = $derived->num_freecells ? \%positive_rec : \%zero_rec;
+
+    # die if $derived->num_freecells > 0;
+
     $self->_initialize_card_states(
           $self->_is_bakers_dozen()
         ? $NUM__BAKERS_DOZEN__OPTS
@@ -155,7 +203,10 @@ sub encode_composite
             my $o;
             if ( $height == 0 )
             {
-                $o = [ $ABOVE_PARENT_CARD_OR_EMPTY_SPACE, $LOWEST_CARD ];
+                $o = [
+                    $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                    $variant_states->{in}->{'LOWEST_CARD'}
+                ];
             }
             else
             {
@@ -165,8 +216,8 @@ sub encode_composite
                     $o = [
                         $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                         ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
-                        ? $PARENT_1
-                        : $PARENT_0
+                        ? $variant_states->{in}->{'PARENT_1'}
+                        : $variant_states->{in}->{'PARENT_0'}
                     ];
                 }
                 else
@@ -186,8 +237,13 @@ sub encode_composite
 
         if ( defined($card) )
         {
-            $self->_mark_opt_as_true( $card,
-                [ $ABOVE_PARENT_CARD_OR_EMPTY_SPACE, $ABOVE_FREECELL ] );
+            $self->_mark_opt_as_true(
+                $card,
+                [
+                    $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                    $variant_states->{in}->{'ABOVE_FREECELL'}
+                ]
+            );
         }
     }
 
@@ -238,7 +294,11 @@ sub encode_composite
                         else
                         {
                             $writer_state->write(
-                                { base => 4, item => $state_o } );
+                                {
+                                    base => $variant_states->{in_base},
+                                    item => $state_o
+                                }
+                            );
                         }
                     }
                 }
@@ -255,7 +315,11 @@ sub encode_composite
                         else
                         {
                             $writer_state->write(
-                                { base => 4, item => $state_o } );
+                                {
+                                    base => $variant_states->{in_base},
+                                    item => $state_o
+                                }
+                            );
                         }
                     }
                     else
@@ -273,9 +337,10 @@ sub encode_composite
                         {
                             $writer_state->write(
                                 {
-                                    base => $state_opt_next,
+                                    base => $variant_states->{state_opt_next},
                                     item => (
-                                        $STATES_OPTS{"@states"}
+                                        $variant_states->{STATES_OPTS}
+                                            ->{"@states"}
                                             // do { die "unknown key @states"; }
                                     ),
                                 }
@@ -313,6 +378,8 @@ sub encode_composite
     my $ret = $_data->($writer_fingerprint);
     return [ $ret, $_data->($writer_state) ];
 }
+
+1;
 
 __END__
 
