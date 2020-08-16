@@ -2,6 +2,7 @@ package FC_Solve::DeltaStater::FccFingerPrint;
 
 use strict;
 use warnings;
+use 5.014;
 
 use parent 'FC_Solve::DeltaStater::DeBondt';
 
@@ -22,9 +23,6 @@ use FC_Solve::VarBaseDigitsWriter        ();
 See git/fc-solve/fc-solve/docs/debondt-compact-freecell-positions--document.asciidoc
 
 =cut
-
-__PACKAGE__->mk_acc_ref(
-    [qw(_card_states _bakers_dozen_topmost_cards_lookup)] );
 
 my $RANK_KING       = 13;
 my $FOUNDATION_BASE = $RANK_KING + 1;
@@ -58,12 +56,14 @@ my %positive_rec = (
     single_card_states => \%states__with_positive_freecells_count,
     num_single_card_states =>
         _get_next( \%states__with_positive_freecells_count ),
-    state_opt_next => 0,
+    state_opt_next      => 0,
+    should_skip_is_king => 0,
 );
 my %zero_rec = (
     single_card_states     => \%states__with_zero_freecells_count,
     num_single_card_states => _get_next( \%states__with_zero_freecells_count ),
     state_opt_next         => 0,
+    should_skip_is_king    => 1,
 );
 foreach my $rec ( \%positive_rec, \%zero_rec )
 {
@@ -187,6 +187,7 @@ sub encode_composite
     my $derived = $self->_derived_state;
 
     my $variant_states = $derived->num_freecells ? \%positive_rec : \%zero_rec;
+    my $should_skip_is_king = $variant_states->{should_skip_is_king};
 
     # die if $derived->num_freecells > 0;
 
@@ -273,26 +274,28 @@ sub encode_composite
             my $suit2 = ( $color | 2 );
             my $rank1 = $derived->get_foundation_value( $suits[$suit1], 0 );
             my $rank2 = $derived->get_foundation_value( $suits[$suit2], 0 );
-            my $fingerprint1;
-            my $fingerprint2;
             my $is_founds1 = ( $rank1 >= $rank );
             my $is_founds2 = ( $rank2 >= $rank );
-            my $opt1       = $self->_opt_by_suit_rank( $suit1, $rank );
-            my $opt2       = $self->_opt_by_suit_rank( $suit2, $rank );
-            $opt1->[0] = $IN_FOUNDATIONS if $is_founds1;
-            die if !defined $opt1->[0];
-            $opt2->[0] = $IN_FOUNDATIONS if $is_founds2;
+            my $opt1 =
+                $is_founds1
+                ? [ $IN_FOUNDATIONS, -1 ]
+                : $self->_opt_by_suit_rank( $suit1, $rank );
+            my $opt2 =
+                $is_founds2
+                ? [ $IN_FOUNDATIONS, -1 ]
+                : $self->_opt_by_suit_rank( $suit2, $rank );
+            die if !( defined $opt1->[0] );
 
-            if ( !defined $opt2->[0] )
+            if ( !( defined $opt2->[0] ) )
             {
                 $DB::single = 1;
                 Carp::confess "opt2";
             }
-            $fingerprint1 = $opt1->[0];
-            $fingerprint2 = $opt2->[0];
-            my $is_king = ( $rank == $RANK_KING );
+            my $fingerprint1 = $opt1->[0];
+            my $fingerprint2 = $opt2->[0];
+            my $is_king      = ( $rank == $RANK_KING );
 
-            if ( $rank > 1 )
+            if ( $rank > 1 && ( not( $is_king && $should_skip_is_king ) ) )
             {
                 if ( $fingerprint1 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
                 {
