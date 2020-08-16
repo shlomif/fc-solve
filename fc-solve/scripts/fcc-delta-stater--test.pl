@@ -101,7 +101,8 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
     return;
 }
 
-foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
+# foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
+foreach my $DEAL_IDX ( 1 .. 100_000_000 )
 {
     mytest($DEAL_IDX);
 }

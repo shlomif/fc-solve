@@ -54,23 +54,24 @@ foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1/)
             _get_next( \%states__with_zero_freecells_count );
     }
 }
-my %STATES_OPTS__zero;
-my %STATES_OPTS__positive;
 my %positive_rec = (
     single_card_states => \%states__with_positive_freecells_count,
     num_single_card_states =>
         _get_next( \%states__with_positive_freecells_count ),
-    STATES_OPTS    => \%STATES_OPTS__positive,
     state_opt_next => 0,
 );
 my %zero_rec = (
     single_card_states     => \%states__with_zero_freecells_count,
     num_single_card_states => _get_next( \%states__with_zero_freecells_count ),
-    STATES_OPTS            => \%STATES_OPTS__zero,
     state_opt_next         => 0,
 );
 foreach my $rec ( \%positive_rec, \%zero_rec )
 {
+    $rec->{CARD_PAIR_STATES_MAP} = [
+        map {
+            [ map { undef() } 0 .. $rec->{num_single_card_states} - 1 ]
+        } 0 .. $rec->{num_single_card_states} - 1
+    ];
     my $_add = sub {
         my @input = @_;
         die if @input != 2;
@@ -78,10 +79,15 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
         die if grep { $_ ne 'ABOVE_FREECELL' } @s;
         if ( not @s )
         {
-            $rec->{STATES_OPTS}
-                ->{ join " ", @{ $rec->{single_card_states} }{@input} } =
-                $rec->{state_opt_next}++;
+            my ( $y, $x ) = @{ $rec->{single_card_states} }{@input};
+
+            die if $y < 0 || $y >= @{ $rec->{CARD_PAIR_STATES_MAP} };
+            die if $x < 0 || $x >= @{ $rec->{CARD_PAIR_STATES_MAP}->[$y] };
+            die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
+            my $val = $rec->{state_opt_next}++;
+            $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
         }
+        return;
     };
     $_add->( 'LOWEST_CARD',    'LOWEST_CARD' );
     $_add->( 'LOWEST_CARD',    'ABOVE_FREECELL' );
@@ -357,9 +363,12 @@ sub encode_composite
                                             // do { die }
                                     ),
                                     item => (
-                                        $variant_states->{STATES_OPTS}
-                                            ->{"@states"}
-                                            // do { die "unknown key @states"; }
+                                        $variant_states->{CARD_PAIR_STATES_MAP}
+                                            ->[ $states[0] ]->[ $states[1] ]
+                                            // do
+                                        {
+                                            die "unknown key @states";
+                                        }
                                     ),
                                 }
                             );
