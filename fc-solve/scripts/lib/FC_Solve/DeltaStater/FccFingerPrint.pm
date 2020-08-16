@@ -197,8 +197,8 @@ sub encode_composite
         : $NUM_OPTS
     );
 
-    my $writer_state       = FC_Solve::VarBaseDigitsWriter->new;
-    my $writer_fingerprint = FC_Solve::VarBaseDigitsWriter->new;
+    my $state_writer       = FC_Solve::VarBaseDigitsWriter->new;
+    my $fingerprint_writer = FC_Solve::VarBaseDigitsWriter->new;
 
     my @cols_indexes = ( 0 .. $derived->num_columns - 1 );
     foreach my $col_idx (@cols_indexes)
@@ -307,12 +307,12 @@ sub encode_composite
                         my $state_o = $opt2->[1];
                         if ($is_king)
                         {
-                            $writer_state->write(
+                            $state_writer->write(
                                 { base => 2, item => $state_o } );
                         }
                         else
                         {
-                            $writer_state->write(
+                            $state_writer->write(
                                 {
                                     base => $variant_states
                                         ->{num_single_card_states},
@@ -329,12 +329,12 @@ sub encode_composite
                         my $state_o = $opt1->[1];
                         if ($is_king)
                         {
-                            $writer_state->write(
+                            $state_writer->write(
                                 { base => 2, item => $state_o } );
                         }
                         else
                         {
-                            $writer_state->write(
+                            $state_writer->write(
                                 {
                                     base => (
                                         $variant_states
@@ -353,13 +353,13 @@ sub encode_composite
                         {
                             foreach my $state_o (@states)
                             {
-                                $writer_state->write(
+                                $state_writer->write(
                                     { base => 2, item => $state_o } );
                             }
                         }
                         else
                         {
-                            $writer_state->write(
+                            $state_writer->write(
                                 {
                                     base => (
                                         $variant_states->{CARD_PAIR_STATE_BASE}
@@ -382,8 +382,8 @@ sub encode_composite
 
             # print("$rank $color $fingerprint1 $fingerprint2\n");
 
-            $writer_fingerprint->write( { base => 3, item => $fingerprint1 } );
-            $writer_fingerprint->write( { base => 3, item => $fingerprint2 } );
+            $fingerprint_writer->write( { base => 3, item => $fingerprint1 } );
+            $fingerprint_writer->write( { base => 3, item => $fingerprint2 } );
             $cnt += 2;
         }
     }
@@ -405,8 +405,8 @@ sub encode_composite
         return $ret;
     };
 
-    my $ret = $_data->($writer_fingerprint);
-    return [ $ret, $_data->($writer_state) ];
+    my $ret = $_data->($fingerprint_writer);
+    return [ $ret, $_data->($state_writer) ];
 }
 
 1;
