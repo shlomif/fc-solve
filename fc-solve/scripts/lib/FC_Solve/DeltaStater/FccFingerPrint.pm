@@ -36,42 +36,50 @@ my $IN_FOUNDATIONS                   = 2;
 # my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
 my %states__with_positive_freecells_count;
 my %states__with_zero_freecells_count;
+
+sub _get_next
+{
+    my $hash_ref = shift;
+    return ( ( max( values(%$hash_ref) ) // -1 ) + 1 );
+}
+
 foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1/)
 {
     $states__with_positive_freecells_count{$state} =
-        ( ( max( values(%states__with_positive_freecells_count) ) // -1 ) + 1 );
+        _get_next( \%states__with_positive_freecells_count );
+
     if ( $state ne 'ABOVE_FREECELL' )
     {
         $states__with_zero_freecells_count{$state} =
-            ( ( max( values(%states__with_zero_freecells_count) ) // -1 ) + 1 );
+            _get_next( \%states__with_zero_freecells_count );
     }
 }
 my %STATES_OPTS__zero;
 my %STATES_OPTS__positive;
 my %positive_rec = (
-    in => \%states__with_positive_freecells_count,
-    in_base =>
-        ( ( max( values(%states__with_positive_freecells_count) ) // -1 ) + 1 ),
+    single_card_states => \%states__with_positive_freecells_count,
+    num_single_card_states =>
+        _get_next( \%states__with_positive_freecells_count ),
     STATES_OPTS    => \%STATES_OPTS__positive,
     state_opt_next => 0,
 );
 my %zero_rec = (
-    in => \%states__with_zero_freecells_count,
-    in_base =>
-        ( ( max( values(%states__with_zero_freecells_count) ) // -1 ) + 1 ),
-    STATES_OPTS    => \%STATES_OPTS__zero,
-    state_opt_next => 0,
+    single_card_states     => \%states__with_zero_freecells_count,
+    num_single_card_states => _get_next( \%states__with_zero_freecells_count ),
+    STATES_OPTS            => \%STATES_OPTS__zero,
+    state_opt_next         => 0,
 );
 foreach my $rec ( \%positive_rec, \%zero_rec )
 {
     my $_add = sub {
         my @input = @_;
         die if @input != 2;
-        my @s = ( grep { !exists $rec->{in}->{$_} } @input );
+        my @s = ( grep { !exists $rec->{single_card_states}->{$_} } @input );
         die if grep { $_ ne 'ABOVE_FREECELL' } @s;
         if ( not @s )
         {
-            $rec->{STATES_OPTS}->{ join " ", @{ $rec->{in} }{@input} } =
+            $rec->{STATES_OPTS}
+                ->{ join " ", @{ $rec->{single_card_states} }{@input} } =
                 $rec->{state_opt_next}++;
         }
     };
@@ -89,9 +97,10 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
     $_add->( 'PARENT_1',       'ABOVE_FREECELL' );
     $_add->( 'PARENT_0',       'PARENT_1' );
     $_add->( 'PARENT_1',       'PARENT_0' );
+    $rec->{CARD_PAIR_STATE_BASE} = $rec->{state_opt_next};
 }
 
-die if $zero_rec{state_opt_next} ne 7;
+die if $zero_rec{CARD_PAIR_STATE_BASE} ne 7;
 
 my $OPT_TOPMOST              = 0;
 my $OPT_DONT_CARE            = $OPT_TOPMOST;
@@ -205,7 +214,10 @@ sub encode_composite
             {
                 $o = [
                     $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                    $variant_states->{in}->{'LOWEST_CARD'}
+                    (
+                        $variant_states->{single_card_states}->{'LOWEST_CARD'}
+                            // ( die "no LOWEST_CARD" )
+                    ),
                 ];
             }
             else
@@ -216,8 +228,10 @@ sub encode_composite
                     $o = [
                         $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                         ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
-                        ? $variant_states->{in}->{'PARENT_1'}
-                        : $variant_states->{in}->{'PARENT_0'}
+                        ? ( $variant_states->{single_card_states}->{'PARENT_1'}
+                                // ( die "no PARENT_1" ) )
+                        : ( $variant_states->{single_card_states}->{'PARENT_0'}
+                                // ( die "no PARENT_0" ) )
                     ];
                 }
                 else
@@ -241,7 +255,10 @@ sub encode_composite
                 $card,
                 [
                     $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                    $variant_states->{in}->{'ABOVE_FREECELL'}
+                    (
+                        $variant_states->{single_card_states}
+                            ->{'ABOVE_FREECELL'} // ( die "no ABOVE_FREECELL" )
+                    ),
                 ]
             );
         }
@@ -295,7 +312,8 @@ sub encode_composite
                         {
                             $writer_state->write(
                                 {
-                                    base => $variant_states->{in_base},
+                                    base => $variant_states
+                                        ->{num_single_card_states},
                                     item => $state_o
                                 }
                             );
@@ -316,7 +334,11 @@ sub encode_composite
                         {
                             $writer_state->write(
                                 {
-                                    base => $variant_states->{in_base},
+                                    base => (
+                                        $variant_states
+                                            ->{num_single_card_states}
+                                            // do { die }
+                                    ),
                                     item => $state_o
                                 }
                             );
@@ -337,7 +359,10 @@ sub encode_composite
                         {
                             $writer_state->write(
                                 {
-                                    base => $variant_states->{state_opt_next},
+                                    base => (
+                                        $variant_states->{CARD_PAIR_STATE_BASE}
+                                            // do { die }
+                                    ),
                                     item => (
                                         $variant_states->{STATES_OPTS}
                                             ->{"@states"}
