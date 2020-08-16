@@ -102,16 +102,9 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
 
 die if $zero_rec{CARD_PAIR_STATE_BASE} ne 7;
 
-my $OPT_TOPMOST              = 0;
-my $OPT_DONT_CARE            = $OPT_TOPMOST;
-my $OPT_FREECELL             = 1;
-my $OPT_ORIG_POS             = 2;
-my $NUM_KING_OPTS            = 3;
-my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
-my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
-my $NUM_OPTS                 = 5;
-my $OPT_IN_FOUNDATION        = 5;
-my $NUM_OPTS_FOR_READ        = 6;
+my $NUM_OPTS          = 5;
+my $OPT_IN_FOUNDATION = 5;
+my $NUM_OPTS_FOR_READ = 6;
 
 my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
 my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;

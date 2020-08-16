@@ -758,6 +758,8 @@ sub decode
     return $state;
 }
 
+1;
+
 __END__
 
 =head1 COPYRIGHT AND LICENSE
