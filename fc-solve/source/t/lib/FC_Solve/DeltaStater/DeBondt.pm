@@ -496,11 +496,21 @@ sub _fill_column_with_descendant_cards
     return;
 }
 
+sub _calc_reader_from_data
+{
+    my ( $self, $bits ) = @_;
+    return FC_Solve::VarBaseDigitsReader->new(
+        {
+            data => $bits,
+        },
+    );
+}
+
 sub decode
 {
     my ( $self, $bits ) = @_;
 
-    my $reader = FC_Solve::VarBaseDigitsReader->new( { data => $bits } );
+    my $reader = $self->_calc_reader_from_data($bits);
 
     $self->_initialize_card_states(
           $self->_is_bakers_dozen

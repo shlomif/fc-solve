@@ -24,6 +24,8 @@ See git/fc-solve/fc-solve/docs/debondt-compact-freecell-positions--document.asci
 
 =cut
 
+__PACKAGE__->mk_acc_ref( [qw(_proxied_worker)] );
+
 my $RANK_KING       = 13;
 my $FOUNDATION_BASE = $RANK_KING + 1;
 
@@ -125,6 +127,8 @@ sub _init
     my ( $self, $args ) = @_;
 
     $self->SUPER::_init($args);
+    $self->_proxied_worker(
+        FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker->new( $args, ) );
 
     if ( $self->_is_bakers_dozen() )
     {
@@ -407,6 +411,58 @@ sub encode_composite
 
     my $ret = $_data->($fingerprint_writer);
     return [ $ret, $_data->($state_writer) ];
+}
+
+package FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker;
+
+use parent 'FC_Solve::DeltaStater::DeBondt';
+
+sub _calc_reader_from_data
+{
+    my ( $self, $cb ) = @_;
+    return FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker::Reader->new(
+        {
+            _callback => $cb,
+        },
+    );
+}
+
+package FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker::Reader;
+
+use parent 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(
+            _callback
+            )
+    ]
+);
+
+sub _init
+{
+    my ( $self, $args ) = @_;
+
+    $self->_callback(
+        $args->{_callback}
+            || do { die "false"; }
+    );
+
+    return;
+}
+
+sub read
+{
+    my $self = shift;
+    my $base = shift;
+
+    my $ret = $self->_callback()->($base);
+
+    die if $ret ne int($ret);
+    die if $ret < 0;
+    die if $ret >= $base;
+
+    return $ret;
 }
 
 1;
