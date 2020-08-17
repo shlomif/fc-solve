@@ -76,6 +76,33 @@ sub _init
     return;
 }
 
+sub _add_state_pair
+{
+    my ( $rec, $arg ) = @_;
+    my @input = @$arg;
+    die if @input != 2;
+    my @s = ( grep { !exists $rec->single_card_states()->{$_} } @input );
+    die if grep { $_ ne 'ABOVE_FREECELL' } @s;
+    if ( not @s )
+    {
+        my ( $y, $x ) = @{ $rec->single_card_states() }{@input};
+
+        die if $y < 0 || $y >= @{ $rec->{CARD_PAIR_STATES_MAP} };
+        die if $x < 0 || $x >= @{ $rec->{CARD_PAIR_STATES_MAP}->[$y] };
+        die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
+        my $val = $rec->{state_opt_next}++;
+        $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
+        $rec->REVERSE_CARD_PAIR_STATES_MAP()->[$val] = [
+            map {
+                FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
+                    $_)
+            } @input
+        ];
+    }
+    return;
+
+}
+
 sub finalize
 {
     my $rec = shift;
@@ -87,26 +114,7 @@ sub finalize
         ]
     );
     my $_add = sub {
-        my @input = @_;
-        die if @input != 2;
-        my @s = ( grep { !exists $rec->single_card_states()->{$_} } @input );
-        die if grep { $_ ne 'ABOVE_FREECELL' } @s;
-        if ( not @s )
-        {
-            my ( $y, $x ) = @{ $rec->single_card_states() }{@input};
-
-            die if $y < 0 || $y >= @{ $rec->{CARD_PAIR_STATES_MAP} };
-            die if $x < 0 || $x >= @{ $rec->{CARD_PAIR_STATES_MAP}->[$y] };
-            die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
-            my $val = $rec->{state_opt_next}++;
-            $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
-            $rec->REVERSE_CARD_PAIR_STATES_MAP()->[$val] = [
-                map {
-                    FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
-                        $_)
-                } @input
-            ];
-        }
+        $rec->_add_state_pair( [@_] );
         return;
     };
     $_add->( 'LOWEST_CARD',    'LOWEST_CARD' );
