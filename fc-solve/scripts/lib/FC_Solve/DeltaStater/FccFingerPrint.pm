@@ -87,11 +87,11 @@ sub _add_state_pair
     {
         my ( $y, $x ) = @{ $rec->single_card_states() }{@input};
 
-        die if $y < 0 || $y >= @{ $rec->{CARD_PAIR_STATES_MAP} };
-        die if $x < 0 || $x >= @{ $rec->{CARD_PAIR_STATES_MAP}->[$y] };
-        die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
+        die if $y < 0 || $y >= @{ $rec->CARD_PAIR_STATES_MAP() };
+        die if $x < 0 || $x >= @{ $rec->CARD_PAIR_STATES_MAP()->[$y] };
+        die if defined $rec->CARD_PAIR_STATES_MAP()->[$y]->[$x];
         my $val = $rec->{state_opt_next}++;
-        $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
+        $rec->CARD_PAIR_STATES_MAP()->[$y]->[$x] = $val;
         $rec->REVERSE_CARD_PAIR_STATES_MAP()->[$val] = [
             map {
                 FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
