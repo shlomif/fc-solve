@@ -541,7 +541,7 @@ sub decode
         foreach my $color ( 0 .. 1 )
         {
             my @indexes = ( $color, ( $color | 2 ) );
-            my @vals;
+            my @are_not_set;
             foreach my $suit_idx (@indexes)
             {
                 my $f   = $fingerprint_reader->read(3);
@@ -559,10 +559,11 @@ sub decode
                 }
                 else
                 {
-                    $newval =
-                        ( ( $is_king && $should_skip_is_king )
+                    $newval = (
+                        ( $is_king && $should_skip_is_king )
                         ? $OPT_TOPMOST
-                        : (-2) );
+                        : (-2)
+                    );
                 }
                 if ( $rank > 1 )
                 {
@@ -572,11 +573,11 @@ sub decode
                 $card_states[$suit_idx][$rank]  = $val;
                 $fingerprints[$suit_idx][$rank] = $f;
 
-                push @vals, $val;
+                push @are_not_set, scalar( $val == -2 );
             }
-            if ( $vals[0] == -2 or $vals[1] == -2 )
+            if ( $are_not_set[0] or $are_not_set[1] )
             {
-                if ( $vals[0] == -2 and $vals[1] == -2 )
+                if ( $are_not_set[0] and $are_not_set[1] )
                 {
                     my $s = $state_reader->read(
                         $variant_states->CARD_PAIR_STATE_BASE()
@@ -602,7 +603,7 @@ sub decode
                         // do { die };
                     $card_states[
                         $indexes[
-                        first { $vals[$_] == -2 }
+                        first { $are_not_set[$_] }
                     0 .. 1
                         ]
                     ][$rank] = $pos;
