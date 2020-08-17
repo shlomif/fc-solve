@@ -191,12 +191,6 @@ foreach my $rec ( $positive_rec, $zero_rec )
 
 die if $zero_rec->CARD_PAIR_STATE_BASE() ne 7;
 
-my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
-my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;
-my $NUM__BAKERS_DOZEN__OPTS          = $OPT__BAKERS_DOZEN__FIRST_PARENT + 4;
-my $OPT__BAKERS_DOZEN__IN_FOUNDATION = $NUM__BAKERS_DOZEN__OPTS;
-my $NUM__BAKERS_DOZEN__OPTS_FOR_READ = $OPT__BAKERS_DOZEN__IN_FOUNDATION + 1;
-
 my @suits = @{ Games::Solitaire::Verify::Card->get_suits_seq() };
 
 sub _init
@@ -275,11 +269,7 @@ sub encode_composite
 
     # die if $derived->num_freecells > 0;
 
-    $self->_initialize_card_states(
-          $self->_is_bakers_dozen()
-        ? $NUM__BAKERS_DOZEN__OPTS
-        : $NUM_OPTS
-    );
+    $self->_initialize_card_states_for_encode();
 
     my $state_writer       = FC_Solve::VarBaseDigitsWriter::XS->new;
     my $fingerprint_writer = FC_Solve::VarBaseDigitsWriter::XS->new;

@@ -251,17 +251,23 @@ sub _get_top_rank_for_iter
     return ( $self->_is_bakers_dozen() ? ( $RANK_KING - 1 ) : $RANK_KING );
 }
 
+sub _initialize_card_states_for_encode
+{
+    my $self = shift;
+
+    return $self->_initialize_card_states(
+          $self->_is_bakers_dozen()
+        ? $NUM__BAKERS_DOZEN__OPTS
+        : $NUM_OPTS
+    );
+}
+
 sub encode_composite
 {
     my ($self) = @_;
 
     my $derived = $self->_derived_state;
-
-    $self->_initialize_card_states(
-          $self->_is_bakers_dozen()
-        ? $NUM__BAKERS_DOZEN__OPTS
-        : $NUM_OPTS
-    );
+    $self->_initialize_card_states_for_encode();
 
     my $writer = FC_Solve::VarBaseDigitsWriter->new;
 
