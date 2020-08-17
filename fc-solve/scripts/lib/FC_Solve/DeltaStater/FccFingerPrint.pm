@@ -498,6 +498,9 @@ sub _calc_variant_states
     return shift()->_init_state->num_freecells ? $positive_rec : $zero_rec;
 }
 
+my @SUIT_INDEXES =
+    ( map { my $color = $_; [ $color, ( $color | 2 ) ] } 0 .. 1 );
+
 sub decode
 {
     my ( $self, $encoded ) = @_;
@@ -539,11 +542,10 @@ sub decode
     foreach my $rank ( 1 .. $RANK_KING )
     {
         my $is_king = ( $rank == $RANK_KING );
-        foreach my $color ( 0 .. 1 )
+        foreach my $indexes (@SUIT_INDEXES)
         {
-            my @indexes = ( $color, ( $color | 2 ) );
             my @are_not_set;
-            foreach my $suit_idx (@indexes)
+            foreach my $suit_idx (@$indexes)
             {
                 my $f   = $fingerprint_reader->read(3);
                 my $val = -1;
@@ -588,9 +590,9 @@ sub decode
                         $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$s]
                             // do { die }
                     };
-                    while (@pos)
+                    for my $i ( keys @pos )
                     {
-                        $card_states[ shift @indexes ][$rank] = shift @pos;
+                        $card_states[ $indexes->[$i] ][$rank] = $pos[$i];
                     }
                 }
                 else
@@ -603,7 +605,7 @@ sub decode
                         $variant_states->rev_single_card_states()->[$s]
                         // do { die };
                     $card_states[
-                        $indexes[
+                        $indexes->[
                         first { $are_not_set[$_] }
                     0 .. 1
                         ]
