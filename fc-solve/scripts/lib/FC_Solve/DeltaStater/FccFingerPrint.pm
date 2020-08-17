@@ -546,36 +546,27 @@ sub decode
             {
                 my $f   = $fingerprint_reader->read(3);
                 my $val = -1;
+                my $newval;
                 if ( $f == $IN_FOUNDATIONS )
                 {
                     # say "ff=$f $suit_idx";
                     $foundations_obj->assign( $suits[$suit_idx], 0, $rank );
-                    if ( $rank > 1 )
-                    {
-                        $val = $OPT_DONT_CARE;
-                    }
+                    $newval = $OPT_DONT_CARE;
                 }
                 elsif ( $f == $ORIG_POS )
                 {
-                    if ( $rank > 1 )
-                    {
-                        $val = $OPT_ORIG_POS;
-                    }
+                    $newval = $OPT_ORIG_POS;
                 }
                 else
                 {
-                    if ( $rank > 1 )
-                    {
-                        if ( $is_king && $should_skip_is_king )
-                        {
-                            $val = $OPT_TOPMOST;
-                        }
-                        else
-                        {
-                            # my $s = $state_reader->read(
-                            $val = -2;
-                        }
-                    }
+                    $newval =
+                        ( ( $is_king && $should_skip_is_king )
+                        ? $OPT_TOPMOST
+                        : (-2) );
+                }
+                if ( $rank > 1 )
+                {
+                    $val = $newval;
                 }
 
                 $card_states[$suit_idx][$rank]  = $val;
