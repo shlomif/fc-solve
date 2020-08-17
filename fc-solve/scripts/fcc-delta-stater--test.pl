@@ -62,7 +62,7 @@ sub mytest
 
     my $was_printed = '';
     open my $exe_fh,
-qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -c -p -t -l lg --freecells-num 0 -mi 3000000 |#;
+qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 |#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -133,7 +133,7 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -c -p -t
 }
 
 # foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
-foreach my $DEAL_IDX ( 20533 .. 100_000_000 )
+foreach my $DEAL_IDX ( 1 .. 100_000_000 )
 {
     mytest($DEAL_IDX);
 }
