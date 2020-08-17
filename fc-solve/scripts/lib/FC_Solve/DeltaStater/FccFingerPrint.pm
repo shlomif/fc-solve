@@ -48,83 +48,60 @@ use parent 'Games::Solitaire::Verify::Base';
 
 __PACKAGE__->mk_acc_ref(
     [
-        qw(zero_freecells single_card_states rev_single_card_states num_single_card_states state_opt_next should_skip_is_king)
+        qw(
+            CARD_PAIR_STATE_BASE
+            CARD_PAIR_STATES_MAP
+            REVERSE_CARD_PAIR_STATES_MAP
+            num_single_card_states
+            rev_single_card_states
+            should_skip_is_king
+            single_card_states
+            state_opt_next
+            does_have_zero_freecells
+            )
     ]
 );
 
 sub _init
 {
     my ( $self, $args ) = @_;
-    $self->zero_freecells( $args->{zero_freecells} );
+    $self->does_have_zero_freecells( $args->{does_have_zero_freecells} );
 
+    $self->REVERSE_CARD_PAIR_STATES_MAP( [] );
     $self->single_card_states( {} );
     $self->rev_single_card_states( [] );
     $self->num_single_card_states(0);
     $self->state_opt_next(0);
-    $self->should_skip_is_king( $self->zero_freecells() );
+    $self->should_skip_is_king( $self->does_have_zero_freecells() );
     return;
 }
 
-sub _string_to_int
+sub finalize
 {
-    local $_ = shift;
-    return
-          $_ eq 'ABOVE_FREECELL' ? $OPT_FREECELL
-        : $_ eq 'PARENT_0'       ? $OPT_PARENT_SUIT_MOD_IS_0
-        : $_ eq 'PARENT_1'       ? $OPT_PARENT_SUIT_MOD_IS_1
-        : $_ eq 'LOWEST_CARD'    ? $OPT_TOPMOST
-        :                          do { die $_ };
-}
-
-sub _my_add_state
-{
-    my ( $rec, $state ) = @_;
-    my $hash     = $rec->{single_card_states};
-    my $rev_hash = $rec->{rev_single_card_states};
-    my $val      = ( ( $rec->{num_single_card_states} )++ );
-    $rev_hash->[$val] = _string_to_int($state);
-    $hash->{$state} = $val;
-}
-
-package FC_Solve::DeltaStater::FccFingerPrint;
-
-my $positive_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
-    { zero_freecells => '' } );
-my $zero_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
-    { zero_freecells => 1 } );
-foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1 /)
-{
-    $positive_rec->_my_add_state($state);
-    if ( $state ne 'ABOVE_FREECELL' )
-    {
-        $zero_rec->_my_add_state($state);
-    }
-}
-foreach my $rec ( $positive_rec, $zero_rec )
-{
-    $rec->{REVERSE_CARD_PAIR_STATES_MAP} = [];
-    $rec->{CARD_PAIR_STATES_MAP}         = [
-        map {
-            [ map { undef() } 0 .. $rec->{num_single_card_states} - 1 ]
-        } 0 .. $rec->{num_single_card_states} - 1
-    ];
+    my $rec = shift;
+    $rec->CARD_PAIR_STATES_MAP(
+        [
+            map {
+                [ map { undef() } 0 .. $rec->num_single_card_states() - 1 ]
+            } 0 .. $rec->num_single_card_states() - 1
+        ]
+    );
     my $_add = sub {
         my @input = @_;
         die if @input != 2;
-        my @s = ( grep { !exists $rec->{single_card_states}->{$_} } @input );
+        my @s = ( grep { !exists $rec->single_card_states()->{$_} } @input );
         die if grep { $_ ne 'ABOVE_FREECELL' } @s;
         if ( not @s )
         {
-            my ( $y, $x ) = @{ $rec->{single_card_states} }{@input};
+            my ( $y, $x ) = @{ $rec->single_card_states() }{@input};
 
             die if $y < 0 || $y >= @{ $rec->{CARD_PAIR_STATES_MAP} };
             die if $x < 0 || $x >= @{ $rec->{CARD_PAIR_STATES_MAP}->[$y] };
             die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
             my $val = $rec->{state_opt_next}++;
             $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
-            $rec->{REVERSE_CARD_PAIR_STATES_MAP}->[$val] = [
-                map
-                {
+            $rec->REVERSE_CARD_PAIR_STATES_MAP()->[$val] = [
+                map {
                     FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
                         $_)
                 } @input
@@ -146,10 +123,54 @@ foreach my $rec ( $positive_rec, $zero_rec )
     $_add->( 'PARENT_1',       'ABOVE_FREECELL' );
     $_add->( 'PARENT_0',       'PARENT_1' );
     $_add->( 'PARENT_1',       'PARENT_0' );
-    $rec->{CARD_PAIR_STATE_BASE} = $rec->{state_opt_next};
+    $rec->CARD_PAIR_STATE_BASE( $rec->state_opt_next() );
+    return;
 }
 
-die if $zero_rec->{CARD_PAIR_STATE_BASE} ne 7;
+sub _string_to_int
+{
+    local $_ = shift;
+    return
+          $_ eq 'ABOVE_FREECELL' ? $OPT_FREECELL
+        : $_ eq 'PARENT_0'       ? $OPT_PARENT_SUIT_MOD_IS_0
+        : $_ eq 'PARENT_1'       ? $OPT_PARENT_SUIT_MOD_IS_1
+        : $_ eq 'LOWEST_CARD'    ? $OPT_TOPMOST
+        :                          do { die $_ };
+}
+
+sub _my_add_state
+{
+    my ( $rec, $state ) = @_;
+    my $hash     = $rec->single_card_states();
+    my $rev_hash = $rec->rev_single_card_states();
+    my $val      = ( ( $rec->{num_single_card_states} )++ );
+    $rev_hash->[$val] = _string_to_int($state);
+    $hash->{$state} = $val;
+    return;
+}
+
+package FC_Solve::DeltaStater::FccFingerPrint;
+
+my $positive_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
+    { does_have_zero_freecells => '' } );
+my $zero_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
+    { does_have_zero_freecells => 1 } );
+foreach my $rec ( $positive_rec, $zero_rec )
+{
+    foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1 /)
+    {
+        if (
+            not(    $rec->does_have_zero_freecells()
+                and $state eq 'ABOVE_FREECELL' )
+            )
+        {
+            $rec->_my_add_state($state);
+        }
+    }
+    $rec->finalize();
+}
+
+die if $zero_rec->CARD_PAIR_STATE_BASE() ne 7;
 
 my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
 my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;
@@ -231,7 +252,7 @@ sub encode_composite
     my $derived = $self->_derived_state;
 
     my $variant_states      = $self->_calc_variant_states();
-    my $should_skip_is_king = $variant_states->{should_skip_is_king};
+    my $should_skip_is_king = $variant_states->should_skip_is_king();
 
     # die if $derived->num_freecells > 0;
 
@@ -259,7 +280,7 @@ sub encode_composite
                 $o = [
                     $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                     (
-                        $variant_states->{single_card_states}->{'LOWEST_CARD'}
+                        $variant_states->single_card_states()->{'LOWEST_CARD'}
                             // ( die "no LOWEST_CARD" )
                     ),
                 ];
@@ -272,9 +293,9 @@ sub encode_composite
                     $o = [
                         $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                         ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
-                        ? ( $variant_states->{single_card_states}->{'PARENT_1'}
+                        ? ( $variant_states->single_card_states()->{'PARENT_1'}
                                 // ( die "no PARENT_1" ) )
-                        : ( $variant_states->{single_card_states}->{'PARENT_0'}
+                        : ( $variant_states->single_card_states()->{'PARENT_0'}
                                 // ( die "no PARENT_0" ) )
                     ];
                 }
@@ -300,7 +321,7 @@ sub encode_composite
                 [
                     $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                     (
-                        $variant_states->{single_card_states}
+                        $variant_states->single_card_states()
                             ->{'ABOVE_FREECELL'} // ( die "no ABOVE_FREECELL" )
                     ),
                 ]
@@ -359,7 +380,8 @@ sub encode_composite
                             $state_writer->write(
                                 {
                                     base => $variant_states
-                                        ->{num_single_card_states},
+                                        ->num_single_card_states(
+                                        ),
                                     item => $state_o
                                 }
                             );
@@ -382,7 +404,8 @@ sub encode_composite
                                 {
                                     base => (
                                         $variant_states
-                                            ->{num_single_card_states}
+                                            ->num_single_card_states(
+                                            )
                                             // do { die }
                                     ),
                                     item => $state_o
@@ -406,11 +429,11 @@ sub encode_composite
                             $state_writer->write(
                                 {
                                     base => (
-                                        $variant_states->{CARD_PAIR_STATE_BASE}
+                                        $variant_states->CARD_PAIR_STATE_BASE()
                                             // do { die }
                                     ),
                                     item => (
-                                        $variant_states->{CARD_PAIR_STATES_MAP}
+                                        $variant_states->CARD_PAIR_STATES_MAP()
                                             ->[ $states[0] ]->[ $states[1] ]
                                             // do
                                         {
@@ -471,7 +494,7 @@ sub decode
     my ( $self, $encoded ) = @_;
 
     my $variant_states      = $self->_calc_variant_states();
-    my $should_skip_is_king = $variant_states->{should_skip_is_king};
+    my $should_skip_is_king = $variant_states->should_skip_is_king();
     die "@$encoded" unless @$encoded == 2;
     my $_reader = sub {
         my $idx = shift;
@@ -557,10 +580,11 @@ sub decode
                 if ( $vals[0] == -2 and $vals[1] == -2 )
                 {
                     my $s = $state_reader->read(
-                        $variant_states->{CARD_PAIR_STATE_BASE} // do { die }
+                        $variant_states->CARD_PAIR_STATE_BASE()
+                            // do { die }
                     );
                     my @pos = @{
-                        $variant_states->{REVERSE_CARD_PAIR_STATES_MAP}->[$s]
+                        $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$s]
                             // do { die }
                     };
                     while (@pos)
@@ -571,9 +595,11 @@ sub decode
                 else
                 {
                     my $s = $state_reader->read(
-                        $variant_states->{num_single_card_states} // do { die }
+                        $variant_states->num_single_card_states()
+                            // do { die }
                     );
-                    my $pos = $variant_states->{rev_single_card_states}->[$s]
+                    my $pos =
+                        $variant_states->rev_single_card_states()->[$s]
                         // do { die };
                     $card_states[
                         $indexes[
