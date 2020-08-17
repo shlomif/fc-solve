@@ -456,6 +456,7 @@ sub _fill_column_with_descendant_cards
 
     my $parent_card = $col->top;
 
+PARENT:
     while ( defined($parent_card) )
     {
         my $child_card;
@@ -465,6 +466,8 @@ sub _fill_column_with_descendant_cards
             ? $self->_wanted_suit_idx_opt($parent_card)
             : $self->_wanted_suit_bit_opt($parent_card);
 
+        my $new_rank = $parent_card->rank() - 1;
+        last PARENT if ( $new_rank < 1 );
     SEEK_CHILD_CARD:
         foreach my $suit (
               $self->_is_bakers_dozen()      ? qw(H C D S)
@@ -472,10 +475,9 @@ sub _fill_column_with_descendant_cards
             :                                  qw(H D)
             )
         {
-            my $candidate_card = $self->_calc_card(
-                $parent_card->rank() - 1,
-                $self->_suit_get_suit_idx($suit),
-            );
+            my $candidate_card =
+                $self->_calc_card( $new_rank, $self->_suit_get_suit_idx($suit),
+                );
 
             my $opt = $self->_get_card_verdict($candidate_card);
 

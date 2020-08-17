@@ -30,7 +30,7 @@ my $bakers_dozen_variant =
 __PACKAGE__->mk_acc_ref(
     [
         qw(
-            _derived_state _init_state _columns_initial_lens _variant
+            _derived_state _init_state _columns_initial_lens _orig_args _variant
             )
     ]
 );
@@ -82,40 +82,47 @@ sub _calc_state_obj_generic
     return $self->_is_bakers_dozen()
         ? Games::Solitaire::Verify::State->new(
         {
-            %{$args}, variant => $self->_variant(),
+            variant => $self->_variant(),
+            %{$args},
         }
         )
         : Games::Solitaire::Verify::State->new(
         {
-            %{$args},
             variant        => 'custom',
             variant_params => $two_fc_variant,
+            %{$args},
         },
         );
 }
 
 sub _calc_state_obj_from_string
 {
-    my ( $self, $str ) = @_;
+    my ( $self, $args ) = @_;
 
-    return $self->_calc_state_obj_generic( { string => $str } );
+    return $self->_calc_state_obj_generic(
+        { string => $args->{str}, %$args, } );
 }
 
 sub _calc_new_empty_state_obj
 {
     my ($self) = @_;
 
-    return $self->_calc_state_obj_generic( {} );
+    return $self->_calc_state_obj_generic( { %{ $self->_orig_args() }, } );
 }
 
 sub _init
 {
     my ( $self, $args ) = @_;
 
+    $self->_orig_args($args);
+
     $self->_variant( $args->{variant} || "two_fc_freecell" );
 
     $self->_init_state(
-        $self->_calc_state_obj_from_string( $args->{init_state_str} ) );
+        $self->_calc_state_obj_from_string(
+            { str => $args->{init_state_str}, %$args, }
+        )
+    );
 
     my $init_state = $self->_init_state;
 
@@ -149,7 +156,10 @@ sub set_derived
     my ( $self, $args ) = @_;
 
     $self->_derived_state(
-        $self->_calc_state_obj_from_string( $args->{state_str} ) );
+        $self->_calc_state_obj_from_string(
+            { str => $args->{state_str}, %$args, }
+        )
+    );
 
     return;
 }

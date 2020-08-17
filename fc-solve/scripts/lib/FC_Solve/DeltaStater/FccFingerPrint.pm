@@ -2,12 +2,13 @@ package FC_Solve::DeltaStater::FccFingerPrint;
 
 use strict;
 use warnings;
+use bytes;
 use 5.014;
 
 use parent 'FC_Solve::DeltaStater::DeBondt';
 
 use Carp ();
-use List::Util qw/ max /;
+use List::Util qw/ first max /;
 
 use Games::Solitaire::Verify::Card        ();
 use Games::Solitaire::Verify::Column      ();
@@ -17,6 +18,8 @@ use Games::Solitaire::Verify::State       ();
 use FC_Solve::DeltaStater::OptionsStruct ();
 use FC_Solve::VarBaseDigitsReader        ();
 use FC_Solve::VarBaseDigitsWriter        ();
+
+use Math::BigInt try => 'GMP';
 
 =head1 ALGORITHM
 
@@ -29,6 +32,17 @@ __PACKAGE__->mk_acc_ref( [qw(_proxied_worker)] );
 my $RANK_KING       = 13;
 my $FOUNDATION_BASE = $RANK_KING + 1;
 
+my $OPT_TOPMOST              = 0;
+my $OPT_DONT_CARE            = $OPT_TOPMOST;
+my $OPT_FREECELL             = 1;
+my $OPT_ORIG_POS             = 2;
+my $NUM_KING_OPTS            = 3;
+my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
+my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
+my $NUM_OPTS                 = 5;
+my $OPT_IN_FOUNDATION        = 5;
+my $NUM_OPTS_FOR_READ        = 6;
+
 my $ORIG_POS                         = 0;
 my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
 my $IN_FOUNDATIONS                   = 2;
@@ -36,6 +50,8 @@ my $IN_FOUNDATIONS                   = 2;
 # my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
 my %states__with_positive_freecells_count;
 my %states__with_zero_freecells_count;
+my @rev_states__with_positive_freecells_count;
+my @rev_states__with_zero_freecells_count;
 
 sub _get_next
 {
@@ -43,19 +59,43 @@ sub _get_next
     return ( ( max( values(%$hash_ref) ) // -1 ) + 1 );
 }
 
+sub _string_to_int
+{
+    local $_ = shift;
+    return
+          $_ eq 'ABOVE_FREECELL' ? $OPT_FREECELL
+        : $_ eq 'PARENT_0'       ? $OPT_PARENT_SUIT_MOD_IS_0
+        : $_ eq 'PARENT_1'       ? $OPT_PARENT_SUIT_MOD_IS_1
+        : $_ eq 'LOWEST_CARD'    ? $OPT_TOPMOST
+        :                          do { die $_ };
+}
+
+sub _my_add_state
+{
+    my ( $state, $hash, $rev_hash ) = @_;
+    my $val = _get_next($hash);
+    $rev_hash->[$val] = _string_to_int($state);
+    $hash->{$state} = $val;
+}
 foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1/)
 {
-    $states__with_positive_freecells_count{$state} =
-        _get_next( \%states__with_positive_freecells_count );
-
+    _my_add_state(
+        $state,
+        \%states__with_positive_freecells_count,
+        \@rev_states__with_positive_freecells_count
+    );
     if ( $state ne 'ABOVE_FREECELL' )
     {
-        $states__with_zero_freecells_count{$state} =
-            _get_next( \%states__with_zero_freecells_count );
+        _my_add_state(
+            $state,
+            \%states__with_zero_freecells_count,
+            \@rev_states__with_zero_freecells_count
+        );
     }
 }
 my %positive_rec = (
-    single_card_states => \%states__with_positive_freecells_count,
+    single_card_states     => \%states__with_positive_freecells_count,
+    rev_single_card_states => \@rev_states__with_positive_freecells_count,
     num_single_card_states =>
         _get_next( \%states__with_positive_freecells_count ),
     state_opt_next      => 0,
@@ -63,13 +103,15 @@ my %positive_rec = (
 );
 my %zero_rec = (
     single_card_states     => \%states__with_zero_freecells_count,
+    rev_single_card_states => \@rev_states__with_zero_freecells_count,
     num_single_card_states => _get_next( \%states__with_zero_freecells_count ),
     state_opt_next         => 0,
     should_skip_is_king    => 1,
 );
 foreach my $rec ( \%positive_rec, \%zero_rec )
 {
-    $rec->{CARD_PAIR_STATES_MAP} = [
+    $rec->{REVERSE_CARD_PAIR_STATES_MAP} = [];
+    $rec->{CARD_PAIR_STATES_MAP}         = [
         map {
             [ map { undef() } 0 .. $rec->{num_single_card_states} - 1 ]
         } 0 .. $rec->{num_single_card_states} - 1
@@ -88,6 +130,8 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
             die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
             my $val = $rec->{state_opt_next}++;
             $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
+            $rec->{REVERSE_CARD_PAIR_STATES_MAP}->[$val] =
+                [ map { _string_to_int($_) } @input ];
         }
         return;
     };
@@ -110,10 +154,6 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
 
 die if $zero_rec{CARD_PAIR_STATE_BASE} ne 7;
 
-my $NUM_OPTS          = 5;
-my $OPT_IN_FOUNDATION = 5;
-my $NUM_OPTS_FOR_READ = 6;
-
 my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
 my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;
 my $NUM__BAKERS_DOZEN__OPTS          = $OPT__BAKERS_DOZEN__FIRST_PARENT + 4;
@@ -130,6 +170,9 @@ sub _init
     $self->_proxied_worker(
         FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker->new( $args, ) );
 
+    die
+        if $self->_proxied_worker->_init_state()->num_freecells() ne
+        $self->_init_state->num_freecells();
     if ( $self->_is_bakers_dozen() )
     {
         die "unimplemented";
@@ -411,6 +454,154 @@ sub encode_composite
 
     my $ret = $_data->($fingerprint_writer);
     return [ $ret, $_data->($state_writer) ];
+}
+
+sub decode
+{
+    my ( $self, $encoded ) = @_;
+
+    my $variant_states =
+        $self->_init_state()->num_freecells() ? \%positive_rec : \%zero_rec;
+    my $should_skip_is_king = $variant_states->{should_skip_is_king};
+    die "@$encoded" unless @$encoded == 2;
+    my $_reader = sub {
+        my $idx    = shift;
+        my $ret    = $encoded->[$idx];
+        my $n      = Math::BigInt->new(0);
+        my $factor = 0;
+        while ( length $ret )
+        {
+            $n |=
+                ( Math::BigInt->new( ord( substr( $ret, 0, 1 ) ) ) << $factor );
+            $factor += 8;
+            $ret = substr( $ret, 1 );
+        }
+        return FC_Solve::VarBaseDigitsReader->new( { data => $n, } );
+    };
+    my $fingerprint_reader = $_reader->(0);
+    my $state_reader       = $_reader->(1);
+
+    my @queue;
+    my @fingerprints;
+    my @card_states;
+
+    my $foundations_obj = Games::Solitaire::Verify::Foundations->new(
+        {
+            num_decks => 1,
+        },
+    );
+    foreach my $rank ( 1 .. $RANK_KING )
+    {
+        my $is_king = ( $rank == $RANK_KING );
+        foreach my $color ( 0 .. 1 )
+        {
+            my @indexes = ( $color, ( $color | 2 ) );
+            my @vals;
+            foreach my $suit_idx (@indexes)
+            {
+                my $f   = $fingerprint_reader->read(3);
+                my $val = -1;
+                if ( $f == $IN_FOUNDATIONS )
+                {
+                    # say "ff=$f $suit_idx";
+                    $foundations_obj->assign( $suits[$suit_idx], 0, $rank );
+                    if ( $rank > 1 )
+                    {
+                        $val = $OPT_DONT_CARE;
+                    }
+                }
+                elsif ( $f == $ORIG_POS )
+                {
+                    if ( $rank > 1 )
+                    {
+                        $val = $OPT_ORIG_POS;
+                    }
+                }
+                else
+                {
+                    if ( $rank > 1 )
+                    {
+                        if ( $is_king && $should_skip_is_king )
+                        {
+                            $val = $OPT_TOPMOST;
+                        }
+                        else
+                        {
+                            # my $s = $state_reader->read(
+                            $val = -2;
+                        }
+                    }
+                }
+
+                $card_states[$suit_idx][$rank]  = $val;
+                $fingerprints[$suit_idx][$rank] = $f;
+
+                push @vals, $val;
+            }
+            if ( $vals[0] == -2 or $vals[1] == -2 )
+            {
+                if ( $vals[0] == -2 and $vals[1] == -2 )
+                {
+                    my $s = $state_reader->read(
+                        $variant_states->{CARD_PAIR_STATE_BASE} // do { die }
+                    );
+                    my @pos = @{
+                        $variant_states->{REVERSE_CARD_PAIR_STATES_MAP}->[$s]
+                            // do { die }
+                    };
+                    while (@pos)
+                    {
+                        $card_states[ shift @indexes ][$rank] = shift @pos;
+                    }
+                }
+                else
+                {
+                    my $s = $state_reader->read(
+                        $variant_states->{num_single_card_states} // do { die }
+                    );
+                    my $pos = $variant_states->{rev_single_card_states}->[$s]
+                        // do { die };
+                    $card_states[
+                        $indexes[
+                        first { $vals[$_] == -2 }
+                    0 .. 1
+                        ]
+                    ][$rank] = $pos;
+                }
+            }
+        }
+    }
+
+    foreach my $suit_idx ( 0 .. $#suits )
+    {
+        push @queue, $foundations_obj->value( $suits[$suit_idx], 0 );
+    }
+
+    # say "@queue";
+    foreach my $rank ( 1 .. $self->_get_top_rank_for_iter() )
+    {
+        foreach my $suit_idx ( 0 .. $#suits )
+        {
+            my $val = $card_states[$suit_idx][$rank];
+            if ( $val >= 0 )
+            {
+                push @queue, $val;
+            }
+            else
+            {
+                die if $val != -1;
+            }
+        }
+    }
+    my $ret = $self->_proxied_worker()->decode(
+        sub {
+            return shift @queue;
+        }
+    );
+
+    die if @queue;
+
+    return $ret;
 }
 
 package FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker;

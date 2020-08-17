@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use 5.014;
 use autodie;
 
 use List::Util qw/ max /;
@@ -9,9 +10,15 @@ use List::Util qw/ max /;
 STDOUT->autoflush(1);
 STDERR->autoflush(1);
 
+sub _canon
+{
+    my $s = shift;
+    return $s =~ s#((?:^:[^\n]*\n)+)#join"",sort { $a cmp $b}split/^/ms,$1#emrs;
+}
+
 # use Test::More tests => 56;
 # use Test::Differences qw/ eq_or_diff /;
-
+use Games::Solitaire::Verify::VariantsMap ();
 use FC_Solve::DeltaStater                 ();
 use FC_Solve::DeltaStater::BitReader      ();
 use FC_Solve::DeltaStater::BitWriter      ();
@@ -22,6 +29,10 @@ use FC_Solve::VarBaseDigitsReader::XS     ();
 use FC_Solve::VarBaseDigitsWriter         ();
 use FC_Solve::VarBaseDigitsWriter::XS     ();
 
+my $zero_fc_variant =
+    Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+
+$zero_fc_variant->num_freecells(0);
 my $RANK_J = 11;
 my $RANK_Q = 12;
 my $RANK_K = 13;
@@ -35,7 +46,9 @@ sub mytest
     # MS Freecell No. 982 Initial state.
     my $delta = FC_Solve::DeltaStater::FccFingerPrint->new(
         {
-                  init_state_str => "Foundations: H-0 C-0 D-0 S-0\n"
+            variant        => 'custom',
+            variant_params => $zero_fc_variant,
+            init_state_str => "Foundations: H-0 C-0 D-0 S-0\n"
                 . "Freecells:\n"
                 . (
                 scalar(`pi-make-microsoft-freecell-board -t "$DEAL_IDX"`) =~
@@ -49,7 +62,7 @@ sub mytest
 
     my $was_printed = '';
     open my $exe_fh,
-qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l lg --freecells-num 0 -mi 3000000 |#;
+qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -c -p -t -l lg --freecells-num 0 -mi 3000000 |#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -69,19 +82,23 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
                     state_str => $l,
                 }
             );
-            if ( $delta->_derived_state->to_string !~ /TD/ )
+            my $state_str = $delta->_derived_state->to_string;
+            if ( $state_str !~ /TD/ )
             {
                 # $DB::single = 1;
 
                 # ...;
             }
+            my $encoded = $delta->encode_composite();
+
+            # say "gotencoded=<@$encoded>";
             my @x =
                 map {
                 [
                     ( join "|", map { sprintf "%.2X", ord($_) } split //, $_ ),
                     length
                 ]
-                } @{ $delta->encode_composite() };
+                } @{$encoded};
 
             die if @x != 2;
 
@@ -94,6 +111,17 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
                 $DB::single = 1;
                 die "exceeded len in deal $DEAL_IDX";
             }
+            my $round_trip_state;
+            eval { $round_trip_state = $delta->decode($encoded); };
+            if ( my $err = $@ )
+            {
+                print "error <$err> when processing <$state_str>.";
+                die $err;
+            }
+            my $round_trip_str = $round_trip_state->to_string();
+            die "mismatch $round_trip_str vs $state_str\n."
+                if _canon($round_trip_str) ne _canon($state_str);
+
             $maxlen = max( $maxlen, $this_len );
         }
     }
