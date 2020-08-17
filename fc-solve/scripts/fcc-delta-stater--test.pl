@@ -136,6 +136,7 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
 foreach my $DEAL_IDX ( 1 .. 100_000_000 )
 {
     mytest($DEAL_IDX);
+    STDERR->print("\rDEAL_IDX = $DEAL_IDX");
 }
 
 __END__

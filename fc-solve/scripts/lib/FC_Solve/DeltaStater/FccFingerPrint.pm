@@ -466,15 +466,13 @@ sub decode
     die "@$encoded" unless @$encoded == 2;
     my $_reader = sub {
         my $idx    = shift;
-        my $ret    = $encoded->[$idx];
         my $n      = Math::BigInt->new(0);
         my $factor = 0;
-        while ( length $ret )
+        foreach my $byte ( split //, $encoded->[$idx], -1 )
         {
             $n |=
-                ( Math::BigInt->new( ord( substr( $ret, 0, 1 ) ) ) << $factor );
+                ( Math::BigInt->new( ord($byte) ) << $factor );
             $factor += 8;
-            $ret = substr( $ret, 1 );
         }
         return FC_Solve::VarBaseDigitsReader->new( { data => $n, } );
     };
