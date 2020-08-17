@@ -64,6 +64,7 @@ __PACKAGE__->mk_acc_ref(
     [qw(_card_states _bakers_dozen_topmost_cards_lookup)] );
 
 use FC_Solve::DeltaStater::Constants qw/
+    $NUM_OPTS
     $OPT_DONT_CARE
     $OPT_FREECELL
     $OPT_ORIG_POS
@@ -76,7 +77,6 @@ use FC_Solve::DeltaStater::Constants qw/
 my $FOUNDATION_BASE = $RANK_KING + 1;
 
 my $NUM_KING_OPTS     = 3;
-my $NUM_OPTS          = 5;
 my $OPT_IN_FOUNDATION = 5;
 my $NUM_OPTS_FOR_READ = 6;
 

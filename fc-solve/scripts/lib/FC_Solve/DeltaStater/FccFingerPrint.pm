@@ -28,6 +28,7 @@ See git/fc-solve/fc-solve/docs/debondt-compact-freecell-positions--document.asci
 __PACKAGE__->mk_acc_ref( [qw(_proxied_worker)] );
 
 use FC_Solve::DeltaStater::Constants qw/
+    $NUM_OPTS
     $OPT_DONT_CARE
     $OPT_FREECELL
     $OPT_ORIG_POS
@@ -36,9 +37,6 @@ use FC_Solve::DeltaStater::Constants qw/
     $OPT_TOPMOST
     $RANK_KING
     /;
-
-my $NUM_KING_OPTS = 3;
-my $NUM_OPTS      = 5;
 
 my $ORIG_POS                         = 0;
 my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
@@ -138,6 +136,7 @@ sub finalize
 }
 
 use FC_Solve::DeltaStater::Constants qw/
+    $NUM_OPTS
     $OPT_DONT_CARE
     $OPT_FREECELL
     $OPT_ORIG_POS

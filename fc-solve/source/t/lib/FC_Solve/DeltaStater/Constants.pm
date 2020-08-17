@@ -11,6 +11,7 @@ use parent 'Exporter';
 our %EXPORT_TAGS = (
     'all' => [
         qw/
+            $NUM_OPTS
             $OPT_DONT_CARE
             $OPT_FREECELL
             $OPT_ORIG_POS
@@ -31,5 +32,6 @@ our $OPT_FREECELL             = 1;
 our $OPT_ORIG_POS             = 2;
 our $OPT_PARENT_SUIT_MOD_IS_0 = 3;
 our $OPT_PARENT_SUIT_MOD_IS_1 = 4;
+our $NUM_OPTS                 = 5;
 
 1;
