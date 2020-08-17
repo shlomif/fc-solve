@@ -61,6 +61,7 @@ sub mytest
     # ok( $delta, 'Object was initialized correctly.' );
 
     my $was_printed = '';
+    my $count       = 0;
     open my $exe_fh,
 qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 |#;
     while ( my $l = <$exe_fh> )
@@ -71,42 +72,39 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
             {
                 $l .= $m;
             }
-            if ( $l !~ /TD/ )
-            {
-                # $DB::single = 1;
-
-                # ...;
-            }
             $delta->set_derived(
                 {
                     state_str => $l,
                 }
             );
             my $state_str = $delta->_derived_state->to_string;
-            if ( $state_str !~ /TD/ )
-            {
-                # $DB::single = 1;
-
-                # ...;
-            }
-            my $encoded = $delta->encode_composite();
+            my $encoded   = $delta->encode_composite();
+            die if @$encoded != 2;
 
             # say "gotencoded=<@$encoded>";
-            my @x =
-                map {
-                [
-                    ( join "|", map { sprintf "%.2X", ord($_) } split //, $_ ),
-                    length
-                ]
-                } @{$encoded};
-
-            die if @x != 2;
-
             $was_printed = 1;
-            print( $DEAL_IDX , ":", join( " ; ", map { "<<$_->[0]>>" } @x ) );
-            print "\n";
-            my $this_len = $x[1][1];
-            if ( $this_len > 8 )
+            if ( ( ++$count ) % 100 == 0 )
+            {
+                print( $DEAL_IDX ,
+                    ":",
+                    ($count),
+                    ": max_len = $maxlen ",
+                    ": ",
+                    join(
+                        " ; ",
+                        map { "<<$_>>" } (
+                            map {
+                                join "|",
+                                    map { sprintf "%.2X", ord($_) } split //,
+                                    $_
+                            } @$encoded
+                        )
+                    )
+                );
+                print "\n";
+            }
+            my $this_len = length $encoded->[1];
+            if ( $this_len > 7 )
             {
                 $DB::single = 1;
                 die "exceeded len in deal $DEAL_IDX";
@@ -128,15 +126,20 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
             $maxlen = max( $maxlen, $this_len );
         }
     }
-    print "max_len = $maxlen\n" if $was_printed;
+    print "DEAL_IDX = $DEAL_IDX ; max_len = $maxlen\n" if $was_printed;
     return;
 }
 
 # foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
+# foreach my $DEAL_IDX (500007572)
+my $MOD = 50;
 foreach my $DEAL_IDX ( 1 .. 100_000_000 )
 {
     mytest($DEAL_IDX);
-    STDERR->print("\rDEAL_IDX = $DEAL_IDX");
+    if ( $DEAL_IDX % $MOD == 0 )
+    {
+        STDERR->print("\rDEAL_IDX = $DEAL_IDX");
+    }
 }
 
 __END__
