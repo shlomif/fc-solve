@@ -11,13 +11,11 @@ use Carp ();
 use List::Util qw/ first max /;
 
 use Games::Solitaire::Verify::Card        ();
-use Games::Solitaire::Verify::Column      ();
 use Games::Solitaire::Verify::Foundations ();
 use Games::Solitaire::Verify::State       ();
 
-use FC_Solve::DeltaStater::OptionsStruct ();
-use FC_Solve::VarBaseDigitsReader::XS    ();
-use FC_Solve::VarBaseDigitsWriter::XS    ();
+use FC_Solve::VarBaseDigitsReader::XS ();
+use FC_Solve::VarBaseDigitsWriter::XS ();
 
 use Math::BigInt try => 'GMP';
 
@@ -29,8 +27,7 @@ See git/fc-solve/fc-solve/docs/debondt-compact-freecell-positions--document.asci
 
 __PACKAGE__->mk_acc_ref( [qw(_proxied_worker)] );
 
-my $RANK_KING       = 13;
-my $FOUNDATION_BASE = $RANK_KING + 1;
+my $RANK_KING = 13;
 
 my $OPT_TOPMOST              = 0;
 my $OPT_DONT_CARE            = $OPT_TOPMOST;
@@ -40,23 +37,32 @@ my $NUM_KING_OPTS            = 3;
 my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
 my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
 my $NUM_OPTS                 = 5;
-my $OPT_IN_FOUNDATION        = 5;
-my $NUM_OPTS_FOR_READ        = 6;
 
 my $ORIG_POS                         = 0;
 my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
 my $IN_FOUNDATIONS                   = 2;
 
-# my ( $LOWEST_CARD, $ABOVE_FREECELL, $PARENT_0, $PARENT_1 ) = ( 0 .. 3 );
-my %states__with_positive_freecells_count;
-my %states__with_zero_freecells_count;
-my @rev_states__with_positive_freecells_count;
-my @rev_states__with_zero_freecells_count;
+package FC_Solve::DeltaStater::FccFingerPrint::StatesRecord;
 
-sub _get_next
+use parent 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref(
+    [
+        qw(zero_freecells single_card_states rev_single_card_states num_single_card_states state_opt_next should_skip_is_king)
+    ]
+);
+
+sub _init
 {
-    my $hash_ref = shift;
-    return ( ( max( values(%$hash_ref) ) // -1 ) + 1 );
+    my ( $self, $args ) = @_;
+    $self->zero_freecells( $args->{zero_freecells} );
+
+    $self->single_card_states( {} );
+    $self->rev_single_card_states( [] );
+    $self->num_single_card_states(0);
+    $self->state_opt_next(0);
+    $self->should_skip_is_king( $self->zero_freecells() );
+    return;
 }
 
 sub _string_to_int
@@ -72,43 +78,29 @@ sub _string_to_int
 
 sub _my_add_state
 {
-    my ( $state, $hash, $rev_hash ) = @_;
-    my $val = _get_next($hash);
+    my ( $rec, $state ) = @_;
+    my $hash     = $rec->{single_card_states};
+    my $rev_hash = $rec->{rev_single_card_states};
+    my $val      = ( ( $rec->{num_single_card_states} )++ );
     $rev_hash->[$val] = _string_to_int($state);
     $hash->{$state} = $val;
 }
-foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1/)
+
+package FC_Solve::DeltaStater::FccFingerPrint;
+
+my $positive_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
+    { zero_freecells => '' } );
+my $zero_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
+    { zero_freecells => 1 } );
+foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1 /)
 {
-    _my_add_state(
-        $state,
-        \%states__with_positive_freecells_count,
-        \@rev_states__with_positive_freecells_count
-    );
+    $positive_rec->_my_add_state($state);
     if ( $state ne 'ABOVE_FREECELL' )
     {
-        _my_add_state(
-            $state,
-            \%states__with_zero_freecells_count,
-            \@rev_states__with_zero_freecells_count
-        );
+        $zero_rec->_my_add_state($state);
     }
 }
-my %positive_rec = (
-    single_card_states     => \%states__with_positive_freecells_count,
-    rev_single_card_states => \@rev_states__with_positive_freecells_count,
-    num_single_card_states =>
-        _get_next( \%states__with_positive_freecells_count ),
-    state_opt_next      => 0,
-    should_skip_is_king => 0,
-);
-my %zero_rec = (
-    single_card_states     => \%states__with_zero_freecells_count,
-    rev_single_card_states => \@rev_states__with_zero_freecells_count,
-    num_single_card_states => _get_next( \%states__with_zero_freecells_count ),
-    state_opt_next         => 0,
-    should_skip_is_king    => 1,
-);
-foreach my $rec ( \%positive_rec, \%zero_rec )
+foreach my $rec ( $positive_rec, $zero_rec )
 {
     $rec->{REVERSE_CARD_PAIR_STATES_MAP} = [];
     $rec->{CARD_PAIR_STATES_MAP}         = [
@@ -130,8 +122,13 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
             die if defined $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x];
             my $val = $rec->{state_opt_next}++;
             $rec->{CARD_PAIR_STATES_MAP}->[$y]->[$x] = $val;
-            $rec->{REVERSE_CARD_PAIR_STATES_MAP}->[$val] =
-                [ map { _string_to_int($_) } @input ];
+            $rec->{REVERSE_CARD_PAIR_STATES_MAP}->[$val] = [
+                map
+                {
+                    FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
+                        $_)
+                } @input
+            ];
         }
         return;
     };
@@ -152,7 +149,7 @@ foreach my $rec ( \%positive_rec, \%zero_rec )
     $rec->{CARD_PAIR_STATE_BASE} = $rec->{state_opt_next};
 }
 
-die if $zero_rec{CARD_PAIR_STATE_BASE} ne 7;
+die if $zero_rec->{CARD_PAIR_STATE_BASE} ne 7;
 
 my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
 my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;
@@ -233,7 +230,7 @@ sub encode_composite
 
     my $derived = $self->_derived_state;
 
-    my $variant_states = $derived->num_freecells ? \%positive_rec : \%zero_rec;
+    my $variant_states      = $self->_calc_variant_states();
     my $should_skip_is_king = $variant_states->{should_skip_is_king};
 
     # die if $derived->num_freecells > 0;
@@ -336,7 +333,7 @@ sub encode_composite
             if ( !( defined $opt2->[0] ) )
             {
                 $DB::single = 1;
-                Carp::confess "opt2";
+                Carp::confess("opt2");
             }
             my $fingerprint1 = $opt1->[0];
             my $fingerprint2 = $opt2->[0];
@@ -464,12 +461,16 @@ sub encode_composite
     return [ $ret, $_data->($state_writer) ];
 }
 
+sub _calc_variant_states
+{
+    return shift()->_init_state->num_freecells ? $positive_rec : $zero_rec;
+}
+
 sub decode
 {
     my ( $self, $encoded ) = @_;
 
-    my $variant_states =
-        $self->_init_state()->num_freecells() ? \%positive_rec : \%zero_rec;
+    my $variant_states      = $self->_calc_variant_states();
     my $should_skip_is_king = $variant_states->{should_skip_is_king};
     die "@$encoded" unless @$encoded == 2;
     my $_reader = sub {
