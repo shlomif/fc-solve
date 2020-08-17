@@ -49,15 +49,15 @@ use parent 'Games::Solitaire::Verify::Base';
 __PACKAGE__->mk_acc_ref(
     [
         qw(
-            CARD_PAIR_STATE_BASE
             CARD_PAIR_STATES_MAP
+            CARD_PAIR_STATE_BASE
             REVERSE_CARD_PAIR_STATES_MAP
+            does_have_zero_freecells
             num_single_card_states
             rev_single_card_states
             should_skip_is_king
             single_card_states
             state_opt_next
-            does_have_zero_freecells
             )
     ]
 );
