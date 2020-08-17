@@ -16,8 +16,8 @@ use Games::Solitaire::Verify::Foundations ();
 use Games::Solitaire::Verify::State       ();
 
 use FC_Solve::DeltaStater::OptionsStruct ();
-use FC_Solve::VarBaseDigitsReader        ();
-use FC_Solve::VarBaseDigitsWriter        ();
+use FC_Solve::VarBaseDigitsReader::XS    ();
+use FC_Solve::VarBaseDigitsWriter::XS    ();
 
 use Math::BigInt try => 'GMP';
 
@@ -244,8 +244,8 @@ sub encode_composite
         : $NUM_OPTS
     );
 
-    my $state_writer       = FC_Solve::VarBaseDigitsWriter->new;
-    my $fingerprint_writer = FC_Solve::VarBaseDigitsWriter->new;
+    my $state_writer       = FC_Solve::VarBaseDigitsWriter::XS->new;
+    my $fingerprint_writer = FC_Solve::VarBaseDigitsWriter::XS->new;
 
     my @cols_indexes = ( 0 .. $derived->num_columns - 1 );
     foreach my $col_idx (@cols_indexes)
@@ -442,7 +442,11 @@ sub encode_composite
     $self->_free_card_states;
 
     my $_data = sub {
-        my $n   = shift()->get_data;
+        my $n = shift()->get_data;
+        return $n;
+
+=begin foo
+
         my $ret = '';
         while ( $n > 0 )
         {
@@ -450,6 +454,10 @@ sub encode_composite
             $n >>= 8;
         }
         return $ret;
+=end foo
+
+=cut
+
     };
 
     my $ret = $_data->($fingerprint_writer);
@@ -465,16 +473,23 @@ sub decode
     my $should_skip_is_king = $variant_states->{should_skip_is_king};
     die "@$encoded" unless @$encoded == 2;
     my $_reader = sub {
-        my $idx    = shift;
+        my $idx = shift;
+        my $buf = $encoded->[$idx];
+
+=begin foo
         my $n      = Math::BigInt->new(0);
         my $factor = 0;
-        foreach my $byte ( split //, $encoded->[$idx], -1 )
+        foreach my $byte ( split //,$buf,  -1 )
         {
             $n |=
                 ( Math::BigInt->new( ord($byte) ) << $factor );
             $factor += 8;
         }
-        return FC_Solve::VarBaseDigitsReader->new( { data => $n, } );
+=end foo
+
+=cut
+
+        return FC_Solve::VarBaseDigitsReader::XS->new( { data => $buf, } );
     };
     my $fingerprint_reader = $_reader->(0);
     my $state_reader       = $_reader->(1);

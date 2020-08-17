@@ -5,12 +5,23 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
+use Math::BigInt try => 'GMP';
+
 __PACKAGE__->mk_acc_ref( [qw(_data)] );
 
 sub _init
 {
     my ( $self, $args ) = @_;
-    $self->_data( $args->{data} );
+    my $buf    = $args->{data};
+    my $n      = Math::BigInt->new(0);
+    my $factor = 0;
+    foreach my $byte ( split //, $buf, -1 )
+    {
+        $n |=
+            ( Math::BigInt->new( ord($byte) ) << $factor );
+        $factor += 8;
+    }
+    $self->_data($n);
     return;
 }
 

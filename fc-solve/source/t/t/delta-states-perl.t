@@ -490,7 +490,8 @@ EOF
 
 {
     my $reader =
-        FC_Solve::VarBaseDigitsReader->new( { data => ( 3 | ( 12 << 3 ) ) } );
+        FC_Solve::VarBaseDigitsReader->new(
+        { data => chr( 3 | ( 12 << 3 ) ) } );
 
     # TEST
     ok( $reader, 'Init var_reader' );
@@ -505,7 +506,9 @@ EOF
 {
     my $reader = FC_Solve::VarBaseDigitsReader->new(
         {
-            data => ( 24 + 8 * 52 + 7 * 11 * 52 )
+            data => FC_Solve::VarBaseDigitsWriter::int_to_buf(
+                24 + 8 * 52 + 7 * 11 * 52
+            )
         }
     );
 

@@ -44,11 +44,24 @@ sub write
     return;
 }
 
+sub int_to_buf
+{
+    my $n   = shift;
+    my $ret = '';
+    while ( $n > 0 )
+    {
+        $ret .= chr( $n & 255 );
+        $n >>= 8;
+    }
+    return $ret;
+}
+
 sub get_data
 {
     my $self = shift;
 
-    return $self->_data()->copy();
+    my $n = $self->_data()->copy();
+    return int_to_buf($n);
 }
 
 1;

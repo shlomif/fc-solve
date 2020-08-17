@@ -19,15 +19,7 @@ sub _canon
 # use Test::More tests => 56;
 # use Test::Differences qw/ eq_or_diff /;
 use Games::Solitaire::Verify::VariantsMap ();
-use FC_Solve::DeltaStater                 ();
-use FC_Solve::DeltaStater::BitReader      ();
-use FC_Solve::DeltaStater::BitWriter      ();
-use FC_Solve::DeltaStater::DeBondt        ();
 use FC_Solve::DeltaStater::FccFingerPrint ();
-use FC_Solve::VarBaseDigitsReader         ();
-use FC_Solve::VarBaseDigitsReader::XS     ();
-use FC_Solve::VarBaseDigitsWriter         ();
-use FC_Solve::VarBaseDigitsWriter::XS     ();
 
 my $zero_fc_variant =
     Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
