@@ -103,7 +103,7 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -c -p -t
             die if @x != 2;
 
             $was_printed = 1;
-            print( $DEAL_IDX , ":", join( ",", map { $_->[0] } @x ) );
+            print( $DEAL_IDX , ":", join( " ; ", map { "<<$_->[0]>>" } @x ) );
             print "\n";
             my $this_len = $x[1][1];
             if ( $this_len > 8 )
@@ -111,16 +111,19 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -c -p -t
                 $DB::single = 1;
                 die "exceeded len in deal $DEAL_IDX";
             }
-            my $round_trip_state;
-            eval { $round_trip_state = $delta->decode($encoded); };
-            if ( my $err = $@ )
+            if ( $state_str !~ m#^:[^\n]*? A[CDHS]\n#ms )
             {
-                print "error <$err> when processing <$state_str>.";
-                die $err;
+                my $round_trip_state;
+                eval { $round_trip_state = $delta->decode($encoded); };
+                if ( my $err = $@ )
+                {
+                    print "error <$err> when processing <$state_str>.";
+                    die $err;
+                }
+                my $round_trip_str = $round_trip_state->to_string();
+                die "mismatch $round_trip_str vs $state_str\n."
+                    if _canon($round_trip_str) ne _canon($state_str);
             }
-            my $round_trip_str = $round_trip_state->to_string();
-            die "mismatch $round_trip_str vs $state_str\n."
-                if _canon($round_trip_str) ne _canon($state_str);
 
             $maxlen = max( $maxlen, $this_len );
         }
@@ -130,7 +133,7 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -c -p -t
 }
 
 # foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
-foreach my $DEAL_IDX ( 1 .. 100_000_000 )
+foreach my $DEAL_IDX ( 20533 .. 100_000_000 )
 {
     mytest($DEAL_IDX);
 }
