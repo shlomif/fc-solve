@@ -66,19 +66,19 @@ __PACKAGE__->mk_acc_ref(
 use FC_Solve::DeltaStater::Constants qw/
     $OPT_DONT_CARE
     $OPT_FREECELL
+    $OPT_ORIG_POS
+    $OPT_PARENT_SUIT_MOD_IS_0
+    $OPT_PARENT_SUIT_MOD_IS_1
     $OPT_TOPMOST
     $RANK_KING
     /;
 
 my $FOUNDATION_BASE = $RANK_KING + 1;
 
-my $OPT_ORIG_POS             = 2;
-my $NUM_KING_OPTS            = 3;
-my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
-my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
-my $NUM_OPTS                 = 5;
-my $OPT_IN_FOUNDATION        = 5;
-my $NUM_OPTS_FOR_READ        = 6;
+my $NUM_KING_OPTS     = 3;
+my $NUM_OPTS          = 5;
+my $OPT_IN_FOUNDATION = 5;
+my $NUM_OPTS_FOR_READ = 6;
 
 my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
 my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;

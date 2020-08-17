@@ -30,15 +30,15 @@ __PACKAGE__->mk_acc_ref( [qw(_proxied_worker)] );
 use FC_Solve::DeltaStater::Constants qw/
     $OPT_DONT_CARE
     $OPT_FREECELL
+    $OPT_ORIG_POS
+    $OPT_PARENT_SUIT_MOD_IS_0
+    $OPT_PARENT_SUIT_MOD_IS_1
     $OPT_TOPMOST
     $RANK_KING
     /;
 
-my $OPT_ORIG_POS             = 2;
-my $NUM_KING_OPTS            = 3;
-my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
-my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
-my $NUM_OPTS                 = 5;
+my $NUM_KING_OPTS = 3;
+my $NUM_OPTS      = 5;
 
 my $ORIG_POS                         = 0;
 my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
@@ -140,6 +140,9 @@ sub finalize
 use FC_Solve::DeltaStater::Constants qw/
     $OPT_DONT_CARE
     $OPT_FREECELL
+    $OPT_ORIG_POS
+    $OPT_PARENT_SUIT_MOD_IS_0
+    $OPT_PARENT_SUIT_MOD_IS_1
     $OPT_TOPMOST
     $RANK_KING
     /;
