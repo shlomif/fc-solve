@@ -63,12 +63,15 @@ case) from each of the bases and get:
 __PACKAGE__->mk_acc_ref(
     [qw(_card_states _bakers_dozen_topmost_cards_lookup)] );
 
-my $RANK_KING       = 13;
+use FC_Solve::DeltaStater::Constants qw/
+    $OPT_DONT_CARE
+    $OPT_FREECELL
+    $OPT_TOPMOST
+    $RANK_KING
+    /;
+
 my $FOUNDATION_BASE = $RANK_KING + 1;
 
-my $OPT_TOPMOST              = 0;
-my $OPT_DONT_CARE            = $OPT_TOPMOST;
-my $OPT_FREECELL             = 1;
 my $OPT_ORIG_POS             = 2;
 my $NUM_KING_OPTS            = 3;
 my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
