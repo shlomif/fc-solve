@@ -258,6 +258,26 @@ sub _mark_opt_as_true
     return;
 }
 
+sub _encode_single_uknown_info_card
+{
+    my ( $self, $state_writer, $opt, $is_king, $variant_states ) = @_;
+    my $state_o = $opt->[1];
+    if ($is_king)
+    {
+        $state_writer->write( { base => 2, item => $state_o } );
+    }
+    else
+    {
+        $state_writer->write(
+            {
+                base => $variant_states->num_single_card_states(),
+                item => $state_o
+            }
+        );
+    }
+    return;
+}
+
 sub encode_composite
 {
     my ($self) = @_;
@@ -378,49 +398,16 @@ sub encode_composite
                     }
                     else
                     {
-                        my $state_o = $opt2->[1];
-                        if ($is_king)
-                        {
-                            $state_writer->write(
-                                { base => 2, item => $state_o } );
-                        }
-                        else
-                        {
-                            $state_writer->write(
-                                {
-                                    base => $variant_states
-                                        ->num_single_card_states(
-                                        ),
-                                    item => $state_o
-                                }
-                            );
-                        }
+                        $self->_encode_single_uknown_info_card( $state_writer,
+                            $opt2, $is_king, $variant_states );
                     }
                 }
                 else
                 {
                     if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
                     {
-                        my $state_o = $opt1->[1];
-                        if ($is_king)
-                        {
-                            $state_writer->write(
-                                { base => 2, item => $state_o } );
-                        }
-                        else
-                        {
-                            $state_writer->write(
-                                {
-                                    base => (
-                                        $variant_states
-                                            ->num_single_card_states(
-                                            )
-                                            // do { die }
-                                    ),
-                                    item => $state_o
-                                }
-                            );
-                        }
+                        $self->_encode_single_uknown_info_card( $state_writer,
+                            $opt1, $is_king, $variant_states );
                     }
                     else
                     {
@@ -706,6 +693,6 @@ and at http://fc-solve.shlomifish.org/docs/distro/COPYING.html . No part of
 Freecell Solver, including this file, may be copied, modified, propagated,
 or distributed except according to the terms contained in the COPYING file.
 
-Copyright (c) 2012 Shlomi Fish
+Copyright (c) 2020 Shlomi Fish
 
 =cut
