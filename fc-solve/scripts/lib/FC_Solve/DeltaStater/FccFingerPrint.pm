@@ -636,11 +636,7 @@ sub decode
             }
         }
     }
-    my $ret = $self->_proxied_worker()->decode(
-        sub {
-            return shift @queue;
-        }
-    );
+    my $ret = $self->_proxied_worker()->decode( \@queue, );
 
     die if @queue;
 
@@ -653,10 +649,10 @@ use parent 'FC_Solve::DeltaStater::DeBondt';
 
 sub _calc_reader_from_data
 {
-    my ( $self, $cb ) = @_;
+    my ( $self, $queue ) = @_;
     return FC_Solve::DeltaStater::FccFingerPrint::ProxiedWorker::Reader->new(
         {
-            _callback => $cb,
+            _q => $queue,
         },
     );
 }
@@ -668,7 +664,7 @@ use parent 'Games::Solitaire::Verify::Base';
 __PACKAGE__->mk_acc_ref(
     [
         qw(
-            _callback
+            _q
             )
     ]
 );
@@ -677,8 +673,8 @@ sub _init
 {
     my ( $self, $args ) = @_;
 
-    $self->_callback(
-        $args->{_callback}
+    $self->_q(
+        $args->{_q}
             || do { die "false"; }
     );
 
@@ -687,10 +683,9 @@ sub _init
 
 sub read
 {
-    my $self = shift;
-    my $base = shift;
+    my ( $self, $base ) = @_;
 
-    my $ret = $self->_callback()->($base);
+    my $ret = shift( @{ $self->{_q} } );
 
     die if $ret ne int($ret);
     die if $ret < 0;
