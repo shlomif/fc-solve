@@ -7,7 +7,11 @@ use Path::Tiny qw/ path /;
 
 use Test::More tests => 1;
 use Test::Differences qw/ eq_or_diff /;
-use FC_Solve::Paths qw/ bin_board $FC_SOLVE_EXE /;
+use FC_Solve::Paths qw/
+    $FC_SOLVE_EXE
+    bin_board
+    is_freecell_only
+    /;
 
 use Games::Solitaire::Verify::VariantsMap ();
 use FC_Solve::DeltaStater::FccFingerPrint ();
@@ -89,9 +93,19 @@ qq#$FC_SOLVE_EXE -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 ${boar
     return cmp_ok( $maxlen, '<=', 7, "maxlen for deal = $DEAL_IDX" );
 }
 
-# TEST
-mytest(164);
+{
+SKIP:
+    {
+        if ( is_freecell_only() )
+        {
+            Test::More::skip(
+                "freecells hard coded to 4 - we need zero freecells", 1 );
+        }
 
+        # TEST
+        mytest(164);
+    }
+}
 __END__
 
 =head1 COPYRIGHT AND LICENSE
