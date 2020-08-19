@@ -2,13 +2,15 @@
 
 use strict;
 use warnings;
-use 5.014;
-use autodie;
 
-use List::Util qw/ max /;
+use Path::Tiny qw/ path /;
 
-STDOUT->autoflush(1);
-STDERR->autoflush(1);
+use Test::More tests => 1;
+use Test::Differences qw/ eq_or_diff /;
+use FC_Solve::Paths qw/ bin_board $FC_SOLVE_EXE /;
+
+use Games::Solitaire::Verify::VariantsMap ();
+use FC_Solve::DeltaStater::FccFingerPrint ();
 
 sub _canonicalize_board_string_columns
 {
@@ -16,44 +18,31 @@ sub _canonicalize_board_string_columns
     return $s =~
         s#((?:^:[^\n]*\n)+)#join"",sort { $a cmp $b} split/^/ms, $1#emrs;
 }
-
-# use Test::More tests => 56;
-# use Test::Differences qw/ eq_or_diff /;
-use Games::Solitaire::Verify::VariantsMap ();
-use FC_Solve::DeltaStater::FccFingerPrint ();
-
 my $zero_fc_variant =
     Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
 
 $zero_fc_variant->num_freecells(0);
 
-my $maxlen = 0;
-
 sub mytest
 {
     my $DEAL_IDX = shift;
 
-    # MS Freecell No. 982 Initial state.
-    my $delta = FC_Solve::DeltaStater::FccFingerPrint->new(
+    my $maxlen   = 0;
+    my $board_fn = bin_board("$DEAL_IDX.board");
+    my $delta    = FC_Solve::DeltaStater::FccFingerPrint->new(
         {
             variant        => 'custom',
             variant_params => $zero_fc_variant,
             init_state_str => "Foundations: H-0 C-0 D-0 S-0\n"
                 . "Freecells:\n"
-                . (
-                scalar(`pi-make-microsoft-freecell-board -t "$DEAL_IDX"`) =~
-                    s/^/: /gmrs
-                )
+                . ( path($board_fn)->slurp_raw() =~ s/^/: /gmrs )
         }
     );
-
-    # TEST
-    # ok( $delta, 'Object was initialized correctly.' );
 
     my $was_printed = '';
     my $count       = 0;
     open my $exe_fh,
-qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 |#;
+qq#$FC_SOLVE_EXE -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 ${board_fn} |#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -73,26 +62,6 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
 
             # say "gotencoded=<@$encoded>";
             $was_printed = 1;
-            if ( ( ++$count ) % 100 == 0 )
-            {
-                print( $DEAL_IDX ,
-                    ":",
-                    ($count),
-                    ": max_len = $maxlen ",
-                    ": ",
-                    join(
-                        " ; ",
-                        map { "<<$_>>" } (
-                            map {
-                                join "|",
-                                    map { sprintf "%.2X", ord($_) } split //,
-                                    $_
-                            } @$encoded
-                        )
-                    )
-                );
-                print "\n";
-            }
             my $this_len = length $encoded->[1];
             if ( $this_len > 7 )
             {
@@ -114,24 +83,14 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
                     _canonicalize_board_string_columns($state_str);
             }
 
-            $maxlen = max( $maxlen, $this_len );
+            $maxlen = $this_len if $this_len > $maxlen;
         }
     }
-    print "DEAL_IDX = $DEAL_IDX ; max_len = $maxlen\n" if $was_printed;
-    return;
+    return cmp_ok( $maxlen, '<=', 7, "maxlen for deal = $DEAL_IDX" );
 }
 
-# foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
-# foreach my $DEAL_IDX (500007572)
-my $MOD = 50;
-foreach my $DEAL_IDX ( 1 .. 100_000_000 )
-{
-    mytest($DEAL_IDX);
-    if ( $DEAL_IDX % $MOD == 0 )
-    {
-        STDERR->print("\rDEAL_IDX = $DEAL_IDX");
-    }
-}
+# TEST
+mytest(164);
 
 __END__
 
