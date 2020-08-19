@@ -112,16 +112,19 @@ options.
 
 2. This is the case for only one of them. (0 bits).
 
-We can get MAX_LEN and encode the secondary state as:
+We can get MAX_LEN and encode the secondary state as one of:
 
 1. In a Freecell.
 2. The lowest card of the stack.
 3. Starting a sequence of 2 cards including itself.
 4. Starting a sequence of 3 cards including itself.
 5. Starting a sequence of 4 cards including itself.
+
 .
 .
-+MAX_LEN\+1+. Starting a sequence of MAX_LEN cards (including itself).
+.
+
+Option MAX_LEN + 1: Starting a sequence of MAX_LEN cards (including itself).
 
 Then we can follow by the bits of the yet unknown ancestor cards.
 
