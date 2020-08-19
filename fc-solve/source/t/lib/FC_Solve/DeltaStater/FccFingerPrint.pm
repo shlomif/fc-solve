@@ -240,11 +240,37 @@ sub _initialize_card_states
     return;
 }
 
+package FC_Solve::DeltaStater::FccFingerPrint::OptRecord;
+
+use parent 'Games::Solitaire::Verify::Base';
+
+__PACKAGE__->mk_acc_ref(
+    [
+        qw/
+            fingerprint_state
+            sub_state
+            /
+    ]
+);
+
+sub _init
+{
+    my ( $self, $args ) = @_;
+    $self->fingerprint_state( $args->{fingerprint_state} );
+    $self->sub_state( $args->{sub_state} );
+
+    return;
+}
+
+package FC_Solve::DeltaStater::FccFingerPrint;
+
 sub _mark_suit_rank_as_true
 {
     my ( $self, $suit, $rank, $opt ) = @_;
 
-    @{ $self->_opt_by_suit_rank( $suit, $rank ) } = @$opt;
+    die if not $opt->isa('FC_Solve::DeltaStater::FccFingerPrint::OptRecord');
+
+    @{ $self->_opt_by_suit_rank( $suit, $rank ) } = ($opt);
 
     return;
 }
@@ -252,6 +278,7 @@ sub _mark_suit_rank_as_true
 sub _mark_opt_as_true
 {
     my ( $self, $card, $opt ) = @_;
+    die if not $opt->isa('FC_Solve::DeltaStater::FccFingerPrint::OptRecord');
 
     @{ $self->_opt_by_card($card) } = (@$opt);
 
@@ -261,7 +288,7 @@ sub _mark_opt_as_true
 sub _encode_single_uknown_info_card
 {
     my ( $self, $state_writer, $opt, $is_king, $variant_states ) = @_;
-    my $state_o = $opt->[1];
+    my $state_o = $opt->sub_state;
     if ($is_king)
     {
         $state_writer->write( { base => 2, item => $state_o } );
@@ -281,7 +308,7 @@ sub _encode_single_uknown_info_card
 sub _encode_a_pair_of_uknown_info_cards
 {
     my ( $self, $state_writer, $opt1, $opt2, $is_king, $variant_states ) = @_;
-    my @states = ( $opt1->[1], $opt2->[1] );
+    my @states = ( $opt1->sub_state, $opt2->sub_state );
     if ($is_king)
     {
         foreach my $state_o (@states)
@@ -339,31 +366,49 @@ sub encode_composite
             my $o;
             if ( $height == 0 )
             {
-                $o = [
-                    $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                    (
-                        $variant_states->single_card_states()->{'LOWEST_CARD'}
-                            // ( die "no LOWEST_CARD" )
-                    ),
-                ];
+                $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                    {
+                        fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                        sub_state         => (
+                            $variant_states->single_card_states()
+                                ->{'LOWEST_CARD'} // ( die "no LOWEST_CARD" )
+                        ),
+                    }
+                );
             }
             else
             {
                 my $parent_card = $col->pos( $height - 1 );
                 if ( $self->_is_parent_card( $parent_card, $card ) )
                 {
-                    $o = [
-                        $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                        ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
-                        ? ( $variant_states->single_card_states()->{'PARENT_1'}
-                                // ( die "no PARENT_1" ) )
-                        : ( $variant_states->single_card_states()->{'PARENT_0'}
-                                // ( die "no PARENT_0" ) )
-                    ];
+                    $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                        {
+                            fingerprint_state =>
+                                $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                            sub_state => (
+                                (
+                                    $self->_suit_get_suit_idx(
+                                        $parent_card->suit
+                                    ) & 2
+                                )
+                                ? ( $variant_states->single_card_states()
+                                        ->{'PARENT_1'}
+                                        // ( die "no PARENT_1" ) )
+                                : ( $variant_states->single_card_states()
+                                        ->{'PARENT_0'}
+                                        // ( die "no PARENT_0" ) )
+                            ),
+                        }
+                    );
                 }
                 else
                 {
-                    $o = [$ORIG_POS];
+                    $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                        {
+                            fingerprint_state => $ORIG_POS,
+                            sub_state         => -1,
+                        }
+                    );
                 }
 
             }
@@ -380,13 +425,16 @@ sub encode_composite
         {
             $self->_mark_opt_as_true(
                 $card,
-                [
-                    $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                    (
-                        $variant_states->single_card_states()
-                            ->{'ABOVE_FREECELL'} // ( die "no ABOVE_FREECELL" )
-                    ),
-                ]
+                FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                    {
+                        fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                        sub_state         => (
+                            $variant_states->single_card_states()
+                                ->{'ABOVE_FREECELL'}
+                                // ( die "no ABOVE_FREECELL" )
+                        ),
+                    }
+                ),
             );
         }
     }
@@ -405,21 +453,31 @@ sub encode_composite
             my $is_founds2 = ( $rank2 >= $rank );
             my $opt1 =
                 $is_founds1
-                ? [ $IN_FOUNDATIONS, -1 ]
-                : $self->_opt_by_suit_rank( $suit1, $rank );
+                ? FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                {
+                    fingerprint_state => $IN_FOUNDATIONS,
+                    sub_state         => -1
+                }
+                )
+                : $self->_opt_by_suit_rank( $suit1, $rank )->[0];
             my $opt2 =
                 $is_founds2
-                ? [ $IN_FOUNDATIONS, -1 ]
-                : $self->_opt_by_suit_rank( $suit2, $rank );
-            die if !( defined $opt1->[0] );
+                ? FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                {
+                    fingerprint_state => $IN_FOUNDATIONS,
+                    sub_state         => -1
+                }
+                )
+                : $self->_opt_by_suit_rank( $suit2, $rank )->[0];
+            die if !( defined $opt1->fingerprint_state );
 
-            if ( !( defined $opt2->[0] ) )
+            if ( !( defined $opt2->fingerprint_state ) )
             {
                 $DB::single = 1;
                 Carp::confess("opt2");
             }
-            my $fingerprint1 = $opt1->[0];
-            my $fingerprint2 = $opt2->[0];
+            my $fingerprint1 = $opt1->fingerprint_state;
+            my $fingerprint2 = $opt2->fingerprint_state;
             my $is_king      = ( $rank == $RANK_KING );
 
             if ( $rank > 1 && ( not( $is_king && $should_skip_is_king ) ) )
