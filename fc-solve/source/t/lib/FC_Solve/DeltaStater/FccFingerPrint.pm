@@ -278,6 +278,39 @@ sub _encode_single_uknown_info_card
     return;
 }
 
+sub _encode_a_pair_of_uknown_info_cards
+{
+    my ( $self, $state_writer, $opt1, $opt2, $is_king, $variant_states ) = @_;
+    my @states = ( $opt1->[1], $opt2->[1] );
+    if ($is_king)
+    {
+        foreach my $state_o (@states)
+        {
+            $state_writer->write( { base => 2, item => $state_o } );
+        }
+    }
+    else
+    {
+        $state_writer->write(
+            {
+                base => (
+                    $variant_states->CARD_PAIR_STATE_BASE()
+                        // do { die }
+                ),
+                item => (
+                    $variant_states->CARD_PAIR_STATES_MAP()->[ $states[0] ]
+                        ->[ $states[1] ] // do
+                    {
+                        die "unknown key @states";
+                    }
+                ),
+            }
+        );
+    }
+
+    return;
+}
+
 sub encode_composite
 {
     my ($self) = @_;
@@ -411,34 +444,9 @@ sub encode_composite
                     }
                     else
                     {
-                        my @states = ( $opt1->[1], $opt2->[1] );
-                        if ($is_king)
-                        {
-                            foreach my $state_o (@states)
-                            {
-                                $state_writer->write(
-                                    { base => 2, item => $state_o } );
-                            }
-                        }
-                        else
-                        {
-                            $state_writer->write(
-                                {
-                                    base => (
-                                        $variant_states->CARD_PAIR_STATE_BASE()
-                                            // do { die }
-                                    ),
-                                    item => (
-                                        $variant_states->CARD_PAIR_STATES_MAP()
-                                            ->[ $states[0] ]->[ $states[1] ]
-                                            // do
-                                        {
-                                            die "unknown key @states";
-                                        }
-                                    ),
-                                }
-                            );
-                        }
+                        $self->_encode_a_pair_of_uknown_info_cards(
+                            $state_writer,
+                            $opt1, $opt2, $is_king, $variant_states );
                     }
                 }
             }
