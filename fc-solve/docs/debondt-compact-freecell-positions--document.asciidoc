@@ -95,6 +95,39 @@ So we get:
 
 This may need to be multiplied by the Combinations number mentioned above.
 
+[id="sequence-encoding-improve-on-the-split-FCC-improvement"]
+Second Update : Improving on the split-FCC improvement by sequence encoding
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Thinking about it, it may be possible to improve on split-FCC like this:
+
+For each of the cards that is ABOVE_PARENT_CARD_OR_EMPTY_SPACE and is in a column
+and is the lowest-rank card in a sequence, we can build a sequence from it through
+incrementing cards (and alternating in colur) as long as:
+
+1. Both ancestor cards are either ABOVE_PARENT_CARD_OR_EMPTY_SPACE or ORIG_POS and not
+blocked by a non-child card **and** both were not allocated
+by a previous known sequence. With this case we'd need 1 bit to distinguish between the
+options.
+
+2. This is the case for only one of them. (0 bits).
+
+We can get MAX_LEN and encode the secondary state as:
+
+1. In a Freecell.
+2. The lowest card of the stack.
+3. Starting a sequence of 2 cards including itself.
+4. Starting a sequence of 3 cards including itself.
+5. Starting a sequence of 4 cards including itself.
+.
+.
++MAX_LEN\+1+. Starting a sequence of MAX_LEN cards (including itself).
+
+Then we can follow by the bits of the yet unknown ancestor cards.
+
+Once we specified the cards in the sequence, we can mark these cards as
+unavailable for future-to-be-encoded sequences.
+
 [id="spec"]
 The spec
 --------
