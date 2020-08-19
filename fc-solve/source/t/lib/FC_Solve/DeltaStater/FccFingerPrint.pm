@@ -339,6 +339,53 @@ sub _encode_a_pair_of_uknown_info_cards
     return;
 }
 
+sub _calc_encoded_OptRecord
+{
+    my ( $self, $col, $height, $card, $variant_states ) = @_;
+
+    if ( $height == 0 )
+    {
+        return FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+            {
+                fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                sub_state         => (
+                    $variant_states->single_card_states()->{'LOWEST_CARD'}
+                        // ( die "no LOWEST_CARD" )
+                ),
+            }
+        );
+    }
+    else
+    {
+        my $parent_card = $col->pos( $height - 1 );
+        if ( $self->_is_parent_card( $parent_card, $card ) )
+        {
+            return FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                {
+                    fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
+                    sub_state         => (
+                        ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
+                        ? ( $variant_states->single_card_states()->{'PARENT_1'}
+                                // ( die "no PARENT_1" ) )
+                        : ( $variant_states->single_card_states()->{'PARENT_0'}
+                                // ( die "no PARENT_0" ) )
+                    ),
+                }
+            );
+        }
+        else
+        {
+            return FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
+                {
+                    fingerprint_state => $ORIG_POS,
+                    sub_state         => $INFERRED_SUB_STATE,
+                }
+            );
+        }
+
+    }
+}
+
 sub encode_composite
 {
     my ($self) = @_;
@@ -364,55 +411,9 @@ sub encode_composite
         foreach my $height ( 0 .. $col_len - 1 )
         {
             my $card = $col->pos($height);
-            my $o;
-            if ( $height == 0 )
-            {
-                $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
-                    {
-                        fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                        sub_state         => (
-                            $variant_states->single_card_states()
-                                ->{'LOWEST_CARD'} // ( die "no LOWEST_CARD" )
-                        ),
-                    }
-                );
-            }
-            else
-            {
-                my $parent_card = $col->pos( $height - 1 );
-                if ( $self->_is_parent_card( $parent_card, $card ) )
-                {
-                    $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
-                        {
-                            fingerprint_state =>
-                                $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                            sub_state => (
-                                (
-                                    $self->_suit_get_suit_idx(
-                                        $parent_card->suit
-                                    ) & 2
-                                )
-                                ? ( $variant_states->single_card_states()
-                                        ->{'PARENT_1'}
-                                        // ( die "no PARENT_1" ) )
-                                : ( $variant_states->single_card_states()
-                                        ->{'PARENT_0'}
-                                        // ( die "no PARENT_0" ) )
-                            ),
-                        }
-                    );
-                }
-                else
-                {
-                    $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
-                        {
-                            fingerprint_state => $ORIG_POS,
-                            sub_state         => $INFERRED_SUB_STATE,
-                        }
-                    );
-                }
-
-            }
+            my $o =
+                $self->_calc_encoded_OptRecord( $col, $height, $card,
+                $variant_states );
             $self->_mark_suit_rank_as_true(
                 $self->_suit_get_suit_idx( $card->suit ),
                 $card->rank, $o );
