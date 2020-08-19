@@ -364,7 +364,7 @@ sub _calc_encoded_OptRecord
                 {
                     fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                     sub_state         => (
-                        ( $self->_suit_get_suit_idx( $parent_card->suit ) & 2 )
+                        ( $self->_get_suit_idx($parent_card) & 2 )
                         ? ( $variant_states->single_card_states()->{'PARENT_1'}
                                 // ( die "no PARENT_1" ) )
                         : ( $variant_states->single_card_states()->{'PARENT_0'}
@@ -414,8 +414,7 @@ sub encode_composite
             my $o =
                 $self->_calc_encoded_OptRecord( $col, $height, $card,
                 $variant_states );
-            $self->_mark_suit_rank_as_true(
-                $self->_suit_get_suit_idx( $card->suit ),
+            $self->_mark_suit_rank_as_true( $self->_get_suit_idx($card),
                 $card->rank, $o );
         }
     }
