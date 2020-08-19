@@ -555,7 +555,8 @@ sub _calc_variant_states
 my @SUIT_INDEXES =
     ( map { my $color = $_; [ $color, ( $color | 2 ) ] } 0 .. 1 );
 
-my $CARD_STATES_SKIP = -1;
+my $CARD_STATES_SKIP              = -1;
+my $CARD_STATES__TO_BE_DETERMINED = -2;
 
 sub decode
 {
@@ -621,7 +622,7 @@ sub decode
                     $newval = (
                         ( $is_king && $should_skip_is_king )
                         ? $OPT_TOPMOST
-                        : (-2)
+                        : $CARD_STATES__TO_BE_DETERMINED
                     );
                 }
                 if ( $rank > 1 )
@@ -632,7 +633,8 @@ sub decode
                 $card_states[$suit_idx][$rank]  = $val;
                 $fingerprints[$suit_idx][$rank] = $f;
 
-                push @are_not_set, scalar( $val == -2 );
+                push @are_not_set,
+                    scalar( $val == $CARD_STATES__TO_BE_DETERMINED );
             }
             if ( $are_not_set[0] or $are_not_set[1] )
             {
