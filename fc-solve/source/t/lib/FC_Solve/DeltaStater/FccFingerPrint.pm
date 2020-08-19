@@ -41,6 +41,7 @@ use FC_Solve::DeltaStater::Constants qw/
 my $ORIG_POS                         = 0;
 my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
 my $IN_FOUNDATIONS                   = 2;
+my $INFERRED_SUB_STATE               = -1;
 
 package FC_Solve::DeltaStater::FccFingerPrint::StatesRecord;
 
@@ -406,7 +407,7 @@ sub encode_composite
                     $o = FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
                         {
                             fingerprint_state => $ORIG_POS,
-                            sub_state         => -1,
+                            sub_state         => $INFERRED_SUB_STATE,
                         }
                     );
                 }
@@ -456,7 +457,7 @@ sub encode_composite
                 ? FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
                 {
                     fingerprint_state => $IN_FOUNDATIONS,
-                    sub_state         => -1
+                    sub_state         => $INFERRED_SUB_STATE,
                 }
                 )
                 : $self->_opt_by_suit_rank( $suit1, $rank )->[0];
@@ -465,7 +466,7 @@ sub encode_composite
                 ? FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
                 {
                     fingerprint_state => $IN_FOUNDATIONS,
-                    sub_state         => -1
+                    sub_state         => $INFERRED_SUB_STATE,
                 }
                 )
                 : $self->_opt_by_suit_rank( $suit2, $rank )->[0];
@@ -554,6 +555,8 @@ sub _calc_variant_states
 my @SUIT_INDEXES =
     ( map { my $color = $_; [ $color, ( $color | 2 ) ] } 0 .. 1 );
 
+my $CARD_STATES_SKIP = -1;
+
 sub decode
 {
     my ( $self, $encoded ) = @_;
@@ -601,7 +604,7 @@ sub decode
             foreach my $suit_idx (@$indexes)
             {
                 my $f   = $fingerprint_reader->read(3);
-                my $val = -1;
+                my $val = $CARD_STATES_SKIP;
                 my $newval;
                 if ( $f == $IN_FOUNDATIONS )
                 {
@@ -685,7 +688,7 @@ sub decode
             }
             else
             {
-                die if $val != -1;
+                die if $val != $CARD_STATES_SKIP;
             }
         }
     }
