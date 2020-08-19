@@ -157,7 +157,7 @@ sub _mark_suit_rank_as_true
 {
     my ( $self, $suit, $rank, $opt ) = @_;
 
-    $self->_opt_by_suit_rank( $suit, $rank )->mark_as_true($opt);
+    $self->_set_opt( $self->_opt_by_suit_rank( $suit, $rank ), $opt );
 
     return;
 }
@@ -177,11 +177,20 @@ sub _opt_by_card
         $card->rank(), );
 }
 
+sub _set_opt
+{
+    my ( $self, $ref, $opt ) = @_;
+
+    $ref->mark_as_true($opt);
+
+    return;
+}
+
 sub _mark_opt_as_true
 {
     my ( $self, $card, $opt ) = @_;
 
-    $self->_opt_by_card($card)->mark_as_true($opt);
+    $self->_set_opt( $self->_opt_by_card($card), $opt );
 
     return;
 }

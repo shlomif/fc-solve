@@ -236,7 +236,13 @@ sub _initialize_card_states
 {
     my ( $self, $num_opts ) = @_;
 
-    $self->_card_states( [ map { [] } ( 0 .. $RANK_KING * 4 - 1 ) ] );
+    $self->_card_states(
+        [
+            map {
+                do { my $x; \$x }
+            } ( 0 .. $RANK_KING * 4 - 1 )
+        ]
+    );
 
     return;
 }
@@ -265,23 +271,13 @@ sub _init
 
 package FC_Solve::DeltaStater::FccFingerPrint;
 
-sub _mark_suit_rank_as_true
+sub _set_opt
 {
-    my ( $self, $suit, $rank, $opt ) = @_;
+    my ( $self, $ref, $opt ) = @_;
 
     die if not $opt->isa('FC_Solve::DeltaStater::FccFingerPrint::OptRecord');
 
-    @{ $self->_opt_by_suit_rank( $suit, $rank ) } = ($opt);
-
-    return;
-}
-
-sub _mark_opt_as_true
-{
-    my ( $self, $card, $opt ) = @_;
-    die if not $opt->isa('FC_Solve::DeltaStater::FccFingerPrint::OptRecord');
-
-    @{ $self->_opt_by_card($card) } = (@$opt);
+    $$ref = $opt;
 
     return;
 }
@@ -460,7 +456,7 @@ sub encode_composite
                     sub_state         => $INFERRED_SUB_STATE,
                 }
                 )
-                : $self->_opt_by_suit_rank( $suit1, $rank )->[0];
+                : ${ $self->_opt_by_suit_rank( $suit1, $rank ) };
             my $opt2 =
                 $is_founds2
                 ? FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
@@ -469,7 +465,7 @@ sub encode_composite
                     sub_state         => $INFERRED_SUB_STATE,
                 }
                 )
-                : $self->_opt_by_suit_rank( $suit2, $rank )->[0];
+                : ${ $self->_opt_by_suit_rank( $suit2, $rank ) };
             die if !( defined $opt1->fingerprint_state );
 
             if ( !( defined $opt2->fingerprint_state ) )
