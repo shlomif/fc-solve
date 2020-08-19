@@ -15,11 +15,7 @@ use FC_Solve::VarBaseDigitsReader::XS ();
 use FC_Solve::VarBaseDigitsWriter     ();
 use FC_Solve::VarBaseDigitsWriter::XS ();
 
-package main;
-
-my $RANK_J = 11;
 my $RANK_Q = 12;
-my $RANK_K = 13;
 
 {
     my @suits       = (qw(H C D S));
