@@ -8,10 +8,18 @@ import {
 } from "./fcs-validate";
 
 const FC_Solve = w.FC_Solve;
-const _my_module = Module()({});
+let _my_non_promise_module;
+let _my_module = Module()({
+    onRuntimeInitialized: () => {
+        _my_module.then((result) => {
+            _my_non_promise_module = result;
+            w.FC_Solve_init_wrappers_with_module(_my_non_promise_module);
+            return 0;
+        });
+    },
+});
 const FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
 const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
-w.FC_Solve_init_wrappers_with_module(_my_module);
 let graphics: any = null;
 
 function _increment_move_indices(move_s) {
