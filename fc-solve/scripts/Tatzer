@@ -214,9 +214,13 @@ my %themes = (
     zerofc     => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
     zerofcst   => [qw(-l zerofc --dbm-single-thread --dbmtree=apr_hash)],
-    zerofcmode => [qw(-l zerofcst --zero-freecells-mode)],
+    zerofcmode => [
+        qw(-l zerofcst --zero-freecells-mode),
+        "--prefix=$HOME/apps/fcs-zero-freecells-production",
+    ],
     zerofcmode_with_moves => [
         qw(-l zerofcmode --no-disable-moves-track --no-disable-num-stored-states),
+        "--prefix=$HOME/apps/fcs-zero-freecells-debug",
     ],
 );
 
