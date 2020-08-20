@@ -61,7 +61,7 @@ const solution_for_board_without_trailing_newline =
     test_strings.dict.solution_for_board_without_trailing_newline;
 const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
-const my_func = (qunit: QUnit, _my_mod, my_callback: () => void) => () => {
+function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
     FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
     const deal_ms_fc_board = w.deal_ms_fc_board;
 
@@ -488,7 +488,7 @@ const my_func = (qunit: QUnit, _my_mod, my_callback: () => void) => () => {
     my_callback();
 
     return;
-};
+}
 
 export function test_js_fc_solve_class(qunit: QUnit, my_callback: () => void) {
     // var _my_mod = Module({});
@@ -497,7 +497,7 @@ export function test_js_fc_solve_class(qunit: QUnit, my_callback: () => void) {
         onRuntimeInitialized: () => {
             _my_mod[0].then((result) => {
                 _my_mod[0] = result;
-                return my_func(qunit, _my_mod, my_callback)();
+                return my_func(qunit, _my_mod, my_callback);
             });
         },
     });
