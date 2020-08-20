@@ -1,0 +1,59 @@
+# vim:ft=txt:
+* Fedora 32 x86-64
+
+<<<<<<<<<<<<<<<
+[shlomif@localhost ~]$ inxi -CSG
+System:
+  Host: localhost.localdomain Kernel: 5.7.15-200.fc32.x86_64 x86_64 bits: 64
+  Desktop: KDE Plasma 5.18.5 Distro: Fedora release 32 (Thirty Two)
+CPU:
+  Topology: Quad Core model: Intel Core i5-8259U bits: 64 type: MT MCP
+  L2 cache: 6144 KiB
+  Speed: 1601 MHz min/max: 400/3800 MHz Core speeds (MHz): 1: 1601 2: 1601
+  3: 1601 4: 1600 5: 1601 6: 1600 7: 1601 8: 1601
+Graphics:
+  Device-1: Intel Iris Plus Graphics 655 driver: i915 v: kernel
+  Display: server: Fedora Project X.org 1.20.8 driver: modesetting
+  unloaded: fbdev,vesa resolution: 1920x1080~60Hz
+  OpenGL: renderer: Mesa Intel Iris Plus Graphics 655 (CFL GT3)
+  v: 4.6 Mesa 20.1.5
+>>>>>>>>>>>>>>>
+
+* Intel NUC: https://en.wikipedia.org/wiki/Next_Unit_of_Computing
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 10 10 x Several Times
+forking solver and threaded solver
+commit 86c61a87d4cf512ea6a33df62dc8afd73a279fe2
+( commit Date:   Thu Aug 20 10:17:06 2020 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+/usr/bin/clang
+tcmalloc from fedora
+With strip.
+
+0.936783075332642s
+
+    Highlight: first recording to be prepared in case the core i3 desktop system gets decomissioned
+
+<DUMP>
+Started at 1597917376.160646
+Reached Board No. 4000 at 1597917376.273427
+Reached Board No. 8000 at 1597917376.383530
+Reached Board No. 16000 at 1597917376.620837
+Reached Board No. 20000 at 1597917376.744393
+Reached Board No. 24000 at 1597917376.860539
+Unsolved Board No. 11982 at 1597917376.893515
+Reached Board No. 12000 at 1597917376.897695
+Reached Board No. 28000 at 1597917376.971563
+Reached Board No. 32000 at 1597917377.085791
+Finished at 1597917377.097429 (total_num_iters=5886704)
+</DUMP>
+
+    ( DUMPS-1597917375-t/dump010 )
