@@ -494,7 +494,12 @@ export function test_js_fc_solve_class(qunit: QUnit, my_callback: () => void) {
     // var _my_mod = Module({});
     const _my_mod = [null];
     _my_mod[0] = Module()({
-        onRuntimeInitialized: my_func(qunit, _my_mod, my_callback),
+        onRuntimeInitialized: () => {
+            _my_mod[0].then((result) => {
+                _my_mod[0] = result;
+                return my_func(qunit, _my_mod, my_callback)();
+            });
+        },
     });
     return;
 }
