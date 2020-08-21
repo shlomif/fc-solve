@@ -335,6 +335,38 @@ sub _encode_a_pair_of_uknown_info_cards
     return;
 }
 
+sub _encode_cards_pair
+{
+    my ( $self, $state_writer, $opt1, $opt2, $is_king, $variant_states ) = @_;
+    my $fingerprint1 = $opt1->fingerprint_state;
+    my $fingerprint2 = $opt2->fingerprint_state;
+    if ( $fingerprint1 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+    {
+        if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+        {
+        }
+        else
+        {
+            $self->_encode_single_uknown_info_card( $state_writer,
+                $opt2, $is_king, $variant_states );
+        }
+    }
+    else
+    {
+        if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
+        {
+            $self->_encode_single_uknown_info_card( $state_writer,
+                $opt1, $is_king, $variant_states );
+        }
+        else
+        {
+            $self->_encode_a_pair_of_uknown_info_cards( $state_writer,
+                $opt1, $opt2, $is_king, $variant_states );
+        }
+    }
+    return;
+}
+
 sub _calc_encoded_OptRecord
 {
     my ( $self, $col, $height, $card, $variant_states ) = @_;
@@ -479,31 +511,8 @@ sub encode_composite
 
             if ( $rank > 1 && ( not( $is_king && $should_skip_is_king ) ) )
             {
-                if ( $fingerprint1 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
-                {
-                    if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
-                    {
-                    }
-                    else
-                    {
-                        $self->_encode_single_uknown_info_card( $state_writer,
-                            $opt2, $is_king, $variant_states );
-                    }
-                }
-                else
-                {
-                    if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
-                    {
-                        $self->_encode_single_uknown_info_card( $state_writer,
-                            $opt1, $is_king, $variant_states );
-                    }
-                    else
-                    {
-                        $self->_encode_a_pair_of_uknown_info_cards(
-                            $state_writer,
-                            $opt1, $opt2, $is_king, $variant_states );
-                    }
-                }
+                $self->_encode_cards_pair( $state_writer,
+                    $opt1, $opt2, $is_king, $variant_states );
             }
 
             # print("$rank $color $fingerprint1 $fingerprint2\n");
