@@ -6,6 +6,7 @@ use 5.014;
 use autodie;
 
 use List::Util qw/ max /;
+use constant LARGEST_DESIRABLE_BIT_LENGTH => ( 7 * 8 );
 
 STDOUT->autoflush(1);
 STDERR->autoflush(1);
@@ -27,7 +28,23 @@ my $zero_fc_variant =
 
 $zero_fc_variant->num_freecells(0);
 
+my @remainder_bit_lens = (
+    map { my $bin = reverse( sprintf( "%08b", $_ ) ); rindex( $bin, '1' ) + 1; }
+        ( 0 .. ( ( 1 << 8 ) - 1 ) )
+);
+
+die if $remainder_bit_lens[1] != 1;
+die if $remainder_bit_lens[0b1001] != 4;
+
+sub bit_len
+{
+    my $s = shift;
+    my $l = length($s) - 1;
+    return +( $l * 8 + $remainder_bit_lens[ ord( substr( $s, $l, 1 ) ) ] );
+}
 my $maxlen = 0;
+
+my $MAX_ITERS = ( $ENV{MAX_ITERS} // 3000000 );
 
 sub mytest
 {
@@ -53,7 +70,7 @@ sub mytest
     my $was_printed = '';
     my $count       = 0;
     open my $exe_fh,
-qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 |#;
+qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecells-num 0 -sam -sel -c -p -t -mi "$MAX_ITERS" |#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -93,8 +110,8 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
                 );
                 print "\n";
             }
-            my $this_len = length $encoded->[1];
-            if ( $this_len > 7 )
+            my $this_len = bit_len( $encoded->[1] );
+            if ( $this_len > LARGEST_DESIRABLE_BIT_LENGTH )
             {
                 $DB::single = 1;
                 die "exceeded len in deal $DEAL_IDX";
