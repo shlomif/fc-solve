@@ -20,7 +20,7 @@
 export = MyFunction;
 
 /*~ This example shows how to have multiple overloads for your function */
-declare function MyFunction(...rest: any[]): any;
+declare function MyFunction(...rest: any[]): Promise<any>;
 
 // declare function MyFunction(length: number): MyFunction.LengthReturnType;
 
