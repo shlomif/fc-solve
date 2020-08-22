@@ -9,7 +9,7 @@ import {
 
 const FC_Solve = w.FC_Solve;
 let _my_non_promise_module;
-let _my_module = Module()({
+let _my_module = Module({
     onRuntimeInitialized: () => {
         _my_module.then((result) => {
             _my_non_promise_module = result;

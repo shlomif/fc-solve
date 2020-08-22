@@ -74,7 +74,7 @@ function test_idx(ajaxQueue, idx: number): void {
 }
 
 export function test_js_fc_solve_class(ajaxQueue) {
-    const _my_module = Module()({});
+    const _my_module = Module({});
     w.FC_Solve_init_wrappers_with_module(_my_module);
     return test_idx(ajaxQueue, 1);
 }

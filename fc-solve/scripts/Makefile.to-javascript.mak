@@ -147,8 +147,6 @@ POST_JS = $(SRC_DIR)/../scripts/post.js
 $(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS)
 	# emcc $(EMCC_CFLAGS) --pre-js $(PRE_JS) --post-js $(POST_JS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 	emcc $(EMCC_CFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
-	cat $(PRE_JS) $@ $(POST_JS) > temp.$@
-	mv -f temp.$@ $@
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_NODE_JS_EXE)

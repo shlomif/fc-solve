@@ -3,7 +3,7 @@ import * as base_ui from "./fcs-base-ui";
 import Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 
-const _my_module = Module()({});
+const _my_module = Module({});
 w.FC_Solve_init_wrappers_with_module(_my_module);
 
 function _create_bmark_obj() {
