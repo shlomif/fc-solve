@@ -43,6 +43,12 @@ my $ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1;
 my $IN_FOUNDATIONS                   = 2;
 my $INFERRED_SUB_STATE               = -1;
 
+sub _assert_def
+{
+    my $val = shift;
+    return $val // do { Carp::confess("undefined"); };
+}
+
 package FC_Solve::DeltaStater::FccFingerPrint::StatesRecord;
 
 use parent 'Games::Solitaire::Verify::Base';
@@ -317,16 +323,10 @@ sub _encode_a_pair_of_uknown_info_cards
     {
         $state_writer->write(
             {
-                base => (
-                    $variant_states->CARD_PAIR_STATE_BASE()
-                        // do { die }
-                ),
-                item => (
+                base => _assert_def( $variant_states->CARD_PAIR_STATE_BASE() ),
+                item => _assert_def(
                     $variant_states->CARD_PAIR_STATES_MAP()->[ $states[0] ]
-                        ->[ $states[1] ] // do
-                    {
-                        die "unknown key @states";
-                    }
+                        ->[ $states[1] ]
                 ),
             }
         );
@@ -376,9 +376,8 @@ sub _calc_encoded_OptRecord
         return FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
             {
                 fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                sub_state         => (
+                sub_state         => _assert_def(
                     $variant_states->single_card_states()->{'LOWEST_CARD'}
-                        // ( die "no LOWEST_CARD" )
                 ),
             }
         );
@@ -393,10 +392,12 @@ sub _calc_encoded_OptRecord
                     fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                     sub_state         => (
                         ( $self->_get_suit_idx($parent_card) & 2 )
-                        ? ( $variant_states->single_card_states()->{'PARENT_1'}
-                                // ( die "no PARENT_1" ) )
-                        : ( $variant_states->single_card_states()->{'PARENT_0'}
-                                // ( die "no PARENT_0" ) )
+                        ? _assert_def(
+                            $variant_states->single_card_states()->{'PARENT_1'}
+                            )
+                        : _assert_def(
+                            $variant_states->single_card_states()->{'PARENT_0'}
+                        )
                     ),
                 }
             );
@@ -422,8 +423,6 @@ sub encode_composite
 
     my $variant_states      = $self->_calc_variant_states();
     my $should_skip_is_king = $variant_states->should_skip_is_king();
-
-    # die if $derived->num_freecells > 0;
 
     $self->_initialize_card_states_for_encode();
 
@@ -457,10 +456,9 @@ sub encode_composite
                 FC_Solve::DeltaStater::FccFingerPrint::OptRecord->new(
                     {
                         fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
-                        sub_state         => (
+                        sub_state         => _assert_def(
                             $variant_states->single_card_states()
                                 ->{'ABOVE_FREECELL'}
-                                // ( die "no ABOVE_FREECELL" )
                         ),
                     }
                 ),
@@ -646,12 +644,13 @@ sub decode
                 if ( $are_not_set[0] and $are_not_set[1] )
                 {
                     my $s = $state_reader->read(
-                        $variant_states->CARD_PAIR_STATE_BASE()
-                            // do { die }
+                        _assert_def( $variant_states->CARD_PAIR_STATE_BASE() )
                     );
                     my @pos = @{
-                        $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$s]
-                            // do { die }
+                        _assert_def(
+                            $variant_states->REVERSE_CARD_PAIR_STATES_MAP()
+                                ->[$s]
+                        )
                     };
                     for my $i ( keys @pos )
                     {
@@ -661,12 +660,13 @@ sub decode
                 else
                 {
                     my $s = $state_reader->read(
-                        $variant_states->num_single_card_states()
-                            // do { die }
+                        _assert_def(
+                            $variant_states->num_single_card_states()
+                        )
                     );
                     my $pos =
-                        $variant_states->rev_single_card_states()->[$s]
-                        // do { die };
+                        _assert_def(
+                        $variant_states->rev_single_card_states()->[$s] );
                     $card_states[
                         $indexes->[
                         first { $are_not_set[$_] }
