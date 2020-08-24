@@ -18,18 +18,18 @@ use Carp ();
 
 has argv             => ( isa => 'ArrayRef[Str]', is => 'ro', required => 1, );
 has _arbitrator      => ( is  => 'rw' );
-has _add_horne_prune => ( isa => 'Bool', is => 'rw' );
+has _add_horne_prune => ( isa => 'Bool',     is => 'rw' );
 has _chosen_scans    => ( isa => 'ArrayRef', is => 'rw' );
 has _should_exit_immediately =>
     ( isa => 'Bool', is => 'rw', default => sub { 0; }, );
 has input_obj_class  => ( isa => 'Str', is => 'rw' );
 has _input_obj       => ( is  => 'rw' );
-has _is_flares       => ( is  => 'rw', isa => 'Bool', default => sub { 0; }, );
-has _num_boards      => ( isa => 'Int', is => 'rw' );
-has _offset_quotas   => ( isa => 'Int', is => 'rw' );
-has _optimize_for    => ( isa => 'Str', is => 'rw' );
-has _output_filename => ( isa => 'Str', is => 'rw' );
-has _post_processor => (
+has _is_flares       => ( is  => 'rw',  isa => 'Bool', default => sub { 0; }, );
+has _num_boards      => ( isa => 'Int', is  => 'rw' );
+has _offset_quotas   => ( isa => 'Int', is  => 'rw' );
+has _optimize_for    => ( isa => 'Str', is  => 'rw' );
+has _output_filename => ( isa => 'Str', is  => 'rw' );
+has _post_processor  => (
     isa => 'Maybe[AI::Pathfinding::OptimizeMultiple::PostProcessor]',
     is  => 'rw'
 );

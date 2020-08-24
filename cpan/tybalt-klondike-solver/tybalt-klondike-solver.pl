@@ -166,7 +166,7 @@ sub move
     {
         my ( $tn, $ts ) = $stacks[$to] =~ /(\w)(\w)$/ or next;
         my ($before) = $rank =~ /(.)$tn/ or die "tn $tn ts $ts\n$layout ";
-        $before or die "no before in\n$layout ";
+        $before                       or die "no before in\n$layout ";
         my $wantsuit = $wantsuit{$ts} or die "tn $tn ts $ts";
         for my $from ( 0 .. $#stacks )
         {
