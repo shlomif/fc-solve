@@ -2,7 +2,7 @@
 {% import "Inc/js_fc_solve.jinja" as jsfcs %}
 {% block title %}Online Freecell solver{% endblock %}
 {% block page_extra_head_elements %}
-{{ jsfcs.page_extra_head_elements(base_path, enable_jquery_ui) }}
+{{ jsfcs.page_extra_head_elements(enable_jquery_ui) }}
 {% endblock %}
 {% block body %}
 
@@ -23,9 +23,9 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 {% endmacro %}
 
 {% macro emscripten_common(incs, subject) %}
-{{ jsfcs.emscripten_common__header(base_path, subject, gen_desc()) }}
+{{ jsfcs.emscripten_common__header(subject, gen_desc()) }}
 <script>
-{{ jsfcs.set_up_requirejs(base_path)}}
+{{ jsfcs.set_up_requirejs()}}
 require(['./solver-freecell'], function (solver) {
     {{ incs }} {
     {% if enable_jquery_ui %}

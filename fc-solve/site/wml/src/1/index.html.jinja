@@ -2,7 +2,7 @@
 {% import "Inc/js_fc_solve.jinja" as jsfcs %}
 {% block title %}Freecell Deal Finder{% endblock %}
 {% block page_extra_head_elements %}
-{{ jsfcs.page_extra_head_elements(base_path, enable_jquery_ui) }}
+{{ jsfcs.page_extra_head_elements(enable_jquery_ui) }}
 {% endblock %}
 {% block body %}
 
@@ -15,6 +15,6 @@ string to indices test. <span class="enable_js">Please enable
 
 {% endmacro %}
 
-{{ jsfcs.emscripten_common(base_path=base_path, incs="require([\"s2i-test\"], function (t)", subject="string to indices test", desc=gen_desc())}}
+{{ jsfcs.emscripten_common(incs="require([\"s2i-test\"], function (t)", subject="string to indices test", desc=gen_desc())}}
 
 {% endblock %}
