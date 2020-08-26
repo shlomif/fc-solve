@@ -1,4 +1,4 @@
-{% macro fcs_document(base_path, fn,desc) %}
+{% macro fcs_document(fn,desc) %}
 <tr>
 <td>
 <a href="{{ base_path }}docs/distro/{{ fn }}.html">{{ fn }}</a>
@@ -12,20 +12,20 @@
 </tr>
 {% endmacro %}
 
-{% macro fcs_distribution_documents(base_path) %}
+{% macro fcs_distribution_documents() %}
 <table class="downloads">
 <tr>
 <th>HTML</th>
 <th>Plaintext</th>
 <th>Description</th>
 </tr>
-{{ fcs_document(base_path=base_path,fn="README",desc="The &quot;README&quot; File" ) }}
-{{ fcs_document(base_path=base_path,fn="INSTALL",desc="How to install Freecell Solver" ) }}
-{{ fcs_document(base_path=base_path,fn="NEWS",desc="The file containing what's new in every release." ) }}
-{{ fcs_document(base_path=base_path,fn="USAGE",desc="A detailed usage document" ) }}
-{{ fcs_document(base_path=base_path,fn="TODO",desc="The to-do list" ) }}
-{{ fcs_document(base_path=base_path,fn="AUTHORS",desc="List of authors and contributors" ) }}
-{{ fcs_document(base_path=base_path,fn="COPYING",desc="The licensing/copyright terms file of Freecell Solver" ) }}
+{{ fcs_document(fn="README",desc="The &quot;README&quot; File" ) }}
+{{ fcs_document(fn="INSTALL",desc="How to install Freecell Solver" ) }}
+{{ fcs_document(fn="NEWS",desc="The file containing what's new in every release." ) }}
+{{ fcs_document(fn="USAGE",desc="A detailed usage document" ) }}
+{{ fcs_document(fn="TODO",desc="The to-do list" ) }}
+{{ fcs_document(fn="AUTHORS",desc="List of authors and contributors" ) }}
+{{ fcs_document(fn="COPYING",desc="The licensing/copyright terms file of Freecell Solver" ) }}
 {% set fn="HACKING" %}
 <tr>
 <td>
