@@ -62,6 +62,7 @@ requirejs.config({
 {% endmacro %}
 {% macro REMOVED() %}
 <script src="https://raw.githack.com/zloirock/core-js/v2.5.0/client/shim.min.js"></script>
+{% block js_fc_solve__page_extra_head_elements %}{% endblock %}
 {% endmacro %}
 
 <link rel="stylesheet" href="{{ base_path }}web-fc-solve.css" />
