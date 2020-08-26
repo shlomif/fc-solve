@@ -1,4 +1,4 @@
-define(["web-fc-solve-tests", "qunit"], function (t, QUnit) {
+define(["web-fc-solve-tests--ui", "qunit"], function (t, QUnit) {
     QUnit.config.autostart = false;
     return function() {
         const _log_cb = ((window.location.href.indexOf("alert") >= 0) ? alert : console.log);
