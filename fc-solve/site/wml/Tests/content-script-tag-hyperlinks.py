@@ -1,10 +1,8 @@
 #! /usr/bin/env python3
-# -*- coding: utf-8 -*-
-# vim:fenc=utf-8
 #
-# Copyright © 2019 Shlomi Fish <shlomif@cpan.org>
+# Copyright © 2020 Shlomi Fish <shlomif@cpan.org>
 #
-# Distributed under terms of the MIT license.
+# Distributed under the terms of the MIT license.
 
 import re
 import unittest
