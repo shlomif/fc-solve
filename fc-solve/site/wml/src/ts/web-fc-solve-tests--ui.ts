@@ -82,21 +82,19 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 
             window.setTimeout(() => {
                 $("#deal_number").val("624");
+                $("#populate_input").click();
                 window.setTimeout(() => {
-                    $("#populate_input").click();
-                    window.setTimeout(() => {
-                        const board: string = String($("#stdin").val());
-                        // alert(board);
-                        // const board = $("#deal_number").text();
-                        // assert.equal(board, "KC", "foo");
-                        // TEST
-                        assert.ok(
-                            /^(?:\: )?KC 6H 4C QS 2D 4S AS$/ms.test(board),
-                            "got the text",
-                        );
-                        // TEST
-                        done();
-                    }, 1000);
+                    const board: string = String($("#stdin").val());
+                    // alert(board);
+                    // const board = $("#deal_number").text();
+                    // assert.equal(board, "KC", "foo");
+                    // TEST
+                    assert.ok(
+                        /^(?:\: )?KC 6H 4C QS 2D 4S AS$/ms.test(board),
+                        "got the text",
+                    );
+                    // TEST
+                    done();
                 }, 1000);
             }, 1000);
         });
