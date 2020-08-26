@@ -11,6 +11,7 @@ use FC_Solve::Paths qw/
     $FC_SOLVE_EXE
     bin_board
     is_freecell_only
+    normalize_lf
     /;
 
 use Games::Solitaire::Verify::VariantsMap ();
@@ -37,9 +38,11 @@ sub mytest
         {
             variant        => 'custom',
             variant_params => $zero_fc_variant,
-            init_state_str => "Foundations: H-0 C-0 D-0 S-0\n"
-                . "Freecells:\n"
-                . ( path($board_fn)->slurp_raw() =~ s/^/: /gmrs )
+            init_state_str => normalize_lf(
+                      "Foundations: H-0 C-0 D-0 S-0\n"
+                    . "Freecells:\n"
+                    . ( path($board_fn)->slurp_raw() =~ s/^/: /gmrs )
+            ),
         }
     );
 
@@ -57,7 +60,7 @@ qq#$FC_SOLVE_EXE -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 ${boar
             }
             $delta->set_derived(
                 {
-                    state_str => $l,
+                    state_str => normalize_lf($l),
                 }
             );
             my $state_str = $delta->_derived_state->to_string;
