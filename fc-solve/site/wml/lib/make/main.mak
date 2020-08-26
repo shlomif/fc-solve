@@ -369,7 +369,8 @@ $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
 
 upload: all
 	$(RSYNC) -a -l $(D)/ $(UPLOAD_URL)
-	$(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
+	# $(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
+	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 
 upload_beta: all
 	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
@@ -450,7 +451,8 @@ BROWSER_TESTS_URL = https://localhost/shlomif/fc-solve-temp
 ifeq ($(LOCAL_BROWSER_TESTS),0)
 	BROWSER_TESTS_URL = https://www.shlomifish.org/fc-solve-temp
 else
-	BROWSER_TESTS_URL = http://localhost:2400/shlomif/fc-solve-temp
+	BROWSER_TESTS_URL = http://127.0.0.1:2400/shlomif/fc-solve-temp
+	BROWSER_TESTS_URL = http://127.0.0.1:2400/fc-solve-temp
 endif
 
 browser-tests: all
