@@ -2,7 +2,7 @@
 {% import "Inc/js_fc_solve.jinja" as jsfcs %}
 {% block title %}Online Freecell solver{% endblock %}
 {% block page_extra_head_elements %}
-{{ jsfcs.page_extra_head_elements(base_path) }}
+{{ jsfcs.page_extra_head_elements(base_path, enable_jquery_ui) }}
 {% endblock %}
 {% block body %}
 
@@ -28,9 +28,13 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 {{ jsfcs.set_up_requirejs(base_path)}}
 require(['./solver-freecell'], function (solver) {
     {{ incs }} {
+    {% if enable_jquery_ui %}
     {{ jsfcs.set_up_tabs()}}
+    {% endif %}
     web_fc_solve_ui.set_up(solver);
+    {% if enable_jquery_ui %}
     $( "#output_tabs" ).tabs();
+    {% endif %}
 });
 });
 </script>

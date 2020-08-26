@@ -1,7 +1,7 @@
 {% extends "prelude.jinja" %}
 {% import "lib.jinja" as lib %}
 {% macro jquery_ui_head_elements() %}
-{{ lib.jquery_ui_head_elements(base_path)}}
+{{ lib.jquery_ui_head_elements(base_path, enable_jquery_ui)}}
 {% endmacro %}
 {% macro h2_section(id,title) %}
 <section class="h2">

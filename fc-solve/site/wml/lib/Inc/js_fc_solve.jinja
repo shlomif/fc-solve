@@ -40,7 +40,7 @@ requirejs.config({
         return;
     });
 {% endmacro %}
-{% macro page_extra_head_elements(base_path) %}
+{% macro page_extra_head_elements(base_path, enable_jquery_ui) %}
 <script>
 (function() {
     try {
@@ -49,7 +49,7 @@ requirejs.config({
     } catch(e) { window.location.replace("{{ base_path }}js-fc-solve/incompatible-browser.html"); }
 })();
 </script>
-{{ lib.jquery_ui_head_elements(base_path)}}
+{{ lib.jquery_ui_head_elements(base_path, enable_jquery_ui)}}
 <script src="{{ base_path }}js/jquery.querystring.js"></script>
 <script src="{{ base_path }}js/jquery.phoenix.js"></script>
 <script src="{{ base_path }}js/lodash.custom.min.js"></script>

@@ -2,7 +2,6 @@
 {% block js_fc_solve__page_extra_head_elements %}
 <link rel="stylesheet" href="{{ base_path }}css/qunit.css" />
 <script src="{{ base_path }}js/jquery.querystring.js"></script>
-{{ jquery_ui_head_elements() }}
 {{ js_requirejs() }}
 <link rel="stylesheet" href="{{ base_path }}web-fc-solve.css" />
 {% endblock %}
@@ -20,4 +19,8 @@ requirejs.config({
 require(["ui-tests-driver"], function (foo) {foo();});
 </script>
 
+{% endblock %}
+{% macro jquery_ui_head_elements(base_path) %}
+{% endmacro %}
+{% block js_fc_solve__jquery_ui_head_elements %}
 {% endblock %}

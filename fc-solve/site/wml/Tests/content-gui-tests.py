@@ -13,6 +13,9 @@ from lxml import etree
 
 class MyTests(unittest.TestCase):
     def test_main(self):
+        def _count_jquery_ui(root):
+            return len(root.xpath(
+                ".//script[contains(@src, 'js/jquery-ui/jquery-ui.min.js')]"))
         input_fn = './dest/js-fc-solve/text/gui-tests.xhtml'
         with open(input_fn, "rb") as fh:
             root = etree.HTML(fh.read())
@@ -20,6 +23,11 @@ class MyTests(unittest.TestCase):
                 ".//script")))
             self.assertTrue(len(root.xpath(
                 ".//textarea")))
+            self.assertEqual(_count_jquery_ui(root), 0)
+        input_fn = './dest/js-fc-solve/text/index.html'
+        with open(input_fn, "rb") as fh:
+            root = etree.HTML(fh.read())
+            self.assertTrue(_count_jquery_ui(root))
 
 
 if __name__ == '__main__':
