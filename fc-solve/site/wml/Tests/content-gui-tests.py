@@ -18,6 +18,8 @@ class MyTests(unittest.TestCase):
             root = etree.HTML(fh.read())
             self.assertTrue(len(root.xpath(
                 ".//script")))
+            self.assertTrue(len(root.xpath(
+                ".//textarea")))
 
 
 if __name__ == '__main__':
