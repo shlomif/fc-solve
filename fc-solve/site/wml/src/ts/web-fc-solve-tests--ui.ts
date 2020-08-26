@@ -82,7 +82,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             $("#deal_number").val("624");
             $("#populate_input").click();
             window.setTimeout(() => {
-                const board: string = String($("#stdin").val());
+                const board: string = $("textarea#stdin").val() as string;
                 // alert(board);
                 // const board = $("#deal_number").text();
                 // assert.equal(board, "KC", "foo");

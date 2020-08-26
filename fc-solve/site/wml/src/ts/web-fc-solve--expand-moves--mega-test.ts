@@ -1,6 +1,5 @@
 import * as w from "./web-fc-solve";
 import Module from "./libfcs-wrap";
-"use strict";
 
 const impossible_deal: number = 11982;
 const last_deal: number = 32000;
