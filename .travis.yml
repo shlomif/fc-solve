@@ -57,8 +57,8 @@ cache:
         - $HOME/perl_modules
         - fc-solve/source/avl-2.0.3
 matrix:
-    allow_failures:
-        - env: WHAT=buildproc
+    # allow_failures:
+    #     - env: WHAT=buildproc
     include:
         - os: linux
           env:
