@@ -6,6 +6,7 @@ include lib/make/include.mak
 
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
+LOCAL_BROWSER_TESTS = 0
 
 SKIP_EMCC ?= 0
 
@@ -444,6 +445,14 @@ $(FAVICON): ../../source/fc-solve.ico
 
 real_all: $(FAVICON)
 
+BROWSER_TESTS_URL = https://localhost/shlomif/fc-solve-temp
+
+ifeq ($(LOCAL_BROWSER_TESTS),0)
+	BROWSER_TESTS_URL = https://www.shlomifish.org/fc-solve-temp
+else
+	BROWSER_TESTS_URL = http://localhost:2400/shlomif/fc-solve-temp
+endif
+
 browser-tests: all
-	qunit-puppeteer 'https://www.shlomifish.org/fc-solve-temp/js-fc-solve/automated-tests/'
-	qunit-puppeteer 'https://www.shlomifish.org/fc-solve-temp/js-fc-solve/text/gui-tests.xhtml'
+	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
+	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
