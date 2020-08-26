@@ -57,7 +57,6 @@ const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
 function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
     FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
-    const deal_ms_fc_board = w.deal_ms_fc_board;
 
     qunit.module("FC_Solve.Algorithmic", () => {
         qunit.test("perl_range", (assert) => {
@@ -99,7 +98,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                         done();
                     }, 1000);
                 }, 1000);
-            }, 5000);
+            }, 1000);
         });
     });
 
