@@ -77,7 +77,6 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         qunit.test("populate_deal", (assert) => {
             assert.expect(1);
 
-            // TEST
             let done = assert.async(1);
 
             $("#deal_number").val("624");
@@ -92,7 +91,6 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     /^(?:\: )?KC 6H 4C QS 2D 4S AS$/ms.test(board),
                     "got the text",
                 );
-                // TEST
                 done();
             }, 1000);
         });
