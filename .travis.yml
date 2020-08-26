@@ -21,6 +21,7 @@ addons:
             - libgoogle-perftools-dev
             - libhunspell-dev
             - libperl-dev
+            - libxml2-dev
             - lynx
             - mercurial
             - ninja-build

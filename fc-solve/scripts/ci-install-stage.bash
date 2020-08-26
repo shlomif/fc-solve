@@ -6,7 +6,7 @@
 # Distributed under terms of the MIT license.
 #
 set -e -x
-python3 -m pip install --user --upgrade cffi cookiecutter freecell_solver pycotap pysol_cards random2 six vnu_validator Zenfilter
+python3 -m pip install --user --upgrade cffi cookiecutter freecell_solver lxml pycotap pysol_cards random2 six vnu_validator Zenfilter
 # For G-S-V dzil
 cpanm --quiet --notest Dist::Zilla Pod::Coverage::TrustPod Pod::Weaver::Section::Support Test::EOL Test::NoTabs Test::Kwalitee Test::Perl::Critic::Policy Test::Pod Test::Pod::Coverage
 # For the website
