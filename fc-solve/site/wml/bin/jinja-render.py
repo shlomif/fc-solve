@@ -15,7 +15,9 @@ import subprocess
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
-env = Environment(
+
+def _calc_env():
+    return Environment(
         loader=FileSystemLoader(['./src', './lib'])
         )
 
@@ -62,6 +64,7 @@ for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
     enable_jquery_ui = (fn != 'js-fc-solve/text/gui-tests.xhtml')
     base_path = "../"*len([x for x in fn if x == '/'])
+    env = _calc_env()
     env.globals['base_path'] = base_path
     template = env.get_template(fn+'.jinja')
     env.globals['base_path'] = base_path
