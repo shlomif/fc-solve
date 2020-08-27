@@ -86,7 +86,7 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                     assert.ok(sol.length > 300, "solution is long enough");
                     done();
                 }, 1000);
-            }, 1000);
+            }, 200);
         });
     });
 
