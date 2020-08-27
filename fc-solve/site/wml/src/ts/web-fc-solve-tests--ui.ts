@@ -1,12 +1,6 @@
 import * as s2i from "./s2ints_js";
-import Module from "./libfcs-wrap";
-import * as w from "./web-fc-solve";
 import * as test_strings from "./web-fcs-tests-strings";
 
-const FC_Solve = w.FC_Solve;
-const FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
-const FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
-const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
 const ms_deal_24 = `4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
@@ -54,8 +48,9 @@ const solution_for_board_without_trailing_newline =
     test_strings.dict.solution_for_board_without_trailing_newline;
 const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
+
 function my_func(qunit: QUnit, my_callback: () => void) {
-    qunit.module("FC_Solve.Algorithmic", () => {
+    qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
             assert.expect(4);
 
