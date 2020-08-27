@@ -54,9 +54,7 @@ const solution_for_board_without_trailing_newline =
     test_strings.dict.solution_for_board_without_trailing_newline;
 const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
-function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
-    FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
-
+function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.Algorithmic", () => {
         qunit.test("populate_deal", (assert) => {
             assert.expect(4);
@@ -103,14 +101,6 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 }
 
 export function test_js_fc_solve_class(qunit: QUnit, my_callback: () => void) {
-    const _my_mod = [null];
-    _my_mod[0] = Module({
-        onRuntimeInitialized: () => {
-            _my_mod[0].then((result) => {
-                _my_mod[0] = result;
-                return my_func(qunit, _my_mod, my_callback);
-            });
-        },
-    });
+    my_func(qunit, my_callback);
     return;
 }
