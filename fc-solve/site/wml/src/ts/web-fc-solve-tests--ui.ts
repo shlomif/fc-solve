@@ -75,7 +75,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             t(4, 3, [], "reverse range");
         });
         qunit.test("populate_deal", (assert) => {
-            assert.expect(1);
+            assert.expect(4);
 
             let done = assert.async(1);
 
@@ -91,7 +91,24 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     /^(?:\: )?KC 6H 4C QS 2D 4S AS$/ms.test(board),
                     "got the text",
                 );
-                done();
+                {
+                    const sol: string = $("#output").val() as string;
+                    // TEST
+                    assert.deepEqual(sol, "", "solution is empty at start");
+                }
+                $("#run_do_solve").click();
+                window.setTimeout(() => {
+                    const sol: string = $("#output").val() as string;
+
+                    // TEST
+                    assert.ok(
+                        /^Move a card from/ms.test(sol),
+                        "solution was filled",
+                    );
+                    // TEST
+                    assert.ok(sol.length > 300, "solution is long enough");
+                    done();
+                }, 1000);
             }, 1000);
         });
     });
