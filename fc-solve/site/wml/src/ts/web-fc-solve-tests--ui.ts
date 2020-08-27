@@ -9,17 +9,20 @@ QC 9S 6H 9H 3S KS 3D
 AH 5S 6S AD 8H JD
 7S 6C 7D 4D 8S 9D
 `;
+const solution_for_deal_24__default = test_strings.dict["24_default_ascii"];
 const solution_for_deal_24__default__with_unicoded_suits =
     test_strings.dict["24_default_unicode_suits"];
 
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(4);
+            assert.expect(3);
 
             let done = assert.async(1);
 
             $("#deal_number").val("24");
+            $("#preset").val("default");
+            $("#one_based").prop("checked", false);
             $("#populate_input").click();
             window.setTimeout(() => {
                 const board: string = $("#stdin").val() as string;
@@ -47,12 +50,11 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                     const sol: string = _get_solution();
 
                     // TEST
-                    assert.ok(
-                        /^Move a card from/ms.test(sol),
+                    assert.deepEqual(
+                        sol,
+                        solution_for_deal_24__default,
                         "solution was filled",
                     );
-                    // TEST
-                    assert.ok(sol.length > 300, "solution is long enough");
                     done();
                 }, 200);
             }, 200);
