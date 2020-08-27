@@ -22,14 +22,19 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                     /^(?:\: )?KC 6H 4C QS 2D 4S AS$/ms.test(board),
                     "got the text",
                 );
-                {
-                    const sol: string = $("#output").val() as string;
-                    // TEST
-                    assert.deepEqual(sol, "", "solution is empty at start");
+
+                function _get_solution(): string {
+                    return $("#output").val() as string;
                 }
+                // TEST
+                assert.deepEqual(
+                    _get_solution(),
+                    "",
+                    "solution is empty at start",
+                );
                 $("#run_do_solve").click();
                 window.setTimeout(() => {
-                    const sol: string = $("#output").val() as string;
+                    const sol: string = _get_solution();
 
                     // TEST
                     assert.ok(
