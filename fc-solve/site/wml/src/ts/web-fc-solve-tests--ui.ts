@@ -1,5 +1,14 @@
 import * as test_strings from "./web-fcs-tests-strings";
 
+const ms_deal_24 = `4C 2C 9C 8C QS 4S 2H
+5H QH 3C AC 3H 4H QD
+QC 9S 6H 9H 3S KS 3D
+5D 2S JC 5C JH 6D AS
+2D KD TH TC TD 8D
+7H JS KH TS KC 7C
+AH 5S 6S AD 8H JD
+7S 6C 7D 4D 8S 9D
+`;
 const solution_for_deal_24__default__with_unicoded_suits =
     test_strings.dict["24_default_unicode_suits"];
 
@@ -10,7 +19,7 @@ function my_func(qunit: QUnit, my_callback: () => void) {
 
             let done = assert.async(1);
 
-            $("#deal_number").val("624");
+            $("#deal_number").val("24");
             $("#populate_input").click();
             window.setTimeout(() => {
                 const board: string = $("#stdin").val() as string;
@@ -18,9 +27,10 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                 // const board = $("#deal_number").text();
                 // assert.equal(board, "KC", "foo");
                 // TEST
-                assert.ok(
-                    /^(?:\: )?KC 6H 4C QS 2D 4S AS$/ms.test(board),
-                    "got the text",
+                assert.deepEqual(
+                    board.replace(/^#[^\n]*\n/gms, "").replace(/^: /gms, ""),
+                    ms_deal_24,
+                    "got the initial layout text",
                 );
 
                 function _get_solution(): string {
