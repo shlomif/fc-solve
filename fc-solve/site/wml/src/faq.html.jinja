@@ -656,10 +656,34 @@ never be) but it is still usable in its current state.
 </p>
 
 <p>
-Also see <a href="http://shlomif-tech.livejournal.com/2011/03/12/">an
+Also see:
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="http://shlomif-tech.livejournal.com/2011/03/12/">An
 earlier blog post</a> about “Finished Projects, Maintained Projects and Those
 that are Up For Adoption”.
 </p>
+</li>
+
+<li>
+<p>
+<a href="https://perl.plover.com/yak/12views/samples/notes.html#sl-9">Mark Jason Dominus about
+"New Versions"</a> - the other side of the coin.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://www.joelonsoftware.com/2001/07/21/good-software-takes-ten-years-get-used-to-it/">"Good Software Takes Ten Years. Get Used To it."
+( Joel on Software )</a>
+</p>
+</li>
+
+</ul>
 
 {% endcall %}
 
@@ -715,8 +739,8 @@ the fact that it was poorly coded, rather than Perl’s fault.
 </p>
 
 <p>
-I've kept the code written in C after version 0.2 which was written in C,
-and have preferred to keep it in C, for performance reasons. Porting a
+I've kept the code written in C after version 0.2, which was written in it,
+and have preferred to keep it that way, for performance reasons. Porting a
 <a href="http://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">different
 solver</a> I wrote - for
 <a href="https://en.wikipedia.org/wiki/Black_Hole_%28solitaire%29">Black Hole
@@ -727,8 +751,9 @@ times faster</a> and I naturally find a 24 factor performance decrease
 unacceptable.
 </p>
 
-<h3 id="algo">How does Freecell Solver solve Freecell? Which algorithm
-does it use?</h3>
+{% endcall %}
+
+{% call h3_section(id="algo",title="How does Freecell Solver solve Freecell? Which algorithm does it use?") %}
 
 <p>
 The exact algorithm used by “fc-solve” can be configured using the various
@@ -774,8 +799,9 @@ different deals in different threads or processes.
 
 </ol>
 
-<h3 id="input">How does Freecell Solver reads the cards and board layout? What
-kind of input does it accept?</h3>
+{% endcall %}
+
+{% call h3_section(id="input",title="How does Freecell Solver read the cards and board layout? What kind of input does it accept?") %}
 
 <p>
 The API of the solver accepts a textual representation in a certain well-formed
@@ -794,21 +820,22 @@ seems to be the approach taken by the <a href="https://www.youtube.com/watch?v=o
 
 <p>
 Note that Freecell Solver also ships with some programs that generate the
-initial deals of some popular Solitaire implementations, and some
-<a href="links.html#front_ends">implementations of Solitaire</a> provide
-integration with Freecell Solver, that provides it with automated input, and
-also uses its moves output to display the solution.
+initial deals of some popular Solitaire implementations. Moreover, some
+<a href="links.html#front_ends">implementations of Solitaire</a> have
+integrated Freecell Solver, which in turn make them input the board to
+the solver and use its moves' output to display the solution graphically.
 </p>
 
-<h3 id="deal_11982">I found a solution for MS Deal No. 11,982 - should I
-report it to you?</h3>
+{% endcall %}
+
+{% call h3_section(id="deal_11982",title="I found a solution for MS Deal No. 11,982 - should I report it to you?") %}
 
 <p>
 That deal was found to be impossible by most human
 players, and all automated solvers that tried to solve it (including
 <a href="https://github.com/boundedvariation/Freecell">a solver</a> which
 is written in <a href="https://en.wikipedia.org/wiki/Haskell_%28programming_language%29">Haskell</a>,
-which is a statically typed programming language that code that is written in
+which is a statically typed programming language, and which code that is written in
 it tends to exhibit very few bugs.). Nevertheless, we would welcome a proof
 to the contrary given it actually refers to the actual deal.
 </p>
@@ -939,6 +966,14 @@ in x86 assembly for DOS.
 - open source under the GPLv3.
 </p>
 </li>
+
+<li>
+<p>
+<a href="https://github.com/thecharlesblake/Solvitaire">Solvitaire</a> - an open-source (GPLed)
+solver for many Solitaire variants written in C++.
+</p>
+</li>
+
 </ol>
 
 {% endcall %}
@@ -957,6 +992,13 @@ can be devised).
 <p>
 That put aside, Freecell is a degenerate case where the number of ranks is
 fixed at 13 (ace-to-king).
+</p>
+
+<p>
+One implication of Generalised Freecell's NP-completeness is that one can devise an algorithm
+to solve it, that while possibly requiring exponential time,
+<a href="https://cs.stackexchange.com/questions/110923/can-any-np-complete-problem-be-solved-using-at-most-polynomial-space-but-while">will
+only require polynomial space</a> (e.g by reducing the algorithm to <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem">3SAT</a>).
 </p>
 
 {% endcall %}

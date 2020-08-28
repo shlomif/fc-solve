@@ -12,7 +12,9 @@ typedef struct
 {
     dbm_solver_thread thread;
     thread_arg arg;
+#ifndef FCS_DBM_SINGLE_THREAD
     pthread_t id;
+#endif
 } main_thread_item;
 
 static inline main_thread_item *dbm__calc_threads(
@@ -100,7 +102,6 @@ static void trace_solution(dbm_solver_instance *const instance,
 {
     fprintf(out_fh, "%s\n", "Success!");
     fflush(out_fh);
-/* Now trace the solution */
 #ifdef FCS_DBM_WITHOUT_CACHES
     fcs_encoded_state_buffer *trace;
     size_t trace_num;

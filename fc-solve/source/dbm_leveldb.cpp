@@ -84,9 +84,8 @@ extern "C" void fc_solve_dbm_store_offload_pre_cache(
         kv = (fcs_pre_cache_key_val_pair_t *)(item);
 
         leveldb::Slice key((const char *)(kv->key.s + 1), kv->key.s[0]);
-        /* We add 1 to the parent and move's length because it includes the
-         * trailing one-char move.
-         * */
+        // We add 1 to the parent and move's length because it includes the
+        // trailing one-char move.
         leveldb::Slice parent_and_move(
             (const char *)(kv->parent_and_move.s + 1),
             kv->parent_and_move.s[0] + 1);

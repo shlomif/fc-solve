@@ -79,15 +79,19 @@ my $force_rebuild = delete( $ENV{REBUILD} );
 my $tests_dir;
 
 my @execute;
+my $should_skip  = 0;
+my $custom_tests = 0;
 GetOptions(
-    '--exclude-re=s' => \$exclude_re_s,
-    '--execute|e=s'  => \@execute,
-    '--exit0!'       => \$exit_success,
-    '--glob=s'       => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
-    '--prove!'       => \$use_prove,
-    '--rebuild!'     => \$force_rebuild,
-    '--jobs|j=n'     => \$num_jobs,
-    '--tests-dir=s'  => \$tests_dir,
+    '--custom-tests-suite!' => \$custom_tests,
+    '--should-skip-tests!'  => \$should_skip,
+    '--exclude-re=s'        => \$exclude_re_s,
+    '--execute|e=s'         => \@execute,
+    '--exit0!'              => \$exit_success,
+    '--glob=s'              => sub { $tests_glob = $_[1]; $glob_was_set = 1; },
+    '--prove!'              => \$use_prove,
+    '--rebuild!'            => \$force_rebuild,
+    '--jobs|j=n'            => \$num_jobs,
+    '--tests-dir=s'         => \$tests_dir,
 ) or die "Wrong opts - $!";
 
 if ( defined $tests_dir )
@@ -142,10 +146,37 @@ sub myglob
     local $ENV{FCS_PATH}                = $fcs_path;
     local $ENV{FCS_SRC_PATH}            = $abs_bindir;
     local $ENV{PYTHONDONTWRITEBYTECODE} = '1';
-
-    local $ENV{FCS_TEST_TAGS} = join ' ',
-        sort { $a cmp $b }
-        ( path('.')->child(qw/t TAGS.txt/)->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g );
+    my %TEST_TAGS = (
+        map { $_ => 1 } (
+            path('.')->child(qw/t TAGS.txt/)->slurp_utf8 =~ /([a-zA-Z_0-9]+)/g
+        )
+    );
+    my $tests_may_fail = ( exists $TEST_TAGS{'tests_may_fail'} );
+    if ( !$custom_tests )
+    {
+        if ($should_skip)
+        {
+            if ($tests_may_fail)
+            {
+                print "Yes, the tests should be skipped.\n";
+                exit(0);
+            }
+            else
+            {
+                print "No, the tests ought to succeed in this configuration.\n";
+                exit(1);
+            }
+        }
+        elsif ($tests_may_fail)
+        {
+            die "The tests should be skipped.";
+        }
+    }
+    else
+    {
+        delete $TEST_TAGS{'tests_may_fail'};
+    }
+    local $ENV{FCS_TEST_TAGS} = join ' ', sort { $a cmp $b } keys %TEST_TAGS;
 
     my $preset_dest     = path('.')->child( "t", "Presets" );
     my $preset_src      = $abs_bindir->child("Presets");

@@ -2,7 +2,7 @@
 {% import "Inc/js_fc_solve.jinja" as jsfcs %}
 {% block title %}Freecell Deal Finder{% endblock %}
 {% block page_extra_head_elements %}
-{{ jsfcs.page_extra_head_elements(base_path) }}
+{{ jsfcs.page_extra_head_elements(enable_jquery_ui) }}
 {% endblock %}
 {% block body %}
 
@@ -16,7 +16,7 @@ card solitaire game. <span class="enable_js">Please enable
 </p>
 {% endmacro %}
 
-{{ jsfcs.emscripten_common(base_path=base_path, incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)",subject="Deal Finder",desc=gen_desc()) }}
+{{ jsfcs.emscripten_common(incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)",subject="Deal Finder",desc=gen_desc()) }}
 
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
@@ -64,7 +64,7 @@ Input a Freecell layout in the <a href="{{ base_path }}docs/distro/README.html">
 
 {{ jsfcs.fc_solve_bookmark__form() }}
 
-<h2 id="how_to_use">How to Use</h2>
+{% call h2_section( id="how_to_use", title="How to Use" ) %}
 
 <p>
 Enter a board in <a href="#stdin">the input text area</a> in
@@ -80,7 +80,9 @@ to read and/or copy the output from the status display.
 Enjoy!
 </p>
 
-<h2 id="technology">Technology</h2>
+{% endcall %}
+
+{% call h2_section( id="technology", title="Technology" ) %}
 
 {{ jsfcs.fc_solve_jsfcs__credits__common()}}
 <li>
@@ -104,7 +106,10 @@ compiler.
 </li>
 </ul>
 
-<h2 id="credits">Credits</h2>
+{% endcall %}
+
+{% call h2_section( id="credits", title="Credits" ) %}
+
 <ul>
 
 <li>
@@ -133,5 +138,7 @@ and he is maintaining it.
 </li>
 
 </ul>
+
+{% endcall %}
 
 {% endblock %}

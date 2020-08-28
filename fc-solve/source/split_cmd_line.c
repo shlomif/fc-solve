@@ -14,7 +14,7 @@
 typedef struct
 {
     fcs_args_man args_man;
-    /* These fields are for internal use only. */
+    // These fields are for internal use only.
     char *last_arg, *last_arg_ptr, *last_arg_end;
 } args_man_wrapper;
 
@@ -73,7 +73,7 @@ static inline void push_args_last_arg(args_man_wrapper *const manager)
             (size_t)(manager->args_man.argc + FC_SOLVE__ARGS_MAN_GROW_BY));
     }
 
-    /* Reset last_arg_ptr so we will have an entirely new argument */
+    // Reset last_arg_ptr so we will have an entirely new argument
     manager->last_arg_ptr = manager->last_arg;
 }
 
@@ -111,7 +111,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
         }
         if (*s == '#')
         {
-            /* Skip to the next line */
+            // Skip to the next line
             while ((*s != '\0') && (*s != '\n'))
             {
                 s++;
@@ -148,7 +148,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
                     break;
                 case '\r':
                 case '\n':
-                    /* Skip to the next line. */
+                    // Skip to the next line.
                     if (!in_arg)
                     {
                         should_still_loop = false;
@@ -187,7 +187,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
 
                         case '\n':
                         case '\r':
-                            /* Do nothing */
+                            // Do nothing
                             break;
 
                         case '\\':
@@ -215,7 +215,7 @@ fcs_args_man fc_solve_args_man_chop(const char *const string)
             case '#':
 
                 in_arg = false;
-                /* Skip to the next line */
+                // Skip to the next line
                 while ((*s != '\0') && (*s != '\n'))
                 {
                     s++;

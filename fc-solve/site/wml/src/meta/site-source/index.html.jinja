@@ -1,0 +1,51 @@
+{% extends "template.jinja" %}
+{% block title %}The Freecell Solver’s Site Source Code{% endblock %}
+{% block body %}
+
+
+<div class="wrap-me">
+
+{% if false %}
+<section>
+<toc />
+</section>
+{% endif %}
+
+{% call h2_section(id="source-code",title="The Site’s Source Code") %}
+
+<p>
+The sources of Freecell Solver’s site can be found here:
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/site/wml">Main sources</a> -
+as a subdirectory of the main fc-solve GitHub repository.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve-site-assets">Site’s Assets</a> -
+compressed archives/etc.
+</p>
+</li>
+
+</ul>
+
+<p>
+They are also under <a href="https://en.wikipedia.org/wiki/Free_and_open-source_software">FOSS</a>
+and <a href="https://en.wikipedia.org/wiki/Open_content">open content</a> licenses.
+</p>
+
+<p>
+Note that building the site requires quite a few dependencies, so it may not be for
+the non-initiated. One can refer to <a href="https://github.com/shlomif/fc-solve/blob/master/.travis.yml">Travis-CI set-up</a> for help.
+</p>
+{% endcall %}
+
+</div>
+
+{% endblock %}

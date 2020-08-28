@@ -98,11 +98,7 @@ Freecell Solver from within your programs.
 
 %build
 %cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12
-if test -d build
-then
-    cd build
-fi
-%make_build
+%cmake_build
 
 %check
 rm -f t/t/tidyall.t
@@ -110,15 +106,15 @@ src="`pwd`"
 if test -d build
 then
     cd build
+elif test -d "%{__cmake_builddir}"
+then
+    cd "%{__cmake_builddir}"
 fi
 perl "$src"/run-tests.pl
 
 %install
-if test -d build
-then
-    cd build
-fi
-%make_install
+#make_install
+%cmake_install
 find %{buildroot} -name *.a -delete
 
 %files -n libfreecell-solver0
@@ -150,6 +146,10 @@ find %{buildroot} -name *.a -delete
 %{_libdir}/pkgconfig/*.pc
 
 %changelog
+* Thu Jul 23 2020 Shlomi Fish <shlomif@shlomifish.org> 6.0.0-1
+- Convert to percent-cmake macros (Fedora 33-and-above-compat)
+- Fix the build in Fedora 33.
+
 * Tue Mar 31 2009 Shlomi Fish <shlomif@iglu.org.il> 2.21.2-1
 - Adapted to the CMake build system.
 - Changed the license from "Public Domain" to "MIT".

@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
- * fcs_cl.h - the Freecell Solver command line arguments-like parsing routines.
- * Useful for more easily configuring a Freecell Solver instance.
- */
+
+// fcs_cl.h - the Freecell Solver command line arguments-like parsing routines.
+// Useful for more easily configuring a Freecell Solver instance.
 #pragma once
 
 #include "freecell-solver/fcs_dllexport.h"
@@ -35,10 +34,8 @@ enum
     FCS_CMD_LINE_USER = 0x10000
 };
 
-/* One should use
- * freecell_solver_user_cmd_line_parse_args_with_file_nesting_count()
- * instead.
- * */
+// One should instead use
+// freecell_solver_user_cmd_line_parse_args_with_file_nesting_count()
 #ifndef FC_SOLVE__REMOVE_OLD_API_1
 DLLEXPORT extern int freecell_solver_user_cmd_line_parse_args(void *instance,
     int argc, freecell_solver_str_t argv[], int start_arg,

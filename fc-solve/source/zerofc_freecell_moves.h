@@ -24,7 +24,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves)
         {
             continue;
         }
-        /* Get the top card in the stack */
+        // Get the top card in the stack
         const fcs_card card = fcs_col_get_card(col, cards_num - 1);
         for (size_t deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
         {
@@ -33,7 +33,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves)
             {
                 continue;
             }
-            /* We can put it there */
             sfs_check_state_begin();
 
             my_copy_stack(stack_idx);
@@ -65,9 +64,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves)
         var_AUTO(col, fcs_state_get_col(state_key, stack_idx));
         const int cards_num = fcs_col_len(col);
 
-        /* Bug fix: if there's only one card in a column, there's no
-         * point moving it to a new empty column.
-         * */
+        // Bug fix: if there's only one card in a column, there's no
+        // point moving it to a new empty column.
         if (cards_num <= 1)
         {
             continue;
@@ -78,7 +76,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_zerofc_0AB_atomic_all_moves)
         {
             continue;
         }
-        /* Let's move it */
         sfs_check_state_begin();
         copy_two_stacks(stack_idx, empty_stack_idx);
         fcs_state_pop_col_top(&new_state_key, stack_idx);

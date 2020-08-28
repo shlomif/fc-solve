@@ -90,14 +90,13 @@ static size_t fcs_states_myhash(const void *a)
 #include "pqueue.h"
 #include "meta_alloc.h"
 
-/* We need 2 chars per card - one for the column_idx and one
- * for the card_idx.
- *
- * We also need it times 13 for each of the ranks.
- *
- * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
- * (-1,-1) (= end) padding.
- * */
+// We need 2 chars per card - one for the column_idx and one
+// for the card_idx.
+//
+// We also need it times 13 for each of the ranks.
+//
+// We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+// (-1,-1) (= end) padding.
 #define FCS_POS_BY_RANK_WIDTH (MAX_NUM_DECKS << 3)
 
 // We don't keep track of kings
@@ -111,7 +110,7 @@ typedef struct
 {
     fcs_iters_int num_checked_states;
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-    fcs_int_limit_t num_states_in_collection;
+    fcs_iters_int num_states_in_collection;
 #endif
 } fcs_stats;
 
@@ -134,10 +133,8 @@ typedef struct fcs_states_linked_list_item_struct
     struct fcs_states_linked_list_item_struct *next;
 } fcs_states_linked_list_item;
 
-/*
- * Declare these structures because they will be used within
- * fc_solve_instance, and they will contain a pointer to it.
- * */
+// Declare these structures because they will be used within
+// fc_solve_instance, and they will contain a pointer to it.
 struct fc_solve_hard_thread_struct;
 struct fc_solve_soft_thread_struct;
 struct fc_solve_instance_struct;
@@ -175,7 +172,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
 #include "move_funcs_maps.h"
 #endif
 
-/* HT_LOOP == hard threads' loop - macros to abstract it. */
+// HT_LOOP == hard threads' loop - macros to abstract it.
 #ifdef FCS_SINGLE_HARD_THREAD
 
 #define HT_LOOP_START() fcs_hard_thread *const hard_thread = instance;
@@ -188,7 +185,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
     for (; hard_thread < end_hard_thread; ++hard_thread)
 #endif
 
-/* ST_LOOP == soft threads' loop - macros to abstract it. */
+// ST_LOOP == soft threads' loop - macros to abstract it.
 #define ST_LOOP_START()                                                        \
     fcs_soft_thread *const ht_soft_threads =                                   \
         HT_FIELD(hard_thread, soft_threads);                                   \
@@ -276,7 +273,7 @@ typedef struct
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
     compact_allocator states_values_to_keys_allocator;
-    fcs_int_limit_t count_elements_in_cache, max_num_elements_in_cache;
+    fcs_iters_int count_elements_in_cache, max_num_elements_in_cache;
 
     fcs_cache_key_info *lowest_pri, *highest_pri, *recycle_bin;
 } fcs_lru_cache;
@@ -301,19 +298,15 @@ struct fc_solve_hard_thread_struct
     struct fc_solve_soft_thread_struct *soft_threads;
 
 #ifndef FCS_SINGLE_HARD_THREAD
-    /*
-     * The hard thread count of how many states he checked himself. The
-     * instance num_checked_states can be confusing because other threads
-     * modify it too.
-     *
-     * Thus, the soft thread switching should be done based on this variable
-     * */
+    // The hard thread count of how many states he checked himself. The
+    // instance num_checked_states can be misleading because other threads
+    // modify it too.
+    //
+    // Thus, the soft thread switching should be done based on this variable
     fcs_iters_int ht__num_checked_states;
 
 #endif
-    /*
-     * The maximal limit for num_checked_states.
-     * */
+    // The maximal limit for num_checked_states.
     fcs_iters_int ht__max_num_checked_states;
 
     // The index for the soft-thread that is currently processed
@@ -328,10 +321,8 @@ struct fc_solve_hard_thread_struct
     fcs_move_stack reusable_move_stack;
 #endif
 
-    /*
-     * This is a buffer used to temporarily store the stacks of the
-     * duplicated state.
-     * */
+    // This is a buffer used to temporarily store the stacks of the
+    // duplicated state.
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     size_t prelude_num_items;
@@ -354,8 +345,6 @@ struct fc_solve_hard_thread_struct
     char *prelude_as_string;
 #endif
 };
-
-/********************************************/
 
 typedef struct
 {
@@ -537,22 +526,20 @@ struct fc_solve_instance_struct
 
     fcs_stats i__stats;
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
-    /*
-     * Limit for the maximal number of checked states.
-     * max_num_checked_states is useful because it can limit the amount of
-     * consumed memory (and time).
-     *
-     * This is the effective number that enables the process to work without
-     * checking if it's zero.
-     *
-     * Normally should be used instead.
-     * */
+    // Limit for the maximal number of checked states.
+    // max_num_checked_states is useful because it can limit the amount of
+    // consumed memory (and time).
+    //
+    // This is the effective number that enables the process to work without
+    // checking if it's zero.
+    //
+    // Normally should be used instead.
     fcs_iters_int effective_max_num_checked_states;
 #endif
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-    fcs_int_limit_t effective_max_num_states_in_collection;
+    fcs_iters_int effective_max_num_states_in_collection;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fcs_int_limit_t effective_trim_states_in_collection_from;
+    fcs_iters_int effective_trim_states_in_collection_from;
 #endif
 #endif
     fcs_seq_cards_power_type initial_cards_under_sequences_value;
@@ -626,7 +613,7 @@ struct fc_solve_instance_struct
 // It gives a rough estimate of the memory occupied by the instance.
 #ifndef FCS_DISABLE_NUM_STORED_STATES
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    fcs_int_limit_t active_num_states_in_collection;
+    fcs_iters_int active_num_states_in_collection;
 #endif
 #endif
 
@@ -652,12 +639,10 @@ struct fc_solve_instance_struct
     // Soft-Threads.
     fcs_moves_order instance_moves_order;
 
-    /*
-     * A counter that determines how many of the hard threads that belong
-     * to this hard thread have already finished. If it becomes
-     * num_hard_threads the instance terminates.
-     * */
-    uint_fast32_t num_hard_threads_finished;
+    // Counts how many of the hard threads that belong
+    // to this instance have already finished. If it becomes
+    // num_hard_threads the instance terminates.
+    uint_fast32_t finished_hard_threads_count;
 
 #ifdef FCS_WITH_MOVES
     // The moves for the optimization scan, as specified by the user.
@@ -676,37 +661,30 @@ struct fc_solve_instance_struct
 #endif
 
 #ifndef FCS_WITHOUT_ITER_HANDLER
-    /*
-     * The debug_iter_output variables provide a programmer programmable way
-     * to debug the algorithm while it is running. This works well for DFS
-     * and Soft-DFS scans but at present support for BeFS and BFS is not
-     * too good, as its hard to tell which state came from which parent
-     * state.
-     *
-     * debug_iter_output_func is a pointer to the function that performs the
-     * debugging. If NULL, this feature is not used.
-     *
-     * debug_iter_output_context is a user-specified context for it, that
-     * may include data that is not included in the instance structure.
-     *
-     * This feature is used by the "-s" and "-i" flags of fc-solve-debug.
-     * */
+    // The debug_iter_output variables provide a programmable way
+    // to debug the algorithm while it is running. This works well for DFS
+    // and Soft-DFS scans but at present support for BeFS and BFS is not
+    // too good, as it's hard to tell which state came from which parent
+    // state.
+    //
+    // debug_iter_output_func is a pointer to the function that performs the
+    // debugging. If NULL, this feature is not used.
+    //
+    // debug_iter_output_context is a user-specified context for it, that
+    // may include data that is not included in the instance structure.
+    //
+    // This feature is used by the "-s" and "-i" flags of fc-solve-debug.
     instance_debug_iter_output_func debug_iter_output_func;
     void *debug_iter_output_context;
 #endif
 
-    /*
-     * The next ID to allocate for a soft-thread.
-     * */
     fastest_type_for_num_soft_threads__unsigned next_soft_thread_id;
 
-    /* This is the initial state */
+    // This is the initial state
     fcs_state_keyval_pair state_copy;
 
 #ifdef FCS_WITH_MOVES
-    /* This is the final state that the scan recommends to the
-     * interface
-     * */
+    // This is the final state that the scan recommends to the interface
     fcs_collectible_state *final_state;
 
     // A move stack that contains the moves leading to the solution.
@@ -743,7 +721,6 @@ struct fc_solve_instance_struct
 #define DFS_VAR(soft_thread, var) (soft_thread)->method_specific.soft_dfs.var
 #define BEFS_VAR(soft_thread, var)                                             \
     (soft_thread)->method_specific.befs.meth.befs.var
-/* M is Methods-common. */
 #define BEFS_M_VAR(soft_thread, var) (soft_thread)->method_specific.befs.var
 #define BRFS_VAR(soft_thread, var)                                             \
     (soft_thread)->method_specific.befs.meth.brfs.var
@@ -781,7 +758,7 @@ static inline int update_col_cards_under_sequences(
     const int sequences_are_built_by,
 #endif
     const fcs_const_cards_column col,
-    int d /* One less than cards_num of col. */
+    int d // One less than cards_num of col
 )
 {
     fcs_card this_card = fcs_col_get_card(col, d);
@@ -838,15 +815,15 @@ static inline fcs_moves_order moves_order_dup(fcs_moves_order *const orig)
 extern fcs_soft_thread *fc_solve_new_soft_thread(
     fcs_hard_thread *const hard_thread);
 
-/* This is the commmon code from fc_solve_instance__init_hard_thread() and
- * recycle_hard_thread() */
+// This is the commmon code from fc_solve_instance__init_hard_thread() and
+// recycle_hard_thread()
 static inline void fc_solve_reset_hard_thread(
     fcs_hard_thread *const hard_thread)
 {
 #ifndef FCS_SINGLE_HARD_THREAD
     HT_FIELD(hard_thread, ht__num_checked_states) = 0;
 #endif
-    HT_FIELD(hard_thread, ht__max_num_checked_states) = FCS_INT_LIMIT_MAX;
+    HT_FIELD(hard_thread, ht__max_num_checked_states) = FCS_ITERS_INT_MAX;
     HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
 
@@ -868,12 +845,6 @@ typedef enum
 extern void fc_solve_foreach_soft_thread(fcs_instance *const instance,
     const foreach_st_callback_choice callback_choice, void *const context);
 
-/*
-    This function is the last function that should be called in the
-    sequence of operations on instance, and it is meant for de-allocating
-    whatever memory was allocated by alloc_instance().
-  */
-
 static inline void moves_order__free(fcs_moves_order *moves_order)
 {
 #ifndef FCS_ZERO_FREECELLS_MODE
@@ -889,7 +860,6 @@ static inline void moves_order__free(fcs_moves_order *moves_order)
     moves_order->num = 0;
 }
 
-/***********************************************************/
 #define MOVE_FUNC_ARGS                                                         \
     fcs_soft_thread *const soft_thread GCC_UNUSED,                             \
         fcs_kv_state raw_state_raw GCC_UNUSED,                                 \

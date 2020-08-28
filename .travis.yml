@@ -3,8 +3,9 @@ addons:
         update: true
         packages:
             - asciidoc
-            - cmake
-            - cmake-data
+            # Avoid downgrading cmake from 3.12.x to 3.10.x
+            # - cmake
+            # - cmake-data
             - cpanminus
             - dbtoepub
             - docbook-xsl
@@ -20,6 +21,7 @@ addons:
             - libgoogle-perftools-dev
             - libhunspell-dev
             - libperl-dev
+            - libxml2-dev
             - lynx
             - mercurial
             - ninja-build
@@ -48,7 +50,6 @@ perl:
     - "5.24"
 script:
     - if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl ../scripts/docker-test.pl ; fi
-sudo: required
 cache:
     ccache: true
     directories:
@@ -56,6 +57,8 @@ cache:
         - $HOME/perl_modules
         - fc-solve/source/avl-2.0.3
 matrix:
+    # allow_failures:
+    #     - env: WHAT=buildproc
     include:
         - os: linux
           env:

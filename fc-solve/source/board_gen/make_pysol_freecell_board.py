@@ -14,34 +14,14 @@ from fc_solve_find_index_s2ints import find_index__board_string_to_ints
 
 from pysol_cards.cards import CardRenderer
 from pysol_cards.deal_game import Game
-from pysol_cards.random import RandomBase
+from pysol_cards.single_deal_args_parse import SingleDealArgsParser
 
 
 def make_pysol_board__main(args):
-    print_ts = False
-    which_deals = RandomBase.DEALS_PYSOL
-    max_rank = 13
-    while args[1][0] == '-':
-        a = args[1]
-        if a == "-t":
-            print_ts = True
-            args.pop(1)
-        elif (a == "--max-rank"):
-            args.pop(1)
-            max_rank = int(args.pop(1))
-        elif (a == "--pysolfc") or (a == "-F"):
-            which_deals = RandomBase.DEALS_PYSOLFC
-            args.pop(1)
-        elif (a == "--ms") or (a == "-M"):
-            which_deals = RandomBase.DEALS_MS
-            args.pop(1)
-        else:
-            raise ValueError("Unknown flag " + a + "!")
-
-    game_num = int(args[1])
-    which_game = args[2] if len(args) >= 3 else "freecell"
-    Game(which_game, game_num, which_deals, max_rank).print_layout(
-        CardRenderer(print_ts))
+    obj = SingleDealArgsParser(args)
+    Game(obj.which_game, obj.game_num,
+         obj.which_deals, obj.max_rank
+         ).print_layout(CardRenderer(obj.print_ts))
 
 
 def find_index_main(args, find_ret):

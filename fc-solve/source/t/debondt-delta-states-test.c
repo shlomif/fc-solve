@@ -51,8 +51,7 @@ static void main_tests(void **state GCC_UNUSED)
 
         fc_solve_delta_stater_set_derived(&delta, &(derived_state.s));
 
-        /* TEST
-         * */
+        // TEST
         test_encode_and_decode(local_variant, &delta, &derived_state,
             ("Foundations: H-0 C-2 D-A S-0\n"
              "Freecells:  8D  QD\n"
@@ -68,10 +67,9 @@ static void main_tests(void **state GCC_UNUSED)
         fc_solve_delta_stater_release(&delta);
     }
 
-    /* More encode_composite tests - this time from the output of:
-     * pi-make-microsoft-freecell-board -t 24 | \
-     *      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
-     */
+    // More encode_composite tests - this time from the output of:
+    // pi-make-microsoft-freecell-board -t 24 |
+    //      ./fc-solve -to 01ABCDE --freecells-num 2 -s -i -p -t
     {
         fcs_state_keyval_pair init_state, derived_state;
 
@@ -112,8 +110,7 @@ static void main_tests(void **state GCC_UNUSED)
             &derived_state, FREECELLS_NUM, STACKS_NUM, DECKS_NUM,
             derived_indirect_stacks_buffer);
 
-        /* TEST
-         * */
+        // TEST
         test_encode_and_decode(local_variant, &delta, &derived_state,
             ("Foundations: H-0 C-0 D-0 S-4\n"
              "Freecells:  TD  KS\n"

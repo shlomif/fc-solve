@@ -50,7 +50,6 @@ static void print_int(fcs_binary_output *const bin, int val)
     if (bin->ptr == bin->buffer_end)
     {
         write_me(bin);
-        /* Reset ptr to the beginning */
         bin->ptr = bin->buffer;
     }
 }

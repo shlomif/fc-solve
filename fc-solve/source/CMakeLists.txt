@@ -88,7 +88,7 @@ SET (FCS_DBM_TREE_BACKEND "libavl2" CACHE STRING "Type of DBM tree backend.")
 SET (FCS_IA_PACK_SIZE 64 CACHE STRING "Size of a single pack in kilo-bytes.")
 SET (FCS_MAX_RANK 13 CACHE STRING "Maximal rank - should be 13")
 SET (MAX_NUM_FREECELLS 8 CACHE STRING "Maximal Number of Freecells")
-SET (MAX_NUM_STACKS 10 CACHE STRING "Maximal Number of Stacks")
+SET (MAX_NUM_STACKS 13 CACHE STRING "Maximal Number of Stacks")
 SET (MAX_NUM_INITIAL_CARDS_IN_A_STACK 8 CACHE STRING
     "Maximal Number of Initial Cards in a Stack. 7 is a better value if you only wish to solve Freecell")
 SET (MAX_NUM_DECKS 1 CACHE STRING "Maximal Number of Decks (must be 1)")
@@ -104,7 +104,7 @@ option (FCS_WITH_TEST_SUITE "Also build and run the test suite." ON)
 option (FCS_LINK_TO_STATIC "Link to the static library.")
 SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY "4" CACHE STRING "The hard-coded number of freecells (4, 2, etc.). Usually ignored")
 option (FCS_WITH_CONTEXT_VARIABLE "Enable the context (extra void *) as passed to the comparison functions, etc." ON)
-option (FCS_INLINED_HASH_COMPARISON "Use more compact tokens for moves internally (makes things slower)" ON)
+option (FCS_INLINED_HASH_COMPARISON "inline the hash tables' comparison" ON)
 option (FCS_AVOID_TCMALLOC "Avoid linking against Google's tcmalloc")
 option (FCS_BUILD_DOCS "Whether to build the documentation or not." ON)
 option (BUILD_STATIC_LIBRARY "Whether to build the static library (which takes more time)" ON)
@@ -149,6 +149,15 @@ option (FCS_USE_PRECOMPILED_CMD_LINE_THEME "Hard code a command line theme as ge
 option (FCS_AVOID_INT128 "Avoid using GCC's __int128 extension (used for debugging)")
 option (FCS_RANGE_SOLVERS_PRINT_SOLVED "Print solved boards.")
 option (FCS_DBM_SINGLE_THREAD "single threaded DBM solvers")
+
+IF (FCS_ZERO_FREECELLS_MODE)
+    SET (FCS_DBM_FREECELLS_NUM 0)
+    SET (FCS_DISABLE_SIMPLE_SIMON 1)
+    SET (FCS_ENABLE_RCS_STATES 0)
+    SET (FCS_FREECELL_ONLY 1)
+    SET (FCS_HARD_CODED_NUM_FCS_FOR_FREECELL_ONLY 0)
+    SET (MAX_NUM_FREECELLS 0)
+ENDIF()
 
 IF (FCS_HARD_CODE_STATE_DEPTH_FIELD)
     SET(FCS_WITHOUT_DEPTH_FIELD "1")
@@ -202,7 +211,8 @@ ENDIF ()
 SET (pats_dir "patsolve")
 
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
-    EXECUTE_PROCESS(COMMAND "git" "clone" "https://github.com/shlomif/patsolve.git" "${pats_dir}"
+    EXECUTE_PROCESS(
+        COMMAND "git" "clone" "https://github.com/shlomif/patsolve.git" "${pats_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
@@ -210,7 +220,8 @@ ENDIF ()
 # Clone the rinutils repository with the appropriate tag.
 SET (rinutils_dir "rinutils")
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils_dir}")
-    EXECUTE_PROCESS(COMMAND "git" "clone" "-b" "0.2.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
+    EXECUTE_PROCESS(
+        COMMAND "git" "clone" "-b" "0.2.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
@@ -239,7 +250,7 @@ MACRO(add_gen_c)
     LIST(APPEND _gen_c_files ${ARGV})
 ENDMACRO ()
 
-SET (MOVE_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
+SET (MOVE_FUNCS_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
 SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
 SET (presets_gen_args "${presets_gen}" "--mode=c" "--output" "${presets_gen_output}")
@@ -250,7 +261,7 @@ ADD_CUSTOM_COMMAND(
     OUTPUT "${presets_gen_output}"
     COMMAND "${PERL_EXECUTABLE}"
     ARGS ${presets_gen_args}
-    DEPENDS "${presets_gen}" "${MOVE_GEN_MOD}"
+    DEPENDS "${presets_gen}" "${MOVE_FUNCS_GEN_MOD}"
 )
 SET (ENV{FCS_MAX_RANK} "${FCS_MAX_RANK}")
 SET (rate_state_output "${CMAKE_CURRENT_BINARY_DIR}/rate_state.c" "${CMAKE_CURRENT_BINARY_DIR}/rate_state.h")
@@ -265,7 +276,7 @@ SET (is_parent_output
     "${CMAKE_CURRENT_BINARY_DIR}/is_parent.c" "${CMAKE_CURRENT_BINARY_DIR}/is_parent.h"
     "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.c" "${CMAKE_CURRENT_BINARY_DIR}/pos_by_rank__freecell.h"
     ${rate_state_output}
-    )
+)
 add_gen_c(${is_parent_output})
 ADD_CUSTOM_COMMAND(
     OUTPUT ${is_parent_output}
@@ -274,7 +285,7 @@ ADD_CUSTOM_COMMAND(
     DEPENDS "${is_parent_gen}"
 )
 # Execute it right away to avoid missing files/includes
-EXECUTE_PROCESS(COMMAND "${PERL_EXECUTABLE}" ${is_parent_args} RESULT_VARIABLE _retcode)
+EXECUTE_PROCESS(COMMAND "${PERL_EXECUTABLE}" ${is_parent_args} WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}" RESULT_VARIABLE _retcode)
 
 IF (NOT ("${_retcode}" STREQUAL "0"))
     MESSAGE(FATAL_ERROR "${PERL_EXECUTABLE} ${is_parent_args} failed!")
@@ -288,7 +299,7 @@ SET (patsolve_modules
     "${p_dir}/pat.c"
     "${p_dir}/patsolve.c"
     "${p_dir}/tree.c"
-    )
+)
 
 FIND_PROGRAM(_GPERF "gperf")
 
@@ -309,6 +320,7 @@ ADD_CUSTOM_COMMAND(
         "${cl_enum_h}"
     COMMAND ${_cmd}
     DEPENDS "${CL_INC_SCRIPT}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 # Execute it right away to avoid missing files/includes
@@ -317,19 +329,20 @@ IF (NOT ("${_retcode}" STREQUAL "0"))
     MESSAGE(FATAL_ERROR "${_cmd} failed!")
 ENDIF ()
 
-SET (MOVE_C move_funcs_maps.c)
-SET (MOVE_H move_funcs_maps.h)
-SET (MOVE_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-move-funcs.pl")
+SET (MOVE_FUNCS_C move_funcs_maps.c)
+SET (MOVE_FUNCS_H move_funcs_maps.h)
+SET (MOVE_FUNCS_GEN "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-move-funcs.pl")
 
-add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}")
+add_gen_c("${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_C}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_H}")
 
 ADD_CUSTOM_COMMAND(
     OUTPUT
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_C}"
-        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_H}"
-    COMMAND "${PERL_EXECUTABLE}" "${MOVE_GEN}"
-    DEPENDS "${MOVE_GEN}" "${MOVE_GEN_MOD}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_C}"
+        "${CMAKE_CURRENT_BINARY_DIR}/${MOVE_FUNCS_H}"
+    COMMAND "${PERL_EXECUTABLE}" "${MOVE_FUNCS_GEN}"
+    DEPENDS "${MOVE_FUNCS_GEN}" "${MOVE_FUNCS_GEN_MOD}"
+    WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
 )
 
 ADD_CUSTOM_TARGET(
@@ -363,7 +376,7 @@ ENDMACRO()
 
 IF (NOT "${FCS_ZERO_FREECELLS_MODE}")
     # add_lib_mods(fcs_is_ss_false_parent.c)
-    add_lib_mods("${MOVE_C}" move_funcs_order.c)
+    add_lib_mods("${MOVE_FUNCS_C}" move_funcs_order.c)
 ENDIF ()
 IF (NOT "${FCS_DISABLE_SIMPLE_SIMON}")
     # add_lib_mods(fcs_is_ss_false_parent.c)
@@ -375,7 +388,10 @@ ENDIF ()
 IF (NOT "${FCS_DISABLE_PATSOLVE}")
     SET (pp_dir "${CMAKE_CURRENT_SOURCE_DIR}/${p_dir}")
     SET (cmd "python3" "${pp_dir}/param.py" "${pp_dir}/param.dat")
-    EXECUTE_PROCESS(COMMAND ${cmd} RESULT_VARIABLE _retcode)
+    EXECUTE_PROCESS(
+        COMMAND ${cmd} RESULT_VARIABLE _retcode
+        WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    )
     IF (NOT ("${_retcode}" STREQUAL "0"))
         MESSAGE(FATAL_ERROR "${cmd} failed!")
     ENDIF ()
@@ -481,10 +497,8 @@ SET (WITH_JUDY )
 # Search for Judy ( http://judy.sourceforge.net/ ) if appropriate.
 IF (("${FCS_STATE_STORAGE}" STREQUAL "FCS_STATE_STORAGE_JUDY") OR
     ("${FCS_STACK_STORAGE}" STREQUAL "FCS_STACK_STORAGE_JUDY") OR
-    (FCS_RCS_STATES AND ("${FCS_RCS_CACHE_STORAGE}" STREQUAL "FCS_RCS_CACHE_STORAGE_JUDY")
-    )
+    (FCS_RCS_STATES AND ("${FCS_RCS_CACHE_STORAGE}" STREQUAL "FCS_RCS_CACHE_STORAGE_JUDY"))
 )
-
     FIND_LIBRARY(LIBJUDY_LIB Judy)
 
     SET (WITH_JUDY 1)
@@ -561,7 +575,7 @@ ENDIF ()
 SHLOMIF_FINALIZE_FLAGS()
 
 IF ("$ENV{FCS_CLANG}")
-    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-comma -Wno-disabled-macro-expansion -Wno-extra-semi-stmt -Wno-documentation-unknown-command -Wno-documentation -Wno-documentation-deprecated-sync -Wno-pass-failed")
+    ADD_DEFINITIONS("-Weverything -Wno-language-extension-token -Wno-padded -Wno-gnu-statement-expression -Wno-unused-parameter -Wno-vla -Wno-cast-align -Wno-used-but-marked-unused -Wno-cast-qual -Wno-comma -Wno-disabled-macro-expansion -Wno-extra-semi-stmt -Wno-documentation-unknown-command -Wno-documentation -Wno-documentation-deprecated-sync -Wno-pass-failed -Wno-implicit-fallthrough")
     # ADD_DEFINITIONS("-Weverything")
 ENDIF ()
 
@@ -603,7 +617,7 @@ SET (FREECELL_SOLVER_LIBS)
 ADD_LIBRARY (freecell-solver
     SHARED
     ${FREECELL_SOLVER_LIB_MODULES} ${FREECELL_SOLVER_LIB_HEADERS}
-    )
+)
 
 LIST (APPEND FREECELL_SOLVER_LIBS "freecell-solver")
 IF (BUILD_STATIC_LIBRARY)
@@ -636,11 +650,11 @@ ENDIF ()
 ADD_LIBRARY (fcs_gen_ms_freecell_boards
     SHARED
     gen_boards_lib.c
-    )
+)
 
 SET_TARGET_PROPERTIES(freecell-solver
-    PROPERTIES VERSION 0.6.0 SOVERSION 0
-    )
+    PROPERTIES VERSION 0.7.0 SOVERSION 0
+)
 
 FIND_LIBM()
 SET(LIBTCMALLOC_LIB_LIST)
@@ -653,9 +667,7 @@ IF ((NOT (FCS_AVOID_TCMALLOC)) AND (NOT (FCS_WITH_TEST_SUITE)) AND ( NOT ((CMAKE
     # This gives better performance for the threaded programs.
     FIND_LIBRARY(LIBTCMALLOC_LIB tcmalloc)
 
-    IF(LIBTCMALLOC_LIB STREQUAL "LIBTCMALLOC_LIB-NOTFOUND")
-        # Do nothing.
-    ELSE()
+    IF(NOT ("${LIBTCMALLOC_LIB}" STREQUAL "LIBTCMALLOC_LIB-NOTFOUND"))
         SET(LIBTCMALLOC_LIB_LIST ${LIBTCMALLOC_LIB})
     ENDIF()
 ENDIF ()
@@ -734,13 +746,17 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         SET (DEBONDT_DELTA_STATES 1)
     ENDIF ()
 
-    SET (DBM_LIBS "pthread")
-    # LINK_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
-    # INCLUDE_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
+    SET (DBM_LIBS )
+    SET (OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE "")
+    IF ((OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE) OR (NOT "${FCS_DBM_SINGLE_THREAD}"))
+        LIST (APPEND DBM_LIBS "pthread")
+        # LINK_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
+        # INCLUDE_DIRECTORIES("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads")
 
-    IF (FCS_DBM_USE_RWLOCK)
-        LIST(APPEND DBM_LIBS "pthread_rwlock_fcfs")
-        ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
+        IF (FCS_DBM_USE_RWLOCK)
+            LIST(APPEND DBM_LIBS "pthread_rwlock_fcfs")
+            ADD_DEFINITIONS("-DFCS_DBM_USE_RWLOCK=1")
+        ENDIF ()
     ENDIF ()
 
     SET (DBM_DEFINITIONS )
@@ -805,9 +821,7 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
 
     FOREACH (TGT ${dbm_solvers})
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB} ${APR_LIBRARIES})
-        SET_TARGET_PROPERTIES("${TGT}"
-            PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}"
-        )
+        SET_TARGET_PROPERTIES("${TGT}" PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}")
     ENDFOREACH ()
 ELSE ()
     gen_error_exe( depth-dbm-fc-solver )
@@ -888,28 +902,28 @@ ENDWHILE ()
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/config.h
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/fcs_back_compat.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/include/freecell-solver/fcs_back_compat.h
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/prefix.h.in
     ${CMAKE_CURRENT_BINARY_DIR}/prefix.h
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.spec.in
     ${CMAKE_CURRENT_SOURCE_DIR}/${CPACK_PACKAGE_NAME}.spec
-    )
+)
 
 CONFIGURE_FILE(
     ${CMAKE_CURRENT_SOURCE_DIR}/lib${CPACK_PACKAGE_NAME}.pc.in
     ${CMAKE_CURRENT_BINARY_DIR}/lib${CPACK_PACKAGE_NAME}.pc
     @ONLY
-    )
+)
 
 INSTALL(
     TARGETS ${FREECELL_SOLVER_LIBS}
@@ -1023,7 +1037,7 @@ IF (NOT "${_PYTHON3}" STREQUAL "_PYTHON3-NOTFOUND")
 ENDIF ()
 
 IF (found_python3_random2)
-    FOREACH(idx 24 981 1941 11982 1107600547)
+    FOREACH(idx 24 164 981 1941 11982 1107600547)
         GEN_BOARD("${idx}")
     ENDFOREACH(idx)
     GEN_BOARD_NO_NEWLINE(24)
@@ -1136,7 +1150,7 @@ IF(ASCIIDOC_FOUND)
                     -o ${_html_out} "${_full_file}"
                 DEPENDS "${_full_file}"
                 COMMENT "Asciidoc ${_in}"
-                )
+            )
             LIST (APPEND htmls "${_html_out}")
         ENDIF ()
 
@@ -1152,7 +1166,7 @@ IF(ASCIIDOC_FOUND)
                 --backend=docbook ${TO_DOCBOOK_EXTRA_FLAGS} -o ${_docbook_out} "${_full_file}"
             DEPENDS "${_full_file}"
             COMMENT "Asciidoc->DocBook ${_in}"
-            )
+        )
 
         SET (_pdf "${_file_we}.pdf")
 
@@ -1277,13 +1291,13 @@ IF ("${FCS_ENABLE_DBM_SOLVER}" AND "${IS_DEBUG}" AND (NOT "${FCS_ENABLE_RCS_STAT
         SHARED
         ${DBM_FCC_COMMON}
         dbm_calc_derived_test.c
-        )
+    )
     TARGET_LINK_LIBRARIES(fcs_dbm_calc_derived_test ${LIBGMP_LIB})
     IF ()
         ADD_LIBRARY(fcs_fcc_brfs_test
             SHARED
             ${DBM_FCC_COMMON} fcc_brfs_test.c ${BIN_TREE_MODULE}
-            )
+        )
         TARGET_LINK_LIBRARIES(fcs_fcc_brfs_test ${LIBGMP_LIB})
     ENDIF ()
 ENDIF ()

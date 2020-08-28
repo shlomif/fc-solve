@@ -63,19 +63,22 @@ case) from each of the bases and get:
 __PACKAGE__->mk_acc_ref(
     [qw(_card_states _bakers_dozen_topmost_cards_lookup)] );
 
-my $RANK_KING       = 13;
+use FC_Solve::DeltaStater::Constants qw/
+    $NUM_OPTS
+    $OPT_DONT_CARE
+    $OPT_FREECELL
+    $OPT_ORIG_POS
+    $OPT_PARENT_SUIT_MOD_IS_0
+    $OPT_PARENT_SUIT_MOD_IS_1
+    $OPT_TOPMOST
+    $RANK_KING
+    /;
+
 my $FOUNDATION_BASE = $RANK_KING + 1;
 
-my $OPT_TOPMOST              = 0;
-my $OPT_DONT_CARE            = $OPT_TOPMOST;
-my $OPT_FREECELL             = 1;
-my $OPT_ORIG_POS             = 2;
-my $NUM_KING_OPTS            = 3;
-my $OPT_PARENT_SUIT_MOD_IS_0 = 3;
-my $OPT_PARENT_SUIT_MOD_IS_1 = 4;
-my $NUM_OPTS                 = 5;
-my $OPT_IN_FOUNDATION        = 5;
-my $NUM_OPTS_FOR_READ        = 6;
+my $NUM_KING_OPTS     = 3;
+my $OPT_IN_FOUNDATION = 5;
+my $NUM_OPTS_FOR_READ = 6;
 
 my $OPT__BAKERS_DOZEN__ORIG_POS      = 0;
 my $OPT__BAKERS_DOZEN__FIRST_PARENT  = 1;
@@ -154,7 +157,7 @@ sub _mark_suit_rank_as_true
 {
     my ( $self, $suit, $rank, $opt ) = @_;
 
-    $self->_opt_by_suit_rank( $suit, $rank )->mark_as_true($opt);
+    $self->_set_opt( $self->_opt_by_suit_rank( $suit, $rank ), $opt );
 
     return;
 }
@@ -174,11 +177,20 @@ sub _opt_by_card
         $card->rank(), );
 }
 
+sub _set_opt
+{
+    my ( $self, $ref, $opt ) = @_;
+
+    $ref->mark_as_true($opt);
+
+    return;
+}
+
 sub _mark_opt_as_true
 {
     my ( $self, $card, $opt ) = @_;
 
-    $self->_opt_by_card($card)->mark_as_true($opt);
+    $self->_set_opt( $self->_opt_by_card($card), $opt );
 
     return;
 }
@@ -248,17 +260,23 @@ sub _get_top_rank_for_iter
     return ( $self->_is_bakers_dozen() ? ( $RANK_KING - 1 ) : $RANK_KING );
 }
 
+sub _initialize_card_states_for_encode
+{
+    my $self = shift;
+
+    return $self->_initialize_card_states(
+          $self->_is_bakers_dozen()
+        ? $NUM__BAKERS_DOZEN__OPTS
+        : $NUM_OPTS
+    );
+}
+
 sub encode_composite
 {
     my ($self) = @_;
 
     my $derived = $self->_derived_state;
-
-    $self->_initialize_card_states(
-          $self->_is_bakers_dozen()
-        ? $NUM__BAKERS_DOZEN__OPTS
-        : $NUM_OPTS
-    );
+    $self->_initialize_card_states_for_encode();
 
     my $writer = FC_Solve::VarBaseDigitsWriter->new;
 
@@ -456,6 +474,7 @@ sub _fill_column_with_descendant_cards
 
     my $parent_card = $col->top;
 
+PARENT:
     while ( defined($parent_card) )
     {
         my $child_card;
@@ -465,6 +484,8 @@ sub _fill_column_with_descendant_cards
             ? $self->_wanted_suit_idx_opt($parent_card)
             : $self->_wanted_suit_bit_opt($parent_card);
 
+        my $new_rank = $parent_card->rank() - 1;
+        last PARENT if ( $new_rank < 1 );
     SEEK_CHILD_CARD:
         foreach my $suit (
               $self->_is_bakers_dozen()      ? qw(H C D S)
@@ -472,10 +493,9 @@ sub _fill_column_with_descendant_cards
             :                                  qw(H D)
             )
         {
-            my $candidate_card = $self->_calc_card(
-                $parent_card->rank() - 1,
-                $self->_suit_get_suit_idx($suit),
-            );
+            my $candidate_card =
+                $self->_calc_card( $new_rank, $self->_suit_get_suit_idx($suit),
+                );
 
             my $opt = $self->_get_card_verdict($candidate_card);
 
@@ -496,11 +516,21 @@ sub _fill_column_with_descendant_cards
     return;
 }
 
+sub _calc_reader_from_data
+{
+    my ( $self, $bits ) = @_;
+    return FC_Solve::VarBaseDigitsReader->new(
+        {
+            data => $bits,
+        },
+    );
+}
+
 sub decode
 {
     my ( $self, $bits ) = @_;
 
-    my $reader = FC_Solve::VarBaseDigitsReader->new( { data => $bits } );
+    my $reader = $self->_calc_reader_from_data($bits);
 
     $self->_initialize_card_states(
           $self->_is_bakers_dozen
@@ -757,6 +787,8 @@ sub decode
 
     return $state;
 }
+
+1;
 
 __END__
 

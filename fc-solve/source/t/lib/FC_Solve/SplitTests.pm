@@ -53,7 +53,7 @@ sub gen
                 return <<"EOF";
 #!/usr/bin/perl
 use Test::More tests => 1;
-use $module;
+use $module ();
 ${module}::r(@{[$dump->(+{id => $args->{id},%{$data->{args}}}) . "," . $dump->($data->{msg})]});
 EOF
             },

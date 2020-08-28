@@ -214,9 +214,13 @@ my %themes = (
     zerofc     => [qw(-l extra_speed3 --nfc=0 --print-solved --dbm=kaztree)],
     zerofcm    => [qw(-l zerofc -l fc_reduce_mem)],
     zerofcst   => [qw(-l zerofc --dbm-single-thread --dbmtree=apr_hash)],
-    zerofcmode => [qw(-l zerofcst --zero-freecells-mode)],
+    zerofcmode => [
+        qw(-l zerofcst --zero-freecells-mode),
+        "--prefix=$HOME/apps/fcs-zero-freecells-production",
+    ],
     zerofcmode_with_moves => [
         qw(-l zerofcmode --no-disable-moves-track --no-disable-num-stored-states),
+        "--prefix=$HOME/apps/fcs-zero-freecells-debug",
     ],
 );
 
@@ -240,11 +244,23 @@ if ( defined $SEED )
             }
             else
             {
+                $flag =~ s/\A--no-?/--/;
                 $k{$flag} = 1;
             }
         }
     }
-    my @k = sort { $a cmp $b } keys %k;
+
+    sub _map_flag
+    {
+        my $flag = shift;
+        if ( my ($key) = $flag =~ /\A--(.*)/ms )
+        {
+            if ( exists $TRUE_BOOL_OPTS{$key} ) { return "--no-$key"; }
+        }
+        return $flag;
+    }
+    my @k = sort { $a cmp $b } map { _map_flag($_) }
+        keys %k;
 
     require Math::Random::MT;
     my $gen = Math::Random::MT->new($SEED);
@@ -257,6 +273,7 @@ if ( defined $SEED )
         }
     }
     my $FN = "run-t-$SEED.bash";
+    @subset = grep { not /libavl/i } @subset;
     path($FN)->spew_utf8("$^X $0 @subset\n");
     delete $ENV{$SEED_KEY};
     exec( "bash", $FN );

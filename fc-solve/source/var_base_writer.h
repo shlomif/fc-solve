@@ -16,7 +16,7 @@ typedef struct
 {
     var_base_int data;
     var_base_int multiplier;
-    /* To avoid memory fragmentation, we keep those here and re use them. */
+    // To avoid memory fragmentation, we keep those here and re use them.
     var_base_int remainder;
 } fcs_var_base_writer;
 

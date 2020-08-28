@@ -15,7 +15,9 @@ import subprocess
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
-env = Environment(
+
+def _calc_env():
+    return Environment(
         loader=FileSystemLoader(['./src', './lib'])
         )
 
@@ -60,8 +62,11 @@ cols_listbox = (
 
 for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
-    template = env.get_template(fn+'.jinja')
+    enable_jquery_ui = (fn != 'js-fc-solve/text/gui-tests.xhtml')
     base_path = "../"*len([x for x in fn if x == '/'])
+    env = _calc_env()
+    env.globals['base_path'] = base_path
+    template = env.get_template(fn+'.jinja')
     try_online_wrapper = ""
     if not re.match("^js-fc-solve/", fn):
         try_online_wrapper = """
@@ -75,6 +80,7 @@ class="try_main">Try</span><br/>
     for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
         text = template.render(
                 cols_listbox=cols_listbox,
+                enable_jquery_ui=enable_jquery_ui,
                 fc_listbox=fc_listbox,
                 production=production,
                 front_page_news=news1,

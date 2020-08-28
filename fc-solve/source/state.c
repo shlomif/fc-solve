@@ -40,7 +40,7 @@ void fc_solve_canonize_state(
     fcs_state *const ptr_state_key FREECELLS_AND_STACKS_ARGS())
 {
 #define state_key (ptr_state_key)
-    /* Insertion-sort the columns */
+    // Insertion-sort the columns
 
     for (size_t b = 1; b < STACKS_NUM__VAL; b++)
     {

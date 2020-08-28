@@ -11,6 +11,14 @@ use MooX qw/ late /;
 
 has 'depth_dbm'  => ( is => 'ro', isa => 'Bool', required => 1 );
 has 'fcc_solver' => ( is => 'ro', isa => 'Bool', default  => 0 );
+has compiler     => (
+    is      => 'ro',
+    isa     => 'Str',
+    default => sub {
+        return ( $ENV{CC} // 'gcc' );
+    },
+);
+
 has [ 'dest_dir_base', 'march_flag' ] =>
     ( is => 'ro', isa => 'Str', required => 1 );
 has 'flto' => ( is => 'ro', isa => 'Bool', required => 1 );
@@ -18,6 +26,8 @@ has [ 'mem', 'num_hours', 'num_threads' ] =>
     ( is => 'ro', isa => 'Int', required => 1 );
 has ['num_freecells'] => ( is => 'ro', isa => 'Int',           default  => 4, );
 has 'deals'           => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
+has 'deal_num_width'  => ( is => 'ro', isa => 'Int',           default  => 0 );
+has 'disable_threading' => ( is => 'ro', isa => 'Bool', default => '' );
 
 sub main_base
 {
@@ -39,6 +49,7 @@ sub src_filenames
 
     return [
         $self->main_base . '.c',
+        'calc_foundation.h',
         'card.c',
         'dbm_cache.h',
         'dbm_calc_derived.h',
@@ -52,10 +63,8 @@ sub src_filenames
         'dbm_solver.h',
         'dbm_solver_head.h',
         'dbm_trace.h',
-        'delta_states.c',
         'delta_states.h',
         'delta_states_any.h',
-        'delta_states_debondt.c',
         'delta_states_debondt_impl.h',
         'delta_states_iface.h',
         'depth_dbm_procs.h',
@@ -119,6 +128,19 @@ sub src_rinutils_filenames
     ];
 }
 
+sub _zero_pad
+{
+    my ( $self, $deal_idx ) = @_;
+
+    my $deal_num_width = $self->deal_num_width;
+
+    return $deal_num_width > 0
+        ? sprintf( "%0${deal_num_width}d", $deal_idx )
+        : $deal_idx;
+}
+
+my $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE = 0;
+
 sub run
 {
     my $self = shift;
@@ -170,15 +192,6 @@ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
             io("$dest_dir/include/freecell-solver/$fn");
     }
 
-    foreach my $fn (
-        'rwlock.c',              'queue.c',
-        'pthread/rwlock_fcfs.h', 'pthread/rwlock_fcfs_queue.h'
-        )
-    {
-        io("/home/shlomif/progs/C/pthreads/rwlock/fcfs-rwlock/pthreads/$fn") >
-            io("$dest_dir/$fn");
-    }
-
     for my $fn ("prepare_vendu_deal.bash")
     {
         io("$BIN_DIR/$fn") > io("$dest_dir/$fn");
@@ -187,9 +200,10 @@ s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
     my @deals = @{ $self->deals };
     foreach my $deal_idx (@deals)
     {
+        my $padded = $self->_zero_pad($deal_idx);
         if (
             system(
-qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > $dest_dir/$deal_idx.board}
+qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > $dest_dir/$padded.board}
             ) != 0
             )
         {
@@ -252,10 +266,19 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     my $num_cpus    = $num_threads;
     my $mem         = $self->mem;
     my $march_flag  = $self->march_flag;
+    my $compiler    = $self->compiler;
+    my $lib_pthread = (
+        (
+            $OVERRIDE_BECAUSE_OF_USE_OF_PTHREAD_CREATE
+                || ( !$self->disable_threading )
+        ) ? " -lpthread " : ''
+    );
+    my $no_threads_flag =
+        $self->disable_threading ? " -DFCS_DBM_SINGLE_THREAD=1 " : "";
 
     io("$dest_dir/Makefile")->print(<<"EOF");
 TARGET = dbm_fc_solver
-DEALS = @deals
+DEALS = @{[map { $self->_zero_pad( $_) } @deals]}
 
 DEALS_DUMPS = \$(patsubst %,%.dump,\$(DEALS))
 DEALS_BOARDS = \$(patsubst %,%.board,\$(DEALS))
@@ -265,7 +288,8 @@ MEM = $mem
 CPUS = $num_cpus
 HOURS = $num_hours
 
-CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
+CC = $compiler
+CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags $no_threads_flag -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))
@@ -274,11 +298,11 @@ JOBS_STAMP = jobs/STAMP
 all: \$(TARGET) \$(JOBS)
 
 \$(TARGET): \$(MODULES)
-\tgcc \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -Bstatic -lm -lpthread -ltcmalloc
+\t\$(CC) \$(CFLAGS) -fwhole-program -o \$\@ \$(MODULES) -Bstatic -lm $lib_pthread -ltcmalloc
 \tstrip \$\@
 
 \$(MODULES): %.o: %.c
-\tgcc -c \$(CFLAGS) -o \$\@ \$<
+\t\$(CC) -c \$(CFLAGS) -o \$\@ \$<
 
 \$(JOBS_STAMP):
 \tmkdir -p jobs

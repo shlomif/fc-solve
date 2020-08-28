@@ -1,8 +1,27 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2020-04-13
+:Date: 2020-07-23
 :Revision: $Id$
+
+Version 6.0.1: (23-Jul-2020)
+----------------------------
+
+1. Fix the cmake build when using +cmake -S src -B build+ followed by
++cmake --build build+. (Reported at
+https://github.com/shlomif/fc-solve/issues/47 - thanks to @antonio-rojas .)
+
+2. Update +freecell-solver.spec.in+ to pass on Fedora 33 and to use
+the +%cmake*+ macros.
+
+Version 6.0.0: (22-Jul-2020)
+----------------------------
+
+1. Fix a minor bug where the initial position could be traversed twice.
+
+2. Add the +FCS_HARD_CODE_STATE_DEPTH_FIELD+ compile time option.
+
+3. Code cleanups.
 
 Version 5.24.0: (04-May-2020)
 -----------------------------

@@ -5,10 +5,9 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2009 Shlomi Fish
-/*
- * scans.h - header file for the scans.c - Best-First-Search and Soft-DFS
- * scans.
- */
+
+// scans.h - header file for the scans.c - Best-First-Search and Soft-DFS
+// scans.
 #pragma once
 
 #ifdef __cplusplus
@@ -80,16 +79,15 @@ static inline void fc_solve__calc_positions_by_rank_data(
         FCS_ON_NOT_FC_ONLY(const int sequences_are_built_by =
                                GET_INSTANCE_SEQUENCES_ARE_BUILT_BY(instance));
 
-        /* We need 2 chars per card - one for the column_idx and one
-         * for the card_idx.
-         *
-         * We also need it times 13 for each of the ranks.
-         *
-         * We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
-         * (-1,-1) (= end) padding.             * */
-        /* Populate positions_by_rank by looping over the stacks and
-         * indices looking for the cards and filling them. */
-
+        // We need 2 chars per card - one for the column_idx and one
+        // for the card_idx.
+        //
+        // We also need it times 13 for each of the ranks.
+        //
+        // We need (4*LOCAL_DECKS_NUM+1) slots to hold the cards plus a
+        // (-1,-1) (= end) padding.
+        // Populate positions_by_rank by looping over the stacks and
+        // indices looking for the cards and filling them.
         for (int ds = 0; ds < LOCAL_STACKS_NUM; ds++)
         {
             const_AUTO(dest_col, fcs_state_get_col(state_key, ds));
@@ -138,11 +136,11 @@ static inline const int8_t *fc_solve_calc_positions_by_rank_location(
     }
 }
 
+#ifndef FCS_ZERO_FREECELLS_MODE
 static inline void add_to_move_funcs_list(
     fcs_move_func **const out_move_funcs_list, size_t *const num_so_far,
     const fcs_move_func *const indexes, const size_t count_to_add)
 {
-#ifndef FCS_ZERO_FREECELLS_MODE
     size_t num = *num_so_far;
     fcs_move_func *const move_funcs_list =
         SREALLOC(*out_move_funcs_list, num + count_to_add);
@@ -153,8 +151,8 @@ static inline void add_to_move_funcs_list(
 
     *out_move_funcs_list = move_funcs_list;
     *num_so_far = num;
-#endif
 }
+#endif
 
 extern int fc_solve_sfs_check_state_begin(fcs_hard_thread *const,
     fcs_kv_state *const,

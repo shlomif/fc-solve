@@ -1,14 +1,14 @@
 Freecell Solver Readme File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2019-12-30
+:Date: 2020-07-20
 :Revision: $Id$
 
 [id="intro"]
 Introduction
 ------------
 
-This is Freecell Solver version 5.24.x, a program that automatically
+This is Freecell Solver version 6.0.x, a program that automatically
 solves most layouts of Freecell, and similar Solitaire variants as
 well as those of Simple Simon.
 

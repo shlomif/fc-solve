@@ -1,7 +1,7 @@
 {% extends "prelude.jinja" %}
 {% import "lib.jinja" as lib %}
 {% macro jquery_ui_head_elements() %}
-{{ lib.jquery_ui_head_elements(base_path)}}
+{{ lib.jquery_ui_head_elements(enable_jquery_ui)}}
 {% endmacro %}
 {% macro h2_section(id,title) %}
 <section class="h2">
@@ -114,6 +114,9 @@ version). The markup and code of this site are, unless noted
 otherwise, licensed under the <a href=
 "http://en.wikipedia.org/wiki/MIT_License">MIT/Expat
 licence</a>.</p>
+<p>
+<a href="{{ base_path }}meta/site-source/">The Site's Sources</a>
+</p>
 <!-- /Creative Commons License --></div>
 <div class="foot_left">
 <p><b>Webmaster:</b> <a href="https://www.shlomifish.org/">Shlomi

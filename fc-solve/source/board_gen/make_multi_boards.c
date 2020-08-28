@@ -5,16 +5,6 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
-    pi_make_microsoft_freecell_board.c - Program to generate the initial
-    board of Microsoft Freecell or Freecell Pro for input to Freecell Solver.
-
-    Usage: pi-make-microsoft-freecell-board -t [board-number] | fc-solve
-
-    Based on the code by Jim Horne (who wrote the original Microsoft Freecell)
-    Based on code from the Microsoft C Run-Time Library.
-    Modified By Shlomi Fish, 2000
-*/
 #include <stdio.h>
 #include <string.h>
 #include "range_solvers_gen_ms_boards.h"
@@ -27,13 +17,12 @@
 
 static void __attribute__((noreturn)) print_help(void)
 {
-    printf("\n%s", "summary-fc-solve [deal1_idx] [deal2_idx] .. -- \n"
+    printf("\n%s", "make-multi-board [deal1_idx] [deal2_idx] .. -- \n"
                    "   [--variant variant_str] [fc-solve theme args]\n"
                    "\n"
-                   "Attempts to solve several arbitrary deal indexes from the\n"
-                   "Microsoft/Freecell Pro deals using the fc-solve's theme "
-                   "and reports a\n"
-                   "summary of their results to STDOUT\n");
+                   "Generate the initial layouts of several arbitrary deal "
+                   "indexes from the\n"
+                   "Microsoft/Freecell Pro deals.");
     exit(-1);
 }
 
@@ -75,7 +64,7 @@ int main(int argc, char *argv[])
         fprintf(stderr, "--dir must be specified!\n");
         print_help();
     }
-    arg = populate_deals_from_argv(argc, argv, arg);
+    populate_deals_from_argv(argc, argv, arg);
 #define MAX_NUM_DIGITS 30
 #define MARGIN 5
     char filename[DIR_LEN + SUFFIX_LEN + MAX_NUM_DIGITS + MARGIN];
@@ -93,7 +82,7 @@ int main(int argc, char *argv[])
     fwrite(s, OUTPUT_LEN, 1, f);
     fclose(f);
 #else
-    const int fh = creat(filename, 0644);
+    const int fh = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
     get_board_l__without_setup(board_num, s);
     write(fh, s, OUTPUT_LEN);
     close(fh);

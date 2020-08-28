@@ -16,7 +16,7 @@ require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() {
 
 <toc />
 
-<h2 id="intro">Introduction</h2>
+{% call h2_section( id="intro", title="Introduction" ) %}
 
 <p>
 <b>Publishing Date:</b> 21 November 2016.
@@ -48,7 +48,9 @@ with 256 GB of RAM. (Thanks to Jonathan Ringstad for the suggestion to use
 AWS.)
 </p>
 
-<h2 id="conclusions">Conclusions</h2>
+{% endcall %}
+
+{% call h2_section( id="conclusions", title="Conclusions" ) %}
 
 <p>
 Deals 219837216, 1252215044, 2255988055, 2901685480, 2902413565, 4260084873,
@@ -58,7 +60,7 @@ space by default, which turned out to not be enough), and appears to be
 impossible as well, but not yet provably so.
 </p>
 
-<h3 id="reflections">Some Reflections</h3>
+{% call h3_section( id="reflections", title="Some Reflections" ) %}
 
 <p>
 This space will be filled with the contemporary statistics of the total
@@ -77,9 +79,13 @@ magnitude. Perhaps this can be explained by the fact that many more deals
 are winnable using 4 freecells.
 </p>
 
-<h2 id="charts">Charts</h2>
+{% endcall %}
 
-<h3 id="queue-items">Queue Items Per Iterations for Each of the Deals</h3>
+{% endcall %}
+
+{% call h2_section( id="charts", title="Charts" ) %}
+
+{% call h3_section( id="queue-items", title="Queue Items Per Iterations for Each of the Deals" ) %}
 
 <p>
 <b>Note:</b> the depth_dbm_fc_solver uses a variation on
@@ -89,11 +95,17 @@ count of states. The x-axis - "Iterations" roughly corresponds to time while
 the y-axis, corresponds to the number of states in the queue.
 </p>
 
-<h4 id="iters-summary-table">Iterations Summary Table</h4>
+{% call h4_section( id="iters-summary-table", title="Iterations Summary Table" ) %}
 
 {{ charts2 }}
 
-<h2 id="links">Links and References</h2>
+{% endcall %}
+
+{% endcall %}
+
+{% endcall %}
+
+{% call h2_section( id="links", title="Links and References" ) %}
 
 <ul>
 
@@ -122,5 +134,7 @@ Google Drive.
 </p>
 </li>
 </ul>
+
+{% endcall %}
 
 {% endblock %}

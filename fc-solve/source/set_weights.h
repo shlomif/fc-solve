@@ -5,9 +5,8 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * set_weights.h - header file of the set_weights function.
- */
+
+// set_weights.h - header file of the set_weights function.
 #pragma once
 
 #ifdef __cplusplus
@@ -29,10 +28,8 @@ static inline void fc_solve_set_weights(freecell_solver_str_t start_num,
         }
         if (start_num >= string_end)
         {
-            /* Initialize all the Best First Search weights at first
-             * to 0 so
-             * we won't have partial initialization.
-             * */
+            // Initialize all the Best First Search weights at first
+            // to 0 so we won't have partial initialization.
             do
             {
                 befs_weights[i++] = 0.0;

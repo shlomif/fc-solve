@@ -3,8 +3,16 @@ import * as base_ui from "./fcs-base-ui";
 import Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 
-const _my_module = Module()({});
-w.FC_Solve_init_wrappers_with_module(_my_module);
+let _my_non_promise_module;
+let _my_module = Module({
+    onRuntimeInitialized: () => {
+        _my_module.then((result) => {
+            _my_non_promise_module = result;
+            w.FC_Solve_init_wrappers_with_module(_my_non_promise_module);
+            return 0;
+        });
+    },
+});
 
 function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({

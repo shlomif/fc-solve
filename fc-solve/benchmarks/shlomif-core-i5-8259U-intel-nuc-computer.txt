@@ -1,0 +1,60 @@
+# vim:ft=txt:
+* Fedora 32 x86-64
+
+<<<<<<<<<<<<<<<
+[shlomif@localhost ~]$ inxi -CSG
+System:
+  Host: localhost.localdomain Kernel: 5.7.15-200.fc32.x86_64 x86_64 bits: 64
+  Desktop: KDE Plasma 5.18.5 Distro: Fedora release 32 (Thirty Two)
+CPU:
+  Topology: Quad Core model: Intel Core i5-8259U bits: 64 type: MT MCP
+  L2 cache: 6144 KiB
+  Speed: 1601 MHz min/max: 400/3800 MHz Core speeds (MHz): 1: 1601 2: 1601
+  3: 1601 4: 1600 5: 1601 6: 1600 7: 1601 8: 1601
+Graphics:
+  Device-1: Intel Iris Plus Graphics 655 driver: i915 v: kernel
+  Display: server: Fedora Project X.org 1.20.8 driver: modesetting
+  unloaded: fbdev,vesa resolution: 1920x1080~60Hz
+  OpenGL: renderer: Mesa Intel Iris Plus Graphics 655 (CFL GT3)
+  v: 4.6 Mesa 20.1.5
+>>>>>>>>>>>>>>>
+
+* Intel NUC: https://en.wikipedia.org/wiki/Next_Unit_of_Computing
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 25 " bash scripts/time-threads-num.bash 10 10 x Several Times
+forking solver and threaded solver
+commit 9c15432382a22b9d4d8eb27b9670d0296c101238
+(commit Date:   Thu Aug 20 12:59:03 2020 +0300 )
+Without (!) Profile Guided Optimisation (PGO).
+../source/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+/usr/bin/clang
+tcmalloc from fedora
+With strip.
+
+0.933027982711792s
+
+    Highlight: first recording to be prepared in case the core i3 desktop system gets decomissioned
+
+
+<DUMP>
+Started at 1597918364.579249
+Reached Board No. 4000 at 1597918364.692487
+Reached Board No. 8000 at 1597918364.801130
+Reached Board No. 16000 at 1597918365.037717
+Reached Board No. 20000 at 1597918365.156970
+Reached Board No. 24000 at 1597918365.265226
+Reached Board No. 28000 at 1597918365.377179
+Reached Board No. 32000 at 1597918365.502138
+Unsolved Board No. 11982 at 1597918365.509374
+Reached Board No. 12000 at 1597918365.512025
+Finished at 1597918365.512277 (total_num_iters=5886704)
+</DUMP>
+
+    ( DUMPS-1597918363-t/dump010 )

@@ -80,7 +80,7 @@ int fc_solve_apply_moves_order(fcs_moves_order *const moves_order,
                 return 3;
             }
 #endif
-            /* Try to parse the ordering function. */
+            // Try to parse the ordering function.
             if (string[i + 1] == '=')
             {
                 i += 2;

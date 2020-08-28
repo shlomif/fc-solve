@@ -32,11 +32,9 @@ extern "C" {
            effective_max_num_states_in_collection)
 #endif
 
-/*
- * This macro checks if we need to terminate from running this soft
- * thread and return to the soft thread manager with an
- * FCS_STATE_SUSPEND_PROCESS
- * */
+// This macro checks if we need to terminate from running this soft
+// thread and return to the soft thread manager with an
+// FCS_STATE_SUSPEND_PROCESS
 #define check_if_limits_exceeded()                                             \
     (check_if_limits_exceeded__num() check_if_limits_exceeded__num_states())
 
@@ -53,7 +51,7 @@ static inline void fc_solve_initialize_befs_rater(
 {
     const fc_solve_weighting_float *const befs_weights =
         weighting->befs_weights.weights;
-    /* Normalize the BeFS Weights, so the sum of all of them would be 1. */
+    // Normalize the BeFS Weights, so the sum of all of them would be 1.
     fc_solve_weighting_float sum = 0;
     for (int i = 0; i < FCS_NUM_BEFS_WEIGHTS; i++)
     {
@@ -119,7 +117,7 @@ static inline void fc_solve_initialize_befs_rater(
 
 typedef int fcs_depth;
 
-static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state)
+static inline fcs_depth calc_depth(fcs_collectible_state *ptr_state GCC_UNUSED)
 {
 #ifdef FCS_WITH_DEPTH_FIELD
     return (FCS_S_DEPTH(ptr_state));
@@ -324,14 +322,10 @@ static inline pq_rating befs_rate_state(
 
 #if defined(FCS_WITH_DEPTH_FIELD) &&                                           \
     !defined(FCS_HARD_CODE_CALC_REAL_DEPTH_AS_FALSE)
-/*
- * The calculate_real_depth() inline function traces the path of the state
- * up to the original state, and thus calculates its real depth.
- *
- * It then assigns the newly updated depth throughout the path.
- *
- * */
-
+// The calculate_real_depth() inline function traces the path of the state
+// up to the original state, and thus calculates its real depth.
+//
+// It then assigns the newly updated depth throughout the path.
 static inline void calculate_real_depth(
     const bool calc_real_depth, fcs_collectible_state *const ptr_state_orig)
 {
@@ -339,14 +333,14 @@ static inline void calculate_real_depth(
     {
         int_fast32_t this_real_depth = -1;
         fcs_collectible_state *temp_state = ptr_state_orig;
-        /* Count the number of states until the original state. */
+        // Count the number of states until the original state.
         while (temp_state != NULL)
         {
             temp_state = FCS_S_PARENT(temp_state);
             ++this_real_depth;
         }
         temp_state = ptr_state_orig;
-        /* Assign the new depth throughout the path */
+        // Assign the new depth throughout the path
         while (FCS_S_DEPTH(temp_state) != this_real_depth)
         {
             FCS_S_DEPTH(temp_state) = (int)this_real_depth;
@@ -359,35 +353,31 @@ static inline void calculate_real_depth(
 #define calculate_real_depth(calc_real_depth, ptr_state_orig)
 #endif
 
-/*
- * The mark_as_dead_end() inline function marks a state as a dead end, and
- * afterwards propagates this information to its parent and ancestor states.
- *
- * */
-
+// The mark_as_dead_end() inline function marks a state as a dead end, and
+// afterwards propagates this information to its parent and ancestor states.
 static inline void mark_as_dead_end__proto(
     fcs_collectible_state *const ptr_state_input)
 {
     fcs_collectible_state *temp_state = (ptr_state_input);
-    /* Mark as a dead end */
+    // Mark as a dead end
     FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
     temp_state = FCS_S_PARENT(temp_state);
     if (temp_state != NULL)
     {
-        /* Decrease the refcount of the state */
+        // Decrease the refcount of the state
         --(FCS_S_NUM_ACTIVE_CHILDREN(temp_state));
         while ((FCS_S_NUM_ACTIVE_CHILDREN(temp_state) == 0) &&
                (FCS_S_VISITED(temp_state) & FCS_VISITED_ALL_TESTS_DONE))
         {
-            /* Mark as dead end */
+            // Mark as dead end
             FCS_S_VISITED(temp_state) |= FCS_VISITED_DEAD_END;
-            /* Go to its parent state */
+            // Go to its parent state
             temp_state = FCS_S_PARENT(temp_state);
-            if (temp_state == NULL)
+            if (!temp_state)
             {
                 break;
             }
-            /* Decrease the refcount */
+            // Decrease the refcount
             (FCS_S_NUM_ACTIVE_CHILDREN(temp_state))--;
         }
     }

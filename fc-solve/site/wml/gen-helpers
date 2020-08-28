@@ -57,7 +57,8 @@ _exec( [ $^X, 'bin/gen-web-fc-solve-tests--texts-dictionary.pl' ],
 _exec( [ $^X, 'bin/my-cookiecutter.pl' ], 'cookiecutter failed.' );
 require HTML::Latemp::DocBook::GenMake;
 HTML::Latemp::DocBook::GenMake->new(
-    { dest_var => '$(D)', post_dest_var => '$(D)' } )->generate;
+    { dest_var => '$(D)', 'disable_docbook4' => 1, post_dest_var => '$(D)' } )
+    ->generate;
 _exec( [ "gmake", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
     "build-deps failed!" );
 _exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );

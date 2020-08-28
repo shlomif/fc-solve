@@ -83,12 +83,6 @@ void fc_solve_apply_move(fcs_state *const ptr_state_key,
     fcs_state_locs_struct *const locs,
     const fcs_internal_move move FREECELLS_AND_STACKS_ARGS());
 
-/*
-    The purpose of this function is to convert the moves from using
-    the canonized positions of the stacks and freecells to their
-    user positions.
-*/
-
 static inline fcs_move_stack fcs_move_stack__new(void)
 {
     return (fcs_move_stack){.num_moves = 0,
@@ -104,6 +98,10 @@ static inline void fc_solve_move_stack_swallow_stack(
         fcs_move_stack_push(stack, move);
     }
 }
+
+// The purpose of this function is to convert the moves from using
+// the canonized positions of the stacks and freecells to their
+// user positions.
 
 static inline void fc_solve_move_stack_normalize(fcs_move_stack *const moves,
     const fcs_state_keyval_pair *const init_state,
@@ -220,9 +218,9 @@ static inline void fc_solve_move_to_string_w_state(char *const string,
 #pragma GCC diagnostic ignored "-Wnull-dereference"
     case FCS_MOVE_TYPE_STACK_TO_STACK:
         if ((standard_notation == FC_SOLVE__STANDARD_NOTATION_EXTENDED) &&
-            /* More than one card was moved */
+            // More than one card was moved
             (fcs_move_get_num_cards_in_seq(move) > 1) &&
-            /* It was a move to an empty stack */
+            // It was a move to an empty stack
             (fcs_state_col_len(*state_key, fcs_move_get_dest_stack(move)) ==
                 fcs_move_get_num_cards_in_seq(move)))
         {

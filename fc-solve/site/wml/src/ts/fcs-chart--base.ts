@@ -27,7 +27,7 @@ export function fc_solve__chart__add_tooltip(): void {
 
     return;
 }
-export function fc_solve__chart_bind(chart_selector: string, plot): void {
+export function fc_solve__chart_bind(chart_selector: string, plot: any): void {
     $(chart_selector).bind("plothover", (event, pos, item) => {
         {
             const str = `(${pos.x.toFixed(2)},${pos.y.toFixed(2)})`;
@@ -60,9 +60,7 @@ export function fc_solve__chart_bind(chart_selector: string, plot): void {
     });
 }
 export function fc_solve__get_fields(chart_selector: string): number[][] {
-    const lines = $(chart_selector)
-        .text()
-        .split("\n");
+    const lines = $(chart_selector).text().split("\n");
     lines.shift();
     return lines.map((l) => l.split("\t").map(parseFloat));
 }

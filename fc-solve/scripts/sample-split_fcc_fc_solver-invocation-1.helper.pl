@@ -13,14 +13,8 @@ $delta->set_derived( { state_str => io->file( $ENV{I} )->all(), } );
 
 my $token = $delta->encode_composite();
 
-my $buffer = '';
-my $count  = 0;
-while ( $token > 0 )
-{
-    ++$count;
-    $buffer .= pack( 'C', ( $token & 0xFF ) );
-    $token >>= 8;
-}
+my $buffer = $token;
+my $count  = length($buffer);
 while ( $count < 16 )
 {
     ++$count;

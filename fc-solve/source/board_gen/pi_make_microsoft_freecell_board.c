@@ -5,16 +5,15 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
-    pi_make_microsoft_freecell_board.c - Program to generate the initial
-    board of Microsoft Freecell or Freecell Pro for input to Freecell Solver.
 
-    Usage: pi-make-microsoft-freecell-board -t [board-number] | fc-solve
-
-    Based on the code by Jim Horne (who wrote the original Microsoft Freecell)
-    Based on code from the Microsoft C Run-Time Library.
-    Modified By Shlomi Fish, 2000
-*/
+// pi_make_microsoft_freecell_board.c - Program to generate the initial
+// board of Microsoft Freecell or Freecell Pro for input to Freecell Solver.
+//
+// Usage: pi-make-microsoft-freecell-board -t [board-number] | fc-solve
+//
+// Based on the code by Jim Horne (who wrote the original Microsoft Freecell)
+// Based on code from the Microsoft C Run-Time Library.
+// Modified By Shlomi Fish, 2000
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>

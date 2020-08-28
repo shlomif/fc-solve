@@ -79,17 +79,10 @@ sub perl_debondt_enc_and_dec
 
     my $token = $delta->encode_composite();
 
-    if ( $token->as_bin() =~ /\A0b0*(1[01]*)\z/ )
+    my $num_bits = length($token) * 8;
+    if ( $num_bits > $max_num_bits )
     {
-        my $num_bits = length($1);
-        if ( $num_bits > $max_num_bits )
-        {
-            $max_num_bits = $num_bits;
-        }
-    }
-    else
-    {
-        die "Token is wrong: " . $token->as_bin() . "!";
+        $max_num_bits = $num_bits;
     }
 
     return $delta->decode($token)->to_string();

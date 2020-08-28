@@ -128,7 +128,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     STACK_SOURCE_LOOP_START(13)
     fcs_card *start_card_ptr = &fcs_col_get_card(col, col_len - FCS_MAX_RANK);
     size_t suit = 0;
-    /* Check if the top 13 cards are a sequence */
+    // Check if the top 13 cards are a sequence
     for (; suit < FCS_NUM_SUITS; ++suit)
     {
         if (!memcmp(start_card_ptr, simple_simon_rank_seqs[suit],
@@ -139,7 +139,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_founds)
     }
     if (suit < FCS_NUM_SUITS)
     {
-        /* We can move this sequence up there */
+        // We can move this sequence up there
         sfs_check_state_begin();
 
         my_copy_stack(source_stack_idx);
@@ -200,17 +200,16 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
     CALC_POSITIONS_BY_RANK();
 
     STACK_SOURCE_LOOP_START(1)
-    /* Loop on the cards in the stack and try to look for a true
-     * parent on top one of the stacks */
+    // Loop on the cards in the stack and try to look for a true
+    // parent on top one of the stacks
     fcs_card card = fcs_col_get_card(col, col_len - 1);
     size_t num_true_seqs = 1;
 
     for (int height = col_len - 2;; --height)
     {
         LOOK_FOR_TRUE_PARENT_AT_TOP__START(card)
-        /* This is a suitable parent - let's check if we
-         * have enough empty stacks to make the move feasible */
-        /* We can do it - so let's move */
+        // This is a suitable parent - let's check if we have enough empty
+        // stacks to make the move feasible We can do it - so let's move
 
         sfs_check_state_begin();
         copy_two_stacks(source_stack_idx, dest_stack_idx);
@@ -218,7 +217,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
             (size_t)(col_len - height - 1));
         sfs_check_state_end();
         LOOK_FOR_TRUE_PARENT_AT_TOP__END()
-        /* Stop if we reached the bottom of the stack */
+        // Stop if we reached the bottom of the stack
         if (height == -1)
         {
             break;
@@ -226,7 +225,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
 
         const fcs_card prev_card = card;
         card = fcs_col_get_card(col, height);
-        /* If this is no longer a sequence - move to the next stack */
+        // If this is no longer a sequence - move to the next stack
         if (!fcs_is_ss_false_parent(card, prev_card))
         {
             break;
@@ -234,8 +233,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_true_parent)
         if (!fcs_is_ss_suit_true(card, prev_card))
         {
             ++num_true_seqs;
-            /* We can no longer perform the move so go to the next
-             * stack. */
+            // We can no longer perform the move so go to the next stack.
             if (calc_max_simple_simon_seq_move(num_vacant_stacks) <
                 num_true_seqs)
             {
@@ -255,11 +253,11 @@ static inline int get_seq_h(
     size_t num_true_seqs = 1;
 
     int height;
-    /* Stop if we reached the bottom of the stack */
+    // Stop if we reached the bottom of the stack
     for (height = col_len - 2; height > -1; --height)
     {
         const fcs_card next_card = fcs_col_get_card(col, height);
-        /* If this is no longer a sequence - move to the next stack */
+        // If this is no longer a sequence - move to the next stack
         if (!fcs_is_ss_false_parent(next_card, card))
         {
             break;
@@ -293,8 +291,8 @@ DECLARE_MOVE_FUNCTION(
     STACK_SOURCE_LOOP_START(1)
     {
         size_t num_true_seqs;
-        /* This means that the loop exited prematurely and the stack does
-         * not contain a sequence. */
+        // This means that the loop exited prematurely and the stack does not
+        // contain a sequence
         if ((get_seq_h(col, &num_true_seqs) > 0) ||
             (max_seq_move < num_true_seqs))
         {
@@ -311,8 +309,6 @@ DECLARE_MOVE_FUNCTION(
     {
         continue;
     }
-    /* We can do it - so let's move */
-
     sfs_check_state_begin();
     copy_two_stacks(source_stack_idx, dest_stack_idx);
     fcs_move_sequence(
@@ -383,7 +379,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
         const bool is_ultimate_iter =
             (false_seq_idx == num_separate_false_seqs);
 
-        /* Find a suitable place to put it */
+        // Find a suitable place to put it
         const fcs_card the_card =
             is_ultimate_iter
                 ? src_card
@@ -393,7 +389,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
             is_ultimate_iter ? num_src_junk_true_seqs
                              : seqs->above_num_true_seqs[false_seq_idx];
 
-        /* Let's try to find a suitable parent on top one of the stacks */
+        // Let's try to find a suitable parent on top one of the stacks
         int clear_junk_dest_stack;
         for (clear_junk_dest_stack = 0; clear_junk_dest_stack < stacks_num;
              ++clear_junk_dest_stack)
@@ -420,7 +416,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
             }
         }
 
-        /* Check if there is a vacant stack */
+        // Check if there is a vacant stack
         if (behavior_flag ||
             (!((num_vacant_stacks > 0) &&
                 (calc_max_simple_simon_seq_move(
@@ -429,8 +425,7 @@ static inline bool generic_false_seq_index_loop(const int stacks_num,
             break;
         }
         --after_junk_num_freestacks;
-        /* Find an empty stack and designate it as the destination for the
-         * junk */
+        // Find an empty stack and designate it as the destination for the junk
         for (clear_junk_dest_stack = 0;; ++clear_junk_dest_stack)
         {
             if (fcs_state_col_is_empty(state_key, clear_junk_dest_stack) &&
@@ -459,7 +454,7 @@ static inline bool false_seq_index_loop(const int stacks_num,
     return generic_false_seq_index_loop(stacks_num, raw_state_raw,
         num_vacant_stacks, col, seqs, source_stack_idx, dest_stack_idx,
         behavior_flag,
-        /* Params that should be ignored in this case. */
+        // Params that should be ignored in this case.
         false, fc_solve_empty_card, 0);
 }
 
@@ -518,11 +513,11 @@ DECLARE_MOVE_FUNCTION(
         bool should_search = true;
         size_t increment_num_true_seqs = 0;
         bool should_break;
-        /* Stop if we reached the bottom of the stack */
+        // Stop if we reached the bottom of the stack
         if (!((should_break = (height == -1))))
         {
             const fcs_card h_above_card = fcs_col_get_card(col, height);
-            /* If this is no longer a sequence - move to the next stack */
+            // If this is no longer a sequence - move to the next stack
             if (!fcs_is_ss_false_parent(h_above_card, card))
             {
                 should_break = true;
@@ -536,8 +531,8 @@ DECLARE_MOVE_FUNCTION(
         if (should_search)
         {
             LOOK_FOR_TRUE_PARENT_with_ds_dc__START(card)
-                /* This is a suitable parent - let's check if there's a sequence
-                   above it. */
+                // This is a suitable parent - let's check if there's a sequence
+                // above it.
                 sequences_analysis seqs;
 
             if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, dest_card_height,
@@ -557,7 +552,7 @@ DECLARE_MOVE_FUNCTION(
                     dest_stack_idx,
                     dest_col_len PASS_IND_BUF_T(indirect_stacks_buffer));
 
-                /* Move the source seq on top of the dest seq */
+                // Move the source seq on top of the dest seq
                 fcs_move_sequence(dest_stack_idx, source_stack_idx,
                     (size_t)(col_len - height - 1));
 
@@ -598,8 +593,8 @@ DECLARE_MOVE_FUNCTION(
             {
                 // Split the cards above it into false sequences
                 LOOK_FOR_TRUE_PARENT_AT_TOP__START(h_card)
-                /* This is a suitable parent - let's check if we
-                 * have enough empty stacks to make the move feasible */
+                // This is a suitable parent - let's check if we
+                // have enough empty stacks to make the move feasible
                 sequences_analysis seqs;
 
                 if ((POPULATE_AND_CHECK_IF_FALSE_SEQ(col,
@@ -608,11 +603,10 @@ DECLARE_MOVE_FUNCTION(
                         (calc_max_simple_simon_seq_move(
                              seqs.after_junk_num_freestacks) > num_true_seqs)))
                 {
-                    /* Let's boogie - we can move everything */
                     sfs_check_state_begin();
                     copy_two_stacks(source_stack_idx, dest_stack_idx);
 
-                    /* Move the junk cards to their place */
+                    // Move the junk cards to their place
                     move_sequences_analysis_seqs_loop(
                         &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
                         source_stack_idx,
@@ -710,8 +704,8 @@ DECLARE_MOVE_FUNCTION(
     LOOK_FOR_TRUE_PARENT_with_ds_dc__START(
         card) if (dest_card_height <= dest_col_len - 2)
     {
-        /* This is a suitable parent - let's check if there's a sequence above
-         * it. */
+        // This is a suitable parent - let's check if there's a sequence above
+        // it.
         sequences_analysis seqs;
 
         populate_seq_points(dest_col, dest_card_height, &seqs);
@@ -724,10 +718,9 @@ DECLARE_MOVE_FUNCTION(
             (calc_max_simple_simon_seq_move(seqs.after_junk_num_freestacks) >=
                 num_true_seqs))
         {
-            /* We can do it - so let's move everything */
             sfs_check_state_begin();
             copy_two_stacks(source_stack_idx, dest_stack_idx);
-            /* Move the junk cards to their place */
+            // Move the junk cards to their place
 
             for (size_t seq_index = 0;
                  seq_index < seqs.num_separate_false_seqs + 1; seq_index++)
@@ -741,7 +734,7 @@ DECLARE_MOVE_FUNCTION(
                     dest_col_i, (size_t)s_e.src_stack, (size_t)s_e.seq_len);
             }
 
-            /* Move the source seq on top of the dest seq */
+            // Move the source seq on top of the dest seq
             fcs_move_sequence(dest_stack_idx, source_stack_idx,
                 (size_t)(after_end_of_junk - height));
 
@@ -819,7 +812,7 @@ DECLARE_MOVE_FUNCTION(
         ds_dcs[len++] = pos;
     }
 
-    /* This is done to preserve the original order in the solutions. */
+    // This is done to preserve the original order in the solutions.
     sort_ds_dcs(ds_dcs, (int)len);
 
     for (size_t i = 0; i < len; i++)
@@ -828,17 +821,16 @@ DECLARE_MOVE_FUNCTION(
         const size_t dest_card_height = (size_t)ds_dcs[i].height;
         const_AUTO(dest_col, fcs_state_get_col(state_key, dest_stack_idx));
 
-        /* This is a suitable parent - let's check if there's a sequence above
-         * it. */
+        // This is a suitable parent - let's check if there's a sequence above
+        // it.
         sequences_analysis seqs;
 
         if (POPULATE_AND_CHECK_IF_FALSE_SEQ(dest_col, (int)dest_card_height,
                 source_stack_idx, dest_stack_idx, true))
         {
-            /* We can do it - so let's move */
             sfs_check_state_begin();
             copy_two_stacks(source_stack_idx, dest_stack_idx);
-            /* Move the junk cards to their place */
+            // Move the junk cards to their place
             move_sequences_analysis_seqs_loop(
                 &pass_new_state SFS__PASS_MOVE_STACK(moves), &seqs,
                 dest_stack_idx,
@@ -859,7 +851,7 @@ DECLARE_MOVE_FUNCTION(
     SIMPS_define_vacant_stacks_accessors();
 
     STACK_SOURCE_LOOP_START(3)
-    /* Search for a parent card */
+    // Search for a parent card
     for (int parent_card_height = 0; parent_card_height < col_len - 2;
          parent_card_height++)
     {
@@ -898,19 +890,18 @@ DECLARE_MOVE_FUNCTION(
             sequences_analysis seqs;
             populate_seq_points(col, end_of_child_seq, &seqs);
 
-            /* Add the child to the seq_points */
+            // Add the child to the seq_points
             const_AUTO(child_seq_index, seqs.num_separate_false_seqs);
             seqs.above_num_true_seqs[seqs.num_separate_false_seqs] =
                 child_num_true_seqs;
             seqs.seq_points[seqs.num_separate_false_seqs++] = child_card_height;
 
-            /* Add the cards between the parent and the child to the seq_points
-             */
+            // Add the cards between the parent and the child to the seq_points
             generic_populate_seq_points(
                 col, parent_card_height, &seqs, child_card_height);
 
-            /* Let's check if we can move the child after we are done
-             * moving all the junk cards */
+            // Let's check if we can move the child after we are done moving all
+            // the junk cards
             if (!(IS_false_seq_index_loop(
                       col, false, source_stack_idx, source_stack_idx) &&
                     (calc_max_simple_simon_seq_move(
@@ -919,10 +910,9 @@ DECLARE_MOVE_FUNCTION(
             {
                 continue;
             }
-            /* We can do it - so let's move everything */
             sfs_check_state_begin();
 
-            /* Move the junk cards to their place */
+            // Move the junk cards to their place
 
             my_copy_stack(source_stack_idx);
             move_sequences_analysis_seqs_loop(
@@ -960,7 +950,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     }
     const fcs_card src_card = fcs_col_get_card(col, height);
 
-    /* take the sequence and try and put it on another stack */
+    // take the sequence and try and put it on another stack
     STACK_DEST_LOOP_START(1)
     if (!fcs_is_ss_false_parent(
             fcs_col_get_card(dest_col, dest_col_len - 1), src_card))
@@ -968,7 +958,6 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
         continue;
     }
 
-    /* We can do it - so let's perform the move */
     sfs_check_state_begin();
     copy_two_stacks(source_stack_idx, dest_stack_idx);
     fcs_move_sequence(
@@ -978,4 +967,4 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_simple_simon_move_sequence_to_false_parent)
     STACK_SOURCE_LOOP_END()
 }
 
-#endif /* #ifdef FCS_DISABLE_SIMPLE_SIMON */
+#endif // #ifdef FCS_DISABLE_SIMPLE_SIMON

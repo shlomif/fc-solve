@@ -42,9 +42,6 @@ static inline void fcs_init_and_encode_state(
         delta_stater, local_variant, state, enc_state->s);
 }
 
-/****************************************************/
-/* compare_enc_states */
-
 #ifdef FCS_DEBONDT_DELTA_STATES
 
 static inline int compare_enc_states(

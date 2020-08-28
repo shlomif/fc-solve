@@ -4,11 +4,13 @@
 {% block body %}
 
 
-<h2 id="distributed-docs">Distributed Documents</h2>
+{% call h2_section( id="distributed-docs", title="Distributed Documents" ) %}
 
-{{ fcs_docs.fcs_distribution_documents(base_path) }}
+{{ fcs_docs.fcs_distribution_documents() }}
 
-<h2>Documents of the Code</h2>
+{% endcall %}
+
+{% call h2_section( id="public-docs", title="Documents of the Code" ) %}
 
 <h3 class="plain"><a href="{{ arch_doc_url }}">Architecture Document</a></h3>
 
@@ -146,5 +148,7 @@ my
 <a href="http://www.mail-archive.com/linux-il@cs.huji.ac.il/msg56378.html">"Why
 I prefer BSD-style licences"</a>.
 </p>
+
+{% endcall %}
 
 {% endblock %}

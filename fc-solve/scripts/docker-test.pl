@@ -8,23 +8,11 @@ use autodie;
 use Path::Tiny qw/ path /;
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 
-my $SYS       = "fedora:32";
+my $SYS       = "fedora:33";
 my $CONTAINER = "fcsfed";
 my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, },
 );
-
-sub do_system
-{
-    my ($args) = @_;
-
-    my $cmd = $args->{cmd};
-    print "Running [@$cmd]\n";
-    if ( system(@$cmd) )
-    {
-        die "Running [@$cmd] failed!";
-    }
-}
 
 my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
@@ -32,9 +20,13 @@ $obj->clean_up();
 $obj->run_docker();
 $obj->docker( { cmd => [ 'cp', "../source",  "fcsfed:source", ] } );
 $obj->docker( { cmd => [ 'cp', "../scripts", "fcsfed:scripts", ] } );
+
+my $REMOVED_SANITY_CHECK = <<'EOF';
+curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
+EOF
+
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
-curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
 sudo pip3 install --prefix=/usr freecell_solver
 pip3 install --user freecell_solver

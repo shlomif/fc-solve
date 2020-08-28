@@ -228,7 +228,9 @@ endif
 ifeq ($(FREECELL_ONLY),0)
 	SOURCE_OBJECTS += card.o
 	SOURCE_OBJECTS += fc_pro_iface.o
+else
 	SOURCE_OBJECTS += preset.o
+	FC_PRO_OBJS += fc_pro_iface.o
 endif
 
 OBJECTS := $(GEN_C_OBJECTS) $(SOURCE_OBJECTS)
@@ -238,7 +240,7 @@ DEP_FILES = $(addprefix .deps/,$(addsuffix .pp,$(basename $(OBJECTS))))
 
 -include $(DEP_FILES)
 
-FC_PRO_OBJS = fc_pro_range_solver.o fc_pro_iface.o fc_pro_iface_aux.o
+FC_PRO_OBJS += fc_pro_range_solver.o fc_pro_iface_aux.o
 
 $(SOURCE_OBJECTS) $(MAIN_OBJECT) $(T_MAIN_OBJECT) $(THR_MAIN_OBJECT) $(FORK_MAIN_OBJECT) $(FC_PRO_OBJS): %.o: $(SRC_DIR)/%.c
 	$(CC) $(INIT_CFLAGS) $(CFLAGS) -o $@ -c $< $(END_OFLAGS)

@@ -27,12 +27,10 @@ typedef size_t fcs_hash_value;
 
 struct fc_solve_hash_symlink_item_struct
 {
-    /* A pointer to the data structure that is to be collected */
     void *key;
-    /* We also store the hash value corresponding to this key for faster
-       comparisons */
+    // We also store the hash value corresponding to this key for faster
+    // comparisons
     fcs_hash_value hash_value;
-    /* The next item in the list */
     struct fc_solve_hash_symlink_item_struct *next;
 };
 
@@ -56,32 +54,29 @@ typedef int (*hash_compare_function)(const void *const, const void *const);
 
 typedef struct
 {
-    /* The vector of the hash table itself */
+    // The vector of the hash table itself
     hash_table_entry *entries;
 #ifndef FCS_WITHOUT_TRIM_MAX_STORED_STATES
-    /* The list of vacant items as freed by the garbage collector. Use
-     * if before allocating more. */
+    // The list of vacant items as freed by the garbage collector. Use
+    // it before allocating more.
     hash_item *list_of_vacant_items;
 #endif
-/* A comparison function that can be used for comparing two keys
-   in the collection */
 #ifdef FCS_INLINED_HASH_COMPARISON
     enum FCS_INLINED_HASH_DATA_TYPE hash_type;
 #else
     hash_compare_function compare_function;
 #ifdef FCS_WITH_CONTEXT_VARIABLE
-    /* A context to pass to the comparison function */
+    // A context to pass to the comparison function
     void *context;
 #else
 #endif
 #endif
 
-    /* The size of the hash table */
     size_t size;
 
-    /* A bit mask that extract the lowest bits out of the hash value */
+    // A bit mask that extract the lowest bits out of the hash value
     size_t size_bitmask;
-    /* The number of elements stored inside the hash */
+    // The number of elements stored inside the hash
     size_t num_elems;
 
     size_t max_num_elems_before_resize;
@@ -120,9 +115,6 @@ static inline void fc_solve_hash_init(
 
     hash->num_elems = 0;
 
-    /* Allocate a table of size entries */
-    /* Initialize all the cells of the hash table to NULL, which indicate
-       that the end of each chain is right at the start. */
     hash->entries =
         (hash_table_entry *)calloc(initial_hash_size, sizeof(hash->entries[0]));
 
@@ -171,13 +163,12 @@ static inline void fc_solve_hash_foreach(hash_table *const hash,
             if (should_delete_ptr((*item)->key, context))
             {
                 hash_item *const next_item = (*item)->next;
-                /* Garbage collect (*item). */
                 (*item)->next = hash->list_of_vacant_items;
                 hash->list_of_vacant_items = (*item);
-                /* Skip the item in the chain. */
+                // Skip the item in the chain.
                 (*item) = next_item;
 
-                hash->num_elems--;
+                --(hash->num_elems);
             }
             else
             {

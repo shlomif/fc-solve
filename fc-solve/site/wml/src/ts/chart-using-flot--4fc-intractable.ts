@@ -30,9 +30,7 @@ export function process_and_chart_data(
     data_selector: string,
     chart_selector: string,
 ) {
-    const lines = $(data_selector)
-        .text()
-        .split("\n");
+    const lines = $(data_selector).text().split("\n");
     let head = lines.shift();
     if (head.length === 0) {
         head = lines.shift();

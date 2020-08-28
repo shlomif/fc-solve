@@ -17,8 +17,9 @@ from six.moves import range
 
 
 def find_ret(ints):
+    r = LCRandom31()
+
     def is_right(d):
-        r = LCRandom31()
         r.setSeed(d)
         n = len(ints)
         for i in ints:
@@ -27,7 +28,7 @@ def find_ret(ints):
             n -= 1
         return True
 
-    for d in range(1, (1 << 33)):
+    for d in range(1, r.MAX_SEED+1):
         if is_right(d):
             return d
     return -1

@@ -2,24 +2,49 @@
 
 use strict;
 use warnings;
+use 5.014;
 use autodie;
+
+use List::Util qw/ max /;
+use constant LARGEST_DESIRABLE_BIT_LENGTH => ( 7 * 8 );
+
+STDOUT->autoflush(1);
+STDERR->autoflush(1);
+
+sub _canonicalize_board_string_columns
+{
+    my $s = shift;
+    return $s =~
+        s#((?:^:[^\n]*\n)+)#join"",sort { $a cmp $b} split/^/ms, $1#emrs;
+}
 
 # use Test::More tests => 56;
 # use Test::Differences qw/ eq_or_diff /;
-
-use FC_Solve::DeltaStater                 ();
-use FC_Solve::DeltaStater::BitReader      ();
-use FC_Solve::DeltaStater::BitWriter      ();
-use FC_Solve::DeltaStater::DeBondt        ();
+use Games::Solitaire::Verify::VariantsMap ();
 use FC_Solve::DeltaStater::FccFingerPrint ();
-use FC_Solve::VarBaseDigitsReader         ();
-use FC_Solve::VarBaseDigitsReader::XS     ();
-use FC_Solve::VarBaseDigitsWriter         ();
-use FC_Solve::VarBaseDigitsWriter::XS     ();
 
-my $RANK_J = 11;
-my $RANK_Q = 12;
-my $RANK_K = 13;
+my $zero_fc_variant =
+    Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
+
+$zero_fc_variant->num_freecells(0);
+
+my @remainder_bit_lens = (
+    map { my $bin = reverse( sprintf( "%08b", $_ ) ); rindex( $bin, '1' ) + 1; }
+        ( 0 .. ( ( 1 << 8 ) - 1 ) )
+);
+
+die if $remainder_bit_lens[1] != 1;
+die if $remainder_bit_lens[0b1001] != 4;
+
+sub bit_len
+{
+    my $s = shift;
+    my $l = length($s) - 1;
+    return +( $l * 8 + $remainder_bit_lens[ ord( substr( $s, $l, 1 ) ) ] );
+}
+my $maxlen = 0;
+
+my $MAX_ITERS = ( $ENV{MAX_ITERS} // 3000000 );
 
 sub mytest
 {
@@ -28,7 +53,9 @@ sub mytest
     # MS Freecell No. 982 Initial state.
     my $delta = FC_Solve::DeltaStater::FccFingerPrint->new(
         {
-                  init_state_str => "Foundations: H-0 C-0 D-0 S-0\n"
+            variant        => 'custom',
+            variant_params => $zero_fc_variant,
+            init_state_str => "Foundations: H-0 C-0 D-0 S-0\n"
                 . "Freecells:\n"
                 . (
                 scalar(`pi-make-microsoft-freecell-board -t "$DEAL_IDX"`) =~
@@ -40,8 +67,10 @@ sub mytest
     # TEST
     # ok( $delta, 'Object was initialized correctly.' );
 
+    my $was_printed = '';
+    my $count       = 0;
     open my $exe_fh,
-qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l lg|#;
+qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecells-num 0 -sam -sel -c -p -t -mi "$MAX_ITERS" |#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -50,46 +79,75 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -sam -sel -p -t -l
             {
                 $l .= $m;
             }
-            if ( $l !~ /TD/ )
-            {
-                # $DB::single = 1;
-
-                # ...;
-            }
             $delta->set_derived(
                 {
                     state_str => $l,
                 }
             );
-            if ( $delta->_derived_state->to_string !~ /TD/ )
+            my $state_str = $delta->_derived_state->to_string;
+            my $encoded   = $delta->encode_composite();
+            die if @$encoded != 2;
+
+            # say "gotencoded=<@$encoded>";
+            $was_printed = 1;
+            if ( ( ++$count ) % 100 == 0 )
             {
-                # $DB::single = 1;
-
-                # ...;
+                print( $DEAL_IDX ,
+                    ":",
+                    ($count),
+                    ": max_len = $maxlen ",
+                    ": ",
+                    join(
+                        " ; ",
+                        map { "<<$_>>" } (
+                            map {
+                                join "|",
+                                    map { sprintf "%.2X", ord($_) } split //,
+                                    $_
+                            } @$encoded
+                        )
+                    )
+                );
+                print "\n";
             }
-            my @x =
-                map {
-                [
-                    ( join "|", map { sprintf "%.2X", ord($_) } split //, $_ ),
-                    length
-                ]
-                } @{ $delta->encode_composite() };
-            die if @x != 2;
-
-            print( $DEAL_IDX , ":", join( ",", map { $_->[0] } @x ) );
-            print "\n";
-            if ( $x[1][1] > 10 )
+            my $this_len = bit_len( $encoded->[1] );
+            if ( $this_len > LARGEST_DESIRABLE_BIT_LENGTH )
             {
                 $DB::single = 1;
                 die "exceeded len in deal $DEAL_IDX";
             }
+            if ( $state_str !~ m#^:[^\n]*? A[CDHS]\n#ms )
+            {
+                my $round_trip_state;
+                eval { $round_trip_state = $delta->decode($encoded); };
+                if ( my $err = $@ )
+                {
+                    print "error <$err> when processing <$state_str>.";
+                    die $err;
+                }
+                my $round_trip_str = $round_trip_state->to_string();
+                die "mismatch $round_trip_str vs $state_str\n."
+                    if _canonicalize_board_string_columns($round_trip_str) ne
+                    _canonicalize_board_string_columns($state_str);
+            }
+
+            $maxlen = max( $maxlen, $this_len );
         }
     }
+    print "DEAL_IDX = $DEAL_IDX ; max_len = $maxlen\n" if $was_printed;
+    return;
 }
 
-foreach my $DEAL_IDX ( 1 .. 300 )
+# foreach my $DEAL_IDX ( 210_521 .. 100_000_000 )
+# foreach my $DEAL_IDX (500007572)
+my $MOD = 50;
+foreach my $DEAL_IDX ( 1 .. 100_000_000 )
 {
     mytest($DEAL_IDX);
+    if ( $DEAL_IDX % $MOD == 0 )
+    {
+        STDERR->print("\rDEAL_IDX = $DEAL_IDX");
+    }
 }
 
 __END__

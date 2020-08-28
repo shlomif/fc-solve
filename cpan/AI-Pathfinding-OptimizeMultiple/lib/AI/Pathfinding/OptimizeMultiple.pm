@@ -15,8 +15,8 @@ use MooX qw/late/;
 use PDL;
 use Scalar::Util qw/ blessed /;
 
-has chosen_scans => ( isa => 'ArrayRef', is => 'rw' );
-has _iter_idx    => ( isa => 'Int',      is => 'rw', default => sub { 0; }, );
+has chosen_scans     => ( isa => 'ArrayRef', is => 'rw' );
+has _iter_idx        => ( isa => 'Int', is => 'rw', default  => sub { 0; }, );
 has _num_boards      => ( isa => 'Int', is => 'ro', init_arg => 'num_boards', );
 has _orig_scans_data => ( isa => 'PDL', is => 'rw' );
 has _optimize_for => ( isa => 'Str', is => 'ro', init_arg => 'optimize_for', );

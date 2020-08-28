@@ -6,6 +6,7 @@ include lib/make/include.mak
 
 # Toggle to generate production code with compressed and merged JS code/etc.
 PROD = 0
+LOCAL_BROWSER_TESTS = 0
 
 SKIP_EMCC ?= 0
 
@@ -141,16 +142,21 @@ $(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cp -f "$<" "$@"
 
-PROCESS_ALL_INCLUDES = APPLY_ADS=1 ALWAYS_MIN=1 perl bin/post-incs.pl
+PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 perl bin/post-incs-v2.pl --mode=minify \
+               --minifier-conf=bin/html-min-cli-config-file.conf \
+               --source-dir=$1 \
+               --dest-dir=$1 \
+               --
 
 jinja_rend := bin/jinja-render.py
 jinja_bases := $(shell cat lib/make/jinja.txt)
 dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
-prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
+# prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
 
 $(dest_jinjas): $(jinja_rend) lib/template.jinja
 	python3 $(jinja_rend)
-	@$(PROCESS_ALL_INCLUDES) $(dest_jinjas) $(prod_dest_jinjas)
+	@$(call PROCESS_ALL_INCLUDES,dest) $(jinja_bases)
+	@$(call PROCESS_ALL_INCLUDES,dest-prod) $(jinja_bases)
 
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
@@ -255,7 +261,7 @@ TYPINGS =
 TEST_FCS_VALID_BASENAME := web-fc-solve-tests--fcs-validate.js
 TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/$(TEST_FCS_VALID_BASENAME)
 
-TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-chart--base.js fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal-ui.js french-cards.js prange.js s2ints_js.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js
+TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-chart--base.js fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal-ui.js french-cards.js prange.js s2ints_js.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js web-fc-solve-tests--ui.js
 
 TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
@@ -332,7 +338,7 @@ T2_SVGS__MIN := $(T2_SVGS__BASE:%.svg=%.min.svg)
 T2_SVGS__svgz := $(T2_SVGS__BASE:%.svg=%.svgz)
 
 $(T2_SVGS__MIN): %.min.svg: %.svg
-	minify --svg-decimals 3 -o $@ $<
+	minify --svg-precision 5 -o $@ $<
 
 $(T2_SVGS__svgz): %.svgz: %.min.svg
 	gzip --best -n < $< > $@
@@ -363,7 +369,8 @@ $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
 
 upload: all
 	$(RSYNC) -a -l $(D)/ $(UPLOAD_URL)
-	$(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
+	# $(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
+	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 
 upload_beta: all
 	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
@@ -432,5 +439,22 @@ real_all: \
 
 real_all: $(SRC_pngs__webps)
 
+FAVICON := $(D)/favicon.ico
+
+$(FAVICON): ../../source/fc-solve.ico
+	$(call COPY)
+
+real_all: $(FAVICON)
+
+BROWSER_TESTS_URL = https://localhost/shlomif/fc-solve-temp
+
+ifeq ($(LOCAL_BROWSER_TESTS),0)
+	BROWSER_TESTS_URL = https://www.shlomifish.org/fc-solve-temp
+else
+	BROWSER_TESTS_URL = http://127.0.0.1:2400/shlomif/fc-solve-temp
+	BROWSER_TESTS_URL = http://127.0.0.1:2400/fc-solve-temp
+endif
+
 browser-tests: all
-	qunit-puppeteer 'https://www.shlomifish.org/fc-solve-temp/js-fc-solve/automated-tests/'
+	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
+	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"

@@ -14,7 +14,7 @@ extern "C" {
 #include "generic_tree.h"
 #include "delta_states.h"
 
-/* We need it for the typedef of fcs_fcc_move. */
+// We need it for the typedef of fcs_fcc_move.
 #include "fcc_brfs_test.h"
 #include "lock.h"
 
@@ -62,8 +62,8 @@ void fc_solve_dbm_store_destroy(fcs_dbm_store store);
 typedef struct fcs_dbm_queue_item_struct
 {
     fcs_encoded_state_buffer key;
-    /* TODO : maybe get rid of moves_seq with FCS_DBM_WITHOUT_CACHES
-     * to save space. */
+    // TODO : maybe get rid of moves_seq with FCS_DBM_WITHOUT_CACHES to save
+    // space.
     fcs_fcc_moves_seq moves_seq;
 #ifndef FCS_DBM_WITHOUT_CACHES
     fcs_fcc_move *moves_to_key;
@@ -144,8 +144,6 @@ typedef struct
 #ifndef FCS_DBM_CACHE_ONLY
     fcs_dbm_store store;
 #endif
-
-    /* The queue */
     unsigned long pre_cache_max_count;
 } fcs_dbm__cache_store__common;
 

@@ -5,12 +5,10 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2000 Shlomi Fish
-/*
- * meta_move_funcs_helpers.h - header file of the move functions of Freecell
- * Solver.
- *
- * The move functions code itself is found in freecell.c and simpsim.c.
- */
+// meta_move_funcs_helpers.h - header file of the move functions of Freecell
+// Solver.
+//
+// The move functions code itself is found in freecell.c and simpsim.c.
 #pragma once
 
 #ifdef __cplusplus
@@ -22,14 +20,10 @@ static inline int max0(const int e) { return max(e, 0); }
 #define calc_max_sequence_move(num_freecells, num_empty_cols)                  \
     (((num_freecells) + 1) << (num_empty_cols))
 #else
-/*
- * The number of cards that can be moved is
- * (freecells_number + 1) * 2 ^ (free_stacks_number)
- *
- * See the Freecell FAQ and the source code of PySol
- *
- * TODO : place INSTANCE_GAME_FLAGS inside a local variable.
- * */
+// The number of cards that can be moved is
+// (freecells_number + 1) * 2 ^ (free_stacks_number)
+//
+// See the Freecell FAQ and the source code of PySol
 #define calc_max_sequence_move(num_freecells, num_empty_cols)                  \
     (INSTANCE_UNLIMITED_SEQUENCE_MOVE                                          \
             ? INT_MAX                                                          \
@@ -127,9 +121,7 @@ static inline void fc_solve_move_sequence_function(
 #endif
 
 #define tests_state_context_val int state_context_value = 0;
-/*
- * This macro defines these accessors to have some value.
- * */
+// This macro defines these accessors to have some value.
 #define tests_define_accessors_no_stacks(MORE)                                 \
     fcs_hard_thread *const hard_thread = soft_thread->hard_thread;             \
     tests_define_accessors_move_stack();                                       \
@@ -158,20 +150,17 @@ static inline void fc_solve_move_sequence_function(
     my_copy_stack(idx1);                                                       \
     my_copy_stack(idx2)
 
-/*
- * This macro assists in implementing this prune:
- *
- * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1121
- * :
- *
- * There is no point in moving the last card in a
- * column to a parent on a different column, because then the column won't
- * be able to be filled, and will be left to disuse. Furthermore, after
- * moved to a parent, the card might block other cards that can be placed
- * on the parent.
- *
- * TODO : implement it for FCS_ES_FILLED_BY_KINGS_ONLY
- * */
+// This macro assists in implementing this prune:
+//
+// https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1121
+//
+// There is no point in moving the last card in a
+// column to a parent on a different column, because then the column won't
+// be able to be filled, and will be left to disuse. Furthermore, after
+// moved to a parent, the card might block other cards that can be placed
+// on the parent.
+//
+// TODO : implement it for FCS_ES_FILLED_BY_KINGS_ONLY
 #define MOVE_FUNCS__should_not_empty_columns() IS_FILLED_BY_NONE()
 
 #define MOVE_FUNCS__define_common()                                            \

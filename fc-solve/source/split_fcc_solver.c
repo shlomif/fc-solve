@@ -31,10 +31,8 @@ struct FccEntryPointNode
     struct
     {
         fcs_dbm_record key;
-        /* fcc_entry_point_value_t */
         struct
         {
-            /* We don't really need it. */
             long location_in_file;
 #if 0
             int depth;
@@ -211,7 +209,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
     while (1)
     {
-        /* First of all extract an item. */
+        // First of all extract an item.
         fcs_lock_lock(&instance->global_lock);
 
         if (prev_item)
@@ -249,19 +247,18 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (!item)
         {
-            /* Sleep until more items become available in the
-             * queue. */
+            // Sleep until more items become available in the queue.
             const struct timespec ts = {.tv_sec = 0, .tv_nsec = 5000000};
             struct timespec no_use;
             nanosleep(&ts, &no_use);
         }
         else
         {
-            /* Handle item. */
+            // Handle item.
             fc_solve_delta_stater_decode_into_state(
                 delta_stater, item->key.s, &state, indirect_stacks_buffer);
 
-            /* A section for debugging. */
+            // A section for debugging.
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 #if 0
         {
@@ -286,13 +283,11 @@ static void *instance_run_solver_thread(void *const void_arg)
                 {
                     if (val_proto->kv.val.depth <= moves_count)
                     {
-                        /* We can prune based on here. */
                         to_prune = true;
                     }
                     else
                     {
-                        /* We can set it to the more pessimstic move count
-                         * for future trimming. */
+                        // We can set it to the more pessimstic move count for future trimming.
                         to_output = !(val_proto->kv.val.was_consumed);
                         val_proto->kv.val.depth = moves_count;
                         val_proto->kv.val.was_consumed = true;
@@ -357,7 +352,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 break;
             }
 
-            /* Encode all the states. */
+            // Encode all the states.
             for (var_AUTO(derived_iter, derived_list); derived_iter;
                  derived_iter = derived_iter->next)
             {
@@ -375,9 +370,9 @@ static void *instance_run_solver_thread(void *const void_arg)
 
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_list);
-            /* End handle item. */
+            // End handle item.
         }
-        /* End of main thread loop */
+        // End of main thread loop
         prev_item = item;
     }
 
@@ -429,7 +424,7 @@ static inline void instance_check_key(
 
         if (key_depth == instance->curr_depth)
         {
-            /* Now insert it into the queue. */
+            // Now insert it into the queue.
             fcs_lock_lock(&instance->global_lock);
 
             fcs_depth_multi_queue__insert(&(coll->depth_queue),
@@ -445,10 +440,9 @@ static inline void instance_check_key(
         }
         else
         {
-            /* Handle an irreversible move */
+            // Handle an irreversible move
 
-            /* Calculate the new fingerprint to which the exit
-             * point belongs. */
+            // Calculate the new fingerprint to which the exit point belongs.
             fcs_which_moves_bitmask new_fingerprint = {{'\0'}};
             for (size_t i = 0; i < COUNT(new_fingerprint.s); ++i)
             {
@@ -459,9 +453,8 @@ static inline void instance_check_key(
             size_t trace_num;
             fcs_encoded_state_buffer *trace;
             fcs_lock_lock(&instance->fcc_exit_points_output_lock);
-            /* instance->storage_lock is already locked
-             * in instance_check_multiple_keys and we should not
-             * lock it here. */
+            // instance->storage_lock is already locked in
+            // instance_check_multiple_keys and we should not lock it here.
             calc_trace(token, &trace, &trace_num);
             {
                 FccEntryPointNode fcc_entry_key;
@@ -538,7 +531,7 @@ static inline void instance_check_key(
                 fingerprint_base64, &unused_output_len);
             base64_encode((unsigned char *)&(*key), sizeof(*key), state_base64,
                 &unused_output_len);
-            /* Output the exit point. */
+            // Output the exit point.
             fprintf(instance->fcc_exit_points_out_fh,
                 "%s %s " RIN_LL_FMT " %s\n", fingerprint_base64, state_base64,
                 (long long)added_moves_to_output,
@@ -571,7 +564,7 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 {
     const_AUTO(threads,
         dbm__calc_threads(instance, init_state, num_threads, init_thread));
-    /* TODO : do something meaningful with start_key_ptr . */
+    // TODO : do something meaningful with start_key_ptr .
     instance->start_key_ptr = key_ptr;
 
 #if 0
@@ -722,16 +715,14 @@ int main(int argc, char *argv[])
 
         assert(unused_size == sizeof(entry_point->kv.key.key));
 
-        /* TODO : Should traverse starting from key. */
+        // TODO : Should traverse starting from key.
         key_ptr = entry_point;
-        /* The NULL parent_state_enc and move for indicating this is the
-         * initial state. */
+        // The NULL parent_state_enc and move for indicating this is the initial
+        // state.
         fcs_init_encoded_state(&(parent_state_enc));
 
-/*
- * These states should be traversed - not blocked, so don't
- * put them inside the store.
- * */
+// These states should be traversed - not blocked, so don't put them inside the
+// store.
 #if 0
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');
@@ -766,7 +757,7 @@ int main(int argc, char *argv[])
         }
         ++instance.common.num_states_in_collection;
         ++instance.common.count_of_items_in_queue;
-        /* Valid for the next iteration: */
+        // Valid for the next iteration:
         location_in_file = ftell(fingerprint_fh);
     }
 

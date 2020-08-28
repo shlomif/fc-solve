@@ -75,6 +75,7 @@
 0-win64
 0rc5
 1-win32
+1-win64
 100K
 10C
 10D
@@ -648,6 +649,7 @@ freecell-solver-2
 freecell-solver-3
 freecell-solver-4
 freecell-solver-5
+freecell-solver-6
 freecell-solver-config
 freecell-solver-fc-pro-range-solve
 freecell-solver-multi-thread-solve
@@ -1232,6 +1234,7 @@ onqtam
 ABI
 DD-MMM-YYYY
 FCS_DEAL_ONLY_UP_TO_2G
+FCS_HARD_CODE_STATE_DEPTH_FIELD
 FCS_STATE_SOFT_SUSPEND_PROCESS
 FCS_ZERO_FREECELLS_MODE
 GNUInstallDirs
@@ -1239,6 +1242,7 @@ Golf_
 MAX_NUM_DECKS
 PACKAGE_VERSION
 Refactorings
+antonio-rojas
 appveyor
 asciidoc
 cffi
@@ -1314,6 +1318,7 @@ misformatting
 non-DeBondt
 pi_make_microsoft_freecell_board
 playstacks
+preempt
 stackoverflow
 tmp
 to-del-fcs
@@ -1324,6 +1329,8 @@ var_base
 -hoi
 Der
 iterations's
+solitairelaboratory
+solutioncatalog
 
 ==== In: dest/download.html
 
@@ -1334,11 +1341,14 @@ pkg
 
 ==== In: dest/faq.html
 
+3SAT
 5-freecells
 Alfille
+Dominus
 HPC
 NNN
 NRG
+Solvitaire
 gen_ms_boards__rand
 mis-attributed
 num_columns
@@ -1358,6 +1368,7 @@ msi
 rinutils
 solv
 transpose-freecell-board
+v6
 
 ==== In: dest/js-fc-solve/find-deal/index.html
 
@@ -1392,4 +1403,5 @@ xxHash
 82-fcs-patch-0
 Der
 FreecellSolver-0
+cffi
 diff

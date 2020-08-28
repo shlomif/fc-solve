@@ -422,7 +422,7 @@ sub _apply_move
         };
 
         $recursive_move->(
-            $ultimate_source, $ultimate_dest,
+            $ultimate_source,    $ultimate_dest,
             $ultimate_num_cards, [@empty_stack_indexes],
         );
     }

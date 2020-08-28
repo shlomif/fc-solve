@@ -154,8 +154,10 @@ my $SAFE = $FALSE;
 my %skip_indices;
 my @tests;
 
+my $IS_TRAVIS_CI = ( exists( $ENV{TRAVIS} ) && ( $ENV{TRAVIS} eq 'true' ) );
+
 my @TRAVIS_CI_SKIP_FAILING_TESTS = (
-      ( exists( $ENV{TRAVIS} ) && ( $ENV{TRAVIS} eq 'true' ) )
+    $IS_TRAVIS_CI
     ? ( runtest_args => [qw%--exclude-re valgrind--dbm_fc_solver_1%], )
     : ()
 );
@@ -352,32 +354,77 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
     else
     {
         mkdir($build_path);
-        _chdir_run(
-            $build_path,
-            sub {
-                if ($tatzer_args)
-                {
-                    $run->( "Tatzer", [ '../scripts/Tatzer', @$tatzer_args ] );
+        if ( $args->{'cmake-B'} )
+        {
+            my $inner_build_path = "inner_build_dir";
+            my $bpath            = "$build_path/$inner_build_path";
+            mkdir($bpath);
+            _chdir_run(
+                $build_path,
+                sub {
+                    $run->(
+                        "cmake config stage",
+                        [
+                            'cmake',           '-B',
+                            $inner_build_path, '-S',
+                            '../source',       @$cmake_args,
+                        ]
+                    );
+                    my @CMAKE_VER = (
+                        scalar(`cmake --version`) =~
+                            /\Acmake\s+version\s+([0-9]+)\.([0-9]+)/i );
+
+                    # Fails with old cmake on travis.
+                    if (
+                        ( not $IS_TRAVIS_CI )
+                        or (   ( $CMAKE_VER[0] > 3 )
+                            or ( $CMAKE_VER[0] == 3 and $CMAKE_VER[1] >= 15 ) )
+                        )
+                    {
+                        $run->(
+                            "cmake build stage",
+                            [ 'cmake', '--build', $inner_build_path, ]
+                        );
+                    }
+                    return;
                 }
-                else
-                {
-                    $run->( "cmake", [ 'cmake', @$cmake_args, '../source' ] );
+            );
+        }
+        else
+        {
+            _chdir_run(
+                $build_path,
+                sub {
+                    if ($tatzer_args)
+                    {
+                        $run->(
+                            "Tatzer", [ '../scripts/Tatzer', @$tatzer_args ]
+                        );
+                    }
+                    else
+                    {
+                        $run->(
+                            "cmake", [ 'cmake', @$cmake_args, '../source' ]
+                        );
+                    }
+                    $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
+                    my $run_test = sub {
+                        my ($cmd_line) = @_;
+                        $run->(
+                            "test", [ $^X, "$CWD/run-tests.pl", @$cmd_line, ]
+                        );
+                    };
+                    if ( not $args->{do_not_test} )
+                    {
+                        $run_test->( [ @{ $args->{runtest_args} // [] } ] );
+                    }
+                    if ( my $exe = $args->{extra_test_command} )
+                    {
+                        $run_test->($exe);
+                    }
                 }
-                $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
-                my $run_test = sub {
-                    my ($cmd_line) = @_;
-                    $run->( "test", [ $^X, "$CWD/run-tests.pl", @$cmd_line, ] );
-                };
-                if ( not $args->{do_not_test} )
-                {
-                    $run_test->( [ @{ $args->{runtest_args} // [] } ] );
-                }
-                if ( my $exe = $args->{extra_test_command} )
-                {
-                    $run_test->($exe);
-                }
-            }
-        );
+            );
+        }
         $build_path->remove_tree( { safe => $SAFE } );
     }
 
@@ -441,12 +488,22 @@ sub reg_prep
 }
 
 reg_test(
+    "cmake -B -S ( GH#47 )",
+    {
+        'cmake-B'  => 1,
+        cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ]
+    }
+);
+reg_test(
     {
         blurb => "zero freecells mode",
     },
     {
         tatzer_theme => 'zerofcmode',
-        runtest_args => [ '--tests-dir', '../scripts/zerofc-mode-tests/t/' ],
+        runtest_args => [
+            '--custom-tests-suite', '--tests-dir',
+            '../scripts/zerofc-mode-tests/t/'
+        ],
     },
 );
 reg_test(
@@ -455,8 +512,10 @@ reg_test(
     },
     {
         tatzer_theme => 'zerofcmode_with_moves',
-        runtest_args =>
-            [ '--tests-dir', '../scripts/zerofc-mode-tests/solution-t/', ],
+        runtest_args => [
+            '--custom-tests-suite', '--tests-dir',
+            '../scripts/zerofc-mode-tests/solution-t/',
+        ],
     },
 );
 reg_theme_test( "Default", 'empty', );

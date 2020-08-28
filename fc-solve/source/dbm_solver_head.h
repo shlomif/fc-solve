@@ -13,11 +13,8 @@
 extern "C" {
 #endif
 
+#ifndef FCS_DBM_SINGLE_THREAD
 #include <pthread.h>
-
-// Define FCS_DBM_SINGLE_THREAD to have single thread-per-instance traversal.
-#if 0
-#define FCS_DBM_SINGLE_THREAD 1
 #endif
 
 #include "freecell-solver/fcs_conf.h"

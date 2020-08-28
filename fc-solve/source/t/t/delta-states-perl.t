@@ -15,11 +15,7 @@ use FC_Solve::VarBaseDigitsReader::XS ();
 use FC_Solve::VarBaseDigitsWriter     ();
 use FC_Solve::VarBaseDigitsWriter::XS ();
 
-package main;
-
-my $RANK_J = 11;
 my $RANK_Q = 12;
-my $RANK_K = 13;
 
 {
     my @suits       = (qw(H C D S));
@@ -490,7 +486,8 @@ EOF
 
 {
     my $reader =
-        FC_Solve::VarBaseDigitsReader->new( { data => ( 3 | ( 12 << 3 ) ) } );
+        FC_Solve::VarBaseDigitsReader->new(
+        { data => chr( 3 | ( 12 << 3 ) ) } );
 
     # TEST
     ok( $reader, 'Init var_reader' );
@@ -505,7 +502,9 @@ EOF
 {
     my $reader = FC_Solve::VarBaseDigitsReader->new(
         {
-            data => ( 24 + 8 * 52 + 7 * 11 * 52 )
+            data => FC_Solve::VarBaseDigitsWriter::int_to_buf(
+                24 + 8 * 52 + 7 * 11 * 52
+            )
         }
     );
 

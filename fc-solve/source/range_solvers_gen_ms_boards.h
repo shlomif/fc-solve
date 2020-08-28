@@ -58,11 +58,9 @@ static inline void get_board_l__without_setup(
     microsoft_rand seedx =
         microsoft_rand__calc_init_seedx((microsoft_rand)deal_idx);
 #endif
-    CARD deck[52]; /* deck of 52 unique cards */
-
-    /* shuffle cards */
-
-    for (size_t i = 0; i < 52; ++i) /* put unique card in each deck loc. */
+    // deck of 52 unique cards
+    CARD deck[52];
+    for (size_t i = 0; i < 52; ++i) // put unique card in each item
     {
         deck[i] = i;
     }
@@ -86,31 +84,27 @@ static inline void get_board_l__without_setup(
 }
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-/* This is to settle gcc's -Wmissing-prototypes which complains about
- * missing prototypes for "extern" subroutines.
- *
- * It is not critical that it would be in the same place because the only
- * thing that uses this function is Python's ctypes (in the test files under
- * t/t/ ) which does not process the included C code. In the future, we may
- * have an external API in which case we'll devise a header for this
- * routine.
- *
- * */
+// This is to settle gcc's -Wmissing-prototypes which complains about
+// missing prototypes for "extern" subroutines.
+//
+// It is not critical that it would be in the same place because the only
+// thing that uses this function is Python's ctypes (in the test files under
+// t/t/ ) which does not process the included C code. In the future, we may
+// have an external API in which case we'll devise a header for this
+// routine.
 void DLLEXPORT fc_solve_get_board_l(
     const fc_solve_ms_deal_idx_type deal_idx, char *const ret);
 #endif
 
 #ifdef FCS_GEN_BOARDS_WITH_EXTERNAL_API
-/* This is to settle gcc's -Wmissing-prototypes which complains about
- * missing prototypes for "extern" subroutines.
- *
- * It is not critical that it would be in the same place because the only
- * thing that uses this function is Python's ctypes (in the test files under
- * t/t/ ) which does not process the included C code. In the future, we may
- * have an external API in which case we'll devise a header for this
- * routine.
- *
- * */
+// This is to settle gcc's -Wmissing-prototypes which complains about
+// missing prototypes for "extern" subroutines.
+//
+// It is not critical that it would be in the same place because the only
+// thing that uses this function is Python's ctypes (in the test files under
+// t/t/ ) which does not process the included C code. In the future, we may
+// have an external API in which case we'll devise a header for this
+// routine.
 void DLLEXPORT fc_solve_get_board_l(
     const fc_solve_ms_deal_idx_type deal_idx, char *const ret);
 

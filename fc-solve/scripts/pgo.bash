@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This is a script for PGO - Profile Guided Optimisations in gcc.
+set -e -x
 
 real_compiler="$1"
 shift
@@ -11,8 +12,11 @@ if test "$real_compiler" = "clang" ; then
     compiler="gcc"
 else
     compiler="$real_compiler"
+    if test "$real_compiler" = "gcc"
+    then
+        p='-fprofile-update=atomic'
+    fi
 fi
-p='-fprofile-update=atomic'
 
 pgo_flags=""
 make_vars=()
@@ -101,7 +105,7 @@ else
 fi
 
 if test \( "$real_compiler" = "clang" \) -a \( "$mode" = "use" \) ; then
-    llvm-profdata merge -output default.profdata default.profraw
+    llvm-profdata merge -output default.profdata default*.profraw
 fi
 
 run_make FREECELL_ONLY=1 \

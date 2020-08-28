@@ -302,10 +302,8 @@ DLLEXPORT extern int freecell_solver_user_next_instance(
 
 DLLEXPORT extern int freecell_solver_user_next_flare(void *const api_instance);
 
-/*
- * This function resets the user_instance, making it lose
- * all the previous command line arguments it encountered
- * */
+// This function resets the user_instance, making it lose
+// all the previous command line arguments it encountered
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
 DLLEXPORT extern int freecell_solver_user_reset(void *const user_instance);
 
@@ -316,18 +314,14 @@ DLLEXPORT const char *freecell_solver_user_get_lib_version(
 DLLEXPORT const char *freecell_solver_user_get_current_soft_thread_name(
     void *const user_instance);
 
-/*
- * This error string should be strdup()'ed or something if one wishes
- * to reuse it. Otherwise, it is constant.
- * */
+// This error string should be strdup()'ed or else copied if one wishes
+// to reuse it. Otherwise, it should be treated as constant.
 #ifdef FCS_WITH_ERROR_STRS
 DLLEXPORT const char *freecell_solver_user_get_last_error_string(
     void *const api_instance);
 #endif
 
-/*
- * This sets the moves_order from min_depth onwards.
- * */
+// This sets the moves_order from min_depth onwards.
 DLLEXPORT extern int freecell_solver_user_set_depth_tests_order(
     void *const user_instance, const int min_depth,
     const char *const moves_order FCS__PASS_ERR_STR(char **const error_string));

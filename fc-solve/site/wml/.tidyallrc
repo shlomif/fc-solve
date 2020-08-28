@@ -10,7 +10,7 @@ ignore = src/ts/jquery.flot.d.ts src/ts/jq_qs.d.ts src/ts/web-fcs-tests-strings.
 
 [PerlTidy]
 select = **/*.{pl,pm,t}
-argv = -ci=4 -bl -cti=0
+argv = -ci=4 -bl -cti=0 --character-encoding=none
 ignore = dest/**/* lib/fc-solve-for-javascript/CMAKE-BUILD-dir/**/*
 
 [PerlCritic]

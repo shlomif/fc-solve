@@ -24,10 +24,7 @@ struct fcs_cache_key_info_struct
 {
     fcs_cache_key key;
     fcs_fcc_move *moves_to_key;
-    /* lower_pri and higher_pri form a doubly linked list.
-     *
-     * pri == priority.
-     * */
+    // lower_pri and higher_pri form a doubly linked list. (pri=priority)
     struct fcs_cache_key_info_struct *lower_pri, *higher_pri;
 };
 

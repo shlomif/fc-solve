@@ -5,15 +5,14 @@
 // or distributed except according to the terms contained in the COPYING file.
 //
 // Copyright (c) 2012 Shlomi Fish
-/*
- * depth_dbm_solver.c - a specialised solver that offloads the states'
- * collection to an on-disk DBM database such as Berkeley DB or Google's
- * LevelDB. Has been adapted to be completely in-memory. It makes use of
- * delta_states.c for a very compact storage.
- *
- * In addition, this solver implements the scheme in:
- * https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1135
- */
+
+// depth_dbm_solver.c - a specialised solver that offloads the states'
+// collection to an on-disk DBM database such as Berkeley DB or Google's
+// LevelDB. Has been adapted to be completely in-memory. It makes use of
+// delta_states.c for a very compact storage.
+//
+// In addition, this solver implements the scheme in:
+// https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1135
 
 #include "dbm_solver_head.h"
 
@@ -119,7 +118,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_derived_state *derived_lists[max_batch_size];
     while (true)
     {
-        /* First of all extract a batch of items. */
+        // First of all extract a batch of items.
         fcs_lock_lock(&instance->common.storage_lock);
         bool should_break = false;
         fcs_batch_size batch_size = 0;
@@ -158,8 +157,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                 prev_size = batch_size;
                 if ((!should_break) && (batch_size == 0))
                 {
-                    /* Sleep until more items become available in the
-                     * queue. */
+                    // Sleep until more items become available in the queue.
                     fcs_condvar__wait_on(
                         &(instance->monitor), &(instance->common.storage_lock));
                 }
@@ -179,10 +177,9 @@ static void *instance_run_solver_thread(void *const void_arg)
         for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             const_AUTO(token, tokens[batch_i]);
-            /* Handle item. */
+            // Handle the item in "token".
             fc_solve_delta_stater_decode_into_state(
                 delta_stater, token->key.s, &state, indirect_stacks_buffer);
-            /* A section for debugging. */
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
@@ -200,7 +197,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             }
         }
 
-        /* Encode all the states. */
+        // Encode all the states.
         for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             for (var_AUTO(derived_iter, derived_lists[batch_i]); derived_iter;
@@ -224,8 +221,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_lists[batch_i]);
         }
-        /* End handle item. */
-        /* End of main thread loop */
+        // End of the thread's main loop
     }
 thread_end:
 
@@ -258,9 +254,6 @@ static inline void instance_check_key(
         fcs_cache_key_info *cache_key = cache_store__insert_key(
             &(instance->cache_store), key, parent, moves_to_parent, move);
 #endif
-
-        /* Now insert it into the queue. */
-
         fcs_offloading_queue__insert(
             &(coll->queue), (const offloading_queue_item *)(&token));
 
@@ -358,8 +351,7 @@ int main(int argc, char *argv[])
     fcs_encoded_state_buffer *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
 
-    /* The NULL parent_state_enc and move for indicating this is the
-     * initial state. */
+    // The NULL parent for indicating this is the initial state.
     fcs_encoded_state_buffer parent_state_enc;
     fcs_init_encoded_state(&(parent_state_enc));
 
