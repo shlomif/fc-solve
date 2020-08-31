@@ -16,37 +16,15 @@ const solution_for_deal_24__default__with_unicoded_suits =
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(3);
+            assert.expect(2);
 
-            let done = assert.async(1);
-
-            $("#deal_number").val("24");
-            $("#preset").val("default");
-            $("#one_based").prop("checked", false);
-            $("#populate_input").click();
-            window.setTimeout(() => {
-                const board: string = $("#stdin").val() as string;
-                // alert(board);
-                // const board = $("#deal_number").text();
-                // assert.equal(board, "KC", "foo");
-                // TEST
-                assert.deepEqual(
-                    board.replace(/^#[^\n]*\n/gms, "").replace(/^: /gms, ""),
-                    ms_deal_24,
-                    "got the initial layout text",
-                );
-
+            let done = assert.async(2);
+            $(document).ready(() => {
                 function _get_solution(): string {
                     return $("#output").val() as string;
                 }
-                // TEST
-                assert.deepEqual(
-                    _get_solution(),
-                    "",
-                    "solution is empty at start",
-                );
-                $("#run_do_solve").click();
-                window.setTimeout(() => {
+
+                $("#output").change(() => {
                     const sol: string = _get_solution();
 
                     // TEST
@@ -56,8 +34,36 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                         "solution was filled",
                     );
                     done();
-                }, 200);
-            }, 200);
+                });
+                $("#stdin").change(() => {
+                    const board: string = $("#stdin").val() as string;
+                    // alert(board);
+                    // const board = $("#deal_number").text();
+                    // assert.equal(board, "KC", "foo");
+                    // TEST
+                    assert.deepEqual(
+                        board
+                            .replace(/^#[^\n]*\n/gms, "")
+                            .replace(/^: /gms, ""),
+                        ms_deal_24,
+                        "got the initial layout text",
+                    );
+
+                    // TEST
+                    assert.deepEqual(
+                        _get_solution(),
+                        "",
+                        "solution is empty at start",
+                    );
+                    // $("#run_do_solve").click();
+                    done();
+                });
+                $("#deal_number").val("24");
+                $("#preset").val("default");
+                $("#one_based").prop("checked", false);
+                $("#populate_input").click();
+                done();
+            });
         });
     });
 
