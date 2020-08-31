@@ -211,7 +211,7 @@ class FC_Solve_UI {
         const that = this;
         const displayer: w.DisplayFilter = that._calcDisplayFilter();
 
-        that._webui_output_set_text(
+        that._webui_output_set_text_trigger_change(
             that._process_pristine_output(that._calc_pristine_output()),
         );
 
@@ -327,7 +327,17 @@ class FC_Solve_UI {
         return $("#unicode_suits__unicards").is(":checked");
     }
     private _webui_output_set_text(text) {
-        $("#output").val(text);
+        const output = $("#output");
+        output.val(text);
+
+        return;
+    }
+    private _webui_output_set_text_trigger_change(text) {
+        const that = this;
+        that._webui_output_set_text(text);
+        const output = $("#output");
+        // For tests
+        output.trigger("change");
 
         return;
     }

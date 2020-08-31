@@ -16,27 +16,14 @@ const solution_for_deal_24__default__with_unicoded_suits =
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(2);
+            assert.expect(3);
 
-            let done = assert.async(2);
+            let done = assert.async(3);
             (() => {
                 function _get_solution(): string {
                     return $("#output").val() as string;
                 }
 
-                if (false) {
-                    $("#output").change(() => {
-                        const sol: string = _get_solution();
-
-                        // TEST
-                        assert.deepEqual(
-                            sol,
-                            solution_for_deal_24__default,
-                            "solution was filled",
-                        );
-                        done();
-                    });
-                }
                 $("#stdin").change(() => {
                     const board: string = $("#stdin").val() as string;
                     // alert(board);
@@ -57,7 +44,18 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                         "",
                         "solution is empty at start",
                     );
-                    // $("#run_do_solve").click();
+                    $("#output").change(() => {
+                        const sol: string = _get_solution();
+
+                        // TEST
+                        assert.deepEqual(
+                            sol,
+                            solution_for_deal_24__default,
+                            "solution was filled",
+                        );
+                        done();
+                    });
+                    $("#run_do_solve").click();
                     done();
                 });
                 $("#deal_number").val("24");
