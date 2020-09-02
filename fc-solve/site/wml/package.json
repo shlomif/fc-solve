@@ -36,7 +36,6 @@
     "param-case": "^3.0.3",
     "prettier": "^2.1.1",
     "qunit": "^2.11.1",
-    "qunit-cli": "^0.2.0",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
     "rollup": "^2.26.9",

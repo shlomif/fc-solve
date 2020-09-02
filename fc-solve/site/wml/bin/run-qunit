@@ -1,2 +1,2 @@
 #!/bin/sh
-NODE_PATH="`pwd`"/lib/for-node/js qunit-cli lib/for-node/test-code.js
+NODE_PATH="`pwd`"/lib/for-node/js prove --exec qunit lib/for-node/test-code.js
