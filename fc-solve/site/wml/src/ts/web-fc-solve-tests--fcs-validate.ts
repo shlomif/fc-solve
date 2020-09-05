@@ -57,7 +57,7 @@ export function test_fcs_validate(qunit: QUnit) {
         }
     });
     qunit.test("verify_state Column class tests", (a: Assert) => {
-        a.expect(23);
+        a.expect(26);
 
         {
             const start_char_idx = 10;
@@ -144,6 +144,23 @@ export function test_fcs_validate(qunit: QUnit) {
             a.equal(
                 result.error,
                 'Wrong rank specifier "1" (followed by "H"). Perhaps you meant either "AH" (for ace) or "TH" (for rank ten).',
+                "error is correct",
+            );
+        }
+
+        {
+            const result = fcs_js__column_from_string(0, "3C TS 1S", false);
+
+            // TEST
+            a.ok(!result.is_correct, "Column is incorrectly formatted.");
+
+            // TEST
+            a.equal(result.num_consumed_chars, 6, "Consumed 6 characters.");
+
+            // TEST
+            a.equal(
+                result.error,
+                'Wrong rank specifier "1" (followed by "S"). Perhaps you meant either "AS" (for ace) or "TS" (for rank ten).',
                 "error is correct",
             );
         }
