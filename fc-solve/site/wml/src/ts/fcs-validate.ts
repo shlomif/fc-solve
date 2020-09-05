@@ -277,6 +277,13 @@ class CardsStringParser<CardType> extends StringParser {
     }
 }
 
+function calc_1H_error_string(suit: string): string {
+    return 'Wrong rank specifier "1" (followed by "[R]"). Perhaps you meant either "A[R]" (for ace) or "T[R]" (for rank ten).'.replace(
+        /\[R\]/g,
+        suit,
+    );
+}
+
 export function fcs_js__column_from_string(
     start_char_idx: number,
     orig_s: string,
@@ -304,10 +311,7 @@ export function fcs_js__column_from_string(
                 false,
                 start_char_idx,
                 p.getConsumed(),
-                'Wrong rank specifier "1" (followed by "[R]"). Perhaps you meant either "A[R]" (for ace) or "T[R]" (for rank ten).'.replace(
-                    /\[R\]/g,
-                    m[1],
-                ),
+                calc_1H_error_string(m[1]),
                 [],
             );
         }
@@ -427,6 +431,11 @@ export function fcs_js__freecells_from_string(
     }
 
     const ret = p.loop("\\-|(?:" + card_re + ")", () => {
+        const card_str = p.match(/^(\S+)/)[1];
+        const m = card_str.match("^1(" + suit_re + ")");
+        if (m) {
+            return make_ret(false, calc_1H_error_string(m[1]));
+        }
         return make_ret(false, "Wrong card format - should be [Rank][Suit]");
     });
 
