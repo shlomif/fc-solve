@@ -297,6 +297,20 @@ export function fcs_js__column_from_string(
     }
 
     const ret = p.loop(card_re, () => {
+        const card_str = p.match(/^(\S+)/)[1];
+        const m = card_str.match("^1(" + suit_re + ")");
+        if (m) {
+            return new ColumnParseResult(
+                false,
+                start_char_idx,
+                p.getConsumed(),
+                'Wrong rank specifier "1" (followed by "[R]"). Perhaps you meant either "A[R]" (for ace) or "T[R]" (for rank ten).'.replace(
+                    /\[R\]/g,
+                    m[1],
+                ),
+                [],
+            );
+        }
         return new ColumnParseResult(
             false,
             start_char_idx,
