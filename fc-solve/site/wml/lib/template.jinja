@@ -35,7 +35,11 @@
 <link rel="stylesheet" href="{{ base_path }}print.css" media="print"/>
 <link rel="shortcut icon" href="{{ base_path }}favicon.ico" type="image/x-icon"/>
 (((((include "cache/combined/{{ host }}/{{ filename }}/html_head_nav_links")))))
+{% if production %}
+<script src="{{ base_path }}js/jq.js"></script>
+{% else %}
 <script src="{{ base_path }}js/jquery-dev.js"></script>
+{% endif %}
 <script src="{{ base_path }}js/toggler.js"></script>
 <script src="{{ base_path }}js/toggle_sect.js"></script>
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="http://fc-solve.blogspot.com/feeds/posts/default?alt=rss"/>

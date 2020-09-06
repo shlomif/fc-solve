@@ -69,8 +69,10 @@ BASE_Solitairey_JS = application.js auto-stack-clear.js auto-turnover.js autopla
 DEST_Solitairey_JS = $(call dest_jsify,$(BASE_Solitairey_JS))
 BASE_lodash_Solitairey_JS = lodash.custom.min.js
 DEST_lodash_Solitairey_JS = $(call dest_jsify,$(BASE_lodash_Solitairey_JS))
+BASE_yui_min_Solitairey_JS = yui-all-min.js
 BASE_yui_Solitairey_JS = yui-debug.js
 DEST_yui_Solitairey_JS = $(call dest_jsify,$(BASE_yui_Solitairey_JS))
+DEST_yui_min_Solitairey_JS = $(call dest_jsify,$(BASE_yui_min_Solitairey_JS))
 
 CSS_TARGETS = \
 			$(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
@@ -90,6 +92,7 @@ include lib/make/deps.mak
 real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
 real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
+real_all: $(DEST_yui_min_Solitairey_JS)
 
 OUT_PREF = lib/out-babel/js
 out_pref_jsify = $(addprefix $(OUT_PREF)/,$(1))
@@ -104,6 +107,9 @@ $(DEST_lodash_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/ext/lodash/%
 	$(MULTI_YUI) -o $@ $<
 
 $(DEST_yui_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/ext/yui-debug/%
+	$(MULTI_YUI) -o $@ $<
+
+$(DEST_yui_min_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/ext/yui/%
 	$(MULTI_YUI) -o $@ $<
 
 $(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/src/js/%

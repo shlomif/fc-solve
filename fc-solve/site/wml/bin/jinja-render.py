@@ -64,9 +64,6 @@ for line in open('lib/make/jinja.txt', 'rt'):
     fn = line.strip()
     enable_jquery_ui = (fn != 'js-fc-solve/text/gui-tests.xhtml')
     base_path = "../"*len([x for x in fn if x == '/'])
-    env = _calc_env()
-    env.globals['base_path'] = base_path
-    template = env.get_template(fn+'.jinja')
     try_online_wrapper = ""
     if not re.match("^js-fc-solve/", fn):
         try_online_wrapper = """
@@ -78,6 +75,10 @@ class="try_main">Try</span><br/>
 <span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a></div>
 """.format(base_path)
     for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
+        env = _calc_env()
+        env.globals['base_path'] = base_path
+        env.globals['production'] = production
+        template = env.get_template(fn+'.jinja')
         text = template.render(
                 cols_listbox=cols_listbox,
                 enable_jquery_ui=enable_jquery_ui,
