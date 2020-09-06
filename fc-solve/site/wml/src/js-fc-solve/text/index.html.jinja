@@ -41,7 +41,7 @@ require(['./solver-freecell'], function (solver) {
 </script>
 
 {% endmacro %}
-{{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { web_fc_solve_ui.init_module((module_wrapper) => {" , subject="Solver" ) }}
+{{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { web_fc_solve_ui.init_module((module_wrapper) =>" , subject="Solver" ) }}
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>

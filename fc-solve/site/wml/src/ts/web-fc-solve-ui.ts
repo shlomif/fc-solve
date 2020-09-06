@@ -578,6 +578,9 @@ function toggle_expand_moves() {
 }
 
 export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
+    if (!module_wrapper["fc_solve__hll_ms_rand__get_singleton"]) {
+        throw "tw";
+    }
     $("#populate_input").click(() => {
         return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
     });
@@ -588,6 +591,9 @@ export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
 }
 
 export function set_up(module_wrapper: BaseApi.ModuleWrapper, graphics_) {
+    if (!module_wrapper["fc_solve__hll_ms_rand__get_singleton"]) {
+        throw "foo";
+    }
     restore_bookmark();
     set_up_handlers(module_wrapper);
     $("#one_based").click(on_toggle_one_based);
