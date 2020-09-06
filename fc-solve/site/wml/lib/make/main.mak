@@ -18,10 +18,12 @@ TEMP_UPLOAD_URL_LOCAL = /var/www/html/shlomif/fc-solve-temp/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
-ifeq ($(PROD),1)
+STAGING_URL_SUFFIX := fc-solve-staging
 
+ifeq ($(PROD),1)
 	D = dest-prod
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
+	STAGING_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(STAGING_URL_SUFFIX)
 	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
 	MULTI_YUI = uglifyjs --compress
 else
@@ -378,6 +380,9 @@ upload: all
 	# $(RSYNC) -a -l --exclude='**/.htaccess' $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 
+upload_staging: all
+	if test "$(PROD)" != "1"; then echo "use PROD=1\!" ; exit 1 ; else $(RSYNC) -a -l $(D)/ $(STAGING_UPLOAD_URL) ; fi
+
 upload_beta: all
 	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
 
@@ -455,7 +460,11 @@ real_all: $(FAVICON)
 BROWSER_TESTS_URL = https://localhost/shlomif/fc-solve-temp
 
 ifeq ($(LOCAL_BROWSER_TESTS),0)
-	BROWSER_TESTS_URL = https://www.shlomifish.org/fc-solve-temp
+	ifeq ($(PROD),1)
+		BROWSER_TESTS_URL = https://www.shlomifish.org/$(STAGING_URL_SUFFIX)
+	else
+		BROWSER_TESTS_URL = https://www.shlomifish.org/fc-solve-temp
+	endif
 else
 	BROWSER_TESTS_URL = http://127.0.0.1:2400/shlomif/fc-solve-temp
 	BROWSER_TESTS_URL = http://127.0.0.1:2400/fc-solve-temp
