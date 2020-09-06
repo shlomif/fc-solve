@@ -34,6 +34,7 @@ typedef struct
     char *max_ptr;
     char *ptr;
     char *rollback_ptr;
+    char *list_tail;
     meta_allocator *meta;
 } compact_allocator;
 
@@ -71,6 +72,7 @@ static inline void fc_solve_compact_allocator_init_helper(
 {
     allocator->old_list = NULL;
     fc_solve_compact_allocator_extend(allocator);
+    allocator->list_tail = allocator->old_list;
 }
 
 static inline void fc_solve_meta_compact_allocator_init(
