@@ -96,6 +96,7 @@ $(function() { $('.enable_js').addClass('ok'); build_toggler({ls_key:"ms_fc_w10_
 {% macro emscripten_common(incs, subject, desc) %}
 {{ emscripten_common__header(subject, desc) }}
 <script>
+alert('error');
 {{ set_up_requirejs()}}
     {{ incs }} {
     {{ set_up_tabs()}}

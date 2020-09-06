@@ -10,15 +10,22 @@ import {
 
 const FC_Solve = w.FC_Solve;
 let _my_non_promise_module;
-let _my_module = Module({
-    onRuntimeInitialized: () => {
-        _my_module.then((result) => {
-            _my_non_promise_module = result;
-            w.FC_Solve_init_wrappers_with_module(_my_non_promise_module);
-            return 0;
-        });
-    },
-});
+let _my_module;
+
+export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
+    _my_module = Module({
+        onRuntimeInitialized: () => {
+            _my_module.then((result) => {
+                _my_non_promise_module = result;
+                const module_wrapper = w.FC_Solve_init_wrappers_with_module(
+                    _my_non_promise_module,
+                );
+                cb(module_wrapper);
+                return 0;
+            });
+        },
+    });
+}
 const FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
 const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
 let graphics: any = null;
