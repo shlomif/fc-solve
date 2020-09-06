@@ -1,5 +1,4 @@
 import { jq_querystring } from "./jq_qs";
-import * as w from "./web-fc-solve";
 import { capitalize_cards } from "./fcs-validate";
 // import jq_querystring as jq_querystring;
 
@@ -18,7 +17,7 @@ export function escapeHtml(str: string): string {
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
-export function populate_input_with_numbered_deal(): void {
+export function populate_input_with_numbered_deal(w: any): void {
     const input_s: string = $("#deal_number").val() as string;
     if (!input_s.match(/^[1-9][0-9]*$/)) {
         alert("Wrong input - please enter a positive integer.");

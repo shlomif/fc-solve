@@ -7,6 +7,7 @@
 import * as s2i from "./s2ints_js";
 import Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
+import * as deal_finder from "./find-fc-deal";
 import * as test_strings from "./web-fcs-tests-strings";
 import { perl_range } from "./prange";
 
@@ -62,7 +63,8 @@ const solution_for_board_without_trailing_newline =
 const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
 function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
-    FC_Solve_init_wrappers_with_module(_my_mod[0] || this);
+    const _module = _my_mod[0] || this;
+    FC_Solve_init_wrappers_with_module(_module);
     const deal_ms_fc_board = w.deal_ms_fc_board;
 
     qunit.module("FC_Solve.Algorithmic", () => {
@@ -275,7 +277,8 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                         return " ".repeat(10 - ret.length) + ret;
                     })
                     .join("");
-                const df = new w.Freecell_Deal_Finder({});
+                deal_finder.FC_Solve_init_wrappers_with_module(_module);
+                const df = new deal_finder.Freecell_Deal_Finder({});
                 df.fill(ints_s);
                 df.run(1, 1000, (args) => {
                     return;

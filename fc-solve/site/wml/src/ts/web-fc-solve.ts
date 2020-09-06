@@ -1,4 +1,3 @@
-import bigInt from "big-integer";
 import * as validate from "./fcs-validate";
 import * as expand from "./web-fc-solve--expand-moves";
 import { perl_range } from "./prange";
@@ -9,10 +8,6 @@ const fc_solve_expand_move = expand.fc_solve_expand_move;
 let fc_solve__hll_ms_rand__get_singleton = null;
 let fc_solve__hll_ms_rand__init = null;
 let fc_solve__hll_ms_rand__mod_rand = null;
-let fc_solve_user__find_deal__alloc = null;
-let fc_solve_user__find_deal__fill = null;
-let fc_solve_user__find_deal__free = null;
-let fc_solve_user__find_deal__run = null;
 let freecell_solver_user_alloc = null;
 let freecell_solver_user_solve_board = null;
 let freecell_solver_user_resume_solution = null;
@@ -52,26 +47,6 @@ export function FC_Solve_init_wrappers_with_module(Module) {
         "fc_solve__hll_ms_rand__mod_rand",
         "number",
         ["number", "number"],
-    );
-    fc_solve_user__find_deal__alloc = Module.cwrap(
-        "fc_solve_user__find_deal__alloc",
-        "number",
-        [],
-    );
-    fc_solve_user__find_deal__fill = Module.cwrap(
-        "fc_solve_user__find_deal__fill",
-        "number",
-        ["number", "string"],
-    );
-    fc_solve_user__find_deal__free = Module.cwrap(
-        "fc_solve_user__find_deal__free",
-        "number",
-        ["number"],
-    );
-    fc_solve_user__find_deal__run = Module.cwrap(
-        "fc_solve_user__find_deal__run",
-        "string",
-        ["number", "string", "string"],
     );
     freecell_solver_user_alloc = Module.cwrap(
         "freecell_solver_user_alloc",
@@ -859,64 +834,4 @@ export function deal_ms_fc_board(seed) {
     }
 
     return columns.map(render_column).join("");
-}
-
-export class Freecell_Deal_Finder {
-    private obj: number;
-    private abs_end: bigInt.BigInteger;
-    private CHUNKM: bigInt.BigInteger;
-    private start: bigInt.BigInteger;
-    private update_cb: any;
-    constructor(args) {
-        const that = this;
-        that.obj = fc_solve_user__find_deal__alloc();
-    }
-
-    public fill(str) {
-        const that = this;
-        fc_solve_user__find_deal__fill(that.obj, str);
-        return;
-    }
-
-    public release() {
-        fc_solve_user__find_deal__free(this.obj);
-        return;
-    }
-
-    public run(abs_start, abs_end_param, update_cb) {
-        const that = this;
-        const CHUNK = bigInt(1000000);
-        that.CHUNKM = CHUNK.add(bigInt.minusOne);
-        const start = bigInt(abs_start);
-        const abs_end = bigInt(abs_end_param);
-        that.abs_end = abs_end;
-        that.start = start;
-        that.update_cb = update_cb;
-
-        return;
-    }
-
-    public cont() {
-        const that = this;
-        const abs_end = that.abs_end;
-        if (that.start.lesser(abs_end)) {
-            that.update_cb({ start: that.start });
-            let end = that.start.add(that.CHUNKM);
-            if (end.gt(abs_end)) {
-                end = abs_end;
-            }
-            const result = fc_solve_user__find_deal__run(
-                that.obj,
-                that.start.toString(),
-                end.toString(),
-            );
-            if (result !== "-1") {
-                return { found: true, result };
-            }
-            that.start = end.add(bigInt.one);
-            return { found: false, cont: true };
-        } else {
-            return { found: false, cont: false };
-        }
-    }
 }

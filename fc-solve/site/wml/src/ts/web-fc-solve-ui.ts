@@ -570,7 +570,9 @@ function toggle_expand_moves() {
 }
 
 export function set_up_handlers(): void {
-    $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
+    $("#populate_input").click(() => {
+        return base_ui.populate_input_with_numbered_deal(w);
+    });
     $("#run_do_solve").click(fc_solve_do_solve);
     base_ui.set_up__capitalize_cards();
 

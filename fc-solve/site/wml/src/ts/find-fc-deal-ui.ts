@@ -1,7 +1,7 @@
 import * as s2i from "./s2ints_js";
 import * as base_ui from "./fcs-base-ui";
 import Module from "./libfcs-wrap";
-import * as w from "./web-fc-solve";
+import * as w from "./find-fc-deal";
 
 let _my_non_promise_module;
 let _my_module = Module({
@@ -87,7 +87,9 @@ export function find_deal_ui(): void {
 }
 
 export function set_up_handlers(): void {
-    $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
+    $("#populate_input").click(() => {
+        return base_ui.populate_input_with_numbered_deal(w);
+    });
     $("#run_do_solve").click(find_deal_ui);
     base_ui.set_up__capitalize_cards();
 
