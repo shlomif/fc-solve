@@ -40,9 +40,8 @@ void fc_solve_meta_compact_allocator_finish(meta_allocator *const meta_alloc)
 void fc_solve_compact_allocator_finish(compact_allocator *const allocator)
 {
     meta_allocator *const meta = allocator->meta;
-    var_AUTO(bin, meta->recycle_bin);
     // Enqueue all the allocated buffers in the meta allocator for re-use.
-    OLD_LIST_NEXT(allocator->list_tail) = bin;
+    OLD_LIST_NEXT(allocator->list_tail) = meta->recycle_bin;
     meta->recycle_bin = allocator->old_list;
 }
 
