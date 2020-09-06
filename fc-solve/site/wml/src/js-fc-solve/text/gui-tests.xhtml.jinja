@@ -1,4 +1,44 @@
 {% extends "js-fc-solve/text/index.html.jinja" %}
+{% import "Inc/js_fc_solve.jinja" as jsfcs %}
+
+{% macro gen_desc() %}
+<p>
+An online solver for
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
+card solitaire game, and <a href="#other_games">several related solitaire games</a>. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
+</p>
+<section class="h2 note" id="ms_fc_w10_note">
+    <header><h2>Note to Microsoft Windows 10's FreeCell Users!</h2></header>
+    {{ msfreecell_note }}
+    <button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
+</section>
+{% endmacro %}
+
+{% macro emscripten_common(incs='', subject='', suffix='') %}
+{{ jsfcs.emscripten_common__header(subject, gen_desc()) }}
+<script>
+{{ jsfcs.set_up_requirejs()}}
+require(['./solver-freecell'], function (solver) {
+    {{ incs }} {
+    {% if enable_jquery_ui %}
+    {{ jsfcs.set_up_tabs()}}
+    {% endif %}
+    web_fc_solve_ui.set_up(module_wrapper, solver);
+    {% if enable_jquery_ui %}
+    $( "#output_tabs" ).tabs();
+    {% endif %}
+{{ suffix }}
+);
+});
+});
+</script>
+
+{% endmacro %}
+
+{% block run_emscripten_common %}
+    {{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { web_fc_solve_ui.init_module((module_wrapper) => {require([\"ui-tests-driver\"], function (foo) {" , subject="Solver", suffix='};foo();});}' ) }}
+{% endblock %}
 {% block js_fc_solve__page_extra_head_elements %}
 <link rel="stylesheet" href="{{ base_path }}css/qunit.css" />
 <script src="{{ base_path }}js/jquery.querystring.js"></script>
@@ -12,12 +52,6 @@
 <h2 id="qunit-userAgent">User Agent</h2>
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture">test markup, will be hidden</div>
-<script>
-requirejs.config({
-    baseUrl: '{{ base_path }}js',
-    });
-require(["ui-tests-driver"], function (foo) {foo();});
-</script>
 
 {% endblock %}
 {% macro jquery_ui_head_elements() %}
