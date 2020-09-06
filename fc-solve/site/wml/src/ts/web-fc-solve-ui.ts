@@ -1,4 +1,5 @@
 import * as base_ui from "./fcs-base-ui";
+import * as BaseApi from "./web-fcs-api-base";
 import Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 import {
@@ -569,9 +570,9 @@ function toggle_expand_moves() {
     return;
 }
 
-export function set_up_handlers(): void {
+export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
     $("#populate_input").click(() => {
-        return base_ui.populate_input_with_numbered_deal(w);
+        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
     });
     $("#run_do_solve").click(fc_solve_do_solve);
     base_ui.set_up__capitalize_cards();
@@ -579,9 +580,9 @@ export function set_up_handlers(): void {
     return;
 }
 
-export function set_up(graphics_) {
+export function set_up(module_wrapper: BaseApi.ModuleWrapper, graphics_) {
     restore_bookmark();
-    set_up_handlers();
+    set_up_handlers(module_wrapper);
     $("#one_based").click(on_toggle_one_based);
     $("#clear_output").click(clear_output);
     $("#fc_solve_bookmark_button").click(on_bookmarking);

@@ -1,4 +1,5 @@
 import bigInt from "big-integer";
+import * as BaseApi from "./web-fcs-api-base";
 import { perl_range } from "./prange";
 
 let fc_solve__hll_ms_rand__get_singleton = null;
@@ -9,7 +10,9 @@ let fc_solve_user__find_deal__fill = null;
 let fc_solve_user__find_deal__free = null;
 let fc_solve_user__find_deal__run = null;
 
-export function FC_Solve_init_wrappers_with_module(Module) {
+export function FC_Solve_init_wrappers_with_module(
+    Module,
+): BaseApi.ModuleWrapper {
     fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
         "fc_solve__hll_ms_rand__get_singleton",
         "number",
@@ -46,7 +49,12 @@ export function FC_Solve_init_wrappers_with_module(Module) {
         ["number", "string", "string"],
     );
 
-    return;
+    return {
+        fc_solve__hll_ms_rand__get_singleton,
+        fc_solve__hll_ms_rand__init,
+        fc_solve__hll_ms_rand__mod_rand,
+        Module,
+    };
 }
 
 /*
@@ -130,15 +138,24 @@ export class Freecell_Deal_Finder {
 class MSRand {
     private gamenumber: string;
     private rander: number;
+    private module_wrapper: BaseApi.ModuleWrapper;
     constructor(args) {
         const that = this;
+        that.module_wrapper = args.module_wrapper;
         that.gamenumber = args.gamenumber;
-        that.rander = fc_solve__hll_ms_rand__get_singleton();
-        fc_solve__hll_ms_rand__init(that.rander, "" + that.gamenumber);
+        that.rander = that.module_wrapper.fc_solve__hll_ms_rand__get_singleton();
+        that.module_wrapper.fc_solve__hll_ms_rand__init(
+            that.rander,
+            "" + that.gamenumber,
+        );
         return;
     }
     public max_rand(mymax) {
-        return fc_solve__hll_ms_rand__mod_rand(this.rander, mymax);
+        const that = this;
+        return that.module_wrapper.fc_solve__hll_ms_rand__mod_rand(
+            that.rander,
+            mymax,
+        );
     }
     public shuffle(deck) {
         if (deck.length) {
@@ -166,8 +183,11 @@ class MSRand {
  *
  * */
 
-export function deal_ms_fc_board(seed) {
-    const randomizer = new MSRand({ gamenumber: seed });
+export function deal_ms_fc_board(module_wrapper: BaseApi.ModuleWrapper, seed) {
+    const randomizer = new MSRand({
+        module_wrapper: module_wrapper,
+        gamenumber: seed,
+    });
     const num_cols = 8;
 
     const columns = perl_range(0, num_cols - 1).map(() => {

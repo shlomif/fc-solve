@@ -1,4 +1,5 @@
 import { jq_querystring } from "./jq_qs";
+import * as BaseApi from "./web-fcs-api-base";
 import { capitalize_cards } from "./fcs-validate";
 // import jq_querystring as jq_querystring;
 
@@ -17,7 +18,10 @@ export function escapeHtml(str: string): string {
 
 // Thanks to Stefan Petrea ( http://garage-coding.com/ ) for inspiring this
 // feature.
-export function populate_input_with_numbered_deal(w: any): void {
+export function populate_input_with_numbered_deal(
+    module_wrapper: BaseApi.ModuleWrapper,
+    w: any,
+): void {
     const input_s: string = $("#deal_number").val() as string;
     if (!input_s.match(/^[1-9][0-9]*$/)) {
         alert("Wrong input - please enter a positive integer.");
@@ -35,7 +39,7 @@ export function populate_input_with_numbered_deal(w: any): void {
         "# MS Freecell Deal #" +
             previous_deal_idx +
             "\n#\n" +
-            w.deal_ms_fc_board(previous_deal_idx),
+            w.deal_ms_fc_board(module_wrapper, previous_deal_idx),
     );
     // For tests:
     stdin.trigger("change");

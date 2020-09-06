@@ -64,7 +64,7 @@ const solution_for_deal_24__expanded_moves =
     test_strings.dict.solution_for_deal_24__expanded_moves;
 function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
     const _module = _my_mod[0] || this;
-    FC_Solve_init_wrappers_with_module(_module);
+    const module_wrapper = FC_Solve_init_wrappers_with_module(_module);
     const deal_ms_fc_board = w.deal_ms_fc_board;
 
     qunit.module("FC_Solve.Algorithmic", () => {
@@ -418,7 +418,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 
             // TEST
             assert.equal(
-                deal_ms_fc_board(3000000000),
+                deal_ms_fc_board(module_wrapper, 3000000000),
                 `: 8D TS JS TD JH JD JC
 : 4D QS TH AD 4S TC 3C
 : 9H KH QH 4C 5C KD AS
@@ -433,7 +433,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 
             // TEST
             assert.equal(
-                deal_ms_fc_board(6000000000),
+                deal_ms_fc_board(module_wrapper, 6000000000),
                 `: 2D 2C QS 8D KD 8C 4C
 : 3D AH 2H 4H TS 6H QD
 : 4D JS AD 6S JH JC JD

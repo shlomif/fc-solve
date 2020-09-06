@@ -1,4 +1,5 @@
 import * as s2i from "./s2ints_js";
+import * as BaseApi from "./web-fcs-api-base";
 import * as base_ui from "./fcs-base-ui";
 import Module from "./libfcs-wrap";
 import * as w from "./find-fc-deal";
@@ -86,9 +87,9 @@ export function find_deal_ui(): void {
     return;
 }
 
-export function set_up_handlers(): void {
+export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
     $("#populate_input").click(() => {
-        return base_ui.populate_input_with_numbered_deal(w);
+        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
     });
     $("#run_do_solve").click(find_deal_ui);
     base_ui.set_up__capitalize_cards();
@@ -96,9 +97,9 @@ export function set_up_handlers(): void {
     return;
 }
 
-export function set_up(): void {
+export function set_up(module_wrapper: any): void {
     restore_bookmark();
-    set_up_handlers();
+    set_up_handlers(module_wrapper);
     $("#fc_solve_bookmark_button").click(on_bookmarking);
 
     return;

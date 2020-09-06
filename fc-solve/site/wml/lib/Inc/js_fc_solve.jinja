@@ -14,7 +14,7 @@ requirejs.config({
         }
         $( "#fc_solve_tabs" ).tabs({
             activate: function () {
-                web_fc_solve_ui.set_up_handlers();
+                web_fc_solve_ui.set_up_handlers(module_wrapper);
 
                 return;
             },
