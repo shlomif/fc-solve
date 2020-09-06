@@ -1,18 +1,26 @@
 import * as s2i from "./s2ints_js";
+import * as BaseApi from "./web-fcs-api-base";
 import * as base_ui from "./fcs-base-ui";
 import Module from "./libfcs-wrap";
-import * as w from "./web-fc-solve";
+import * as w from "./find-fc-deal";
 
 let _my_non_promise_module;
-let _my_module = Module({
-    onRuntimeInitialized: () => {
-        _my_module.then((result) => {
-            _my_non_promise_module = result;
-            w.FC_Solve_init_wrappers_with_module(_my_non_promise_module);
-            return 0;
-        });
-    },
-});
+let _my_module;
+
+export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
+    _my_module = Module({
+        onRuntimeInitialized: () => {
+            _my_module.then((result) => {
+                _my_non_promise_module = result;
+                const module_wrapper = w.FC_Solve_init_wrappers_with_module(
+                    _my_non_promise_module,
+                );
+                cb(module_wrapper);
+                return 0;
+            });
+        },
+    });
+}
 
 function _create_bmark_obj() {
     return new base_ui.FC_Solve_Bookmarking({
@@ -86,17 +94,19 @@ export function find_deal_ui(): void {
     return;
 }
 
-export function set_up_handlers(): void {
-    $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
+export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
+    $("#populate_input").click(() => {
+        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+    });
     $("#run_do_solve").click(find_deal_ui);
     base_ui.set_up__capitalize_cards();
 
     return;
 }
 
-export function set_up(): void {
+export function set_up(module_wrapper: BaseApi.ModuleWrapper): void {
     restore_bookmark();
-    set_up_handlers();
+    set_up_handlers(module_wrapper);
     $("#fc_solve_bookmark_button").click(on_bookmarking);
 
     return;

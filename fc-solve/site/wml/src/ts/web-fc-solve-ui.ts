@@ -1,4 +1,5 @@
 import * as base_ui from "./fcs-base-ui";
+import * as BaseApi from "./web-fcs-api-base";
 import Module from "./libfcs-wrap";
 import * as w from "./web-fc-solve";
 import {
@@ -9,15 +10,22 @@ import {
 
 const FC_Solve = w.FC_Solve;
 let _my_non_promise_module;
-let _my_module = Module({
-    onRuntimeInitialized: () => {
-        _my_module.then((result) => {
-            _my_non_promise_module = result;
-            w.FC_Solve_init_wrappers_with_module(_my_non_promise_module);
-            return 0;
-        });
-    },
-});
+let _my_module;
+
+export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
+    _my_module = Module({
+        onRuntimeInitialized: () => {
+            _my_module.then((result) => {
+                _my_non_promise_module = result;
+                const module_wrapper = w.FC_Solve_init_wrappers_with_module(
+                    _my_non_promise_module,
+                );
+                cb(module_wrapper);
+                return 0;
+            });
+        },
+    });
+}
 const FCS_STATE_SUSPEND_PROCESS = w.FCS_STATE_SUSPEND_PROCESS;
 const FCS_STATE_WAS_SOLVED = w.FCS_STATE_WAS_SOLVED;
 let graphics: any = null;
@@ -569,17 +577,25 @@ function toggle_expand_moves() {
     return;
 }
 
-export function set_up_handlers(): void {
-    $("#populate_input").click(base_ui.populate_input_with_numbered_deal);
+export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
+    if (!module_wrapper["fc_solve__hll_ms_rand__get_singleton"]) {
+        throw "tw";
+    }
+    $("#populate_input").click(() => {
+        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+    });
     $("#run_do_solve").click(fc_solve_do_solve);
     base_ui.set_up__capitalize_cards();
 
     return;
 }
 
-export function set_up(graphics_) {
+export function set_up(module_wrapper: BaseApi.ModuleWrapper, graphics_) {
+    if (!module_wrapper["fc_solve__hll_ms_rand__get_singleton"]) {
+        throw "foo";
+    }
     restore_bookmark();
-    set_up_handlers();
+    set_up_handlers(module_wrapper);
     $("#one_based").click(on_toggle_one_based);
     $("#clear_output").click(clear_output);
     $("#fc_solve_bookmark_button").click(on_bookmarking);

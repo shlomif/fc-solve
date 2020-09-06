@@ -1,18 +1,23 @@
 import * as w from "./web-fc-solve";
+import * as BaseApi from "./web-fcs-api-base";
 import Module from "./libfcs-wrap";
 
 const impossible_deal: number = 11982;
 const last_deal: number = 32000;
 const preset: string = "as";
 
-function test_idx(ajaxQueue, idx: number): void {
+function test_idx(
+    ajaxQueue,
+    module_wrapper: BaseApi.ModuleWrapper,
+    idx: number,
+): void {
     $("#deal_idx_update").html("Reached deal idx=" + idx);
 
     if (idx > last_deal) {
         alert("Success. Yay!");
         return;
     } else if (idx === impossible_deal) {
-        return test_idx(ajaxQueue, idx + 1);
+        return test_idx(ajaxQueue, module_wrapper, idx + 1);
     } else {
         ajaxQueue({
             url:
@@ -33,7 +38,7 @@ function test_idx(ajaxQueue, idx: number): void {
             });
 
             let solve_err_code: number = instance.do_solve(
-                w.deal_ms_fc_board(idx),
+                w.deal_ms_fc_board(module_wrapper, idx),
             );
 
             while (solve_err_code === w.FCS_STATE_SUSPEND_PROCESS) {
@@ -66,7 +71,7 @@ function test_idx(ajaxQueue, idx: number): void {
                 throw msg;
             }
 
-            return test_idx(ajaxQueue, idx + 1);
+            return test_idx(ajaxQueue, module_wrapper, idx + 1);
         });
         return;
     }
@@ -74,6 +79,6 @@ function test_idx(ajaxQueue, idx: number): void {
 
 export function test_js_fc_solve_class(ajaxQueue) {
     const _my_module = Module({});
-    w.FC_Solve_init_wrappers_with_module(_my_module);
-    return test_idx(ajaxQueue, 1);
+    const module_wrapper = w.FC_Solve_init_wrappers_with_module(_my_module);
+    return test_idx(ajaxQueue, module_wrapper, 1);
 }
