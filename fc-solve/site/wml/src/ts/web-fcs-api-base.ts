@@ -1,32 +1,32 @@
 import { perl_range } from "./prange";
 
 export interface ModuleWrapper {
-    fc_solve__hll_ms_rand__get_singleton: (...args: any) => any;
-    fc_solve__hll_ms_rand__init: (...args: any) => any;
-    fc_solve__hll_ms_rand__mod_rand: (...args: any) => any;
+    ms_rand__get_singleton: (...args: any) => any;
+    ms_rand__init: (...args: any) => any;
+    ms_rand__mod_rand: (...args: any) => any;
     Module: any;
 }
 
 export function base_calc_module_wrapper(Module: any): ModuleWrapper {
-    const fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
+    const ms_rand__get_singleton = Module.cwrap(
         "fc_solve__hll_ms_rand__get_singleton",
         "number",
         [],
     );
-    const fc_solve__hll_ms_rand__init = Module.cwrap(
+    const ms_rand__init = Module.cwrap(
         "fc_solve__hll_ms_rand__init",
         "number",
         ["number", "string"],
     );
-    const fc_solve__hll_ms_rand__mod_rand = Module.cwrap(
+    const ms_rand__mod_rand = Module.cwrap(
         "fc_solve__hll_ms_rand__mod_rand",
         "number",
         ["number", "number"],
     );
     return {
-        fc_solve__hll_ms_rand__get_singleton,
-        fc_solve__hll_ms_rand__init,
-        fc_solve__hll_ms_rand__mod_rand,
+        ms_rand__get_singleton,
+        ms_rand__init,
+        ms_rand__mod_rand,
         Module,
     };
 }
@@ -45,19 +45,13 @@ class MSRand {
         const that = this;
         that.module_wrapper = args.module_wrapper;
         that.gamenumber = args.gamenumber;
-        that.rander = that.module_wrapper.fc_solve__hll_ms_rand__get_singleton();
-        that.module_wrapper.fc_solve__hll_ms_rand__init(
-            that.rander,
-            "" + that.gamenumber,
-        );
+        that.rander = that.module_wrapper.ms_rand__get_singleton();
+        that.module_wrapper.ms_rand__init(that.rander, "" + that.gamenumber);
         return;
     }
     public max_rand(mymax) {
         const that = this;
-        return that.module_wrapper.fc_solve__hll_ms_rand__mod_rand(
-            that.rander,
-            mymax,
-        );
+        return that.module_wrapper.ms_rand__mod_rand(that.rander, mymax);
     }
     public shuffle(deck) {
         if (deck.length) {
