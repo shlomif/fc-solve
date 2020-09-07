@@ -33,19 +33,6 @@ export function FC_Solve_init_wrappers_with_module(
     return BaseApi.base_calc_module_wrapper(Module);
 }
 
-/*
- * Microsoft Windows Freecell / Freecell Pro boards generation.
- *
- * See:
- *
- * - http://rosettacode.org/wiki/Deal_cards_for_FreeCell
- *
- * - http://www.solitairelaboratory.com/mshuffle.txt
- *
- * Under MIT/Expat Licence.
- *
- * */
-
 export class Freecell_Deal_Finder {
     private obj: number;
     private abs_end: bigInt.BigInteger;

@@ -1,9 +1,7 @@
 import * as validate from "./fcs-validate";
 import * as BaseApi from "./web-fcs-api-base";
-import * as expand from "./web-fc-solve--expand-moves";
-import { rank_re, suits__int_to_str, suit_re } from "./french-cards";
-
-const fc_solve_expand_move = expand.fc_solve_expand_move;
+import { fc_solve_expand_move } from "./web-fc-solve--expand-moves";
+import { rank_re, suit_re } from "./french-cards";
 
 let freecell_solver_user_alloc = null;
 let freecell_solver_user_solve_board = null;
