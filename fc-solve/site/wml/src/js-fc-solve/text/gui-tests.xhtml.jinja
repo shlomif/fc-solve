@@ -44,11 +44,17 @@ require(['./solver-freecell'], function (solver) {
 {% block run_emscripten_common %}
 {{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { web_fc_solve_ui.init_module((module_wrapper) => { " , subject="Solver", suffix='}; });}' ) }}
 {% endblock %}
-{% block js_fc_solve__page_extra_head_elements %}
+{% block page_extra_head_elements %}
 <link rel="stylesheet" href="{{ base_path }}css/qunit.css" />
 <script src="{{ base_path }}js/jquery.querystring.js"></script>
-{{ js_requirejs() }}
+<script src="{{ base_path }}js/jquery.phoenix.js"></script>
+<script src="{{ base_path }}js/qunit.js"></script>
+<script src="{{ base_path }}js/lodash.custom.min.js"></script>
+<script src="{{ base_path }}js/require--debug.js"></script>
+<script src="{{ base_path }}js/yui-debug.js"></script>
+<script src="{{ base_path }}js/yui-breakout.js"></script>
 <link rel="stylesheet" href="{{ base_path }}web-fc-solve.css" />
+<link rel="stylesheet" href="{{ base_path }}solitairey-cards.css" />
 {% endblock %}
 {% block extended_body %}
 
