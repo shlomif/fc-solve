@@ -23,14 +23,13 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <script>
 {{ jsfcs.set_up_requirejs()}}
 require(["ui-tests-driver"], function (foo) {
-//QUnit = foo['q'];
 require(['./solver-freecell'], function (solver) {
     {{ incs }} {
     {% if enable_jquery_ui %}
     {{ jsfcs.set_up_tabs()}}
     {% endif %}
     web_fc_solve_ui.set_up(module_wrapper, solver);
-    if(true){foo["cb"]();}
+    if(true){foo();}
     {% if enable_jquery_ui %}
     $( "#output_tabs" ).tabs();
     {% endif %}

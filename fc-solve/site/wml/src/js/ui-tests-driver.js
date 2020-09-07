@@ -1,6 +1,6 @@
 define(["web-fc-solve-tests--ui", "qunit"], function (web_fc_solve_tests, QUnit) {
     QUnit.config.autostart = false;
-    return { q: QUnit, cb: function() {
+    return function() {
         const _log_cb = ((window.location.href.indexOf("alert") >= 0) ? alert : console.log);
         if (false) {
             QUnit.done(function( details ) {
@@ -29,5 +29,5 @@ define(["web-fc-solve-tests--ui", "qunit"], function (web_fc_solve_tests, QUnit)
             });
             throw err;
         }
-    }};
+    };
 });
