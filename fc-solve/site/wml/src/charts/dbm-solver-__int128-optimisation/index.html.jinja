@@ -1,5 +1,5 @@
-{% extends "prelude.jinja" %}
-{% block prelude_body %}
+{% macro prelude_body() %}
+{% include "new_prelude.jinja" without context %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
@@ -1108,4 +1108,5 @@ require(["chart-using-flot--int128-opt"], function (chart) { });
 </script>
 </body>
 </html>
-{% endblock %}
+{% endmacro %}
+{% include "new_template.jinja" with context %}

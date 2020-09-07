@@ -1,0 +1,9 @@
+{% import "lib.jinja" as lib %}
+
+{% if not(js_requirejs is defined) %}
+
+{% macro js_requirejs() %}
+{{ lib.js_requirejs(production)}}
+{% endmacro %}
+
+{% endif %}

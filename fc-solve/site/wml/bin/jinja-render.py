@@ -23,7 +23,8 @@ def _calc_env():
 
 
 def _slurp(fn):
-    return open(fn, 'rt').read()
+    with open(fn, 'rt') as ifh:
+        return ifh.read()
 
 
 def _htmlish(base):
@@ -60,7 +61,11 @@ cols_listbox = (
             ['<option value="{num}">{num}</option>'.format(num=num)
              for num in range(1, 12+1)]))
 
-for line in open('lib/make/jinja.txt', 'rt'):
+lines = []
+with open('lib/make/jinja.txt', 'rt') as ifh:
+    for line in ifh:
+        lines.append(line)
+for line in lines:
     fn = line.strip()
     enable_jquery_ui = (fn != 'js-fc-solve/text/gui-tests.xhtml')
     base_path = "../"*len([x for x in fn if x == '/'])
@@ -78,6 +83,12 @@ class="try_main">Try</span><br/>
         env = _calc_env()
         env.globals['base_path'] = base_path
         env.globals['production'] = production
+        env.globals['filename'] = fn
+        env.globals['host'] = 'fc-solve'
+
+        def mythrow(s):
+            raise Exception(s)
+        env.globals['mythrow'] = mythrow
         template = env.get_template(fn+'.jinja')
         text = template.render(
                 cols_listbox=cols_listbox,
@@ -97,8 +108,6 @@ class="try_main">Try</span><br/>
                 desc="Freecell Solver " +
                 "- a Program and a Library written in ANSI C for" +
                 " Solving Games of Freecell and similar Solitaire Variants",
-                filename=fn,
-                host='fc-solve',
                 try_online_wrapper=try_online_wrapper,
                 solitairey='<a href="https://foss-card-games.github.io/' +
                 'Solitairey/">Solitairey</a>',
@@ -111,8 +120,10 @@ class="try_main">Try</span><br/>
         text = re.sub("\\A[\\s\\n]+", '', text)
         if re.search('<toc */ *>', text):
             tocs.append(out_fn)
-        open(out_fn, 'wt').write(text)
+        with open(out_fn, 'wt') as ofh:
+            ofh.write(text)
 
+assert len(tocs)
 subprocess.call(["perl", "-0777", "-i", "-p", "-I./lib", "-e",
                  "use HTML::Latemp::AddToc (); " +
                  "HTML::Latemp::AddToc->new->add_toc(\\$_);", "--"] + tocs)

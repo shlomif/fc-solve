@@ -1,6 +1,6 @@
 {% extends "js-fc-solve/text/index.html.jinja" %}
 {% import "Inc/js_fc_solve.jinja" as jsfcs %}
-
+{% if not(gen_desc is defined) %}
 {% macro gen_desc() %}
 <p>
 An online solver for
@@ -14,6 +14,9 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
     <button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
 </section>
 {% endmacro %}
+{% else %}
+    {{ mythrow("yes") }}
+{% endif %}
 
 {% macro emscripten_common(incs='', subject='', suffix='') %}
 {{ jsfcs.emscripten_common__header(subject, gen_desc()) }}

@@ -1,3 +1,7 @@
+{% if not(js_requirejs is defined) %}
+    {#
+    {{mythrow("js_requirejs")}}
+    #}
 {% macro js_requirejs(production) %}
 {% if production %}
 <script src="{{ base_path }}js/require.js"></script>
@@ -5,6 +9,11 @@
 <script src="{{ base_path }}js/require--debug.js"></script>
 {% endif %}
 {% endmacro %}
+
+{% endif %}
+
+{% if not(jquery_ui_head_elements is defined) %}
+
 {% macro jquery_ui_head_elements(enable_jquery_ui) %}
 {% if enable_jquery_ui %}
 <script src="{{ base_path }}js/jquery-ui/jquery-ui.min.js"></script>
@@ -12,3 +21,5 @@
 <link rel="stylesheet" href="{{ base_path }}jqui-override.css" media="screen" />
 {% endif %}
 {% endmacro %}
+
+{% endif %}
