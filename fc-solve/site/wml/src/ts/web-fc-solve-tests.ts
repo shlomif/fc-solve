@@ -10,6 +10,7 @@ import * as w from "./web-fc-solve";
 import * as deal_finder from "./find-fc-deal";
 import * as test_strings from "./web-fcs-tests-strings";
 import { perl_range } from "./prange";
+import { deal_ms_fc_board } from "./web-fcs-api-base";
 
 const FC_Solve = w.FC_Solve;
 const FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
@@ -65,7 +66,6 @@ const solution_for_deal_24__expanded_moves =
 function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
     const _module = _my_mod[0] || this;
     const module_wrapper = FC_Solve_init_wrappers_with_module(_module);
-    const deal_ms_fc_board = w.deal_ms_fc_board;
 
     qunit.module("FC_Solve.Algorithmic", () => {
         function test_for_equal(

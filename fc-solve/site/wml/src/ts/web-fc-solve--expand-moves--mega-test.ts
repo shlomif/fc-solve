@@ -38,7 +38,7 @@ function test_idx(
             });
 
             let solve_err_code: number = instance.do_solve(
-                w.deal_ms_fc_board(module_wrapper, idx),
+                BaseApi.deal_ms_fc_board(module_wrapper, idx),
             );
 
             while (solve_err_code === w.FCS_STATE_SUSPEND_PROCESS) {

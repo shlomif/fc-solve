@@ -39,7 +39,7 @@ export function populate_input_with_numbered_deal(
         "# MS Freecell Deal #" +
             previous_deal_idx +
             "\n#\n" +
-            w.deal_ms_fc_board(module_wrapper, previous_deal_idx),
+            BaseApi.deal_ms_fc_board(module_wrapper, previous_deal_idx),
     );
     // For tests:
     stdin.trigger("change");
