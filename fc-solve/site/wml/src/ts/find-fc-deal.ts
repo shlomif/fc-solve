@@ -10,21 +10,6 @@ let fc_solve_user__find_deal__run = null;
 export function FC_Solve_init_wrappers_with_module(
     Module,
 ): BaseApi.ModuleWrapper {
-    const fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
-        "fc_solve__hll_ms_rand__get_singleton",
-        "number",
-        [],
-    );
-    const fc_solve__hll_ms_rand__init = Module.cwrap(
-        "fc_solve__hll_ms_rand__init",
-        "number",
-        ["number", "string"],
-    );
-    const fc_solve__hll_ms_rand__mod_rand = Module.cwrap(
-        "fc_solve__hll_ms_rand__mod_rand",
-        "number",
-        ["number", "number"],
-    );
     fc_solve_user__find_deal__alloc = Module.cwrap(
         "fc_solve_user__find_deal__alloc",
         "number",
@@ -46,12 +31,7 @@ export function FC_Solve_init_wrappers_with_module(
         ["number", "string", "string"],
     );
 
-    return {
-        fc_solve__hll_ms_rand__get_singleton,
-        fc_solve__hll_ms_rand__init,
-        fc_solve__hll_ms_rand__mod_rand,
-        Module,
-    };
+    return BaseApi.base_calc_module_wrapper(Module);
 }
 
 /*
