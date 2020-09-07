@@ -1,4 +1,4 @@
-define(["web-fc-solve-tests--ui", "qunit"], function (t, QUnit) {
+define(["web-fc-solve-tests--ui", "qunit"], function (web_fc_solve_tests, QUnit) {
     QUnit.config.autostart = false;
     return { q: QUnit, cb: function() {
         const _log_cb = ((window.location.href.indexOf("alert") >= 0) ? alert : console.log);
@@ -11,19 +11,12 @@ define(["web-fc-solve-tests--ui", "qunit"], function (t, QUnit) {
               _log_cb( `Finished running module : ${name} Failed/total: ${failed}, ${total}` );
         });
 
-        /*
-        QUnit.module("BeforeMeta");
-        QUnit.test("silence_qunit", function(assert) {
-            assert.ok(true, "foo");
-        });
-        */
-        const test_js_fc_solve_class = t.test_js_fc_solve_class;
+        const test_js_fc_solve_class = web_fc_solve_tests.test_js_fc_solve_class;
+        let was_called = false;
         try {
             test_js_fc_solve_class(QUnit, function () {
                 QUnit.start();
-                let was_called = false;
                 was_called = true;
-                // $('#qunit-tests').addClass('hidepass');
                 return;
             });
         } catch (err) {
