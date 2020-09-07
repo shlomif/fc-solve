@@ -6,9 +6,6 @@ import { rank_re, suits__int_to_str, suit_re } from "./french-cards";
 
 const fc_solve_expand_move = expand.fc_solve_expand_move;
 
-let fc_solve__hll_ms_rand__get_singleton = null;
-let fc_solve__hll_ms_rand__init = null;
-let fc_solve__hll_ms_rand__mod_rand = null;
 let freecell_solver_user_alloc = null;
 let freecell_solver_user_solve_board = null;
 let freecell_solver_user_resume_solution = null;
@@ -36,17 +33,17 @@ let fc_solve_allocate_i8 = null;
 export function FC_Solve_init_wrappers_with_module(
     Module,
 ): BaseApi.ModuleWrapper {
-    fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
+    const fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
         "fc_solve__hll_ms_rand__get_singleton",
         "number",
         [],
     );
-    fc_solve__hll_ms_rand__init = Module.cwrap(
+    const fc_solve__hll_ms_rand__init = Module.cwrap(
         "fc_solve__hll_ms_rand__init",
         "number",
         ["number", "string"],
     );
-    fc_solve__hll_ms_rand__mod_rand = Module.cwrap(
+    const fc_solve__hll_ms_rand__mod_rand = Module.cwrap(
         "fc_solve__hll_ms_rand__mod_rand",
         "number",
         ["number", "number"],

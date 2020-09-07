@@ -2,9 +2,6 @@ import bigInt from "big-integer";
 import * as BaseApi from "./web-fcs-api-base";
 import { perl_range } from "./prange";
 
-let fc_solve__hll_ms_rand__get_singleton = null;
-let fc_solve__hll_ms_rand__init = null;
-let fc_solve__hll_ms_rand__mod_rand = null;
 let fc_solve_user__find_deal__alloc = null;
 let fc_solve_user__find_deal__fill = null;
 let fc_solve_user__find_deal__free = null;
@@ -13,17 +10,17 @@ let fc_solve_user__find_deal__run = null;
 export function FC_Solve_init_wrappers_with_module(
     Module,
 ): BaseApi.ModuleWrapper {
-    fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
+    const fc_solve__hll_ms_rand__get_singleton = Module.cwrap(
         "fc_solve__hll_ms_rand__get_singleton",
         "number",
         [],
     );
-    fc_solve__hll_ms_rand__init = Module.cwrap(
+    const fc_solve__hll_ms_rand__init = Module.cwrap(
         "fc_solve__hll_ms_rand__init",
         "number",
         ["number", "string"],
     );
-    fc_solve__hll_ms_rand__mod_rand = Module.cwrap(
+    const fc_solve__hll_ms_rand__mod_rand = Module.cwrap(
         "fc_solve__hll_ms_rand__mod_rand",
         "number",
         ["number", "number"],
