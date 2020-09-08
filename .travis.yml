@@ -37,7 +37,8 @@ addons:
 os: linux
 # dist: trusty
 # dist: xenial
-dist: bionic
+# dist: bionic
+dist: focal
 go:
     - '1.11.x'
 language: c
