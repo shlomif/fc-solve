@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::TrailingSpace 0.03;
+use Test::TrailingSpace 0.03 ();
 use Test::More tests => 1;
 
 my $lib    = qr#libfreecell-solver(?:-asm)?\.js(?:\.mem)?#;

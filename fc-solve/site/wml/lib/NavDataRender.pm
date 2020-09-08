@@ -7,11 +7,11 @@ use utf8;
 
 use HTML::Widgets::NavMenu::EscapeHtml qw(escape_html);
 
-use MyNavData;
-use HTML::Widgets::NavMenu::JQueryTreeView;
+use MyNavData                              ();
+use HTML::Widgets::NavMenu::JQueryTreeView ();
 
 use URI::Escape qw(uri_escape);
-use MyNavLinks;
+use MyNavLinks ();
 
 use Text::WrapAsUtf8 qw/ print_utf8 /;
 
