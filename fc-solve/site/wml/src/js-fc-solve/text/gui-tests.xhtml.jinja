@@ -3,33 +3,22 @@
 
 {% macro gen_desc() %}
 <p>
-An online solver for
-<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
-card solitaire game, and <a href="#other_games">several related solitaire games</a>. <span class="enable_js">Please enable
-<strong>JavaScript</strong>.</span>
+GUI Tests for the online Freecell Solvers (intended for developers and contributors).
 </p>
-<section class="h2 note" id="ms_fc_w10_note">
-    <header><h2>Note to Microsoft Windows 10's FreeCell Users!</h2></header>
-    {{ msfreecell_note }}
-    <button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
-</section>
 {% endmacro %}
 
 {% macro emscripten_common(incs='', subject='', suffix='') %}
 {{ jsfcs.emscripten_common__header(subject, gen_desc()) }}
-{% if false %}
-    <script>var QUnit = null;</script>
-{% endif %}
 <script>
 {{ jsfcs.set_up_requirejs()}}
-require(["ui-tests-driver"], function (foo) {
+require(["ui-tests-driver"], function (tests_runner) {
 require(['./solver-freecell'], function (solver) {
     {{ incs }} {
     {% if enable_jquery_ui %}
     {{ jsfcs.set_up_tabs()}}
     {% endif %}
     web_fc_solve_ui.set_up(module_wrapper, solver);
-    if(true){setTimeout(foo, 1000);}
+    if(true){setTimeout(tests_runner, 1000);}
     {% if enable_jquery_ui %}
     $( "#output_tabs" ).tabs();
     {% endif %}
@@ -64,8 +53,4 @@ require(['./solver-freecell'], function (solver) {
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture">test markup, will be hidden</div>
 
-{% endblock %}
-{% macro jquery_ui_head_elements() %}
-{% endmacro %}
-{% block js_fc_solve__jquery_ui_head_elements %}
 {% endblock %}

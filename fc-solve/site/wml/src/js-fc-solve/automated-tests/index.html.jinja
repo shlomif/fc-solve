@@ -19,7 +19,7 @@
 requirejs.config({
     baseUrl: '{{ base_path }}js',
     });
-require(["auto-tests-driver"], function (foo) {setTimeout(foo, 1000);});
+require(["auto-tests-driver"], function (tests_runner) {setTimeout(tests_runner, 1000);});
 </script>
 
 {% endblock %}
