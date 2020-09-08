@@ -451,11 +451,17 @@ real_all: \
 real_all: $(SRC_pngs__webps)
 
 FAVICON := $(D)/favicon.ico
+PNG_FAVICON := $(D)/favicon.png
+FAVICON_SOURCE := ../../source/fc-solve.ico
 
-$(FAVICON): ../../source/fc-solve.ico
+$(FAVICON): $(FAVICON_SOURCE)
 	$(call COPY)
 
-real_all: $(FAVICON)
+$(PNG_FAVICON): $(FAVICON_SOURCE)
+	gm convert $< $@
+	optipng -o7 $@
+
+real_all: $(FAVICON) $(PNG_FAVICON)
 
 BROWSER_TESTS_URL = https://localhost/shlomif/fc-solve-temp
 

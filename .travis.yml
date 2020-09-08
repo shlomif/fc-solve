@@ -25,6 +25,7 @@ addons:
             - lynx
             - mercurial
             - ninja-build
+            - optipng
             - perl
             - python3
             - python3-pip
