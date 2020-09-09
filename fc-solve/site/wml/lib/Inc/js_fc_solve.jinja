@@ -72,7 +72,17 @@ requirejs.config({
 {% macro emscripten_common__header(subject, desc) %}
 
 <script>
-$(function() { $('.enable_js').addClass('ok'); build_toggler({ls_key:"ms_fc_w10_note", toggler_selector:"#ms_fc_w10_note__dismiss", toggled_selector:"#ms_fc_w10_note", toggled_class:"disabled", hide_text:"foo", show_text:"foo", default_state: false});
+$(function() {
+    $('.enable_js').addClass('ok');
+    build_toggler({
+        ls_key: "ms_fc_w10_note",
+        toggler_selector: "#ms_fc_w10_note__dismiss",
+        toggled_selector: "#ms_fc_w10_note",
+        toggled_class: "disabled",
+        hide_text: "foo",
+        show_text: "foo",
+        default_state: false
+    });
 })
 </script>
 
