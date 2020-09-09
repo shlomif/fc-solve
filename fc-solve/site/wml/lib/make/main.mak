@@ -19,14 +19,17 @@ TEMP_UPLOAD_URL_LOCAL = /var/www/html/shlomif/fc-solve-temp/
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
 STAGING_URL_SUFFIX := fc-solve-staging
+TESTING_ENV__URL_SUFFIX := fc-solve-temp
 
 ifeq ($(PROD),1)
+	TEST_SITE_URL_SUFFIX := $(STAGING_URL_SUFFIX)
 	D = dest-prod
 	UPLOAD_URL = hostgator:domains/fc-solve/public_html
 	STAGING_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(STAGING_URL_SUFFIX)
 	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
 	MULTI_YUI = uglifyjs --compress
 else
+	TEST_SITE_URL_SUFFIX := $(TESTING_ENV__URL_SUFFIX)
 	MULTI_YUI = ./bin/cat-o
 
 	BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
@@ -463,18 +466,17 @@ $(PNG_FAVICON): $(FAVICON_SOURCE)
 
 real_all: $(FAVICON) $(PNG_FAVICON)
 
-BROWSER_TESTS_URL = https://localhost/shlomif/fc-solve-temp
-
 ifeq ($(LOCAL_BROWSER_TESTS),0)
-	ifeq ($(PROD),1)
-		BROWSER_TESTS_URL = https://www.shlomifish.org/$(STAGING_URL_SUFFIX)
-	else
-		BROWSER_TESTS_URL = https://www.shlomifish.org/fc-solve-temp
-	endif
+
+BROWSER_TESTS_URL__BASE = "https://www.shlomifish.org/"
+
 else
-	BROWSER_TESTS_URL = http://127.0.0.1:2400/shlomif/fc-solve-temp
-	BROWSER_TESTS_URL = http://127.0.0.1:2400/fc-solve-temp
+
+BROWSER_TESTS_URL__BASE = "http://127.0.0.1:2400/"
+
 endif
+
+BROWSER_TESTS_URL = $(BROWSER_TESTS_URL__BASE)$(TEST_SITE_URL_SUFFIX)
 
 browser-tests: all
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
