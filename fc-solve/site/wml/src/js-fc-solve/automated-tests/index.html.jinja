@@ -16,9 +16,7 @@
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture">test markup, will be hidden</div>
 <script>
-requirejs.config({
-    baseUrl: '{{ base_path }}js',
-    });
+{{ requirejs_conf() }}
 require(["auto-tests-driver"], function (tests_runner) {setTimeout(tests_runner, 1000);});
 </script>
 

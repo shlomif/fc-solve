@@ -1101,9 +1101,7 @@ OldIterations	OldTimeSinceStart	NewTimeSinceStart
 </textarea>
     </div>
 <script>
-requirejs.config({
-    baseUrl: '{{ base_path }}js',
-    });
+{{ requirejs_conf() }}
 require(["chart-using-flot--int128-opt"], function (chart) { });
 </script>
 </body>

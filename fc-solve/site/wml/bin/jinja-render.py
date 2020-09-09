@@ -74,10 +74,14 @@ class="try_main">Try</span><br/>
 <br/>
 <span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a></div>
 """.format(base_path)
+
+    def requirejs_conf():
+        return "requirejs.config({{ baseUrl: '{base_path}js', }});".format(base_path=base_path)
     for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
         env = _calc_env()
         env.globals['base_path'] = base_path
         env.globals['production'] = production
+        env.globals['requirejs_conf'] = requirejs_conf
         template = env.get_template(fn+'.jinja')
         text = template.render(
                 cols_listbox=cols_listbox,
