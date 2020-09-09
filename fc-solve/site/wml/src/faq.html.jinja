@@ -447,13 +447,13 @@ convenient than issuing multiple lower-level API calls.
 
 <p>
 You can opt to put the solver on a separate thread, on a separate process,
-or alternatively limit the iterations and increase it constantly, in a
-pre-emptive multi-tasking fashion.
+or alternatively limit the iterations and incrementally increase it, in a
+<a href="https://en.wikipedia.org/wiki/Preemptive_multitasking">pre-emptive multi-tasking</a> fashion.
 </p>
 
 <p>
-Good luck and please let us know if you run into any trouble, or,
-alternatively, if you are successful.
+Good luck and please let us know if you have run into any problems, or,
+alternatively, if you have been successful.
 </p>
 
 {% endcall %}
@@ -477,6 +477,13 @@ If this still does not work to your satisfaction, you can try constructing
 a specialised heuristic from the many command line options of Freecell Solver
 that will yield something. There are some examples for those in the individual
 flares and soft threads under the “Presets/presets” directory.
+</p>
+
+<p>
+Note that some alternative solvers may give shorter solutions, for example
+<a href="https://github.com/shlomif/shirl-hart-freecell-solver/">Shirl Hart’s solver</a>
+which has a Java version and a (slower) Perl 5 version (and is also
+open source).
 </p>
 
 {% endcall %}
