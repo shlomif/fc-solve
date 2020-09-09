@@ -18,7 +18,7 @@ require(['./solver-freecell'], function (solver) {
     {{ jsfcs.set_up_tabs()}}
     {% endif %}
     web_fc_solve_ui.set_up(module_wrapper, solver);
-    if(true){setTimeout(tests_runner, 1000);}
+    tests_runner.run_after_delay(tests_runner.run_tests);
     {% if enable_jquery_ui %}
     $( "#output_tabs" ).tabs();
     {% endif %}

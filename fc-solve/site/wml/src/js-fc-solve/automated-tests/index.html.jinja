@@ -15,7 +15,10 @@
 <div id="qunit-fixture">test markup, will be hidden</div>
 <script>
 {{ requirejs_conf() }}
-require(["auto-tests-driver"], function (tests_runner) {setTimeout(tests_runner, 1000);});
+require(["auto-tests-driver"], function (tests_runner) {
+    tests_runner.run_after_delay(tests_runner.run_tests);
+    return;
+});
 </script>
 
 {% endblock %}

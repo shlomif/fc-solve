@@ -1,6 +1,6 @@
 export function tests_driver(web_fc_solve_tests, extra_test) {
     QUnit.config.autostart = false;
-    return function () {
+    function run_tests() {
         const _log_cb =
             window.location.href.indexOf("alert") >= 0 ? alert : console.log;
         if (false) {
@@ -46,6 +46,11 @@ export function tests_driver(web_fc_solve_tests, extra_test) {
             });
             throw err;
         }
-    };
-    // body...
+    }
+    const delay_len = 1000;
+    function run_after_delay(cb) {
+        setTimeout(cb, delay_len);
+        return;
+    }
+    return { run_tests, run_after_delay };
 }
