@@ -47,7 +47,7 @@ export function tests_driver(web_fc_solve_tests, extra_test) {
             throw err;
         }
     }
-    const delay_len = 1000;
+    const delay_len = 500;
     function run_after_delay(cb) {
         setTimeout(cb, delay_len);
         return;

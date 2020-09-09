@@ -467,11 +467,11 @@ real_all: $(FAVICON) $(PNG_FAVICON)
 
 ifeq ($(LOCAL_BROWSER_TESTS),0)
 
-    BROWSER_TESTS_URL__BASE = "https://www.shlomifish.org/"
+    BROWSER_TESTS_URL__BASE = https://www.shlomifish.org/
 
 else
 
-    BROWSER_TESTS_URL__BASE = "http://127.0.0.1:2400/"
+    BROWSER_TESTS_URL__BASE = http://127.0.0.1:2400/
 
 endif
 
