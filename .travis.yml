@@ -3,9 +3,8 @@ addons:
         update: true
         packages:
             - asciidoc
-            # Avoid downgrading cmake from 3.12.x to 3.10.x
-            # - cmake
-            # - cmake-data
+            - cmake
+            - cmake-data
             - cpanminus
             - dbtoepub
             - docbook-xsl
@@ -35,9 +34,6 @@ addons:
             - valgrind
             - xsltproc
 os: linux
-# dist: trusty
-# dist: xenial
-# dist: bionic
 dist: focal
 go:
     - '1.11.x'
@@ -59,8 +55,6 @@ cache:
         - $HOME/perl_modules
         - fc-solve/source/avl-2.0.3
 matrix:
-    # allow_failures:
-    #     - env: WHAT=buildproc
     include:
         - os: linux
           env:
