@@ -8,12 +8,6 @@
  *~ workarounds for this limitation of ES6 modules.
  */
 
-/*~ If this module is a UMD module that exposes a global variable 'myFuncLib' when
- *~ loaded outside a module loader environment, declare that global here.
- *~ Otherwise, delete this declaration.
- */
-// export as namespace myFuncLib;
-
 /*~ This declaration specifies that the function
  *~ is the exported object from the file
  */
@@ -21,8 +15,6 @@ export = MyFunction;
 
 /*~ This example shows how to have multiple overloads for your function */
 declare function MyFunction(...rest: any[]): Promise<any>;
-
-// declare function MyFunction(length: number): MyFunction.LengthReturnType;
 
 /*~ If you want to expose types from your module as well, you can
  *~ place them in this block. Often you will want to describe the
