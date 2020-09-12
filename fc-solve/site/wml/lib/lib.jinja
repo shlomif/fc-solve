@@ -1,13 +1,13 @@
 {% macro js_requirejs(production) %}
 {% if production %}
-<script src="{{ base_path }}js/require.js"></script>
+    {{ load_javascript_srcs("require.js") }}
 {% else %}
-<script src="{{ base_path }}js/require--debug.js"></script>
+    {{ load_javascript_srcs("require--debug.js") }}
 {% endif %}
 {% endmacro %}
 {% macro jquery_ui_head_elements(enable_jquery_ui) %}
 {% if enable_jquery_ui %}
-<script src="{{ base_path }}js/jquery-ui/jquery-ui.min.js"></script>
+    {{ load_javascript_srcs("jquery-ui/jquery-ui.min.js") }}
 <link rel="stylesheet" href="{{ base_path }}js/jquery-ui/jquery-ui.min.css" media="screen" />
 <link rel="stylesheet" href="{{ base_path }}jqui-override.css" media="screen" />
 {% endif %}

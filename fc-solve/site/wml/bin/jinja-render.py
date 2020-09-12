@@ -79,14 +79,20 @@ class="try_main">Try</span><br/>
         return "requirejs.config({{ baseUrl: '{base_path}js', }});".format(
             base_path=base_path)
 
-    def pre_requirejs_javascript_tags():
+    def load_javascript_srcs(srcs):
+        if isinstance(srcs, str):
+            return load_javascript_srcs([srcs])
         return "".join([
             """<script src="{base_path}js/{js}"></script>""".format(
                 base_path=base_path, js=js)
-            for js in [
+            for js in srcs])
+
+    def pre_requirejs_javascript_tags():
+        return load_javascript_srcs(
+            [
                 "jquery.querystring.js",
                 "jquery.phoenix.js",
-                "lodash.custom.min.js"]])
+                "lodash.custom.min.js"])
     for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
         env = _calc_env()
         env.globals['base_path'] = base_path
@@ -94,6 +100,8 @@ class="try_main">Try</span><br/>
         env.globals['requirejs_conf'] = requirejs_conf
         env.globals['pre_requirejs_javascript_tags'] = \
             pre_requirejs_javascript_tags
+        env.globals['load_javascript_srcs'] = \
+            load_javascript_srcs
         template = env.get_template(fn+'.jinja')
         text = template.render(
                 cols_listbox=cols_listbox,

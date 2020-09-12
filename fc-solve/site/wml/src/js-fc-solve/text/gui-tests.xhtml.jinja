@@ -36,10 +36,10 @@ require(['./solver-freecell'], function (solver) {
 {% block page_extra_head_elements %}
 <link rel="stylesheet" href="{{ base_path }}css/qunit.css" />
 {{ pre_requirejs_javascript_tags() }}
-<script src="{{ base_path }}js/qunit.js"></script>
-<script src="{{ base_path }}js/require--debug.js"></script>
-<script src="{{ base_path }}js/yui-debug.js"></script>
-<script src="{{ base_path }}js/yui-breakout.js"></script>
+{{ load_javascript_srcs("qunit.js") }}
+{{ load_javascript_srcs("require--debug.js") }}
+{{ load_javascript_srcs("yui-debug.js") }}
+{{ load_javascript_srcs("yui-breakout.js") }}
 <link rel="stylesheet" href="{{ base_path }}web-fc-solve.css" />
 <link rel="stylesheet" href="{{ base_path }}solitairey-cards.css" />
 {% endblock %}

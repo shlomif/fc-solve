@@ -36,12 +36,12 @@
 <link rel="shortcut icon" href="{{ base_path }}favicon.png" type="image/png"/>
 (((((include "cache/combined/{{ host }}/{{ filename }}/html_head_nav_links")))))
 {% if production %}
-<script src="{{ base_path }}js/jq.js"></script>
+{{ load_javascript_srcs("jq.js") }}
 {% else %}
-<script src="{{ base_path }}js/jquery-dev.js"></script>
+{{ load_javascript_srcs("jquery-dev.js") }}
 {% endif %}
-<script src="{{ base_path }}js/toggler.js"></script>
-<script src="{{ base_path }}js/toggle_sect.js"></script>
+{{ load_javascript_srcs("toggler.js") }}
+{{ load_javascript_srcs("toggle_sect.js") }}
 <link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="http://fc-solve.blogspot.com/feeds/posts/default?alt=rss"/>
 <link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default"/>
 {{ nav_links }}

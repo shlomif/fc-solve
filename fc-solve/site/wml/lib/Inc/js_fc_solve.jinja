@@ -52,8 +52,8 @@ requirejs.config({
 {{ lib.jquery_ui_head_elements(enable_jquery_ui)}}
 {{ pre_requirejs_javascript_tags() }}
 {{ lib.js_requirejs(production) }}
-<script src="{{ base_path }}js/yui-debug.js"></script>
-<script src="{{ base_path }}js/yui-breakout.js"></script>
+{{ load_javascript_srcs("yui-debug.js") }}
+{{ load_javascript_srcs("yui-breakout.js") }}
 {% macro expanded_scripts() %}
 {% endmacro %}
 {% macro production_scripts() %}
