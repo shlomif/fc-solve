@@ -76,12 +76,24 @@ class="try_main">Try</span><br/>
 """.format(base_path)
 
     def requirejs_conf():
-        return "requirejs.config({{ baseUrl: '{base_path}js', }});".format(base_path=base_path)
+        return "requirejs.config({{ baseUrl: '{base_path}js', }});".format(
+            base_path=base_path)
+
+    def pre_requirejs_javascript_tags():
+        return "".join([
+            """<script src="{base_path}js/{js}"></script>""".format(
+                base_path=base_path, js=js)
+            for js in [
+                "jquery.querystring.js",
+                "jquery.phoenix.js",
+                "lodash.custom.min.js"]])
     for production, dest in [(False, 'dest'), (True, 'dest-prod'), ]:
         env = _calc_env()
         env.globals['base_path'] = base_path
         env.globals['production'] = production
         env.globals['requirejs_conf'] = requirejs_conf
+        env.globals['pre_requirejs_javascript_tags'] = \
+            pre_requirejs_javascript_tags
         template = env.get_template(fn+'.jinja')
         text = template.render(
                 cols_listbox=cols_listbox,

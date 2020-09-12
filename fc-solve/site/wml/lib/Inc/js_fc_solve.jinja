@@ -50,9 +50,7 @@ requirejs.config({
 })();
 </script>
 {{ lib.jquery_ui_head_elements(enable_jquery_ui)}}
-<script src="{{ base_path }}js/jquery.querystring.js"></script>
-<script src="{{ base_path }}js/jquery.phoenix.js"></script>
-<script src="{{ base_path }}js/lodash.custom.min.js"></script>
+{{ pre_requirejs_javascript_tags() }}
 {{ lib.js_requirejs(production) }}
 <script src="{{ base_path }}js/yui-debug.js"></script>
 <script src="{{ base_path }}js/yui-breakout.js"></script>
