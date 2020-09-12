@@ -15,6 +15,8 @@ required:
           url: "http://optipng.sourceforge.net/"
         - exe: "python3"
           url: "https://www.python.org/"
+        - exe: "strip-nondeterminism"
+          url: "https://packages.debian.org/sid/strip-nondeterminism"
         - exe: "xz"
           url: "http://tukaani.org/xz/"
         - exe: "zip"

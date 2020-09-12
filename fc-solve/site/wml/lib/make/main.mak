@@ -450,6 +450,12 @@ $(SRC_pngs__webps): %.webp: %.png
 real_all: \
 	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(dest_jinjas)
 
+real_all: lib/cache/epub.stamp
+
+lib/cache/epub.stamp: $(DOCBOOK5_INSTALLED_EPUBS)
+	$(PERL) bin/normalize-zips.pl $^
+	touch $@
+
 real_all: $(SRC_pngs__webps)
 
 FAVICON := $(D)/favicon.ico
