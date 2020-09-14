@@ -6,31 +6,36 @@ let fc_solve_user__find_deal__fill = null;
 let fc_solve_user__find_deal__free = null;
 let fc_solve_user__find_deal__run = null;
 
-export function FC_Solve_init_wrappers_with_module(
-    Module,
-): BaseApi.ModuleWrapper {
-    fc_solve_user__find_deal__alloc = Module.cwrap(
+export interface ModuleWrapper extends BaseApi.ModuleWrapper {
+    find_deal__alloc: (...args: any) => any;
+    find_deal__fill: (...args: any) => any;
+    find_deal__free: (...args: any) => any;
+    find_deal__run: (...args: any) => any;
+}
+
+export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
+    const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
+    ret.find_deal__alloc = Module.cwrap(
         "fc_solve_user__find_deal__alloc",
         "number",
         [],
     );
-    fc_solve_user__find_deal__fill = Module.cwrap(
+    ret.find_deal__fill = Module.cwrap(
         "fc_solve_user__find_deal__fill",
         "number",
         ["number", "string"],
     );
-    fc_solve_user__find_deal__free = Module.cwrap(
+    ret.find_deal__free = Module.cwrap(
         "fc_solve_user__find_deal__free",
         "number",
         ["number"],
     );
-    fc_solve_user__find_deal__run = Module.cwrap(
+    ret.find_deal__run = Module.cwrap(
         "fc_solve_user__find_deal__run",
         "string",
         ["number", "string", "string"],
     );
-
-    return BaseApi.base_calc_module_wrapper(Module);
+    return ret;
 }
 
 export class Freecell_Deal_Finder {
@@ -39,19 +44,22 @@ export class Freecell_Deal_Finder {
     private CHUNKM: bigInt.BigInteger;
     private start: bigInt.BigInteger;
     private update_cb: any;
+    private module_wrapper: ModuleWrapper;
     constructor(args) {
         const that = this;
-        that.obj = fc_solve_user__find_deal__alloc();
+        that.module_wrapper = args.module_wrapper;
+        that.obj = that.module_wrapper.find_deal__alloc();
     }
 
     public fill(str) {
         const that = this;
-        fc_solve_user__find_deal__fill(that.obj, str);
+        that.module_wrapper.find_deal__fill(that.obj, str);
         return;
     }
 
     public release() {
-        fc_solve_user__find_deal__free(this.obj);
+        const that = this;
+        that.module_wrapper.find_deal__free(that.obj);
         return;
     }
 
@@ -77,7 +85,7 @@ export class Freecell_Deal_Finder {
             if (end.gt(abs_end)) {
                 end = abs_end;
             }
-            const result = fc_solve_user__find_deal__run(
+            const result = that.module_wrapper.find_deal__run(
                 that.obj,
                 that.start.toString(),
                 end.toString(),

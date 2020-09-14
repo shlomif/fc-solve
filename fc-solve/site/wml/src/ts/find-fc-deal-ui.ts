@@ -6,6 +6,7 @@ import * as w from "./find-fc-deal";
 
 let _my_non_promise_module;
 let _my_module;
+let _module_wrapper: w.ModuleWrapper;
 
 export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
     _my_module = Module({
@@ -15,6 +16,7 @@ export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
                 const module_wrapper = w.FC_Solve_init_wrappers_with_module(
                     _my_non_promise_module,
                 );
+                _module_wrapper = module_wrapper;
                 cb(module_wrapper);
                 return 0;
             });
@@ -58,7 +60,7 @@ export function find_deal_ui(): void {
             return " ".repeat(10 - ret.length) + ret;
         })
         .join("");
-    const df = new w.Freecell_Deal_Finder({});
+    const df = new w.Freecell_Deal_Finder({ module_wrapper: _module_wrapper });
     df.fill(ints_s);
     const ctl = $("#fc_solve_status");
     df.run(1, "8589934591", (args) => {
