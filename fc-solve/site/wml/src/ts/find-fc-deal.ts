@@ -1,11 +1,6 @@
 import bigInt from "big-integer";
 import * as BaseApi from "./web-fcs-api-base";
 
-let fc_solve_user__find_deal__alloc = null;
-let fc_solve_user__find_deal__fill = null;
-let fc_solve_user__find_deal__free = null;
-let fc_solve_user__find_deal__run = null;
-
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     find_deal__alloc: (...args: any) => any;
     find_deal__fill: (...args: any) => any;
