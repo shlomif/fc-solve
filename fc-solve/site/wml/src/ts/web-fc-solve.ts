@@ -5,9 +5,9 @@ import { rank_re, suit_re } from "./french-cards";
 
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_alloc: (...args: any) => any;
+    user_solve_board: (...args: any) => any;
 }
 
-let freecell_solver_user_solve_board = null;
 let freecell_solver_user_resume_solution = null;
 let freecell_solver_user_cmd_line_read_cmd_line_preset = null;
 let malloc = null;
@@ -31,11 +31,6 @@ let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    freecell_solver_user_solve_board = Module.cwrap(
-        "freecell_solver_user_solve_board",
-        "number",
-        ["number", "string"],
-    );
     freecell_solver_user_resume_solution = Module.cwrap(
         "freecell_solver_user_resume_solution",
         "number",
@@ -136,6 +131,11 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     };
     const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
     ret.user_alloc = Module.cwrap("freecell_solver_user_alloc", "number", []);
+    ret.user_solve_board = Module.cwrap(
+        "freecell_solver_user_solve_board",
+        "number",
+        ["number", "string"],
+    );
     return ret;
 }
 
@@ -369,7 +369,7 @@ export class FC_Solve {
             // alert("preset_ret = " + preset_ret);
 
             const board_string = that._process_board_string(proto_board_string);
-            const solve_err_code = freecell_solver_user_solve_board(
+            const solve_err_code = that.module_wrapper.user_solve_board(
                 that.obj,
                 board_string,
             );
