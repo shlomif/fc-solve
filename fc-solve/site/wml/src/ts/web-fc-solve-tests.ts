@@ -122,6 +122,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.ok(true, "True is, well, true.");
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -147,6 +148,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.expect(2);
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -172,6 +174,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.expect(2);
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -199,6 +202,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 assert.expect(2);
 
                 const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
                     cmd_line_preset: "default",
                     dir_base: "fcs1",
                     set_status_callback: () => {
@@ -232,6 +236,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 assert.ok(true, "True is, well, true.");
 
                 const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
                     cmd_line_preset: "as",
                     set_status_callback: () => {
                         return;
@@ -263,6 +268,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             let success = false;
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -323,6 +329,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -341,6 +348,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -362,6 +370,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 assert.expect(1);
 
                 const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
                     cmd_line_preset: "default",
                     dir_base: "fcs2",
                     set_status_callback: () => {
@@ -383,6 +392,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 set_status_callback: () => {
                     return;
@@ -401,6 +411,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
                 cmd_line_preset: "default",
                 dir_base: "fcs3",
                 set_status_callback: () => {
@@ -468,6 +479,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 
             for (let mytry = 1; mytry <= 2; ++mytry) {
                 const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
                     cmd_line_preset: "default",
                     set_status_callback: () => {
                         return;

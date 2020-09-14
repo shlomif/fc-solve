@@ -7,7 +7,6 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_alloc: (...args: any) => any;
 }
 
-let freecell_solver_user_alloc = null;
 let freecell_solver_user_solve_board = null;
 let freecell_solver_user_resume_solution = null;
 let freecell_solver_user_cmd_line_read_cmd_line_preset = null;
@@ -32,11 +31,6 @@ let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    freecell_solver_user_alloc = Module.cwrap(
-        "freecell_solver_user_alloc",
-        "number",
-        [],
-    );
     freecell_solver_user_solve_board = Module.cwrap(
         "freecell_solver_user_solve_board",
         "number",
@@ -141,7 +135,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
     const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
-    ret.user_alloc = freecell_solver_user_alloc;
+    ret.user_alloc = Module.cwrap("freecell_solver_user_alloc", "number", []);
     return ret;
 }
 
@@ -242,6 +236,7 @@ export class FC_Solve {
     private set_status_callback: any;
     private cmd_line_preset: string;
     private current_iters_limit: number;
+    private module_wrapper: ModuleWrapper;
     private obj: any;
     private _do_not_alert: boolean;
     private _pre_expand_states_and_moves_seq: any;
@@ -252,6 +247,7 @@ export class FC_Solve {
 
     constructor(args) {
         const that = this;
+        that.module_wrapper = args.module_wrapper;
         that._do_not_alert = false;
 
         that.dir_base = args.dir_base;
@@ -260,7 +256,7 @@ export class FC_Solve {
         that.cmd_line_preset = args.cmd_line_preset;
         that.current_iters_limit = 0;
         that.obj = (() => {
-            const ret_obj = freecell_solver_user_alloc();
+            const ret_obj = that.module_wrapper.user_alloc();
 
             // TODO : add an option to customise the limit of the
             // iterations count.
