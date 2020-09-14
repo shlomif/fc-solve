@@ -18,3 +18,28 @@ command! RefactForEach call RefactForEach()
 if 0
     map <F2> Oconsole.log("<<line no. <C-r>=line(".")<cr> at <c-r>% : trace>>");<esc>
 endif
+fun TsReplace()
+    let pat = @/
+    let funcname = substitute(pat, "\\v^\\\\\\<(.*)\\\\\\>$", "\\1", "")
+    let basefunc = substitute(funcname, "\\v^freecell_solver_user", "user", "")
+    echo basefunc
+    /^export interface ModuleWrapper /
+    exe "normal o\<c-r>=basefunc\<cr>: (...args: any) => any;\<esc>vi{:sort\<cr>"
+    exe "/\\v^let " . funcname . " \\=/"
+    .d
+    /^export function FC_Solve_init_wrappers_with_module/
+    let @/ = pat
+    normal n
+    exe "s/" . pat . "/ret." . basefunc . "/"
+    exe "normal V%\"ad"
+    /^    return ret;/
+    normal k
+    put a
+    /\v^\}/
+    normal 3j
+    let @/ = pat
+    exe ".,$s/" . pat . "/that.module_wrapper." . basefunc . "/g"
+    normal gg
+endf
+
+map <F3> :call TsReplace()<cr>

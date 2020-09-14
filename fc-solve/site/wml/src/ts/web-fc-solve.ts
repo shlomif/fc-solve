@@ -5,24 +5,24 @@ import { rank_re, suit_re } from "./french-cards";
 
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_alloc: (...args: any) => any;
+    user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
+    user_cmd_line_read_cmd_line_preset: (...args: any) => any;
+    user_current_state_stringify: (...args: any) => any;
+    user_free: (...args: any) => any;
+    user_get_invalid_state_error_into_string: (...args: any) => any;
+    user_get_next_move: (...args: any) => any;
+    user_get_num_freecells: (...args: any) => any;
+    user_get_num_stacks: (...args: any) => any;
+    user_get_unrecognized_cmd_line_flag: (...args: any) => any;
+    user_get_unrecognized_cmd_line_flag_status: (...args: any) => any;
+    user_limit_iterations_long: (...args: any) => any;
+    user_resume_solution: (...args: any) => any;
     user_solve_board: (...args: any) => any;
+    user_stringify_move_ptr: (...args: any) => any;
 }
 
-let freecell_solver_user_resume_solution = null;
-let freecell_solver_user_cmd_line_read_cmd_line_preset = null;
 let malloc = null;
 let c_free = null;
-let freecell_solver_user_get_next_move = null;
-let freecell_solver_user_get_num_freecells = null;
-let freecell_solver_user_get_num_stacks = null;
-let freecell_solver_user_get_unrecognized_cmd_line_flag = null;
-let freecell_solver_user_get_unrecognized_cmd_line_flag_status = null;
-let freecell_solver_user_current_state_stringify = null;
-let freecell_solver_user_stringify_move_ptr = null;
-let freecell_solver_user_free = null;
-let freecell_solver_user_limit_iterations_long = null;
-let freecell_solver_user_get_invalid_state_error_into_string = null;
-let freecell_solver_user_cmd_line_parse_args_with_file_nesting_count = null;
 let fc_solve_Pointer_stringify = null;
 let fc_solve_FS_writeFile = null;
 let fc_solve_getValue = null;
@@ -31,85 +31,8 @@ let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    freecell_solver_user_resume_solution = Module.cwrap(
-        "freecell_solver_user_resume_solution",
-        "number",
-        ["number"],
-    );
-    freecell_solver_user_cmd_line_read_cmd_line_preset = Module.cwrap(
-        "freecell_solver_user_cmd_line_read_cmd_line_preset",
-        "number",
-        ["number", "string", "number", "number", "number", "string"],
-    );
     malloc = Module.cwrap("malloc", "number", ["number"]);
     c_free = Module.cwrap("free", "number", ["number"]);
-    freecell_solver_user_get_next_move = Module.cwrap(
-        "freecell_solver_user_get_next_move",
-        "number",
-        ["number", "number"],
-    );
-    freecell_solver_user_get_num_freecells = Module.cwrap(
-        "freecell_solver_user_get_num_freecells",
-        "number",
-        ["number"],
-    );
-    freecell_solver_user_get_num_stacks = Module.cwrap(
-        "freecell_solver_user_get_num_stacks",
-        "number",
-        ["number"],
-    );
-    freecell_solver_user_get_unrecognized_cmd_line_flag = Module.cwrap(
-        "freecell_solver_user_get_unrecognized_cmd_line_flag",
-        "number",
-        ["number", "number"],
-    );
-    freecell_solver_user_get_unrecognized_cmd_line_flag_status = Module.cwrap(
-        "freecell_solver_user_get_unrecognized_cmd_line_flag_status",
-        "number",
-        ["number", "number"],
-    );
-    freecell_solver_user_current_state_stringify = Module.cwrap(
-        "freecell_solver_user_current_state_stringify",
-        "number",
-        ["number", "number", "number", "number", "number"],
-    );
-    freecell_solver_user_stringify_move_ptr = Module.cwrap(
-        "freecell_solver_user_stringify_move_ptr",
-        "number",
-        ["number", "number", "number", "number"],
-    );
-    freecell_solver_user_free = Module.cwrap(
-        "freecell_solver_user_free",
-        "number",
-        ["number"],
-    );
-    freecell_solver_user_limit_iterations_long = Module.cwrap(
-        "freecell_solver_user_limit_iterations_long",
-        "number",
-        ["number", "number"],
-    );
-    freecell_solver_user_get_invalid_state_error_into_string = Module.cwrap(
-        "freecell_solver_user_get_invalid_state_error_into_string",
-        "number",
-        ["number", "number", "number"],
-    );
-    freecell_solver_user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap(
-        "freecell_solver_user_cmd_line_parse_args_with_file_nesting_count",
-        "number",
-        [
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-        ],
-    );
 
     fc_solve_Pointer_stringify = (ptr) => {
         return Module.UTF8ToString(ptr, 10000);
@@ -135,6 +58,81 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         "freecell_solver_user_solve_board",
         "number",
         ["number", "string"],
+    );
+    ret.user_resume_solution = Module.cwrap(
+        "freecell_solver_user_resume_solution",
+        "number",
+        ["number"],
+    );
+    ret.user_cmd_line_read_cmd_line_preset = Module.cwrap(
+        "freecell_solver_user_cmd_line_read_cmd_line_preset",
+        "number",
+        ["number", "string", "number", "number", "number", "string"],
+    );
+    ret.user_get_next_move = Module.cwrap(
+        "freecell_solver_user_get_next_move",
+        "number",
+        ["number", "number"],
+    );
+    ret.user_get_num_freecells = Module.cwrap(
+        "freecell_solver_user_get_num_freecells",
+        "number",
+        ["number"],
+    );
+    ret.user_get_num_stacks = Module.cwrap(
+        "freecell_solver_user_get_num_stacks",
+        "number",
+        ["number"],
+    );
+    ret.user_get_unrecognized_cmd_line_flag = Module.cwrap(
+        "freecell_solver_user_get_unrecognized_cmd_line_flag",
+        "number",
+        ["number", "number"],
+    );
+    ret.user_get_unrecognized_cmd_line_flag_status = Module.cwrap(
+        "freecell_solver_user_get_unrecognized_cmd_line_flag_status",
+        "number",
+        ["number", "number"],
+    );
+    ret.user_current_state_stringify = Module.cwrap(
+        "freecell_solver_user_current_state_stringify",
+        "number",
+        ["number", "number", "number", "number", "number"],
+    );
+    ret.user_stringify_move_ptr = Module.cwrap(
+        "freecell_solver_user_stringify_move_ptr",
+        "number",
+        ["number", "number", "number", "number"],
+    );
+    ret.user_free = Module.cwrap("freecell_solver_user_free", "number", [
+        "number",
+    ]);
+    ret.user_limit_iterations_long = Module.cwrap(
+        "freecell_solver_user_limit_iterations_long",
+        "number",
+        ["number", "number"],
+    );
+    ret.user_get_invalid_state_error_into_string = Module.cwrap(
+        "freecell_solver_user_get_invalid_state_error_into_string",
+        "number",
+        ["number", "number", "number"],
+    );
+    ret.user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap(
+        "freecell_solver_user_cmd_line_parse_args_with_file_nesting_count",
+        "number",
+        [
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+            "number",
+        ],
     );
     return ret;
 }
@@ -274,7 +272,7 @@ export class FC_Solve {
                 } else {
                     alert("Failed to initialize solver (Bug!)");
                 }
-                freecell_solver_user_free(ret_obj);
+                that.module_wrapper.user_free(ret_obj);
                 throw "Bar";
             }
 
@@ -310,7 +308,7 @@ export class FC_Solve {
                 "Gum",
             );
 
-            freecell_solver_user_get_invalid_state_error_into_string(
+            that.module_wrapper.user_get_invalid_state_error_into_string(
                 that.obj,
                 error_string_ptr,
                 1,
@@ -354,7 +352,9 @@ export class FC_Solve {
         const that = this;
 
         that._increase_iters_limit();
-        const solve_err_code = freecell_solver_user_resume_solution(that.obj);
+        const solve_err_code = that.module_wrapper.user_resume_solution(
+            that.obj,
+        );
         that.handle_err_code(solve_err_code);
         return solve_err_code;
     }
@@ -440,12 +440,12 @@ export class FC_Solve {
     public get_num_freecells() {
         const that = this;
 
-        return freecell_solver_user_get_num_freecells(that.obj);
+        return that.module_wrapper.user_get_num_freecells(that.obj);
     }
     public get_num_stacks() {
         const that = this;
 
-        return freecell_solver_user_get_num_stacks(that.obj);
+        return that.module_wrapper.user_get_num_stacks(that.obj);
     }
     private _calc_states_and_moves_seq() {
         const that = this;
@@ -463,7 +463,7 @@ export class FC_Solve {
         }
 
         function get_state_str() {
-            freecell_solver_user_current_state_stringify(
+            that.module_wrapper.user_current_state_stringify(
                 that.obj,
                 that._state_string_buffer,
                 1,
@@ -480,13 +480,13 @@ export class FC_Solve {
         // 128 bytes are enough to hold a move.
         const move_buffer = alloc_wrap(128, "a buffer for the move", "maven");
         while (
-            (move_ret_code = freecell_solver_user_get_next_move(
+            (move_ret_code = that.module_wrapper.user_get_next_move(
                 that.obj,
                 move_buffer,
             )) === 0
         ) {
             const state_as_string = get_state_str();
-            freecell_solver_user_stringify_move_ptr(
+            that.module_wrapper.user_stringify_move_ptr(
                 that.obj,
                 that._move_string_buffer,
                 move_buffer,
@@ -518,7 +518,7 @@ export class FC_Solve {
 
         // Cleanup C resources
         c_free(move_buffer);
-        freecell_solver_user_free(that.obj);
+        that.module_wrapper.user_free(that.obj);
         that.obj = 0;
         c_free(that._state_string_buffer);
         that._state_string_buffer = 0;
@@ -575,7 +575,7 @@ export class FC_Solve {
         const that = this;
 
         that.current_iters_limit += iters_step;
-        freecell_solver_user_limit_iterations_long(
+        that.module_wrapper.user_limit_iterations_long(
             that.obj,
             that.current_iters_limit,
         );
@@ -607,7 +607,7 @@ export class FC_Solve {
                     "error string buffer",
                     "Foo",
                 );
-                const preset_ret = freecell_solver_user_cmd_line_read_cmd_line_preset(
+                const preset_ret = that.module_wrapper.user_cmd_line_read_cmd_line_preset(
                     obj,
                     cmd_line_preset,
                     0,
@@ -672,7 +672,7 @@ export class FC_Solve {
                 const last_arg_ptr = alloc_wrap(4, "last_arg_ptr", "cherry");
 
                 // Input the file to the solver.
-                const args_ret_code = freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
+                const args_ret_code = that.module_wrapper.user_cmd_line_parse_args_with_file_nesting_count(
                     obj,
                     2,
                     args_buf,
@@ -702,11 +702,11 @@ export class FC_Solve {
 
                 if (args_ret_code !== 0) {
                     const unrecognized_opt_ptr =
-                        freecell_solver_user_get_unrecognized_cmd_line_flag_status(
+                        that.module_wrapper.user_get_unrecognized_cmd_line_flag_status(
                             obj,
                             0,
                         ) == 0
-                            ? freecell_solver_user_get_unrecognized_cmd_line_flag(
+                            ? that.module_wrapper.user_get_unrecognized_cmd_line_flag(
                                   obj,
                                   0,
                               )
