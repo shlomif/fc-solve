@@ -4,17 +4,14 @@ import * as base_ui from "./fcs-base-ui";
 import Module from "./libfcs-wrap";
 import * as w from "./find-fc-deal";
 
-let _my_non_promise_module;
-let _my_module;
 let _module_wrapper: w.ModuleWrapper;
 
 export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
-    _my_module = Module({
+    const _my_module = Module({
         onRuntimeInitialized: () => {
             _my_module.then((result) => {
-                _my_non_promise_module = result;
                 const module_wrapper = w.FC_Solve_init_wrappers_with_module(
-                    _my_non_promise_module,
+                    result,
                 );
                 _module_wrapper = module_wrapper;
                 cb(module_wrapper);
