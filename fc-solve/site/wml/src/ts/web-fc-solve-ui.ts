@@ -12,7 +12,7 @@ const FC_Solve = w.FC_Solve;
 let _my_non_promise_module;
 let _my_module;
 
-export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
+export function init_module(cb: (mw: w.ModuleWrapper) => any): any {
     _my_module = Module({
         onRuntimeInitialized: () => {
             _my_module.then((result) => {
@@ -577,7 +577,7 @@ function toggle_expand_moves() {
     return;
 }
 
-export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
+export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     if (!module_wrapper["ms_rand__get_singleton"]) {
         throw "ms_rand__get_singleton does not exist in set_up_handlers()";
     }
@@ -590,7 +590,7 @@ export function set_up_handlers(module_wrapper: BaseApi.ModuleWrapper): void {
     return;
 }
 
-export function set_up(module_wrapper: BaseApi.ModuleWrapper, graphics_) {
+export function set_up(module_wrapper: w.ModuleWrapper, graphics_) {
     if (!module_wrapper["ms_rand__get_singleton"]) {
         throw "ms_rand__get_singleton does not exist in set_up()";
     }

@@ -8,7 +8,7 @@ const preset: string = "as";
 
 function test_idx(
     ajaxQueue,
-    module_wrapper: BaseApi.ModuleWrapper,
+    module_wrapper: w.ModuleWrapper,
     idx: number,
 ): void {
     $("#deal_idx_update").html("Reached deal idx=" + idx);

@@ -3,6 +3,10 @@ import * as BaseApi from "./web-fcs-api-base";
 import { fc_solve_expand_move } from "./web-fc-solve--expand-moves";
 import { rank_re, suit_re } from "./french-cards";
 
+export interface ModuleWrapper extends BaseApi.ModuleWrapper {
+    user_alloc: (...args: any) => any;
+}
+
 let freecell_solver_user_alloc = null;
 let freecell_solver_user_solve_board = null;
 let freecell_solver_user_resume_solution = null;
@@ -27,9 +31,7 @@ let fc_solve_setValue = null;
 let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
-export function FC_Solve_init_wrappers_with_module(
-    Module,
-): BaseApi.ModuleWrapper {
+export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     freecell_solver_user_alloc = Module.cwrap(
         "freecell_solver_user_alloc",
         "number",
@@ -138,7 +140,9 @@ export function FC_Solve_init_wrappers_with_module(
     fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
-    return BaseApi.base_calc_module_wrapper(Module);
+    const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
+    ret.user_alloc = freecell_solver_user_alloc;
+    return ret;
 }
 
 function alloc_wrap(size, desc, error) {
