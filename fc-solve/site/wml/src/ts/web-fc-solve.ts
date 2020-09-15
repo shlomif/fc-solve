@@ -24,13 +24,9 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_stringify_move_ptr: (...args: any) => any;
 }
 
-let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    fc_solve_intArrayFromString = (s) => {
-        return Module.intArrayFromString(s);
-    };
     fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
@@ -662,10 +658,14 @@ export class FC_Solve {
                 );
                 // TODO : Is there a memory leak here?
                 const read_from_file_str_ptr = fc_solve_allocate_i8(
-                    fc_solve_intArrayFromString("--read-from-file"),
+                    that.module_wrapper.Module.intArrayFromString(
+                        "--read-from-file",
+                    ),
                 );
                 const arg_str_ptr = fc_solve_allocate_i8(
-                    fc_solve_intArrayFromString("0," + string_params_file_path),
+                    that.module_wrapper.Module.intArrayFromString(
+                        "0," + string_params_file_path,
+                    ),
                 );
 
                 that.module_wrapper.Module.setValue(
