@@ -486,3 +486,6 @@ BROWSER_TESTS_URL = $(BROWSER_TESTS_URL__BASE)$(TEST_SITE_URL_SUFFIX)
 browser-tests: all
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
+
+smoke-tests:
+	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/*.ts && git add -u . && touch lib/template.jinja && $(MAKE) test && $(MAKE) upload_local && $(MAKE) browser-tests LOCAL_BROWSER_TESTS=1
