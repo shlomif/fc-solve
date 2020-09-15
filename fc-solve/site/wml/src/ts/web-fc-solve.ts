@@ -25,20 +25,12 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
 }
 
 let fc_solve_FS_writeFile = null;
-let fc_solve_getValue = null;
-let fc_solve_setValue = null;
 let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     fc_solve_FS_writeFile = (p1, p2, p3) => {
         return Module.FS.writeFile(p1, p2, p3);
-    };
-    fc_solve_getValue = (p1, p2) => {
-        return Module.getValue(p1, p2);
-    };
-    fc_solve_setValue = (p1, p2, p3) => {
-        return Module.setValue(p1, p2, p3);
     };
     fc_solve_intArrayFromString = (s) => {
         return Module.intArrayFromString(s);
@@ -626,7 +618,7 @@ export class FC_Solve {
                     null,
                 );
 
-                const error_string_ptr = fc_solve_getValue(
+                const error_string_ptr = that.module_wrapper.Module.getValue(
                     error_string_ptr_buf,
                     "*",
                 );
@@ -680,8 +672,16 @@ export class FC_Solve {
                     fc_solve_intArrayFromString("0," + string_params_file_path),
                 );
 
-                fc_solve_setValue(args_buf, read_from_file_str_ptr, "*");
-                fc_solve_setValue(args_buf + 4, arg_str_ptr, "*");
+                that.module_wrapper.Module.setValue(
+                    args_buf,
+                    read_from_file_str_ptr,
+                    "*",
+                );
+                that.module_wrapper.Module.setValue(
+                    args_buf + 4,
+                    arg_str_ptr,
+                    "*",
+                );
 
                 const last_arg_ptr = that.module_wrapper.alloc_wrap(
                     4,
@@ -707,7 +707,7 @@ export class FC_Solve {
                 that.module_wrapper.c_free(last_arg_ptr);
                 that.module_wrapper.c_free(args_buf);
 
-                const error_string_ptr = fc_solve_getValue(
+                const error_string_ptr = that.module_wrapper.Module.getValue(
                     error_string_ptr_buf,
                     "*",
                 );
