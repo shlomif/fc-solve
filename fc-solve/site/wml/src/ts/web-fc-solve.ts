@@ -24,14 +24,10 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_stringify_move_ptr: (...args: any) => any;
 }
 
-let fc_solve_FS_writeFile = null;
 let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    fc_solve_FS_writeFile = (p1, p2, p3) => {
-        return Module.FS.writeFile(p1, p2, p3);
-    };
     fc_solve_intArrayFromString = (s) => {
         return Module.intArrayFromString(s);
     };
@@ -653,7 +649,7 @@ export class FC_Solve {
                 const base_path = "/";
                 const file_basename = "string-params.fc-solve.txt";
                 const string_params_file_path = base_path + file_basename;
-                fc_solve_FS_writeFile(
+                that.module_wrapper.Module.FS.writeFile(
                     string_params_file_path,
                     that.string_params,
                     {},
