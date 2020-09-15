@@ -13,9 +13,6 @@ CURRENT TASKS:
       * E.g "fc-solve --freecells-num 0"
       * Fix.
       @ Added [Tue 2019-08-20]
-    - Add a <select> for freecells count and one for columns/stacks.
-      * With a "Default" no-op option.
-      @ Added [Tue 2019-08-20]
 
 LONG TERM:
     - Try to see if the 3 freecells limit issue can be reproduced and
@@ -178,6 +175,10 @@ COMPLETED TASKS:
         * in a separate git branch
         * Added [Sat 2013-01-12]
         @ DONE [Wed 2019-05-01]
+    - Add a <select> for freecells count and one for columns/stacks.
+        @ DONE [Tue 2020-09-15]
+      * With a "Default" no-op option.
+      @ Added [Tue 2019-08-20]
 
 
 
