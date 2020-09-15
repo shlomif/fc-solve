@@ -56,7 +56,7 @@ def find_index_main(args, find_ret):
     if input_from_stdin:
         content = sys.stdin.readlines()
     else:
-        with open(input_fn) as f:
+        with open(input_fn, "rt") as f:
             content = f.readlines()
 
     content = ''.join(content)

@@ -23,7 +23,8 @@ def _calc_env():
 
 
 def _slurp(fn):
-    return open(fn, 'rt').read()
+    with open(fn, 'rt') as f:
+        return f.read()
 
 
 def _htmlish(base):
@@ -60,7 +61,13 @@ cols_listbox = (
             ['<option value="{num}">{num}</option>'.format(num=num)
              for num in range(1, 12+1)]))
 
-for line in open('lib/make/jinja.txt', 'rt'):
+
+def _get_files():
+    with open('lib/make/jinja.txt', 'rt') as f:
+        return f.readlines()
+
+
+for line in _get_files():
     fn = line.strip()
     enable_jquery_ui = (fn != 'js-fc-solve/text/gui-tests.xhtml')
     base_path = "../"*len([x for x in fn if x == '/'])
@@ -135,7 +142,8 @@ class="try_main">Try</span><br/>
         text = re.sub("\\A[\\s\\n]+", '', text)
         if re.search('<toc */ *>', text):
             tocs.append(out_fn)
-        open(out_fn, 'wt').write(text)
+        with open(out_fn, 'wt') as f:
+            f.write(text)
 
 subprocess.call(["perl", "-0777", "-i", "-p", "-I./lib", "-e",
                  "use HTML::Latemp::AddToc (); " +

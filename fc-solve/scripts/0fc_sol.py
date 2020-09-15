@@ -24,7 +24,7 @@ end = min((idx + 1) * SEG, MAX)
 fn = 'results/%010d' % idx
 if os.path.exists(fn):
     sys.exit()
-with open(fn, 'w') as o:
+with open(fn, 'wt') as o:
     def w(cmd, deal):
         o.write("%s\t%d\n" % (cmd, int(deal)))
         o.flush()

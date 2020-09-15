@@ -8,7 +8,7 @@ from six import print_
 
 
 def iters_count_iterator(fn):
-    with open(fn, 'r') as f:
+    with open(fn, 'rt') as f:
         last = 0
         skip = False
         for l in f:
@@ -32,7 +32,7 @@ def iters_count_iterator(fn):
 class PreludeAnalyzer(object):
     """docstring for PreludeAnalyzer"""
     def __init__(self, fn):
-        with open(fn, 'r') as f:
+        with open(fn, 'rt') as f:
             for l in f:
                 m = re.match(r'^\s*--prelude "([^"]+)"', l)
                 if m:
