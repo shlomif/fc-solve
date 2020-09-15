@@ -22,7 +22,6 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_stringify_move_ptr: (...args: any) => any;
 }
 
-let malloc = null;
 let c_free = null;
 let fc_solve_Pointer_stringify = null;
 let fc_solve_FS_writeFile = null;
@@ -32,7 +31,6 @@ let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    malloc = Module.cwrap("malloc", "number", ["number"]);
     c_free = Module.cwrap("free", "number", ["number"]);
 
     fc_solve_Pointer_stringify = (ptr) => {
@@ -144,7 +142,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
             }
             return buffer;
         };
-    })(malloc);
+    })(Module.cwrap("malloc", "number", ["number"]));
 
     return ret;
 }
