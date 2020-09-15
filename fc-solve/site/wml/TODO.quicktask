@@ -1,6 +1,12 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Add some code to transpose rows/columns in playstacks vs. lines
+      * Some code in py under "source/board_gen"
+      @ Added [Tue 2020-09-15]
+    - Check if "8 cards times 6 lines plus 4 cards in 1 line" was entered
+      * Offer to transpose rows/columns.
+      @ Added [Tue 2020-09-15]
     - A cmd line option that does not start with a "-" causes the cmd line
       parsing to stop. Silently.
       * https://fc-solve.shlomifish.org/js-fc-solve/text/
@@ -12,6 +18,9 @@ CURRENT TASKS:
       @ Added [Tue 2019-08-20]
 
 LONG TERM:
+    - Try to see if the 3 freecells limit issue can be reproduced and
+      investigated.
+      @ Added [Tue 2020-09-15]
 
 COMPLETED TASKS:
     - Write better documentation of the boards/layouts format with examples.
