@@ -541,6 +541,8 @@ function _create_bmark_obj() {
             "unicode_suits__unisuits",
             "string_params",
             "game_type",
+            "num_freecells",
+            "num_columns",
         ],
         show: [],
     });
