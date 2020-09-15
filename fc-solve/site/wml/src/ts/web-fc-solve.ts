@@ -5,6 +5,7 @@ import { rank_re, suit_re } from "./french-cards";
 
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     alloc_wrap: (size: number, desc: string, error: string) => number;
+    c_free: (buffer: number) => number;
     user_alloc: (...args: any) => any;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
@@ -22,7 +23,6 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_stringify_move_ptr: (...args: any) => any;
 }
 
-let c_free = null;
 let fc_solve_Pointer_stringify = null;
 let fc_solve_FS_writeFile = null;
 let fc_solve_getValue = null;
@@ -31,8 +31,6 @@ let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    c_free = Module.cwrap("free", "number", ["number"]);
-
     fc_solve_Pointer_stringify = (ptr) => {
         return Module.UTF8ToString(ptr, 10000);
     };
@@ -143,6 +141,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
             return buffer;
         };
     })(Module.cwrap("malloc", "number", ["number"]));
+    ret.c_free = Module.cwrap("free", "number", ["number"]);
 
     return ret;
 }
@@ -316,7 +315,7 @@ export class FC_Solve {
             );
 
             const error_string = fc_solve_Pointer_stringify(error_string_ptr);
-            c_free(error_string_ptr);
+            that.module_wrapper.c_free(error_string_ptr);
 
             alert(error_string + "\n");
 
@@ -522,12 +521,12 @@ export class FC_Solve {
         that._post_expand_states_and_moves_seq = null;
 
         // Cleanup C resources
-        c_free(move_buffer);
+        that.module_wrapper.c_free(move_buffer);
         that.module_wrapper.user_free(that.obj);
         that.obj = 0;
-        c_free(that._state_string_buffer);
+        that.module_wrapper.c_free(that._state_string_buffer);
         that._state_string_buffer = 0;
-        c_free(that._move_string_buffer);
+        that.module_wrapper.c_free(that._move_string_buffer);
         that._move_string_buffer = 0;
 
         return;
@@ -630,8 +629,8 @@ export class FC_Solve {
                     error_string_ptr,
                 );
 
-                c_free(error_string_ptr);
-                c_free(error_string_ptr_buf);
+                that.module_wrapper.c_free(error_string_ptr);
+                that.module_wrapper.c_free(error_string_ptr_buf);
 
                 if (preset_ret !== 0) {
                     alert(
@@ -699,8 +698,8 @@ export class FC_Solve {
                     0,
                 );
 
-                c_free(last_arg_ptr);
-                c_free(args_buf);
+                that.module_wrapper.c_free(last_arg_ptr);
+                that.module_wrapper.c_free(args_buf);
 
                 const error_string_ptr = fc_solve_getValue(
                     error_string_ptr_buf,
@@ -710,8 +709,8 @@ export class FC_Solve {
                 const error_string = that._stringify_possibly_null_ptr(
                     error_string_ptr,
                 );
-                c_free(error_string_ptr);
-                c_free(error_string_ptr_buf);
+                that.module_wrapper.c_free(error_string_ptr);
+                that.module_wrapper.c_free(error_string_ptr_buf);
 
                 if (args_ret_code !== 0) {
                     const unrecognized_opt_ptr =
@@ -729,7 +728,7 @@ export class FC_Solve {
                         that._unrecognized_opt = that._stringify_possibly_null_ptr(
                             unrecognized_opt_ptr,
                         );
-                        c_free(unrecognized_opt_ptr);
+                        that.module_wrapper.c_free(unrecognized_opt_ptr);
                         unrecognized_opt_s =
                             "There was an unrecognized command line flag: «" +
                             that._unrecognized_opt +
