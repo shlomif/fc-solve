@@ -141,7 +141,7 @@ def cmd_line_main(args):
                     % (idx+1, x+1)
                 )
 
-    with (sys.stdout if output_to_stdout else open(output_fn)) as f:
+    with (sys.stdout if output_to_stdout else open(output_fn, "wt")) as f:
         def _out_line(line):
             if line:
                 f.write(line + "\n")

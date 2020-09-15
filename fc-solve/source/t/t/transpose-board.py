@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 import os
+import os.path
 import subprocess
+import tempfile
 import unittest
 
 py_prog = os.environ['FCS_SRC_PATH'] + '/board_gen/transpose-freecell-board.py'
@@ -21,6 +23,22 @@ class MyTests(unittest.TestCase):
         process.stdin.write(bytes(input_text, 'utf_8'))
         process.stdin.close()
         got_out = process.stdout.read().decode('utf-8')
+
+        self.assertEqual(_normalize_lf(got_out), _normalize_lf(want_out), msg)
+
+    def mytest_using_files(self, input_text, want_out, msg):
+        global py_prog
+        with tempfile.TemporaryDirectory() as tempname:
+            in_fn = os.path.join(tempname, "input.txt")
+            out_fn = os.path.join(tempname, "output.txt")
+            with open(in_fn, "wt") as write_input:
+                write_input.write(input_text)
+            subprocess.check_call(
+                ['python3', py_prog, '-o', out_fn, in_fn, ],
+                shell=False,
+            )
+            with open(out_fn, "rb") as read_output:
+                got_out = read_output.read().decode('utf-8')
 
         self.assertEqual(_normalize_lf(got_out), _normalize_lf(want_out), msg)
 
@@ -186,6 +204,31 @@ QS 3H 3S JH TD    8H 8S
 : 7S 6C 7D 4D 8S
 """,
             "With neither a Freecells line nor a Foundations line."
+        )
+
+        # TEST
+        self.mytest_using_files(
+            """4C 5H QC 5D 2D 7H AH 7S
+2H QH 9S 2S KD JS 5S 6C
+9C 3C 6H JC TH KH 6S 7D
+8C AC 9H 5C TC TS AD 4D
+QS 3H 3S JH TD    8H 8S
+   4H KS 6D 8D    JD
+   QD 3D AS       KC
+      2C          9D
+      4S
+      7C
+""",
+            """: 4C 2H 9C 8C QS
+: 5H QH 3C AC 3H 4H QD
+: QC 9S 6H 9H 3S KS 3D 2C 4S 7C
+: 5D 2S JC 5C JH 6D AS
+: 2D KD TH TC TD 8D
+: 7H JS KH TS
+: AH 5S 6S AD 8H JD KC 9D
+: 7S 6C 7D 4D 8S
+""",
+            "Using files",
         )
 
 
