@@ -4,6 +4,7 @@ import { fc_solve_expand_move } from "./web-fc-solve--expand-moves";
 import { rank_re, suit_re } from "./french-cards";
 
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
+    alloc_wrap: (size: number, desc: string, error: string) => number;
     user_alloc: (...args: any) => any;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
@@ -134,15 +135,17 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
             "number",
         ],
     );
-    return ret;
-}
+    ret.alloc_wrap = ((my_malloc) => {
+        return (size: number, desc: string, error: string) => {
+            const buffer = my_malloc(size);
+            if (buffer === 0) {
+                alert("Could not allocate " + desc + " (out of memory?)");
+                throw error;
+            }
+            return buffer;
+        };
+    })(malloc);
 
-function alloc_wrap(size, desc, error) {
-    const ret = malloc(size);
-    if (ret === 0) {
-        alert("Could not allocate " + desc + " (out of memory?)");
-        throw error;
-    }
     return ret;
 }
 
@@ -281,12 +284,12 @@ export class FC_Solve {
         that.proto_states_and_moves_seq = null;
         that._pre_expand_states_and_moves_seq = null;
         that._post_expand_states_and_moves_seq = null;
-        that._state_string_buffer = alloc_wrap(
+        that._state_string_buffer = that.module_wrapper.alloc_wrap(
             500,
             "state string buffer",
             "Zam",
         );
-        that._move_string_buffer = alloc_wrap(
+        that._move_string_buffer = that.module_wrapper.alloc_wrap(
             200,
             "move string buffer",
             "Plum",
@@ -302,7 +305,7 @@ export class FC_Solve {
     public handle_err_code(solve_err_code) {
         const that = this;
         if (solve_err_code === FCS_STATE_INVALID_STATE) {
-            const error_string_ptr = alloc_wrap(
+            const error_string_ptr = that.module_wrapper.alloc_wrap(
                 300,
                 "state error string",
                 "Gum",
@@ -478,7 +481,11 @@ export class FC_Solve {
 
         let move_ret_code;
         // 128 bytes are enough to hold a move.
-        const move_buffer = alloc_wrap(128, "a buffer for the move", "maven");
+        const move_buffer = that.module_wrapper.alloc_wrap(
+            128,
+            "a buffer for the move",
+            "maven",
+        );
         while (
             (move_ret_code = that.module_wrapper.user_get_next_move(
                 that.obj,
@@ -602,7 +609,7 @@ export class FC_Solve {
         const cmd_line_preset = that.cmd_line_preset;
         try {
             if (cmd_line_preset !== "default") {
-                const error_string_ptr_buf = alloc_wrap(
+                const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
                     128,
                     "error string buffer",
                     "Foo",
@@ -641,7 +648,7 @@ export class FC_Solve {
             }
 
             if (that.string_params) {
-                const error_string_ptr_buf = alloc_wrap(
+                const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
                     128,
                     "error string buffer",
                     "Engo",
@@ -657,7 +664,11 @@ export class FC_Solve {
                     {},
                 );
 
-                const args_buf = alloc_wrap(4 * 2, "args buf", "Seed");
+                const args_buf = that.module_wrapper.alloc_wrap(
+                    4 * 2,
+                    "args buf",
+                    "Seed",
+                );
                 // TODO : Is there a memory leak here?
                 const read_from_file_str_ptr = fc_solve_allocate_i8(
                     fc_solve_intArrayFromString("--read-from-file"),
@@ -669,7 +680,11 @@ export class FC_Solve {
                 fc_solve_setValue(args_buf, read_from_file_str_ptr, "*");
                 fc_solve_setValue(args_buf + 4, arg_str_ptr, "*");
 
-                const last_arg_ptr = alloc_wrap(4, "last_arg_ptr", "cherry");
+                const last_arg_ptr = that.module_wrapper.alloc_wrap(
+                    4,
+                    "last_arg_ptr",
+                    "cherry",
+                );
 
                 // Input the file to the solver.
                 const args_ret_code = that.module_wrapper.user_cmd_line_parse_args_with_file_nesting_count(
