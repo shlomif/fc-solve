@@ -49,14 +49,14 @@ class LinesHandler:
 def cmd_line_main(args):
     output_to_stdout = True
     output_fn = None
-    while args[1][0] == '-':
+    while len(args) >= 2 and args[1][0] == '-':
         if args[1] == "-o":
-            args.pop(0)
-            if not len(args):
+            args.pop(1)
+            if len(args) < 2:
                 raise ValueError("-o must accept an argument.")
             output_fn = args[1]
             output_to_stdout = False
-            args.pop(0)
+            args.pop(1)
         elif args[1] == '-':
             break
         else:
@@ -68,13 +68,17 @@ def cmd_line_main(args):
         if args[1] != "-":
             input_fn = args[1]
             input_from_stdin = False
-            args.pop(0)
+        args.pop(1)
+    if len(args) > 1:
+        raise ValueError(
+            "Too many command line arguments starting at '{}'!".format(
+                args[1]))
 
     content = []
     if input_from_stdin:
         content = sys.stdin.readlines()
     else:
-        with open(input_fn) as f:
+        with open(input_fn, "rt") as f:
             content = f.readlines()
 
     layout = [[None for x in range(52)] for line in range(52)]
