@@ -26,75 +26,83 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
 }
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
-    ret.fc_solve_allocate_i8 = (p1) => {
+    const module_wrapper = BaseApi.base_calc_module_wrapper(
+        Module,
+    ) as ModuleWrapper;
+    module_wrapper.fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
-    ret.user_alloc = Module.cwrap("freecell_solver_user_alloc", "number", []);
-    ret.user_solve_board = Module.cwrap(
+    module_wrapper.user_alloc = Module.cwrap(
+        "freecell_solver_user_alloc",
+        "number",
+        [],
+    );
+    module_wrapper.user_solve_board = Module.cwrap(
         "freecell_solver_user_solve_board",
         "number",
         ["number", "string"],
     );
-    ret.user_resume_solution = Module.cwrap(
+    module_wrapper.user_resume_solution = Module.cwrap(
         "freecell_solver_user_resume_solution",
         "number",
         ["number"],
     );
-    ret.user_cmd_line_read_cmd_line_preset = Module.cwrap(
+    module_wrapper.user_cmd_line_read_cmd_line_preset = Module.cwrap(
         "freecell_solver_user_cmd_line_read_cmd_line_preset",
         "number",
         ["number", "string", "number", "number", "number", "string"],
     );
-    ret.user_get_next_move = Module.cwrap(
+    module_wrapper.user_get_next_move = Module.cwrap(
         "freecell_solver_user_get_next_move",
         "number",
         ["number", "number"],
     );
-    ret.user_get_num_freecells = Module.cwrap(
+    module_wrapper.user_get_num_freecells = Module.cwrap(
         "freecell_solver_user_get_num_freecells",
         "number",
         ["number"],
     );
-    ret.user_get_num_stacks = Module.cwrap(
+    module_wrapper.user_get_num_stacks = Module.cwrap(
         "freecell_solver_user_get_num_stacks",
         "number",
         ["number"],
     );
-    ret.user_get_unrecognized_cmd_line_flag = Module.cwrap(
+    module_wrapper.user_get_unrecognized_cmd_line_flag = Module.cwrap(
         "freecell_solver_user_get_unrecognized_cmd_line_flag",
         "number",
         ["number", "number"],
     );
-    ret.user_get_unrecognized_cmd_line_flag_status = Module.cwrap(
+    module_wrapper.user_get_unrecognized_cmd_line_flag_status = Module.cwrap(
         "freecell_solver_user_get_unrecognized_cmd_line_flag_status",
         "number",
         ["number", "number"],
     );
-    ret.user_current_state_stringify = Module.cwrap(
+    module_wrapper.user_current_state_stringify = Module.cwrap(
         "freecell_solver_user_current_state_stringify",
         "number",
         ["number", "number", "number", "number", "number"],
     );
-    ret.user_stringify_move_ptr = Module.cwrap(
+    module_wrapper.user_stringify_move_ptr = Module.cwrap(
         "freecell_solver_user_stringify_move_ptr",
         "number",
         ["number", "number", "number", "number"],
     );
-    ret.user_free = Module.cwrap("freecell_solver_user_free", "number", [
+    module_wrapper.user_free = Module.cwrap(
+        "freecell_solver_user_free",
         "number",
-    ]);
-    ret.user_limit_iterations_long = Module.cwrap(
+        ["number"],
+    );
+    module_wrapper.user_limit_iterations_long = Module.cwrap(
         "freecell_solver_user_limit_iterations_long",
         "number",
         ["number", "number"],
     );
-    ret.user_get_invalid_state_error_into_string = Module.cwrap(
+    module_wrapper.user_get_invalid_state_error_into_string = Module.cwrap(
         "freecell_solver_user_get_invalid_state_error_into_string",
         "number",
         ["number", "number", "number"],
     );
-    ret.user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap(
+    module_wrapper.user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap(
         "freecell_solver_user_cmd_line_parse_args_with_file_nesting_count",
         "number",
         [
@@ -111,7 +119,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
             "number",
         ],
     );
-    ret.alloc_wrap = ((my_malloc) => {
+    module_wrapper.alloc_wrap = ((my_malloc) => {
         return (size: number, desc: string, error: string) => {
             const buffer = my_malloc(size);
             if (buffer === 0) {
@@ -121,12 +129,12 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
             return buffer;
         };
     })(Module.cwrap("malloc", "number", ["number"]));
-    ret.c_free = Module.cwrap("free", "number", ["number"]);
-    ret.fc_solve_Pointer_stringify = (ptr) => {
+    module_wrapper.c_free = Module.cwrap("free", "number", ["number"]);
+    module_wrapper.fc_solve_Pointer_stringify = (ptr) => {
         return Module.UTF8ToString(ptr, 10000);
     };
 
-    return ret;
+    return module_wrapper;
 }
 
 const remove_trailing_space_re = /[ \t]+$/gm;
