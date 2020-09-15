@@ -6,6 +6,7 @@ import { rank_re, suit_re } from "./french-cards";
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     alloc_wrap: (size: number, desc: string, error: string) => number;
     c_free: (buffer: number) => number;
+    fc_solve_Pointer_stringify: (buffer: number) => string;
     user_alloc: (...args: any) => any;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
@@ -23,7 +24,6 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_stringify_move_ptr: (...args: any) => any;
 }
 
-let fc_solve_Pointer_stringify = null;
 let fc_solve_FS_writeFile = null;
 let fc_solve_getValue = null;
 let fc_solve_setValue = null;
@@ -31,9 +31,6 @@ let fc_solve_intArrayFromString = null;
 let fc_solve_allocate_i8 = null;
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    fc_solve_Pointer_stringify = (ptr) => {
-        return Module.UTF8ToString(ptr, 10000);
-    };
     fc_solve_FS_writeFile = (p1, p2, p3) => {
         return Module.FS.writeFile(p1, p2, p3);
     };
@@ -142,6 +139,9 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         };
     })(Module.cwrap("malloc", "number", ["number"]));
     ret.c_free = Module.cwrap("free", "number", ["number"]);
+    ret.fc_solve_Pointer_stringify = (ptr) => {
+        return Module.UTF8ToString(ptr, 10000);
+    };
 
     return ret;
 }
@@ -314,7 +314,9 @@ export class FC_Solve {
                 1,
             );
 
-            const error_string = fc_solve_Pointer_stringify(error_string_ptr);
+            const error_string = that.module_wrapper.fc_solve_Pointer_stringify(
+                error_string_ptr,
+            );
             that.module_wrapper.c_free(error_string_ptr);
 
             alert(error_string + "\n");
@@ -471,7 +473,9 @@ export class FC_Solve {
                 1,
             );
 
-            return fc_solve_Pointer_stringify(that._state_string_buffer);
+            return that.module_wrapper.fc_solve_Pointer_stringify(
+                that._state_string_buffer,
+            );
         }
 
         _out_state(get_state_str());
@@ -496,7 +500,7 @@ export class FC_Solve {
                 move_buffer,
                 0,
             );
-            const move_as_string = fc_solve_Pointer_stringify(
+            const move_as_string = that.module_wrapper.fc_solve_Pointer_stringify(
                 that._move_string_buffer,
             );
 
@@ -599,7 +603,9 @@ export class FC_Solve {
     }
     private _stringify_possibly_null_ptr(s_ptr) {
         const that = this;
-        return s_ptr ? fc_solve_Pointer_stringify(s_ptr) : "";
+        return s_ptr
+            ? that.module_wrapper.fc_solve_Pointer_stringify(s_ptr)
+            : "";
     }
     private _initialize_obj(obj) {
         const that = this;
