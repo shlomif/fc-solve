@@ -6,6 +6,7 @@ import { rank_re, suit_re } from "./french-cards";
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     alloc_wrap: (size: number, desc: string, error: string) => number;
     c_free: (buffer: number) => number;
+    fc_solve_allocate_i8: (pointer: number) => number;
     fc_solve_Pointer_stringify: (buffer: number) => string;
     user_alloc: (...args: any) => any;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
@@ -24,13 +25,11 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_stringify_move_ptr: (...args: any) => any;
 }
 
-let fc_solve_allocate_i8 = null;
-
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
-    fc_solve_allocate_i8 = (p1) => {
+    const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
+    ret.fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
-    const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
     ret.user_alloc = Module.cwrap("freecell_solver_user_alloc", "number", []);
     ret.user_solve_board = Module.cwrap(
         "freecell_solver_user_solve_board",
@@ -657,12 +656,12 @@ export class FC_Solve {
                     "Seed",
                 );
                 // TODO : Is there a memory leak here?
-                const read_from_file_str_ptr = fc_solve_allocate_i8(
+                const read_from_file_str_ptr = that.module_wrapper.fc_solve_allocate_i8(
                     that.module_wrapper.Module.intArrayFromString(
                         "--read-from-file",
                     ),
                 );
-                const arg_str_ptr = fc_solve_allocate_i8(
+                const arg_str_ptr = that.module_wrapper.fc_solve_allocate_i8(
                     that.module_wrapper.Module.intArrayFromString(
                         "0," + string_params_file_path,
                     ),
