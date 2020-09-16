@@ -49,7 +49,12 @@ class MyTests(unittest.TestCase):
         fcs = FreecellSolverTestSuite(self)
 
         # TEST*$unrecognized_flag
-        fcs.unrecognized_flag__test()
+        fcs.unrecognized_flag__test(unrecognized_flag="-unrecognized")
+
+        fcs = FreecellSolverTestSuite(self)
+
+        # TEST*$unrecognized_flag
+        fcs.unrecognized_flag__test(unrecognized_flag="fc-solve")
 
 
 if __name__ == "__main__":

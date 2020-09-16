@@ -166,12 +166,13 @@ char * freecell_solver_user_get_unrecognized_cmd_line_flag(
                 "Is: " + str(have))
 
     # TEST:$unrecognized_flag=0;
-    def unrecognized_flag__test(self):
+    def unrecognized_flag__test(self, unrecognized_flag):
         import os.path
         import tempfile
         with tempfile.TemporaryDirectory() as tempname:
             fn = os.path.join(tempname, "foo.txt")
-            open(fn, "wt").write("-unrecognized foo\n")
+            with open(fn, "wt") as fh:
+                fh.write("{} foo\n".format(unrecognized_flag))
             self.input_cmd_line(["--read-from-file", fn])
             # TEST:$unrecognized_flag++;
             self._eq(
@@ -192,6 +193,6 @@ char * freecell_solver_user_get_unrecognized_cmd_line_flag(
             # TEST:$unrecognized_flag++;
             self._eq(
                 self.ffi.string(s),
-                b'-unrecognized',
+                unrecognized_flag.encode('utf-8'),
                 'flag_string',
             )
