@@ -238,6 +238,15 @@ MACRO(add_gen_c)
     LIST(APPEND _gen_c_files ${ARGV})
 ENDMACRO ()
 
+SET (CPAN_MODULE "Moo")
+EXECUTE_PROCESS (
+    COMMAND "${PERL_EXECUTABLE}" "-M${CPAN_MODULE}=" "-e" "exit(0)"
+    RESULT_VARIABLE "RESULT"
+)
+IF (NOT RESULT EQUAL 0)
+    MESSAGE(FATAL_ERROR "You need the Perl 5/CPAN distribution ${CPAN_MODULE} to build Freecell Solver. See http://perl-begin.org/topics/cpan/ for installing from CPAN (perhaps \"cpan ${CPAN_MODULE}\" will work for you).")
+ENDIF ()
+
 SET (MOVE_FUNCS_GEN_MOD "${CMAKE_CURRENT_SOURCE_DIR}/t/lib/FC_Solve/MoveFuncs.pm")
 SET (presets_gen "${CMAKE_CURRENT_SOURCE_DIR}/scripts/gen-presets.pl")
 SET (presets_gen_output "${CMAKE_CURRENT_BINARY_DIR}/fcs_presets_generated.h")
