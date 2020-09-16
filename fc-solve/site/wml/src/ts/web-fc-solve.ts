@@ -734,6 +734,7 @@ export class FC_Solve {
                             : 0;
                     let unrecognized_opt_s = "";
                     if (unrecognized_opt_ptr != 0) {
+                        that._do_not_alert = true;
                         that._unrecognized_opt = that._stringify_possibly_null_ptr(
                             unrecognized_opt_ptr,
                         );
@@ -743,7 +744,6 @@ export class FC_Solve {
                             that._unrecognized_opt +
                             "».";
                         alert(unrecognized_opt_s);
-                        that._do_not_alert = true;
                         throw "Bar";
                     }
                     alert(
