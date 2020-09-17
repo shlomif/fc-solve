@@ -773,7 +773,7 @@ export function test_fcs_validate(qunit: QUnit) {
         }
     });
     qunit.test("verify_state BoardParseResult tests #1", (a: Assert) => {
-        a.expect(5);
+        a.expect(6);
         const ms_deal_24 =
             ": 4C 2C 9C 8C QS 4S 2H\n" +
             ": 5H QH 3C AC 3H 4H QD\n" +
@@ -787,6 +787,9 @@ export function test_fcs_validate(qunit: QUnit) {
 
         // TEST
         a.ok(result.is_valid, "parsed correctly.");
+
+        // TEST
+        a.notOk(result.checkIfFlipped(), "is not flipped");
 
         // TEST
         a.equal(result.columns.length, 8, "There are 8 columns");
@@ -1380,4 +1383,29 @@ Foundations:
             );
         },
     );
+    qunit.test("verify_state BoardParseResult flipped", (a: Assert) => {
+        a.expect(1);
+        const flipped_deal = `# MS Freecell Deal no. 240 flipped
+JH 5D 8S 7S KH TS 9D AH
+9C 3D 5C AC JD TC JC 7C
+5S 9S KD 9H 7D 4S 2C 6D
+KC 2S QC 6C 4C 5H QS 8D
+6S 3C 3H QH 8H QD TH TD
+2H AD 4D KS 6H JS 2D 7H
+AS 8C 3S 4H
+`;
+        const non_flipped = `JH 9C 5S KC 6S 2H AS
+5D 3D 9S 2S 3C AD 8C
+8S 5C KD QC 3H 4D 3S
+7S AC 9H 6C QH KS 4H
+KH JD 7D 4C 8H 6H
+TS TC 4S 5H QD JS
+9D JC 2C QS TH 2D
+AH 7C 6D 8D TD 7H
+`;
+        const result = new BoardParseResult(8, 4, flipped_deal);
+
+        // TEST
+        a.ok(result.checkIfFlipped(), "is flipped");
+    });
 }

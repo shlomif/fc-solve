@@ -184,6 +184,10 @@ class ColumnParseResult extends BaseResult {
         super(is_correct, start_char_idx, num_consumed_chars, error);
         this.col = new Column(cards);
     }
+
+    public getLen(): number {
+        return this.col.getLen();
+    }
 }
 
 class StringParser {
@@ -864,5 +868,31 @@ export class BoardParseResult {
             ret += col.col.toString();
         }
         return ret;
+    }
+    public checkIfFlipped(): boolean {
+        const that = this;
+        let i = 0;
+        for (; i < 6; ++i) {
+            if (i >= that.columns.length) {
+                return false;
+            }
+            if (that.columns[i].getLen() != 8) {
+                return false;
+            }
+        }
+        for (; i < 7; ++i) {
+            if (i >= that.columns.length) {
+                return false;
+            }
+            if (that.columns[i].getLen() != 4) {
+                return false;
+            }
+        }
+        for (; i < that.columns.length; ++i) {
+            if (that.columns[i].getLen() != 0) {
+                return false;
+            }
+        }
+        return true;
     }
 }
