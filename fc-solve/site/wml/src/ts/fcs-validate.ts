@@ -895,4 +895,29 @@ export class BoardParseResult {
         }
         return true;
     }
+    public flip() {
+        const that = this;
+        if (!that.checkIfFlipped()) {
+            throw "not flipped";
+        }
+        let new_columns = [];
+        for (let i = 0; i < 8; ++i) {
+            new_columns.push(
+                fcs_js__column_from_string(
+                    0,
+                    ": " +
+                        perl_range(0, i < 4 ? 6 : 5)
+                            .map((c) => {
+                                return that.columns[c].col
+                                    .getCard(i)
+                                    .toString();
+                            })
+                            .join(" ") +
+                        "\n",
+                    false,
+                ),
+            );
+        }
+        that.columns = new_columns;
+    }
 }

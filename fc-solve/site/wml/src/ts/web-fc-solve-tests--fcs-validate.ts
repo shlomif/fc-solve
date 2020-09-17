@@ -1384,7 +1384,7 @@ Foundations:
         },
     );
     qunit.test("verify_state BoardParseResult flipped", (a: Assert) => {
-        a.expect(1);
+        a.expect(4);
         const flipped_deal = `# MS Freecell Deal no. 240 flipped
 JH 5D 8S 7S KH TS 9D AH
 9C 3D 5C AC JD TC JC 7C
@@ -1407,5 +1407,19 @@ AH 7C 6D 8D TD 7H
 
         // TEST
         a.ok(result.checkIfFlipped(), "is flipped");
+
+        result.flip();
+
+        // TEST
+        a.notOk(result.checkIfFlipped(), "no longer flipped");
+
+        // TEST
+        a.deepEqual(result.columns.length, 8, "columns length");
+        // TEST
+        a.deepEqual(
+            result.columns[0].col.getArrOfStrs(),
+            "JH 9C 5S KC 6S 2H AS".split(" "),
+            "column 0 was parsed fine.",
+        );
     });
 }
