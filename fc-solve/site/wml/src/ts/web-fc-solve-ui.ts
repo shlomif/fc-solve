@@ -44,11 +44,11 @@ function _increment_move_indices(move_s) {
 const ENABLE_VALIDATION = true;
 
 let is_flipped: boolean = false;
-let flip_strings = new Map();
+let flip_strings = new Map<boolean, string>();
 const _global = window as any;
 _global._fc_solve_web_ui_flip = function _fc_solve_web_ui_flip() {
     is_flipped = !is_flipped;
-    const key = is_flipped ? "true" : "false";
+    const key = is_flipped;
     if (!flip_strings.has(key)) {
         throw "no key";
     }
@@ -218,9 +218,9 @@ class FC_Solve_UI {
                 '<p>The input text of the deal appears to be flipped.</p><p><button class="flip" id="fcs_flip_deal" onclick="window._fc_solve_web_ui_flip()">⤢ Flip it.</button></p>',
             );
             is_flipped = false;
-            flip_strings.set("false", that._calc_initial_board_string());
+            flip_strings.set(false, that._calc_initial_board_string());
             const true_flip_string = validate.flip().getBoardString();
-            flip_strings.set("true", true_flip_string);
+            flip_strings.set(true, true_flip_string);
         }
 
         that._solve_err_code = that._instance.do_solve(
