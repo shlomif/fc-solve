@@ -190,9 +190,18 @@ class FC_Solve_UI {
             // TODO : restore after improving.
             if (ENABLE_VALIDATION) {
                 that._webui_set_status_callback("error", "Parse Error");
+                $("#board_parse__wrap > h2").text(
+                    "Board Input Parsing Errors:",
+                );
                 parse_error_wrapper.removeClass(parse_error_control_hide_class);
                 return;
             }
+        } else if (validate.checkIfFlipped()) {
+            $("#board_parse__wrap > h2").text("Board Input Parsing Warnings:");
+            parse_error_wrapper.removeClass(parse_error_control_hide_class);
+            parse_error_control.html(
+                "<p>The text of the deal appears to be flipped.</p>",
+            );
         }
 
         that._solve_err_code = that._instance.do_solve(
