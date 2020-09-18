@@ -43,6 +43,21 @@ function _increment_move_indices(move_s) {
 
 const ENABLE_VALIDATION = true;
 
+let is_flipped: boolean = false;
+let flip_strings = new Map();
+const _global = window as any;
+_global._fc_solve_web_ui_flip = function _fc_solve_web_ui_flip() {
+    is_flipped = !is_flipped;
+    const key = is_flipped ? "true" : "false";
+    if (!flip_strings.has(key)) {
+        throw "no key";
+    }
+    const new_stdin_val = flip_strings.get(key);
+    const stdin = $("#stdin");
+    stdin.val(new_stdin_val);
+    stdin.trigger("change");
+    return;
+};
 class FC_Solve_UI {
     private _instance: w.FC_Solve = null;
     private _solve_err_code = null;
@@ -200,8 +215,12 @@ class FC_Solve_UI {
             $("#board_parse__wrap > h2").text("Board Input Parsing Warnings:");
             parse_error_wrapper.removeClass(parse_error_control_hide_class);
             parse_error_control.html(
-                "<p>The text of the deal appears to be flipped.</p>",
+                '<p>The input text of the deal appears to be flipped.</p><p><button class="flip" id="fcs_flip_deal" onclick="window._fc_solve_web_ui_flip()">⤢ Flip it.</button></p>',
             );
+            is_flipped = false;
+            flip_strings.set("false", that._calc_initial_board_string());
+            const true_flip_string = validate.flip().getBoardString();
+            flip_strings.set("true", true_flip_string);
         }
 
         that._solve_err_code = that._instance.do_solve(

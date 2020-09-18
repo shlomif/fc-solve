@@ -1408,16 +1408,16 @@ AH 7C 6D 8D TD 7H
         // TEST
         a.ok(result.checkIfFlipped(), "is flipped");
 
-        result.flip();
+        const flipped_object: BoardParseResult = result.flip();
 
         // TEST
-        a.notOk(result.checkIfFlipped(), "no longer flipped");
+        a.notOk(flipped_object.checkIfFlipped(), "no longer flipped");
 
         // TEST
-        a.deepEqual(result.columns.length, 8, "columns length");
+        a.deepEqual(flipped_object.columns.length, 8, "columns length");
         // TEST
         a.deepEqual(
-            result.columns[0].col.getArrOfStrs(),
+            flipped_object.columns[0].col.getArrOfStrs(),
             "JH 9C 5S KC 6S 2H AS".split(" "),
             "column 0 was parsed fine.",
         );

@@ -26,6 +26,14 @@ KC 2S QC 6C 4C 5H QS 8D
 AS 8C 3S 4H
 
 `;
+const non_flipped = `JH 9C 5S KC 6S 2H AS
+5D 3D 9S 2S 3C AD 8C
+8S 5C KD QC 3H 4D 3S
+7S AC 9H 6C QH KS 4H
+KH JD 7D 4C 8H 6H
+TS TC 4S 5H QD JS
+9D JC 2C QS TH 2D
+AH 7C 6D 8D TD 7H`;
 class Ops {
     constructor(
         public assert,
@@ -44,7 +52,16 @@ class Ops {
         return that.on_output_change(that, that.assert, that.done);
     }
 }
-const on_flip_stdin = (my_operations, assert, done) => {};
+const on_flip_stdin = (my_operations, assert, done) => {
+    const board: string = $("#stdin").val() as string;
+
+    assert.deepEqual(
+        board,
+        non_flipped.replace(/^/gms, ": ") + "\n",
+        "got the double-flipped text",
+    );
+    done();
+};
 const on_flip_output = (my_operations, assert, done) => {
     const board_parse__wrap = $("#board_parse__wrap");
 
@@ -53,6 +70,8 @@ const on_flip_output = (my_operations, assert, done) => {
         "Board Input Parsing Warnings:",
         "warnings",
     );
+    my_operations.on_stdin_change = on_flip_stdin;
+    $("#fcs_flip_deal").click();
     done();
 };
 const on_stdin_initial_layout = (my_operations, assert, done) => {
@@ -77,7 +96,7 @@ const on_change_initial_layout = (my_operations, assert, done) => {
 
     // TEST
     assert.deepEqual(sol, solution_for_deal_24__default, "solution was filled");
-    my_operations.on_stdin_change = on_flip_stdin;
+    my_operations.on_stdin_change = (a, b, c) => {};
     my_operations.on_output_change = on_flip_output;
     $("#stdin").val(flipped_deal);
     $("#run_do_solve").click();
@@ -87,9 +106,9 @@ const on_change_initial_layout = (my_operations, assert, done) => {
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(4);
+            assert.expect(5);
 
-            let done = assert.async(4);
+            let done = assert.async(5);
             let my_operations = new Ops(
                 assert,
                 done,

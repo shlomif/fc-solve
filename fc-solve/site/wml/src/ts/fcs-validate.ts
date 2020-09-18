@@ -895,12 +895,12 @@ export class BoardParseResult {
         }
         return true;
     }
-    public flip() {
+    public flip(): BoardParseResult {
         const that = this;
         if (!that.checkIfFlipped()) {
             throw "not flipped";
         }
-        let new_columns = [];
+        let new_columns: ColumnParseResult[] = [];
         for (let i = 0; i < 8; ++i) {
             new_columns.push(
                 fcs_js__column_from_string(
@@ -918,6 +918,10 @@ export class BoardParseResult {
                 ),
             );
         }
-        that.columns = new_columns;
+        return new BoardParseResult(
+            8,
+            4,
+            new_columns.map((col) => col.col.toString()).join(""),
+        );
     }
 }
