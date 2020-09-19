@@ -266,12 +266,7 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(ASMJS_STAMP)
 
 FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
-TYPINGS =
-
-TEST_FCS_VALID_BASENAME := web-fc-solve-tests--fcs-validate.js
-TEST_FCS_VALID_DEST = $(DEST_JS_DIR)/$(TEST_FCS_VALID_BASENAME)
-
-TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-chart--base.js fcs-validate.js $(TEST_FCS_VALID_BASENAME) fcs-base-ui.js find-fc-deal.js find-fc-deal-ui.js french-cards.js generic-tests-driver.js prange.js s2ints_js.js web-fc-solve.js web-fc-solve--expand-moves.js web-fc-solve--expand-moves--mega-test.js web-fc-solve-ui.js web-fcs-tests-strings.js web-fc-solve-tests.js web-fc-solve-tests--ui.js web-fcs-api-base.js
+TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-base-ui.js fcs-chart--base.js fcs-validate.js find-fc-deal-ui.js find-fc-deal.js french-cards.js generic-tests-driver.js prange.js s2ints_js.js web-fc-solve--expand-moves--mega-test.js web-fc-solve--expand-moves.js web-fc-solve-tests--fcs-validate.js web-fc-solve-tests--ui.js web-fc-solve-tests.js web-fc-solve-ui.js web-fc-solve.js web-fcs-api-base.js web-fcs-tests-strings.js
 
 TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
@@ -322,8 +317,6 @@ ts_chart_common1 = ./src/charts/dbm-solver-__int128-optimisation/jquery.flot.d.t
 $(TS_CHART_DEST) $(TS_CHART2_DEST): $(D)/%.js: src/%.ts
 	tsc --module amd --out $@ $(ts_chart_common1) $<
 	$(MULTI_YUI) -o $@ $@
-
-$(TEST_FCS_VALID_DEST): $(patsubst $(D)/js/%.js,src/ts/%.ts,$(FCS_VALID_DEST))
 
 FC_PRO_4FC_DUMPS = $(filter charts/fc-pro--4fc-intractable-deals--report/data/%.dump.txt,$(SRC_IMAGES))
 FC_PRO_4FC_TSVS = $(patsubst %.dump.txt,$(D)/%.tsv,$(FC_PRO_4FC_DUMPS))
