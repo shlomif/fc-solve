@@ -1,4 +1,4 @@
-import * as test_strings from "./web-fcs-tests-strings";
+import * as test_strings from "../web-fcs-tests-strings";
 
 const ms_deal_24 = `4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
