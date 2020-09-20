@@ -266,7 +266,7 @@ $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(ASMJS_STAMP)
 
 FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
-TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-base-ui.js fcs-chart--base.js fcs-validate.js find-fc-deal-ui.js find-fc-deal.js french-cards.js generic-tests-driver.js prange.js s2ints_js.js tests/fcs-validate.js tests/fcs-ui.js web-fc-solve--expand-moves--mega-test.js web-fc-solve--expand-moves.js web-fc-solve-tests.js web-fc-solve-ui.js web-fc-solve.js web-fcs-api-base.js web-fcs-tests-strings.js
+TYPESCRIPT_basenames = chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js fcs-base-ui.js fcs-chart--base.js fcs-validate.js find-fc-deal-ui.js find-fc-deal.js french-cards.js generic-tests-driver.js prange.js s2ints_js.js tests/fcs-core.js tests/fcs-validate.js tests/fcs-ui.js web-fc-solve--expand-moves--mega-test.js web-fc-solve--expand-moves.js web-fc-solve-ui.js web-fc-solve.js web-fcs-api-base.js web-fcs-tests-strings.js
 
 TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))

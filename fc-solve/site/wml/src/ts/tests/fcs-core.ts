@@ -4,13 +4,13 @@
     },
 };*/
 // import * as s2i from "./dist/fc_solve_find_index_s2ints.js";
-import * as s2i from "./s2ints_js";
-import Module from "./libfcs-wrap";
-import * as w from "./web-fc-solve";
-import * as deal_finder from "./find-fc-deal";
-import * as test_strings from "./web-fcs-tests-strings";
-import { perl_range } from "./prange";
-import { deal_ms_fc_board } from "./web-fcs-api-base";
+import * as s2i from "../s2ints_js";
+import Module from "../libfcs-wrap";
+import * as w from "../web-fc-solve";
+import * as deal_finder from "../find-fc-deal";
+import * as test_strings from "../web-fcs-tests-strings";
+import { perl_range } from "../prange";
+import { deal_ms_fc_board } from "../web-fcs-api-base";
 
 const FC_Solve = w.FC_Solve;
 const FC_Solve_init_wrappers_with_module = w.FC_Solve_init_wrappers_with_module;
