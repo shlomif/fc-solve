@@ -84,6 +84,7 @@
 /fc-solve/site/wml/lib/for-node/js/*.js
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver.wasm
+/fc-solve/site/wml/lib/for-node/js/tests/*.js
 /fc-solve/site/wml/lib/front-page-news.htmlish
 /fc-solve/site/wml/lib/games.htmlish
 /fc-solve/site/wml/lib/h_sections.tt2
@@ -102,6 +103,7 @@
 /fc-solve/site/wml/lib/msfreecell-note.htmlish
 /fc-solve/site/wml/lib/old-news.htmlish
 /fc-solve/site/wml/lib/out-babel/js/*.js
+/fc-solve/site/wml/lib/out-babel/js/tests/*.js
 /fc-solve/site/wml/lib/repos/Solitairey/
 /fc-solve/site/wml/lib/repos/rinutils-include/
 /fc-solve/site/wml/lib/sgml/

@@ -9,7 +9,7 @@ import {
     Foundations,
     ParseErrorType,
     suits__str_to_int,
-} from "./fcs-validate";
+} from "../fcs-validate";
 
 export function test_fcs_validate(qunit: QUnit) {
     qunit.module("FC_Solve.JavaScript.InputValidation");
