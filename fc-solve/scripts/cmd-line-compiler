@@ -15,22 +15,9 @@ EOF
     }
 }
 
-use Socket qw(:crlf);
 use Path::Tiny qw/ path /;
 use lib "$ENV{FCS_SRC_PATH}/t/lib";
 use FC_Solve::CmdLine::Expand ();
-
-sub _normalize_lf
-{
-    my ($s) = @_;
-    $s =~ s#$CRLF#$LF#g;
-    return $s;
-}
-
-sub _normalize_lf_list
-{
-    return [ map { _normalize_lf($_) } @{ shift @_ } ];
-}
 
 sub compile_cmd_line
 {
@@ -43,7 +30,7 @@ sub compile_cmd_line
         }
     );
 
-    my $expanded = _normalize_lf_list( $obj->argv() );
+    my $expanded = [ @{ $obj->argv() } ];
     my $out      = <<'EOF';
 #pragma once
 #define freecell_solver_user_set_soft_thread_name(st, n)

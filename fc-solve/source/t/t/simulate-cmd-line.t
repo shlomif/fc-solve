@@ -10,7 +10,7 @@ use Test::More tests => 6;
 use Test::Differences qw/ eq_or_diff /;
 use FC_Solve::Paths qw( normalize_lf );
 
-sub _normalize_lf_list
+sub _normalize_end_of_line_in_array_ref
 {
     return [ map { normalize_lf($_) } @{ shift @_ } ];
 }
@@ -29,8 +29,8 @@ sub check
         }
     );
 
-    eq_or_diff( _normalize_lf_list( $obj->argv() ),
-        _normalize_lf_list($want_argv), $msg, );
+    eq_or_diff( _normalize_end_of_line_in_array_ref( $obj->argv() ),
+        _normalize_end_of_line_in_array_ref($want_argv), $msg, );
 }
 
 # TEST
