@@ -869,27 +869,34 @@ export class BoardParseResult {
         }
         return ret;
     }
+    private _calc_filled(): ColumnParseResult[] {
+        const that = this;
+        return that.columns.filter((c) => {
+            return c.col.getLen() > 0;
+        });
+    }
     public checkIfFlipped(): boolean {
         const that = this;
         let i = 0;
+        const my_filled_columns = that._calc_filled();
         for (; i < 6; ++i) {
-            if (i >= that.columns.length) {
+            if (i >= my_filled_columns.length) {
                 return false;
             }
-            if (that.columns[i].getLen() != 8) {
+            if (my_filled_columns[i].getLen() != 8) {
                 return false;
             }
         }
         for (; i < 7; ++i) {
-            if (i >= that.columns.length) {
+            if (i >= my_filled_columns.length) {
                 return false;
             }
-            if (that.columns[i].getLen() != 4) {
+            if (my_filled_columns[i].getLen() != 4) {
                 return false;
             }
         }
-        for (; i < that.columns.length; ++i) {
-            if (that.columns[i].getLen() != 0) {
+        for (; i < my_filled_columns.length; ++i) {
+            if (my_filled_columns[i].getLen() != 0) {
                 return false;
             }
         }
@@ -900,6 +907,7 @@ export class BoardParseResult {
         if (!that.checkIfFlipped()) {
             throw "not flipped";
         }
+        const my_filled_columns = that._calc_filled();
         let new_columns: ColumnParseResult[] = [];
         for (let i = 0; i < 8; ++i) {
             new_columns.push(
@@ -908,7 +916,7 @@ export class BoardParseResult {
                     ": " +
                         perl_range(0, i < 4 ? 6 : 5)
                             .map((c) => {
-                                return that.columns[c].col
+                                return my_filled_columns[c].col
                                     .getCard(i)
                                     .toString();
                             })

@@ -16,6 +16,16 @@ const solution_for_deal_24__default__with_unicoded_suits =
 function _get_solution(): string {
     return $("#output").val() as string;
 }
+const flipped_deal__with_leading_line = `
+JH 5D 8S 7S KH TS 9D AH
+9C 3D 5C AC JD TC JC 7C
+5S 9S KD 9H 7D 4S 2C 6D
+KC 2S QC 6C 4C 5H QS 8D
+6S 3C 3H QH 8H QD TH TD
+2H AD 4D KS 6H JS 2D 7H
+AS 8C 3S 4H
+
+`;
 const flipped_deal = `# MS Freecell Deal no. 240 flipped
 JH 5D 8S 7S KH TS 9D AH
 9C 3D 5C AC JD TC JC 7C
@@ -52,6 +62,7 @@ class Ops {
         return that.on_output_change(that, that.assert, that.done);
     }
 }
+let count: number = 0;
 const on_flip_stdin = (my_operations, assert, done) => {
     const board: string = $("#stdin").val() as string;
 
@@ -61,6 +72,10 @@ const on_flip_stdin = (my_operations, assert, done) => {
         "got the double-flipped text",
     );
     done();
+    if (++count < 2) {
+        $("#stdin").val(flipped_deal__with_leading_line);
+        $("#run_do_solve").click();
+    }
 };
 const on_flip_output = (my_operations, assert, done) => {
     const board_parse__wrap = $("#board_parse__wrap");
@@ -106,9 +121,9 @@ const on_change_initial_layout = (my_operations, assert, done) => {
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(5);
+            assert.expect(7);
 
-            let done = assert.async(5);
+            let done = assert.async(7);
             let my_operations = new Ops(
                 assert,
                 done,
