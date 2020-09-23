@@ -63,11 +63,12 @@ class Ops {
     }
 }
 let count: number = 0;
+function _get_stdin(): string {
+    return $("#stdin").val() as string;
+}
 const on_flip_stdin = (my_operations, assert, done) => {
-    const board: string = $("#stdin").val() as string;
-
     assert.deepEqual(
-        board,
+        _get_stdin(),
         non_flipped.replace(/^/gms, ": ") + "\n",
         "got the double-flipped text",
     );
@@ -86,17 +87,22 @@ const on_flip_output = (my_operations, assert, done) => {
         "warnings",
     );
     my_operations.on_stdin_change = on_flip_stdin;
+    if (count > 0) {
+        assert.deepEqual(
+            _get_stdin(),
+            flipped_deal__with_leading_line,
+            "got the single-flipped leading lins text",
+        );
+    }
     $("#fcs_flip_deal").click();
     done();
 };
 const on_stdin_initial_layout = (my_operations, assert, done) => {
-    const board: string = $("#stdin").val() as string;
-    // alert(board);
-    // const board = $("#deal_number").text();
-    // assert.equal(board, "KC", "foo");
     // TEST
     assert.deepEqual(
-        board.replace(/^#[^\n]*\n/gms, "").replace(/^: /gms, ""),
+        _get_stdin()
+            .replace(/^#[^\n]*\n/gms, "")
+            .replace(/^: /gms, ""),
         ms_deal_24,
         "got the initial layout text",
     );
@@ -121,7 +127,7 @@ const on_change_initial_layout = (my_operations, assert, done) => {
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(7);
+            assert.expect(8);
 
             let done = assert.async(7);
             let my_operations = new Ops(
