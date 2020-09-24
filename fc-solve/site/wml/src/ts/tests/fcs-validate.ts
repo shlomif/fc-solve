@@ -11,7 +11,10 @@ import {
     suits__str_to_int,
 } from "../fcs-validate";
 
-import { get_flipped_deal_with_comment_prefix } from "./fcs-common-constants";
+import {
+    get_flipped_deal_with_comment_prefix,
+    get_non_flipped_deal,
+} from "./fcs-common-constants";
 
 export function test_fcs_validate(qunit: QUnit) {
     qunit.module("FC_Solve.JavaScript.InputValidation");
@@ -1386,16 +1389,7 @@ Foundations:
         },
     );
     qunit.test("verify_state BoardParseResult flipped", (a: Assert) => {
-        a.expect(4);
-        const non_flipped = `JH 9C 5S KC 6S 2H AS
-5D 3D 9S 2S 3C AD 8C
-8S 5C KD QC 3H 4D 3S
-7S AC 9H 6C QH KS 4H
-KH JD 7D 4C 8H 6H
-TS TC 4S 5H QD JS
-9D JC 2C QS TH 2D
-AH 7C 6D 8D TD 7H
-`;
+        a.expect(5);
         const result = new BoardParseResult(
             8,
             4,
@@ -1417,6 +1411,12 @@ AH 7C 6D 8D TD 7H
             flipped_object.columns[0].col.getArrOfStrs(),
             "JH 9C 5S KC 6S 2H AS".split(" "),
             "column 0 was parsed fine.",
+        );
+        // TEST
+        a.deepEqual(
+            flipped_object.getBoardString(),
+            get_non_flipped_deal(),
+            "non-flipped board string",
         );
     });
 }

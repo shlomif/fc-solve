@@ -12,9 +12,21 @@ const flipped_deal_with_comment_prefix =
 const flipped_deal_with_leading_empty_line =
     "\n" + flipped_deal_base_string + "\n\n";
 
+const non_flipped = `JH 9C 5S KC 6S 2H AS
+5D 3D 9S 2S 3C AD 8C
+8S 5C KD QC 3H 4D 3S
+7S AC 9H 6C QH KS 4H
+KH JD 7D 4C 8H 6H
+TS TC 4S 5H QD JS
+9D JC 2C QS TH 2D
+AH 7C 6D 8D TD 7H`;
+
 export function get_flipped_deal_with_comment_prefix(): string {
     return flipped_deal_with_comment_prefix;
 }
 export function get_flipped_deal_with_leading_empty_line(): string {
     return flipped_deal_with_leading_empty_line;
+}
+export function get_non_flipped_deal(): string {
+    return non_flipped.replace(/^/gms, ": ") + "\n";
 }
