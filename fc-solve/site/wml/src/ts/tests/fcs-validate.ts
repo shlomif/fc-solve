@@ -11,6 +11,8 @@ import {
     suits__str_to_int,
 } from "../fcs-validate";
 
+import { get_flipped_deal_with_comment_prefix } from "./fcs-common-constants";
+
 export function test_fcs_validate(qunit: QUnit) {
     qunit.module("FC_Solve.JavaScript.InputValidation");
 
@@ -1385,15 +1387,6 @@ Foundations:
     );
     qunit.test("verify_state BoardParseResult flipped", (a: Assert) => {
         a.expect(4);
-        const flipped_deal = `# MS Freecell Deal no. 240 flipped
-JH 5D 8S 7S KH TS 9D AH
-9C 3D 5C AC JD TC JC 7C
-5S 9S KD 9H 7D 4S 2C 6D
-KC 2S QC 6C 4C 5H QS 8D
-6S 3C 3H QH 8H QD TH TD
-2H AD 4D KS 6H JS 2D 7H
-AS 8C 3S 4H
-`;
         const non_flipped = `JH 9C 5S KC 6S 2H AS
 5D 3D 9S 2S 3C AD 8C
 8S 5C KD QC 3H 4D 3S
@@ -1403,7 +1396,11 @@ TS TC 4S 5H QD JS
 9D JC 2C QS TH 2D
 AH 7C 6D 8D TD 7H
 `;
-        const result = new BoardParseResult(8, 4, flipped_deal);
+        const result = new BoardParseResult(
+            8,
+            4,
+            get_flipped_deal_with_comment_prefix(),
+        );
 
         // TEST
         a.ok(result.checkIfFlipped(), "is flipped");

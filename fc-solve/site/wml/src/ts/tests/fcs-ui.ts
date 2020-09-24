@@ -1,5 +1,10 @@
 import * as test_strings from "../web-fcs-tests-strings";
 
+import {
+    get_flipped_deal_with_comment_prefix,
+    get_flipped_deal_with_leading_empty_line,
+} from "./fcs-common-constants";
+
 const ms_deal_24 = `4C 2C 9C 8C QS 4S 2H
 5H QH 3C AC 3H 4H QD
 QC 9S 6H 9H 3S KS 3D
@@ -16,26 +21,6 @@ const solution_for_deal_24__default__with_unicoded_suits =
 function _get_solution(): string {
     return $("#output").val() as string;
 }
-const flipped_deal__with_leading_line = `
-JH 5D 8S 7S KH TS 9D AH
-9C 3D 5C AC JD TC JC 7C
-5S 9S KD 9H 7D 4S 2C 6D
-KC 2S QC 6C 4C 5H QS 8D
-6S 3C 3H QH 8H QD TH TD
-2H AD 4D KS 6H JS 2D 7H
-AS 8C 3S 4H
-
-`;
-const flipped_deal = `# MS Freecell Deal no. 240 flipped
-JH 5D 8S 7S KH TS 9D AH
-9C 3D 5C AC JD TC JC 7C
-5S 9S KD 9H 7D 4S 2C 6D
-KC 2S QC 6C 4C 5H QS 8D
-6S 3C 3H QH 8H QD TH TD
-2H AD 4D KS 6H JS 2D 7H
-AS 8C 3S 4H
-
-`;
 const non_flipped = `JH 9C 5S KC 6S 2H AS
 5D 3D 9S 2S 3C AD 8C
 8S 5C KD QC 3H 4D 3S
@@ -74,7 +59,7 @@ const on_flip_stdin = (my_operations, assert, done) => {
     );
     done();
     if (++count < 2) {
-        $("#stdin").val(flipped_deal__with_leading_line);
+        $("#stdin").val(get_flipped_deal_with_leading_empty_line());
         $("#run_do_solve").click();
     }
 };
@@ -90,7 +75,7 @@ const on_flip_output = (my_operations, assert, done) => {
     if (count > 0) {
         assert.deepEqual(
             _get_stdin(),
-            flipped_deal__with_leading_line,
+            get_flipped_deal_with_leading_empty_line(),
             "got the single-flipped leading lins text",
         );
     }
@@ -119,7 +104,7 @@ const on_change_initial_layout = (my_operations, assert, done) => {
     assert.deepEqual(sol, solution_for_deal_24__default, "solution was filled");
     my_operations.on_stdin_change = (a, b, c) => {};
     my_operations.on_output_change = on_flip_output;
-    $("#stdin").val(flipped_deal);
+    $("#stdin").val(get_flipped_deal_with_comment_prefix());
     $("#run_do_solve").click();
 
     done();
