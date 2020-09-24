@@ -221,7 +221,7 @@ ENDIF ()
 SET (rinutils_dir "rinutils")
 IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils_dir}")
     EXECUTE_PROCESS(
-        COMMAND "git" "clone" "-b" "0.2.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
+        COMMAND "git" "clone" "-b" "0.6.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
         WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
     )
 ENDIF ()
