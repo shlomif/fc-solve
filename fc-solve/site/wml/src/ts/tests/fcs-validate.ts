@@ -13,6 +13,7 @@ import {
 
 import {
     get_flipped_deal_with_comment_prefix,
+    get_flipped_deal_with_leading_empty_line,
     get_non_flipped_deal,
 } from "./fcs-common-constants";
 
@@ -1388,35 +1389,46 @@ Foundations:
             );
         },
     );
-    qunit.test("verify_state BoardParseResult flipped", (a: Assert) => {
-        a.expect(5);
-        const result = new BoardParseResult(
-            8,
-            4,
-            get_flipped_deal_with_comment_prefix(),
+    function _flip_test(id_proto: string, initial_board_s: string) {
+        const id: string = id_proto + " ";
+        return qunit.test(
+            "verify_state BoardParseResult flipped",
+            (a: Assert) => {
+                a.expect(5);
+                const result = new BoardParseResult(8, 4, initial_board_s);
+
+                // TEST
+                a.ok(result.checkIfFlipped(), id + "is flipped");
+
+                const flipped_object: BoardParseResult = result.flip();
+
+                // TEST
+                a.notOk(
+                    flipped_object.checkIfFlipped(),
+                    id + "no longer flipped",
+                );
+
+                // TEST
+                a.deepEqual(
+                    flipped_object.columns.length,
+                    8,
+                    id + "columns length",
+                );
+                // TEST
+                a.deepEqual(
+                    flipped_object.columns[0].col.getArrOfStrs(),
+                    "JH 9C 5S KC 6S 2H AS".split(" "),
+                    id + "column 0 was parsed fine.",
+                );
+                // TEST
+                a.deepEqual(
+                    flipped_object.getBoardString(),
+                    get_non_flipped_deal(),
+                    id + "non-flipped board string",
+                );
+            },
         );
-
-        // TEST
-        a.ok(result.checkIfFlipped(), "is flipped");
-
-        const flipped_object: BoardParseResult = result.flip();
-
-        // TEST
-        a.notOk(flipped_object.checkIfFlipped(), "no longer flipped");
-
-        // TEST
-        a.deepEqual(flipped_object.columns.length, 8, "columns length");
-        // TEST
-        a.deepEqual(
-            flipped_object.columns[0].col.getArrOfStrs(),
-            "JH 9C 5S KC 6S 2H AS".split(" "),
-            "column 0 was parsed fine.",
-        );
-        // TEST
-        a.deepEqual(
-            flipped_object.getBoardString(),
-            get_non_flipped_deal(),
-            "non-flipped board string",
-        );
-    });
+    }
+    _flip_test("comment prefix", get_flipped_deal_with_comment_prefix());
+    _flip_test("empty line prefix", get_flipped_deal_with_leading_empty_line());
 }
