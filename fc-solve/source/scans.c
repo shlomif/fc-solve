@@ -8,8 +8,6 @@
 // scans.c - The code that relates to the various scans.
 // Currently Soft-DFS / Random-DFS, Best-FS and Breadth-FS are implemented.
 
-#include "scans.h"
-#include "meta_alloc.h"
 #include "move_stack_compact_alloc.h"
 
 #undef DEBUG

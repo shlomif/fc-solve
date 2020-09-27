@@ -7,11 +7,7 @@
 // Copyright (c) 2000 Shlomi Fish
 // lib.c - library interface functions of Freecell Solver.
 #include "instance_for_lib.h"
-#include "preset.h"
 #include "freecell-solver/fcs_user.h"
-#ifndef FCS_ZERO_FREECELLS_MODE
-#include "move_funcs_order.h"
-#endif
 #include "fcs_user_internal.h"
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
 #include "fc_pro_iface_pos.h"

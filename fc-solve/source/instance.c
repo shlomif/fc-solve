@@ -7,12 +7,6 @@
 // Copyright (c) 2000 Shlomi Fish
 // instance.c - instance/hard_thread/soft_thread functions for Freecell Solver.
 #include "instance_for_lib.h"
-#include "instance.h"
-#ifndef FCS_ZERO_FREECELLS_MODE
-#include "move_funcs_order.h"
-#endif
-#include "preset.h"
-#include "scans.h"
 
 // General use of this interface:
 // 1. fc_solve_alloc_instance()
