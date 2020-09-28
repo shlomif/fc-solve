@@ -16,7 +16,6 @@ extern "C" {
 #include "freecell-solver/fcs_enums.h"
 
 #include "freecell-solver/fcs_dllexport.h"
-#include "dbm_common.h"
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 #include "dbm_lru_cache.h"

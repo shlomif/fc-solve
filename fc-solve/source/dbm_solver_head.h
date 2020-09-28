@@ -23,7 +23,6 @@ extern "C" {
 #include "lock.h"
 #include "dbm_calc_derived.h"
 #include "delta_states_any.h"
-#include "dbm_common.h"
 #include "dbm_solver.h"
 #include "dbm_cache.h"
 
