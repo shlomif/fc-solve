@@ -55,7 +55,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
 
 #define pos (pos_proto.s)
     stack_i virtual_stack_len[8];
-    const uint_fast32_t num_back_end_moves = moves_seq->num_moves;
+    const_AUTO(num_back_end_moves, moves_seq->num_moves);
     var_PTR(next_move_ptr, moves_seq->moves - 1);
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
