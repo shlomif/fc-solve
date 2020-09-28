@@ -76,7 +76,7 @@ typedef struct
 
 typedef struct
 {
-    int num_moves;
+    uint_fast32_t num_moves;
     fcs_move_t *moves;
 } fcs_moves_sequence_t;
 

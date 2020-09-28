@@ -38,10 +38,13 @@ static inline bool fc_solve_fc_pro__can_be_moved(
 }
 
 DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
-    fcs_state_keyval_pair *const orig, const int num_freecells GCC_UNUSED,
+    fcs_state_keyval_pair *const orig, const int proto_num_freecells GCC_UNUSED,
     const fcs_moves_sequence_t *const moves_seq)
 {
     fcs_state_keyval_pair pos_proto;
+#if MAX_NUM_FREECELLS > 0
+    const stack_i num_freecells = (stack_i)proto_num_freecells;
+#endif
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     FCS_STATE__DUP_keyval_pair(pos_proto, *orig);
@@ -52,7 +55,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
 
 #define pos (pos_proto.s)
     stack_i virtual_stack_len[8];
-    const int num_back_end_moves = moves_seq->num_moves;
+    const uint_fast32_t num_back_end_moves = moves_seq->num_moves;
     var_PTR(next_move_ptr, moves_seq->moves - 1);
     ret->num_moves = 0;
     ret->moves = SMALLOC(ret->moves, MOVES_PROCESSED_GROW_BY);
@@ -62,11 +65,11 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         virtual_stack_len[i] = fcs_state_col_len(pos, i);
     }
 
-    for (int move_idx = 0; move_idx < num_back_end_moves; move_idx++)
+    for (uint_fast32_t move_idx = 0; move_idx < num_back_end_moves; ++move_idx)
     {
     // Move safe cards to the foundations
     loop_start:
-        for (int i = 0; i < 8; ++i)
+        for (stack_i i = 0; i < 8; ++i)
         {
             var_AUTO(col, fcs_state_get_col(pos, i));
             const_AUTO(l, fcs_col_len(col));
@@ -78,7 +81,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
             }
         }
 #if MAX_NUM_FREECELLS > 0
-        for (int j = 0; j < num_freecells; j++)
+        for (stack_i j = 0; j < num_freecells; j++)
         {
             const fcs_card card = fcs_freecell_card(pos, j);
             if (fcs_card_is_valid(card) &&
@@ -112,7 +115,7 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         case FCS_MOVE_TYPE_FREECELL_TO_FOUNDATION:
 #if MAX_NUM_FREECELLS > 0
         {
-            const int src = fcs_move_get_src_freecell(move);
+            const stack_i src = fcs_move_get_src_freecell(move);
             if (!fcs_freecell_is_empty(pos, src))
                 moves_processed_add_new_move(ret,
                     (fcs_extended_move){.move = move, .to_empty_stack = false});
@@ -143,8 +146,8 @@ DLLEXPORT void fc_solve_moves_processed_gen(fcs_moves_processed *const ret,
         case FCS_MOVE_TYPE_STACK_TO_FREECELL:
 #if MAX_NUM_FREECELLS > 0
         {
-            const int src = fcs_move_get_src_stack(move);
-            const int dest = fcs_move_get_dest_freecell(move);
+            const stack_i src = fcs_move_get_src_stack(move);
+            const stack_i dest = fcs_move_get_dest_freecell(move);
             assert(virtual_stack_len[src] > 0);
             var_AUTO(col, fcs_state_get_col(pos, src));
             assert(fcs_col_len(col) <= virtual_stack_len[src]);

@@ -3051,7 +3051,7 @@ static inline void calc_moves_seq(const fcs_move_stack *const solution_moves,
         ret_moves[i] = internal_move_to_user_move(*(--next_move_ptr));
     }
 
-    moves_seq->num_moves = (int)num_moves;
+    moves_seq->num_moves = num_moves;
     moves_seq->moves = ret_moves;
 }
 #endif
@@ -3081,7 +3081,7 @@ static void trace_flare_solution(fcs_user *const user, flare_item *const flare)
 #endif
 
 #ifdef FCS_WITH_FLARES
-static int get_flare_move_count(
+static uint_fast32_t get_flare_move_count(
     fcs_user *const user GCC_UNUSED, flare_item *const flare GCC_UNUSED)
 {
 #ifndef FCS_WITH_MOVES
@@ -3110,8 +3110,7 @@ static int get_flare_move_count(
                 &(flare->moves_seq));
         }
 
-        return (int)fc_solve_moves_processed_get_moves_left(
-            &(flare->fc_pro_moves));
+        return fc_solve_moves_processed_get_moves_left(&(flare->fc_pro_moves));
     }
 #endif
 
@@ -3625,7 +3624,7 @@ int DLLEXPORT freecell_solver_user_get_next_move(
         return 1;
     }
     flare_item *const flare = calc_moves_flare(user);
-    if (flare->next_move_idx == (uint_fast32_t)flare->moves_seq.num_moves)
+    if (flare->next_move_idx == flare->moves_seq.num_moves)
     {
         return 1;
     }
@@ -4078,7 +4077,7 @@ int DLLEXPORT freecell_solver_user_get_moves_left(
     if (user->ret_code == FCS_STATE_WAS_SOLVED)
     {
         const flare_item *const flare = calc_moves_flare(user);
-        return flare->moves_seq.num_moves - (int)flare->next_move_idx;
+        return (int)(flare->moves_seq.num_moves - flare->next_move_idx);
     }
     else
     {

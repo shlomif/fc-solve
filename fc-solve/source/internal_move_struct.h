@@ -65,7 +65,7 @@ typedef fcs_move_t fcs_internal_move;
 typedef struct
 {
     fcs_internal_move *moves;
-    size_t num_moves;
+    uint_fast32_t num_moves;
 } fcs_move_stack;
 
 #endif
