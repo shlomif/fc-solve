@@ -3,7 +3,7 @@ ignore = build/**/* asprintf-1.0/* patsolve/patsolve/Rejects/* patsolve/patsolve
 select = **/*.{c,cpp,h,hpp}
 
 [PerlTidy]
-argv = -ci=4 -bl -cti=0
+argv = -ci=4 -bl -cti=0 --character-encoding=none
 ignore = rinutils/**/* **/scripts/err-on-unbuilt-executable.pl **/{cmpdigest,valgrind,verify}--*.t
 select = **/*.{pl,pm,t}
 
