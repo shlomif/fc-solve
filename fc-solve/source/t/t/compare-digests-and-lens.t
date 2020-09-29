@@ -23,8 +23,8 @@ sub vtest
 # TEST
 vtest(
     {
-        id   => "375783-dbm-sol",
-        deal => 375_783,
+        id               => "375783-dbm-sol",
+        deal             => 375_783,
         complete_command =>
 "$^X @{[src_script('convert-dbm-fc-solver-solution-to-fc-solve-solution.pl')]} --freecells-num=2 @{[samp_sol('375783.dbm-sol')]}"
     },

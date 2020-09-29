@@ -8,7 +8,7 @@ use lib '../Games-Solitaire-Verify/lib';
 use Inline (
     C                 => 'DATA',
     CLEAN_AFTER_BUILD => 0,
-    INC =>
+    INC               =>
 "-I$ENV{FCS_PATH}/include -I$ENV{FCS_PATH} -I$ENV{FCS_SRC_PATH}/include -I$ENV{FCS_SRC_PATH} -I$ENV{FCS_SRC_PATH}/patsolve/patsolve/include -I$ENV{FCS_SRC_PATH}/patsolve/patsolve",
     LIBS    => "-L" . $ENV{FCS_PATH} . " -lfreecell-solver",
     CCFLAGS => "-std=gnu99",

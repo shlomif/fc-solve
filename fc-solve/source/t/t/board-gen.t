@@ -744,7 +744,7 @@ _test_find_index(
 _test_find_index(
     {
         blurb => "find-deal-index with -o",
-        cmd =>
+        cmd   =>
             [ '--ms', '-o', bin_board("24.find.txt"), bin_board("24.board") ],
         expected => q{},
     }

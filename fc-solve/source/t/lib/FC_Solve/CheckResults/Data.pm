@@ -231,8 +231,8 @@ __PACKAGE__->populate(
         },
         'qualified_seed_for_6240' => {
             args => {
-                id   => "qualified_seed_for_6240",
-                deal => 6240,
+                id    => "qualified_seed_for_6240",
+                deal  => 6240,
                 theme =>
                     [ "-l", "qs", "-fif", "5", "--flares-choice", "fcpro", ],
                 with_flares => 1,

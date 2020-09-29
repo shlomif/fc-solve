@@ -134,13 +134,13 @@ my $arr = [
     'range_parallel_solve_befs' => {
         prog => "freecell-solver-range-parallel-solve",
         argv => [qw(1 2 1 --method a-star)],
-        msg =>
+        msg  =>
             qq{range-parallel-solve for board #2 using the BeFS method valgrind}
     },
     'range_parallel_solve_l_as_3fc' => {
         prog => "freecell-solver-range-parallel-solve",
         argv => [qw(285 285 1 --freecells-num 3 -l as)],
-        msg =>
+        msg  =>
 qq{"range-parallel-solve --freecells-num 3 -l as" returned no errors}
     },
     'range_parallel_solve_l_gi' => {
@@ -175,7 +175,7 @@ qq{range-parallel-solve with a preset that ends with an option with a missing ar
     'range_parallel_solve__mixed_simple_simon' => {
         prog => "freecell-solver-range-parallel-solve",
         argv => [ "1", "1", "1", "-to", "01abc", ],
-        msg =>
+        msg  =>
             qq{range-parallel-solve with mixed Freecell and Simple Simon Tests}
     },
     'range_parallel_solve__next-flare' => {
@@ -199,7 +199,7 @@ qq{range-parallel-solve with a preset that ends with an option with a missing ar
     'range_parallel_solve__1__2__invalid_flares_plan_1' => {
         prog => "freecell-solver-range-parallel-solve",
         argv => [ qw(1 2 1 --flares-plan), q(Run:500@foo) ],
-        msg =>
+        msg  =>
 qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
     },
     'range_parallel_solve__sp_r_tf__not_leak' => {
@@ -213,19 +213,19 @@ qq{"range-parallel-solve --flares-plan Run:500\@foo" does not crash.}
     'range_parallel__invalid_print_step' => {
         prog => "freecell-solver-range-parallel-solve",
         argv => [qw(1 1 0 -l as)],
-        msg =>
+        msg  =>
             qq{Make sure that the program does not crash on a zero print_step},
     },
     'fc_pro_range_solve__invalid_print_step' => {
         prog => "freecell-solver-fc-pro-range-solve",
         argv => [qw(1 2 0 -l as)],
-        msg =>
+        msg  =>
 qq{Make sure that the fc-pro program does not crash on a zero print_step},
     },
     'board_gen__pi_make_ms__t_only' => {
         prog => "board_gen/pi-make-microsoft-freecell-board",
         argv => [qw(-t)],
-        msg =>
+        msg  =>
 qq{Board generation should not crash with only -t flag (pi-make-ms)},
     },
 ];

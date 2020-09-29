@@ -41,8 +41,8 @@ my $tree_contents = {
             'url'   => "js-fc-solve/",
             'subs'  => [
                 {
-                    'text' => "Solver",
-                    'url'  => "js-fc-solve/text/",
+                    'text'  => "Solver",
+                    'url'   => "js-fc-solve/text/",
                     'title' =>
                         "An online solver with graphical and text previews",
                 },
@@ -101,8 +101,8 @@ my $tree_contents = {
             'title' => "Information about contributing to Freecell Solver",
             subs    => [
                 {
-                    'text' => "To Do List",
-                    'url'  => "to-do.html",
+                    'text'  => "To Do List",
+                    'url'   => "to-do.html",
                     'title' =>
 "A List of Major Tasks that can be Performed by Intereseted Developers",
                 },
@@ -143,8 +143,8 @@ my $tree_contents = {
                     'url'  => "articles/how-we-benchmark/v1/",
                 },
                 {
-                    'text' => "4FC Deals Solvability Statistics",
-                    'url'  => "charts/fc-pro--4fc-deals-solvability--report/",
+                    'text'  => "4FC Deals Solvability Statistics",
+                    'url'   => "charts/fc-pro--4fc-deals-solvability--report/",
                     'title' =>
 "Report: The solvability statistics of the Freecell Pro 4-Freecells Deals",
                 },

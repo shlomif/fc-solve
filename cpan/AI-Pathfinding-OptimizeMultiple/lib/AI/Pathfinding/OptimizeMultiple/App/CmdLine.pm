@@ -39,7 +39,7 @@ has _should_rle_be_done   => ( isa => 'Bool',       is => 'rw' );
 has _should_trace_be_done => ( isa => 'Bool',       is => 'rw' );
 has _simulate_to          => ( isa => 'Maybe[Str]', is => 'rw' );
 has _start_board          => ( isa => 'Int',        is => 'rw' );
-has _stats_factors =>
+has _stats_factors        =>
     ( isa => 'HashRef', is => 'rw', default => sub { return +{}; }, );
 
 my $_component_re = qr/[A-Za-z][A-Za-z0-9_]*/;

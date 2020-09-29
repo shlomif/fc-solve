@@ -22,7 +22,7 @@ my $use_prove = $ENV{FCS_USE_TEST_RUN} ? 0 : 1;
 my $num_jobs  = $ENV{TEST_JOBS};
 my $KEY       = 'FC_SOLVE__TESTS_RERUNS_CACHE_DATA_DIR';
 my $cache     = CHI->new(
-    driver => 'File',
+    driver   => 'File',
     root_dir =>
         ( $ENV{$KEY} || ( ( $ENV{TMPDIR} || '/tmp' ) . '/fc-solve1temp' ) )
 );
