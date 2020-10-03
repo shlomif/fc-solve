@@ -188,6 +188,9 @@ class ColumnParseResult extends BaseResult {
     public getLen(): number {
         return this.col.getLen();
     }
+    public toString(): string {
+        return this.col.toString();
+    }
 }
 
 class StringParser {
@@ -865,14 +868,14 @@ export class BoardParseResult {
             ret += that.freecells.freecells.toString();
         }
         for (const col of that.columns) {
-            ret += col.col.toString();
+            ret += col.toString();
         }
         return ret;
     }
     private _calc_filled(): ColumnParseResult[] {
         const that = this;
         return that.columns.filter((c) => {
-            return c.col.getLen() > 0;
+            return c.getLen() > 0;
         });
     }
     public checkIfFlipped(): boolean {
@@ -929,7 +932,7 @@ export class BoardParseResult {
         return new BoardParseResult(
             8,
             4,
-            new_columns.map((col) => col.col.toString()).join(""),
+            new_columns.map((col) => col.toString()).join(""),
         );
     }
 }
