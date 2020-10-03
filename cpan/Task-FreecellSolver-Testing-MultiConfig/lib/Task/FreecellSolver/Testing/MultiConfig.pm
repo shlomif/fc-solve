@@ -30,7 +30,13 @@ the Freecell Solver multi-config test suite.
 
 =pkg HTML::Spelling::Site::Whitelist
 
+=pkg HTML::Toc
+
+=pkg HTML::TocGenerator
+
 =pkg Markdent
+
+=pkg Parallel::ForkManager::Segmented
 
 =pkg Perl::Critic::Freenode
 
@@ -40,11 +46,15 @@ the Freecell Solver multi-config test suite.
 
 =pkg Task::FreecellSolver::Testing
 
+=pkg Test::File::Find::CaseCollide
+
 =pkg Test::HTML::Recursive::DeprecatedTags
 
 =pkg Test::Perl::Critic::Policy
 
 =pkg Test::Pod::Coverage
+
+=pkg Text::WrapAsUtf8
 
 =head1 AUTHOR
 
