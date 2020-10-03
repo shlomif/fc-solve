@@ -3,6 +3,10 @@
 
 set -e -x
 
+# Try disabling on appveyor for now due to failures;
+# the code may no longer be needed.
+exit 0
+
 curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz
 curl -O http://repo.msys2.org/msys/x86_64/msys2-keyring-r21.b39fb11-1-any.pkg.tar.xz.sig
 
