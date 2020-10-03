@@ -41,14 +41,15 @@ if ( not -e "lib/jquery/jquery-phoenix/" )
         "git clone",
     );
 }
-if ( not -e "lib/repos/Solitairey" )
+my $GAME = "Solitairey";
+if ( not -e "lib/repos/$GAME" )
 {
     _exec(
         [
-"cd lib/repos && git clone https://github.com/foss-card-games/Solitairey.git"
+"cd lib/repos && git clone https://github.com/foss-card-games/${GAME}.git && cd $GAME && git checkout ba2ac84696204d212302cbd0052ce31f01212d4e"
 
         ],
-        "git clone",
+        "git clone of $GAME",
     );
 }
 _exec( [ $^X, 'bin/gen-web-fc-solve-tests--texts-dictionary.pl' ],
