@@ -30,6 +30,8 @@ the Freecell Solver multi-config test suite.
 
 =pkg HTML::Spelling::Site::Whitelist
 
+=pkg Markdent
+
 =pkg Perl::Critic::Freenode
 
 =pkg Pod::Weaver::PluginBundle::SHLOMIF
