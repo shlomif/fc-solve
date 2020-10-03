@@ -42,3 +42,6 @@ required:
         Perl::Critic: 0
         Perl::Tidy: 0
         XML::Feed: 0
+    py3_modules:
+        jinja2: 0
+        vnu_validator: 0
