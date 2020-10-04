@@ -46,7 +46,7 @@ if ( not -e "lib/repos/$GAME" )
 {
     _exec(
         [
-"cd lib/repos && git clone https://github.com/foss-card-games/${GAME}.git && cd $GAME && git checkout ba2ac84696204d212302cbd0052ce31f01212d4e"
+"cd lib/repos && git clone https://github.com/foss-card-games/${GAME}.git && cd $GAME && git checkout 9613873a42f14ba94b2c26e661ef17e800490f60"
 
         ],
         "git clone of $GAME",
