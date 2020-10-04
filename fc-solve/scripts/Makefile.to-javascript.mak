@@ -55,7 +55,7 @@ pos_by_rank__freecell.c \
 rate_state.c \
 
 
-C_FILES = main.c $(LIB_C_FILES)
+C_FILES = $(LIB_C_FILES)
 
 
 SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
@@ -111,7 +111,7 @@ RINUTILS_DIR ?= $(RINUTILS_BASE_DIR)/rinutils-include
 RINUTILS_INCLUDE_DIR := $(RINUTILS_DIR)/include
 RINUTILS_PIVOT = $(RINUTILS_INCLUDE_DIR)/rinutils/rinutils.h
 
-CFLAGS = $(OPT_FLAGS) -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINUTILS_INCLUDE_DIR) -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.7.2 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include -m32 -std=gnu99 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+CFLAGS = $(OPT_FLAGS) -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINUTILS_INCLUDE_DIR) -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.7.2 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include -m32 -std=gnu18 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
