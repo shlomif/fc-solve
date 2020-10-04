@@ -198,7 +198,17 @@ my $GENERATOR = ( ( delete $ENV{CMAKE_GEN} ) || 'make' );
 sub run_tests
 {
     my ( $idx, $blurb_rec, $args ) = @_;
-    my $IS_NINJA = ( $GENERATOR eq 'ninja' );
+    my $IS_NINJA             = ( $GENERATOR eq 'ninja' );
+    my $calc_generator_flags = sub {
+        my $flag = shift;
+        return [
+            (
+                $IS_NINJA
+                ? ( $flag, ucfirst($GENERATOR), )
+                : ()
+            ),
+        ];
+    };
 
     $args = +{ @TRAVIS_CI_SKIP_FAILING_TESTS, %$args };
     my $blurb_base_base = $blurb_rec->{blurb};
@@ -404,11 +414,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                             "Tatzer",
                             [
                                 '../scripts/Tatzer',
-                                (
-                                    $IS_NINJA
-                                    ? ( "--gen", ucfirst($GENERATOR) )
-                                    : ()
-                                ),
+                                @{ $calc_generator_flags->("--gen") },
                                 @$tatzer_args
                             ]
                         );
@@ -418,14 +424,8 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                         $run->(
                             "cmake",
                             [
-                                'cmake',
-                                (
-                                    $IS_NINJA
-                                    ? ( "-G", ucfirst($GENERATOR) )
-                                    : ()
-                                ),
-                                @$cmake_args,
-                                '../source'
+                                'cmake', @{ $calc_generator_flags->("-G") },
+                                @$cmake_args, '../source'
                             ]
                         );
                     }
