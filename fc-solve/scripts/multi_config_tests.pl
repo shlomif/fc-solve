@@ -193,9 +193,12 @@ sub _chdir_run
     return;
 }
 
+my $GENERATOR = ( ( delete $ENV{CMAKE_GEN} ) || 'make' );
+
 sub run_tests
 {
     my ( $idx, $blurb_rec, $args ) = @_;
+    my $IS_NINJA = ( $GENERATOR eq 'ninja' );
 
     $args = +{ @TRAVIS_CI_SKIP_FAILING_TESTS, %$args };
     my $blurb_base_base = $blurb_rec->{blurb};
@@ -398,16 +401,36 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                     if ($tatzer_args)
                     {
                         $run->(
-                            "Tatzer", [ '../scripts/Tatzer', @$tatzer_args ]
+                            "Tatzer",
+                            [
+                                '../scripts/Tatzer',
+                                (
+                                    $IS_NINJA
+                                    ? ( "--gen", ucfirst($GENERATOR) )
+                                    : ()
+                                ),
+                                @$tatzer_args
+                            ]
                         );
                     }
                     else
                     {
                         $run->(
-                            "cmake", [ 'cmake', @$cmake_args, '../source' ]
+                            "cmake",
+                            [
+                                'cmake',
+                                (
+                                    $IS_NINJA
+                                    ? ( "-G", ucfirst($GENERATOR) )
+                                    : ()
+                                ),
+                                @$cmake_args,
+                                '../source'
+                            ]
                         );
                     }
-                    $run->( "make", [ 'make', "-j$NUM_PROCESSORS" ] );
+                    my $builder = ( $IS_NINJA ? "ninja" : "make" );
+                    $run->( $builder, [ $builder, "-j$NUM_PROCESSORS" ] );
                     my $run_test = sub {
                         my ($cmd_line) = @_;
                         $run->(
