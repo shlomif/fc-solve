@@ -26,7 +26,7 @@ class MyTests(unittest.TestCase):
     def test_main(self):
         def _count_jquery_ui(root):
             return len(root.xpath(
-                ".//script[contains(@src, 'js/jquery-ui/jquery-ui.min.js')]"))
+                ".//script[contains(@src, 'js/jquery-ui/tabs.js')]"))
         input_fn = './dest/js-fc-solve/text/gui-tests.xhtml'
         root = _html_tree(input_fn)
         self.assertTrue(len(root.xpath(

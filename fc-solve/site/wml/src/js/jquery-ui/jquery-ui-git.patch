@@ -1,0 +1,14 @@
+diff --git a/Gruntfile.js b/Gruntfile.js
+index 75004eb58..0705b7b9f 100644
+--- a/Gruntfile.js
++++ b/Gruntfile.js
+@@ -20,6 +20,9 @@ var
+ 	uiFiles = coreFiles.map( function( file ) {
+ 		return "ui/" + file;
+ 	} ).concat( expandFiles( "ui/**/*.js" ).filter( function( file ) {
++        if (((file.match(/^ui\/widgets/)) && (file !== "ui/widgets/tabs.js"))) {
++            return false;
++        }
+ 		return coreFiles.indexOf( file.substring( 3 ) ) === -1;
+ 	} ) ),
+ 
