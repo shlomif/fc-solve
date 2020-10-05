@@ -27,7 +27,7 @@ ifeq ($(PROD),1)
     UPLOAD_URL = hostgator:domains/fc-solve/public_html
     STAGING_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(STAGING_URL_SUFFIX)
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
-    MULTI_YUI = uglifyjs --compress
+    MULTI_YUI = terser --compress
 else
     TEST_SITE_URL_SUFFIX := $(TESTING_ENV__URL_SUFFIX)
     MULTI_YUI = ./bin/cat-o
