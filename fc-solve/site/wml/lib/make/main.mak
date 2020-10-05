@@ -426,6 +426,9 @@ $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/loading
 $(D)/green.jpg: $(SOLITAIREY_REPO)/green.jpg
 	cp -f $< $@
 
+$(D)/green.webp: $(SOLITAIREY_REPO)/green.jpg
+	gm convert $< $@
+
 $(D)/layouts $(D)/dondorf: $(D)/%: $(SOLITAIREY_REPO)/%
 	rsync -a $</ $@
 
@@ -433,7 +436,7 @@ $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/js: %:
 	ln -sf ../../$(notdir $@) $@
 
 real_all: \
-	$(D)/dondorf $(D)/green.jpg $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/js $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/loading.gif $(D)/layouts
+	$(D)/dondorf $(D)/green.jpg $(D)/green.webp $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/dondorf $(Solver_Dest_Dir)/js $(Solver_Dest_Dir)/layouts $(Solver_Dest_Dir)/loading.gif $(D)/layouts
 
 SRC_pngs__BASE := $(filter $(D)/%.png,$(IMAGES))
 SRC_pngs__webps := $(SRC_pngs__BASE:%.png=%.webp)
