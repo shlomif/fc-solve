@@ -7,8 +7,11 @@
 {% endmacro %}
 {% macro jquery_ui_head_elements(enable_jquery_ui) %}
 {% if enable_jquery_ui %}
+    {{ load_javascript_srcs("jquery-ui/version.js") }}
+    {{ load_javascript_srcs("jquery-ui/keycode.js") }}
     {{ load_javascript_srcs("jquery-ui/unique-id.js") }}
     {{ load_javascript_srcs("jquery-ui/widget.js") }}
+    {{ load_javascript_srcs("jquery-ui/safe-active-element.js") }}
     {{ load_javascript_srcs("jquery-ui/tabs.js") }}
 <link rel="stylesheet" href="{{ base_path }}js/jquery-ui/jquery-ui.min.css" media="screen" />
 <link rel="stylesheet" href="{{ base_path }}jqui-override.css" media="screen" />
