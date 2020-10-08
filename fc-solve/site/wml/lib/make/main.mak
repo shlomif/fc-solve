@@ -27,7 +27,7 @@ ifeq ($(PROD),1)
     UPLOAD_URL = hostgator:domains/fc-solve/public_html
     STAGING_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(STAGING_URL_SUFFIX)
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
-    MULTI_YUI = terser --compress
+    MULTI_YUI = terser --compress --comments "false"
 else
     TEST_SITE_URL_SUFFIX := $(TESTING_ENV__URL_SUFFIX)
     MULTI_YUI = ./bin/cat-o
@@ -239,13 +239,29 @@ Phoenix_JS = $(BABEL_SRC_DIR)/$(Phoenix_JS_BASE)
 $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE)
 	coffee --compile -o $(BABEL_SRC_DIR) $<
 
+JQUIDESTDIR := $(D)/js/jquery-ui
+JQUISRCDIR := lib/jquery/jquery-ui-trimmed
+
+JQUERYUI_JS_SRCS = \
+	$(JQUISRCDIR)/keycode.js \
+	$(JQUISRCDIR)/safe-active-element.js \
+	$(JQUISRCDIR)/tabs.js \
+	$(JQUISRCDIR)/unique-id.js \
+	$(JQUISRCDIR)/version.js \
+	$(JQUISRCDIR)/widget.js
+
+JQUERYUI_JS_DESTS = $(patsubst $(JQUISRCDIR)/%.js,$(JQUIDESTDIR)/%.js,$(JQUERYUI_JS_SRCS))
+
+$(JQUERYUI_JS_DESTS): $(JQUIDESTDIR)/%.js: $(JQUISRCDIR)/%.js
+	$(MULTI_YUI) -o $@ $<
+
 $(Phoenix_JS_DEST): $(Phoenix_JS)
 	cp -f $< $@
 
 $(Phoenix_JS): $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE)
 	$(MULTI_YUI) -o $@ $<
 
-real_all: $(DEST_WEB_RAW_JS) $(Phoenix_JS_DEST)
+real_all: $(DEST_WEB_RAW_JS) $(Phoenix_JS_DEST) $(JQUERYUI_JS_DESTS)
 
 $(DEST_WEB_RAW_JS): $(DEST_JS_DIR)/%: lib/web-raw-js/%
 	$(MULTI_YUI) -o $@ $<
@@ -483,5 +499,7 @@ browser-tests: all
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
 
+MAKE_WITH_PROD = $(MAKE) PROD=$(PROD)
+
 smoke-tests:
-	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && $(MAKE) test && $(MAKE) upload_local && $(MAKE) browser-tests LOCAL_BROWSER_TESTS=1
+	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && $(MAKE_WITH_PROD) test && $(MAKE_WITH_PROD) upload_local && $(MAKE_WITH_PROD) browser-tests LOCAL_BROWSER_TESTS=1
