@@ -82,6 +82,8 @@ DEST_yui_min_Solitairey_JS = $(call dest_jsify,$(BASE_yui_min_Solitairey_JS))
 CSS_TARGETS = $(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
+DEST_JQUERY_UI_DIR := $(DEST_JS_DIR)/jquery-ui
+DEST_JQUERY_UI_MIN_JS = $(DEST_JQUERY_UI_DIR)/tot.js
 
 ifeq ($(SKIP_EMCC),1)
     LIBFREECELL_SOLVER_JS__NODE__TARGETS =
@@ -93,7 +95,7 @@ endif
 
 include lib/make/deps.mak
 
-real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_JQUERY_UI_MIN_JS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
 
 real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
 real_all: $(DEST_yui_min_Solitairey_JS)
@@ -254,6 +256,13 @@ WEB_FCS_UI_JS_SOURCES = $(call dest_jsify,web-fc-solve-ui.js)
 
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
+
+DEST_JQUERY_UI__SOURCES = $(addprefix $(DEST_JQUERY_UI_DIR)/,version.js keycode.js unique-id.js widget.js safe-active-element.js tabs.js)
+
+$(DEST_JQUERY_UI_MIN_JS): $(DEST_JQUERY_UI__SOURCES)
+	# browserify -s $(DEST_JQUERY_UI__SOURCES) -r -o $@
+	base="\$$.ui" ; browserify -s $(DEST_JQUERY_UI__SOURCES) -r "$$base" -o $@
+	$(MULTI_YUI) -o $@ $@
 
 $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
 	cp -f $< $@
