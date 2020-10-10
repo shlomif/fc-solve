@@ -28,7 +28,6 @@ which cookiecutter
 which git
 which make
 which perl
-which qunit-cli
 which unxz
 which xz
 perl -E 'use Task::FreecellSolver::Testing::MultiConfig v0.0.2; exit(0)'
