@@ -12,9 +12,10 @@ SKIP_EMCC ?= 0
 
 D = dest
 
+BASE_LOCAL_UPLOAD_PREFIX = /var/www/html/shlomif
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
-TEMP_UPLOAD_URL_LOCAL = /var/www/html/shlomif/fc-solve-temp/
+TEMP_UPLOAD_URL_LOCAL = $(BASE_LOCAL_UPLOAD_PREFIX)/fc-solve-temp/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
@@ -34,6 +35,18 @@ else
 
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
 endif
+
+ifeq ($(LOCAL_BROWSER_TESTS),0)
+
+    BROWSER_TESTS_URL__BASE = https://www.shlomifish.org/
+
+else
+
+    BROWSER_TESTS_URL__BASE = http://127.0.0.1:2400/
+    STAGING_UPLOAD_URL = $(BASE_LOCAL_UPLOAD_PREFIX)/$(STAGING_URL_SUFFIX)
+
+endif
+
 
 DEST_JS_DIR = $(D)/js
 BASE_FC_SOLVE_SOURCE_DIR := ../../source
@@ -392,7 +405,7 @@ upload: all
 	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 
 upload_staging: all
-	if test "$(PROD)" != "1"; then echo "use PROD=1\!" ; exit 1 ; else $(RSYNC) -a -l $(D)/ $(STAGING_UPLOAD_URL) ; fi
+	if test "$(PROD)" != "1"; then echo "use PROD=1\!" ; exit 1 ; else $(RSYNC) -a -l $(D)/ $(STAGING_UPLOAD_URL)/ ; fi
 
 upload_beta: all
 	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
@@ -401,7 +414,7 @@ upload_temp: all
 	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL)
 
 upload_local: all
-	$(RSYNC) -a $(D)/ /var/www/html/shlomif/fc-solve-temp
+	$(RSYNC) -a $(D)/ $(BASE_LOCAL_UPLOAD_PREFIX)/fc-solve-temp
 
 TEST_ENV = SKIP_EMCC="$(SKIP_EMCC)"
 TEST_TARGETS = Tests/*.{py,t}
@@ -483,23 +496,13 @@ $(PNG_FAVICON): $(FAVICON_SOURCE)
 
 real_all: $(FAVICON) $(PNG_FAVICON)
 
-ifeq ($(LOCAL_BROWSER_TESTS),0)
-
-    BROWSER_TESTS_URL__BASE = https://www.shlomifish.org/
-
-else
-
-    BROWSER_TESTS_URL__BASE = http://127.0.0.1:2400/
-
-endif
-
 BROWSER_TESTS_URL = $(BROWSER_TESTS_URL__BASE)$(TEST_SITE_URL_SUFFIX)
 
 browser-tests: all
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
 	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
 
-MAKE_WITH_PROD = $(MAKE) PROD=$(PROD)
+MAKE_WITH_PROD = $(MAKE) PROD=$(PROD) LOCAL_BROWSER_TESTS=$(LOCAL_BROWSER_TESTS)
 
 smoke-tests:
-	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && $(MAKE_WITH_PROD) test && $(MAKE_WITH_PROD) upload_local && $(MAKE_WITH_PROD) browser-tests LOCAL_BROWSER_TESTS=1
+	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && $(MAKE_WITH_PROD) test && $(MAKE_WITH_PROD) upload_local upload_staging && $(MAKE_WITH_PROD) browser-tests LOCAL_BROWSER_TESTS=1
