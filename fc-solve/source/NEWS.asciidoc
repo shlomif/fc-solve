@@ -4,6 +4,26 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-07-23
 :Revision: $Id$
 
+Version 6.2.0: (10-Oct-2020)
+----------------------------
+
+1. +CMakeLists.txt+ cleanups.
+
+2. Fixed broken links.
+
+3. Use +with+ for open calls in Python code:
+https://stackoverflow.com/questions/3012488/what-is-the-python-with-statement-designed-for
+
+4. Fix run time errors in +board_gen/transpose-freecell-board.py+ .
+
+5. Convert some integer types to +uint_fast32_t+.
+
+6. Add the +--should-skip-tests+ and +--custom-tests-suite+ flags to
++run-tests.pl+. This allow for fuzz-testing builds.
+
+7. Add +t/lib/FC_Solve/DeltaStater/FccFingerPrint.pm+ which is a prototype
+for a more compact representation of zero-freecells deals.
+
 Version 6.0.1: (23-Jul-2020)
 ----------------------------
 

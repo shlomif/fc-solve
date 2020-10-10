@@ -1233,10 +1233,12 @@ onqtam
 2G
 ABI
 DD-MMM-YYYY
+DeltaStater
 FCS_DEAL_ONLY_UP_TO_2G
 FCS_HARD_CODE_STATE_DEPTH_FIELD
 FCS_STATE_SOFT_SUSPEND_PROCESS
 FCS_ZERO_FREECELLS_MODE
+FccFingerPrint
 GNUInstallDirs
 Golf_
 MAX_NUM_DECKS
@@ -1284,9 +1286,11 @@ runtimes
 show_bug
 solution_moves
 sp
+stackoverflow
 summarizing_solver
 transpose-freecell-board
 uint16_t
+uint_fast32_t
 unrecognized
 userland
 usleep
@@ -1294,6 +1298,7 @@ v0
 win32
 xxHash
 xxh3
+zero-freecells
 
 ==== In: dest/docs/distro/README.html
 
