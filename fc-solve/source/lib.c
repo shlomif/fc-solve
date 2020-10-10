@@ -3394,10 +3394,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         const_AUTO(current_iterations_limit,
             (user->current_iterations_limit < 0
                     ? user->current_soft_iterations_limit
-                    : user->current_soft_iterations_limit < 0
-                          ? user->current_iterations_limit
-                          : min(user->current_iterations_limit,
-                                user->current_soft_iterations_limit)));
+                : user->current_soft_iterations_limit < 0
+                    ? user->current_iterations_limit
+                    : min(user->current_iterations_limit,
+                          user->current_soft_iterations_limit)));
         process_ret = set_upper_limit(
             user, instance_item, instance, current_iterations_limit
 #ifdef FCS_WITH_FLARES
