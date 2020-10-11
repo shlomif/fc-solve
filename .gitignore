@@ -89,6 +89,7 @@
 /fc-solve/site/wml/lib/games.htmlish
 /fc-solve/site/wml/lib/h_sections.tt2
 /fc-solve/site/wml/lib/jquery/jquery-phoenix/
+/fc-solve/site/wml/lib/jquery/jquery-ui-webpack/dist/tot.js
 /fc-solve/site/wml/lib/make/build-deps/build-deps.mak
 /fc-solve/site/wml/lib/make/build-deps/build-deps.stamp
 /fc-solve/site/wml/lib/make/deps.mak
