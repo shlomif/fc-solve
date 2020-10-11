@@ -254,6 +254,17 @@ $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE
 
 JQUIDESTDIR := $(D)/js/jquery-ui
 JQUISRCDIR := lib/jquery/jquery-ui-trimmed
+JQUI_webpack_dir := lib/jquery/jquery-ui-webpack/
+JQUI_webpack_dest_dir := lib/jquery/jquery-ui-webpack/dist
+JQUI_webpack_bn = tot.js
+JQUI_webpackintermediate_js := $(JQUI_webpack_dest_dir)/$(JQUI_webpack_bn)
+JQUI_webpack_dest := $(JQUIDESTDIR)/$(JQUI_webpack_bn)
+
+$(JQUI_webpack_dest): $(JQUI_webpackintermediate_js)
+	$(call COPY)
+
+$(JQUI_webpackintermediate_js):
+	webpack --config $(JQUI_webpack_dir)/webpack-config.js --mode production
 
 JQUERYUI_JS_SRCS = \
 	$(JQUISRCDIR)/keycode.js \
@@ -378,6 +389,7 @@ $(T2_SVGS__svgz): %.svgz: %.min.svg
 min_svgs: $(T2_SVGS__MIN) $(T2_SVGS__svgz)
 
 all_deps: $(FC_pro_all_TSVS)
+all_deps: $(JQUI_webpack_dest)
 
 real_all: all_deps min_svgs
 
