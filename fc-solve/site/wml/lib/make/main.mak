@@ -254,14 +254,14 @@ $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE
 
 JQUIDESTDIR := $(D)/js/jquery-ui
 JQUISRCDIR := lib/jquery/jquery-ui-trimmed
-JQUI_webpack_dir := lib/jquery/jquery-ui-webpack/
+JQUI_webpack_dir := lib/jquery/jquery-ui-webpack
 JQUI_webpack_dest_dir := lib/jquery/jquery-ui-webpack/dist
 JQUI_webpack_bn = tot.js
 JQUI_webpackintermediate_js := $(JQUI_webpack_dest_dir)/$(JQUI_webpack_bn)
 JQUI_webpack_dest := $(JQUIDESTDIR)/$(JQUI_webpack_bn)
 
 $(JQUI_webpack_dest): $(JQUI_webpackintermediate_js)
-	$(call COPY)
+	$(MULTI_YUI) -o $@ $<
 
 $(JQUI_webpackintermediate_js):
 	webpack --config $(JQUI_webpack_dir)/webpack-config.js --mode production
