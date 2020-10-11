@@ -58,6 +58,14 @@ my $tree_contents = {
                     'hide' => 1,
                     'skip' => 1,
                 },
+                {
+                    'text'  => "API Automated Tests",
+                    'url'   => "js-fc-solve/text/gui-tests.xhtml",
+                    'title' =>
+"Automated tests that can be run in the browser; intended for developers",
+                    'hide' => 1,
+                    'skip' => 1,
+                },
             ],
         },
         {
