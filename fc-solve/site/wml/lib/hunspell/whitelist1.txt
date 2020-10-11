@@ -1397,10 +1397,14 @@ pysolfc
 ==== In: dest/links.html
 
 GitLab
+Jörn
 Screencasts
 Solvitaire
+Zaefferer
 cffi
 gg
+webpack
+webpack-jquery-ui
 xxHash
 
 ==== In: dest/pysol/index.html
