@@ -12,7 +12,7 @@ SKIP_EMCC ?= 0
 
 D = dest
 
-BASE_LOCAL_UPLOAD_PREFIX = /var/www/html/shlomif
+BASE_LOCAL_UPLOAD_PREFIX := /var/www/html/shlomif
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
 TEMP_UPLOAD_URL_LOCAL = $(BASE_LOCAL_UPLOAD_PREFIX)/fc-solve-temp/
