@@ -36,8 +36,8 @@ my $tree_contents = {
             ],
         },
         {
-            'text'  => "Online (WWW) Demos",
-            'title' => "Try Freecell Solver in your browser!",
+            'text'  => "Online (web-based) Apps",
+            'title' => "Use Freecell Solver in your browser!",
             'url'   => "js-fc-solve/",
             'subs'  => [
                 {
@@ -49,6 +49,14 @@ my $tree_contents = {
                 {
                     'text' => "Find a deal’s number",
                     'url'  => "js-fc-solve/find-deal/",
+                },
+                {
+                    'text'  => "API Automated Tests",
+                    'url'   => "js-fc-solve/automated-tests/",
+                    'title' =>
+"Automated tests that can be run in the browser; intended for developers",
+                    'hide' => 1,
+                    'skip' => 1,
                 },
             ],
         },
