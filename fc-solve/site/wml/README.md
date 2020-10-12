@@ -5,7 +5,7 @@
 1. [Latemp](https://github.com/thewml/latemp) , python3
 and [Jinja2](http://jinja.pocoo.org/),
 [Website Meta Language](https://bitbucket.org/shlomif/website-meta-language) .
-2. [Emscripten](https://kripken.github.io/emscripten-site/)
+2. [Emscripten](https://emscripten.org/)
 3. [CMake](https://cmake.org/)
 4. [GNU Make](https://www.gnu.org/software/make/)
 5. Some [CPAN](http://metacpan.org/) Modules.
