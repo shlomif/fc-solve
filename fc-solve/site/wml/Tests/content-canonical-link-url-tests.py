@@ -22,6 +22,9 @@ def _count_link_rels(root, needle):
         ".//link[@rel='canonical' and @href='{}']".format(needle)))
 
 
+CANONICAL_URL = 'https://fc-solve.shlomifish.org/'
+
+
 class MyTests(unittest.TestCase):
     def test_main(self):
         input_fn = './dest/index.html'
@@ -29,7 +32,7 @@ class MyTests(unittest.TestCase):
         self.assertEqual(
             _count_link_rels(
                 root,
-                'https://fc-solve.shlomifish.org/'
+                CANONICAL_URL,
             ),
             1,
             'root link rel'
@@ -41,7 +44,7 @@ class MyTests(unittest.TestCase):
         self.assertEqual(
             _count_link_rels(
                 root,
-                'https://fc-solve.shlomifish.org/js-fc-solve/text/'
+                CANONICAL_URL + 'js-fc-solve/text/',
             ),
             1,
             'production js-fc-solve link rel')
