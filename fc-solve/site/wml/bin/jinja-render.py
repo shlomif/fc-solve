@@ -133,6 +133,7 @@ class="try_main">Use</span><br/>
                     '(\\A|/)index\\.(?:x)?html\\Z',
                     lambda m: m.group(1), fn
                 ),
+                canonical_base_url='https://fc-solve.shlomifish.org/',
                 host='fc-solve',
                 use_online_wrapper=use_online_wrapper,
                 solitairey='<a href="https://foss-card-games.github.io/' +
