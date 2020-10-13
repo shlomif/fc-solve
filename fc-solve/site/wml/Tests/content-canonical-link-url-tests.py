@@ -38,6 +38,18 @@ class MyTests(unittest.TestCase):
             'root link rel'
         )
 
+    def test_non_dir_path(self):
+        input_fn = './dest/links.html'
+        root = _html_tree(input_fn)
+        self.assertEqual(
+            _count_link_rels(
+                root,
+                CANONICAL_URL + "links.html",
+            ),
+            1,
+            'non-dir path test',
+        )
+
     def test_production(self):
         input_fn = './dest-prod/js-fc-solve/text/index.html'
         root = _html_tree(input_fn)
