@@ -39,7 +39,7 @@
     "qunit": "^2.11.2",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
-    "rollup": "^2.28.1",
+    "rollup": "^2.28.2",
     "sass": "^1.26.11",
     "tap": "^14.10.8",
     "tar": "^6.0.5",
