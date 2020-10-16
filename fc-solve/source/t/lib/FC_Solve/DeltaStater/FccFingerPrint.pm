@@ -124,16 +124,16 @@ sub finalize
         $rec->_add_state_pair( [@_] );
         return;
     };
-    $_add->( 'LOWEST_CARD',    'LOWEST_CARD' );
-    $_add->( 'LOWEST_CARD',    'ABOVE_FREECELL' );
-    $_add->( 'ABOVE_FREECELL', 'LOWEST_CARD' );
+    $_add->( 'LEFTMOST_CARD',  'LEFTMOST_CARD' );
+    $_add->( 'LEFTMOST_CARD',  'ABOVE_FREECELL' );
+    $_add->( 'ABOVE_FREECELL', 'LEFTMOST_CARD' );
     $_add->( 'ABOVE_FREECELL', 'ABOVE_FREECELL' );
-    $_add->( 'LOWEST_CARD',    'PARENT_0' );
-    $_add->( 'LOWEST_CARD',    'PARENT_1' );
+    $_add->( 'LEFTMOST_CARD',  'PARENT_0' );
+    $_add->( 'LEFTMOST_CARD',  'PARENT_1' );
     $_add->( 'ABOVE_FREECELL', 'PARENT_0' );
     $_add->( 'ABOVE_FREECELL', 'PARENT_1' );
-    $_add->( 'PARENT_0',       'LOWEST_CARD' );
-    $_add->( 'PARENT_1',       'LOWEST_CARD' );
+    $_add->( 'PARENT_0',       'LEFTMOST_CARD' );
+    $_add->( 'PARENT_1',       'LEFTMOST_CARD' );
     $_add->( 'PARENT_0',       'ABOVE_FREECELL' );
     $_add->( 'PARENT_1',       'ABOVE_FREECELL' );
     $_add->( 'PARENT_0',       'PARENT_1' );
@@ -160,7 +160,7 @@ sub _string_to_int
           $_ eq 'ABOVE_FREECELL' ? $OPT_FREECELL
         : $_ eq 'PARENT_0'       ? $OPT_PARENT_SUIT_MOD_IS_0
         : $_ eq 'PARENT_1'       ? $OPT_PARENT_SUIT_MOD_IS_1
-        : $_ eq 'LOWEST_CARD'    ? $OPT_TOPMOST
+        : $_ eq 'LEFTMOST_CARD'  ? $OPT_TOPMOST
         :                          do { die $_ };
 }
 
@@ -183,7 +183,7 @@ my $zero_rec = FC_Solve::DeltaStater::FccFingerPrint::StatesRecord->new(
     { does_have_zero_freecells => 1 } );
 foreach my $rec ( $positive_rec, $zero_rec )
 {
-    foreach my $state (qw/ LOWEST_CARD ABOVE_FREECELL PARENT_0 PARENT_1 /)
+    foreach my $state (qw/ LEFTMOST_CARD ABOVE_FREECELL PARENT_0 PARENT_1 /)
     {
         if (
             not(    $rec->does_have_zero_freecells()
@@ -377,7 +377,7 @@ sub _calc_encoded_OptRecord
             {
                 fingerprint_state => $ABOVE_PARENT_CARD_OR_EMPTY_SPACE,
                 sub_state         => _assert_def(
-                    $variant_states->single_card_states()->{'LOWEST_CARD'}
+                    $variant_states->single_card_states()->{'LEFTMOST_CARD'}
                 ),
             }
         );
