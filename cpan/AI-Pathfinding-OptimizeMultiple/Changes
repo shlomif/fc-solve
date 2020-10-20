@@ -1,3 +1,8 @@
+0.0.16      2020-10-20
+    - dist.ini / weaver.ini / .tidyallrc / etc. cleanup
+        - Move to @SHLOMIF
+        - Inspired by Lady_Aleena.
+
 v0.0.15     2017-05-01
     - Skip adding ~$ files to the MANIFEST.
         - See https://rt.cpan.org/Ticket/Display.html?id=121485 .
