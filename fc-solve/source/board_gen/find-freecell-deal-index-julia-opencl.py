@@ -75,14 +75,38 @@ def find_ret(ints):
 #define CL_TARGET_OPENCL_VERSION 120
 #include "ocl_boiler.h"
 
-size_t gws_align_init;
-size_t gws_align_sum;
+static size_t gws_align_init;
+static size_t gws_align_sum;
 
-cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
+static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
+        cl_mem r_buff, cl_int nels)
+{{
+        const size_t gws[] = {{ round_mul_up(((size_t)nels),
+            gws_align_init) }};
+        printf("init gws: %d | %zu = %zu\\n", nels, gws_align_init, gws[0]);
+        cl_event vecinit_evt;
+        cl_int err;
+
+        cl_uint i = 0;
+        err = clSetKernelArg(vecinit_k, i++, sizeof(r_buff), &r_buff);
+        ocl_check(err, "set vecinit arg", i-1);
+        err = clSetKernelArg(vecinit_k, i++, sizeof(nels), &nels);
+        ocl_check(err, "set vecinit arg", i-1);
+
+        err = clEnqueueNDRangeKernel(que, vecinit_k, 1,
+                NULL, gws, NULL,
+                0, NULL, &vecinit_evt);
+
+        ocl_check(err, "enqueue vecinit");
+
+        return vecinit_evt;
+}}
+
+static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_mem i_buff, cl_mem r_buff, cl_int nels,
         cl_event init_evt)
 {{
-        const size_t gws[] = {{ round_mul_up(nels, gws_align_sum) }};
+        const size_t gws[] = {{ round_mul_up(((size_t)nels), gws_align_sum) }};
         printf("sum gws: %d | %zu = %zu\\n", nels, gws_align_sum, gws[0]);
         cl_event vecsum_evt;
         cl_int err;
@@ -104,7 +128,12 @@ cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         return vecsum_evt;
 }}
 
-int main(int argc, char *argv[])
+int main(
+        #if 0
+int argc, char *argv[]
+        #else
+        #endif
+)
 {{
 #if 0
         if (argc <= 1) {{
@@ -157,6 +186,7 @@ while (! is_right)
 {{
     // queue(k, size(r), nothing, r_buff, i_buff)
     cl_event init_evt, sum_evt, read_evt;
+    init_evt = vecinit(vecinit_k, que, r_buff, nels);
     sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
 
     #if 0
@@ -176,15 +206,16 @@ while (! is_right)
 
         clWaitForEvents(1, &read_evt);
 
-for(cl_int myiterint=0;myiterint < bufsize; ++myiterint)
+for(cl_int myiterint=0;myiterint < nels; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == {first_int})
         {{
             is_right = true;
-            int rr = r_buff_arr[myiterint];
+            cl_int rr = r_buff_arr[myiterint];
             for (int n= 48; n >=2; --n)
             {{
-                rr = ((rr * 214013 + 2531011) & 0xFFFFFFFF);
+                rr = ((rr * ((cl_int)214013) +
+                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
                 {{
                     is_right = false;
@@ -193,14 +224,18 @@ for(cl_int myiterint=0;myiterint < bufsize; ++myiterint)
             }}
             if ( is_right)
             {{
-                printf("%ld\\n", mystart+myiterint);
+                printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
                 break;
             }}
         }}
     }}
 
     mystart += bufsize;
+    #if 0
     if (mystart > {limit})
+    #else
+    if (mystart < 0)
+    #endif
     {{
         break;
     }}
