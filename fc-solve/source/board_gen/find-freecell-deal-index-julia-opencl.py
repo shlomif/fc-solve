@@ -55,6 +55,18 @@ def find_ret(ints):
     }}'''))
     with open("test.c", "wt") as f:
         f.write(_myformat('''
+/*
+    Code based on
+    https://www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/
+    under CC0 / Public Domain.
+
+    Also see:
+    https://www.dmi.unict.it/bilotta/gpgpu/libro/gpu-programming.html
+    by Giuseppe Bilotta.
+
+    Thanks!
+
+*/
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
