@@ -55,21 +55,30 @@ def find_ret(ints):
     }}'''))
     with open("test.c", "wt") as f:
         f.write(_myformat('''
+#include <stdbool.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <time.h>
+
+#define CL_TARGET_OPENCL_VERSION 120
+#include "ocl_boiler.h"
+
+size_t gws_align_init;
+size_t gws_align_sum;
+
 cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
-        cl_mem d_vsum, cl_mem d_v1, cl_mem d_v2, cl_int nels,
+        cl_mem i_buff, cl_mem r_buff, cl_int nels,
         cl_event init_evt)
 {{
-        const size_t gws[] = { round_mul_up(nels, gws_align_sum) };
-        printf("sum gws: %d | %zu = %zu\n", nels, gws_align_sum, gws[0]);
+        const size_t gws[] = {{ round_mul_up(nels, gws_align_sum) }};
+        printf("sum gws: %d | %zu = %zu\\n", nels, gws_align_sum, gws[0]);
         cl_event vecsum_evt;
         cl_int err;
 
         cl_uint i = 0;
-        err = clSetKernelArg(vecsum_k, i++, sizeof(d_vsum), &d_vsum);
+        err = clSetKernelArg(vecsum_k, i++, sizeof(i_buff), &i_buff);
         ocl_check(err, "set vecsum arg", i-1);
-        err = clSetKernelArg(vecsum_k, i++, sizeof(d_v1), &d_v1);
-        ocl_check(err, "set vecsum arg", i-1);
-        err = clSetKernelArg(vecsum_k, i++, sizeof(d_v2), &d_v2);
+        err = clSetKernelArg(vecsum_k, i++, sizeof(r_buff), &r_buff);
         ocl_check(err, "set vecsum arg", i-1);
         err = clSetKernelArg(vecsum_k, i++, sizeof(nels), &nels);
         ocl_check(err, "set vecsum arg", i-1);
@@ -87,7 +96,7 @@ int main(int argc, char *argv[])
 {{
 #if 0
         if (argc <= 1) {{
-                fprintf(stderr, "specify number of elements\n");
+                fprintf(stderr, "specify number of elements\\n");
                 exit(1);
         }}
         const int nels = atoi(argv[1]);
@@ -125,44 +134,67 @@ r_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE | CL_MEM_HOST_NO_ACCESS,
                 bufsize, NULL,
                         &err);
-        ocl_check(err, "create buffer d_v1");
+        ocl_check(err, "create buffer r_buff");
 i_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE | CL_MEM_HOST_NO_ACCESS,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
+        const cl_int nels = bufsize;
 while (! is_right)
 {{
-    queue(k, size(r), nothing, r_buff, i_buff)
-    sum_evt = vecsum(vecsum_k, que, d_vsum, d_v1, d_v2, nels, init_evt);
+    // queue(k, size(r), nothing, r_buff, i_buff)
+    cl_event init_evt, sum_evt, read_evt;
+    sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
 
+    #if 0
+    r = cl.read(queue, r_buff);
+    i = cl.read(queue, i_buff);
+    #endif
+        cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+                CL_MAP_READ,
+                0, bufsize,
+                1, &sum_evt, &read_evt, &err);
 
-    r = cl.read(queue, r_buff)
-    i = cl.read(queue, i_buff)
+        clWaitForEvents(1, &read_evt);
+        cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+                CL_MAP_READ,
+                0, bufsize,
+                1, &sum_evt, &read_evt, &err);
 
-    for myiterint in 1:bufsize
-        if i[myiterint] == {first_int}
-            global is_right = true
-            rr = r[myiterint]
-            for n in 48:-1:2
-                rr = ((rr * 214013 + 2531011) & 0xFFFFFFFF)
+        clWaitForEvents(1, &read_evt);
+
+for(cl_int myiterint=0;myiterint < bufsize; ++myiterint)
+{{
+        if (i_buff_arr[myiterint] == {first_int})
+        {{
+            is_right = true;
+            int rr = r_buff_arr[myiterint];
+            for (int n= 48; n >=2; --n)
+            {{
+                rr = ((rr * 214013 + 2531011) & 0xFFFFFFFF);
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
-                    global is_right = false
-                    break
-                end
-            end
-            if is_right
-                @show mystart+myiterint-1
-                break
-            end
-        end
-    end
+                {{
+                    is_right = false;
+                    break;
+                }}
+            }}
+            if ( is_right)
+            {{
+                printf("%ld\\n", mystart+myiterint);
+                break;
+            }}
+        }}
+    }}
 
-    global mystart += bufsize
-    if mystart > {limit}
-        break
-    end
-end
+    mystart += bufsize;
+    if (mystart > {limit})
+    {{
+        break;
+    }}
+}}
+return 0;
+}}
 '''))
     with open("test.jl", "wt") as f:
         f.write(_myformat('''
