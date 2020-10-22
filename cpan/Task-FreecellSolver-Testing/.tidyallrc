@@ -1,0 +1,10 @@
+[PerlCritic]
+argv =
+select = {t,lib,scripts}/**/*.{pl,pm,t} {t,lib,scripts}/*.{pl,pm,t}
+
+[PerlTidy]
+argv = -ci=4 -bl -cti=0 --character-encoding=none
+select = {t,lib,scripts}/**/*.{pl,pm,t} {t,lib,scripts}/*.{pl,pm,t}
+
+[TestCount]
+select = t/*.t
