@@ -1,5 +1,9 @@
 Revision history for Task-FreecellSolver-Testing
 
+0.0.12      2020-10-22
+    - Avoid stale POD
+        - Inspired by Lady_Aleena.
+
 v0.0.11     2017-04-25
         - Add Test::Code::TidyAll .
 

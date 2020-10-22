@@ -3,7 +3,7 @@ package Task::FreecellSolver::Testing;
 use warnings;
 use strict;
 
-use 5.012;
+use 5.014;
 
 =head1 NAME
 
