@@ -13,6 +13,9 @@ CURRENT TASKS:
       * E.g "fc-solve --freecells-num 0"
       * Fix.
       @ Added [Tue 2019-08-20]
+    - A solver with a verified mathematical/logical proof
+      * https://en.wikipedia.org/wiki/Coq
+      @ Added [Mon 2020-10-26]
 
 LONG TERM:
     - Try to see if the 3 freecells limit issue can be reproduced and
