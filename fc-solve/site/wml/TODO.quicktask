@@ -14,6 +14,7 @@ CURRENT TASKS:
       * Fix.
       @ Added [Tue 2019-08-20]
     - A solver with a verified mathematical/logical proof
+      * Add to https://fc-solve.shlomifish.org/to-do.html
       * https://en.wikipedia.org/wiki/Coq
       @ Added [Mon 2020-10-26]
 
@@ -21,6 +22,12 @@ LONG TERM:
     - Try to see if the 3 freecells limit issue can be reproduced and
       investigated.
       @ Added [Tue 2020-09-15]
+    - Add web UIs for more Patience/Solitaire solvers:
+      * https://github.com/thecharlieblake/Solvitaire
+      * https://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/
+      * https://github.com/ShootMe/Klondike-Solver
+      * https://github.com/shlomif/shirl-hart-freecell-solver
+      @ Added [Tue 2020-10-27]
 
 COMPLETED TASKS:
     - Write better documentation of the boards/layouts format with examples.
