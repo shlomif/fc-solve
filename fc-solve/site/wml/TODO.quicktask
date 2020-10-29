@@ -13,10 +13,6 @@ CURRENT TASKS:
       * E.g "fc-solve --freecells-num 0"
       * Fix.
       @ Added [Tue 2019-08-20]
-    - A solver with a verified mathematical/logical proof
-      * Add to https://fc-solve.shlomifish.org/to-do.html
-      * https://en.wikipedia.org/wiki/Coq
-      @ Added [Mon 2020-10-26]
 
 LONG TERM:
     - Try to see if the 3 freecells limit issue can be reproduced and
@@ -189,6 +185,11 @@ COMPLETED TASKS:
         @ DONE [Tue 2020-09-15]
       * With a "Default" no-op option.
       @ Added [Tue 2019-08-20]
+    - A solver with a verified mathematical/logical proof
+        @ DONE [Thu 2020-10-29]
+      * Add to https://fc-solve.shlomifish.org/to-do.html
+      * https://en.wikipedia.org/wiki/Coq
+      @ Added [Mon 2020-10-26]
 
 
 
