@@ -1387,6 +1387,7 @@ transcrypt
 ==== In: dest/js-fc-solve/text/index.html
 
 10's
+CLI
 Der
 Free_and_open-source_software
 Redeal
