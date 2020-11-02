@@ -952,7 +952,7 @@ const lax_card_three_matches = new RegExp(
         lax_card_with_spaces_re +
         ".*?" +
         lax_card_with_spaces_re,
-    "ms",
+    "ims",
 );
 export function determine_if_string_is_board_like(s: string): boolean {
     return lax_card_three_matches.test(s);
