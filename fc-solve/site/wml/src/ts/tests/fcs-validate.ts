@@ -9,6 +9,7 @@ import {
     Foundations,
     ParseErrorType,
     suits__str_to_int,
+    determine_if_string_is_board_like,
 } from "../fcs-validate";
 
 import {
@@ -1431,4 +1432,15 @@ Foundations:
     }
     _flip_test("comment prefix", get_flipped_deal_with_comment_prefix());
     _flip_test("empty line prefix", get_flipped_deal_with_leading_empty_line());
+    qunit.test(
+        "verify_state determine_if_string_is_board_like",
+        (a: Assert) => {
+            a.expect(1);
+            const input = `3C 2S KH`;
+            const result = determine_if_string_is_board_like(input);
+
+            // TEST
+            a.ok(result, "determine_if_string_is_board_like simple");
+        },
+    );
 }

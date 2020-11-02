@@ -936,3 +936,28 @@ export class BoardParseResult {
         );
     }
 }
+const lax_card_rank_re = "(?:(?:" + rank_re + ")|10|[01])";
+const lax_card_re =
+    "(?:(?:" +
+    lax_card_rank_re +
+    suit_re +
+    ")|(?:" +
+    suit_re +
+    lax_card_rank_re +
+    "))";
+const lax_card_with_spaces_re = "(?:(?:\\s|^)" + lax_card_re + "(?=(?:\\s|$)))";
+const lax_card_three_matches = new RegExp(
+    lax_card_with_spaces_re +
+        ".*?" +
+        lax_card_with_spaces_re +
+        ".*?" +
+        lax_card_with_spaces_re,
+    "ms",
+);
+export function determine_if_string_is_board_like(s: string): boolean {
+    return lax_card_three_matches.test(s);
+    /*
+    const ret = lax_card_with_spaces_re.exec(s);
+    console.log(ret);
+    return ret.length >= 3;*/
+}
