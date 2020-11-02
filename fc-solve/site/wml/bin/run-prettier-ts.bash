@@ -1,2 +1,2 @@
 #!/usr/bin/env bash
-prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/js/*.ts
+prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/{**/*.ts,*.ts}

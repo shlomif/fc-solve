@@ -1435,7 +1435,7 @@ Foundations:
     qunit.test(
         "verify_state determine_if_string_is_board_like",
         (a: Assert) => {
-            a.expect(3);
+            a.expect(4);
             {
                 const input = `3C 2S KH`;
                 const result = determine_if_string_is_board_like(input);
@@ -1456,6 +1456,13 @@ Foundations:
 
                 // TEST
                 a.notOk(result, "determine_if_string_is_board_like negative");
+            }
+            {
+                const input = `3c 2s kh`;
+                const result = determine_if_string_is_board_like(input);
+
+                // TEST
+                a.ok(result, "determine_if_string_is_board_like lowercase");
             }
         },
     );
