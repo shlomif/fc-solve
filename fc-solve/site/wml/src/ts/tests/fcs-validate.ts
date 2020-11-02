@@ -1435,12 +1435,21 @@ Foundations:
     qunit.test(
         "verify_state determine_if_string_is_board_like",
         (a: Assert) => {
-            a.expect(1);
-            const input = `3C 2S KH`;
-            const result = determine_if_string_is_board_like(input);
+            a.expect(2);
+            {
+                const input = `3C 2S KH`;
+                const result = determine_if_string_is_board_like(input);
 
-            // TEST
-            a.ok(result, "determine_if_string_is_board_like simple");
+                // TEST
+                a.ok(result, "determine_if_string_is_board_like simple");
+            }
+            {
+                const input = `3C\nS2\n10H\n`;
+                const result = determine_if_string_is_board_like(input);
+
+                // TEST
+                a.ok(result, "determine_if_string_is_board_like simple");
+            }
         },
     );
 }
