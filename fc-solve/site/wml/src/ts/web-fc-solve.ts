@@ -240,7 +240,7 @@ export class FC_Solve {
         that._do_not_alert = false;
 
         that.dir_base = args.dir_base;
-        that.string_params = args.string_params;
+        that.string_params = args.string_params ? [args.string_params] : null;
         that.set_status_callback = args.set_status_callback;
         that.cmd_line_preset = args.cmd_line_preset;
         that.current_iters_limit = 0;
@@ -654,7 +654,7 @@ export class FC_Solve {
                 const string_params_file_path = base_path + file_basename;
                 that.module_wrapper.Module.FS.writeFile(
                     string_params_file_path,
-                    that.string_params,
+                    that.string_params[0],
                     {},
                 );
 
@@ -739,12 +739,28 @@ export class FC_Solve {
                             unrecognized_opt_ptr,
                         );
                         that.module_wrapper.c_free(unrecognized_opt_ptr);
-                        unrecognized_opt_s =
-                            "There was an unrecognized command line flag: «" +
-                            that._unrecognized_opt +
-                            "».";
+                        let exception_string = "";
+                        if (
+                            validate.determine_if_string_is_board_like(
+                                that.string_params[0],
+                            )
+                        ) {
+                            unrecognized_opt_s =
+                                "Did you try inputting the cards' deal in the command-line arguments text box?\n" +
+                                "Unrecognized command line flag: «" +
+                                that._unrecognized_opt +
+                                "».";
+                            exception_string =
+                                "CommandLineArgsMayContainCardsArrangement";
+                        } else {
+                            unrecognized_opt_s =
+                                "There was an unrecognized command line flag: «" +
+                                that._unrecognized_opt +
+                                "».";
+                            exception_string = "Bar";
+                        }
                         alert(unrecognized_opt_s);
-                        throw "Bar";
+                        throw exception_string;
                     }
                     alert(
                         "Failed to process user-specified command " +
