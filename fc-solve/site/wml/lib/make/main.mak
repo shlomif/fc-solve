@@ -11,16 +11,16 @@ LOCAL_BROWSER_TESTS = 0
 SKIP_EMCC ?= 0
 
 D = dest
+TESTING_ENV__URL_SUFFIX := fc-solve-temp
 
 BASE_LOCAL_UPLOAD_PREFIX := /var/www/html/shlomif
-TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-temp
+TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(TESTING_ENV__URL_SUFFIX)
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
-TEMP_UPLOAD_URL_LOCAL = $(BASE_LOCAL_UPLOAD_PREFIX)/fc-solve-temp/
+TEMP_UPLOAD_URL_LOCAL = $(BASE_LOCAL_UPLOAD_PREFIX)/$(TESTING_ENV__URL_SUFFIX)/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
 STAGING_URL_SUFFIX := fc-solve-staging
-TESTING_ENV__URL_SUFFIX := fc-solve-temp
 
 ifeq ($(PROD),1)
     TEST_SITE_URL_SUFFIX := $(STAGING_URL_SUFFIX)
@@ -139,12 +139,19 @@ STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
-SASS_CMD = sass -I lib/repos/Solitairey/ --style $(SASS_STYLE)
+SASS_CMD = sass --sourcemap=inline -I lib/repos/Solitairey/ --style $(SASS_STYLE)
 
 SASS_HEADERS = lib/sass/common-style.scss lib/repos/Solitairey/solitairey-cards--common.scss
 
 $(CSS_TARGETS): $(D)/%.css: lib/sass/%.scss $(SASS_HEADERS)
 	$(SASS_CMD) $< $@
+
+SCSS_TARGETS = $(patsubst %.css,%.scss,$(CSS_TARGETS))
+
+$(SCSS_TARGETS): $(D)/%.scss: lib/sass/%.scss
+	$(call COPY)
+
+real_all: $(SCSS_TARGETS)
 
 $(D) $(SUBDIRS): % :
 	@if [ ! -e $@ ] ; then \
@@ -426,7 +433,7 @@ upload_temp: all
 	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL)
 
 upload_local: all
-	$(RSYNC) -a $(D)/ $(BASE_LOCAL_UPLOAD_PREFIX)/fc-solve-temp
+	$(RSYNC) -a $(D)/ $(BASE_LOCAL_UPLOAD_PREFIX)/$(TESTING_ENV__URL_SUFFIX)
 
 TEST_ENV = SKIP_EMCC="$(SKIP_EMCC)"
 TEST_TARGETS = Tests/*.{py,t}
