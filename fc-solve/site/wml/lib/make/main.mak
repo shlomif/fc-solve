@@ -139,7 +139,7 @@ STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
-SASS_CMD = sass --sourcemap=inline -I lib/repos/Solitairey/ --style $(SASS_STYLE)
+SASS_CMD = sass --source-map --embed-sources --embed-source-map -I lib/repos/Solitairey/ --style $(SASS_STYLE)
 
 SASS_HEADERS = lib/sass/common-style.scss lib/repos/Solitairey/solitairey-cards--common.scss
 
