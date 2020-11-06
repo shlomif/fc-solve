@@ -29,11 +29,13 @@ ifeq ($(PROD),1)
     STAGING_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(STAGING_URL_SUFFIX)
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
     MULTI_YUI = terser --compress --comments "false"
+    SASS_DEBUG_FLAGS =
 else
     TEST_SITE_URL_SUFFIX := $(TESTING_ENV__URL_SUFFIX)
     MULTI_YUI = ./bin/cat-o
 
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
+    SASS_DEBUG_FLAGS = --source-map --embed-sources --embed-source-map
 endif
 
 ifeq ($(LOCAL_BROWSER_TESTS),0)
@@ -139,7 +141,7 @@ STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
-SASS_CMD = sass --source-map --embed-sources --embed-source-map -I lib/repos/Solitairey/ --style $(SASS_STYLE)
+SASS_CMD = sass $(SASS_DEBUG_FLAGS) -I lib/repos/Solitairey/ --style $(SASS_STYLE)
 
 SASS_HEADERS = lib/sass/common-style.scss lib/repos/Solitairey/solitairey-cards--common.scss
 
