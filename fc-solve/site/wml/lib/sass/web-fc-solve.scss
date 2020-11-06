@@ -115,15 +115,15 @@ textarea.emscripten {
 #run_do_solve {
     // @include button_orange_color;
     /*
-         * rgb(50, 205, 50) is "LimeGreen", see:
-         *
-         * https://en.wikipedia.org/wiki/Web_colors
-         *
-         * We change the background-color slightly as well as the border-color
-         * because some color-blind users may have issues distinguishing between
-         * red and green.
-         *
-         * */
+     * rgb(50, 205, 50) is "LimeGreen", see:
+     *
+     * https://en.wikipedia.org/wiki/Web_colors
+     *
+     * We change the background-color slightly as well as the border-color
+     * because some color-blind users may have issues distinguishing between
+     * red and green.
+     *
+     * */
     background-color: rgb(50, 205, 50);
     color: black;
     // border-color: #b4ff00;
@@ -131,11 +131,11 @@ textarea.emscripten {
     &:focus {
         border-color: red;
         /*
-     * rgb(0, 128, 0) is "Green", see:
-     *
-     * https://en.wikipedia.org/wiki/Web_colors
-     *
-     * */
+         * rgb(0, 128, 0) is "Green", see:
+         *
+         * https://en.wikipedia.org/wiki/Web_colors
+         *
+         * */
         background-color: rgb(0, 128, 0);
         color: white;
     }
