@@ -235,19 +235,26 @@ while (! is_right)
 
         clWaitForEvents(1, &sum_evt);
 
+        r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+                CL_MAP_READ,
+                0, bufsize,
+                1, &sum_evt, &init_evt, &err);
+        ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+        assert(r_buff_arr);
+
+        clWaitForEvents(1, &sum_evt);
 for(cl_int myiterint=0;myiterint < nels; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == {first_int})
         {{
             is_right = true;
-            printf("foo %ld\\n", (long)myiterint);
-            exit(0);
+            //exit(0);
             cl_int rr = r_buff_arr[myiterint];
-            for (int n= 48; n >=2; --n)
+            for (int n= 48; n >=1; --n)
             {{
                 rr = ((rr * ((cl_int)214013) +
                     ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
-                if ( ((rr >> 16) & 0x7fff) % n != myints[n])
+                if ( ((rr >> 16) & 0x7fff) % n != myints[n-1])
                 {{
                     is_right = false;
                     break;
