@@ -44,10 +44,10 @@ def find_ret(ints):
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
     with open("vecinit_prog.ocl", "wt") as f:
         f.write(_myformat(
-            '''kernel void vecinit(global unsigned * restrict r)
+            '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
     {{
       const int gid = get_global_id(0);
-      r[gid] = gid;
+      r[gid] = gid + mystart;
     }}'''))
     with open("test.ocl", "wt") as f:
         f.write(_myformat(
@@ -87,18 +87,22 @@ static size_t gws_align_init;
 static size_t gws_align_sum;
 
 static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
-        cl_mem r_buff, cl_int nels)
+        cl_mem r_buff, cl_int mystart, cl_int nels)
 {{
         const size_t gws[] = {{ round_mul_up(((size_t)nels),
             gws_align_init) }};
+#if 0
         printf("vecinit gws: nels = %d | gws_align_init ="
             " %zu ; gws[0] = %zu\\n", nels, gws_align_init, gws[0]);
+#endif
         cl_event vecinit_evt;
         cl_int err;
 
         cl_uint i = 0;
         err = clSetKernelArg(vecinit_k, i++, sizeof(r_buff), &r_buff);
         ocl_check(err, "r_buff set vecinit arg", i-1);
+        err = clSetKernelArg(vecinit_k, i++, sizeof(mystart), &mystart);
+        ocl_check(err, "mystart set vecinit arg", i-1);
         #if 0
         err = clSetKernelArg(vecinit_k, i++, sizeof(nels), &nels);
         ocl_check(err, "nels set vecinit arg", i-1);
@@ -119,7 +123,9 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_event init_evt)
 {{
         const size_t gws[] = {{ round_mul_up(((size_t)nels), gws_align_sum) }};
+        #if 0
         printf("vecsum gws: %d | %zu = %zu\\n", nels, gws_align_sum, gws[0]);
+        #endif
         cl_event vecsum_evt;
         cl_int err;
 
@@ -203,7 +209,7 @@ while (! is_right)
     #if 0
     cl_event init_evt, sum_evt, read_evt;
     #endif
-    cl_event init_evt = vecinit(vecinit_k, que, r_buff, nels);
+    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, nels);
     #if 1
     cl_event sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
     #endif
