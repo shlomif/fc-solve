@@ -74,6 +74,7 @@ def find_ret(ints):
     Thanks!
 
 */
+#include <assert.h>
 #include <stdbool.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -210,12 +211,14 @@ while (! is_right)
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &read_evt, &err);
+        assert(r_buff_arr);
 
         clWaitForEvents(1, &read_evt);
         cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &read_evt, &err);
+        assert(i_buff_arr);
 
         clWaitForEvents(1, &read_evt);
 
