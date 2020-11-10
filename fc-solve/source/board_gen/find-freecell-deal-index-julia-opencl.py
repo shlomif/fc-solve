@@ -186,12 +186,12 @@ int mystart = 1;
 int myints[48] = {{ {myints} }};
 cl_mem r_buff = NULL, i_buff = NULL;
 r_buff = clCreateBuffer(ctx,
-        CL_MEM_READ_WRITE | CL_MEM_HOST_NO_ACCESS,
+        CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer r_buff");
 i_buff = clCreateBuffer(ctx,
-        CL_MEM_READ_WRITE | CL_MEM_HOST_NO_ACCESS,
+        CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
