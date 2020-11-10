@@ -103,10 +103,6 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
         ocl_check(err, "r_buff set vecinit arg", i-1);
         err = clSetKernelArg(vecinit_k, i++, sizeof(mystart), &mystart);
         ocl_check(err, "mystart set vecinit arg", i-1);
-        #if 0
-        err = clSetKernelArg(vecinit_k, i++, sizeof(nels), &nels);
-        ocl_check(err, "nels set vecinit arg", i-1);
-        #endif
 
 
         err = clEnqueueNDRangeKernel(que, vecinit_k, 1,
@@ -134,10 +130,6 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         ocl_check(err, "r_buff set vecsum arg", i-1);
         err = clSetKernelArg(vecsum_k, i++, sizeof(i_buff), &i_buff);
         ocl_check(err, "i_buff set vecsum arg", i-1);
-        #if 0
-        err = clSetKernelArg(vecsum_k, i++, sizeof(nels), &nels);
-        ocl_check(err, "nels set vecsum arg", i-1);
-        #endif
 
         err = clEnqueueNDRangeKernel(que, vecsum_k, 1,
                 NULL, gws, NULL,
@@ -151,7 +143,6 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
 int main(
         #if 0
 int argc, char *argv[]
-        #else
         #endif
 )
 {{
@@ -161,7 +152,7 @@ int argc, char *argv[]
                 exit(1);
         }}
         const int nels = atoi(argv[1]);
-        #endif
+#endif
         const size_t bufsize = {bufsize};
 
         cl_platform_id p = select_platform();
@@ -206,28 +197,12 @@ i_buff = clCreateBuffer(ctx,
 while (! is_right)
 {{
     // queue(k, size(r), nothing, r_buff, i_buff)
-    #if 0
-    cl_event init_evt, sum_evt, read_evt;
-    #endif
     cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, nels);
-    #if 1
     cl_event sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
-    #endif
-    #if 0
-    r = cl.read(queue, r_buff);
-    i = cl.read(queue, i_buff);
-    #endif
-    #if 0
-        cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-                CL_MAP_READ,
-                0, bufsize,
-                1, &sum_evt, &read_evt, &err);
-    #else
         cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &init_evt, &err);
-    #endif
         ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
 
@@ -258,9 +233,6 @@ for(cl_int myiterint=0;myiterint < nels; ++myiterint)
             cl_int rr = r_buff_arr[myiterint];
             for (int n= 48; n >=1; --n)
             {{
-#if 0
-            printf("dav %d\\n",n);
-#endif
                 rr = ((rr * ((cl_int)214013) +
                     ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
