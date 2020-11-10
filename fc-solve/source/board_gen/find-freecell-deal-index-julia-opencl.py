@@ -184,7 +184,7 @@ int argc, char *argv[]
 
 bool is_right = false;
 int mystart = 1;
-int myints[48] = {{ {myints} }};
+int myints[49] = {{ 0, {myints} }};
 cl_mem r_buff = NULL, i_buff = NULL;
 r_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
@@ -254,7 +254,7 @@ for(cl_int myiterint=0;myiterint < nels; ++myiterint)
             {{
                 rr = ((rr * ((cl_int)214013) +
                     ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
-                if ( ((rr >> 16) & 0x7fff) % n != myints[n-1])
+                if ( ((rr >> 16) & 0x7fff) % n != myints[n])
                 {{
                     is_right = false;
                     break;
