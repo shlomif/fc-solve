@@ -203,32 +203,38 @@ while (! is_right)
     cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
     cl_event sum_evt = vecsum(
         vecsum_k, que, i_buff, r_buff, num_elems, init_evt
-        );
-        cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-                CL_MAP_READ,
-                0, num_elems,
-                1, &sum_evt, &init_evt, &err);
-        ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-        assert(r_buff_arr);
+    );
+    cl_int *r_buff_arr;
+    #define BOTH 1
+#if 1
+    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+    assert(r_buff_arr);
+#endif
 
-        // clWaitForEvents(1, &init_evt);
-        cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
-                CL_MAP_READ,
-                0, num_elems,
-                1, &sum_evt, &init_evt, &err);
-        ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
-        assert(i_buff_arr);
+    // clWaitForEvents(1, &init_evt);
+    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
+    assert(i_buff_arr);
 
-        clWaitForEvents(1, &sum_evt);
+    clWaitForEvents(1, &sum_evt);
 
-        r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-                CL_MAP_READ,
-                0, num_elems,
-                1, &sum_evt, &init_evt, &err);
-        ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-        assert(r_buff_arr);
+#if BOTH
+    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+    assert(r_buff_arr);
 
-        clWaitForEvents(1, &sum_evt);
+    clWaitForEvents(1, &sum_evt);
+#endif
 for(cl_int myiterint=0;myiterint < num_elems; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == {first_int})
