@@ -91,7 +91,8 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 {{
         const size_t gws[] = {{ round_mul_up(((size_t)nels),
             gws_align_init) }};
-        printf("init gws: %d | %zu = %zu\\n", nels, gws_align_init, gws[0]);
+        printf("vecinit gws: nels = %d | gws_align_init ="
+            " %zu ; gws[0] = %zu\\n", nels, gws_align_init, gws[0]);
         cl_event vecinit_evt;
         cl_int err;
 
@@ -118,7 +119,7 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_event init_evt)
 {{
         const size_t gws[] = {{ round_mul_up(((size_t)nels), gws_align_sum) }};
-        printf("sum gws: %d | %zu = %zu\\n", nels, gws_align_sum, gws[0]);
+        printf("vecsum gws: %d | %zu = %zu\\n", nels, gws_align_sum, gws[0]);
         cl_event vecsum_evt;
         cl_int err;
 
@@ -201,28 +202,36 @@ while (! is_right)
     // queue(k, size(r), nothing, r_buff, i_buff)
     cl_event init_evt, sum_evt, read_evt;
     init_evt = vecinit(vecinit_k, que, r_buff, nels);
+    #if 1
     sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
-
+    #endif
     #if 0
     r = cl.read(queue, r_buff);
     i = cl.read(queue, i_buff);
     #endif
+    #if 0
         cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &read_evt, &err);
+                #else
+        cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+                CL_MAP_READ,
+                0, bufsize,
+                1, &init_evt, &init_evt, &err);
+                #endif
         ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
 
-        clWaitForEvents(1, &read_evt);
+        // clWaitForEvents(1, &init_evt);
         cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
                 CL_MAP_READ,
                 0, bufsize,
-                1, &sum_evt, &read_evt, &err);
+                1, &sum_evt, &sum_evt, &err);
         ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
         assert(i_buff_arr);
 
-        clWaitForEvents(1, &read_evt);
+        // clWaitForEvents(1, &read_evt);
 
 for(cl_int myiterint=0;myiterint < nels; ++myiterint)
 {{
