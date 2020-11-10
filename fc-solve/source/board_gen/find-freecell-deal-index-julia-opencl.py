@@ -89,9 +89,9 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 
         cl_uint i = 0;
         err = clSetKernelArg(vecinit_k, i++, sizeof(r_buff), &r_buff);
-        ocl_check(err, "set vecinit arg", i-1);
+        ocl_check(err, "r_buff set vecinit arg", i-1);
         err = clSetKernelArg(vecinit_k, i++, sizeof(nels), &nels);
-        ocl_check(err, "set vecinit arg", i-1);
+        ocl_check(err, "nels set vecinit arg", i-1);
 
         err = clEnqueueNDRangeKernel(que, vecinit_k, 1,
                 NULL, gws, NULL,
@@ -151,7 +151,7 @@ int argc, char *argv[]
         cl_program prog = create_program("test.ocl", ctx, d);
         cl_int err;
 
-        cl_kernel vecinit_k = clCreateKernel(prog, "vecinit", &err);
+        cl_kernel vecinit_k = clCreateKernel(prog, "sum", &err);
         ocl_check(err, "create kernel vecinit");
         cl_kernel vecsum_k = clCreateKernel(prog, "sum", &err);
         ocl_check(err, "create kernel vecsum");
