@@ -124,10 +124,10 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_int err;
 
         cl_uint i = 0;
-        err = clSetKernelArg(vecsum_k, i++, sizeof(i_buff), &i_buff);
-        ocl_check(err, "i_buff set vecsum arg", i-1);
         err = clSetKernelArg(vecsum_k, i++, sizeof(r_buff), &r_buff);
         ocl_check(err, "r_buff set vecsum arg", i-1);
+        err = clSetKernelArg(vecsum_k, i++, sizeof(i_buff), &i_buff);
+        ocl_check(err, "i_buff set vecsum arg", i-1);
         #if 0
         err = clSetKernelArg(vecsum_k, i++, sizeof(nels), &nels);
         ocl_check(err, "nels set vecsum arg", i-1);
@@ -200,10 +200,12 @@ i_buff = clCreateBuffer(ctx,
 while (! is_right)
 {{
     // queue(k, size(r), nothing, r_buff, i_buff)
+    #if 0
     cl_event init_evt, sum_evt, read_evt;
-    init_evt = vecinit(vecinit_k, que, r_buff, nels);
+    #endif
+    cl_event init_evt = vecinit(vecinit_k, que, r_buff, nels);
     #if 1
-    sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
+    cl_event sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
     #endif
     #if 0
     r = cl.read(queue, r_buff);
@@ -214,11 +216,11 @@ while (! is_right)
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &read_evt, &err);
-                #else
+    #else
         cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
                 CL_MAP_READ,
                 0, bufsize,
-                1, &init_evt, &init_evt, &err);
+                1, &sum_evt, &init_evt, &err);
                 #endif
         ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
@@ -227,17 +229,19 @@ while (! is_right)
         cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
                 CL_MAP_READ,
                 0, bufsize,
-                1, &sum_evt, &sum_evt, &err);
+                1, &sum_evt, &init_evt, &err);
         ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
         assert(i_buff_arr);
 
-        // clWaitForEvents(1, &read_evt);
+        clWaitForEvents(1, &sum_evt);
 
 for(cl_int myiterint=0;myiterint < nels; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == {first_int})
         {{
             is_right = true;
+            printf("foo %ld\\n", (long)myiterint);
+            exit(0);
             cl_int rr = r_buff_arr[myiterint];
             for (int n= 48; n >=2; --n)
             {{
