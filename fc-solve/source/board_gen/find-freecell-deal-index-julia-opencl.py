@@ -42,6 +42,13 @@ def find_ret(ints):
                 },
             limit=((1 << 31)-1),
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
+    with open("vecinit_prog.ocl", "wt") as f:
+        f.write(_myformat(
+            '''kernel void vecinit(global unsigned * restrict r)
+    {{
+      const int gid = get_global_id(0);
+      r[gid] = gid;
+    }}'''))
     with open("test.ocl", "wt") as f:
         f.write(_myformat(
             '''kernel void sum(global unsigned * restrict r,
@@ -90,8 +97,11 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
         cl_uint i = 0;
         err = clSetKernelArg(vecinit_k, i++, sizeof(r_buff), &r_buff);
         ocl_check(err, "r_buff set vecinit arg", i-1);
+        #if 0
         err = clSetKernelArg(vecinit_k, i++, sizeof(nels), &nels);
         ocl_check(err, "nels set vecinit arg", i-1);
+        #endif
+
 
         err = clEnqueueNDRangeKernel(que, vecinit_k, 1,
                 NULL, gws, NULL,
@@ -113,11 +123,13 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
 
         cl_uint i = 0;
         err = clSetKernelArg(vecsum_k, i++, sizeof(i_buff), &i_buff);
-        ocl_check(err, "set vecsum arg", i-1);
+        ocl_check(err, "i_buff set vecsum arg", i-1);
         err = clSetKernelArg(vecsum_k, i++, sizeof(r_buff), &r_buff);
-        ocl_check(err, "set vecsum arg", i-1);
+        ocl_check(err, "r_buff set vecsum arg", i-1);
+        #if 0
         err = clSetKernelArg(vecsum_k, i++, sizeof(nels), &nels);
-        ocl_check(err, "set vecsum arg", i-1);
+        ocl_check(err, "nels set vecsum arg", i-1);
+        #endif
 
         err = clEnqueueNDRangeKernel(que, vecsum_k, 1,
                 NULL, gws, NULL,
@@ -148,10 +160,11 @@ int argc, char *argv[]
         cl_device_id d = select_device(p);
         cl_context ctx = create_context(p, d);
         cl_command_queue que = create_queue(ctx, d);
+        cl_program vecinit_prog = create_program("vecinit_prog.ocl", ctx, d);
         cl_program prog = create_program("test.ocl", ctx, d);
         cl_int err;
 
-        cl_kernel vecinit_k = clCreateKernel(prog, "sum", &err);
+        cl_kernel vecinit_k = clCreateKernel(vecinit_prog, "vecinit", &err);
         ocl_check(err, "create kernel vecinit");
         cl_kernel vecsum_k = clCreateKernel(prog, "sum", &err);
         ocl_check(err, "create kernel vecsum");
