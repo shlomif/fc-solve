@@ -87,13 +87,14 @@ static size_t gws_align_init;
 static size_t gws_align_sum;
 
 static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
-        cl_mem r_buff, cl_int mystart, cl_int nels)
+        cl_mem r_buff, cl_int mystart, cl_int num_elems)
 {{
-        const size_t gws[] = {{ round_mul_up(((size_t)nels),
+        const size_t gws[] = {{ round_mul_up(((size_t)num_elems),
             gws_align_init) }};
 #if 0
-        printf("vecinit gws: mystart = %d ; nels = %d | gws_align_init ="
-            " %zu ; gws[0] = %zu\\n", mystart, nels, gws_align_init, gws[0]);
+        printf("vecinit gws: mystart = %d ; num_elems = %d | gws_align_init ="
+            " %zu ; gws[0] = %zu\\n",
+            mystart, num_elems, gws_align_init, gws[0]);
 #endif
         cl_event vecinit_evt;
         cl_int err;
@@ -115,12 +116,14 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 }}
 
 static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
-        cl_mem i_buff, cl_mem r_buff, cl_int nels,
+        cl_mem i_buff, cl_mem r_buff, cl_int num_elems,
         cl_event init_evt)
 {{
-        const size_t gws[] = {{ round_mul_up(((size_t)nels), gws_align_sum) }};
+        const size_t gws[] = {{
+        round_mul_up(((size_t)num_elems), gws_align_sum) }};
         #if 0
-        printf("vecsum gws: %d | %zu = %zu\\n", nels, gws_align_sum, gws[0]);
+        printf("vecsum gws: %d | %zu = %zu\\n",
+        num_elems, gws_align_sum, gws[0]);
         #endif
         cl_event vecsum_evt;
         cl_int err;
@@ -151,9 +154,10 @@ int argc, char *argv[]
                 fprintf(stderr, "specify number of elements\\n");
                 exit(1);
         }}
-        const int nels = atoi(argv[1]);
+        const int num_elems = atoi(argv[1]);
 #endif
-        const size_t bufsize = {bufsize};
+        const size_t num_elems = {bufsize};
+        const size_t bufsize = num_elems * sizeof(cl_int);
 
         cl_platform_id p = select_platform();
         cl_device_id d = select_device(p);
@@ -185,23 +189,24 @@ int myints[49] = {{ 0, {myints} }};
 cl_mem r_buff = NULL, i_buff = NULL;
 r_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
-                bufsize*4, NULL,
+                bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer r_buff");
 i_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
-                bufsize*4, NULL,
+                bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
-        const cl_int nels = bufsize;
 while (! is_right)
 {{
     // queue(k, size(r), nothing, r_buff, i_buff)
-    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, nels);
-    cl_event sum_evt = vecsum(vecsum_k, que, i_buff, r_buff, nels, init_evt);
+    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
+    cl_event sum_evt = vecsum(
+        vecsum_k, que, i_buff, r_buff, num_elems, init_evt
+        );
         cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
                 CL_MAP_READ,
-                0, bufsize,
+                0, num_elems,
                 1, &sum_evt, &init_evt, &err);
         ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
@@ -209,7 +214,7 @@ while (! is_right)
         // clWaitForEvents(1, &init_evt);
         cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
                 CL_MAP_READ,
-                0, bufsize,
+                0, num_elems,
                 1, &sum_evt, &init_evt, &err);
         ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
         assert(i_buff_arr);
@@ -218,13 +223,13 @@ while (! is_right)
 
         r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
                 CL_MAP_READ,
-                0, bufsize,
+                0, num_elems,
                 1, &sum_evt, &init_evt, &err);
         ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
 
         clWaitForEvents(1, &sum_evt);
-for(cl_int myiterint=0;myiterint < nels; ++myiterint)
+for(cl_int myiterint=0;myiterint < num_elems; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == {first_int})
         {{
@@ -249,7 +254,7 @@ for(cl_int myiterint=0;myiterint < nels; ++myiterint)
         }}
     }}
 
-    mystart += bufsize;
+    mystart += num_elems;
     #if 0
     if (mystart > {limit})
     #else
