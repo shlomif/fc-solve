@@ -126,10 +126,10 @@
                 compilers.
             </para>
         </section>
-        <section xml:id="strict_adherence_to_the_ansi_c_standard_lib"><info><title>Strict Adherence to the ANSI C Standard Library</title></info>
+        <section xml:id="strict_adherence_to_the_ansi_c_standard_lib"><info><title>Strict Adherence to the C Standard Library</title></info>
 
             <para>
-                Freecell Solver is dependant on the ANSI C and
+                Freecell Solver is dependant on the C and
                 POSIX Standard Library as defined
                 by the standard and on that library alone. The core FCS code is
                 not dependant on glib, apr or any other abstraction or
@@ -444,7 +444,7 @@
                     It is derived from <link xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://www.heyes-jones.com/astar.html">Justin
                         Heyes-Jones</link> C++ code which he has kindly
                     donated to Freecell Solver (while re-licensing it under the public
-                    domain). Since then, the code has been converted to ANSI C
+                    domain). Since then, the code has been converted to C
                     , modified and optimised.
                 </para>
                 <para>

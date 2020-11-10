@@ -126,7 +126,7 @@ class="try_main">Use</span><br/>
                 "AI, artificial intelligence, solitaire, Simple Simon, " +
                 "Baker's Game, Seahaven Towers, Shlomi Fish, games",
                 desc="Freecell Solver " +
-                "- a Program and a Library written in ANSI C for" +
+                "- a Program and a Library written in C for" +
                 " Solving Games of Freecell and similar Solitaire Variants",
                 filename=fn,
                 index_filename=re.sub(
