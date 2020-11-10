@@ -44,8 +44,8 @@ def find_ret(ints):
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
     with open("test.ocl", "wt") as f:
         f.write(_myformat(
-            '''kernel void sum(global unsigned int4 * restrict r,
-                     global unsigned int4 * restrict i)
+            '''kernel void sum(global unsigned * restrict r,
+                     global unsigned * restrict i)
     {{
       const int gid = get_global_id(0);
       i[gid] = {_myrand[52]};
