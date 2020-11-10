@@ -92,8 +92,8 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
         const size_t gws[] = {{ round_mul_up(((size_t)nels),
             gws_align_init) }};
 #if 0
-        printf("vecinit gws: nels = %d | gws_align_init ="
-            " %zu ; gws[0] = %zu\\n", nels, gws_align_init, gws[0]);
+        printf("vecinit gws: mystart = %d ; nels = %d | gws_align_init ="
+            " %zu ; gws[0] = %zu\\n", mystart, nels, gws_align_init, gws[0]);
 #endif
         cl_event vecinit_evt;
         cl_int err;
@@ -194,12 +194,12 @@ int myints[49] = {{ 0, {myints} }};
 cl_mem r_buff = NULL, i_buff = NULL;
 r_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
-                bufsize, NULL,
+                bufsize*4, NULL,
                         &err);
         ocl_check(err, "create buffer r_buff");
 i_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
-                bufsize, NULL,
+                bufsize*4, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
         const cl_int nels = bufsize;
@@ -227,7 +227,7 @@ while (! is_right)
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &init_evt, &err);
-                #endif
+    #endif
         ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
 
@@ -258,6 +258,9 @@ for(cl_int myiterint=0;myiterint < nels; ++myiterint)
             cl_int rr = r_buff_arr[myiterint];
             for (int n= 48; n >=1; --n)
             {{
+#if 0
+            printf("dav %d\\n",n);
+#endif
                 rr = ((rr * ((cl_int)214013) +
                     ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
