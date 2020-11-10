@@ -211,6 +211,7 @@ while (! is_right)
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &read_evt, &err);
+        ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
         assert(r_buff_arr);
 
         clWaitForEvents(1, &read_evt);
@@ -218,6 +219,7 @@ while (! is_right)
                 CL_MAP_READ,
                 0, bufsize,
                 1, &sum_evt, &read_evt, &err);
+        ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
         assert(i_buff_arr);
 
         clWaitForEvents(1, &read_evt);
