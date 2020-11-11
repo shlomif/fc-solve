@@ -18,7 +18,7 @@
 #include "freecell-solver/fcs_dllexport.h"
 
 #define CL_TARGET_OPENCL_VERSION 120
-#include "ocl_boiler.h"
+#include "fcs_ocl_boiler.h"
 
 static size_t gws_align_init;
 static size_t gws_align_sum;
