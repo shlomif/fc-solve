@@ -1,3 +1,4 @@
+set -x
 deal="$(( 2 * 10 ** 9))"
 run_deal="$(( 20004000))"
 run_deal="$deal"
