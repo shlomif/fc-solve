@@ -28,9 +28,9 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 {
     const size_t gws[] = {round_mul_up(((size_t)num_elems), gws_align_init)};
 #if 0
-        printf("vecinit gws: mystart = %d ; num_elems = %d | gws_align_init ="
-            " %zu ; gws[0] = %zu\n",
-            mystart, num_elems, gws_align_init, gws[0]);
+    printf("vecinit gws: mystart = %d ; num_elems = %d | gws_align_init ="
+        " %zu ; gws[0] = %zu\n",
+        mystart, num_elems, gws_align_init, gws[0]);
 #endif
     cl_event vecinit_evt;
     cl_int err;
@@ -54,8 +54,7 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que, cl_mem i_buff,
 {
     const size_t gws[] = {round_mul_up(((size_t)num_elems), gws_align_sum)};
 #if 0
-        printf("vecsum gws: %d | %zu = %zu\n",
-        num_elems, gws_align_sum, gws[0]);
+    printf("vecsum gws: %d | %zu = %zu\n", num_elems, gws_align_sum, gws[0]);
 #endif
     cl_event vecsum_evt;
     cl_int err;
@@ -75,22 +74,18 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que, cl_mem i_buff,
 }
 
 DLLEXPORT long long fc_solve_user__opencl_find_deal(
-    const int first_int, const int *myints
-#if 0
-int argc, char *argv[]
-#endif
-)
+    const int first_int, const int *myints)
 {
 #if 0
-        if (argc <= 1) {
-                fprintf(stderr, "specify number of elements\n");
-                exit(1);
-        }
-        const int num_elems = atoi(argv[1]);
-for(cl_int myiterint=0;myiterint < 49; ++myiterint)
-{
-printf("myints[%d]=%d\n", myiterint, myints[myiterint]);
-}
+    if (argc <= 1) {
+        fprintf(stderr, "specify number of elements\n");
+        exit(1);
+    }
+    const int num_elems = atoi(argv[1]);
+    for(cl_int myiterint=0;myiterint < 49; ++myiterint)
+    {
+        printf("myints[%d]=%d\n", myiterint, myints[myiterint]);
+    }
 #endif
     const size_t num_elems = 300000;
     const cl_int cl_int_num_elems = (cl_int)num_elems;
@@ -180,19 +175,19 @@ printf("myints[%d]=%d\n", myiterint, myints[myiterint]);
                 }
                 if (is_right)
                 {
-                    long long ret = (mystart + myiterint);
+                    const long long ret = (((long long)mystart) + myiterint);
                     return ret;
 #if 0
-                printf("%lu\n", ((unsigned long)(mystart+myiterint)));
-#endif
+                    printf("%lld\n", ret);
                     break;
+#endif
                 }
             }
         }
 
         mystart += num_elems;
 #if 0
-    if (mystart > 2147483647)
+        if (mystart > 2147483647)
 #else
         if (mystart < 0)
 #endif
