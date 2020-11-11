@@ -60,7 +60,7 @@ def find_ret(ints):
       i[gid] |= ({_myrand[50]} << 12);
       i[gid] |= ({_myrand[49]} << 18);
     }}'''))
-    with open("test.c", "wt") as f:
+    with open("opencl_find_deal_idx.c", "wt") as f:
         f.write(_myformat('''
 /*
     Code based on
@@ -79,6 +79,7 @@ def find_ret(ints):
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
+#include "freecell-solver/fcs_dllexport.h"
 
 #define CL_TARGET_OPENCL_VERSION 120
 #include "ocl_boiler.h"
@@ -143,7 +144,9 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         return vecsum_evt;
 }}
 
-int main(
+DLLEXPORT long long fc_solve_user__opencl_find_deal(
+const int first_int,
+    const int * myints
         #if 0
 int argc, char *argv[]
         #endif
@@ -155,8 +158,13 @@ int argc, char *argv[]
                 exit(1);
         }}
         const int num_elems = atoi(argv[1]);
+for(cl_int myiterint=0;myiterint < 49; ++myiterint)
+{{
+printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
+}}
 #endif
         const size_t num_elems = {bufsize};
+        const cl_int cl_int_num_elems = (cl_int)num_elems;
         const size_t bufsize = num_elems * sizeof(cl_int);
 
         cl_platform_id p = select_platform();
@@ -185,7 +193,6 @@ int argc, char *argv[]
 
 bool is_right = false;
 int mystart = 1;
-int myints[49] = {{ 0, {myints} }};
 cl_mem r_buff = NULL, i_buff = NULL;
 r_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
@@ -235,9 +242,9 @@ while (! is_right)
 
     clWaitForEvents(1, &sum_evt);
 #endif
-for(cl_int myiterint=0;myiterint < num_elems; ++myiterint)
+for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 {{
-        if (i_buff_arr[myiterint] == {first_int})
+        if (i_buff_arr[myiterint] == first_int)
         {{
             is_right = true;
             //exit(0);
@@ -254,7 +261,11 @@ for(cl_int myiterint=0;myiterint < num_elems; ++myiterint)
             }}
             if ( is_right)
             {{
+                long long ret = (mystart+myiterint);
+                return ret;
+                #if 0
                 printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
+                #endif
                 break;
             }}
         }}
@@ -270,7 +281,7 @@ for(cl_int myiterint=0;myiterint < num_elems; ++myiterint)
         break;
     }}
 }}
-return 0;
+return -1;
 }}
 '''))
     with open("test.jl", "wt") as f:
