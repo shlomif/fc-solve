@@ -59,14 +59,14 @@ def find_ret(ints):
     _update_file_using_template(fn="vecinit_prog.ocl", template=(
                 '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
     {{
-      const int gid = get_global_id(0);
+      const unsigned gid = get_global_id(0);
       r[gid] = gid + mystart;
     }}'''))
     _update_file_using_template(fn="test.ocl", template=(
                 '''kernel void sum(global unsigned * restrict r,
                      global unsigned * restrict i)
     {{
-      const int gid = get_global_id(0);
+      const unsigned gid = get_global_id(0);
       i[gid] = {_myrand[52]};
       i[gid] |= ({_myrand[51]} << 6);
       i[gid] |= ({_myrand[50]} << 12);
