@@ -43,13 +43,19 @@ def find_ret(ints):
             limit=((1 << 31)-1),
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
 
-    def _update_file_using_template(fn, template):
-        newtext = _myformat(template)
-        with open(fn, "rt") as f:
-            oldtext = f.read()
-        if oldtext != newtext:
+    def _update_file(fn, newtext):
+        update = False
+        try:
+            with open(fn, "rt") as f:
+                oldtext = f.read()
+        except FileNotFoundError:
+            update = True
+        if update or (oldtext != newtext):
             with open(fn, "wt") as f:
                 f.write(newtext)
+
+    def _update_file_using_template(fn, template):
+        return _update_file(fn=fn, newtext=_myformat(template))
     _update_file_using_template(fn="vecinit_prog.ocl", template=(
                 '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
     {{
