@@ -42,16 +42,22 @@ def find_ret(ints):
                 },
             limit=((1 << 31)-1),
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
-    with open("vecinit_prog.ocl", "wt") as f:
-        f.write(_myformat(
-            '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
+
+    def _update_file_using_template(fn, template):
+        newtext = _myformat(template)
+        with open(fn, "rt") as f:
+            oldtext = f.read()
+        if oldtext != newtext:
+            with open(fn, "wt") as f:
+                f.write(newtext)
+    _update_file_using_template(fn="vecinit_prog.ocl", template=(
+                '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
     {{
       const int gid = get_global_id(0);
       r[gid] = gid + mystart;
     }}'''))
-    with open("test.ocl", "wt") as f:
-        f.write(_myformat(
-            '''kernel void sum(global unsigned * restrict r,
+    _update_file_using_template(fn="test.ocl", template=(
+                '''kernel void sum(global unsigned * restrict r,
                      global unsigned * restrict i)
     {{
       const int gid = get_global_id(0);
@@ -60,8 +66,7 @@ def find_ret(ints):
       i[gid] |= ({_myrand[50]} << 12);
       i[gid] |= ({_myrand[49]} << 18);
     }}'''))
-    with open("opencl_find_deal_idx.c", "wt") as f:
-        f.write(_myformat('''
+    _update_file_using_template(fn="opencl_find_deal_idx.c", template=('''
 /*
     Code based on
     https://www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/
@@ -284,8 +289,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 return -1;
 }}
 '''))
-    with open("test.jl", "wt") as f:
-        f.write(_myformat('''
+    _update_file_using_template(fn="test.jl", template=('''
 
 using OpenCL
 
