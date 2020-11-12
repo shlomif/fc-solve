@@ -57,14 +57,14 @@ def find_ret(ints):
     def _update_file_using_template(fn, template):
         return _update_file(fn=fn, newtext=_myformat(template))
     _update_file_using_template(fn="vecinit_prog.ocl", template=(
-                '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
+            '''kernel void vecinit(global long * restrict r, long mystart)
     {{
       const unsigned gid = get_global_id(0);
       r[gid] = gid + mystart;
     }}'''))
     _update_file_using_template(fn="test.ocl", template=(
-                '''kernel void sum(global unsigned * restrict r,
-                     global unsigned * restrict i)
+            '''kernel void sum(global long * restrict r,
+                     global long * restrict i)
     {{
       const unsigned gid = get_global_id(0);
       i[gid] = {_myrand[52]};
@@ -99,7 +99,7 @@ static size_t gws_align_init;
 static size_t gws_align_sum;
 
 static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
-        cl_mem r_buff, cl_int mystart, cl_int num_elems)
+        cl_mem r_buff, cl_long mystart, cl_long num_elems)
 {{
         const size_t gws[] = {{ round_mul_up(((size_t)num_elems),
             gws_align_init) }};
@@ -128,7 +128,7 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 }}
 
 static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
-        cl_mem i_buff, cl_mem r_buff, cl_int num_elems,
+        cl_mem i_buff, cl_mem r_buff, cl_long num_elems,
         cl_event init_evt)
 {{
         const size_t gws[] = {{
@@ -175,8 +175,8 @@ printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
 }}
 #endif
         const size_t num_elems = {bufsize};
-        const cl_int cl_int_num_elems = (cl_int)num_elems;
-        const size_t bufsize = num_elems * sizeof(cl_int);
+        const cl_long cl_int_num_elems = (cl_long)num_elems;
+        const size_t bufsize = num_elems * sizeof(cl_long);
 
         cl_platform_id p = select_platform();
         cl_device_id d = select_device(p);
@@ -222,7 +222,7 @@ while (! is_right)
     cl_event sum_evt = vecsum(
         vecsum_k, que, i_buff, r_buff, num_elems, init_evt
     );
-    cl_int *r_buff_arr;
+    cl_long *r_buff_arr;
     #define BOTH 1
 #if 1
     r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
@@ -234,7 +234,7 @@ while (! is_right)
 #endif
 
     // clWaitForEvents(1, &init_evt);
-    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+    cl_long *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
             CL_MAP_READ,
             0, num_elems,
             1, &sum_evt, &init_evt, &err);
@@ -253,17 +253,17 @@ while (! is_right)
 
     clWaitForEvents(1, &sum_evt);
 #endif
-for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
+for(cl_long myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == first_int)
         {{
             is_right = true;
             //exit(0);
-            cl_int rr = r_buff_arr[myiterint];
+            cl_long rr = r_buff_arr[myiterint];
             for (int n= 48; n >=1; --n)
             {{
-                rr = ((rr * ((cl_int)214013) +
-                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
+                rr = ((rr * ((cl_long)214013) +
+                    ((cl_long)2531011)) & ((cl_long)0xFFFFFFFF));
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
                 {{
                     is_right = false;

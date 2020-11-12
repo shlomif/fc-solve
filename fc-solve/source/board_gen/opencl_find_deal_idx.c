@@ -24,7 +24,7 @@ static size_t gws_align_init;
 static size_t gws_align_sum;
 
 static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
-    cl_mem r_buff, cl_int mystart, cl_int num_elems)
+    cl_mem r_buff, cl_long mystart, cl_long num_elems)
 {
     const size_t gws[] = {round_mul_up(((size_t)num_elems), gws_align_init)};
 #if 0
@@ -50,7 +50,7 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 }
 
 static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que, cl_mem i_buff,
-    cl_mem r_buff, cl_int num_elems, cl_event init_evt)
+    cl_mem r_buff, cl_long num_elems, cl_event init_evt)
 {
     const size_t gws[] = {round_mul_up(((size_t)num_elems), gws_align_sum)};
 #if 0
@@ -88,8 +88,8 @@ DLLEXPORT long long fc_solve_user__opencl_find_deal(
     }
 #endif
     const size_t num_elems = 300000;
-    const cl_int cl_int_num_elems = (cl_int)num_elems;
-    const size_t bufsize = num_elems * sizeof(cl_int);
+    const cl_long cl_int_num_elems = (cl_long)num_elems;
+    const size_t bufsize = num_elems * sizeof(cl_long);
 
     cl_platform_id p = select_platform();
     cl_device_id d = select_device(p);
@@ -131,7 +131,7 @@ DLLEXPORT long long fc_solve_user__opencl_find_deal(
         cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
         cl_event sum_evt =
             vecsum(vecsum_k, que, i_buff, r_buff, num_elems, init_evt);
-        cl_int *r_buff_arr;
+        cl_long *r_buff_arr;
 #define BOTH 1
 #if 1
         r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE, CL_MAP_READ, 0,
@@ -141,7 +141,7 @@ DLLEXPORT long long fc_solve_user__opencl_find_deal(
 #endif
 
         // clWaitForEvents(1, &init_evt);
-        cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+        cl_long *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
             CL_MAP_READ, 0, num_elems, 1, &sum_evt, &init_evt, &err);
         ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
         assert(i_buff_arr);
@@ -156,17 +156,17 @@ DLLEXPORT long long fc_solve_user__opencl_find_deal(
 
         clWaitForEvents(1, &sum_evt);
 #endif
-        for (cl_int myiterint = 0; myiterint < cl_int_num_elems; ++myiterint)
+        for (cl_long myiterint = 0; myiterint < cl_int_num_elems; ++myiterint)
         {
             if (i_buff_arr[myiterint] == first_int)
             {
                 is_right = true;
                 // exit(0);
-                cl_int rr = r_buff_arr[myiterint];
+                cl_long rr = r_buff_arr[myiterint];
                 for (int n = 48; n >= 1; --n)
                 {
-                    rr = ((rr * ((cl_int)214013) + ((cl_int)2531011)) &
-                          ((cl_int)0xFFFFFFFF));
+                    rr = ((rr * ((cl_long)214013) + ((cl_long)2531011)) &
+                          ((cl_long)0xFFFFFFFF));
                     if (((rr >> 16) & 0x7fff) % n != myints[n])
                     {
                         is_right = false;
