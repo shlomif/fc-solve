@@ -30,6 +30,7 @@ def find_ret(ints):
                 ' >> 16) & 0x7fff) % {})').format(mod)
     assert len(ints) == 47
     _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
+    myints_str = ",".join(['0']*1+list(reversed([str(x) for x in ints])))
 
     def _myformat(template):
         return template.format(
@@ -37,7 +38,8 @@ def find_ret(ints):
             bufsize=300000,
             _myrand=_myrand_lookups,
             limit=((1 << 31)-1),
-            myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
+            myints=myints_str,
+        )
 
     def _update_file(fn, newtext):
         update = False
