@@ -29,14 +29,13 @@ def find_ret(ints):
         return ('((((r[gid] = (r[gid]*214013 + 2531011))' +
                 ' >> 16) & 0x7fff) % {})').format(mod)
     assert len(ints) == 47
+    _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
 
     def _myformat(template):
         return template.format(
             first_int=first_int,
             bufsize=300000,
-            _myrand={
-                base: _myrand(base) for base in range(1, 53)
-            },
+            _myrand=_myrand_lookups,
             limit=((1 << 31)-1),
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
 
