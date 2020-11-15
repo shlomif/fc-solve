@@ -6,6 +6,12 @@
 # Copyright by Shlomi Fish, 2018
 #
 # Licensed under the MIT/Expat License.
+"""
+For now, you can try using this as a driver:
+
+    bash ../../scripts/opencl-test.bash
+
+"""
 
 import sys
 
@@ -45,6 +51,7 @@ def find_ret(ints, num_ints_in_first=4):
     def _myformat(template):
         return template.format(
             first_int=first_int,
+            num_ints_in_first=num_ints_in_first,
             bufsize=300000,
             _myrand=_myrand_lookups,
             kernel_sum_cl_code=kernel_sum_cl_code,
@@ -161,6 +168,8 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         return vecsum_evt;
 }}
 
+static const int num_ints_in_first = {num_ints_in_first};
+static const int num_remaining_ints = 4*13 - num_ints_in_first;
 DLLEXPORT long long fc_solve_user__opencl_find_deal(
 const int first_int,
     const int * myints
@@ -266,7 +275,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             is_right = true;
             //exit(0);
             cl_int rr = r_buff_arr[myiterint];
-            for (int n= 48; n >=1; --n)
+            for (int n= num_remaining_ints; n >=1; --n)
             {{
                 rr = ((rr * ((cl_int)214013) +
                     ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
@@ -308,6 +317,8 @@ using OpenCL
 device, ctx, queue = cl.create_compute_context()
 
 const bufsize = {bufsize}
+const num_ints_in_first = {num_ints_in_first};
+const num_remaining_ints = 4*13 - num_ints_in_first;
 
 const sum_kernel = "
    __kernel void sum(__global unsigned int *r,
@@ -338,7 +349,7 @@ while (! is_right)
         if i[myiterint] == {first_int}
             global is_right = true
             rr = r[myiterint]
-            for n in 48:-1:2
+            for n in num_remaining_ints:-1:2
                 rr = ((rr * 214013 + 2531011) & 0xFFFFFFFF)
                 if ( ((rr >> 16) & 0x7fff) % n != myints[n])
                     global is_right = false
