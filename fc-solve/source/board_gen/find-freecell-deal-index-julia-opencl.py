@@ -19,17 +19,27 @@ def _to_bytes(s):
         return s
 
 
-def find_ret(ints):
-    first_int = ints.pop(0)
-    first_int |= (ints.pop(0) << 6)
-    first_int |= (ints.pop(0) << 12)
-    first_int |= (ints.pop(0) << 18)
+def find_ret(ints, num_ints_in_first=4):
+    assert len(ints) == 51
+    STEP = 6
+    first_int = 0
+    bits_width = 0
 
     def _myrand(mod):
         return ('((((r[gid] = (r[gid]*214013 + 2531011))' +
                 ' >> 16) & 0x7fff) % {})').format(mod)
-    assert len(ints) == 47
     _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
+    kernel_sum_cl_code = ""
+    for i in range(num_ints_in_first):
+        first_int |= (ints.pop(0) << bits_width)
+        myr = _myrand_lookups[52-i]
+        kernel_sum_cl_code += "i[gid] " + (
+            "= " + myr if i == 0 else
+            "|= (" + myr + " << " + str(bits_width) + ")"
+        ) + ";\n"
+        bits_width += STEP
+
+    assert len(ints) == 51 - num_ints_in_first
     myints_str = ",".join(['0']*1+list(reversed([str(x) for x in ints])))
 
     def _myformat(template):
@@ -37,6 +47,7 @@ def find_ret(ints):
             first_int=first_int,
             bufsize=300000,
             _myrand=_myrand_lookups,
+            kernel_sum_cl_code=kernel_sum_cl_code,
             limit=((1 << 31)-1),
             myints=myints_str,
         )
@@ -65,10 +76,7 @@ def find_ret(ints):
                      global unsigned * restrict i)
     {{
       const unsigned gid = get_global_id(0);
-      i[gid] = {_myrand[52]};
-      i[gid] |= ({_myrand[51]} << 6);
-      i[gid] |= ({_myrand[50]} << 12);
-      i[gid] |= ({_myrand[49]} << 18);
+      {kernel_sum_cl_code}
     }}'''))
     _update_file_using_template(fn="opencl_find_deal_idx.c", template=('''
 /*
@@ -306,10 +314,7 @@ const sum_kernel = "
                      __global unsigned int *i)
     {{
       int gid = get_global_id(0);
-      i[gid] = {_myrand[52]};
-      i[gid] |= ({_myrand[51]} << 6);
-      i[gid] |= ({_myrand[50]} << 12);
-      i[gid] |= ({_myrand[49]} << 18);
+      {kernel_sum_cl_code}
     }}
 "
 p = cl.Program(ctx, source=sum_kernel) |> cl.build!
