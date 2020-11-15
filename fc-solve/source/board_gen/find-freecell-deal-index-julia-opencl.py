@@ -35,11 +35,8 @@ def find_ret(ints):
             first_int=first_int,
             bufsize=300000,
             _myrand={
-                52: _myrand(52),
-                51: _myrand(51),
-                50: _myrand(50),
-                49: _myrand(49),
-                },
+                base: _myrand(base) for base in range(1, 53)
+            },
             limit=((1 << 31)-1),
             myints=",".join(['0']*1+list(reversed([str(x) for x in ints]))))
 
