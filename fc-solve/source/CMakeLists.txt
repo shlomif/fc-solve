@@ -217,21 +217,9 @@ IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${pats_dir}")
     )
 ENDIF ()
 
-# Clone the rinutils repository with the appropriate tag.
-SET (rinutils_dir "rinutils")
-IF (NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils_dir}")
-    EXECUTE_PROCESS(
-        COMMAND "git" "clone" "-b" "0.6.0" "https://github.com/shlomif/rinutils.git" "${rinutils_dir}"
-        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}"
-    )
-ENDIF ()
+INCLUDE ("${CMAKE_SOURCE_DIR}/cmake/rinutils_bootstrap.cmake")
 
-find_package(Rinutils)
-IF ("${Rinutils_FOUND}")
-    INCLUDE_DIRECTORIES(AFTER ${RINUTILS_INCLUDE_DIR} ${RINUTILS_INCLUDE_DIRS})
-ELSE ()
-    INCLUDE_DIRECTORIES(AFTER "${CMAKE_CURRENT_SOURCE_DIR}/${rinutils_dir}/rinutils/include")
-ENDIF ()
+RINUTILS_SET_UP_FLAGS()
 
 SET (_gen_c_files )
 MACRO(add_gen_c)
