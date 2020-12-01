@@ -39,24 +39,24 @@ charts2 = _htmlish('4fc-deals-charts2')
 msfreecell_note = _htmlish('msfreecell-note')
 tocs = []
 
-fc_listbox_id = "num_freecells"
-fc_listbox = (
-    '<label for="{id}">Freecells Number:</label>' +
+listbox_template = (
+    '<label for="{id}">{label_text}</label>' +
     '<select id="{id}" class="phoenix">' +
     '<option value="default" selected="selected">' +
-    'Default</option>{options}</select>').format(
+    'Default</option>{options}</select>')
+
+fc_listbox_id = "num_freecells"
+fc_listbox = (listbox_template).format(
         id=fc_listbox_id,
+        label_text='Freecells Number:',
         options=''.join(
             ['<option value="{num}">{num}</option>'.format(num=num)
              for num in range(8+1)]))
 
 cols_listbox_id = "num_columns"
-cols_listbox = (
-    '<label for="{id}">Columns Number:</label>' +
-    '<select id="{id}" class="phoenix">' +
-    '<option value="default" selected="selected">' +
-    'Default</option>{options}</select>').format(
+cols_listbox = (listbox_template).format(
         id=cols_listbox_id,
+        label_text='Columns Number:',
         options=''.join(
             ['<option value="{num}">{num}</option>'.format(num=num)
              for num in range(1, 12+1)]))
