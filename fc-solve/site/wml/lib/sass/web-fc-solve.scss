@@ -259,6 +259,10 @@ textarea.emscripten {
     label {
         padding: 0.5em;
     }
+
+    .widget_wrapper {
+        display: inline;
+    }
 }
 
 #game_type {

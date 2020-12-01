@@ -40,10 +40,13 @@ msfreecell_note = _htmlish('msfreecell-note')
 tocs = []
 
 listbox_template = (
+    '<div class="widget_wrapper {id}">'
     '<label for="{id}">{label_text}</label>' +
     '<select id="{id}" class="phoenix">' +
     '<option value="default" selected="selected">' +
-    'Default</option>{options}</select>')
+    'Default</option>{options}</select>' +
+    '</div>'
+)
 
 fc_listbox_id = "num_freecells"
 fc_listbox = (listbox_template).format(
