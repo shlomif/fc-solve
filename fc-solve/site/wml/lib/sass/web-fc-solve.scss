@@ -252,9 +252,13 @@ textarea.emscripten {
 }
 
 #fcs_advanced {
-    clear: left;
     border: black 1pt solid;
+    clear: left;
     padding: 1em;
+
+    label {
+        padding: 0.5em;
+    }
 }
 
 #game_type {
