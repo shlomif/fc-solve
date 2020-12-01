@@ -33,15 +33,16 @@ sub calc_html
 {
     my $self = shift;
 
+    my $id = "game_type";
     return
-qq#<label for="game_type" id="game_type_label">Game Type:</label><select id="game_type">#
+qq#<div class="widget_wrapper $id"><label for="$id" id="game_type_label">Game Type:</label><select id="$id">#
         . join(
         '',
         map {
             my $sel = $_->{id} eq 'freecell' ? qq# selected="selected"# : '';
 qq#<option value="$_->{id}"$sel>@{[escapeHTML($_->{name})]}</option>#
         } @{ $self->games() }
-        ) . "</select>";
+        ) . "</select></div>";
 }
 
 1;
