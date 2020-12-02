@@ -380,7 +380,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             is_right = true;
             //exit(0);
             cl_int rr = r_buff_arr[myiterint];
-            for (int n= num_remaining_ints; n >=1; --n)
+            for (int n = num_remaining_ints; n >=1; --n)
             {{
                 rr = ((rr * ((cl_int)214013) +
                     ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
@@ -392,8 +392,15 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             }}
             if ( is_right)
             {{
-                long long ret = (mystart+myiterint);
-                return ret;
+                const long long ret = (((long long)mystart)+myiterint);
+                if (ret >= 0x100000000LL)
+                {{
+                    return -1;
+                }}
+                else
+                {{
+                    return ret;
+                }}
                 #if 0
                 printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
                 #endif
@@ -413,7 +420,7 @@ const unsigned newstart = mystart + num_elems;
     }}
     else
     {{
-    mystart = newstart;
+        mystart = newstart;
     }}
 }}
 }}
