@@ -115,7 +115,7 @@ while (! is_right)
     // queue(k, size(r), nothing, r_buff, i_buff)
     cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
     cl_event sum_evt = vecsum(
-        vecsum_k4G, que, i_buff, r_buff, num_elems, init_evt
+        {my_vecsum_var}, que, i_buff, r_buff, num_elems, init_evt
     );
     cl_int *r_buff_arr;
     #define BOTH 1
@@ -195,6 +195,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_two_g = _myformat(
         template=c_loop_template,
         extra_fields={
+            'my_vecsum_var': 'vecsum_k',
             'int_type': 'int',
             'start': '1',
             'check_ret': '',
@@ -204,6 +205,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_four_g = _myformat(
         template=c_loop_template,
         extra_fields={
+            'my_vecsum_var': 'vecsum_k4G',
             'int_type': 'unsigned',
             'start': '0x80000000U',
             'check_ret': '''
