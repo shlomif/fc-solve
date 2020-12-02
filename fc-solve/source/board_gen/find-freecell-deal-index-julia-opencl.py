@@ -61,7 +61,7 @@ def find_ret(ints, num_ints_in_first=4):
     assert len(ints) == 51 - num_ints_in_first
     myints_str = ",".join(['0']*1+list(reversed([str(x) for x in ints])))
 
-    def _myformat(template):
+    def _myformat(template, extra_fields={}):
         return template.format(
             first_int=first_int,
             num_ints_in_first=num_ints_in_first,
@@ -71,6 +71,7 @@ def find_ret(ints, num_ints_in_first=4):
             kernel_sum_to_4G_cl_code=kernel_sum_to_4G_cl_code,
             limit=((1 << 31)-1),
             myints=myints_str,
+            **extra_fields,
         )
 
     def _update_file(fn, newtext):
@@ -84,8 +85,9 @@ def find_ret(ints, num_ints_in_first=4):
             with open(fn, "wt") as f:
                 f.write(newtext)
 
-    def _update_file_using_template(fn, template):
-        return _update_file(fn=fn, newtext=_myformat(template))
+    def _update_file_using_template(fn, template, extra_fields={}):
+        return _update_file(fn=fn, newtext=_myformat(
+            template=template, extra_fields=extra_fields,))
     _update_file_using_template(fn="vecinit_prog.ocl", template=(
                 '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
     {{
@@ -106,7 +108,116 @@ def find_ret(ints, num_ints_in_first=4):
       const unsigned gid = get_global_id(0);
       {kernel_sum_to_4G_cl_code}
     }}'''))
-    _update_file_using_template(fn="opencl_find_deal_idx.c", template=('''
+    c_loop_template = '''{{
+{int_type} mystart = {start};
+while (! is_right)
+{{
+    // queue(k, size(r), nothing, r_buff, i_buff)
+    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
+    cl_event sum_evt = vecsum(
+        vecsum_k4G, que, i_buff, r_buff, num_elems, init_evt
+    );
+    cl_int *r_buff_arr;
+    #define BOTH 1
+#if 1
+    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+    assert(r_buff_arr);
+#endif
+
+    // clWaitForEvents(1, &init_evt);
+    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
+    assert(i_buff_arr);
+
+    clWaitForEvents(1, &sum_evt);
+
+#if BOTH
+    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+    assert(r_buff_arr);
+
+    clWaitForEvents(1, &sum_evt);
+#endif
+for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
+{{
+        if (i_buff_arr[myiterint] == first_int)
+        {{
+            is_right = true;
+            //exit(0);
+            cl_int rr = r_buff_arr[myiterint];
+            for (int n = num_remaining_ints; n >=1; --n)
+            {{
+                rr = ((rr * ((cl_int)214013) +
+                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
+                if ( (((rr >> 16) & 0x7fff){seed_proc_code}) % n != myints[n])
+                {{
+                    is_right = false;
+                    break;
+                }}
+            }}
+            if ( is_right)
+            {{
+                const long long ret =
+                (((long long)mystart)+myiterint);\n{check_ret}\nreturn ret;
+                #if 0
+                printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
+                #endif
+                break;
+            }}
+        }}
+    }}
+
+    const {int_type} newstart = mystart + num_elems;
+    #if 0
+    if (mystart > {limit})
+    #else
+    if (newstart < mystart)
+    #endif
+    {{
+        break;
+    }}
+    else
+    {{
+        mystart = newstart;
+    }}
+}}
+}}'''
+    c_loop_two_g = _myformat(
+        template=c_loop_template,
+        extra_fields={
+            'int_type': 'int',
+            'start': '1',
+            'check_ret': '',
+            'seed_proc_code': '',
+        }
+    )
+    c_loop_four_g = _myformat(
+        template=c_loop_template,
+        extra_fields={
+            'int_type': 'unsigned',
+            'start': '0x80000000U',
+            'check_ret': '''
+                if (ret >= 0x100000000LL)
+                {
+                    return -1;
+                }\n''',
+            'seed_proc_code': '|0x8000',
+        }
+    )
+    _update_file_using_template(fn="opencl_find_deal_idx.c", extra_fields={
+        'c_loop_four_g': c_loop_four_g,
+        'c_loop_two_g': c_loop_two_g,
+        }, template=('''
 /*
     Code based on
     https://www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/
@@ -253,181 +364,8 @@ i_buff = clCreateBuffer(ctx,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
-{{
-int mystart = 1;
-while (! is_right)
-{{
-    // queue(k, size(r), nothing, r_buff, i_buff)
-    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
-    cl_event sum_evt = vecsum(
-        vecsum_k, que, i_buff, r_buff, num_elems, init_evt
-    );
-    cl_int *r_buff_arr;
-    #define BOTH 1
-#if 1
-    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-    assert(r_buff_arr);
-#endif
-
-    // clWaitForEvents(1, &init_evt);
-    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
-    assert(i_buff_arr);
-
-    clWaitForEvents(1, &sum_evt);
-
-#if BOTH
-    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-    assert(r_buff_arr);
-
-    clWaitForEvents(1, &sum_evt);
-#endif
-for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
-{{
-        if (i_buff_arr[myiterint] == first_int)
-        {{
-            is_right = true;
-            //exit(0);
-            cl_int rr = r_buff_arr[myiterint];
-            for (int n= num_remaining_ints; n >=1; --n)
-            {{
-                rr = ((rr * ((cl_int)214013) +
-                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
-                if ( ((rr >> 16) & 0x7fff) % n != myints[n])
-                {{
-                    is_right = false;
-                    break;
-                }}
-            }}
-            if ( is_right)
-            {{
-                long long ret = (mystart+myiterint);
-                return ret;
-                #if 0
-                printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
-                #endif
-                break;
-            }}
-        }}
-    }}
-
-    const int newstart = mystart + num_elems;
-    #if 0
-    if (newstart > {limit})
-    #else
-    if (newstart < 0)
-    #endif
-    {{
-        break;
-    }}
-    else
-    {{
-        mystart = newstart;
-    }}
-}}
-}}
-{{
-unsigned mystart = 0x80000000U;
-while (! is_right)
-{{
-    // queue(k, size(r), nothing, r_buff, i_buff)
-    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
-    cl_event sum_evt = vecsum(
-        vecsum_k4G, que, i_buff, r_buff, num_elems, init_evt
-    );
-    cl_int *r_buff_arr;
-    #define BOTH 1
-#if 1
-    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-    assert(r_buff_arr);
-#endif
-
-    // clWaitForEvents(1, &init_evt);
-    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
-    assert(i_buff_arr);
-
-    clWaitForEvents(1, &sum_evt);
-
-#if BOTH
-    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-    assert(r_buff_arr);
-
-    clWaitForEvents(1, &sum_evt);
-#endif
-for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
-{{
-        if (i_buff_arr[myiterint] == first_int)
-        {{
-            is_right = true;
-            //exit(0);
-            cl_int rr = r_buff_arr[myiterint];
-            for (int n = num_remaining_ints; n >=1; --n)
-            {{
-                rr = ((rr * ((cl_int)214013) +
-                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
-                if ( (((rr >> 16) & 0x7fff)|0x8000) % n != myints[n])
-                {{
-                    is_right = false;
-                    break;
-                }}
-            }}
-            if ( is_right)
-            {{
-                const long long ret = (((long long)mystart)+myiterint);
-                if (ret >= 0x100000000LL)
-                {{
-                    return -1;
-                }}
-                else
-                {{
-                    return ret;
-                }}
-                #if 0
-                printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
-                #endif
-                break;
-            }}
-        }}
-    }}
-
-    const unsigned newstart = mystart + num_elems;
-    #if 0
-    if (mystart > {limit})
-    #else
-    if (newstart < mystart)
-    #endif
-    {{
-        break;
-    }}
-    else
-    {{
-        mystart = newstart;
-    }}
-}}
-}}
+{c_loop_two_g}
+{c_loop_four_g}
 return -1;
 }}
 '''))
