@@ -34,14 +34,27 @@ def find_ret(ints, num_ints_in_first=4):
     def _myrand(mod):
         return ('((((r[gid] = (r[gid]*214013 + 2531011))' +
                 ' >> 16) & 0x7fff) % {})').format(mod)
+
+    def _myrand_to_4G(mod):
+        return ('(((((r[gid] = (r[gid]*214013 + 2531011))' +
+                ' >> 16) & 0x7fff)|0x8000) % {})').format(mod)
     _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
+    _myrand_to_4G_lookups = {
+        base: _myrand_to_4G(base) for base in range(1, 53)}
     kernel_sum_cl_code = ""
+    kernel_sum_to_4G_cl_code = ""
     for i in range(num_ints_in_first):
         first_int |= (ints.pop(0) << bits_width)
         myr = _myrand_lookups[52-i]
+        myr4G = _myrand_to_4G_lookups[52-i]
         kernel_sum_cl_code += "i[gid] " + (
             "= " + myr if i == 0 else
             "|= (" + myr + " << " + str(bits_width) + ")"
+        ) + ";\n"
+
+        kernel_sum_to_4G_cl_code += "i[gid] " + (
+            "= " + myr4G if i == 0 else
+            "|= (" + myr4G + " << " + str(bits_width) + ")"
         ) + ";\n"
         bits_width += STEP
 
@@ -55,6 +68,7 @@ def find_ret(ints, num_ints_in_first=4):
             bufsize=300000,
             _myrand=_myrand_lookups,
             kernel_sum_cl_code=kernel_sum_cl_code,
+            kernel_sum_to_4G_cl_code=kernel_sum_to_4G_cl_code,
             limit=((1 << 31)-1),
             myints=myints_str,
         )
@@ -84,6 +98,13 @@ def find_ret(ints, num_ints_in_first=4):
     {{
       const unsigned gid = get_global_id(0);
       {kernel_sum_cl_code}
+    }}'''))
+    _update_file_using_template(fn="test_2G_to_4G.ocl", template=(
+                '''kernel void sumg(global unsigned * restrict r,
+                     global unsigned * restrict i)
+    {{
+      const unsigned gid = get_global_id(0);
+      {kernel_sum_to_4G_cl_code}
     }}'''))
     _update_file_using_template(fn="opencl_find_deal_idx.c", template=('''
 /*
@@ -199,12 +220,15 @@ printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
         cl_command_queue que = create_queue(ctx, d);
         cl_program vecinit_prog = create_program("vecinit_prog.ocl", ctx, d);
         cl_program prog = create_program("test.ocl", ctx, d);
+        cl_program prog4G = create_program("test_2G_to_4G.ocl", ctx, d);
         cl_int err;
 
         cl_kernel vecinit_k = clCreateKernel(vecinit_prog, "vecinit", &err);
         ocl_check(err, "create kernel vecinit");
         cl_kernel vecsum_k = clCreateKernel(prog, "sum", &err);
         ocl_check(err, "create kernel vecsum");
+        cl_kernel vecsum_k4G = clCreateKernel(prog4G, "sumg", &err);
+        ocl_check(err, "create kernel vecsum_k4G");
 
         /* get information about the preferred work-group size multiple */
         err = clGetKernelWorkGroupInfo(vecinit_k, d,
@@ -218,7 +242,6 @@ printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
 
 
 bool is_right = false;
-int mystart = 1;
 cl_mem r_buff = NULL, i_buff = NULL;
 r_buff = clCreateBuffer(ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
@@ -230,6 +253,8 @@ i_buff = clCreateBuffer(ctx,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
+{{
+int mystart = 1;
 while (! is_right)
 {{
     // queue(k, size(r), nothing, r_buff, i_buff)
@@ -306,6 +331,91 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     {{
         break;
     }}
+}}
+}}
+{{
+unsigned mystart = 0x80000000;
+while (! is_right)
+{{
+    // queue(k, size(r), nothing, r_buff, i_buff)
+    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
+    cl_event sum_evt = vecsum(
+        vecsum_k4G, que, i_buff, r_buff, num_elems, init_evt
+    );
+    cl_int *r_buff_arr;
+    #define BOTH 1
+#if 1
+    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+    assert(r_buff_arr);
+#endif
+
+    // clWaitForEvents(1, &init_evt);
+    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
+    assert(i_buff_arr);
+
+    clWaitForEvents(1, &sum_evt);
+
+#if BOTH
+    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+            CL_MAP_READ,
+            0, num_elems,
+            1, &sum_evt, &init_evt, &err);
+    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
+    assert(r_buff_arr);
+
+    clWaitForEvents(1, &sum_evt);
+#endif
+for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
+{{
+        if (i_buff_arr[myiterint] == first_int)
+        {{
+            is_right = true;
+            //exit(0);
+            cl_int rr = r_buff_arr[myiterint];
+            for (int n= num_remaining_ints; n >=1; --n)
+            {{
+                rr = ((rr * ((cl_int)214013) +
+                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
+                if ( (((rr >> 16) & 0x7fff)|0x8000) % n != myints[n])
+                {{
+                    is_right = false;
+                    break;
+                }}
+            }}
+            if ( is_right)
+            {{
+                long long ret = (mystart+myiterint);
+                return ret;
+                #if 0
+                printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
+                #endif
+                break;
+            }}
+        }}
+    }}
+
+const unsigned newstart = mystart + num_elems;
+    #if 0
+    if (mystart > {limit})
+    #else
+    if (newstart < mystart)
+    #endif
+    {{
+        break;
+    }}
+    else
+    {{
+    mystart = newstart;
+    }}
+}}
 }}
 return -1;
 }}
