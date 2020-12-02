@@ -322,14 +322,18 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         }}
     }}
 
-    mystart += num_elems;
+    const int newstart = mystart + num_elems;
     #if 0
-    if (mystart > {limit})
+    if (newstart > {limit})
     #else
-    if (mystart < 0)
+    if (newstart < 0)
     #endif
     {{
         break;
+    }}
+    else
+    {{
+        mystart = newstart;
     }}
 }}
 }}
@@ -409,7 +413,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         }}
     }}
 
-const unsigned newstart = mystart + num_elems;
+    const unsigned newstart = mystart + num_elems;
     #if 0
     if (mystart > {limit})
     #else
