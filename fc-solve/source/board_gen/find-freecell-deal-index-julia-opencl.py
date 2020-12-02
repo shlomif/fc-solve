@@ -334,7 +334,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 }}
 }}
 {{
-unsigned mystart = 0x80000000;
+unsigned mystart = 0x80000000U;
 while (! is_right)
 {{
     // queue(k, size(r), nothing, r_buff, i_buff)
