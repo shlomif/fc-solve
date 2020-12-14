@@ -13,7 +13,7 @@
     "@babel/preset-env": "^7.12.1",
     "@types/jquery": "^3.5.4",
     "@types/qunit": "^2.9.6",
-    "@typescript-eslint/eslint-plugin": "^4.8.1",
+    "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.1",
     "amdefine": "^1.0.1",
     "babel-eslint": "^10.1.0",
