@@ -38,15 +38,23 @@ def find_ret(ints, num_ints_in_first=4):
     def _myrand_to_4G(mod):
         return ('(((((r[gid] = (r[gid]*214013 + 2531011))' +
                 ' >> 16) & 0x7fff)|0x8000) % {})').format(mod)
+
+    def _myrand_to_8G(mod):
+        return ('(((((r[gid] = (r[gid]*214013 + 2531011))' +
+                ' >> 16) & 0x7fff)+1) % {})').format(mod)
     _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
     _myrand_to_4G_lookups = {
         base: _myrand_to_4G(base) for base in range(1, 53)}
+    _myrand_to_8G_lookups = {
+        base: _myrand_to_8G(base) for base in range(1, 53)}
     kernel_sum_cl_code = ""
     kernel_sum_to_4G_cl_code = ""
+    kernel_sum_to_8G_cl_code = ""
     for i in range(num_ints_in_first):
         first_int |= (ints.pop(0) << bits_width)
         myr = _myrand_lookups[52-i]
         myr4G = _myrand_to_4G_lookups[52-i]
+        myr8G = _myrand_to_8G_lookups[52-i]
         kernel_sum_cl_code += "i[gid] " + (
             "= " + myr if i == 0 else
             "|= (" + myr + " << " + str(bits_width) + ")"
@@ -55,6 +63,10 @@ def find_ret(ints, num_ints_in_first=4):
         kernel_sum_to_4G_cl_code += "i[gid] " + (
             "= " + myr4G if i == 0 else
             "|= (" + myr4G + " << " + str(bits_width) + ")"
+        ) + ";\n"
+        kernel_sum_to_8G_cl_code += "i[gid] " + (
+            "= " + myr8G if i == 0 else
+            "|= (" + myr8G + " << " + str(bits_width) + ")"
         ) + ";\n"
         bits_width += STEP
 
@@ -69,6 +81,7 @@ def find_ret(ints, num_ints_in_first=4):
             _myrand=_myrand_lookups,
             kernel_sum_cl_code=kernel_sum_cl_code,
             kernel_sum_to_4G_cl_code=kernel_sum_to_4G_cl_code,
+            kernel_sum_to_8G_cl_code=kernel_sum_to_8G_cl_code,
             limit=((1 << 31)-1),
             myints=myints_str,
             **extra_fields,
@@ -107,6 +120,13 @@ def find_ret(ints, num_ints_in_first=4):
     {{
       const unsigned gid = get_global_id(0);
       {kernel_sum_to_4G_cl_code}
+    }}'''))
+    _update_file_using_template(fn="test_4G_to_8G.ocl", template=(
+                '''kernel void sumh(global unsigned long * restrict r,
+                     global unsigned long * restrict i)
+    {{
+      const unsigned gid = get_global_id(0);
+      {kernel_sum_to_8G_cl_code}
     }}'''))
     c_loop_template = '''{{
 {int_type} mystart = {start};
@@ -216,8 +236,23 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'seed_proc_code': '|0x8000',
         }
     )
+    c_loop_eight_g = _myformat(
+        template=c_loop_template,
+        extra_fields={
+            'my_vecsum_var': 'vecsum_k8G',
+            'int_type': 'unsigned long',
+            'start': ('0x10000'+'0000ULL'),
+            'check_ret': '''
+                if (ret >= 0x200000000LL)
+                {
+                    return -1;
+                }\n''',
+            'seed_proc_code': '+1',
+        }
+    )
     _update_file_using_template(fn="opencl_find_deal_idx.c", extra_fields={
         'c_loop_four_g': c_loop_four_g,
+        'c_loop_eight_g': c_loop_eight_g,
         'c_loop_two_g': c_loop_two_g,
         }, template=('''
 /*
@@ -334,6 +369,7 @@ printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
         cl_program vecinit_prog = create_program("vecinit_prog.ocl", ctx, d);
         cl_program prog = create_program("test.ocl", ctx, d);
         cl_program prog4G = create_program("test_2G_to_4G.ocl", ctx, d);
+        cl_program prog8G = create_program("test_4G_to_8G.ocl", ctx, d);
         cl_int err;
 
         cl_kernel vecinit_k = clCreateKernel(vecinit_prog, "vecinit", &err);
@@ -342,6 +378,8 @@ printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
         ocl_check(err, "create kernel vecsum");
         cl_kernel vecsum_k4G = clCreateKernel(prog4G, "sumg", &err);
         ocl_check(err, "create kernel vecsum_k4G");
+        cl_kernel vecsum_k8G = clCreateKernel(prog8G, "sumh", &err);
+        ocl_check(err, "create kernel vecsum_k8G");
 
         /* get information about the preferred work-group size multiple */
         err = clGetKernelWorkGroupInfo(vecinit_k, d,
@@ -368,6 +406,7 @@ i_buff = clCreateBuffer(ctx,
         ocl_check(err, "create buffer i_buff");
 {c_loop_two_g}
 {c_loop_four_g}
+{c_loop_eight_g}
 return -1;
 }}
 '''))

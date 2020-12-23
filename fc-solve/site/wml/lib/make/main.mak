@@ -35,7 +35,7 @@ else
     MULTI_YUI = ./bin/cat-o
 
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
-    SASS_DEBUG_FLAGS = --source-map --embed-sources --embed-source-map
+    SASS_DEBUG_FLAGS = --sourcemap-embed
 endif
 
 ifeq ($(LOCAL_BROWSER_TESTS),0)
@@ -141,7 +141,7 @@ STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
-SASS_CMD = sass $(SASS_DEBUG_FLAGS) -I lib/repos/Solitairey/ --style $(SASS_STYLE)
+SASS_CMD = pysassc $(SASS_DEBUG_FLAGS) -I lib/repos/Solitairey/ --style $(SASS_STYLE)
 
 SASS_HEADERS = lib/sass/common-style.scss lib/repos/Solitairey/solitairey-cards--common.scss
 
