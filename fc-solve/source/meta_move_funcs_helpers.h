@@ -192,15 +192,14 @@ static inline void fc_solve_move_sequence_function(
     const int empty_stacks_fill = INSTANCE_EMPTY_STACKS_FILL;
 #define PASS_sequences_are_built_by(param) , param
 #define POS_BY_RANK_STEP                                                       \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
-            ? 1                                                                \
-            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4 : 2)
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)      ? 1                \
+        : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT) ? 4                \
+                                                            : 2)
 #define FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(card)             \
-    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK)                         \
-            ? 0                                                                \
-            : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                \
-                  ? fcs_card_suit(card)                                        \
-                  : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
+    ((sequences_are_built_by == FCS_SEQ_BUILT_BY_RANK) ? 0                     \
+        : (sequences_are_built_by == FCS_SEQ_BUILT_BY_SUIT)                    \
+            ? fcs_card_suit(card)                                              \
+            : ((fcs_card_suit(card) ^ 0x1) & (0x2 - 1)))
 
 #define FCS_POS_IDX_TO_CHECK_START_LOOP(src_card)                              \
     const int8_t *pos_idx_to_check = &positions_by_rank[(                      \

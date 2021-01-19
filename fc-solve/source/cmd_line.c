@@ -350,10 +350,9 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
 #ifndef FCS_FREECELL_ONLY
             const_AUTO(p, (*arg));
             freecell_solver_user_set_sequences_are_built_by_type(instance,
-                (!strcmp(p, "suit"))
-                    ? FCS_SEQ_BUILT_BY_SUIT
-                    : (!strcmp(p, "rank")) ? FCS_SEQ_BUILT_BY_RANK
-                                           : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR);
+                (!strcmp(p, "suit"))   ? FCS_SEQ_BUILT_BY_SUIT
+                : (!strcmp(p, "rank")) ? FCS_SEQ_BUILT_BY_RANK
+                                       : FCS_SEQ_BUILT_BY_ALTERNATE_COLOR);
 #endif
         }
         break;
@@ -369,11 +368,10 @@ DLLEXPORT int freecell_solver_user_cmd_line_parse_args_with_file_nesting_count(
             PROCESS_OPT_ARG();
 #ifndef FCS_FREECELL_ONLY
             const char *const s = (*arg);
-            freecell_solver_user_set_empty_stacks_filled_by(instance,
-                (!strcmp(s, "kings"))
-                    ? FCS_ES_FILLED_BY_KINGS_ONLY
-                    : (!strcmp(s, "none")) ? FCS_ES_FILLED_BY_NONE
-                                           : FCS_ES_FILLED_BY_ANY_CARD);
+            freecell_solver_user_set_empty_stacks_filled_by(
+                instance, (!strcmp(s, "kings"))  ? FCS_ES_FILLED_BY_KINGS_ONLY
+                          : (!strcmp(s, "none")) ? FCS_ES_FILLED_BY_NONE
+                                                 : FCS_ES_FILLED_BY_ANY_CARD);
 #endif
         }
         break;

@@ -127,9 +127,9 @@ static inline void fc_solve_get_column_encoding_composite(
     ret->bit_in_char_idx = bit_w.bit_in_char_idx;
 
     // Calculate the type.
-    ret->type = ((col_len == 0) ? COL_TYPE_EMPTY
-                                : num_orig_cards ? COL_TYPE_HAS_ORIG
-                                                 : COL_TYPE_ENTIRELY_NON_ORIG);
+    ret->type = ((col_len == 0)   ? COL_TYPE_EMPTY
+                 : num_orig_cards ? COL_TYPE_HAS_ORIG
+                                  : COL_TYPE_ENTIRELY_NON_ORIG);
 }
 
 #if MAX_NUM_FREECELLS > 0
