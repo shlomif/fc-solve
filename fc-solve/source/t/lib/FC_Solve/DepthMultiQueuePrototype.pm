@@ -18,7 +18,7 @@ __PACKAGE__->mk_acc_ref(
             _max_depth
             _queues_by_depth
             _next_queue_id
-            )
+        )
     ]
 );
 

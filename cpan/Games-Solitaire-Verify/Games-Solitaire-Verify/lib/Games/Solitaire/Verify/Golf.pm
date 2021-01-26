@@ -64,7 +64,7 @@ __PACKAGE__->mk_acc_ref(
             _talon
             _variant
             _wrap_ranks
-            )
+        )
     ]
 );
 

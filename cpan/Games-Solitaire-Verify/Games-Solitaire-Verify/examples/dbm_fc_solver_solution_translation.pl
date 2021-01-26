@@ -19,7 +19,7 @@ __PACKAGE__->mk_acc_ref(
         qw(
             _filename
             _variant_params
-            )
+        )
     ]
 );
 

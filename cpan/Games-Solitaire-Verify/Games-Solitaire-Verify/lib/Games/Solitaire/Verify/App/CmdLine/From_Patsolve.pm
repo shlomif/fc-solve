@@ -16,7 +16,7 @@ __PACKAGE__->mk_acc_ref(
             _sol_filename
             _variant_params
             _buffer_ref
-            )
+        )
     ]
 );
 

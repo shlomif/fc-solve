@@ -11,7 +11,7 @@ use vars (qw(@fields %fields_map));
         cmd_line
         id
         used
-        )
+    )
 );
 
 %fields_map = ( map { $_ => 1 } @fields );

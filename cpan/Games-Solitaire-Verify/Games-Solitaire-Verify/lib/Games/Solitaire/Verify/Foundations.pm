@@ -22,7 +22,7 @@ __PACKAGE__->mk_acc_ref(
             _num_decks
             _founds
             _s
-            )
+        )
     ]
 );
 

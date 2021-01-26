@@ -65,7 +65,7 @@ __PACKAGE__->mk_acc_ref(
             should_skip_is_king
             single_card_states
             state_opt_next
-            )
+        )
     ]
 );
 
@@ -728,7 +728,7 @@ __PACKAGE__->mk_acc_ref(
     [
         qw(
             _q
-            )
+        )
     ]
 );
 

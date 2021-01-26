@@ -170,7 +170,7 @@ __PACKAGE__->mk_acc_ref(
     [
         qw(
             states
-            )
+        )
     ]
 );
 

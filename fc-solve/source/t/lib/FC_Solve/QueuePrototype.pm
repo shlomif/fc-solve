@@ -17,7 +17,7 @@ __PACKAGE__->mk_acc_ref(
             _page_to_read_from
             _page_to_write_to
             _queue_id
-            )
+        )
     ]
 );
 
@@ -172,7 +172,7 @@ __PACKAGE__->mk_acc_ref(
             _queue_id
             _read_from_idx
             _write_to_idx
-            )
+        )
     ]
 );
 

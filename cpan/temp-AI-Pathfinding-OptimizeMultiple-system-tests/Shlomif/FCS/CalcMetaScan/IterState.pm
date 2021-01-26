@@ -14,7 +14,7 @@ use vars (qw(@fields %fields_map));
         _num_solved
         _quota
         _scan_idx
-        )
+    )
 );
 
 use Exception::Class ('Shlomif::FCS::CalcMetaScan::Error::OutOfQuotas');

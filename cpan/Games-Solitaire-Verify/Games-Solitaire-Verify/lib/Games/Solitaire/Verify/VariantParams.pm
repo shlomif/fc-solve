@@ -24,7 +24,7 @@ __PACKAGE__->mk_acc_ref(
             rules
             seq_build_by
             sequence_move
-            )
+        )
     ]
 );
 

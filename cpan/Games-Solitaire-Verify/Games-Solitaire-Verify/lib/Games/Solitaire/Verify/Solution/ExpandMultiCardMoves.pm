@@ -31,7 +31,7 @@ __PACKAGE__->mk_acc_ref(
         qw(
             _move_line
             _output_fh
-            )
+        )
     ]
 );
 

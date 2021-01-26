@@ -20,7 +20,7 @@ __PACKAGE__->mk_acc_ref(
         qw(
             _cards
             _s
-            )
+        )
     ]
 );
 

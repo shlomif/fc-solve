@@ -31,7 +31,7 @@ __PACKAGE__->mk_acc_ref(
             _summary_lock
             _variant_params
             _should_verify
-            )
+        )
     ]
 );
 

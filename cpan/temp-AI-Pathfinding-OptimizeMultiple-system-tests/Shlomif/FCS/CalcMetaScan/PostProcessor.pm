@@ -10,7 +10,7 @@ __PACKAGE__->mk_acc_ref(
         qw(
             _should_do_rle
             _offset_quotas
-            )
+        )
     ]
 );
 

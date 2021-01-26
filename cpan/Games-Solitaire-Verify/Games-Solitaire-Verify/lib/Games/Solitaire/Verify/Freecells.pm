@@ -22,7 +22,7 @@ __PACKAGE__->mk_acc_ref(
             _count
             _cells
             _s
-            )
+        )
     ]
 );
 

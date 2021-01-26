@@ -18,7 +18,7 @@ __PACKAGE__->mk_acc_ref(
             start_board
             num_boards
             selected_scans
-            )
+        )
     ],
 );
 

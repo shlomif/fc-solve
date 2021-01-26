@@ -108,9 +108,9 @@ sub modules
 
     return [
         sort { $a cmp $b } $self->main_base . '.o', 'card.o',
-        'dbm_kaztree.o',        'debondt__card_pos.o',
-        'debondt__state_pos.o', 'is_parent.o',
-        'fcs-libavl/rb.o',      'meta_alloc.o',
+        'dbm_kaztree.o',                            'debondt__card_pos.o',
+        'debondt__state_pos.o',                     'is_parent.o',
+        'fcs-libavl/rb.o',                          'meta_alloc.o',
         'state.o',
     ];
 }

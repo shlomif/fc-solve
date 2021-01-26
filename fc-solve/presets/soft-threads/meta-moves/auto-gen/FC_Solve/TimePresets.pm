@@ -35,7 +35,7 @@ has input_obj   => (
             lookup_scan_idx_based_on_id
             selected_scans
             time_scan
-            )
+        )
     ]
 );
 

@@ -14,7 +14,7 @@ __PACKAGE__->mk_accessors(
         dir
         items
         num_on_front
-        )
+    )
 );
 
 my @old_news_items = (

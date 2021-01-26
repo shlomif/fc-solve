@@ -22,7 +22,7 @@ __PACKAGE__->mk_acc_ref(
             _num_redeals_so_far
             _undealt_cards
             _waste
-            )
+        )
     ]
 );
 

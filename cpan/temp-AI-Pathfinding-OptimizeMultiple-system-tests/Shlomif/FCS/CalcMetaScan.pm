@@ -25,7 +25,7 @@ __PACKAGE__->mk_acc_ref(
             _total_boards_solved
             _total_iters
             _trace_cb
-            )
+        )
     ]
 );
 

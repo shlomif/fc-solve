@@ -34,7 +34,7 @@ __PACKAGE__->mk_acc_ref(
             _should_trace_be_done
             _simulate_to
             _start_board
-            )
+        )
     ]
 );
 

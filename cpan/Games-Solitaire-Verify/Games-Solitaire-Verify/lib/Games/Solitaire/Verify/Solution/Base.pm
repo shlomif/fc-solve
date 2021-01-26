@@ -28,7 +28,7 @@ __PACKAGE__->mk_acc_ref(
             _max_rank
             _move
             _reached_end
-            )
+        )
     ]
 );
 

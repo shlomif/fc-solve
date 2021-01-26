@@ -31,7 +31,7 @@ __PACKAGE__->mk_acc_ref(
     [
         qw(
             _derived_state _init_state _columns_initial_lens _orig_args _variant
-            )
+        )
     ]
 );
 

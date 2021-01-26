@@ -197,7 +197,7 @@ use Games::Solitaire::Verify::Card;
             JS
             QH
             KS
-            )
+        )
     );
 
     foreach my $string (@cards)

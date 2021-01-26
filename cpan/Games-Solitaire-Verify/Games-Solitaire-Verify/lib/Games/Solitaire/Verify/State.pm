@@ -33,7 +33,7 @@ __PACKAGE__->mk_acc_ref(
             _variant
             _variant_params
             _temp_move
-            )
+        )
     ]
 );
 

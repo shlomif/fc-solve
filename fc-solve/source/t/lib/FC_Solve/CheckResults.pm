@@ -20,7 +20,7 @@ __PACKAGE__->mk_acc_ref(
             digests_storage_fn
             digests_storage
             trim_stats
-            )
+        )
     ]
 );
 

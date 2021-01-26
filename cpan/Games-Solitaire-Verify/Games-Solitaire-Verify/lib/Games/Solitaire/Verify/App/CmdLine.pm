@@ -19,7 +19,7 @@ __PACKAGE__->mk_acc_ref(
             _filename
             _max_rank
             _variant_params
-            )
+        )
     ]
 );
 

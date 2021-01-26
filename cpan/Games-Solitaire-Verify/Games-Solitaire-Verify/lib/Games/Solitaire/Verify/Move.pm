@@ -23,7 +23,7 @@ __PACKAGE__->mk_acc_ref(
             dest
             num_cards
             _game
-            )
+        )
     ]
 );
 

@@ -21,7 +21,7 @@ __PACKAGE__->mk_acc_ref(
             theme
             variant
             variant_s
-            )
+        )
     ]
 );
 

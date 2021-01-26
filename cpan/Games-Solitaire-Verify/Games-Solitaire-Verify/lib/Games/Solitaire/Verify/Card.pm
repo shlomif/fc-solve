@@ -26,7 +26,7 @@ __PACKAGE__->mk_acc_ref(
             rank
             suit
             _game
-            )
+        )
     ]
 );
 
