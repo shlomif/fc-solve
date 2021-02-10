@@ -44,7 +44,7 @@ let count: number = 0;
 function _get_stdin(): string {
     return $("#stdin").val() as string;
 }
-const on_flip_stdin = (my_operations, assert, done) => {
+const on_flip_stdin = (my_operations: Ops, assert, done) => {
     assert.deepEqual(
         _get_stdin(),
         get_non_flipped_deal(),
@@ -56,7 +56,7 @@ const on_flip_stdin = (my_operations, assert, done) => {
         $("#run_do_solve").click();
     }
 };
-const on_flip_output = (my_operations, assert, done) => {
+const on_flip_output = (my_operations: Ops, assert, done) => {
     const board_parse__wrap = $("#board_parse__wrap");
 
     assert.deepEqual(
@@ -75,7 +75,7 @@ const on_flip_output = (my_operations, assert, done) => {
     $("#fcs_flip_deal").click();
     done();
 };
-const on_stdin_initial_layout = (my_operations, assert, done) => {
+const on_stdin_initial_layout = (my_operations: Ops, assert, done) => {
     // TEST
     assert.deepEqual(
         _get_stdin()
@@ -90,7 +90,7 @@ const on_stdin_initial_layout = (my_operations, assert, done) => {
     $("#run_do_solve").click();
     done();
 };
-const on_change_initial_layout = (my_operations, assert, done) => {
+const on_change_initial_layout = (my_operations: Ops, assert, done) => {
     const sol: string = _get_solution();
 
     // TEST
@@ -108,7 +108,7 @@ function my_func(qunit: QUnit, my_callback: () => void) {
             assert.expect(8);
 
             let done = assert.async(7);
-            let my_operations = new Ops(
+            const my_operations: Ops = new Ops(
                 assert,
                 done,
                 on_stdin_initial_layout,
