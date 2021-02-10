@@ -11,7 +11,7 @@ use NavDataRender ();
 use MyNavData     ();
 use URI::Escape qw(uri_escape);
 use HTML::Widgets::NavMenu::EscapeHtml qw(escape_html);
-use Parallel::ForkManager::Segmented ();
+use Parallel::Map::Segmented ();
 
 sub get_page_path
 {
@@ -48,6 +48,119 @@ sub _out
     return;
 }
 
+sub _process_item
+{
+    my ( $host, $hostp, $proto_url ) = @{ shift() }{qw/ host hostp proto_url /};
+    my $url = $proto_url =~ s#(\A|/)(index\.x?html)\z#$1#r;
+
+    my $suf      = $2;
+    my $filename = "/$url";
+
+    # urlpath.
+    my $urlp = "$hostp/" . ( $url =~ s#(\A|/)$#${1}$suf#r ) . '/';
+    path($urlp)->mkpath;
+
+    print "start filename=$filename\n";
+
+    my $nav_bar = HTML::Widgets::NavMenu::JQueryTreeView->new(
+        'path_info'    => $filename,
+        'current_host' => $host,
+        MyNavData::get_params(),
+        'ul_classes'     => [],
+        'no_leading_dot' => 1,
+    );
+
+    my $rendered_results = $nav_bar->render();
+
+    my $leading_path = $rendered_results->{leading_path};
+
+    my $nav_results = NavDataRender->nav_data_render(
+        {
+            filename => $url,
+            host     => $host,
+            ROOT     => get_root($url),
+        }
+    );
+
+    my $shlomif_nav_links_renderer = $nav_results->{nav_links_renderer};
+
+    my $nav_links_obj = $rendered_results->{nav_links_obj};
+
+    my $out = sub {
+        my ( $id, $cb ) = @_;
+
+        return _out( $urlp . $id, $cb );
+    };
+
+    $out->(
+        'main_nav_menu_html',
+        sub {
+            return \( join( "\n", @{ $rendered_results->{html} } ) );
+        }
+    );
+    $out->(
+        'html_head_nav_links',
+        sub {
+            return \(
+                NavDataRender->get_html_head_nav_links(
+                    { nav_links_obj => $nav_links_obj }
+                )
+            );
+        }
+    );
+
+    $out->(
+        'page_url',
+        sub {
+            return \(
+                escape_html(
+                    uri_escape(
+                        MyNavData::get_hosts()->{$host}->{base_url} . $url
+                    )
+                )
+            );
+        }
+    );
+
+    foreach my $with_accesskey ( '', 1 )
+    {
+        $out->(
+            "shlomif_nav_links_renderer-with_accesskey=$with_accesskey",
+            sub {
+                my @params;
+                if ( $with_accesskey ne "" )
+                {
+                    push @params, ( 'with_accesskey' => $with_accesskey );
+                }
+                return \(
+                    join( '',
+                        $shlomif_nav_links_renderer->get_total_html(@params) )
+                );
+            },
+        );
+    }
+
+    if ( $filename eq '/site-map/' )
+    {
+        $out->(
+            'shlomif_main_expanded_nav_bar',
+            sub {
+                return \(
+                    join(
+                        '',
+                        map { "$_\n" } @{
+                            $nav_results->{shlomif_main_expanded_nav_bar}
+                                ->gen_site_map()
+                        }
+                    )
+                );
+            },
+        );
+    }
+    print "filename=$filename\n";
+    return;
+}
+
 # At least temporarily disable Parallel::ForkManager because it causes
 # the main process to exit before all the work is done.
 
@@ -55,7 +168,7 @@ foreach my $host (qw(fc-solve))
 {
     my $hostp = "lib/cache/combined/$host";
 
-    Parallel::ForkManager::Segmented->new->run(
+    Parallel::Map::Segmented->new()->run(
         {
             items => [
                 ( $host eq 'fc-solve' )
@@ -65,125 +178,14 @@ foreach my $host (qw(fc-solve))
             nproc        => 4,
             batch_size   => 16,
             process_item => sub {
-                my $proto_url = shift;
-                my $url       = $proto_url =~ s#(\A|/)(index\.x?html)\z#$1#r;
-
-                my $suf      = $2;
-                my $filename = "/$url";
-
-                # urlpath.
-                my $urlp = "$hostp/" . ( $url =~ s#(\A|/)$#${1}$suf#r ) . '/';
-                path($urlp)->mkpath;
-
-                print "start filename=$filename\n";
-
-                my $nav_bar = HTML::Widgets::NavMenu::JQueryTreeView->new(
-                    'path_info'    => $filename,
-                    'current_host' => $host,
-                    MyNavData::get_params(),
-                    'ul_classes'     => [],
-                    'no_leading_dot' => 1,
-                );
-
-                my $rendered_results = $nav_bar->render();
-
-                my $leading_path = $rendered_results->{leading_path};
-
-                my $nav_results = NavDataRender->nav_data_render(
+                return _process_item(
                     {
-                        filename => $url,
-                        host     => $host,
-                        ROOT     => get_root($url),
+                        host      => $host,
+                        hostp     => $hostp,
+                        proto_url => shift(),
                     }
                 );
-
-                my $shlomif_nav_links_renderer =
-                    $nav_results->{nav_links_renderer};
-
-                my $nav_links_obj = $rendered_results->{nav_links_obj};
-
-                my $out = sub {
-                    my ( $id, $cb ) = @_;
-
-                    return _out( $urlp . $id, $cb );
-                };
-
-                $out->(
-                    'main_nav_menu_html',
-                    sub {
-                        return \(
-                            join( "\n", @{ $rendered_results->{html} } ) );
-                    }
-                );
-                $out->(
-                    'html_head_nav_links',
-                    sub {
-                        return \(
-                            NavDataRender->get_html_head_nav_links(
-                                { nav_links_obj => $nav_links_obj }
-                            )
-                        );
-                    }
-                );
-
-                $out->(
-                    'page_url',
-                    sub {
-                        return \(
-                            escape_html(
-                                uri_escape(
-                                    MyNavData::get_hosts()->{$host}->{base_url}
-                                        . $url
-                                )
-                            )
-                        );
-                    }
-                );
-
-                foreach my $with_accesskey ( '', 1 )
-                {
-                    $out->(
-"shlomif_nav_links_renderer-with_accesskey=$with_accesskey",
-                        sub {
-                            my @params;
-                            if ( $with_accesskey ne "" )
-                            {
-                                push @params,
-                                    ( 'with_accesskey' => $with_accesskey );
-                            }
-                            return \(
-                                join(
-                                    '',
-                                    $shlomif_nav_links_renderer->get_total_html(
-                                        @params)
-                                )
-                            );
-                        },
-                    );
-                }
-
-                if ( $filename eq '/site-map/' )
-                {
-                    $out->(
-                        'shlomif_main_expanded_nav_bar',
-                        sub {
-                            return \(
-                                join(
-                                    '',
-                                    map { "$_\n" } @{
-                                        $nav_results
-                                            ->{shlomif_main_expanded_nav_bar}
-                                            ->gen_site_map()
-                                    }
-                                )
-                            );
-                        },
-                    );
-                }
-                print "filename=$filename\n";
-
-                # print "filename=$filename\n";
-            }
+            },
         }
     );
 }

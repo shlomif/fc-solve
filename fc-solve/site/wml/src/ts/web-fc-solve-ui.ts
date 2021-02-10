@@ -304,54 +304,56 @@ class FC_Solve_UI {
             html += "</ol>\n";
             that._set_html_output(html);
 
-            $("#dynamic_output").on("click", "button.expand_move", function (
-                event,
-            ) {
-                const button = $(this);
-                const b_id = button.attr("id");
-                const idx = parseInt(
-                    b_id.match(/^expand_move_([0-9]+)$/)[1],
-                    10,
-                );
+            $("#dynamic_output").on(
+                "click",
+                "button.expand_move",
+                function (event) {
+                    const button = $(this);
+                    const b_id = button.attr("id");
+                    const idx = parseInt(
+                        b_id.match(/^expand_move_([0-9]+)$/)[1],
+                        10,
+                    );
 
-                const move_ctl = $("#move_" + idx);
-                const calc_class = "calced";
-                if (!move_ctl.hasClass(calc_class)) {
-                    const inner_moves = inst.calc_expanded_move(idx);
+                    const move_ctl = $("#move_" + idx);
+                    const calc_class = "calced";
+                    if (!move_ctl.hasClass(calc_class)) {
+                        const inner_moves = inst.calc_expanded_move(idx);
 
-                    let inner_html = "";
+                        let inner_html = "";
 
-                    inner_html += '<ol class="inner_moves">';
+                        inner_html += '<ol class="inner_moves">';
 
-                    function _out_inner_move(i) {
-                        inner_html +=
-                            '<li class="move">' +
-                            '<span class="inner_move">' +
-                            _filt(inner_moves[i].str) +
-                            "</span>\n</li>\n";
-                        return;
+                        function _out_inner_move(i) {
+                            inner_html +=
+                                '<li class="move">' +
+                                '<span class="inner_move">' +
+                                _filt(inner_moves[i].str) +
+                                "</span>\n</li>\n";
+                            return;
+                        }
+
+                        for (let i = 0; i < inner_moves.length - 1; i += 2) {
+                            _out_inner_move(i);
+                            inner_html += _render_state(inner_moves[i + 1], [
+                                idx,
+                                i,
+                            ]);
+                        }
+                        _out_inner_move(inner_moves.length - 1);
+                        inner_html += "</ol>";
+                        move_ctl.append(inner_html);
+                        move_ctl.toggleClass(calc_class);
                     }
-
-                    for (let i = 0; i < inner_moves.length - 1; i += 2) {
-                        _out_inner_move(i);
-                        inner_html += _render_state(inner_moves[i + 1], [
-                            idx,
-                            i,
-                        ]);
-                    }
-                    _out_inner_move(inner_moves.length - 1);
-                    inner_html += "</ol>";
-                    move_ctl.append(inner_html);
-                    move_ctl.toggleClass(calc_class);
-                }
-                move_ctl.toggleClass("expanded");
-                move_ctl.toggleClass("unexpanded");
-                button.text(
-                    move_ctl.hasClass("expanded")
-                        ? "Unexpand move"
-                        : "Expand move",
-                );
-            });
+                    move_ctl.toggleClass("expanded");
+                    move_ctl.toggleClass("unexpanded");
+                    button.text(
+                        move_ctl.hasClass("expanded")
+                            ? "Unexpand move"
+                            : "Expand move",
+                    );
+                },
+            );
         }
         return;
     }

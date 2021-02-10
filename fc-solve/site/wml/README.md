@@ -22,7 +22,7 @@ and [Jinja2](http://jinja.pocoo.org/),
 
 The smoke tests can be run using:
 
-1. `gmake smoke-tests`
+1. `gmake PROD=1 smoke-tests`
 
 To upload, use:
 

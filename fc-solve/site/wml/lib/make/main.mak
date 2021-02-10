@@ -23,7 +23,7 @@ UPLOAD_URL = $(TEMP_UPLOAD_URL)
 STAGING_URL_SUFFIX := fc-solve-staging
 
 ifeq ($(PROD),1)
-    TEST_SITE_URL_SUFFIX := $(STAGING_URL_SUFFIX)
+    TEST_SITE_URL_SUFFIX = $(STAGING_URL_SUFFIX)
     D = dest-prod
     UPLOAD_URL = hostgator:domains/fc-solve/public_html
     STAGING_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(STAGING_URL_SUFFIX)
@@ -31,7 +31,7 @@ ifeq ($(PROD),1)
     MULTI_YUI = terser --compress --comments "false"
     SASS_DEBUG_FLAGS =
 else
-    TEST_SITE_URL_SUFFIX := $(TESTING_ENV__URL_SUFFIX)
+    TEST_SITE_URL_SUFFIX = $(TESTING_ENV__URL_SUFFIX)
     MULTI_YUI = ./bin/cat-o
 
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
