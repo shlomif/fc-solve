@@ -114,19 +114,17 @@ function my_func(qunit: QUnit, my_callback: () => void) {
                 on_stdin_initial_layout,
                 on_change_initial_layout,
             );
-            (() => {
-                $("#stdin").change(() => {
-                    return my_operations.wrap_stdin();
-                });
-                $("#output").change(() => {
-                    return my_operations.wrap_output();
-                });
-                $("#deal_number").val("24");
-                $("#preset").val("default");
-                $("#one_based").prop("checked", false);
-                $("#populate_input").click();
-                done();
-            })();
+            $("#stdin").change(() => {
+                return my_operations.wrap_stdin();
+            });
+            $("#output").change(() => {
+                return my_operations.wrap_output();
+            });
+            $("#deal_number").val("24");
+            $("#preset").val("default");
+            $("#one_based").prop("checked", false);
+            $("#populate_input").click();
+            done();
         });
     });
 
