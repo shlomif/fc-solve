@@ -2101,15 +2101,11 @@ typedef struct
 
 typedef struct
 {
-#ifdef FCS_WITH_NI
     // This is a list of several consecutive instances that are run
     // one after the other in case the previous ones could not solve
     // the board
     fcs_instance_item *current_instance, *instances_list,
         *end_of_instances_list;
-#else
-    fcs_instance_item single_inst;
-#endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     // The global (sequence-wide) limit of the iterations. Used
     // by limit_iterations() and friends
@@ -2121,14 +2117,9 @@ typedef struct
     // The number of iterations that the current instance started solving from.
     fcs_stats init_num_checked_states;
     // A pointer to the currently active flare out of the sequence
-#if defined(FCS_WITH_NI) || defined(FCS_WITH_FLARES)
 #define ACTIVE_FLARE(user) ((user)->active_flare)
 #define SET_ACTIVE_FLARE(user, flare) ((user)->active_flare = (flare))
     flare_item *active_flare;
-#else
-#define ACTIVE_FLARE(user) (&((user)->single_inst.single_flare))
-#define SET_ACTIVE_FLARE(user, flare)
-#endif
 #define OBJ_STATS(user) (ACTIVE_FLARE(user)->obj_stats)
     fcs_state_keyval_pair state;
 #ifdef FCS_WITH_MOVES
@@ -2145,9 +2136,7 @@ typedef struct
 #else
 #define SET_user_ret(user, val) (val)
 #endif
-#ifdef FCS_WITH_NI
     bool all_instances_were_suspended;
-#endif
 #ifdef FCS_WITH_ERROR_STRS
     state_validity_ret state_validity_ret;
     fcs_card state_validity_card;
@@ -2189,26 +2178,15 @@ static inline fcs_instance *active_obj(void *const api_instance)
 
 static inline fcs_instance_item *curr_inst(fcs_user *const user)
 {
-#ifdef FCS_WITH_NI
     return user->current_instance;
-#else
-    return &user->single_inst;
-#endif
 }
 
-#ifdef FCS_WITH_NI
 #define INSTANCES_LOOP_START()                                                 \
     {                                                                          \
         const_SLOT(end_of_instances_list, user);                               \
         for (fcs_instance_item *instance_item = user->instances_list;          \
              instance_item < end_of_instances_list; ++instance_item)           \
         {
-#else
-#define INSTANCES_LOOP_START()                                                 \
-    do                                                                         \
-    {                                                                          \
-        const_AUTO(instance_item, curr_inst(user));
-#endif
 
 #ifdef FCS_WITH_FLARES
 
@@ -2226,16 +2204,9 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
 
 #define INSTANCE_ITEM_FLARES_LOOP_END() }
 
-#ifdef FCS_WITH_NI
 #define INSTANCES_LOOP_END()                                                   \
     }                                                                          \
     }
-#else
-#define INSTANCES_LOOP_END()                                                   \
-    }                                                                          \
-    while (0)                                                                  \
-        ;
-#endif
 
 #define FLARES_LOOP_START()                                                    \
     INSTANCES_LOOP_START()                                                     \
@@ -2415,22 +2386,16 @@ static FLARE_INLINE void user_next_flare(fcs_user *const user)
     flare->obj_stats = initial_stats;
 }
 
-#ifdef FCS_WITH_NI
 #define NI_INLINE
-#else
-#define NI_INLINE inline
-#endif
 
 static NI_INLINE void user_next_instance(fcs_user *const user)
 {
-#ifdef FCS_WITH_NI
     const_AUTO(num_instances,
         (size_t)(user->end_of_instances_list - user->instances_list));
     user->instances_list = SREALLOC(user->instances_list, num_instances + 1);
 
     user->end_of_instances_list =
         (user->current_instance = user->instances_list + num_instances) + 1;
-#endif
 
 #ifdef FCS_WITH_FLARES
     *(curr_inst(user)) = (fcs_instance_item){
@@ -2486,10 +2451,8 @@ static MYINLINE void user_initialize(fcs_user *const user)
 
     fc_solve_meta_compact_allocator_init(&(user->meta_alloc));
 
-#ifdef FCS_WITH_NI
     user->instances_list = NULL;
     user->end_of_instances_list = NULL;
-#endif
 #ifndef FCS_WITHOUT_ITER_HANDLER
     user->long_iter_handler = NULL;
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
@@ -2503,9 +2466,7 @@ static MYINLINE void user_initialize(fcs_user *const user)
 #endif
 
     user->iterations_board_started_at = initial_stats;
-#ifdef FCS_WITH_NI
     user->all_instances_were_suspended = true;
-#endif
 #ifdef FCS_WITH_FLARES
 #ifndef FCS_WITHOUT_FC_PRO_MOVES_COUNT
     user->flares_choice = FLARES_CHOICE_FC_SOLVE_SOLUTION_LEN;
@@ -3124,13 +3085,9 @@ static inline fc_solve_solve_process_ret_t eval_resume_ret_code(
     const fc_solve_solve_process_ret_t ret_proto,
     const bool process_ret GCC_UNUSED)
 {
-#ifdef FCS_WITH_NI
     const_AUTO(
         ret, (user->all_instances_were_suspended ? FCS_STATE_SUSPEND_PROCESS
                                                  : ret_proto));
-#else
-    const_AUTO(ret, ret_proto);
-#endif
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     if (ret == FCS_STATE_SUSPEND_PROCESS)
     {
@@ -3298,13 +3255,9 @@ static inline void flare__update_stats(
     user->init_num_checked_states = flare->obj_stats;
 }
 
-#ifdef FCS_WITH_NI
 #define BUMP_CURR_INST()                                                       \
     user->current_instance++;                                                  \
     continue
-#else
-#define BUMP_CURR_INST() break
-#endif
 static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
@@ -3314,9 +3267,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #else
     const bool process_ret = false;
 #endif
-#ifdef FCS_WITH_NI
     const_SLOT(end_of_instances_list, user);
-#endif
     // I expect user->current_instance to be initialized with some value.
     do
     {
@@ -3431,12 +3382,10 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 #endif
             flare->instance_is_ready = false;
         }
-#ifdef FCS_WITH_NI
         if (ret != FCS_STATE_SUSPEND_PROCESS)
         {
             user->all_instances_were_suspended = false;
         }
-#endif
 
         flare__update_stats(user, instance, flare
 #ifdef FCS_WITH_FLARES
@@ -3533,11 +3482,7 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
         }
 #endif
 
-    } while (
-#ifdef FCS_WITH_NI
-        (user->current_instance < end_of_instances_list) &&
-#endif
-        true);
+    } while (user->current_instance < end_of_instances_list);
 
     return SET_user_ret(user, eval_resume_ret_code(user, ret, process_ret));
 }
@@ -3560,9 +3505,7 @@ int DLLEXPORT freecell_solver_user_solve_board(
     {
         return FCS_STATE_VALIDITY__PREMATURE_END_OF_INPUT;
     }
-#ifdef FCS_WITH_NI
     user->current_instance = user->instances_list;
-#endif
 #ifndef FCS_FREECELL_ONLY
     {
         FLARES_LOOP_START()
@@ -3720,9 +3663,7 @@ static MYINLINE void user_free_resources(fcs_user *const user)
 #endif
     INSTANCES_LOOP_END()
 
-#ifdef FCS_WITH_NI
     free(user->instances_list);
-#endif
     fc_solve_meta_compact_allocator_finish(&(user->meta_alloc));
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
     for (size_t i = 0; i < COUNT(user->unrecognized_cmd_line_options); ++i)
@@ -4652,14 +4593,12 @@ void DLLEXPORT freecell_solver_user_set_scans_synergy(
 }
 #endif
 
-#ifdef FCS_WITH_NI
 int DLLEXPORT freecell_solver_user_next_instance(void *const api_instance)
 {
     user_next_instance((fcs_user *)api_instance);
 
     return 0;
 }
-#endif
 
 #ifdef FCS_WITH_FLARES
 int DLLEXPORT freecell_solver_user_next_flare(void *const api_instance)

@@ -22,9 +22,8 @@ extern "C" {
 #define FCS_WITH_FLARES
 #endif
 
-#ifndef FCS_DISABLE_MULTI_NEXT_INSTS
+// #ifndef FCS_DISABLE_MULTI_NEXT_INSTS
 #define FCS_WITH_NI
-#endif
 
 #ifndef FCS_WITHOUT_DEPTH_FIELD
 #define FCS_WITH_DEPTH_FIELD
