@@ -123,8 +123,8 @@ def find_ret(ints, num_ints_in_first=4):
       {kernel_sum_to_4G_cl_code}
     }}'''))
     _update_file_using_template(fn="test_4G_to_8G.ocl", template=(
-                '''kernel void sumh(global unsigned long * restrict r,
-                     global unsigned long * restrict i)
+                '''kernel void sumh(global unsigned * restrict r,
+                     global unsigned * restrict i)
     {{
       const unsigned gid = get_global_id(0);
       {kernel_sum_to_8G_cl_code}
@@ -252,10 +252,10 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_eight_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'apply_limit': '1',
+            'apply_limit': '0',
             'limit': '0x100000000LL',
             'my_vecsum_var': 'vecsum_k8G',
-            'int_type': 'unsigned long',
+            'int_type': 'unsigned',
             'mask': '0xffff',
             'start': '0',  # ('0x10000'+'0000ULL'),
             'ret_offset': '+0x100000000LL',
@@ -292,6 +292,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 #include "freecell-solver/fcs_dllexport.h"
 
 #define CL_TARGET_OPENCL_VERSION 120
+
 #include <fcs_ocl_boiler.h>
 
 static size_t gws_align_init;
