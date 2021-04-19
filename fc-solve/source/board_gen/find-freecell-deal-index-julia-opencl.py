@@ -41,7 +41,7 @@ def find_ret(ints, num_ints_in_first=4):
 
     def _myrand_to_8G(mod):
         return ('(((((r[gid] = (r[gid]*214013 + 2531011))' +
-                ' >> 16) & 0x7fff)+1) % {})').format(mod)
+                ' >> 16) & 0xffff)+1) % {})').format(mod)
     _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
     _myrand_to_4G_lookups = {
         base: _myrand_to_4G(base) for base in range(1, 53)}
@@ -82,7 +82,6 @@ def find_ret(ints, num_ints_in_first=4):
             kernel_sum_cl_code=kernel_sum_cl_code,
             kernel_sum_to_4G_cl_code=kernel_sum_to_4G_cl_code,
             kernel_sum_to_8G_cl_code=kernel_sum_to_8G_cl_code,
-            limit=((1 << 31)-1),
             myints=myints_str,
             **extra_fields,
         )
@@ -98,7 +97,9 @@ def find_ret(ints, num_ints_in_first=4):
             with open(fn, "wt") as f:
                 f.write(newtext)
 
-    def _update_file_using_template(fn, template, extra_fields={}):
+    def _update_file_using_template(fn, template, extra_fields={
+        'limit': str((1 << 31)-1),
+            }):
         return _update_file(fn=fn, newtext=_myformat(
             template=template, extra_fields=extra_fields,))
     _update_file_using_template(fn="vecinit_prog.ocl", template=(
@@ -185,11 +186,14 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
                     break;
                 }}
             }}
+                #if 1
+                printf("%lu\\n", ((unsigned long)(mystart+0)));
+                #endif
             if ( is_right)
             {{
                 const long long ret =
                 (((long long)mystart)+myiterint);\n{check_ret}\nreturn ret;
-                #if 0
+                #if 1
                 printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
                 #endif
                 break;
@@ -198,7 +202,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     }}
 
     const {int_type} newstart = mystart + num_elems;
-    #if 0
+    #if {apply_limit}
     if (mystart > {limit})
     #else
     if (newstart < mystart)
@@ -215,18 +219,22 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_two_g = _myformat(
         template=c_loop_template,
         extra_fields={
+            'apply_limit': '0',
             'my_vecsum_var': 'vecsum_k',
             'int_type': 'int',
             'start': '1',
             'check_ret': '',
+            'limit': str((1 << 31)-1),
             'seed_proc_code': '',
         }
     )
     c_loop_four_g = _myformat(
         template=c_loop_template,
         extra_fields={
+            'apply_limit': '0',
             'my_vecsum_var': 'vecsum_k4G',
             'int_type': 'unsigned',
+            'limit': str((1 << 31)-1),
             'start': '0x80000000U',
             'check_ret': '''
                 if (ret >= 0x100000000LL)
@@ -239,11 +247,13 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_eight_g = _myformat(
         template=c_loop_template,
         extra_fields={
+            'apply_limit': '1',
+            'limit': '0x100000000LL',
             'my_vecsum_var': 'vecsum_k8G',
             'int_type': 'unsigned long',
-            'start': ('0x10000'+'0000ULL'),
+            'start': '0',  # ('0x10000'+'0000ULL'),
             'check_ret': '''
-                if (ret >= 0x200000000LL)
+                if (ret >= 0x100000000LL)
                 {
                     return -1;
                 }\n''',
