@@ -175,25 +175,26 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         {{
             is_right = true;
             //exit(0);
-            cl_int rr = r_buff_arr[myiterint];
+            {int_type} rr = r_buff_arr[myiterint];
             for (int n = num_remaining_ints; n >=1; --n)
             {{
-                rr = ((rr * ((cl_int)214013) +
-                    ((cl_int)2531011)) & ((cl_int)0xFFFFFFFF));
-                if ( (((rr >> 16) & 0x7fff){seed_proc_code}) % n != myints[n])
+                rr = ((rr * (({int_type})214013) +
+                    (({int_type})2531011)) & (({int_type})0xFFFFFFFF));
+                if ( (((rr >> 16) & {mask}){seed_proc_code}) % n != myints[n])
                 {{
                     is_right = false;
                     break;
                 }}
             }}
-                #if 1
+                #if 0
                 printf("%lu\\n", ((unsigned long)(mystart+0)));
                 #endif
             if ( is_right)
             {{
                 const long long ret =
-                (((long long)mystart)+myiterint);\n{check_ret}\nreturn ret;
-                #if 1
+                ((((long long)mystart)+myiterint){ret_offset});\n
+                {check_ret}\nreturn ret;
+                #if 0
                 printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
                 #endif
                 break;
@@ -222,8 +223,10 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'apply_limit': '0',
             'my_vecsum_var': 'vecsum_k',
             'int_type': 'int',
+            'mask': '0x7fff',
             'start': '1',
             'check_ret': '',
+            'ret_offset': '',
             'limit': str((1 << 31)-1),
             'seed_proc_code': '',
         }
@@ -234,8 +237,10 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'apply_limit': '0',
             'my_vecsum_var': 'vecsum_k4G',
             'int_type': 'unsigned',
+            'mask': '0x7fff',
             'limit': str((1 << 31)-1),
             'start': '0x80000000U',
+            'ret_offset': '',
             'check_ret': '''
                 if (ret >= 0x100000000LL)
                 {
@@ -251,9 +256,11 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'limit': '0x100000000LL',
             'my_vecsum_var': 'vecsum_k8G',
             'int_type': 'unsigned long',
+            'mask': '0xffff',
             'start': '0',  # ('0x10000'+'0000ULL'),
+            'ret_offset': '+0x100000000LL',
             'check_ret': '''
-                if (ret >= 0x100000000LL)
+                if (false)//ret >= 0x100000000LL)
                 {
                     return -1;
                 }\n''',
