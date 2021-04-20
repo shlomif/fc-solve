@@ -17,6 +17,8 @@ import sys
 
 from make_pysol_freecell_board import find_index_main
 
+COMMON_RAND = '((r[gid] = (r[gid]*214013 + 2531011)) >> 16)'
+
 
 def find_ret(ints, num_ints_in_first=4):
     assert len(ints) == 51
@@ -25,16 +27,13 @@ def find_ret(ints, num_ints_in_first=4):
     bits_width = 0
 
     def _myrand(mod):
-        return ('((((r[gid] = (r[gid]*214013 + 2531011))' +
-                ' >> 16) & 0x7fff) % {})').format(mod)
+        return ('(({} & 0x7fff) % {})').format(COMMON_RAND, mod)
 
     def _myrand_to_4G(mod):
-        return ('(((((r[gid] = (r[gid]*214013 + 2531011))' +
-                ' >> 16) & 0x7fff)|0x8000) % {})').format(mod)
+        return ('((({} & 0x7fff)|0x8000) % {})').format(COMMON_RAND, mod)
 
     def _myrand_to_8G(mod):
-        return ('(((((r[gid] = (r[gid]*214013 + 2531011))' +
-                ' >> 16) & 0xffff)+1) % {})').format(mod)
+        return ('((({} & 0xffff)+1) % {})').format(COMMON_RAND, mod)
     _myrand_lookups = {base: _myrand(base) for base in range(1, 53)}
     _myrand_to_4G_lookups = {
         base: _myrand_to_4G(base) for base in range(1, 53)}
