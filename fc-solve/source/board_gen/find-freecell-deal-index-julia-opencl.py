@@ -194,10 +194,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
                 const long long ret =
                 ((((long long)mystart)+myiterint){ret_offset});\n
                 {check_ret}\nreturn ret;
-                #if 0
-                printf("%lu\\n", ((unsigned long)(mystart+myiterint)));
-                #endif
-                break;
             }}
         }}
     }}
@@ -259,11 +255,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'mask': '0xffff',
             'start': '0',  # ('0x10000'+'0000ULL'),
             'ret_offset': '+0x100000000LL',
-            'check_ret': '''
-                if (false)//ret >= 0x100000000LL)
-                {
-                    return -1;
-                }\n''',
+            'check_ret': '',
             'seed_proc_code': '+1',
         }
     )
@@ -365,17 +357,6 @@ int argc, char *argv[]
         #endif
 )
 {{
-#if 0
-        if (argc <= 1) {{
-                fprintf(stderr, "specify number of elements\\n");
-                exit(1);
-        }}
-        const int num_elems = atoi(argv[1]);
-for(cl_int myiterint=0;myiterint < 49; ++myiterint)
-{{
-printf("myints[%d]=%d\\n", myiterint, myints[myiterint]);
-}}
-#endif
         const size_t num_elems = {bufsize};
         const cl_int cl_int_num_elems = (cl_int)num_elems;
         const size_t bufsize = num_elems * sizeof(cl_int);
