@@ -47,7 +47,8 @@ qq#\${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/u
 
 sub _check_deal
 {
-    my ($deal) = @_;
+    my ($args)   = @_;
+    my $deal     = $args->{deal};
     my $run_deal = $deal;
     my $captured =
 `bash -c 'time python3 "$board_gen_dir"/find-freecell-deal-index-using-opencl.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")'`;
@@ -55,7 +56,7 @@ sub _check_deal
 }
 
 # TEST
-_check_deal(2_000_000_000);
+_check_deal( { deal => 2_000_000_000, } );
 
 # TEST
-_check_deal( ( ( ( 1 << 33 ) - 1 ) ) );
+_check_deal( { deal => ( ( ( 1 << 33 ) - 1 ) ), } );
