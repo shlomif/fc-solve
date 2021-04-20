@@ -23,8 +23,6 @@ COMMON_RAND = '((r[gid] = (r[gid]*214013 + 2531011)) >> 16)'
 def find_ret(ints, num_ints_in_first=4):
     assert len(ints) == 51
     STEP = 6
-    first_int = 0
-    bits_width = 0
 
     def _myrand(mod):
         return ('(({} & 0x7fff) % {})').format(COMMON_RAND, mod)
@@ -42,8 +40,9 @@ def find_ret(ints, num_ints_in_first=4):
     kernel_sum_cl_code = ""
     kernel_sum_to_4G_cl_code = ""
     kernel_sum_to_8G_cl_code = ""
+    bits_width = 0
     for i in range(num_ints_in_first):
-        first_int |= (ints.pop(0) << bits_width)
+        ints.pop(0)
 
         def _expr(myr):
             return "i[gid] " + (
@@ -67,7 +66,6 @@ def find_ret(ints, num_ints_in_first=4):
             **{
                 'apply_limit': '0',
                 'bufsize': 300000,
-                'first_int': first_int,
                 'kernel_sum_cl_code': kernel_sum_cl_code,
                 'kernel_sum_to_4G_cl_code': kernel_sum_to_4G_cl_code,
                 'kernel_sum_to_8G_cl_code': kernel_sum_to_8G_cl_code,
@@ -401,6 +399,7 @@ using OpenCL
 
 device, ctx, queue = cl.create_compute_context()
 
+const first_int = -1
 const bufsize = {bufsize}
 const num_ints_in_first = {num_ints_in_first};
 const num_remaining_ints = 4*13 - num_ints_in_first;
@@ -431,7 +430,7 @@ while (! is_right)
     i = cl.read(queue, i_buff)
 
     for myiterint in 1:bufsize
-        if i[myiterint] == {first_int}
+        if i[myiterint] == first_int
             global is_right = true
             rr = r[myiterint]
             for n in num_remaining_ints:-1:2
