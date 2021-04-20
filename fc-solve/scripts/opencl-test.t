@@ -16,7 +16,7 @@ my $obj             = Docker::CLI::Wrapper::Container->new(
 );
 if ( not -d "$board_gen_dir" )
 {
-    die "wrong place";
+    die qq#wrong place! "$board_gen_dir" not found.#;
 }
 if ( not -f "$gen_ocl_py_prog" )
 {
