@@ -59,9 +59,12 @@ def find_ret(ints, num_ints_in_first=4):
                 ("|= (" + myr + " << " + str(bits_width) + ")")
             ) + ";\n"
 
-        kernel_sum_cl_code += _expr(_myrand_lookups[52-i])
-        kernel_sum_to_4G_cl_code += _expr(_myrand_to_4G_lookups[52-i])
-        kernel_sum_to_8G_cl_code += _expr(_myrand_to_8G_lookups[52-i])
+        def _e2(arr):
+            return _expr(arr[52-i])
+
+        kernel_sum_cl_code += _e2(_myrand_lookups)
+        kernel_sum_to_4G_cl_code += _e2(_myrand_to_4G_lookups)
+        kernel_sum_to_8G_cl_code += _e2(_myrand_to_8G_lookups)
         bits_width += STEP
 
     assert len(ints) == 51 - num_ints_in_first
