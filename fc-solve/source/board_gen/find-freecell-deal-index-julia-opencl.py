@@ -55,19 +55,16 @@ def find_ret(ints, num_ints_in_first=4):
         myr = _myrand_lookups[52-i]
         myr4G = _myrand_to_4G_lookups[52-i]
         myr8G = _myrand_to_8G_lookups[52-i]
-        kernel_sum_cl_code += "i[gid] " + (
-            "= " + myr if i == 0 else
-            "|= (" + myr + " << " + str(bits_width) + ")"
-        ) + ";\n"
 
-        kernel_sum_to_4G_cl_code += "i[gid] " + (
-            "= " + myr4G if i == 0 else
-            "|= (" + myr4G + " << " + str(bits_width) + ")"
-        ) + ";\n"
-        kernel_sum_to_8G_cl_code += "i[gid] " + (
-            "= " + myr8G if i == 0 else
-            "|= (" + myr8G + " << " + str(bits_width) + ")"
-        ) + ";\n"
+        def _expr(myr):
+            return "i[gid] " + (
+                ("= " + myr) if i == 0 else
+                ("|= (" + myr + " << " + str(bits_width) + ")")
+            ) + ";\n"
+
+        kernel_sum_cl_code += _expr(myr)
+        kernel_sum_to_4G_cl_code += _expr(myr4G)
+        kernel_sum_to_8G_cl_code += _expr(myr8G)
         bits_width += STEP
 
     assert len(ints) == 51 - num_ints_in_first
@@ -217,44 +214,44 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_two_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'my_vecsum_var': 'vecsum_k',
-            'int_type': 'int',
-            'mask': '0x7fff',
-            'start': '1',
             'check_ret': '',
-            'ret_offset': '',
+            'int_type': 'int',
             'limit': str((1 << 31)-1),
+            'mask': '0x7fff',
+            'my_vecsum_var': 'vecsum_k',
+            'ret_offset': '',
             'seed_proc_code': '',
+            'start': '1',
         }
     )
     c_loop_four_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'my_vecsum_var': 'vecsum_k4G',
-            'int_type': 'unsigned',
-            'mask': '0x7fff',
-            'limit': str((1 << 31)-1),
-            'start': '0x80000000U',
-            'ret_offset': '',
             'check_ret': '''
                 if (ret >= 0x100000000LL)
                 {
                     return -1;
                 }\n''',
+            'int_type': 'unsigned',
+            'limit': str((1 << 31)-1),
+            'mask': '0x7fff',
+            'my_vecsum_var': 'vecsum_k4G',
+            'ret_offset': '',
             'seed_proc_code': '|0x8000',
+            'start': '0x80000000U',
         }
     )
     c_loop_eight_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'limit': '0x100000000LL',
-            'my_vecsum_var': 'vecsum_k8G',
-            'int_type': 'unsigned',
-            'mask': '0xffff',
-            'start': '0',  # ('0x10000'+'0000ULL'),
-            'ret_offset': '+0x100000000LL',
             'check_ret': '',
+            'int_type': 'unsigned',
+            'limit': '0x100000000LL',
+            'mask': '0xffff',
+            'my_vecsum_var': 'vecsum_k8G',
+            'ret_offset': '+0x100000000LL',
             'seed_proc_code': '+1',
+            'start': '0',  # ('0x10000'+'0000ULL'),
         }
     )
     _update_file_using_template(fn="opencl_find_deal_idx.c", extra_fields={
