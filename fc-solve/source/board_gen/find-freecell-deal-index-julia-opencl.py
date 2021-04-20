@@ -75,6 +75,7 @@ def find_ret(ints, num_ints_in_first=4):
 
     def _myformat(template, extra_fields={}):
         return template.format(
+            apply_limit='0',
             first_int=first_int,
             num_ints_in_first=num_ints_in_first,
             bufsize=300000,
@@ -216,7 +217,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_two_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'apply_limit': '0',
             'my_vecsum_var': 'vecsum_k',
             'int_type': 'int',
             'mask': '0x7fff',
@@ -230,7 +230,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_four_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'apply_limit': '0',
             'my_vecsum_var': 'vecsum_k4G',
             'int_type': 'unsigned',
             'mask': '0x7fff',
@@ -248,7 +247,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_eight_g = _myformat(
         template=c_loop_template,
         extra_fields={
-            'apply_limit': '0',
             'limit': '0x100000000LL',
             'my_vecsum_var': 'vecsum_k8G',
             'int_type': 'unsigned',
