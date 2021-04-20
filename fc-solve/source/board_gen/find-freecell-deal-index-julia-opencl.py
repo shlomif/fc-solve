@@ -20,6 +20,18 @@ from make_pysol_freecell_board import find_index_main
 COMMON_RAND = '((r[gid] = (r[gid]*214013 + 2531011)) >> 16)'
 
 
+def _update_file(fn, newtext):
+    update = False
+    try:
+        with open(fn, "rt") as fh:
+            oldtext = fh.read()
+    except FileNotFoundError:
+        update = True
+    if update or (oldtext != newtext):
+        with open(fn, "wt") as fh:
+            fh.write(newtext)
+
+
 def find_ret(ints, num_ints_in_first=4):
     assert len(ints) == 51
     STEP = 6
@@ -75,17 +87,6 @@ def find_ret(ints, num_ints_in_first=4):
                 **extra_fields,
             }
         )
-
-    def _update_file(fn, newtext):
-        update = False
-        try:
-            with open(fn, "rt") as f:
-                oldtext = f.read()
-        except FileNotFoundError:
-            update = True
-        if update or (oldtext != newtext):
-            with open(fn, "wt") as f:
-                f.write(newtext)
 
     def _update_file_using_template(fn, template, extra_fields={
             }):
