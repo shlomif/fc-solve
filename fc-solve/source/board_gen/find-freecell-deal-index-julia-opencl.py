@@ -52,9 +52,6 @@ def find_ret(ints, num_ints_in_first=4):
     kernel_sum_to_8G_cl_code = ""
     for i in range(num_ints_in_first):
         first_int |= (ints.pop(0) << bits_width)
-        myr = _myrand_lookups[52-i]
-        myr4G = _myrand_to_4G_lookups[52-i]
-        myr8G = _myrand_to_8G_lookups[52-i]
 
         def _expr(myr):
             return "i[gid] " + (
@@ -62,9 +59,9 @@ def find_ret(ints, num_ints_in_first=4):
                 ("|= (" + myr + " << " + str(bits_width) + ")")
             ) + ";\n"
 
-        kernel_sum_cl_code += _expr(myr)
-        kernel_sum_to_4G_cl_code += _expr(myr4G)
-        kernel_sum_to_8G_cl_code += _expr(myr8G)
+        kernel_sum_cl_code += _expr(_myrand_lookups[52-i])
+        kernel_sum_to_4G_cl_code += _expr(_myrand_to_4G_lookups[52-i])
+        kernel_sum_to_8G_cl_code += _expr(_myrand_to_8G_lookups[52-i])
         bits_width += STEP
 
     assert len(ints) == 51 - num_ints_in_first
