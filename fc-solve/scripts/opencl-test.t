@@ -1,0 +1,64 @@
+#!/usr/bin/env perl
+
+use strict;
+use warnings;
+use Test::More tests => 1;
+
+use Docker::CLI::Wrapper::Container v0.0.4 ();
+my $lib           = "libopencl_find_deal_idx.so";
+my $board_gen_dir = "../../source/board_gen";
+
+my $gen_ocl_py_prog = "$board_gen_dir/find-freecell-deal-index-julia-opencl.py";
+my $container       = "foo";
+my $sys             = "fedora33";
+my $obj             = Docker::CLI::Wrapper::Container->new(
+    { container => $container, sys => $sys, },
+);
+if ( not -d "$board_gen_dir" )
+{
+    die "wrong place";
+}
+if ( not -f "$gen_ocl_py_prog" )
+{
+    die "$gen_ocl_py_prog wrong place";
+}
+if (   ( !-e "$lib" )
+    || ( "$ENV{REBUILD}" eq "1" ) )
+{
+    $obj->do_system(
+        {
+            cmd => [
+                "bash",
+                "-c",
+qq#python3 "$gen_ocl_py_prog" --ms <(pi-make-microsoft-freecell-board -t "24")#,
+            ]
+        }
+    );
+    $obj->do_system(
+        {
+            cmd => [
+                "bash",
+                "-c",
+qq#\${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" \${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL#
+            ]
+        }
+    );
+}
+
+sub _check_deal
+{
+    my ($deal) = @_;
+    my $run_deal = $deal;
+    $obj->do_system(
+        {
+            cmd => [
+                "bash",
+                "-c",
+qq#time python3 "$board_gen_dir"/find-freecell-deal-index-using-opencl.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")#,
+            ]
+        }
+    );
+    return;
+}
+_check_deal(2_000_000_000);
+_check_deal( ( ( ( 1 << 33 ) - 1 ) ) );
