@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 1;
+use Test::More tests => 2;
 
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 my $lib           = "libopencl_find_deal_idx.so";
@@ -49,16 +49,13 @@ sub _check_deal
 {
     my ($deal) = @_;
     my $run_deal = $deal;
-    $obj->do_system(
-        {
-            cmd => [
-                "bash",
-                "-c",
-qq#time python3 "$board_gen_dir"/find-freecell-deal-index-using-opencl.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")#,
-            ]
-        }
-    );
-    return;
+    my $captured =
+`bash -c 'time python3 "$board_gen_dir"/find-freecell-deal-index-using-opencl.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")'`;
+    return is( $captured, "Found deal = $run_deal\n", "ok run_deal=$run_deal" );
 }
+
+# TEST
 _check_deal(2_000_000_000);
+
+# TEST
 _check_deal( ( ( ( 1 << 33 ) - 1 ) ) );
