@@ -18,13 +18,6 @@ import sys
 from make_pysol_freecell_board import find_index_main
 
 
-def _to_bytes(s):
-    if sys.version_info > (3,):
-        return bytes(s, 'UTF-8')
-    else:
-        return s
-
-
 def find_ret(ints, num_ints_in_first=4):
     assert len(ints) == 51
     STEP = 6
@@ -72,16 +65,18 @@ def find_ret(ints, num_ints_in_first=4):
 
     def _myformat(template, extra_fields={}):
         return template.format(
-            apply_limit='0',
-            first_int=first_int,
-            num_ints_in_first=num_ints_in_first,
-            bufsize=300000,
-            _myrand=_myrand_lookups,
-            kernel_sum_cl_code=kernel_sum_cl_code,
-            kernel_sum_to_4G_cl_code=kernel_sum_to_4G_cl_code,
-            kernel_sum_to_8G_cl_code=kernel_sum_to_8G_cl_code,
-            myints=myints_str,
-            **extra_fields,
+            **{
+                'apply_limit': '0',
+                'bufsize': 300000,
+                'first_int': first_int,
+                'kernel_sum_cl_code': kernel_sum_cl_code,
+                'kernel_sum_to_4G_cl_code': kernel_sum_to_4G_cl_code,
+                'kernel_sum_to_8G_cl_code': kernel_sum_to_8G_cl_code,
+                'limit': str((1 << 31)-1),
+                'myints': myints_str,
+                'num_ints_in_first': num_ints_in_first,
+                **extra_fields,
+            }
         )
 
     def _update_file(fn, newtext):
@@ -96,7 +91,6 @@ def find_ret(ints, num_ints_in_first=4):
                 f.write(newtext)
 
     def _update_file_using_template(fn, template, extra_fields={
-        'limit': str((1 << 31)-1),
             }):
         return _update_file(fn=fn, newtext=_myformat(
             template=template, extra_fields=extra_fields,))
@@ -217,7 +211,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         extra_fields={
             'check_ret': '',
             'int_type': 'int',
-            'limit': str((1 << 31)-1),
             'mask': '0x7fff',
             'my_vecsum_var': 'vecsum_k',
             'ret_offset': '',
@@ -234,7 +227,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
                     return -1;
                 }\n''',
             'int_type': 'unsigned',
-            'limit': str((1 << 31)-1),
             'mask': '0x7fff',
             'my_vecsum_var': 'vecsum_k4G',
             'ret_offset': '',
@@ -252,7 +244,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'my_vecsum_var': 'vecsum_k8G',
             'ret_offset': '+0x100000000LL',
             'seed_proc_code': '+1',
-            'start': '0',  # ('0x10000'+'0000ULL'),
+            'start': '0',
         }
     )
     _update_file_using_template(fn="opencl_find_deal_idx.c", extra_fields={
@@ -346,11 +338,8 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
 static const int num_ints_in_first = {num_ints_in_first};
 static const int num_remaining_ints = 4*13 - num_ints_in_first;
 DLLEXPORT long long fc_solve_user__opencl_find_deal(
-const int first_int,
+    const int first_int,
     const int * myints
-        #if 0
-int argc, char *argv[]
-        #endif
 )
 {{
         const size_t num_elems = {bufsize};
