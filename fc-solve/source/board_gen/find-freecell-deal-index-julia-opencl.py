@@ -100,21 +100,21 @@ def find_ret(ints, num_ints_in_first=4):
       const unsigned gid = get_global_id(0);
       r[gid] = gid + mystart;
     }}'''))
-    _update_file_using_template(fn="test.ocl", template=(
+    _update_file_using_template(fn="msfc_deal_finder_to_2G.ocl", template=(
                 '''kernel void sum(global unsigned * restrict r,
                      global unsigned * restrict i)
     {{
       const unsigned gid = get_global_id(0);
       {kernel_sum_cl_code}
     }}'''))
-    _update_file_using_template(fn="test_2G_to_4G.ocl", template=(
+    _update_file_using_template(fn="msfc_deal_finder_2G_to_4G.ocl", template=(
                 '''kernel void sumg(global unsigned * restrict r,
                      global unsigned * restrict i)
     {{
       const unsigned gid = get_global_id(0);
       {kernel_sum_to_4G_cl_code}
     }}'''))
-    _update_file_using_template(fn="test_4G_to_8G.ocl", template=(
+    _update_file_using_template(fn="msfc_deal_finder_4G_to_8G.ocl", template=(
                 '''kernel void sumh(global unsigned * restrict r,
                      global unsigned * restrict i)
     {{
@@ -351,9 +351,11 @@ DLLEXPORT long long fc_solve_user__opencl_find_deal(
         cl_context ctx = create_context(p, d);
         cl_command_queue que = create_queue(ctx, d);
         cl_program vecinit_prog = create_program("vecinit_prog.ocl", ctx, d);
-        cl_program prog = create_program("test.ocl", ctx, d);
-        cl_program prog4G = create_program("test_2G_to_4G.ocl", ctx, d);
-        cl_program prog8G = create_program("test_4G_to_8G.ocl", ctx, d);
+        cl_program prog = create_program("msfc_deal_finder_to_2G.ocl", ctx, d);
+        cl_program prog4G =
+            create_program("msfc_deal_finder_2G_to_4G.ocl", ctx, d);
+        cl_program prog8G =
+            create_program("msfc_deal_finder_4G_to_8G.ocl", ctx, d);
         cl_int err;
 
         cl_kernel vecinit_k = clCreateKernel(vecinit_prog, "vecinit", &err);
