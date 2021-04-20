@@ -59,8 +59,8 @@ def find_ret(ints, num_ints_in_first=4):
                 ("|= (" + myr + " << " + str(bits_width) + ")")
             ) + ";\n"
 
-        def _e2(arr):
-            return _expr(arr[52-i])
+        def _e2(lookup):
+            return _expr(lookup[52-i])
 
         kernel_sum_cl_code += _e2(_myrand_lookups)
         kernel_sum_to_4G_cl_code += _e2(_myrand_to_4G_lookups)
