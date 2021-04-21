@@ -7,7 +7,7 @@
 #
 set -e -x
 mkdir -p ~/bin
-ln -s /usr/bin/make ~/bin/gmake
+ln -fs /usr/bin/make ~/bin/gmake
 export PATH="$PATH:$HOME/bin"
 eval "$(GIMME_GO_VERSION=1.16 gimme)"
 go get -u github.com/tdewolff/minify/cmd/minify
