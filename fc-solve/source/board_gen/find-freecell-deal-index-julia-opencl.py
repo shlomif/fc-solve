@@ -123,7 +123,6 @@ def find_ret(ints, num_ints_in_first=4):
 {int_type} mystart = {start};
 while (! is_right)
 {{
-    // queue(k, size(r), nothing, r_buff, i_buff)
     cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
     cl_event sum_evt = vecsum(
         {my_vecsum_var}, que, i_buff, r_buff, num_elems, init_evt
@@ -135,7 +134,6 @@ while (! is_right)
     ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
     assert(r_buff_arr);
 
-    // clWaitForEvents(1, &init_evt);
     cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
             CL_MAP_READ,
             0, num_elems,
@@ -150,7 +148,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         if (i_buff_arr[myiterint] == first_int)
         {{
             is_right = true;
-            //exit(0);
             {int_type} rr = r_buff_arr[myiterint];
             for (int n = num_remaining_ints; n >=1; --n)
             {{
