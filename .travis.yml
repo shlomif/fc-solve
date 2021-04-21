@@ -45,6 +45,7 @@ python:
 before_install:
     - if test "$WHAT" = "normal"; then     rm -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
 install:
+    - if test "$WHAT" = "normal"; then     rm -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
     - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; elif test "$WHAT" = "buildproc"; then . fc-solve/scripts/ci-docker-test--install.bash ; fi
 perl:
     - "5.24"
