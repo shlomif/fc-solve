@@ -158,8 +158,7 @@ use Games::Solitaire::Verify::Card;
 
 {
     my $card;
-    eval { $card = Games::Solitaire::Verify::Card->new( {
-                string => "ZH", } ); };
+    eval { $card = Games::Solitaire::Verify::Card->new( { string => "ZH", } ); };
 
     my $e = Exception::Class->caught();
 
@@ -170,8 +169,7 @@ use Games::Solitaire::Verify::Card;
 
 {
     my $card;
-    eval { $card = Games::Solitaire::Verify::Card->new( {
-                string => "A*", } ); };
+    eval { $card = Games::Solitaire::Verify::Card->new( { string => "A*", } ); };
 
     my $e = Exception::Class->caught();
 

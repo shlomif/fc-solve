@@ -45,7 +45,7 @@ sub compile_preset
     my $preset = $presets{$preset_name};
     my @params = @{$preset};
     eval {
-        CMD:
+    CMD:
         while ( my $cmd = shift(@params) )
         {
             my $arg = shift(@params);

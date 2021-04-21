@@ -310,7 +310,9 @@ sub _format_prelude_iter
 
     my $iter = shift;
 
-    return ( $self->_is_flares() ? "Run:" : "" ) . $iter->iters() . '@'
+    return
+          ( $self->_is_flares() ? "Run:" : "" )
+        . $iter->iters() . '@'
         . $self->_map_scan_idx_to_id( $iter->scan_idx() );
 }
 

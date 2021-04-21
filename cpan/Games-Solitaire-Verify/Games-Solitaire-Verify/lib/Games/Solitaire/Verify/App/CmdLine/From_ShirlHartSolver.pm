@@ -238,8 +238,7 @@ FOUNDATION:
             my @src_s;
             my $rec   = $suits{$suit};
             my $start = $rec->{start};
-            eval { @src_s = $self->_find_card_src_string(
-                    $start->to_string ); };
+            eval { @src_s = $self->_find_card_src_string( $start->to_string ); };
             if ( !$@ )
             {
                 ++$count;

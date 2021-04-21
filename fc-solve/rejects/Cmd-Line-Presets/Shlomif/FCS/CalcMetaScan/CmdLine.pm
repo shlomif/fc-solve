@@ -3,7 +3,7 @@ package Shlomif::FCS::CalcMetaScan::CmdLine;
 use strict;
 use warnings;
 
-use base 'Shlomif::FCS::CalcMetaScan::Base';
+use parent 'Shlomif::FCS::CalcMetaScan::Base';
 
 use Getopt::Long;
 use IO::File;
@@ -265,7 +265,9 @@ sub _format_prelude_iter
 
     my $iter = shift;
 
-    return ( $self->_is_flares() ? "Run:" : "" ) . $iter->iters() . '@'
+    return
+          ( $self->_is_flares() ? "Run:" : "" )
+        . $iter->iters() . '@'
         . $self->_map_scan_idx_to_id( $iter->scan() );
 }
 
