@@ -13,6 +13,8 @@ required:
           url: "https://github.com/tdewolff/minify/tree/master/cmd/minify"
         - exe: "optipng"
           url: "http://optipng.sourceforge.net/"
+        - exe: "pysassc"
+          url: "https://sass.github.io/libsass-python/pysassc.html"
         - exe: "python3"
           url: "https://www.python.org/"
         - exe: "strip-nondeterminism"
