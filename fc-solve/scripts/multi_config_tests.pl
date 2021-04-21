@@ -350,7 +350,7 @@ qq#/home/$component/build/shlomif/fc-solve/fc-solve/source/../site/wml/../../sou
                                 : (
                                     'bash',
                                     '-c',
-". ~/bin/Dev-Path-Configs-Source-Me.bash ; set -o pipefail ; @cmd 2>&1 | tail -300"
+qq#src_me="\$HOME/bin/Dev-Path-Configs-Source-Me.bash"; if test -e "\$src_me"; then . "\$src_me" ; fi ; set -o pipefail ; @cmd 2>&1 | tail -300#
                                 )
                             ]
                         }
