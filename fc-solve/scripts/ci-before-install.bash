@@ -13,7 +13,7 @@ eval "$(GIMME_GO_VERSION=1.16 gimme)"
 # go get -u github.com/tdewolff/minify/cmd/minify
 
 (
-    mkdir $HOME/src
+    mkdir -p $HOME/src
     cd $HOME/src
     rm -fr minify
     git clone https://github.com/tdewolff/minify.git
