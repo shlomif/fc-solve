@@ -7,6 +7,7 @@ addons:
             - cmake-data
             - cpanminus
             - dbtoepub
+            - docbook5-xml
             - docbook-xsl
             - docbook-xsl-ns
             - graphicsmagick
@@ -36,7 +37,7 @@ addons:
 os: linux
 dist: focal
 go:
-    - '1.11.x'
+    - '1.16.x'
 language: c
 python:
     - '3.6'
