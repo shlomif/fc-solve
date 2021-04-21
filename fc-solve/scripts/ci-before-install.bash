@@ -10,7 +10,16 @@ mkdir -p ~/bin
 ln -fs /usr/bin/make ~/bin/gmake
 export PATH="$PATH:$HOME/bin"
 eval "$(GIMME_GO_VERSION=1.16 gimme)"
-go get -u github.com/tdewolff/minify/cmd/minify
+# go get -u github.com/tdewolff/minify/cmd/minify
+
+(
+    mkdir $HOME/src
+    cd $HOME/src
+    rm -fr minify
+    git clone https://github.com/tdewolff/minify.git
+    cd minify
+    go install ./cmd/minify
+)
       # - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
       # - sudo cpanm Text::Hunspell
 cpanm local::lib
