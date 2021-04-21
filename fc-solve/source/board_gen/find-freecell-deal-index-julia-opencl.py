@@ -182,7 +182,8 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             if ( is_right)
             {{
                 const long long ret =
-                ((((long long)mystart)+myiterint){ret_offset});\n
+                ((((long long)mystart)+myiterint){ret_offset});
+
 {check_ret}
                 return ret;
             }}
