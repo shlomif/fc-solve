@@ -23,6 +23,6 @@ cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
     # - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'libtap' 'https://github.com/shlomif/libtap-prev.git'
 bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' '.' 'https://github.com/shlomif/libtap.git' "cmake"
 bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
-( cd .. && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
-( cd .. && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
-( cd .. && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
+( cd .. && rm -fr "wml-extended-apis" && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
+( cd .. && rm -fr "wml-affiliations" && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
+( cd .. && rm -fr "latemp" && git clone https://github.com/thewml/latemp.git && cd latemp/support-headers && perl install.pl )
