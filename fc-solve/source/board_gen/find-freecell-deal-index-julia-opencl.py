@@ -128,16 +128,12 @@ while (! is_right)
     cl_event sum_evt = vecsum(
         {my_vecsum_var}, que, i_buff, r_buff, num_elems, init_evt
     );
-    cl_int *r_buff_arr;
-    #define BOTH 1
-#if 1
-    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+    cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
             CL_MAP_READ,
             0, num_elems,
             1, &sum_evt, &init_evt, &err);
     ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
     assert(r_buff_arr);
-#endif
 
     // clWaitForEvents(1, &init_evt);
     cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
@@ -149,16 +145,6 @@ while (! is_right)
 
     clWaitForEvents(1, &sum_evt);
 
-#if BOTH
-    r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
-            CL_MAP_READ,
-            0, num_elems,
-            1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
-    assert(r_buff_arr);
-
-    clWaitForEvents(1, &sum_evt);
-#endif
 for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 {{
         if (i_buff_arr[myiterint] == first_int)
