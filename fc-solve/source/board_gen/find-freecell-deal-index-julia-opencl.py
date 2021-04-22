@@ -391,6 +391,14 @@ i_buff = clCreateBuffer(ctx,
 {c_loop_four_g}
 {c_loop_eight_g}
 meta_cleanup:
+        clReleaseKernel(vecinit_k);
+        ocl_check(err, "release kernel vecinit");
+        clReleaseKernel(vecsum_k);
+        ocl_check(err, "release kernel vecsum");
+        clReleaseKernel(vecsum_k4G);
+        ocl_check(err, "release kernel vecsum_k4G");
+        clReleaseKernel(vecsum_k8G);
+        ocl_check(err, "release kernel vecsum_k8G");
 clReleaseContext(ctx);
 clReleaseDevice(d);
 clUnloadPlatformCompiler(p);
