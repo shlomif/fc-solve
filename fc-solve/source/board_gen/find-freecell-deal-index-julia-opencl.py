@@ -399,6 +399,11 @@ meta_cleanup:
         ocl_check(err, "release kernel vecsum_k4G");
         clReleaseKernel(vecsum_k8G);
         ocl_check(err, "release kernel vecsum_k8G");
+clReleaseProgram(prog8G);
+clReleaseProgram(prog4G);
+clReleaseProgram(prog);
+clReleaseProgram(vecinit_prog);
+clReleaseCommandQueue(que);
 clReleaseContext(ctx);
 clReleaseDevice(d);
 clUnloadPlatformCompiler(p);
