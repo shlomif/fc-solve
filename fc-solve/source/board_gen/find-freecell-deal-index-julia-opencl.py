@@ -123,12 +123,14 @@ def find_ret(ints, num_ints_in_first=4):
     }}'''))
     c_loop_template = '''{{
 ret = -1;
+cl_event init_evt = NULL;
+cl_event sum_evt = NULL;
 {{
 {int_type} mystart = {start};
 while (! is_right)
 {{
-    cl_event init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
-    cl_event sum_evt = vecsum(
+    init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
+    sum_evt = vecsum(
         {my_vecsum_var}, que, i_buff, r_buff, num_elems, init_evt
     );
     cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
@@ -190,9 +192,14 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     {{
         mystart = newstart;
     }}
+    clReleaseEvent(sum_evt);
+    clReleaseEvent(init_evt);
+    sum_evt = init_evt = NULL;
 }}
 }}
 {cleanup_label}:
+    clReleaseEvent(sum_evt);
+    clReleaseEvent(init_evt);
     if (ret > 0)
     {{
     goto meta_cleanup;
@@ -391,6 +398,8 @@ i_buff = clCreateBuffer(ctx,
 {c_loop_four_g}
 {c_loop_eight_g}
 meta_cleanup:
+    clReleaseMemObject(i_buff);
+    clReleaseMemObject(r_buff);
         clReleaseKernel(vecinit_k);
         ocl_check(err, "release kernel vecinit");
         clReleaseKernel(vecsum_k);
