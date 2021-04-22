@@ -7,9 +7,11 @@
 #
 # Licensed under the MIT/Expat License.
 """
-For now, you can try using this as a driver:
+For now, you can try using these as drivers:
 
     bash ../../scripts/opencl-test.bash
+
+    CC=clang REBUILD=1 prove ../../scripts/opencl-test.t
 
 """
 
@@ -120,6 +122,8 @@ def find_ret(ints, num_ints_in_first=4):
       {kernel_sum_to_8G_cl_code}
     }}'''))
     c_loop_template = '''{{
+long long ret = -1;
+{{
 {int_type} mystart = {start};
 while (! is_right)
 {{
@@ -164,11 +168,11 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
                 #endif
             if ( is_right)
             {{
-                const long long ret =
+                ret =
                 ((((long long)mystart)+myiterint){ret_offset});
 
 {check_ret}
-                return ret;
+                goto {cleanup_label};
             }}
         }}
     }}
@@ -187,11 +191,19 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         mystart = newstart;
     }}
 }}
-}}'''
+}}
+{cleanup_label}:
+    if (ret > 0)
+    {{
+        return ret;
+    }}
+}}
+'''
     c_loop_two_g = _myformat(
         template=c_loop_template,
         extra_fields={
             'check_ret': '',
+            'cleanup_label': ('c_loop_two_g' + '__cleanup'),
             'int_type': 'int',
             'mask': '0x7fff',
             'my_vecsum_var': 'vecsum_k',
@@ -206,8 +218,9 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'check_ret': '''
                 if (ret >= 0x100000000LL)
                 {
-                    return -1;
+                    ret = -1;
                 }\n''',
+            'cleanup_label': ('c_loop_four_g' + '__cleanup'),
             'int_type': 'unsigned',
             'mask': '0x7fff',
             'my_vecsum_var': 'vecsum_k4G',
@@ -220,6 +233,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         template=c_loop_template,
         extra_fields={
             'check_ret': '',
+            'cleanup_label': ('c_loop_eight_g' + '__cleanup'),
             'int_type': 'unsigned',
             'limit': '0x100000000LL',
             'mask': '0xffff',
