@@ -22,6 +22,9 @@ def _to_bytes(s):
         return s
 
 
+obj = lib.fc_solve_user__opencl_create()
+
+
 def find_ret(ints):
     first_int = ints.pop(0)
     first_int |= (ints.pop(0) << 6)
@@ -30,6 +33,7 @@ def find_ret(ints):
     assert len(ints) == 47
     # print(first_int, ints)
     ret = lib.fc_solve_user__opencl_find_deal(
+        obj,
         first_int, [0] * 2 + list(reversed(ints))
     )
     return ret

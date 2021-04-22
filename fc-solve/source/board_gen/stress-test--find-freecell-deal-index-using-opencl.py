@@ -31,12 +31,13 @@ def find_ret(ints):
     # print(first_int, ints)
     inp = [0] * 2 + list(reversed(ints))
     count = 0
+    obj = lib.fc_solve_user__opencl_create()
     while True:
         ret = lib.fc_solve_user__opencl_find_deal(
-            first_int, inp
+            obj, first_int, inp
         )
         count += 1
-        if not count & 0b1:
+        if not count & 0b11111111:
             print(count, flush=True)
     return ret
 

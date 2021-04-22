@@ -28,10 +28,18 @@ def find_ret(ints):
             n -= 1
         return True
 
-    for d in range(1, r.MAX_SEED+1):
-        if is_right(d):
-            return d
-    return -1
+    def _h():
+        for d in range(1, r.MAX_SEED+1):
+            if is_right(d):
+                return d
+    count = 0
+    while True:
+        ret = _h()
+        count += 1
+        if not count & 0b1:
+            print(count, flush=True)
+
+    return ret
 
 
 if __name__ == "__main__":

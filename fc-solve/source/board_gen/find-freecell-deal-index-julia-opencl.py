@@ -129,22 +129,24 @@ cl_event sum_evt = NULL;
 {int_type} mystart = {start};
 while (! is_right)
 {{
-    init_evt = vecinit(vecinit_k, que, r_buff, mystart, num_elems);
+    init_evt = vecinit(obj->vecinit_k, obj->que, obj->r_buff, mystart, num_elems);
     sum_evt = vecsum(
-        {my_vecsum_var}, que, i_buff, r_buff, num_elems, init_evt
+        obj->{my_vecsum_var}, obj->que, obj->i_buff, obj->r_buff,
+        num_elems, init_evt
     );
-    cl_int *r_buff_arr = clEnqueueMapBuffer(que, r_buff, CL_FALSE,
+        cl_int err;
+    cl_int *r_buff_arr = clEnqueueMapBuffer(obj->que, obj->r_buff, CL_FALSE,
             CL_MAP_READ,
             0, num_elems,
             1, &sum_evt, &init_evt, &err);
     ocl_check(err, "clEnqueueMapBuffer r_buff_arr");
     assert(r_buff_arr);
 
-    cl_int *i_buff_arr = clEnqueueMapBuffer(que, i_buff, CL_FALSE,
+    cl_int *i_buff_arr = clEnqueueMapBuffer(obj->que, obj->i_buff, CL_FALSE,
             CL_MAP_READ,
             0, num_elems,
             1, &sum_evt, &init_evt, &err);
-    ocl_check(err, "clEnqueueMapBuffer i_buff_arr");
+    ocl_check(err, "clEnqueueMapBuffer obj->i_buff_arr");
     assert(i_buff_arr);
 
     clWaitForEvents(1, &sum_evt);
@@ -324,9 +326,11 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_int err;
 
         cl_uint i = 0;
-        err = clSetKernelArg(vecsum_k, i++, sizeof(r_buff), &r_buff);
+        err = clSetKernelArg(vecsum_k, i++,
+            sizeof(r_buff), &r_buff);
         ocl_check(err, "r_buff set vecsum arg", i-1);
-        err = clSetKernelArg(vecsum_k, i++, sizeof(i_buff), &i_buff);
+        err = clSetKernelArg(vecsum_k, i++,
+            sizeof(i_buff), &i_buff);
         ocl_check(err, "i_buff set vecsum arg", i-1);
 
         err = clEnqueueNDRangeKernel(que, vecsum_k, 1,
@@ -340,82 +344,108 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
 
 static const int num_ints_in_first = {num_ints_in_first};
 static const int num_remaining_ints = 4*13 - num_ints_in_first;
-DLLEXPORT long long fc_solve_user__opencl_find_deal(
-    const int first_int,
-    const int * myints
-)
-{{
-    long long ret = -1;
+typedef struct {{
+cl_platform_id p;
+        cl_device_id d;
+        cl_context ctx;
+        cl_command_queue que;
+        cl_program vecinit_prog;
+        cl_program prog;
+        cl_program prog4G;
+        cl_program prog8G;
+        cl_kernel vecinit_k;
+        cl_kernel vecsum_k;
+        cl_kernel vecsum_k4G;
+        cl_kernel vecsum_k8G;
+cl_mem r_buff , i_buff ;
+}} fcs_ocl;
+
         const size_t num_elems = {bufsize};
         const cl_int cl_int_num_elems = (cl_int)num_elems;
         const size_t bufsize = num_elems * sizeof(cl_int);
 
-        cl_platform_id p = select_platform();
-        cl_device_id d = select_device(p);
-        cl_context ctx = create_context(p, d);
-        cl_command_queue que = create_queue(ctx, d);
-        cl_program vecinit_prog = create_program("vecinit_prog.ocl", ctx, d);
-        cl_program prog = create_program("msfc_deal_finder_to_2G.ocl", ctx, d);
-        cl_program prog4G =
-            create_program("msfc_deal_finder_2G_to_4G.ocl", ctx, d);
-        cl_program prog8G =
-            create_program("msfc_deal_finder_4G_to_8G.ocl", ctx, d);
+DLLEXPORT void * fc_solve_user__opencl_create(void)
+{{
+    fcs_ocl * obj = malloc(sizeof(*obj));
+
+obj->p = select_platform();
+obj->d = select_device(obj->p);
+obj->ctx = create_context(obj->p, obj->d);
+obj->que = create_queue(obj->ctx, obj->d);
+obj->vecinit_prog = create_program("vecinit_prog.ocl", obj->ctx, obj->d);
+obj->prog = create_program("msfc_deal_finder_to_2G.ocl", obj->ctx, obj->d);
+obj->prog4G = create_program(
+    "msfc_deal_finder_2G_to_4G.ocl", obj->ctx, obj->d);
+obj->prog8G = create_program(
+    "msfc_deal_finder_4G_to_8G.ocl", obj->ctx, obj->d);
         cl_int err;
 
-        cl_kernel vecinit_k = clCreateKernel(vecinit_prog, "vecinit", &err);
+obj->vecinit_k = clCreateKernel(obj->vecinit_prog, "vecinit", &err);
         ocl_check(err, "create kernel vecinit");
-        cl_kernel vecsum_k = clCreateKernel(prog, "sum", &err);
+obj->vecsum_k = clCreateKernel(obj->prog, "sum", &err);
         ocl_check(err, "create kernel vecsum");
-        cl_kernel vecsum_k4G = clCreateKernel(prog4G, "sumg", &err);
+obj->vecsum_k4G = clCreateKernel(obj->prog4G, "sumg", &err);
         ocl_check(err, "create kernel vecsum_k4G");
-        cl_kernel vecsum_k8G = clCreateKernel(prog8G, "sumh", &err);
+obj->vecsum_k8G = clCreateKernel(obj->prog8G, "sumh", &err);
         ocl_check(err, "create kernel vecsum_k8G");
 
         /* get information about the preferred work-group size multiple */
-        err = clGetKernelWorkGroupInfo(vecinit_k, d,
+        err = clGetKernelWorkGroupInfo(obj->vecinit_k, obj->d,
                 CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE,
                 sizeof(gws_align_init), &gws_align_init, NULL);
         ocl_check(err, "preferred wg multiple for init");
-        err = clGetKernelWorkGroupInfo(vecsum_k, d,
+        err = clGetKernelWorkGroupInfo(obj->vecsum_k, obj->d,
                 CL_KERNEL_PREFERRED_WORK_GROUP_SIZE_MULTIPLE,
                 sizeof(gws_align_sum), &gws_align_sum, NULL);
         ocl_check(err, "preferred wg multiple for sum");
 
 
-bool is_right = false;
-cl_mem r_buff = NULL, i_buff = NULL;
-r_buff = clCreateBuffer(ctx,
+obj->r_buff = clCreateBuffer(obj->ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer r_buff");
-i_buff = clCreateBuffer(ctx,
+obj->i_buff = clCreateBuffer(obj->ctx,
         CL_MEM_READ_WRITE, // | CL_MEM_HOST_NO_ACCESS,
                 bufsize, NULL,
                         &err);
         ocl_check(err, "create buffer i_buff");
+    return obj;
+}}
+
+DLLEXPORT long long fc_solve_user__opencl_find_deal(
+    fcs_ocl * const obj,
+    const int first_int,
+    const int * myints
+)
+{{
+    long long ret = -1;
+bool is_right = false;
+
 {c_loop_two_g}
 {c_loop_four_g}
 {c_loop_eight_g}
 meta_cleanup:
-    clReleaseMemObject(i_buff);
+    #if 0
+    clReleaseMemObject(obj->i_buff);
     clReleaseMemObject(r_buff);
-        clReleaseKernel(vecinit_k);
+        clReleaseKernel(obj->vecinit_k);
         ocl_check(err, "release kernel vecinit");
-        clReleaseKernel(vecsum_k);
+        clReleaseKernel(obj->vecsum_k);
         ocl_check(err, "release kernel vecsum");
-        clReleaseKernel(vecsum_k4G);
+        clReleaseKernel(obj->vecsum_k4G);
         ocl_check(err, "release kernel vecsum_k4G");
-        clReleaseKernel(vecsum_k8G);
+        clReleaseKernel(obj->vecsum_k8G);
         ocl_check(err, "release kernel vecsum_k8G");
-clReleaseProgram(prog8G);
-clReleaseProgram(prog4G);
-clReleaseProgram(prog);
-clReleaseProgram(vecinit_prog);
-clReleaseCommandQueue(que);
-clReleaseContext(ctx);
-clReleaseDevice(d);
-clUnloadPlatformCompiler(p);
+clReleaseProgram(obj->prog8G);
+clReleaseProgram(obj->prog4G);
+clReleaseProgram(obj->prog);
+clReleaseProgram(obj->vecinit_prog);
+clReleaseCommandQueue(obj->que);
+clReleaseContext(obj->ctx);
+clReleaseDevice(obj->d);
+clUnloadPlatformCompiler(obj->p);
+#endif
 return ret;
 }}
 '''))
