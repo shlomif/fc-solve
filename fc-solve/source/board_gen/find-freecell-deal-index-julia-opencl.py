@@ -122,7 +122,7 @@ def find_ret(ints, num_ints_in_first=4):
       {kernel_sum_to_8G_cl_code}
     }}'''))
     c_loop_template = '''{{
-long long ret = -1;
+ret = -1;
 {{
 {int_type} mystart = {start};
 while (! is_right)
@@ -195,7 +195,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 {cleanup_label}:
     if (ret > 0)
     {{
-        return ret;
+    goto meta_cleanup;
     }}
 }}
 '''
@@ -338,6 +338,7 @@ DLLEXPORT long long fc_solve_user__opencl_find_deal(
     const int * myints
 )
 {{
+    long long ret = -1;
         const size_t num_elems = {bufsize};
         const cl_int cl_int_num_elems = (cl_int)num_elems;
         const size_t bufsize = num_elems * sizeof(cl_int);
@@ -389,7 +390,11 @@ i_buff = clCreateBuffer(ctx,
 {c_loop_two_g}
 {c_loop_four_g}
 {c_loop_eight_g}
-return -1;
+meta_cleanup:
+clReleaseContext(ctx);
+clReleaseDevice(d);
+clUnloadPlatformCompiler(p);
+return ret;
 }}
 '''))
     return 0
