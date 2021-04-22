@@ -129,7 +129,8 @@ cl_event sum_evt = NULL;
 {int_type} mystart = {start};
 while (! is_right)
 {{
-    init_evt = vecinit(obj->vecinit_k, obj->que, obj->r_buff, mystart, num_elems);
+    init_evt = vecinit(
+        obj->vecinit_k, obj->que, obj->r_buff, mystart, num_elems);
     sum_evt = vecsum(
         obj->{my_vecsum_var}, obj->que, obj->i_buff, obj->r_buff,
         num_elems, init_evt
@@ -414,11 +415,12 @@ obj->i_buff = clCreateBuffer(obj->ctx,
 }}
 
 DLLEXPORT long long fc_solve_user__opencl_find_deal(
-    fcs_ocl * const obj,
+    void * const proto_obj,
     const int first_int,
     const int * myints
 )
 {{
+    fcs_ocl * const obj = proto_obj;
     long long ret = -1;
 bool is_right = false;
 
@@ -426,9 +428,17 @@ bool is_right = false;
 {c_loop_four_g}
 {c_loop_eight_g}
 meta_cleanup:
-    #if 0
+return ret;
+}}
+
+DLLEXPORT long long fc_solve_user__opencl_release(
+    void * const proto_obj)
+{{
+    fcs_ocl * const obj = proto_obj;
+    cl_int err = 0;
+    #if 1
     clReleaseMemObject(obj->i_buff);
-    clReleaseMemObject(r_buff);
+    clReleaseMemObject(obj->r_buff);
         clReleaseKernel(obj->vecinit_k);
         ocl_check(err, "release kernel vecinit");
         clReleaseKernel(obj->vecsum_k);
@@ -446,7 +456,8 @@ clReleaseContext(obj->ctx);
 clReleaseDevice(obj->d);
 clUnloadPlatformCompiler(obj->p);
 #endif
-return ret;
+free(obj);
+return 0;
 }}
 '''))
     return 0

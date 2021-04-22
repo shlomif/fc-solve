@@ -39,6 +39,7 @@ def find_ret(ints):
         count += 1
         if not count & 0b11111111:
             print(count, flush=True)
+    lib.fc_solve_user__opencl_release(obj)
     return ret
 
 

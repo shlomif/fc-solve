@@ -32,6 +32,8 @@ def find_ret(ints):
         for d in range(1, r.MAX_SEED+1):
             if is_right(d):
                 return d
+        return -1
+    return _h()
     count = 0
     while True:
         ret = _h()
