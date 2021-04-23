@@ -214,7 +214,7 @@ Solitairey.
 
 <label for="stdin">Input:</label><br />
 <textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
-<button id="{{ main_id }}">{{ main_text }}</button>
+<button id="{{ main_id }}" onclick="javascript:window.my_web_fc_solve_ui.on__run_do_solve__click()">{{ main_text }}</button>
 <button id="capitalize_cards" title="Convert the cards in the input to uppercase letters">Capitalize the Cards</button>
 
 {% endmacro %}

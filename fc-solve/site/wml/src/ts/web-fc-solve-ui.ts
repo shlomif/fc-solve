@@ -612,6 +612,7 @@ function toggle_expand_moves() {
     return;
 }
 
+export let on__run_do_solve__click: () => void = null;
 export let populate_input_pressed: () => void = null;
 export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     if (!module_wrapper["ms_rand__get_singleton"]) {
@@ -623,7 +624,10 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     if (false) {
         $("#populate_input").click(populate_input_pressed);
     }
-    $("#run_do_solve").click(fc_solve_do_solve);
+    on__run_do_solve__click = fc_solve_do_solve;
+    if (false) {
+        $("#run_do_solve").click(on__run_do_solve__click);
+    }
     base_ui.set_up__capitalize_cards();
 
     return;

@@ -93,6 +93,7 @@ export function find_deal_ui(): void {
     return;
 }
 
+export let on__run_do_solve__click: () => void = null;
 export let populate_input_pressed: () => void = null;
 export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     populate_input_pressed = () => {
@@ -101,7 +102,10 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     if (false) {
         $("#populate_input").click(populate_input_pressed);
     }
-    $("#run_do_solve").click(find_deal_ui);
+    on__run_do_solve__click = find_deal_ui;
+    if (false) {
+        $("#run_do_solve").click(on__run_do_solve__click);
+    }
     base_ui.set_up__capitalize_cards();
 
     return;
