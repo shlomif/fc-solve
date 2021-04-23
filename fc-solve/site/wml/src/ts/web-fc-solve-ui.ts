@@ -612,19 +612,16 @@ function toggle_expand_moves() {
     return;
 }
 
-export let populate_input_pressed: any = null;
+export let populate_input_pressed: () => void = null;
 export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     if (!module_wrapper["ms_rand__get_singleton"]) {
         throw "ms_rand__get_singleton does not exist in set_up_handlers()";
     }
-    if (true) {
-        populate_input_pressed = () => {
-            return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
-        };
-    } else {
-        $("#populate_input").click(() => {
-            return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
-        });
+    populate_input_pressed = () => {
+        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+    };
+    if (false) {
+        $("#populate_input").click(populate_input_pressed);
     }
     $("#run_do_solve").click(fc_solve_do_solve);
     base_ui.set_up__capitalize_cards();
