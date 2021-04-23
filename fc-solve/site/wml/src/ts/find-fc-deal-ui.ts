@@ -93,10 +93,17 @@ export function find_deal_ui(): void {
     return;
 }
 
+export let populate_input_pressed: any = null;
 export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
-    $("#populate_input").click(() => {
-        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
-    });
+    if (true) {
+        populate_input_pressed = () => {
+            return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+        };
+    } else {
+        $("#populate_input").click(() => {
+            return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+        });
+    }
     $("#run_do_solve").click(find_deal_ui);
     base_ui.set_up__capitalize_cards();
 

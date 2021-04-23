@@ -14,6 +14,7 @@ requirejs.config({
         }
         $( "#fc_solve_tabs" ).tabs({
             activate: function () {
+                window.my_web_fc_solve_ui = web_fc_solve_ui;
                 web_fc_solve_ui.set_up_handlers(module_wrapper);
 
                 return;
@@ -106,6 +107,7 @@ $(function() {
 <script>
 {{ set_up_requirejs()}}
     {{ incs }} {
+    window.my_web_fc_solve_ui = web_fc_solve_ui;
     web_fc_solve_ui.init_module((module_wrapper)=>{
     web_fc_solve_ui.set_up(module_wrapper);
     {{ set_up_tabs()}};
