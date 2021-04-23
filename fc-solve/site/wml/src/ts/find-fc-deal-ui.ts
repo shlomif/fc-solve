@@ -114,7 +114,9 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
 export function set_up(module_wrapper: w.ModuleWrapper): void {
     restore_bookmark();
     set_up_handlers(module_wrapper);
-    $("#fc_solve_bookmark_button").click(on_bookmarking);
+    const fc_solve_bookmark_button = $("#fc_solve_bookmark_button");
+    fc_solve_bookmark_button.off("click");
+    fc_solve_bookmark_button.click(on_bookmarking);
 
     return;
 }

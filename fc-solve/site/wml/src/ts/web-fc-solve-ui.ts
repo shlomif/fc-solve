@@ -188,19 +188,23 @@ class FC_Solve_UI {
                 err_s = '<ul class="err_s">' + err_s + "</ul>";
             }
             parse_error_control.html(err_s);
-            $(".err_s button.loc").click(function () {
-                const button = $(this);
-                function _n(cl) {
-                    return parseInt(button.find(cl).text(), 10);
-                }
-                const start = _n(".start");
-                const end = _n(".end");
+            $(".err_s button.loc")
+                .off("click")
+                .click(function () {
+                    const button = $(this);
+                    function _n(cl) {
+                        return parseInt(button.find(cl).text(), 10);
+                    }
+                    const start = _n(".start");
+                    const end = _n(".end");
 
-                const el = document.getElementById("stdin") as HTMLInputElement;
-                el.focus();
-                el.setSelectionRange(start, end);
-                return;
-            });
+                    const el = document.getElementById(
+                        "stdin",
+                    ) as HTMLInputElement;
+                    el.focus();
+                    el.setSelectionRange(start, end);
+                    return;
+                });
             // Disabling for now because the error messages are too cryptic
             // TODO : restore after improving.
             if (ENABLE_VALIDATION) {
@@ -304,10 +308,9 @@ class FC_Solve_UI {
             html += "</ol>\n";
             that._set_html_output(html);
 
-            $("#dynamic_output").on(
-                "click",
-                "button.expand_move",
-                function (event) {
+            $("#dynamic_output")
+                .off("click")
+                .on("click", "button.expand_move", function (event) {
                     const button = $(this);
                     const b_id = button.attr("id");
                     const idx = parseInt(
@@ -352,8 +355,7 @@ class FC_Solve_UI {
                             ? "Unexpand move"
                             : "Expand move",
                     );
-                },
-            );
+                });
         }
         return;
     }
@@ -639,9 +641,9 @@ export function set_up(module_wrapper: w.ModuleWrapper, graphics_) {
     }
     restore_bookmark();
     set_up_handlers(module_wrapper);
-    $("#one_based").click(on_toggle_one_based);
-    $("#clear_output").click(clear_output);
-    $("#fc_solve_bookmark_button").click(on_bookmarking);
+    $("#one_based").off("click").click(on_toggle_one_based);
+    $("#clear_output").off("click").click(clear_output);
+    $("#fc_solve_bookmark_button").off("click").click(on_bookmarking);
     $('input[name="unicode_suits"]').change(() => {
         fcs_ui.update_output();
     });
