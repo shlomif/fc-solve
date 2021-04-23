@@ -8,8 +8,8 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.13.14",
-    "@babel/core": "^7.13.15",
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.13.16",
     "@babel/preset-env": "^7.13.15",
     "@types/jquery": "^3.5.5",
     "@types/qunit": "^2.11.1",
@@ -46,7 +46,7 @@
     "terser": "^5.6.1",
     "typescript": "^4.2.4",
     "uglify-es": "^3.3.10",
-    "webpack": "^5.34.0",
+    "webpack": "^5.35.0",
     "webpack-cli": "^4.6.0",
     "yarn": "^1.22.10"
   },
