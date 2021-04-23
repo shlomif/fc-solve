@@ -3,7 +3,7 @@
 
 set -e -x
 
-disable=0
+disable=1
 if test "$disable" = 1
 then
     # Try disabling on appveyor for now due to failures;
