@@ -17,6 +17,7 @@ For now, you can try using these as drivers:
 
 import sys
 
+import perl
 from make_pysol_freecell_board import find_index_main
 
 COMMON_RAND = '((r[gid] = (r[gid]*214013 + 2531011)) >> 16)'
@@ -90,13 +91,20 @@ def find_ret(ints, num_ints_in_first=4):
             }
         )
 
+    _tt3_pkg = "PyTT3"
+
+    def _tt3_r(s):
+        """docstring for _tt3_r"""
+        return s.replace("PyTT3", _tt3_pkg)
+
     def _tt3_myformat(template, extra_fields={}):
-        import perl
-        perl.eval(
-            "use Template; $::input=''; $PyTT3::o=''; " +
-            "$::t = Template->new(); %PyTT3::vars=();")
-        h = perl.get_ref("%PyTT3::vars")
-        perl.get_ref("$::input").__value__ += template
+        nonlocal _tt3_pkg
+        _tt3_pkg += "t"
+        perl.eval(_tt3_r(
+            "use Template (); $PyTT3::input=''; $PyTT3::o=''; " +
+            "$PyTT3::template = Template->new(); %PyTT3::vars=();"))
+        h = perl.get_ref(_tt3_r("%PyTT3::vars"))
+        perl.get_ref(_tt3_r("$PyTT3::input")).__value__ += template
         fields = {
                 'apply_limit': '0',
                 'bufsize': 300000,
@@ -110,8 +118,10 @@ def find_ret(ints, num_ints_in_first=4):
             }
         for k, v in fields.items():
             h[k] = v
-        perl.eval("$::t->process(\\$::input, \\%PyTT3::vars, \\$PyTT3::o)")
-        return perl.get_ref("$PyTT3::o").__value__
+        perl.eval(_tt3_r(
+            "$PyTT3::template->process(" +
+            "\\$PyTT3::input, \\%PyTT3::vars, \\$PyTT3::o)"))
+        return perl.get_ref(_tt3_r("$PyTT3::o")).__value__
 
     def _update_file_using_template(fn, template, extra_fields={
             }):
