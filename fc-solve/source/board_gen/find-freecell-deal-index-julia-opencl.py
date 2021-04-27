@@ -94,8 +94,8 @@ def find_ret(ints, num_ints_in_first=4):
         import perl
         perl.eval(
             "use Template; $::input=''; $PyTT3::o=''; " +
-            "$::t = Template->new(); %::_vars=();")
-        h = perl.get_ref("%::_vars")
+            "$::t = Template->new(); %PyTT3::vars=();")
+        h = perl.get_ref("%PyTT3::vars")
         perl.get_ref("$::input").__value__ += template
         fields = {
                 'apply_limit': '0',
@@ -110,7 +110,7 @@ def find_ret(ints, num_ints_in_first=4):
             }
         for k, v in fields.items():
             h[k] = v
-        perl.eval("$::t->process(\\$::input, \\%::vars, \\$PyTT3::o)")
+        perl.eval("$::t->process(\\$::input, \\%PyTT3::vars, \\$PyTT3::o)")
         return perl.get_ref("$PyTT3::o").__value__
 
     def _update_file_using_template(fn, template, extra_fields={
@@ -128,13 +128,13 @@ def find_ret(ints, num_ints_in_first=4):
       const unsigned gid = get_global_id(0);
       r[gid] = gid + mystart;
     }'''))
-    _update_file_using_template(fn="msfc_deal_finder_to_2G.ocl", template=(
+    _tt3_update_file_using_template(fn="msfc_deal_finder_to_2G.ocl", template=(
                 '''kernel void sum(global unsigned * restrict r,
                      global unsigned * restrict i)
-    {{
+    {
       const unsigned gid = get_global_id(0);
-      {kernel_sum_cl_code}
-    }}'''))
+      [% kernel_sum_cl_code %]
+    }'''))
     _update_file_using_template(fn="msfc_deal_finder_2G_to_4G.ocl", template=(
                 '''kernel void sumg(global unsigned * restrict r,
                      global unsigned * restrict i)
