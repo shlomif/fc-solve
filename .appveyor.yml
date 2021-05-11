@@ -1,4 +1,5 @@
----
+image: Visual Studio 2019
+
 environment:
     MSYS_PACKAGES: mingw-w64-x86_64-cmocka mingw-w64-i686-cmocka mingw-w64-x86_64-pkg-config mingw-w64-i686-pkg-config
     PY3MODS: cffi freecell_solver pycotap pysol_cards random2 six
@@ -7,12 +8,14 @@ environment:
 install:
     - dir
     - cd
-    - c:\msys64\usr\bin\bash -l "c:/projects/fc-solve/fc-solve/scripts/ci-appveyor-upgrade-msys2.bash"
-    # - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm"
-    # - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm ${MSYS_PACKAGES}"
-    - c:\msys64\usr\bin\bash -lc "set -e -x; rm -r /etc/pacman.d/gnupg/; pacman-key --init ; pacman-key --populate msys2 ; "
-    - c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
-    - c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
+    # Disable checking disk space to speed up install time
+    - C:\msys64\usr\bin\sed -i 's/^CheckSpace/#CheckSpace/g' /etc/pacman.conf
+    # Update core packages
+    - C:\msys64\usr\bin\pacman -Syyuu --noconfirm --noprogressbar --ask=20
+    # Explicitly kill any remaining msys2 processes after core update
+    - taskkill /f /fi "MODULES eq msys-2.0.dll"
+    # Update non-core packages
+    - C:\msys64\usr\bin\pacman -Suu --noconfirm --noprogressbar --ask=20
     - choco install ag
     - choco install strawberryperl
     - if not exist C:\libtap mkdir C:\libtap
@@ -32,7 +35,7 @@ install:
     - copy C:\libtap\gperf-3.0.4.tar.gz .
     - tar -xvf gperf-3.0.4.tar.gz
     - cd gperf-3.0.4 && perl -e "if (-e qq#C:\\libtap\\bin\\gperf.exe#) { exit(0); } $ENV{PATH} = qq#C:\\msys64\\mingw64\\bin;$ENV{PATH}#; system('sh configure --prefix=C:/libtap') or system('gmake') or system('gmake install');" && cd ..
-    - git clone https://github.com/clibs/cmocka libtap
+    - git clone --depth=1 https://github.com/clibs/cmocka libtap
     - mkdir libtap\b
     - cd libtap\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
@@ -41,7 +44,7 @@ install:
     - gmake
     - gmake install
     - cd ..\..\
-    - git clone https://github.com/shlomif/rinutils rinutils
+    - git clone --depth=1 https://github.com/shlomif/rinutils rinutils
     - mkdir rinutils\b
     - cd rinutils\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
