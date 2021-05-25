@@ -84,11 +84,10 @@ body {
     .wrap-me * {
         @include wrap;
     }
-    * {
-        // word-break: break-all;
-
-        // overflow-wrap: break-word;
-        // word-wrap: break-word;
+    p {
+        $p: 2em;
+        padding-left: $p;
+        padding-right: $p;
     }
 }
 

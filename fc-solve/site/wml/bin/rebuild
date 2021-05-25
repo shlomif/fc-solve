@@ -4,6 +4,14 @@ rebuild()
     (
         set -x
         set -e
+        scrpt=/usr/bin/dbtoepub
+        if test -x "$scrpt"
+        then
+            if test -e /etc/debian_version -a -z "$TRAVIS"
+            then
+                export DBTOEPUB="ruby $scrpt"
+            fi
+        fi
         time git clean -dxf .
         time bash -x bin/install-npm-deps.sh
         time ./gen-helpers
