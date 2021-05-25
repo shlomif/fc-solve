@@ -102,23 +102,24 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         "number",
         ["number", "number", "number"],
     );
-    module_wrapper.user_cmd_line_parse_args_with_file_nesting_count = Module.cwrap(
-        "freecell_solver_user_cmd_line_parse_args_with_file_nesting_count",
-        "number",
-        [
+    module_wrapper.user_cmd_line_parse_args_with_file_nesting_count =
+        Module.cwrap(
+            "freecell_solver_user_cmd_line_parse_args_with_file_nesting_count",
             "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-            "number",
-        ],
-    );
+            [
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+                "number",
+            ],
+        );
     module_wrapper.alloc_wrap = ((my_malloc) => {
         return (size: number, desc: string, error: string) => {
             const buffer = my_malloc(size);
@@ -305,9 +306,10 @@ export class FC_Solve {
                 1,
             );
 
-            const error_string = that.module_wrapper.fc_solve_Pointer_stringify(
-                error_string_ptr,
-            );
+            const error_string =
+                that.module_wrapper.fc_solve_Pointer_stringify(
+                    error_string_ptr,
+                );
             that.module_wrapper.c_free(error_string_ptr);
 
             alert(error_string + "\n");
@@ -491,9 +493,10 @@ export class FC_Solve {
                 move_buffer,
                 0,
             );
-            const move_as_string = that.module_wrapper.fc_solve_Pointer_stringify(
-                that._move_string_buffer,
-            );
+            const move_as_string =
+                that.module_wrapper.fc_solve_Pointer_stringify(
+                    that._move_string_buffer,
+                );
 
             states_and_moves_sequence.push({
                 exp: null,
@@ -608,23 +611,23 @@ export class FC_Solve {
                     "error string buffer",
                     "Foo",
                 );
-                const preset_ret = that.module_wrapper.user_cmd_line_read_cmd_line_preset(
-                    obj,
-                    cmd_line_preset,
-                    0,
-                    error_string_ptr_buf,
-                    0,
-                    null,
-                );
+                const preset_ret =
+                    that.module_wrapper.user_cmd_line_read_cmd_line_preset(
+                        obj,
+                        cmd_line_preset,
+                        0,
+                        error_string_ptr_buf,
+                        0,
+                        null,
+                    );
 
                 const error_string_ptr = that.module_wrapper.Module.getValue(
                     error_string_ptr_buf,
                     "*",
                 );
 
-                const error_string = that._stringify_possibly_null_ptr(
-                    error_string_ptr,
-                );
+                const error_string =
+                    that._stringify_possibly_null_ptr(error_string_ptr);
 
                 that.module_wrapper.c_free(error_string_ptr);
                 that.module_wrapper.c_free(error_string_ptr_buf);
@@ -664,11 +667,12 @@ export class FC_Solve {
                     "Seed",
                 );
                 // TODO : Is there a memory leak here?
-                const read_from_file_str_ptr = that.module_wrapper.fc_solve_allocate_i8(
-                    that.module_wrapper.Module.intArrayFromString(
-                        "--read-from-file",
-                    ),
-                );
+                const read_from_file_str_ptr =
+                    that.module_wrapper.fc_solve_allocate_i8(
+                        that.module_wrapper.Module.intArrayFromString(
+                            "--read-from-file",
+                        ),
+                    );
                 const arg_str_ptr = that.module_wrapper.fc_solve_allocate_i8(
                     that.module_wrapper.Module.intArrayFromString(
                         "0," + string_params_file_path,
@@ -693,19 +697,20 @@ export class FC_Solve {
                 );
 
                 // Input the file to the solver.
-                const args_ret_code = that.module_wrapper.user_cmd_line_parse_args_with_file_nesting_count(
-                    obj,
-                    2,
-                    args_buf,
-                    0,
-                    0,
-                    0,
-                    0,
-                    error_string_ptr_buf,
-                    last_arg_ptr,
-                    -1,
-                    0,
-                );
+                const args_ret_code =
+                    that.module_wrapper.user_cmd_line_parse_args_with_file_nesting_count(
+                        obj,
+                        2,
+                        args_buf,
+                        0,
+                        0,
+                        0,
+                        0,
+                        error_string_ptr_buf,
+                        last_arg_ptr,
+                        -1,
+                        0,
+                    );
 
                 that.module_wrapper.c_free(last_arg_ptr);
                 that.module_wrapper.c_free(args_buf);
@@ -715,9 +720,8 @@ export class FC_Solve {
                     "*",
                 );
 
-                const error_string = that._stringify_possibly_null_ptr(
-                    error_string_ptr,
-                );
+                const error_string =
+                    that._stringify_possibly_null_ptr(error_string_ptr);
                 that.module_wrapper.c_free(error_string_ptr);
                 that.module_wrapper.c_free(error_string_ptr_buf);
 
@@ -735,9 +739,10 @@ export class FC_Solve {
                     let unrecognized_opt_s = "";
                     if (unrecognized_opt_ptr != 0) {
                         that._do_not_alert = true;
-                        that._unrecognized_opt = that._stringify_possibly_null_ptr(
-                            unrecognized_opt_ptr,
-                        );
+                        that._unrecognized_opt =
+                            that._stringify_possibly_null_ptr(
+                                unrecognized_opt_ptr,
+                            );
                         that.module_wrapper.c_free(unrecognized_opt_ptr);
                         let exception_string = "";
                         if (

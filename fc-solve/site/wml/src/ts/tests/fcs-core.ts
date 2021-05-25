@@ -283,9 +283,8 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                         return " ".repeat(10 - ret.length) + ret;
                     })
                     .join("");
-                const module_wrapper = deal_finder.FC_Solve_init_wrappers_with_module(
-                    _module,
-                );
+                const module_wrapper =
+                    deal_finder.FC_Solve_init_wrappers_with_module(_module);
                 const df = new deal_finder.Freecell_Deal_Finder({
                     module_wrapper,
                 });
