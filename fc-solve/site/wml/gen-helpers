@@ -85,16 +85,20 @@ my $generator = HTML::Latemp::GenMakeHelpers->new(
     filename_lists_post_filter => sub {
         my ($args) = @_;
         my $filenames = $args->{filenames};
-        return [
-            grep {
-                my $fn = $_;
-                (
-                    ( $fn =~ s#\.jinja\z## )
-                    ? do { push @jinja, $fn; '' }
-                    : 1
-                )
-            } @$filenames
-        ];
+        my @ret;
+        foreach my $fn (@$filenames)
+        {
+            if ( $fn =~ s#\.jinja\z## )
+            {
+                push @jinja, $fn;
+            }
+            else
+            {
+                # else...
+                push @ret, $fn;
+            }
+        }
+        return \@ret;
     },
 );
 
