@@ -108,6 +108,7 @@
 /fc-solve/site/wml/lib/out-babel/js/tests/*.js
 /fc-solve/site/wml/lib/repos/Solitairey/
 /fc-solve/site/wml/lib/repos/rinutils-include/
+/fc-solve/site/wml/lib/repos/rinutils/
 /fc-solve/site/wml/lib/sgml/
 /fc-solve/site/wml/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/libfreecell-solver.wasm
