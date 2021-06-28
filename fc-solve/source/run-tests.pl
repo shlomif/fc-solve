@@ -142,8 +142,9 @@ sub myglob
 }
 
 {
-    my $fcs_path = Path::Tiny->cwd;
-    local $ENV{FCS_PATH}                = $fcs_path;
+    my $fcs_bin_path = Path::Tiny->cwd->absolute;
+    local $ENV{FCS_PATH}                = $fcs_bin_path;
+    local $ENV{FCS_BIN_PATH}            = $fcs_bin_path;
     local $ENV{FCS_SRC_PATH}            = $abs_bindir;
     local $ENV{PYTHONDONTWRITEBYTECODE} = '1';
     my %TEST_TAGS = (
@@ -194,7 +195,7 @@ sub myglob
 
     my $testing_preset_rc = $preset_dest->child("presetrc")->absolute;
     $testing_preset_rc->spew_utf8(
-        $fcs_path->child( "Presets", "presetrc" )->slurp_utf8 =~
+        $fcs_bin_path->child( "Presets", "presetrc" )->slurp_utf8 =~
             s{^(dir=)([^\n]*)}{$1$files_dest_abs}gmrs );
 
     local $ENV{FREECELL_SOLVER_PRESETRC} = $testing_preset_rc;
@@ -206,11 +207,11 @@ sub myglob
 
     Env::Path->CPATH->Prepend( $abs_bindir, );
 
-    Env::Path->LD_LIBRARY_PATH->Prepend($fcs_path);
+    Env::Path->LD_LIBRARY_PATH->Prepend($fcs_bin_path);
     if ($FC_Solve::Paths::Base::IS_WIN)
     {
         # For the shared objects.
-        Env::Path->PATH->Append($fcs_path);
+        Env::Path->PATH->Append($fcs_bin_path);
     }
 
     my $foo_lib_dir = $abs_bindir->child( "t", "lib" );
@@ -278,7 +279,7 @@ sub myglob
             myglob('t'),
             myglob('.'),
             (
-                  ( $fcs_path ne $abs_bindir ) ? ( myglob("$abs_bindir/t/t") )
+                ( $fcs_bin_path ne $abs_bindir ) ? ( myglob("$abs_bindir/t/t") )
                 : ()
             ),
         )

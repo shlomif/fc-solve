@@ -6,7 +6,7 @@ use warnings;
 use Test::TrailingSpace ();
 use Test::More tests => 2;
 
-foreach my $path ( @ENV{qw/FCS_SRC_PATH FCS_PATH/} )
+foreach my $path ( @ENV{qw/FCS_SRC_PATH FCS_BIN_PATH/} )
 {
     my $finder = Test::TrailingSpace->new(
         {

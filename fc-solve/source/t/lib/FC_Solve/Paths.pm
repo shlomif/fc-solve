@@ -41,8 +41,8 @@ sub _correct_path
     return $p;
 }
 my $EXE_SUF            = ( $IS_WIN ? '.exe' : '' );
-my $FCS_PATH           = path( $ENV{FCS_PATH} );
-my $FC_SOLVE__RAW__RAW = "$FCS_PATH/fc-solve";
+my $FCS_BIN_PATH       = path( $ENV{FCS_BIN_PATH} );
+my $FC_SOLVE__RAW__RAW = "$FCS_BIN_PATH/fc-solve";
 our $FC_SOLVE__RAW = _correct_path($FC_SOLVE__RAW__RAW) . $EXE_SUF;
 our $FC_SOLVE_EXE  = _correct_path( shell_quote($FC_SOLVE__RAW__RAW) );
 my $PY3 = ( $IS_WIN ? 'python3 ' : '' );
@@ -77,7 +77,7 @@ my $DBM_APR     = _is_tag('dbm_apr');
 # A file in the output/binaries directory where fc-solve was compiled.
 sub bin_file
 {
-    return $FCS_PATH->child( @{ shift @_ } );
+    return $FCS_BIN_PATH->child( @{ shift @_ } );
 }
 
 sub dll_file
@@ -94,7 +94,7 @@ sub bin_exe_raw
 # A board file in the binary directory.
 sub bin_board
 {
-    return $FCS_PATH->child(shift);
+    return $FCS_BIN_PATH->child(shift);
 }
 
 sub data_file
