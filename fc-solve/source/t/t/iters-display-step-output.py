@@ -5,7 +5,7 @@ import re
 import subprocess
 import unittest
 
-prog = os.environ['FCS_PATH'] + '/fc-solve'
+prog = os.environ['FCS_BIN_PATH'] + '/fc-solve'
 
 
 def _normalize_lf(txt):

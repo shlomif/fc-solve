@@ -62,7 +62,7 @@ sub _process_cmd_line
         {
             ++$idx;
             my $preset_name = $argv[$idx];
-            open my $in, '<', "$ENV{FCS_PATH}/Presets/presetrc"
+            open my $in, '<', "$ENV{FCS_BIN_PATH}/Presets/presetrc"
                 or die "Cannot open presetrc file - $!";
             my $cmd_found;
         PRESETRC:

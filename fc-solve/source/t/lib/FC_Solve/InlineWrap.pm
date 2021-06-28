@@ -37,7 +37,7 @@ sub import
                 ( ["include"], ["rinutils/rinutils/include"], [] ) ),
         CCFLAGS           => $ccflags,
         CLEAN_AFTER_BUILD => 0,
-        LIBS              => "-L$ENV{FCS_PATH} $libs",
+        LIBS              => "-L$ENV{FCS_BIN_PATH} $libs",
         @workaround_for_a_heisenbug,
         %args,
     );
