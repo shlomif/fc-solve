@@ -390,9 +390,6 @@ T2_SVGS__MIN := $(T2_SVGS__BASE:%.svg=%.min.svg)
 T2_SVGS__svgz := $(T2_SVGS__BASE:%.svg=%.svgz)
 
 $(T2_SVGS__MIN): %.min.svg: %.svg
-	which minify
-	minify --version
-	minify --help
 	minify --svg-precision 5 -o $@ $<
 
 $(T2_SVGS__svgz): %.svgz: %.min.svg

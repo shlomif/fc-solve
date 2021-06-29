@@ -6,7 +6,6 @@ use warnings;
 use autodie;
 
 use Path::Tiny qw/ path /;
-use IO::All qw/ io /;
 use MooX qw/ late /;
 
 has 'depth_dbm'  => ( is => 'ro', isa => 'Bool', required => 1 );
@@ -176,25 +175,25 @@ sub run
 
     foreach my $fn ('dbm_common.h')
     {
-        io("$dest_dir/$fn")
-            ->print( io("$src_path/$fn")->slurp() =~
+        path("$dest_dir/$fn")
+            ->spew_raw( path("$src_path/$fn")->slurp_raw() =~
 s{^(#define FCS_DBM_FREECELLS_NUM\s*)\d+(\s*)$}{$1$num_freecells$2}mrs
             );
     }
 
     foreach my $fn ('include/freecell-solver/config.h')
     {
-        io("./$fn") > io("$dest_dir/$fn");
+        path("./$fn")->copy("$dest_dir/$fn");
     }
     foreach my $fn ('fcs_back_compat.h')
     {
-        io("./include/freecell-solver/$fn") >
-            io("$dest_dir/include/freecell-solver/$fn");
+        path("./include/freecell-solver/$fn")
+            ->copy("$dest_dir/include/freecell-solver/$fn");
     }
 
     for my $fn ("prepare_vendu_deal.bash")
     {
-        io("$BIN_DIR/$fn") > io("$dest_dir/$fn");
+        path("$BIN_DIR/$fn")->copy("$dest_dir/$fn");
     }
 
     my @deals = @{ $self->deals };
@@ -230,7 +229,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
             {
                 die "'$src' is not a file!";
             }
-            io($src) > io($dest);
+            path($src)->copy($dest);
         }
     }
     my ($rinutils_dir) = (
@@ -248,7 +247,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
             {
                 die "'$src' is not a file!";
             }
-            io($src) > io($dest);
+            path($src)->copy($dest);
         }
     }
 
@@ -276,7 +275,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     my $no_threads_flag =
         $self->disable_threading ? " -DFCS_DBM_SINGLE_THREAD=1 " : "";
 
-    io("$dest_dir/Makefile")->print(<<"EOF");
+    path("$dest_dir/Makefile")->spew_raw(<<"EOF");
 TARGET = dbm_fc_solver
 DEALS = @{[map { $self->_zero_pad( $_) } @deals]}
 
