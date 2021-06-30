@@ -426,7 +426,7 @@ upload: all
 	$(RSYNC) -a -l $(D)/ $(TEMP_UPLOAD_URL_LOCAL)
 
 upload_staging: all
-	if test "$(PROD)" != "1"; then echo "use PROD=1\!" ; exit 1 ; else $(RSYNC) -a -l $(D)/ $(STAGING_UPLOAD_URL)/ ; fi
+	if test "$(PROD)" != "1"; then echo "use PROD=1\!" ; exit 0 ; else $(RSYNC) -a -l $(D)/ $(STAGING_UPLOAD_URL)/ ; fi
 
 upload_beta: all
 	$(RSYNC) -a -l $(D)/ $(BETA_UPLOAD_URL)
