@@ -26,6 +26,24 @@ static void __attribute__((noreturn)) print_help(void)
     exit(-1);
 }
 
+#define CARD_STR_LEN 3
+#define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
+#ifndef RINUTILS__IS_UNIX
+static inline void output_file(const char *const filename, const char *const s)
+{
+    FILE *f = fopen(filename, "wt");
+    fwrite(s, OUTPUT_LEN, 1, f);
+    fclose(f);
+}
+#else
+static inline void output_file(const char *const filename, const char *const s)
+{
+    const int fh = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+    write(fh, s, OUTPUT_LEN);
+    close(fh);
+}
+#endif
+
 int main(int argc, char *argv[])
 {
     int arg = 1;
@@ -74,19 +92,8 @@ int main(int argc, char *argv[])
 
     DEALS_ITERATE__START(board_num)
     sprintf(fn_suffix, "%lu%s", board_num, suffix);
-#define CARD_STR_LEN 3
-#define OUTPUT_LEN (CARD_STR_LEN * 4 * 13)
-#ifndef RINUTILS__IS_UNIX
-    FILE *f = fopen(filename, "wt");
     get_board_l__without_setup(board_num, s);
-    fwrite(s, OUTPUT_LEN, 1, f);
-    fclose(f);
-#else
-    const int fh = open(filename, O_WRONLY | O_CREAT | O_TRUNC, 0644);
-    get_board_l__without_setup(board_num, s);
-    write(fh, s, OUTPUT_LEN);
-    close(fh);
-#endif
+    output_file(filename, s);
     DEALS_ITERATE__END()
     deals_ranges__free();
 
