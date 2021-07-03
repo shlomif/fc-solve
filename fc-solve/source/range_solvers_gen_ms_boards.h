@@ -17,7 +17,7 @@ extern "C" {
 #include "gen_ms_boards__rand.h"
 #include "board_gen_lookup1.h"
 
-typedef size_t CARD;
+typedef size_t fcs_board_gen_card;
 
 #define SUIT(card) ((card) & (4 - 1))
 #define VALUE(card) ((card) >> 2)
@@ -25,7 +25,7 @@ typedef size_t CARD;
 static const char *card_to_string_values = "A23456789TJQK";
 static const char *card_to_string_suits = "CDHS";
 
-static inline void card_to_string(char *const s, const CARD card)
+static inline void card_to_string(char *const s, const fcs_board_gen_card card)
 {
     s[0] = card_to_string_values[VALUE(card)];
     s[1] = card_to_string_suits[SUIT(card)];
@@ -59,7 +59,7 @@ static inline void get_board_l__without_setup(
         microsoft_rand__calc_init_seedx((microsoft_rand)deal_idx);
 #endif
     // deck of 52 unique cards
-    CARD deck[52];
+    fcs_board_gen_card deck[52];
     for (size_t i = 0; i < 52; ++i) // put unique card in each item
     {
         deck[i] = i;
