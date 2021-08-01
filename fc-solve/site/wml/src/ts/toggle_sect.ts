@@ -27,7 +27,7 @@ function build_main_nav_menu_toggler(): void {
     });
 }
 
-$(document).ready(function () {
+$(document).ready(function (): void {
     build_sect_nav_menu_toggler();
     build_main_nav_menu_toggler();
 });
