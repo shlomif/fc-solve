@@ -146,7 +146,6 @@ static inline void soft_thread_run_cb(fcs_soft_thread *const soft_thread,
 void fc_solve_foreach_soft_thread(fcs_instance *const instance,
     const foreach_st_callback_choice callback_choice, void *const context)
 {
-#ifdef FCS_SINGLE_HARD_THREAD
     const_AUTO(num_soft_threads, instance->hard_thread.num_soft_threads);
     for (fastest_type_for_num_soft_threads__unsigned st_idx = 0;
          st_idx <= num_soft_threads; ++st_idx)
@@ -168,34 +167,9 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
         }
         soft_thread_run_cb(soft_thread, callback_choice, context);
     }
-#else
-    for (uint_fast32_t ht_idx = 0; ht_idx <= instance->num_hard_threads;
-         ++ht_idx)
-    {
-        fcs_hard_thread *hard_thread;
-        if (ht_idx < instance->num_hard_threads)
-        {
-            hard_thread = &(instance->hard_threads[ht_idx]);
-        }
-#ifdef FCS_WITH_MOVES
-        else if (instance->optimization_thread)
-        {
-            hard_thread = instance->optimization_thread;
-        }
-#endif
-        else
-        {
-            break;
-        }
-        ST_LOOP_START()
-        {
-            soft_thread_run_cb(soft_thread, callback_choice, context);
-        }
-    }
-#endif
 }
 
-#if !(defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_WITH_MOVES))
+#if !(defined(FCS_WITH_MOVES))
 static inline
 #endif
     void

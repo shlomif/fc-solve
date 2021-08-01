@@ -193,11 +193,9 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
     instance->is_simple_simon = (preset.preset_id == FCS_PRESET_SIMPLE_SIMON);
 #endif
 
-// This code makes sure that all the moves in all the existing
-// soft threads are acceptable by the new preset.
-#ifdef FCS_SINGLE_HARD_THREAD
+    // This code makes sure that all the moves in all the existing
+    // soft threads are acceptable by the new preset.
     if (instance->next_soft_thread_id)
-#endif
     {
         HT_LOOP_START()
         {

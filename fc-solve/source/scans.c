@@ -405,10 +405,6 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
 
     fcs_iters_int *const instance_num_checked_states_ptr =
         &(instance->i__stats.num_checked_states);
-#ifndef FCS_SINGLE_HARD_THREAD
-    fcs_iters_int *const hard_thread_num_checked_states_ptr =
-        &(HT_FIELD(hard_thread, ht__num_checked_states));
-#endif
     const_SLOT(is_befs, soft_thread);
 #ifdef FCS_WITH_MOVES
     const_SLOT(is_optimize_scan, soft_thread);

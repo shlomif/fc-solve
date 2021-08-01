@@ -95,13 +95,8 @@ static inline void fc_solve_move_sequence_function(
 
 #else
 
-#ifdef FCS_SINGLE_HARD_THREAD
 #define tests_define_accessors_freecell_only()                                 \
     fcs_instance *const instance = hard_thread;
-#else
-#define tests_define_accessors_freecell_only()                                 \
-    fcs_instance *const instance = hard_thread->instance;
-#endif
 
 #define tests__is_filled_by_any_card()                                         \
     (empty_stacks_fill == FCS_ES_FILLED_BY_ANY_CARD)
