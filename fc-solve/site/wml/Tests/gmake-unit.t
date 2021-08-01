@@ -4,6 +4,7 @@ use strict;
 use warnings;
 use 5.014;
 use Test::More tests => 2;
+use Test::Differences (qw( eq_or_diff ));
 use lib './lib';
 
 # diag(`env`);
@@ -41,8 +42,8 @@ sub gmake_test
     my @bn = split /\s+/, $val;
 
     # TEST
-    is_deeply( [ grep { !/\.js\z/ } @bn ], [], "good extension", );
+    eq_or_diff( [ grep { !/\.js\z/ } @bn ], [], "good extension", );
 
     # TEST
-    is_deeply( [ sort @bn ], [@bn], "sorted", );
+    eq_or_diff( [ sort @bn ], [@bn], "sorted", );
 }
