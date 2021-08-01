@@ -16,13 +16,8 @@ extern "C" {
 
 #include "scans.h"
 
-#ifdef FCS_SINGLE_HARD_THREAD
 #define check_if_limits_exceeded__num()                                        \
     ((*instance_num_checked_states_ptr) >= max_num_states)
-#else
-#define check_if_limits_exceeded__num()                                        \
-    ((*hard_thread_num_checked_states_ptr) >= max_num_states)
-#endif
 
 #ifdef FCS_DISABLE_NUM_STORED_STATES
 #define check_if_limits_exceeded__num_states()
@@ -398,11 +393,7 @@ static inline void mark_as_dead_end__proto(
     }
 #endif
 
-#ifdef FCS_SINGLE_HARD_THREAD
 #define BUMP_NUM_CHECKED_STATES__HT()
-#else
-#define BUMP_NUM_CHECKED_STATES__HT() (*hard_thread_num_checked_states_ptr)++;
-#endif
 
 #define BUMP_NUM_CHECKED_STATES()                                              \
     {                                                                          \
@@ -443,15 +434,8 @@ static inline bool fcs__should_state_be_pruned(
 }
 #endif
 
-#ifdef FCS_SINGLE_HARD_THREAD
 #define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
     (instance->effective_max_num_checked_states)
-#else
-#define CALC_HARD_THREAD_MAX_NUM_CHECKED_STATES__HELPER()                      \
-    (HT_FIELD(hard_thread, ht__num_checked_states) +                           \
-        (instance->effective_max_num_checked_states -                          \
-            (instance->i__stats.num_checked_states)))
-#endif
 static inline fcs_iters_int calc_ht_max_num_states(
     const fcs_instance *const instance GCC_UNUSED,
     const fcs_hard_thread *const hard_thread)
