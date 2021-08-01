@@ -29,21 +29,9 @@ static void verify_state_sanity(const fcs_state *const ptr_state)
 }
 #endif
 
-static
-#ifdef FCS_SINGLE_HARD_THREAD
-    inline
-#endif
-    void
-    fc_solve_instance__init_hard_thread(
-#ifndef FCS_SINGLE_HARD_THREAD
-        fcs_instance *const instance,
-#endif
-        fcs_hard_thread *const hard_thread)
+static inline void fc_solve_instance__init_hard_thread(
+    fcs_hard_thread *const hard_thread)
 {
-#ifndef FCS_SINGLE_HARD_THREAD
-    hard_thread->instance = instance;
-#endif
-
     HT_FIELD(hard_thread, num_soft_threads) = 0;
 
     HT_FIELD(hard_thread, soft_threads) = NULL;
@@ -56,46 +44,13 @@ static
     HT_FIELD(hard_thread, prelude_num_items) = 0;
 
     fc_solve_reset_hard_thread(hard_thread);
-    fc_solve_compact_allocator_init(&(HT_FIELD(hard_thread, allocator)),
-#ifdef FCS_SINGLE_HARD_THREAD
-        hard_thread->meta_alloc
-#else
-        instance->meta_alloc
-#endif
-    );
+    fc_solve_compact_allocator_init(
+        &(HT_FIELD(hard_thread, allocator)), hard_thread->meta_alloc);
 
 #ifdef FCS_WITH_MOVES
     HT_FIELD(hard_thread, reusable_move_stack) = fcs_move_stack__new();
 #endif
 }
-#ifndef FCS_SINGLE_HARD_THREAD
-static inline fcs_soft_thread *new_hard_thread(fcs_instance *const instance)
-{
-    // Make sure we are not exceeding the maximal number of soft threads
-    // for an instance.
-    if (instance->next_soft_thread_id == MAX_NUM_SCANS)
-    {
-        return NULL;
-    }
-
-    instance->hard_threads =
-        SREALLOC(instance->hard_threads, instance->num_hard_threads + 1);
-
-    // Since we SREALLOC()ed the hard_threads, their addresses changed,
-    // so we need to update them.
-    HT_LOOP_START()
-    {
-        ST_LOOP_START() { soft_thread->hard_thread = hard_thread; }
-    }
-
-    fcs_hard_thread *const ret =
-        &(instance->hard_threads[instance->num_hard_threads]);
-    fc_solve_instance__init_hard_thread(instance, ret);
-    ++instance->num_hard_threads;
-
-    return &(ret->soft_threads[0]);
-}
-#endif
 
 #ifndef FCS_FREECELL_ONLY
 static inline void apply_preset_by_name(
@@ -159,16 +114,8 @@ static inline void alloc_instance(
         .FCS_RUNTIME_IN_OPTIMIZATION_THREAD = false,
         .FCS_RUNTIME_OPT_TESTS_ORDER_WAS_SET = false,
 #endif
-#ifdef FCS_SINGLE_HARD_THREAD
 #ifdef FCS_WITH_MOVES
         .is_optimization_st = false,
-#endif
-#else
-        .num_hard_threads = 0,
-        .hard_threads = NULL,
-#ifdef FCS_WITH_MOVES
-        .optimization_thread = NULL,
-#endif
 #endif
         .next_soft_thread_id = 0,
 #ifndef FCS_WITHOUT_ITER_HANDLER
@@ -233,11 +180,7 @@ static inline void alloc_instance(
 #endif
 #endif
 
-#ifdef FCS_SINGLE_HARD_THREAD
     fc_solve_instance__init_hard_thread(instance);
-#else
-    new_hard_thread(instance);
-#endif
 }
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
@@ -317,13 +260,9 @@ static inline void init_instance(fcs_instance *const instance)
 {
     HT_LOOP_START()
     {
-// The pointer to instance may change as the flares array get resized
-// so the pointers need to be reassigned to it.
-#ifndef FCS_SINGLE_HARD_THREAD
-        hard_thread->instance = instance;
-#else
+        // The pointer to instance may change as the flares array get resized
+        // so the pointers need to be reassigned to it.
         ST_LOOP_START() { soft_thread->hard_thread = instance; }
-#endif
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
         if (HT_FIELD(hard_thread, prelude_as_string) &&
             !HT_FIELD(hard_thread, prelude))
@@ -614,17 +553,8 @@ static inline void start_process_with_board(fcs_instance *const instance,
 
     fcs_kv_state no_use,
         pass_copy = FCS_STATE_keyval_pair_to_kv(&instance->state_copy);
-    fc_solve_check_and_add_state(
-#ifdef FCS_SINGLE_HARD_THREAD
-        instance,
-#else
-        instance->hard_threads,
-#endif
-        &pass_copy, &no_use);
+    fc_solve_check_and_add_state(instance, &pass_copy, &no_use);
 
-#ifndef FCS_SINGLE_HARD_THREAD
-    instance->current_hard_thread = instance->hard_threads;
-#endif
     {
         HT_LOOP_START()
         {
@@ -661,7 +591,6 @@ static inline void free_instance(fcs_instance *const instance)
 
     HT_LOOP_START() { free_hard_thread(hard_thread); }
 
-#ifdef FCS_SINGLE_HARD_THREAD
 #ifdef FCS_WITH_MOVES
     if (instance->is_optimization_st)
     {
@@ -669,17 +598,6 @@ static inline void free_instance(fcs_instance *const instance)
             &(instance->optimization_soft_thread));
         instance->is_optimization_st = false;
     }
-#endif
-#else
-    free(instance->hard_threads);
-
-#ifdef FCS_WITH_MOVES
-    if (instance->optimization_thread)
-    {
-        free_hard_thread(instance->optimization_thread);
-        free(instance->optimization_thread);
-    }
-#endif
 #endif
     moves_order__free(&(instance->instance_moves_order));
 #ifdef FCS_WITH_MOVES
@@ -803,28 +721,12 @@ static inline void recycle_inst(fcs_instance *const instance)
 #endif
     instance->i__stats = initial_stats;
     instance->finished_hard_threads_count = 0;
-#ifdef FCS_SINGLE_HARD_THREAD
     recycle_ht(instance);
 #ifdef FCS_WITH_MOVES
     if (instance->is_optimization_st)
     {
         fc_solve_reset_soft_thread(&(instance->optimization_soft_thread));
     }
-#endif
-#else
-    for (uint_fast32_t ht_idx = 0; ht_idx < instance->num_hard_threads;
-         ht_idx++)
-    {
-        recycle_ht(&(instance->hard_threads[ht_idx]));
-    }
-#ifdef FCS_WITH_MOVES
-    if (instance->optimization_thread)
-    {
-        recycle_ht(instance->optimization_thread);
-    }
-#endif
-#endif
-#ifdef FCS_WITH_MOVES
     STRUCT_CLEAR_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD);
 #endif
 }
@@ -867,7 +769,6 @@ static inline void setup_opt_thread__helper(
 
 // This function optimizes the solution path using a BFS scan on the
 // states in the solution path.
-#ifdef FCS_SINGLE_HARD_THREAD
 static inline fc_solve_solve_process_ret_t optimize_solution(
     fcs_instance *const instance)
 {
@@ -903,54 +804,6 @@ static inline fc_solve_solve_process_ret_t optimize_solution(
     return fc_solve_befs_or_bfs_do_solve(optimization_soft_thread);
 }
 #undef soft_thread
-#else
-static inline fc_solve_solve_process_ret_t optimize_solution(
-    fcs_instance *const instance)
-{
-    fcs_soft_thread *soft_thread;
-    fcs_hard_thread *optimization_thread;
-
-    if (!instance->solution_moves.moves)
-    {
-        fc_solve_trace_solution(instance);
-    }
-
-#ifndef FCS_HARD_CODE_REPARENT_STATES_AS_FALSE
-    STRUCT_TURN_ON_FLAG(instance, FCS_RUNTIME_TO_REPARENT_STATES_REAL);
-#endif
-
-    if (!instance->optimization_thread)
-    {
-        instance->optimization_thread = optimization_thread =
-            SMALLOC1(optimization_thread);
-
-        fc_solve_instance__init_hard_thread(instance, optimization_thread);
-
-        fcs_hard_thread *const old_hard_thread = instance->current_hard_thread;
-
-        soft_thread = optimization_thread->soft_threads;
-
-#ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-        // Copy enable_pruning from the thread that reached the solution,
-        // because otherwise -opt in conjunction with -sp r:tf will fail.
-        soft_thread->enable_pruning =
-            old_hard_thread->soft_threads[old_hard_thread->st_idx]
-                .enable_pruning;
-#endif
-    }
-    else
-    {
-        optimization_thread = instance->optimization_thread;
-        soft_thread = optimization_thread->soft_threads;
-    }
-
-    setup_opt_thread__helper(instance, soft_thread);
-    // Instruct the optimization hard thread to run indefinitely as
-    // far as it is concerned.
-    optimization_thread->ht__max_num_checked_states = FCS_ITERS_INT_MAX;
-    return fc_solve_befs_or_bfs_do_solve(soft_thread);
-}
-#endif
 #endif
 
 #ifdef DEBUG
@@ -1360,10 +1213,6 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 
     fcs_iters_int *const instance_num_checked_states_ptr =
         &(instance->i__stats.num_checked_states);
-#ifndef FCS_SINGLE_HARD_THREAD
-    fcs_iters_int *const hard_thread_num_checked_states_ptr =
-        &(HT_FIELD(hard_thread, ht__num_checked_states));
-#endif
     const_AUTO(max_num_states, calc_ht_max_num_states(instance, hard_thread));
 #ifndef FCS_WITHOUT_ITER_HANDLER
     const_SLOT(debug_iter_output_func, instance);
@@ -1726,9 +1575,6 @@ static inline fc_solve_solve_process_ret_t do_patsolve(
     fc_solve_pats__do_it(pats_scan);
 
     const_AUTO(after_scan_delta, pats_scan->num_checked_states - start_from);
-#ifndef FCS_SINGLE_HARD_THREAD
-    HT_FIELD(hard_thread, ht__num_checked_states) += after_scan_delta;
-#endif
     HT_INSTANCE(hard_thread)->i__stats.num_checked_states += after_scan_delta;
 
     switch (pats_scan->status)
@@ -1797,11 +1643,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
     fcs_hard_thread *const hard_thread)
 {
     const size_t prelude_num_items = HT_FIELD(hard_thread, prelude_num_items);
-#ifdef FCS_SINGLE_HARD_THREAD
 #define instance hard_thread
-#else
-    fcs_instance *const instance = hard_thread->instance;
-#endif
     uint_fast32_t *const st_idx_ptr = &(HT_FIELD(hard_thread, st_idx));
     // Again, making sure that not all of the soft_threads in this
     // hard thread finished.
@@ -1914,9 +1756,7 @@ static inline fc_solve_solve_process_ret_t run_hard_thread(
 
     return ret;
 }
-#ifdef FCS_SINGLE_HARD_THREAD
 #undef instance
-#endif
 
 // Resume a solution process that was stopped in the middle
 static inline fc_solve_solve_process_ret_t resume_instance(
@@ -1932,26 +1772,13 @@ static inline fc_solve_solve_process_ret_t resume_instance(
     if (STRUCT_QUERY_FLAG(instance, FCS_RUNTIME_IN_OPTIMIZATION_THREAD))
     {
         ret = fc_solve_befs_or_bfs_do_solve(
-#ifdef FCS_SINGLE_HARD_THREAD
-            &(instance->optimization_soft_thread)
-#else
-            &(instance->optimization_thread->soft_threads[0])
-#endif
-        );
+            &(instance->optimization_soft_thread));
     }
     else
 #endif
     {
-#ifdef FCS_SINGLE_HARD_THREAD
 #define hard_thread instance
 #define NUM_HARD_THREADS() 1
-#else
-        fcs_hard_thread *const end_of_hard_threads =
-            instance->hard_threads + instance->num_hard_threads;
-
-        fcs_hard_thread *hard_thread = instance->current_hard_thread;
-#define NUM_HARD_THREADS() (instance->num_hard_threads)
-#endif
         // instance->finished_hard_threads_count signals to us that
         // all the incomplete soft threads terminated. It is necessary
         // in case the scan only contains incomplete threads.
@@ -1959,13 +1786,10 @@ static inline fc_solve_solve_process_ret_t resume_instance(
         // I.e: 01235 and 01246, where no thread contains all tests.
         while (instance->finished_hard_threads_count < NUM_HARD_THREADS())
         {
-// A loop on the hard threads.
-// Note that we do not initialize instance->ht_idx because:
-// 1. It is initialized before the first call to this function.
-// 2. It is reset to zero below.
-#ifndef FCS_SINGLE_HARD_THREAD
-            for (; hard_thread < end_of_hard_threads; ++hard_thread)
-#endif
+            // A loop on the hard threads.
+            // Note that we do not initialize instance->ht_idx because:
+            // 1. It is initialized before the first call to this function.
+            // 2. It is reset to zero below.
             {
                 ret = run_hard_thread(hard_thread);
                 if ((ret == FCS_STATE_IS_NOT_SOLVEABLE) ||
@@ -1975,16 +1799,9 @@ static inline fc_solve_solve_process_ret_t resume_instance(
                     goto end_of_hard_threads_loop;
                 }
             }
-#ifndef FCS_SINGLE_HARD_THREAD
-            hard_thread = instance->hard_threads;
-#endif
         }
 
     end_of_hard_threads_loop:
-#ifndef FCS_SINGLE_HARD_THREAD
-        instance->current_hard_thread = hard_thread;
-#endif
-
         // If all the incomplete scans finished, then terminate.
         if (instance->finished_hard_threads_count == NUM_HARD_THREADS())
         {
@@ -2003,9 +1820,7 @@ static inline fc_solve_solve_process_ret_t resume_instance(
 #endif
     return ret;
 }
-#ifdef FCS_SINGLE_HARD_THREAD
 #undef hard_thread
-#endif
 
 // A flare is an alternative scan algorithm to be tried. All flares in
 // a single instance are being evaluated and then one picks the shortest
@@ -4414,25 +4229,10 @@ extern void DLLEXPORT freecell_solver_user_set_soft_thread_step(
         (fcs_iters_int)checked_states_step;
 }
 
-#if (!(defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_BREAK_BACKWARD_COMPAT_1)))
+#if (!(defined(FCS_BREAK_BACKWARD_COMPAT_1)))
 int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 {
-#ifdef FCS_SINGLE_HARD_THREAD
     return freecell_solver_user_next_soft_thread(api_instance);
-#else
-    fcs_user *const user = (fcs_user *)api_instance;
-
-    fcs_soft_thread *const soft_thread = new_hard_thread(user_obj(user));
-
-    if (soft_thread == NULL)
-    {
-        return 1;
-    }
-
-    user->soft_thread = soft_thread;
-
-    return 0;
-#endif
 }
 #endif
 
@@ -4629,12 +4429,7 @@ freecell_solver_user_get_lib_version(void *api_instance GCC_UNUSED)
 DLLEXPORT __attribute__((pure)) const char *
 freecell_solver_user_get_current_soft_thread_name(void *const api_instance)
 {
-#ifdef FCS_SINGLE_HARD_THREAD
     const fcs_hard_thread *const hard_thread = active_obj(api_instance);
-#else
-    const fcs_hard_thread *const hard_thread =
-        active_obj(api_instance)->current_hard_thread;
-#endif
 
     return HT_FIELD(hard_thread, soft_threads)[HT_FIELD(hard_thread, st_idx)]
         .name;

@@ -129,23 +129,15 @@ typedef void (*fc_solve_solve_for_state_move_func)(
     struct fc_solve_soft_thread_struct *, fcs_kv_state,
     fcs_derived_states_list *);
 
-#ifdef FCS_SINGLE_HARD_THREAD
 #define HT_FIELD(ht, field) (ht)->hard_thread.field
 #define HT_INSTANCE(hard_thread) (hard_thread)
 #define INST_HT0(instance) ((instance)->hard_thread)
 #define NUM_CHECKED_STATES                                                     \
     (HT_INSTANCE(hard_thread)->i__stats.num_checked_states)
 typedef struct fc_solve_instance_struct fcs_hard_thread;
-#if (defined(FCS_SINGLE_HARD_THREAD) && defined(FCS_WITH_MOVES))
+#if (defined(FCS_WITH_MOVES))
 extern void fc_solve_init_soft_thread(fcs_hard_thread *const hard_thread,
     struct fc_solve_soft_thread_struct *const soft_thread);
-#endif
-#else
-#define HT_FIELD(hard_thread, field) (hard_thread)->field
-#define HT_INSTANCE(hard_thread) ((hard_thread)->instance)
-#define INST_HT0(instance) ((instance)->hard_threads[0])
-#define NUM_CHECKED_STATES HT_FIELD(hard_thread, ht__num_checked_states)
-typedef struct fc_solve_hard_thread_struct fcs_hard_thread;
 #endif
 extern bool fc_solve_check_and_add_state(
     fcs_hard_thread *, fcs_kv_state *, fcs_kv_state *);
@@ -159,17 +151,7 @@ extern guint fc_solve_hash_function(gconstpointer key);
 #endif
 
 // HT_LOOP == hard threads' loop - macros to abstract it.
-#ifdef FCS_SINGLE_HARD_THREAD
-
 #define HT_LOOP_START() fcs_hard_thread *const hard_thread = instance;
-
-#else
-#define HT_LOOP_START()                                                        \
-    fcs_hard_thread *hard_thread = instance->hard_threads;                     \
-    fcs_hard_thread *const end_hard_thread =                                   \
-        hard_thread + instance->num_hard_threads;                              \
-    for (; hard_thread < end_hard_thread; ++hard_thread)
-#endif
 
 // ST_LOOP == soft threads' loop - macros to abstract it.
 #define ST_LOOP_START()                                                        \
@@ -277,21 +259,8 @@ typedef struct fc_solve_instance_struct fcs_instance;
 typedef uint_fast32_t fastest_type_for_num_soft_threads__unsigned;
 struct fc_solve_hard_thread_struct
 {
-#ifndef FCS_SINGLE_HARD_THREAD
-    fcs_instance *instance;
-#endif
-
     struct fc_solve_soft_thread_struct *soft_threads;
 
-#ifndef FCS_SINGLE_HARD_THREAD
-    // The hard thread count of how many states he checked himself. The
-    // instance num_checked_states can be misleading because other threads
-    // modify it too.
-    //
-    // Thus, the soft thread switching should be done based on this variable
-    fcs_iters_int ht__num_checked_states;
-
-#endif
     // The maximal limit for num_checked_states.
     fcs_iters_int ht__max_num_checked_states;
 
@@ -599,22 +568,10 @@ struct fc_solve_instance_struct
 #endif
 #endif
 
-#ifdef FCS_SINGLE_HARD_THREAD
     struct fc_solve_hard_thread_struct hard_thread;
 #ifdef FCS_WITH_MOVES
     bool is_optimization_st;
     struct fc_solve_soft_thread_struct optimization_soft_thread;
-#endif
-#else
-    uint_fast32_t num_hard_threads;
-    struct fc_solve_hard_thread_struct *hard_threads;
-    // An iterator over the hard threads.
-    fcs_hard_thread *current_hard_thread;
-
-#ifdef FCS_WITH_MOVES
-    // This is the hard-thread used for the optimization scan.
-    struct fc_solve_hard_thread_struct *optimization_thread;
-#endif
 #endif
 
     // The master moves' order. It is used to initialize all the new
@@ -802,9 +759,6 @@ extern fcs_soft_thread *fc_solve_new_soft_thread(
 static inline void fc_solve_reset_hard_thread(
     fcs_hard_thread *const hard_thread)
 {
-#ifndef FCS_SINGLE_HARD_THREAD
-    HT_FIELD(hard_thread, ht__num_checked_states) = 0;
-#endif
     HT_FIELD(hard_thread, ht__max_num_checked_states) = FCS_ITERS_INT_MAX;
     HT_FIELD(hard_thread, num_soft_threads_finished) = 0;
 }
