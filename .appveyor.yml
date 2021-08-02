@@ -60,6 +60,7 @@ install:
     - SET PATH=%MYOLDPATH_%
     - cd ..\..\
 build: off
+image: Visual Studio 2019
 test_script:
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
     - set LIBRARY_PATH=C:\libtap\lib
