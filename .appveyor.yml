@@ -7,10 +7,10 @@ environment:
 install:
     - dir
     - cd
-    - c:\msys64\usr\bin\bash -l "c:/projects/fc-solve/fc-solve/scripts/ci-appveyor-upgrade-msys2.bash"
+    # - c:\msys64\usr\bin\bash -l "c:/projects/fc-solve/fc-solve/scripts/ci-appveyor-upgrade-msys2.bash"
     # - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm"
     # - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm ${MSYS_PACKAGES}"
-    - c:\msys64\usr\bin\bash -lc "set -e -x; rm -r /etc/pacman.d/gnupg/; pacman-key --init ; pacman-key --populate msys2 ; "
+    # - c:\msys64\usr\bin\bash -lc "set -e -x; rm -r /etc/pacman.d/gnupg/; pacman-key --init ; pacman-key --populate msys2 ; "
     - c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
     - c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
     - choco install ag
