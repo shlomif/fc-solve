@@ -295,10 +295,12 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'start': '0',
         }
     )
-    _update_file_using_template(fn="opencl_find_deal_idx.c", extra_fields={
-        'c_loop_four_g': c_loop_four_g,
-        'c_loop_eight_g': c_loop_eight_g,
-        'c_loop_two_g': c_loop_two_g,
+    _tt3_update_file_using_template(
+        fn="opencl_find_deal_idx.c",
+        extra_fields={
+            'c_loop_four_g': c_loop_four_g,
+            'c_loop_eight_g': c_loop_eight_g,
+            'c_loop_two_g': c_loop_two_g,
         }, template=('''
 /*
     Code based on
@@ -328,9 +330,9 @@ static size_t gws_align_sum;
 
 static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
         cl_mem r_buff, cl_int mystart, cl_int num_elems)
-{{
-        const size_t gws[] = {{ round_mul_up(((size_t)num_elems),
-            gws_align_init) }};
+{
+        const size_t gws[] = { round_mul_up(((size_t)num_elems),
+            gws_align_init) };
 #if 0
         printf("vecinit gws: mystart = %d ; num_elems = %d | gws_align_init ="
             " %zu ; gws[0] = %zu\\n",
@@ -353,14 +355,14 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
         ocl_check(err, "enqueue vecinit");
 
         return vecinit_evt;
-}}
+}
 
 static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_mem i_buff, cl_mem r_buff, cl_int num_elems,
         cl_event init_evt)
-{{
-        const size_t gws[] = {{
-        round_mul_up(((size_t)num_elems), gws_align_sum) }};
+{
+        const size_t gws[] = {
+        round_mul_up(((size_t)num_elems), gws_align_sum) };
         #if 0
         printf("vecsum gws: %d | %zu = %zu\\n",
         num_elems, gws_align_sum, gws[0]);
@@ -383,11 +385,11 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         ocl_check(err, "enqueue vecsum");
 
         return vecsum_evt;
-}}
+}
 
-static const int num_ints_in_first = {num_ints_in_first};
+static const int num_ints_in_first = [% num_ints_in_first %];
 static const int num_remaining_ints = 4*13 - num_ints_in_first;
-typedef struct {{
+typedef struct {
 cl_platform_id p;
         cl_device_id d;
         cl_context ctx;
@@ -401,14 +403,14 @@ cl_platform_id p;
         cl_kernel vecsum_k4G;
         cl_kernel vecsum_k8G;
 cl_mem r_buff , i_buff ;
-}} fcs_ocl;
+} fcs_ocl;
 
-        const size_t num_elems = {bufsize};
+        const size_t num_elems = [% bufsize %];
         const cl_int cl_int_num_elems = (cl_int)num_elems;
         const size_t bufsize = num_elems * sizeof(cl_int);
 
 DLLEXPORT void * fc_solve_user__opencl_create(void)
-{{
+{
     fcs_ocl * obj = malloc(sizeof(*obj));
 
 obj->p = select_platform();
@@ -454,28 +456,28 @@ obj->i_buff = clCreateBuffer(obj->ctx,
                         &err);
         ocl_check(err, "create buffer i_buff");
     return obj;
-}}
+}
 
 DLLEXPORT long long fc_solve_user__opencl_find_deal(
     void * const proto_obj,
     const int first_int,
     const int * myints
 )
-{{
+{
     fcs_ocl * const obj = proto_obj;
     long long ret = -1;
 bool is_right = false;
 
-{c_loop_two_g}
-{c_loop_four_g}
-{c_loop_eight_g}
+[% c_loop_two_g %]
+[% c_loop_four_g %]
+[% c_loop_eight_g %]
 meta_cleanup:
 return ret;
-}}
+}
 
 DLLEXPORT long long fc_solve_user__opencl_release(
     void * const proto_obj)
-{{
+{
     fcs_ocl * const obj = proto_obj;
     cl_int err = 0;
     #if 1
@@ -500,7 +502,7 @@ clUnloadPlatformCompiler(obj->p);
 #endif
 free(obj);
 return 0;
-}}
+}
 '''))
     return 0
 
