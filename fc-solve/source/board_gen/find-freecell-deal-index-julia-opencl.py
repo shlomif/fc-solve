@@ -76,21 +76,6 @@ def find_ret(ints, num_ints_in_first=4):
     assert len(ints) == 51 - num_ints_in_first
     myints_str = ",".join(['0']*1+list(reversed([str(x) for x in ints])))
 
-    def _myformat(template, extra_fields={}):
-        return template.format(
-            **{
-                'apply_limit': '0',
-                'bufsize': 300000,
-                'kernel_sum_cl_code': kernel_sum_cl_code,
-                'kernel_sum_to_4G_cl_code': kernel_sum_to_4G_cl_code,
-                'kernel_sum_to_8G_cl_code': kernel_sum_to_8G_cl_code,
-                'limit': str((1 << 31)-1),
-                'myints': myints_str,
-                'num_ints_in_first': num_ints_in_first,
-                **extra_fields,
-            }
-        )
-
     _tt3_pkg = "PyTT3"
 
     def _tt3_r(s):
@@ -122,11 +107,6 @@ def find_ret(ints, num_ints_in_first=4):
             "$PyTT3::template->process(" +
             "\\$PyTT3::input, \\%PyTT3::vars, \\$PyTT3::o)"))
         return perl.get_ref(_tt3_r("$PyTT3::o")).__value__
-
-    def _update_file_using_template(fn, template, extra_fields={
-            }):
-        return _update_file(fn=fn, newtext=_myformat(
-            template=template, extra_fields=extra_fields,))
 
     def _tt3_update_file_using_template(fn, template, extra_fields={
             }):
