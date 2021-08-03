@@ -104,11 +104,15 @@ def find_ret(ints, num_ints_in_first=4):
                 'num_ints_in_first': num_ints_in_first,
                 **extra_fields,
             }
-        for k, v in fields.items():
-            h[k] = v
+        if 1:
+            h.update(fields)
+        else:
+            for k, v in fields.items():
+                h[k] = str(v)
         perl.eval(_tt3_r(
             "$PyTT3::template->process(" +
             "\\$PyTT3::input, \\%PyTT3::vars, \\$PyTT3::o)"))
+        # sys.exit(0)
         return perl.get_ref(_tt3_r("$PyTT3::o")).__value__
 
     def _tt3_update_file_using_template(fn, template, extra_fields={
