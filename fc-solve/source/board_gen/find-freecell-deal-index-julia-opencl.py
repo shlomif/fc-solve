@@ -163,18 +163,18 @@ def find_ret(ints, num_ints_in_first=4):
       const unsigned gid = get_global_id(0);
       [% kernel_sum_to_8G_cl_code %]
     }'''))
-    c_loop_template = '''{{
+    c_loop_template = '''{
 ret = -1;
 cl_event init_evt = NULL;
 cl_event sum_evt = NULL;
-{{
-{int_type} mystart = {start};
+{
+[% int_type %] mystart = [% start %];
 while (! is_right)
-{{
+{
     init_evt = vecinit(
         obj->vecinit_k, obj->que, obj->r_buff, mystart, num_elems);
     sum_evt = vecsum(
-        obj->{my_vecsum_var}, obj->que, obj->i_buff, obj->r_buff,
+        obj->[% my_vecsum_var %], obj->que, obj->i_buff, obj->r_buff,
         num_elems, init_evt
     );
         cl_int err;
@@ -195,63 +195,64 @@ while (! is_right)
     clWaitForEvents(1, &sum_evt);
 
 for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
-{{
+{
         if (i_buff_arr[myiterint] == first_int)
-        {{
+        {
             is_right = true;
-            {int_type} rr = r_buff_arr[myiterint];
+            [% int_type %] rr = r_buff_arr[myiterint];
             for (int n = num_remaining_ints; n >=1; --n)
-            {{
-                rr = ((rr * (({int_type})214013) +
-                    (({int_type})2531011)) & (({int_type})0xFFFFFFFF));
-                if ( (((rr >> 16) & {mask}){seed_proc_code}) % n != myints[n])
-                {{
+            {
+                rr = ((rr * (([% int_type %])214013) +
+                    (([% int_type %])2531011)) & (([% int_type %])0xFFFFFFFF));
+                if ( (((rr >> 16) & [% mask %])[% seed_proc_code
+    %]) % n != myints[n])
+                {
                     is_right = false;
                     break;
-                }}
-            }}
+                }
+            }
                 #if 0
                 printf("%lu\\n", ((unsigned long)(mystart+0)));
                 #endif
             if ( is_right)
-            {{
+            {
                 ret =
-                ((((long long)mystart)+myiterint){ret_offset});
+                ((((long long)mystart)+myiterint)[% ret_offset %]);
 
-{check_ret}
-                goto {cleanup_label};
-            }}
-        }}
-    }}
+[% check_ret %]
+                goto [% cleanup_label %];
+            }
+        }
+    }
 
-    const {int_type} newstart = mystart + num_elems;
-    #if {apply_limit}
-    if (mystart > {limit})
+    const [% int_type %] newstart = mystart + num_elems;
+    #if [% apply_limit %]
+    if (mystart > [% limit %])
     #else
     if (newstart < mystart)
     #endif
-    {{
+    {
         break;
-    }}
+    }
     else
-    {{
+    {
         mystart = newstart;
-    }}
+    }
     clReleaseEvent(sum_evt);
     clReleaseEvent(init_evt);
     sum_evt = init_evt = NULL;
-}}
-}}
-{cleanup_label}:
+}
+}
+[% cleanup_label %]:
     clReleaseEvent(sum_evt);
     clReleaseEvent(init_evt);
     if (ret > 0)
-    {{
+    {
     goto meta_cleanup;
-    }}
-}}
+    }
+}
 '''
-    c_loop_two_g = _myformat(
+    c_loop_two_g = _tt3_myformat(
         template=c_loop_template,
         extra_fields={
             'check_ret': '',
@@ -264,7 +265,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'start': '1',
         }
     )
-    c_loop_four_g = _myformat(
+    c_loop_four_g = _tt3_myformat(
         template=c_loop_template,
         extra_fields={
             'check_ret': '''
@@ -281,7 +282,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
             'start': '0x80000000U',
         }
     )
-    c_loop_eight_g = _myformat(
+    c_loop_eight_g = _tt3_myformat(
         template=c_loop_template,
         extra_fields={
             'check_ret': '',
