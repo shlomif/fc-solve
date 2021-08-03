@@ -85,9 +85,12 @@ def find_ret(ints, num_ints_in_first=4):
     def _tt3_myformat(template, extra_fields={}):
         nonlocal _tt3_pkg
         # _tt3_pkg += "t"
-        perl.eval(_tt3_r(
-            "use Template (); $PyTT3::input=''; $PyTT3::o=''; " +
-            "$PyTT3::template = Template->new(); %PyTT3::vars=();"))
+        perl.eval(
+            _tt3_r(
+                """use Template (); $PyTT3::input=''; $PyTT3::o='';
+                $PyTT3::template = Template->new(); %PyTT3::vars=();"""
+            )
+        )
         h = perl.get_ref(_tt3_r("%PyTT3::vars"))
         perl.get_ref(_tt3_r("$PyTT3::input")).__value__ = template
         fields = {
