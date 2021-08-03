@@ -145,20 +145,24 @@ def find_ret(ints, num_ints_in_first=4):
       const unsigned gid = get_global_id(0);
       [% kernel_sum_cl_code %]
     }'''))
-    _update_file_using_template(fn="msfc_deal_finder_2G_to_4G.ocl", template=(
+    _tt3_update_file_using_template(
+        fn="msfc_deal_finder_2G_to_4G.ocl",
+        template=(
                 '''kernel void sumg(global unsigned * restrict r,
                      global unsigned * restrict i)
-    {{
+    {
       const unsigned gid = get_global_id(0);
-      {kernel_sum_to_4G_cl_code}
-    }}'''))
-    _update_file_using_template(fn="msfc_deal_finder_4G_to_8G.ocl", template=(
+      [% kernel_sum_to_4G_cl_code %]
+    }'''))
+    _tt3_update_file_using_template(
+        fn="msfc_deal_finder_4G_to_8G.ocl",
+        template=(
                 '''kernel void sumh(global unsigned * restrict r,
                      global unsigned * restrict i)
-    {{
+    {
       const unsigned gid = get_global_id(0);
-      {kernel_sum_to_8G_cl_code}
-    }}'''))
+      [% kernel_sum_to_8G_cl_code %]
+    }'''))
     c_loop_template = '''{{
 ret = -1;
 cl_event init_evt = NULL;
