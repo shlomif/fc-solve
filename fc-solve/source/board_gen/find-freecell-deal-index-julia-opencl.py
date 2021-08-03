@@ -104,7 +104,7 @@ def find_ret(ints, num_ints_in_first=4):
                 'num_ints_in_first': num_ints_in_first,
                 **extra_fields,
             }
-        if 1:
+        if True:
             h.update(fields)
         else:
             for k, v in fields.items():
