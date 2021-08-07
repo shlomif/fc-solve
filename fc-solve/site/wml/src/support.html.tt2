@@ -1,9 +1,8 @@
-{% extends "template.jinja" %}
-{% block title %}Freecell Solver Support{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver Support" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section( id="bugs", title="Report Bugs" ) %}
+[% WRAPPER h2_section id = "bugs" title = "Report Bugs" %]
 
 <p>
 One can report bugs on
@@ -16,9 +15,9 @@ to the maintainer</a>, who is reachable using many online mediums, including
 E-mail and many forms of instant messaging.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section( id="support", title="Getting Support" ) %}
+[% WRAPPER h2_section id = "support" title = "Getting Support" %]
 
 <p>
 You can receive support for Freecell Solver by E-mailing the mailing list or
@@ -26,6 +25,6 @@ You can receive support for Freecell Solver by E-mailing the mailing list or
 <a href="http://www.shlomifish.org/me/contact-me/">Shlomi Fish</a>.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
