@@ -1,0 +1,139 @@
+[% SET html_lang = "en-US" %]
+
+[% SET desc = "Freecell Solver - a Program and a Library written in C for Solving Games of Freecell and similar Solitaire Variants" %]
+
+[%- BLOCK start_html -%]
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="[% html_lang %]">
+<head>
+<title>[% title %]</title>
+[% IF xhtml1 %]
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+[% ELSE %]
+<meta charset="utf-8"/>
+[% END %]
+<meta name="author" content="Shlomi Fish"/>
+<meta name="description" content="[% desc || title %]"/>
+<meta name="keywords" content="[% common_keywords %][% more_keywords %]"/>
+<link rel="canonical" href="[% canonical_base_url %][% index_filename %]"/>
+<link rel="stylesheet" href="[% base_path %]style.css" media="screen" title="Normal"/>
+<link rel="stylesheet" href="[% base_path %]print.css" media="print"/>
+<link rel="shortcut icon" href="[% base_path %]favicon.png" type="image/png"/>
+[%- nav_links -%]
+[% IF production %]
+[% load_javascript_srcs("jq.js") %]
+[% ELSE %]
+[% load_javascript_srcs("jquery-dev.js") %]
+[% END %]
+[% load_javascript_srcs("toggler.js") %]
+[% load_javascript_srcs("toggle_sect.js") %]
+<link rel="alternate" type="application/rss+xml" title="Freecell Solver's Blog RSS Feed" href="http://fc-solve.blogspot.com/feeds/posts/default?alt=rss"/>
+<link rel="alternate" type="application/atom+xml" title="Freecell Solver's Blog Atom Feed" href="http://fc-solve.blogspot.com/feeds/posts/default"/>
+[% TRY %]
+[% INCLUDE page_extra_head_elements %]
+[% CATCH file %]
+[% END %]
+
+</head>
+
+<body[% body_params %]>
+<div class="header" id="header"></div>
+<div id="faux">
+<p class="invisible"><a href="#main">Go to main content</a></p>
+<p class="invisible"><a href="#navbar">Go to the navigation</a></p>
+<div id="container-all"><button id="show_navbar" class="on">Hide
+NavBar ⬈</button>
+<main id="main">
+<header>
+<h1>[% title %]</h1>
+[% use_online_wrapper %]
+</header>
+[%- END -%]
+
+[%- BLOCK end_html -%]
+<br />
+<br />
+<p class="share">
+    <a href="http://www.addtoany.com/share_save?linkurl=(((((chomp_inc='cache/combined/[% host %]/[% filename %]/page_url')))))&amp;linkname="><img src="[% base_path %]images/share_save_171_16.png" width="171" height="16" class="bless" alt="Share/Bookmark" /></a><br />
+</p>
+</main>
+<div id="navbar_wrapper">
+<nav class="navbar" id="navbar">
+<p class="invisible"><a href="#nav_menu">Go to the navigation
+menu</a></p>
+<div class="center"><a href="[% base_path or "." %]" title=
+"Freecell Solver’s Homepage"><img src=
+"[% base_path %]images/fc-solve-logo.min.svg" alt="fc-solve icon: H C D S" class=
+"icon" /></a></div>
+<div id="nav_menu">
+(((((include "cache/combined/[% host %]/[% filename %]/main_nav_menu_html")))))
+</div>
+<p><a href="https://www.mozilla.org/en-US/firefox/new/" class=
+"bless"><img class="bless" alt="Get Firefox!" title=
+"Get Firefox! A safer, faster, better web-browser." src=
+"[% base_path %]images/get-firefox.png" /></a></p>
+<p><a href="http://validator.w3.org/check/referer" title=
+"Valid XHTML5!" class="bless"><img class="html5 highlight bless" src=
+"[% base_path %]images/HTML5-Logo.min.svg" alt="HTML5" height="31"
+width="88" /></a></p>
+<p><a href="http://jigsaw.w3.org/css-validator/" title="Valid CSS!"
+class="bless"><img class="highlight bless" src=
+"[% base_path %]images/valid-css.png" alt="Valid CSS!" /></a></p>
+<b class="plain" id="site-ddg-search">Duck Duck Go Search</b>
+<div class="search"><!-- DuckDuckGo Search --> <object data=
+"https://duckduckgo.com/search.html?width=100&amp;site=fc-solve.shlomifish.org&amp;prefill=SearchDuckDuckGo"
+type="text/html" style=
+"overflow:hidden;margin:0;padding:0;width:160px;height:40px"></object></div>
+<ul>
+<li>
+<p>Please consider <a href=
+"http://www.shlomifish.org/meta/donate/"><b>donating</b></a>.</p>
+</li>
+</ul>
+<a href="http://fc-solve.blogspot.com/feeds/posts/default?alt=rss"
+title="Subscribe to Our News">RSS Feed</a></nav>
+</div>
+<div id="container-footer"></div>
+</div>
+</div>
+<footer id="footer">
+<hr />
+<div class="righty"><!-- Creative Commons License -->
+<p>Unless noted otherwise, the text and other creative media of the
+pages of this site is <b>licensed</b> under the <a rel="license"
+href="http://creativecommons.org/licenses/by/3.0/">Creative Commons
+Attribution 3.0 Unported License</a> (or at your option any later
+version). The markup and code of this site are, unless noted
+otherwise, licensed under the <a href=
+"http://en.wikipedia.org/wiki/MIT_License">MIT/Expat
+licence</a>.</p>
+<p>
+<a href="[% base_path %]meta/site-source/">The Site's Sources</a>
+</p>
+<!-- /Creative Commons License --></div>
+<div class="foot_left">
+<p><b>Webmaster:</b> <a href="https://www.shlomifish.org/">Shlomi
+Fish</a>. He can be <a href="https://www.shlomifish.org/me/contact-me/">contacted using
+many electronic means</a>, and while he can be reached using email (<a href=
+"mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a>),
+more reliable messaging means such as XMPP or Telegram are preferable.
+.</p>
+</div>
+</footer>
+</div>
+</body>
+</html>
+[%- END -%]
+
+[% PROCESS "h_sections.tt2" %]
+
+[%- BLOCK wrap_html -%]
+[%- PROCESS start_html -%]
+[% content %]
+[%- PROCESS end_html -%]
+[%- END -%]
+
+[%-# vim:ft=tt2html:
+-%]

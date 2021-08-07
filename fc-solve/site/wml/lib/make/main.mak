@@ -190,6 +190,16 @@ $(dest_jinjas): $(jinja_rend) lib/template.jinja
 	@$(call PROCESS_ALL_INCLUDES,dest) $(jinja_bases)
 	@$(call PROCESS_ALL_INCLUDES,dest-prod) $(jinja_bases)
 
+tt2_rend := bin/tt-render.pl
+tt2_bases := $(shell cat lib/make/tt2.txt)
+dest_tt2s := $(patsubst %,dest/%,$(tt2_bases))
+# prod_dest_tt2s := $(patsubst %,dest-prod/%,$(tt2_bases))
+
+$(dest_tt2s): $(tt2_rend) lib/blocks.tt2
+	$(PERL) $(tt2_rend)
+	$(call PROCESS_ALL_INCLUDES,dest) $(tt2_bases)
+	$(call PROCESS_ALL_INCLUDES,dest-prod) $(tt2_bases)
+
 $(IMAGES): $(D)/% : src/%
 	cp -f $< $@
 
@@ -409,7 +419,7 @@ ALL_HTACCESSES = $(D)/.htaccess $(D)/js-fc-solve/automated-tests/.htaccess $(D)/
 GEN_SECT_NAV_MENUS = ./bin/gen-sect-nav-menus.pl
 T2_CACHE_ALL_STAMP = lib/cache/STAMP.one
 $(T2_CACHE_ALL_STAMP): $(GEN_SECT_NAV_MENUS) $(FACTOIDS_NAV_JSON) $(ALL_SUBSECTS_DEPS)
-	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS) $(jinja_bases)
+	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS) $(jinja_bases) $(tt2_bases)
 	touch $@
 
 make-dirs: $(D) $(SUBDIRS)
@@ -457,7 +467,7 @@ $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xm
 $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
 	cp -f $< $@
 
-fastrender: all_deps $(dest_jinjas)
+fastrender: all_deps $(dest_jinjas) $(dest_tt2s)
 
 DBTOEPUB := ZIPOPT="-X" $(DBTOEPUB)
 

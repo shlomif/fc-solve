@@ -11,6 +11,7 @@
 """
 import re
 import subprocess
+import yaml
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
@@ -25,6 +26,10 @@ def _calc_env():
 def _slurp(fn):
     with open(fn, 'rt') as f:
         return f.read()
+
+
+with open('lib/static_constant_params.yaml', 'rt') as f:
+    static_constant_params = yaml.safe_load(f)['static_constant_params']
 
 
 def _htmlish(base):
@@ -114,6 +119,7 @@ class="try_main">Use</span><br/>
             load_javascript_srcs
         template = env.get_template(fn+'.jinja')
         text = template.render(
+                **static_constant_params,
                 cols_listbox=cols_listbox,
                 enable_jquery_ui=enable_jquery_ui,
                 fc_listbox=fc_listbox,
@@ -125,9 +131,6 @@ class="try_main">Use</span><br/>
                 charts2=charts2,
                 msfreecell_note=msfreecell_note,
                 base_path=base_path,
-                common_keywords="Freecell, Freecell Solver, solvers, " +
-                "AI, artificial intelligence, solitaire, Simple Simon, " +
-                "Baker's Game, Seahaven Towers, Shlomi Fish, games",
                 desc="Freecell Solver " +
                 "- a Program and a Library written in C for" +
                 " Solving Games of Freecell and similar Solitaire Variants",
@@ -136,7 +139,6 @@ class="try_main">Use</span><br/>
                     '(\\A|/)index\\.(?:x)?html\\Z',
                     lambda m: m.group(1), fn
                 ),
-                canonical_base_url='https://fc-solve.shlomifish.org/',
                 host='fc-solve',
                 use_online_wrapper=use_online_wrapper,
                 solitairey='<a href="https://foss-card-games.github.io/' +
@@ -153,6 +155,7 @@ class="try_main">Use</span><br/>
         with open(out_fn, 'wt') as f:
             f.write(text)
 
+# subprocess.check_call(["perl", "bin/tt-render.pl", ])
 subprocess.call(["perl", "-0777", "-i", "-p", "-I./lib", "-e",
                  "use HTML::Latemp::AddToc (); " +
                  "HTML::Latemp::AddToc->new->add_toc(\\$_);", "--"] + tocs)
