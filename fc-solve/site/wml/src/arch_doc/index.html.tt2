@@ -1,0 +1,22 @@
+[%- SET title = "The Freecell Solver Architecture Document" -%]
+
+[%- WRAPPER wrap_html -%]
+
+
+[% WRAPPER h2_section id = "intro", title = "Introduction" %]
+
+<p>
+This is the
+<a href="[% base_path %]">Freecell
+Solver</a>
+architecture document. Its source is written in <a
+href="http://www.docbook.org/">DocBook/XML</a> and from there converted
+to different formats. All the common formats you'd like to use are supplied
+here.
+</p>
+
+[% END %]
+
+[% INCLUDE docbook_formats_w_base base = "fcs_arch_doc", h2_id="formats", h2_text = "Formats", orig_xml_href = "https://github.com/shlomif/fc-solve/tree/master/fc-solve/arch_doc" %]
+
+[% END %]
