@@ -1,6 +1,6 @@
-{% extends "template.jinja" %}
-{% block title %}The Freecell Solver Frequently Asked Questions (F.A.Q.) List{% endblock %}
-{% block body %}
+[%- SET title = "The Freecell Solver Frequently Asked Questions (F.A.Q.) List" -%]
+
+[%- WRAPPER wrap_html -%]
 
 
 <div class="wrap-me">
@@ -9,9 +9,9 @@
 <toc />
 </section>
 
-{% call h2_section(id="questions",title="The Questions") %}
+[% WRAPPER h2_section id = "questions", title = "The Questions" %]
 
-{% call h3_section(id="what_is_it",title="What is Freecell Solver? What is a solver for Freecell in general?") %}
+[% WRAPPER h3_section id = "what_is_it", title = "What is Freecell Solver? What is a solver for Freecell in general?" %]
 
 <p>
 <a href="https://en.wikipedia.org/wiki/FreeCell">Freecell (or “FreeCell”)</a>
@@ -28,7 +28,7 @@ A typical deal of Freecell with 8 columns and 4 reserve cells, looks something
 like this:
 </p>
 
-<img src="{{ base_path }}images/kpat-freecell-deal-1.webp" alt="Freecell deal screenshot"
+<img src="[% base_path %]images/kpat-freecell-deal-1.webp" alt="Freecell deal screenshot"
 title="KPatience's Freecell deal No. 1" style="max-width: 85%; margin: 0.5em;" />
 
 <p>
@@ -40,7 +40,7 @@ not be solved by it. Freecell Solver is one such program, and it is
 under the permissive and common
 <a href="https://en.wikipedia.org/wiki/MIT_License">MIT/Expat licence</a>,
 provided free-of-charge for download or use online, and sports a large number
-of features. (See <a href="{{ base_path }}features.html">its features list</a>.)
+of features. (See <a href="[% base_path %]features.html">its features list</a>.)
 </p>
 
 <p>
@@ -50,9 +50,9 @@ but Freecell appears to be the most popular variant out of them, and the
 name is kept for historical reasons.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="what_is_solitaire",title="What is Solitaire? Is it the Windows implementation of Klondike?") %}
+[% WRAPPER h3_section id = "what_is_solitaire", title = "What is Solitaire? Is it the Windows implementation of Klondike?" %]
 
 <p>
 <a href="https://en.wikipedia.org/wiki/Patience_%28game%29">“Patience” or
@@ -73,13 +73,13 @@ In some countries, "Solitaire" can also refer to
 </p>
 
 <p>
-You can find <a href="{{ base_path }}links.html#other_solvers">a list of solvers</a>
+You can find <a href="[% base_path %]links.html#other_solvers">a list of solvers</a>
 for various variants of patience games in our links page.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="what_are_ms_deals",title="What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?") %}
+[% WRAPPER h3_section id = "what_are_ms_deals", title = "What is “Microsoft deal #NNN”? What is “MS deal #NNN”? What are the Microsoft Freecell deals?" %]
 
 <p>
 Microsoft shipped several implementations of Freecell for its Windows operating
@@ -142,9 +142,9 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 </li>
 </ol>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="solve_all_games",title="Can Freecell Solver solve all the Freecell layouts?") %}
+[% WRAPPER h3_section id = "solve_all_games", title = "Can Freecell Solver solve all the Freecell layouts?" %]
 
 <p>
 First of all, despite popular belief, a small percentage of the standard
@@ -200,9 +200,9 @@ which is impossible to win with 8 freecells or fewer.
 </li>
 </ol>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="a_move_seems_wrong",title="I think I found a wrong move in the solution? What can I do?") %}
+[% WRAPPER h3_section id = "a_move_seems_wrong", title = "I think I found a wrong move in the solution? What can I do?" %]
 
 <p>
 While it is not unthinkable that Freecell Solver will have a bug and will
@@ -231,14 +231,14 @@ install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
 </p>
 
 <p>
-Note that the <a href="{{ base_path }}js-fc-solve/">web-based solver</a> also has an
+Note that the <a href="[% base_path %]js-fc-solve/">web-based solver</a> also has an
 option to expand such moves and one can use it in most modern JavaScript-enabled
 browsers without having to install any additional software on your computer.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="abuse_of_fc_solve",title="I think I found an abuse of Freecell Solver. What should I do?") %}
+[% WRAPPER h3_section id = "abuse_of_fc_solve", title = "I think I found an abuse of Freecell Solver. What should I do?" %]
 
 <p>
 We received a report or two about various people or companies distributing
@@ -269,9 +269,9 @@ or library (which violates the no warranty paragraph of the licence) everything
 should be fine and the “abuse” of the program is acceptable.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="what_are_the_uses_of_a_solver",title="What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?") %}
+[% WRAPPER h3_section id = "what_are_the_uses_of_a_solver", title = "What are the uses of a solver for Patience/Solitaire card games, such as Freecell Solver?" %]
 
 <p>
 Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
@@ -309,9 +309,9 @@ by finding whether reached states are solvable. This provides a combined
 solving technique, that is greater than the sum of both parts.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="does_anyone_care",title="Does anyone care about this project? I think no one cares about it except you.") %}
+[% WRAPPER h3_section id = "does_anyone_care", title = "Does anyone care about this project? I think no one cares about it except you." %]
 
 <p>
 The short answer is that: yes, some people care. As of November 2016, I received
@@ -342,9 +342,9 @@ on mobile devices (e.g: smartphones, tablets) seems to have rekindled
 interest in Freecell solvers.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="new_solver_is_too_slow",title="I started writing a solver for Freecell (of my own) but it is too slow. What can I do?") %}
+[% WRAPPER h3_section id = "new_solver_is_too_slow", title = "I started writing a solver for Freecell (of my own) but it is too slow. What can I do?" %]
 
 <p>
 The problem with many naïve Freecell solving programs is that, while they
@@ -359,11 +359,11 @@ can be devised).
 
 <p>
 You can try inspecting the code of Freecell Solver or one of the
-<a href="{{ base_path }}links.html#other_solvers">other solvers</a> for insights, but
+<a href="[% base_path %]links.html#other_solvers">other solvers</a> for insights, but
 note that their code (and especially Freecell Solver’s) may be somewhat
 complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
-<a href="{{ base_path }}docs/">Freecell Solver documentation</a> as well as the
+<a href="[% base_path %]docs/">Freecell Solver documentation</a> as well as the
 <a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">archives of
 the fc-solve-discuss mailing list</a> for some insights and ideas.
 </p>
@@ -424,9 +424,9 @@ authors of other open-source solvers may be happy for help as well, so if
 you want to help to improve something more mature, then contact us.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="integrate_fcs_into_program",title="May I integrate Freecell Solver into my program? If so - how?") %}
+[% WRAPPER h3_section id = "integrate_fcs_into_program", title = "May I integrate Freecell Solver into my program? If so - how?" %]
 
 <p>
 Yes, you can, as long as you accept the
@@ -458,9 +458,9 @@ Good luck and please let us know if you have run into any problems, or,
 alternatively, if you have been successful.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="solutions_are_too_long",title="The Solutions I got are too long. What can I do?") %}
+[% WRAPPER h3_section id = "solutions_are_too_long", title = "The Solutions I got are too long. What can I do?" %]
 
 <p>
 You can try using a flares-based preset such as “video-editing” and
@@ -488,9 +488,9 @@ which has a Java version and a (slower) Perl 5 version (and is also
 open source).
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="which_prog_lang",title="Which programming language (or programming languages) is Freecell Solver written in?") %}
+[% WRAPPER h3_section id = "which_prog_lang", title = "Which programming language (or programming languages) is Freecell Solver written in?" %]
 
 <p>
 The core Freecell Solver source is written in the GNU11 version of
@@ -530,9 +530,9 @@ sh:             970 (2.42%)
 cpp:            277 (0.69%)
 </pre>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="why_in_c",title="Why is Freecell Solver written in C? Why not in another language?") %}
+[% WRAPPER h3_section id = "why_in_c", title = "Why is Freecell Solver written in C? Why not in another language?" %]
 
 <p>
 Part of the reason why Freecell Solver is written in C, is because the first
@@ -622,21 +622,21 @@ is still maintained directly, and the generated JavaScript code is not
 idiomatic JavaScript.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="unsolvable_solution",title="I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?") %}
+[% WRAPPER h3_section id = "unsolvable_solution", title = "I found a solvable deal that Freecell Solver reports as unsolvable - should I report it to you?" %]
 
 <p>
 The default Freecell Solver heuristic may have a small number of deals that
 are reported as unsolvable despite being solvable. However, you can use scans
 based on atomic moves to rectify that. See <kbd>fc-solve --help-configs</kbd>
-and the <a href="{{ base_path }}docs/distro/USAGE.html">USAGE.html</a> file for
+and the <a href="[% base_path %]docs/distro/USAGE.html">USAGE.html</a> file for
 more information.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="is_fc_solve_completed",title="Have you completed/finished the work on Freecell Solver? Is it done yet?") %}
+[% WRAPPER h3_section id = "is_fc_solve_completed", title = "Have you completed/finished the work on Freecell Solver? Is it done yet?" %]
 
 <p>
 I am getting asked that a lot, and I find it a strange notion. It is similar
@@ -694,9 +694,9 @@ that are Up For Adoption”.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="wasnt_freecell_solved_yet",title="“‘Freecell Solver’? Hasn’t Freecell been solved yet?”") %}
+[% WRAPPER h3_section id = "wasnt_freecell_solved_yet", title = "“‘Freecell Solver’? Hasn’t Freecell been solved yet?”" %]
 
 <p>
 This question shows a basic misunderstanding of what Freecell is, and the
@@ -718,9 +718,9 @@ some layouts, but hopefully the chance of this risk can be minimised
 with the more advanced searches.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="is_fc_solve_written_in_perl",title="Is Freecell Solver written in Perl?") %}
+[% WRAPPER h3_section id = "is_fc_solve_written_in_perl", title = "Is Freecell Solver written in Perl?" %]
 
 <p>
 For some reason, some people assume that I (= Shlomi Fish) wrote Freecell
@@ -760,15 +760,15 @@ times faster</a> and I naturally find a 24 factor performance decrease
 unacceptable.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="algo",title="How does Freecell Solver solve Freecell? Which algorithm does it use?") %}
+[% WRAPPER h3_section id = "algo", title = "How does Freecell Solver solve Freecell? Which algorithm does it use?" %]
 
 <p>
 The exact algorithm used by “fc-solve” can be configured using the various
 command line arguments it accepts, which are documented in the
-<a href="{{ base_path }}docs/distro/README.html">README</a> and
-<a href="{{ base_path }}docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
+<a href="[% base_path %]docs/distro/README.html">README</a> and
+<a href="[% base_path %]docs/distro/USAGE.html">USAGE</a> files. Furthermore, the
 “-l” flag can load some predefined configurations, which are essentially a
 sequence of command line arguments loaded from a file.
 </p>
@@ -808,9 +808,9 @@ different deals in different threads or processes.
 
 </ol>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="input",title="How does Freecell Solver read the cards and board layout? What kind of input does it accept?") %}
+[% WRAPPER h3_section id = "input", title = "How does Freecell Solver read the cards and board layout? What kind of input does it accept?" %]
 
 <p>
 The API of the solver accepts a textual representation in a certain well-formed
@@ -835,9 +835,9 @@ integrated Freecell Solver, which in turn make them input the board to
 the solver and use its moves' output to display the solution graphically.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="deal_11982",title="I found a solution for MS Deal No. 11,982 - should I report it to you?") %}
+[% WRAPPER h3_section id = "deal_11982", title = "I found a solution for MS Deal No. 11,982 - should I report it to you?" %]
 
 <p>
 That deal was found to be impossible by most human
@@ -880,7 +880,7 @@ Or arranged with the piles in each text line:
 </pre>
 
 <p>
-Here is a <a href="{{ base_path }}images/pysol-freecell-ms11982.png">screenshot
+Here is a <a href="[% base_path %]images/pysol-freecell-ms11982.png">screenshot
 of that deal in PySol</a>.
 </p>
 
@@ -985,9 +985,9 @@ solver for many Solitaire variants written in C++.
 
 </ol>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="complexity",title="What is the runtime complexity of solving Freecell?") %}
+[% WRAPPER h3_section id = "complexity", title = "What is the runtime complexity of solving Freecell?" %]
 
 <p>
 Generalised Freecell (where there is an
@@ -1010,9 +1010,9 @@ to solve it, that while possibly requiring exponential time,
 only require polynomial space</a> (e.g by reducing the algorithm to <a href="https://en.wikipedia.org/wiki/Boolean_satisfiability_problem">3SAT</a>).
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="what_is_pysol",title="What is PySol? What is PySol FC? Are they solvers as well?") %}
+[% WRAPPER h3_section id = "what_is_pysol", title = "What is PySol? What is PySol FC? Are they solvers as well?" %]
 
 <p>
 No, actually <a href="http://pysolfc.sourceforge.net/">PySol FC</a>, which
@@ -1041,9 +1041,9 @@ For some more information, see:
 </li>
 </ol>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="is_freecell_the_ms_game",title="“Freecell”? Is it the Microsoft/Windows game?") %}
+[% WRAPPER h3_section id = "is_freecell_the_ms_game", title = "“Freecell”? Is it the Microsoft/Windows game?" %]
 
 <p>
 Yes, and no. The "Freecell" game (see its <a href="https://en.wikipedia.org/wiki/FreeCell">wikipedia entry</a>)
@@ -1057,9 +1057,9 @@ support for many variations on them, and accepts any arbitrary layout of the
 cards, including those at mid play, as input.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="is_it_foss",title="Is Freecell Solver open source?") %}
+[% WRAPPER h3_section id = "is_it_foss", title = "Is Freecell Solver open source?" %]
 
 <p>
 Freecell Solver is
@@ -1071,16 +1071,16 @@ and provided free-of-charge for download or use online. You can find the
 latest development sources in
 <a href="https://github.com/shlomif/fc-solve">its GitHub repository</a>
 and call also download release source archive files from
-<a href="{{ base_path }}download.html">the download page</a>. Share and enjoy!
+<a href="[% base_path %]download.html">the download page</a>. Share and enjoy!
 </p>
 
 <p>
 Contributions are welcome.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="exceeded_512GB",title="What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?") %}
+[% WRAPPER h3_section id = "exceeded_512GB", title = "What were the whereabouts of one of the solvers running out of 512 GB (= gigabyte) of RAM?" %]
 
 <p>
 We were trying to conclusively determine whether MS deal no. 384,243 was
@@ -1093,7 +1093,7 @@ consumption and it seems unlikely that there were memory leaks in the code.
 </p>
 
 <p>
-We have been able to complete a <a href="{{ base_path }}charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
+We have been able to complete a <a href="[% base_path %]charts/fc-pro--4fc-deals-solvability--report/">complete scan of all 4 freecell deals in the MS freecell 8.6
 milliard range</a> using an AWS node with only 256 GB of RAM and about
 40-50 GB of hard disk (though we could probably use less or make use
 of <a href="https://github.com/s3fs-fuse/s3fs-fuse">s3fs-fuse</a> or similar
@@ -1110,9 +1110,9 @@ using a different algorithm, by distributing calculations, or other techniques.
 As usual, patches/<a href="https://help.github.com/articles/about-pull-requests/">pull requests</a> or ideas are welcome.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="machine_learning",title="Have you considered using machine learning, neural networks, or deep learning for improving the solver?") %}
+[% WRAPPER h3_section id = "machine_learning", title = "Have you considered using machine learning, neural networks, or deep learning for improving the solver?" %]
 
 <p>
 I did, but I didn't get too far, in part due to not investing a lot of time, and in part due to lacking sufficient knowledge.
@@ -1132,9 +1132,9 @@ Freecell Solver is not an exception to either item, as even its best performing 
 be time consuming for a small percentage of the input layouts.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="i_want_a_gui",title="Where can I find a GUI for Freecell Solver? I dislike the fact that it is a command line program.") %}
+[% WRAPPER h3_section id = "i_want_a_gui", title = "Where can I find a GUI for Freecell Solver? I dislike the fact that it is a command line program." %]
 
 <p>
 Freecell Solver provides some <a href="https://en.wikipedia.org/wiki/Application_programming_interface">APIs</a>
@@ -1146,7 +1146,7 @@ line</a> programs that are part of the Freecell Solver distribution, you can opt
 <ol>
 <li>
 <p>
-<a href="{{ base_path }}js-fc-solve/">The web-based solver</a>
+<a href="[% base_path %]js-fc-solve/">The web-based solver</a>
 which provides a graphical and animated preview of the solution.
 </p>
 </li>
@@ -1172,10 +1172,10 @@ We believe competent software developers can write other front ends and wrappers
 the provided APIs.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endcall %}
+[% END %]
 
 </div>
 
-{% endblock %}
+[% END %]
