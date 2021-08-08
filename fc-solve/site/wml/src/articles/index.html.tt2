@@ -1,0 +1,33 @@
+
+[%- SET title = "Freecell Solver - Articles and Reports" -%]
+[%- WRAPPER wrap_html -%]
+
+
+[% WRAPPER h2_section id = "about", title = "About" %]
+
+<p>
+These are articles and reports by the Freecell Solver developers.
+</p>
+
+[% END %]
+
+[% WRAPPER h2_section id = "docs", title = "Documents" %]
+
+<ul>
+<li>
+<p>
+<a href="[% base_path %]articles/how-we-benchmark/v1/">How We Benchmark Freecell Solver (Version 1)</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="[% base_path %]charts/fc-pro--4fc-deals-solvability--report/">Report: The solvability statistics of the Freecell Pro 4-Freecells Deals</a>
+</p>
+</li>
+
+</ul>
+
+[% END %]
+
+[% END %]
