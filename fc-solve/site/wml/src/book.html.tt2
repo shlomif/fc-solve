@@ -1,8 +1,7 @@
-{% extends "template.jinja" %}
-{% import "Inc/db_formats.jinja" as docbook %}
-{% block title %}Freecell Solver Book{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver Book" -%]
+[%- WRAPPER wrap_html -%]
 
+[%# PROCESS "Inc/db_formats.tt2" %]
 
 <div class="note">
 
@@ -36,11 +35,11 @@ see the links below.
 
 <p>
 You may wish to refer to
-<a href="{{ presentation_url }}">
+<a href="[% presentation_url %]">
 a lecture</a>
 I prepared about the subject.
 </p>
 
-{{ docbook.docbook_formats(docbase="book--freecell-solver--evolution-of-a-c-program/fcs-book", source_href="https://github.com/shlomif/fc-solve/tree/master/fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program/") }}
+[% INCLUDE docbook_formats_w_base base = "book--freecell-solver--evolution-of-a-c-program/fcs-book", h2_id="formats", h2_text = "Formats", orig_xml_href = "https://github.com/shlomif/fc-solve/tree/master/fc-solve/docs/Freecell-Solver--Evolution-of-a-C-Program/" %]
 
-{% endblock %}
+[% END %]
