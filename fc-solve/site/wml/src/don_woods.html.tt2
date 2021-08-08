@@ -1,9 +1,9 @@
-{% extends "template.jinja" %}
-{% block title %}Don Woods' Freecell Solver{% endblock %}
-{% block body %}
+[%- SET title = "Don Woods' Freecell Solver" -%]
+
+[%- WRAPPER wrap_html -%]
 
 
-{% call h2_section(id="about",title="About these files") %}
+[% WRAPPER h2_section id = "about", title = "About these files" %]
 
 <p>
 This is the source code for the famous Freecell solver by
@@ -35,9 +35,9 @@ of <a href="http://cards.wikia.com/wiki/FreeCell_Pro">Freecell Pro</a>.
 FC-Pro is an open-source GPLed program, whose <a href="FC-Pro-Source-2003-05-17.zip">source code</a> is available.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="downloads",title="Downloads") %}
+[% WRAPPER h2_section id = "downloads", title = "Downloads" %]
 
 <ul>
 
@@ -55,5 +55,5 @@ FC-Pro is an open-source GPLed program, whose <a href="FC-Pro-Source-2003-05-17.
 
 </ul>
 
-{% endcall %}
-{% endblock %}
+[% END %]
+[% END %]
