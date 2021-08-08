@@ -1,9 +1,9 @@
-{% extends "template.jinja" %}
-{% block title %}Verifying Solutions of Solitaire Games Automatically (Freecell Solver){% endblock %}
-{% block body %}
+[%- SET title = "Verifying Solutions of Solitaire Games Automatically (Freecell Solver)" -%]
+
+[%- WRAPPER wrap_html -%]
 
 
-{% call h2_section(id="about",title="About") %}
+[% WRAPPER h2_section id = "about", title = "About" %]
 
 <p>
 <b>Games-Solitaire-Verify</b> is a <a href="http://www.cpan.org/">CPAN
@@ -12,9 +12,9 @@ Solitaire games. It was designed to serve as an aid in the test suite of
 Freecell Solver, but may prove useful in other contexts.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="download",title="Download") %}
+[% WRAPPER h2_section id = "download", title = "Download" %]
 
 <ul>
 
@@ -34,9 +34,9 @@ Repository</a>.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="features",title="Features and Limitations") %}
+[% WRAPPER h2_section id = "features", title = "Features and Limitations" %]
 
 <ul>
 
@@ -63,7 +63,7 @@ Can handle the verification of individual cards, columns, entire states
 
 </ul>
 
-{% endcall %}
+[% END %]
 
 
-{% endblock %}
+[% END %]
