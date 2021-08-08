@@ -87,11 +87,6 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
                 my $args = shift;
                 return _render_nav_block( $args->{name} );
             },
-            fortunes__package_base => sub {
-                lib->import('./src/humour/fortunes/');
-                require ShlomifFortunesMake;
-                return ShlomifFortunesMake->package_base;
-            },
             longblank  => $LONGBLANK,
             main_email => 'shlomif@shlomifish.org',
             my_acronym => sub {
@@ -106,30 +101,6 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             retrieved_slurp => \&retrieved_slurp,
             path_slurp      => \&path_slurp,
             shlomif_include_colorized_file => \&_shlomif_include_colorized_file,
-            gen_vcs_comparison_systems_list => sub {
-                require XML::CompareML::HTML;
-                my $buf = '';
-                open my $fh, '>', \$buf;
-                my $converter = XML::CompareML::HTML->new(
-                    'input_filename' => "./src/comparison/scm-comparison.xml",
-                    'output_handle'  => $fh,
-                );
-
-                $converter->gen_systems_list( output_handle => $fh );
-                close $fh;
-                return $buf;
-            },
-            my_compare_gen => sub {
-                require MyCompareGen;
-                return decode_utf8( ${ MyCompareGen->run() } );
-            },
-            latemp_news_get_news_page_entries => sub {
-                require MyManageNews;
-
-                my $news_manager = MyManageNews::get_news_manager();
-
-                return $news_manager->get_news_page_entries();
-            },
         };
     }
 );
