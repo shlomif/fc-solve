@@ -141,10 +141,6 @@ class="try_main">Use</span><br/>
                 ),
                 host='fc-solve',
                 use_online_wrapper=use_online_wrapper,
-                solitairey='<a href="https://foss-card-games.github.io/' +
-                'Solitairey/">Solitairey</a>',
-                presentation_url="http://www.shlomifish.org/" +
-                "lecture/Freecell-Solver/",
                 doxygen_url=base_path + "michael_mann/",
                 arch_doc_url=base_path + "arch_doc/",
                 )

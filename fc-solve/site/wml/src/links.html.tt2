@@ -1,11 +1,10 @@
-{% extends "template.jinja" %}
-{% block title %}Freecell Solver Links{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver Links" -%]
 
+[%- WRAPPER wrap_html -%]
 
 <toc />
 
-{% call h2_section(id="resources",title="Resources") %}
+[% WRAPPER h2_section id = "resources", title = "Resources" %]
 
 <p class="desc">
 Freecell Solver Resources on the Net.
@@ -41,14 +40,14 @@ history, a Freecode internal hit count, and other useful information.
 
 <li>
 <p>
-<a href="{{ presentation_url }}">Freecell
+<a href="[% presentation_url %]">Freecell
 Solver Lecture</a> - A lecture I gave to the
 <a href="http://www.haifux.org/">Haifa Linux Club</a> about the
 development of Freecell Solver.
 </p>
 </li>
 
-{% if False %}
+[% IF 0 %]
 <li>
 <p>
 <a href="http://developer.berlios.de/project/?group_id=66">BerliOS' Project
@@ -75,7 +74,7 @@ and other resources.
 </p>
 </li>
 
-{% endif %}
+[% END %]
 
 <li>
 <p>
@@ -95,9 +94,9 @@ contains the old Subversion repository.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="technologies",title="Technologies") %}
+[% WRAPPER h2_section id = "technologies", title = "Technologies" %]
 
 <p class="desc">
 Technologies used by Freecell Solver or that aided in its development.
@@ -197,7 +196,7 @@ high-level, dynamic programming language. It is often considered a "scripting
 language", but can be easily used for writing large-scale and production code.
 Perl proved useful for writing a lot of code to automate many tasks in the
 development of Freecell Solver. Lately, it was also utilised as the foundation
-for its test suite, especially in writing <a href="{{ base_path }}verify-code/">the
+for its test suite, especially in writing <a href="[% base_path %]verify-code/">the
 solutions' verification code</a>.
 </p>
 </li>
@@ -218,7 +217,7 @@ markup language (with open-source converters) that allows to write plain-text
 and convert it to XHTML, to
 <a href="http://www.docbook.org/">DocBook/XML</a>, and subsequently
 to other formats such as PDFs, or UNIX man pages. We use it for
-<a href="{{ base_path }}docs/#distributed-docs">the distributed documentation</a>.
+<a href="[% base_path %]docs/#distributed-docs">the distributed documentation</a>.
 </p>
 </li>
 
@@ -304,9 +303,9 @@ and <a href="https://jqueryui.com/">jQuery UI</a> themselves.)
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="front_ends",title="Programs that use Freecell Solver") %}
+[% WRAPPER h2_section id = "front_ends", title = "Programs that use Freecell Solver" %]
 
 <ul>
 <li>
@@ -362,9 +361,9 @@ port of libfreecell-solver.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="people",title="People") %}
+[% WRAPPER h2_section id = "people", title = "People" %]
 
 <p class="desc">
 Links to the homepages of people who contributed in any way to Freecell
@@ -425,9 +424,9 @@ Sadly, he passed away on 2013 and there is <a href="https://en.wikipedia.org/wik
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="other_solvers",title="Other Solvers") %}
+[% WRAPPER h2_section id = "other_solvers", title = "Other Solvers" %]
 
 <p class="desc">
 We have competition. But there's nothing wrong with competition. ;-)
@@ -531,7 +530,7 @@ course project and contains a final report.
 
 <li>
 <p>
-<a href="{{ doxygen_url }}">C++ Port of Freecell Solver by Michael Mann</a> -
+<a href="[% doxygen_url %]">C++ Port of Freecell Solver by Michael Mann</a> -
 Michael Mann ported FCS to C++ and used
 <a href="http://www.doxygen.org/">Doxygen</a> to cross-reference and
 document the code. Covers version 2.2.x of the program.
@@ -609,7 +608,7 @@ Open source under the restrictive GPLv3 licence.
 
 <li>
 <p>
-{{ solitairey }} - contains
+[% solitairey %] - contains
 a Freecell solver written in JavaScript. The
 <a href="https://github.com/shlomif/Solitairey/branches">source code</a> for it is
 available on GitHub, under the open source FreeBSD licence.
@@ -733,9 +732,9 @@ source under the MIT / Expat licence.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="reviews",title="Reviews of Freecell Solver") %}
+[% WRAPPER h2_section id = "reviews", title = "Reviews of Freecell Solver" %]
 
 <ul>
 <li>
@@ -774,9 +773,9 @@ Thought of the Moment Regarding Freecell Solver</a>
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="videos",title="Videos: Screencasts, demos, etc.") %}
+[% WRAPPER h2_section id = "videos", title = "Videos: Screencasts, demos, etc." %]
 
 <ul>
 
@@ -812,9 +811,9 @@ an external iPhone device.
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="old_pages",title="Old pages of this site") %}
+[% WRAPPER h2_section id = "old_pages", title = "Old pages of this site" %]
 
 <p>
 These are some old pages of this site that are no longer of relevance and
@@ -825,7 +824,7 @@ were removed from the navigation menu.
 
 <li>
 <p>
-<a href="{{ base_path }}pysol/">PySol Integration</a>.
+<a href="[% base_path %]pysol/">PySol Integration</a>.
 </p>
 </li>
 
@@ -839,23 +838,23 @@ out-of-date.
 
 <li>
 <p>
-<a href="{{ base_path }}current-status.html">What is the <b>Status</b> of Freecell
+<a href="[% base_path %]current-status.html">What is the <b>Status</b> of Freecell
 Solver</a> - Freecell Solver is actively maintained again.
 </p>
 </li>
 
 <li>
 <p>
-<a href="{{ base_path }}book.html">The Book</a> - a book about Freecell Solver was
+<a href="[% base_path %]book.html">The Book</a> - a book about Freecell Solver was
 originally planned, but this is no longer actively pursued.
 </p>
 </li>
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="general_freecell",title="General Freecell Links") %}
+[% WRAPPER h2_section id = "general_freecell", title = "General Freecell Links" %]
 
 <ul>
 <li>
@@ -907,7 +906,7 @@ only fair that we will link back to him.
 
 <li>
 <p>
-{{ solitairey }} - play Freecell and other
+[% solitairey %] - play Freecell and other
 Patience games online. The
 <a href="https://github.com/shlomif/Solitairey/branches">source code</a> is
 available on GitHub.
@@ -939,6 +938,6 @@ with open source code written in <a href="https://en.wikipedia.org/wiki/Scala_(p
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]

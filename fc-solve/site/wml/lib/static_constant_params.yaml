@@ -1,3 +1,5 @@
 static_constant_params:
     canonical_base_url: https://fc-solve.shlomifish.org/
     common_keywords: "Freecell, Freecell Solver, solvers, AI, artificial intelligence, solitaire, Simple Simon, Baker's Game, Seahaven Towers, Shlomi Fish, games"
+    presentation_url: "http://www.shlomifish.org/lecture/Freecell-Solver/"
+    solitairey: '<a href="https://foss-card-games.github.io/Solitairey/">Solitairey</a>'
