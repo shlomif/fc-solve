@@ -1,6 +1,6 @@
 ./gen-helpers && make fastrender && make -j 17
-a="dest/current-status.html"
-b="/home/shlomif/Backup/Arcs/fcs-site--post-dest/post-incs/current-status.html"
+a="dest/don_woods.html"
+b="/home/shlomif/Backup/Arcs/fcs-site--post-dest/post-incs/don_woods.html"
 adest=have.xhtml
 bdest=want.xhtml
 tidy < $a > $adest
