@@ -1,9 +1,9 @@
-{% extends "template.jinja" %}
-{% block title %}What's the Status of Freecell Solver? Is it Dead?{% endblock %}
-{% block body %}
+[%- SET title = "What's the Status of Freecell Solver? Is it Dead?" -%]
+
+[%- WRAPPER wrap_html -%]
 
 
-{% call h2_section( id="update", title="Update" ) %}
+[% WRAPPER h2_section id = "update", title = "Update" %]
 
 <p>
 <b>4-July-2009</b>: development of Freecell Solver was now resumed. There
@@ -12,9 +12,9 @@ is under active development again. As a result, this page is no longer
 relevant.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section( id="status", title="What is the Status of Freecell Solver?" ) %}
+[% WRAPPER h2_section id = "status", title = "What is the Status of Freecell Solver?" %]
 
 <p>
 <b>Last Updated</b>: 26-Nov-2005
@@ -50,6 +50,6 @@ students' project to get academic credit for</a>, and Shlomi is willing to
 provide any reasonable mental aid for that.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
