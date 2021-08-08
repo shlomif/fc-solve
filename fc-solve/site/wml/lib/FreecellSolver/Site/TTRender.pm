@@ -212,6 +212,8 @@ LINKS:
         )
     );
     $vars->{index_filename}     = $fn2;
+    $vars->{doxygen_url}        = $base_path . "michael_mann/";
+    $vars->{arch_doc_url}       = $base_path . "arch_doc/";
     $vars->{use_online_wrapper} = (
         ( $input_tt2_page_path !~ m#\A js-fc-solve/#msx )
         ? <<"EOF"
