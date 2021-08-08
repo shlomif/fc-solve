@@ -1,5 +1,5 @@
 ./gen-helpers && make fastrender && make -j 17
-a="dest/arch_doc/index.html"
+a="dest/getting-credit.html"
 b="/home/shlomif/Backup/Arcs/fcs-site--post-dest/post-incs/${a##dest/}"
 adest=have.xhtml
 bdest=want.xhtml
