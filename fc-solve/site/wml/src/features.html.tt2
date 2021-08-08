@@ -1,9 +1,8 @@
-{% extends "template.jinja" %}
-{% block title %}Freecell Solver's Features List{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver's Features List" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section(id="usability-opts",title="Usability Options") %}
+[% WRAPPER h2_section id = "usability-opts", title = "Usability Options" %]
 
 <ul>
 <li>
@@ -62,9 +61,9 @@ of iterations was reached without a conclusion (= "intractable").
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="dev-features",title="Development Features") %}
+[% WRAPPER h2_section id = "dev-features", title = "Development Features" %]
 
 <ul>
 
@@ -105,9 +104,9 @@ A test suite is included as part of the distribution.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="scam-opts",title="Scan Options") %}
+[% WRAPPER h2_section id = "scam-opts", title = "Scan Options" %]
 
 <ul>
 
@@ -189,9 +188,9 @@ for each depth in the DFS stack.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="game-types",title="Game Types") %}
+[% WRAPPER h2_section id = "game-types", title = "Game Types" %]
 
 <ul>
 <li>
@@ -289,6 +288,6 @@ command-line options.
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
