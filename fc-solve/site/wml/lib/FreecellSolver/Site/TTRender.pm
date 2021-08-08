@@ -119,7 +119,10 @@ my $template = Template->new(
     }
 );
 
-my @DESTs = ( [ '.', "dest", ], [ '.', 'dest-prod', ], );
+my @DESTs = (
+    { production => 0, path => [ '.', "dest", ], },
+    { production => 1, path => [ '.', "dest-prod", ], },
+);
 
 sub _render_leading_path_component
 {
@@ -242,21 +245,29 @@ EOF
 
     $vars->{load_javascript_srcs} = $load_javascript_srcs;
 
-    my $html = '';
-    $template->process( "src/$input_tt2_page_path.tt2",
-        $vars, \$html, binmode => ':utf8', )
-        or die $template->error();
-
-    $toc->add_toc( \$html );
     if ( $self->stdout )
     {
         binmode STDOUT, ':encoding(utf-8)';
+        my $html = '';
+        $template->process( "src/$input_tt2_page_path.tt2",
+            $vars, \$html, binmode => ':utf8', )
+            or die $template->error();
+
+        $toc->add_toc( \$html );
         print $html;
     }
     else
     {
-        foreach my $d (@DESTs)
+        foreach my $rec (@DESTs)
         {
+            my $d = $rec->{path};
+            $vars->{production} = $rec->{production};
+            my $html = '';
+            $template->process( "src/$input_tt2_page_path.tt2",
+                $vars, \$html, binmode => ':utf8', )
+                or die $template->error();
+
+            $toc->add_toc( \$html );
             path( @$d, @fn, )->touchpath()->spew_utf8($html);
         }
     }
