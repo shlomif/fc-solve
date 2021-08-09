@@ -1,9 +1,8 @@
-{% extends "template.jinja" %}
-{% block title %}How We Benchmark Freecell Solver (Version 1){% endblock %}
-{% block body %}
+[%- SET title = "How We Benchmark Freecell Solver (Version 1)" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section(id="summary",title="Summary") %}
+[% WRAPPER h2_section id = "summary", title = "Summary" %]
 
 <img src="cat-on-a-bench.jpg" alt="A cat sitting on a bench" style="float:right;margin:1em" />
 
@@ -15,11 +14,11 @@ may provide some insights for your benchmarking efforts, and we welcome further
 insights into it.
 </p>
 
-{% endcall %}
+[% END %]
 
 <toc />
 
-{% call h2_section(id="intro",title="Introduction") %}
+[% WRAPPER h2_section id = "intro", title = "Introduction" %]
 
 <p>
 <b>Publishing Date:</b> 3 October 2017.
@@ -34,11 +33,11 @@ the point of view of benchmarking it on a modern
 <a href="https://en.wikipedia.org/wiki/Linux">GNU/Linux</a> installation.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="points",title="Points") %}
+[% WRAPPER h2_section id = "points", title = "Points" %]
 
-{% call h3_section(id="sudo_renice",title="Use the “sudo_renice” script") %}
+[% WRAPPER h3_section id = "sudo_renice", title = "Use the “sudo_renice” script" %]
 
 <p>
 <a href="https://github.com/shlomif/shlomif-computer-settings/blob/master/shlomif-settings/home-bin-executables/bin/sudo_renice">sudo_renice</a> is a shell wrapper
@@ -57,9 +56,9 @@ It is reproduced here:
 sudo nice -n-20 ionice -c1 -n0 sudo -u "$USER" "$@"
 </pre>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="same_sys",title="Use the same machine and same operating system installation for both timings") %}
+[% WRAPPER h3_section id = "same_sys", title = "Use the same machine and same operating system installation for both timings" %]
 
 <p>
 It is important to run both the "before" and "after" versions of the benchmark
@@ -67,9 +66,9 @@ on the same physical computer, with the same system installation and in
 similar conditions - one after the other.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="isolate",title="Make sure the benchmarked process is practically the only thing running") %}
+[% WRAPPER h3_section id = "isolate", title = "Make sure the benchmarked process is practically the only thing running" %]
 
 <p>
 We noticed that running an X environment with a resource-heavy desktop
@@ -85,9 +84,9 @@ system services or
 or stale processes that were not killed).
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="not_overheated",title="Make sure the system is not overheated") %}
+[% WRAPPER h3_section id = "not_overheated", title = "Make sure the system is not overheated" %]
 
 <p>
 We noticed that once the computer becomes overheated, the CPU is
@@ -98,9 +97,9 @@ and perhaps by waiting a little using the UNIX
 <a href="https://en.wikipedia.org/wiki/Sleep_%28Unix%29">sleep command</a>.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="run_several_times",title="Run each benchmarked process several times") %}
+[% WRAPPER h3_section id = "run_several_times", title = "Run each benchmarked process several times" %]
 
 <p>
 Keep track of the results, and try to see which are generally (minimally,
@@ -108,9 +107,9 @@ on average, etc.) faster. Also see <a href="https://www.mail-archive.com/linux-i
 on the Linux-IL mailing list.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="compile_flags",title="Compile flags") %}
+[% WRAPPER h3_section id = "compile_flags", title = "Compile flags" %]
 
 <p>
 You should build both versions using CPU flags for maximal performance such
@@ -120,9 +119,9 @@ as <code>-O3</code>, <code>-march=native</code>, <code>-flto</code>,
 useful as well.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h3_section(id="malloc_lib",title="malloc library") %}
+[% WRAPPER h3_section id = "malloc_lib", title = "malloc library" %]
 
 <p>
 One should link against a
@@ -132,11 +131,11 @@ Other prominent mallocs, which are not mentioned in the first link, are <a href=
 and <a href="https://github.com/r-lyeh/ltalloc">ltalloc</a>
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="links",title="Links and References") %}
+[% WRAPPER h2_section id = "links", title = "Links and References" %]
 
 <ul>
 
@@ -157,9 +156,9 @@ Code for Speed</i></a> - an earlier wikibook written by me.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="credits",title="Credits") %}
+[% WRAPPER h2_section id = "credits", title = "Credits" %]
 
 <ul>
 
@@ -169,14 +168,14 @@ Code for Speed</i></a> - an earlier wikibook written by me.
 </p>
 </li>
 </ul>
-{% endcall %}
+[% END %]
 
-{% macro cc_by_british_blurb(year) %}
+[% BLOCK cc_by_british_blurb %]
 
-<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" class="bless" src="{{ base_path }}images/somerights20.png"/></a></p>
+<p><a rel="license" href="http://creativecommons.org/licenses/by/3.0/"><img alt="Creative Commons License" class="bless" src="[% base_path %]images/somerights20.png"/></a></p>
 
 <p>
-This document is Copyright by Shlomi Fish, {{ year }}, and is available
+This document is Copyright by Shlomi Fish, [% year %], and is available
 under the
 terms of <a rel="license"
 href="http://creativecommons.org/licenses/by/3.0/">the Creative Commons
@@ -191,12 +190,12 @@ and see <a href="http://www.shlomifish.org/meta/copyrights/">the
 explicit requirements</a> that are being spelt from abiding by that licence.
 </p>
 
-{% endmacro %}
+[% END %]
 
-{% call h2_section(id="licence",title="Licence") %}
+[% WRAPPER h2_section id = "licence", title = "Licence" %]
 
-{{ cc_by_british_blurb(year="2017") }}
+[% INCLUDE cc_by_british_blurb year = "2017", %]
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
