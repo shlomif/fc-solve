@@ -1,15 +1,13 @@
-{% extends "prelude.jinja" %}
-{% block prelude_body %}
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-US">
 <head>
     <title>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</title>
     <meta charset="utf-8" />
-    <link href="{{ base_path }}css/flot/examples/examples.css" rel="stylesheet" />
-{{ load_javascript_srcs("jq.js") }}
-{{ load_javascript_srcs("jquery.flot.js") }}
-        {{ js_requirejs() }}
+    <link href="[% base_path %]css/flot/examples/examples.css" rel="stylesheet" />
+[% load_javascript_srcs("jq.js") %]
+[% load_javascript_srcs("jquery.flot.js") %]
+[% INCLUDE js_requirejs %]
 </head>
 <body>
     <h1>Freecell Solver’s depth_dbm_solver’s Old-vs-New Benchmark Progress</h1>
@@ -1101,9 +1099,9 @@ OldIterations	OldTimeSinceStart	NewTimeSinceStart
 </textarea>
     </div>
 <script>
-{{ requirejs_conf() }}
+[%- requirejs_conf() -%]
+[% "\n" %]
 require(["chart-using-flot--int128-opt"], function (chart) { });
 </script>
 </body>
 </html>
-{% endblock %}
