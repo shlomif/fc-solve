@@ -177,5 +177,13 @@ more reliable messaging means such as XMPP or Telegram are preferable.
 [% INCLUDE docbook_formats h2_id=h2_id h2_text=h2_text indiv_href=base _ "/" epub_href=base _".epub", raw_href=base _ ".raw.html", rtf_href=base _".rtf", pdf_href=base _".pdf" %]
 [% END %]
 
+[% BLOCK js_requirejs %]
+[% IF production %]
+    [% load_javascript_srcs("require.js") %]
+[% ELSE %]
+    [% load_javascript_srcs("require--debug.js") %]
+[% END %]
+[% END %]
+
 [%-# vim:ft=tt2html:
 -%]

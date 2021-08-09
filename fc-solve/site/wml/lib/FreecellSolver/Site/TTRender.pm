@@ -244,6 +244,9 @@ EOF
     };
 
     $vars->{load_javascript_srcs} = $load_javascript_srcs;
+    $vars->{requirejs_conf}       = sub {
+        return "requirejs.config({ baseUrl: '${base_path}js', });";
+    };
 
     if ( $self->stdout )
     {
