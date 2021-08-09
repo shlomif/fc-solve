@@ -1,17 +1,16 @@
-{% extends "template.jinja" %}
-{% block title %}The Freecell Solver’s Site Source Code{% endblock %}
-{% block body %}
+[%- SET title = "The Freecell Solver’s Site Source Code" -%]
 
+[%- WRAPPER wrap_html -%]
 
 <div class="wrap-me">
 
-{% if false %}
+[% IF 0 %]
 <section>
 <toc />
 </section>
-{% endif %}
+[% END %]
 
-{% call h2_section(id="source-code",title="The Site’s Source Code") %}
+[% WRAPPER h2_section id = "source-code", title = "The Site’s Source Code" %]
 
 <p>
 The sources of Freecell Solver’s site can be found here:
@@ -44,8 +43,8 @@ and <a href="https://en.wikipedia.org/wiki/Open_content">open content</a> licens
 Note that building the site requires quite a few dependencies, so it may not be for
 the non-initiated. One can refer to <a href="https://github.com/shlomif/fc-solve/blob/master/.travis.yml">Travis-CI set-up</a> for help.
 </p>
-{% endcall %}
+[% END %]
 
 </div>
 
-{% endblock %}
+[% END %]
