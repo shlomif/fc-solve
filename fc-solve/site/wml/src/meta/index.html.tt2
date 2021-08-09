@@ -1,0 +1,13 @@
+[%- SET title = "meta / About the Freecell Solver site" -%]
+
+[%- WRAPPER wrap_html -%]
+
+<div class="wrap-me">
+
+<p>
+See <a href="site-source/">Site sources</a>.
+</p>
+
+</div>
+
+[% END %]
