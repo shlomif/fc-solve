@@ -1,6 +1,6 @@
-{% extends "template.jinja" %}
-{% block title %}Freecell Solver - “The Well and the Wall”{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver - “The Well and the Wall”" -%]
+
+[%- WRAPPER wrap_html -%]
 
 
 <h2 id="prologue">Prologue</h2>
@@ -482,4 +482,4 @@ screenplay.
 </li>
 </ul>
 
-{% endblock %}
+[% END %]
