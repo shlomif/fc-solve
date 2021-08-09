@@ -1,17 +1,16 @@
-{% extends "template.jinja" %}
-{% block title %}Michael Mann’s Freecell Solver Work{% endblock %}
-{% block body %}
+[%- SET title = "Michael Mann’s Freecell Solver Work" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section(id="about",title="About") %}
+[% WRAPPER h2_section id = "about", title = "About" %]
 <p>
 Michael Mann converted an old version of Freecell Solver to C++ and
 added <a href="http://www.stack.nl/~dimitri/doxygen/">Doxygen</a>-generated
 documentation to it.
 </p>
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="resources",title="Resources") %}
+[% WRAPPER h2_section id = "resources", title = "Resources" %]
 <ul>
 
 <li>
@@ -28,6 +27,6 @@ documentation to it.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
