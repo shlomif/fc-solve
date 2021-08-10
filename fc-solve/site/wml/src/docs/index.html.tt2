@@ -1,18 +1,18 @@
-{% extends "template.jinja" %}
-{% import "fcs-distribution-docs.jinja" as fcs_docs %}
-{% block title %}Freecell Solver - Documentation{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver - Documentation" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section( id="distributed-docs", title="Distributed Documents" ) %}
+[% PROCESS "fcs-distribution-docs.tt2" %]
 
-{{ fcs_docs.fcs_distribution_documents() }}
+[% WRAPPER h2_section id = "distributed-docs", title = "Distributed Documents" %]
 
-{% endcall %}
+[% INCLUDE fcs_distribution_documents %]
 
-{% call h2_section( id="public-docs", title="Documents of the Code" ) %}
+[% END %]
 
-<h3 class="plain"><a href="{{ arch_doc_url }}">Architecture Document</a></h3>
+[% WRAPPER h2_section id = "public-docs", title = "Documents of the Code" %]
+
+<h3 class="plain"><a href="[% arch_doc_url %]">Architecture Document</a></h3>
 
 <p>
 The Freecell Solver Architecture Document. Contains coding conventions,
@@ -20,7 +20,7 @@ overview of the code and the modules, some terminology and some techniques
 that one is bound to encounter when dealing with the code.
 </p>
 
-<h3 class="plain"><a href="{{ doxygen_url }}">Doxygen Browsing</a></h3>
+<h3 class="plain"><a href="[% doxygen_url %]">Doxygen Browsing</a></h3>
 
 <p>
 Michael Mann has ported Freecell Solver to C++ and used Doxygen to prepare a
@@ -29,7 +29,7 @@ Freecell Solver.
 </p>
 
 
-<h3 class="plain"><a href="{{ presentation_url }}">Lecture: Freecell Solver - Evolution of a C Program</a></h3>
+<h3 class="plain"><a href="[% presentation_url %]">Lecture: Freecell Solver - Evolution of a C Program</a></h3>
 
 <p>
 A lecture given to the <a href="http://www.haifux.org/">Haifa Linux Club</a>
@@ -63,7 +63,7 @@ Cathedral and the Bazaar"</a> document. What I did very much the
 same, (mostly without thinking too much about it), what I did differently, and what happened. Slightly out-of-date.
 </p>
 
-<h3 class="plain"><a href="{{ base_path }}book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
+<h3 class="plain"><a href="[% base_path %]book.html">Freecell Solver - Evolution of a C Program - The Book</a></h3>
 
 <p>
 A book I planned to write and publish online about the evolution of the code
@@ -147,6 +147,6 @@ my
 I prefer BSD-style licences"</a>.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]

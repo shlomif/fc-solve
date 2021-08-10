@@ -1,0 +1,42 @@
+[% BLOCK fcs_document %]
+<tr>
+<td>
+<a href="[% base_path %]docs/distro/[% fn %].html">[% fn %]</a>
+</td>
+<td>
+<a href="[% base_path %][% fn %]">Plaintext</a>
+</td>
+<td>
+[% desc ? desc : fn %]
+</td>
+</tr>
+[% END %]
+
+[% BLOCK fcs_distribution_documents %]
+<table class="downloads">
+<tr>
+<th>HTML</th>
+<th>Plaintext</th>
+<th>Description</th>
+</tr>
+[% INCLUDE fcs_document fn="README", desc="The &quot;README&quot; File" %]
+[% INCLUDE fcs_document fn="INSTALL", desc="How to install Freecell Solver" %]
+[% INCLUDE fcs_document fn="NEWS", desc="The file containing what's new in every release." %]
+[% INCLUDE fcs_document fn="USAGE", desc="A detailed usage document" %]
+[% INCLUDE fcs_document fn="TODO", desc="The to-do list" %]
+[% INCLUDE fcs_document fn="AUTHORS", desc="List of authors and contributors" %]
+[% INCLUDE fcs_document fn="COPYING", desc="The licensing/copyright terms file of Freecell Solver" %]
+[% SET fn="HACKING" %]
+<tr>
+<td>
+<a href="[% base_path %]docs/distro/[% fn %].html">CONTRIBUTING</a>
+</td>
+<td>
+<a href="[% base_path %][% fn %]">Plaintext</a>
+</td>
+<td>
+Some guidelines for how to contribute. Note <a href="http://paulgraham.com/gba.html">this</a> regarding the "HACKING" in the filename.
+</td>
+</tr>
+</table>
+[% END %]
