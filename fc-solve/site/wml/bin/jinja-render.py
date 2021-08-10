@@ -152,6 +152,7 @@ class="try_main">Use</span><br/>
             f.write(text)
 
 # subprocess.check_call(["perl", "bin/tt-render.pl", ])
-subprocess.call(["perl", "-0777", "-i", "-p", "-I./lib", "-e",
-                 "use HTML::Latemp::AddToc (); " +
-                 "HTML::Latemp::AddToc->new->add_toc(\\$_);", "--"] + tocs)
+if False:
+    subprocess.call(["perl", "-0777", "-i", "-p", "-I./lib", "-e",
+                     "use HTML::Latemp::AddToc (); " +
+                     "HTML::Latemp::AddToc->new->add_toc(\\$_);", "--"] + tocs)
