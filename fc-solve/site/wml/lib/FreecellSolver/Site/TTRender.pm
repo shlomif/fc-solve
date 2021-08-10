@@ -62,6 +62,14 @@ sub _shlomif_include_colorized_file
     );
 }
 
+sub _htmlish
+{
+    my ($base) = @_;
+    return sub {
+        return path( 'lib/' . $base . '.htmlish' )->slurp_utf8();
+    };
+}
+
 has vars => (
     is      => 'ro',
     default => sub {
@@ -72,6 +80,8 @@ has vars => (
                     ->{static_constant_params}
             },
             ( $self->printable ? ( PRINTABLE => 1 ) : () ),
+            charts1         => _htmlish('4fc-deals-charts'),
+            charts2         => _htmlish('4fc-deals-charts2'),
             common_keywords => (
                       "Freecell, Freecell Solver, solvers, "
                     . "AI, artificial intelligence, solitaire, Simple Simon, "
