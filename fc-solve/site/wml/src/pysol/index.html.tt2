@@ -1,7 +1,6 @@
-{% extends "template.jinja" %}
-{% block title %}Freecell Solver PySol Integration{% endblock %}
-{% block body %}
+[%- SET title = "Freecell Solver PySol Integration" -%]
 
+[%- WRAPPER wrap_html -%]
 
 <h2 id="note">Recent Note (09-July-2009)</h2>
 
@@ -75,4 +74,4 @@ also moves non-homogeneous sequences as one, so it was not enabled at the
 moment.
 </p>
 
-{% endblock %}
+[% END %]
