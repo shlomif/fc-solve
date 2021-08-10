@@ -1,16 +1,15 @@
-{% extends "template.jinja" %}
-{% block title %}Contribute to Freecell Solver{% endblock %}
-{% block body %}
+[%- SET title = "Contribute to Freecell Solver" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section(id="about",title="About") %}
+[% WRAPPER h2_section id = "about", title = "About" %]
 <p>
 This page is intended to provide information about how to <b>contribute</b>
 to Freecell Solver.
 </p>
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="vcs-version",title="Latest Version from Git (= the Version Control System)") %}
+[% WRAPPER h2_section id = "vcs-version", title = "Latest Version from Git (= the Version Control System)" %]
 
 <ul>
 <li>
@@ -24,9 +23,9 @@ up-and-running.
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="coding-conventions",title="Coding Conventions") %}
+[% WRAPPER h2_section id = "coding-conventions", title = "Coding Conventions" %]
 
 <p>
 One can read the
@@ -35,6 +34,6 @@ conventions</a> and contribution guidelines. Please follow them when sending
 a patch or pull-request.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
