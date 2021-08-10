@@ -1,0 +1,7 @@
+[%- SET title = "Freecell Solver's Previous News Items" -%]
+
+[%- WRAPPER wrap_html -%]
+
+[% old_news() %]
+
+[% END %]
