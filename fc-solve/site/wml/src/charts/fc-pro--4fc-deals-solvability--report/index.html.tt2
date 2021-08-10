@@ -1,19 +1,19 @@
-{% extends "template.jinja" %}
-{% block title %}Report: The solvability statistics of the Freecell Pro 4-Freecells Deals{% endblock %}
-{% block page_extra_head_elements %}
-{{ load_javascript_srcs("jquery.flot.js") }}
-{{ js_requirejs() }}
-{% endblock %}
-{% block body %}
+[%- SET title = "Report: The solvability statistics of the Freecell Pro 4-Freecells Deals" -%]
+[% BLOCK page_extra_head_elements %]
+[% load_javascript_srcs("jquery.flot.js") %]
+[% INCLUDE js_requirejs %]
+[% END %]
+[%- WRAPPER wrap_html -%]
 
 <script>
-{{ requirejs_conf() }}
+[% requirejs_conf() %]
+[% "\n" %]
 require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
 </script>
 
 <toc />
 
-{% call h2_section(id="intro",title="Introduction") %}
+[% WRAPPER h2_section id = "intro", title = "Introduction" %]
 
 <p>
 <b>Publishing Date:</b> 12 December 2016.
@@ -64,9 +64,9 @@ to be impossible as well, thus yielding no remaining intractable deals in
 the FreeCell Pro range.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="conclusions",title="Conclusions") %}
+[% WRAPPER h2_section id = "conclusions", title = "Conclusions" %]
 
 <p>
 Out of the 8.6 milliard Freecell Pro deals, there are 102,075 ones that
@@ -84,7 +84,7 @@ These deals are: 14720822, 647519280, 3015622123, 5705339228, 7273316239 and
 
 </p>
 
-{% call h3_section(id="reflections",title="Some Reflections") %}
+[% WRAPPER h3_section id = "reflections", title = "Some Reflections" %]
 
 <p>
 One surprising fact is that solving 4-freecells deals was
@@ -97,13 +97,13 @@ magnitude. Perhaps this can be explained by the fact that many more deals
 are winnable using 4 freecells.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="charts",title="Charts") %}
+[% WRAPPER h2_section id = "charts", title = "Charts" %]
 
-{% call h3_section(id="queue-items",title="Queue Items Per Iterations for Each of the Deals") %}
+[% WRAPPER h3_section id = "queue-items", title = "Queue Items Per Iterations for Each of the Deals" %]
 
 <p>
 <b>Note:</b> the depth_dbm_fc_solver uses a variation on
@@ -113,17 +113,17 @@ count of states. The x-axis - "Iterations" roughly corresponds to time while
 the y-axis, corresponds to the number of states in the queue.
 </p>
 
-{% call h4_section(id="iters-summary-table",title="Iterations Summary Table") %}
+[% WRAPPER h4_section id = "iters-summary-table", title = "Iterations Summary Table" %]
 
-{{ charts1 }}
+[% charts1() %]
 
-{% endcall %}
+[% END %]
 
-{% endcall %}
+[% END %]
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="future_directions",title="Future Directions") %}
+[% WRAPPER h2_section id = "future_directions", title = "Future Directions" %]
 
 <p>
 The version of the depth_dbm_fc_solver that was used for solving the intractable
@@ -161,9 +161,9 @@ solvers just move cards on top of each others and into empty slots using
 reversible moves. We wish to investigate some potential prunes to detect such
 terminal positions and avoid traversing them further.
 </p>
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="links",title="Links and References") %}
+[% WRAPPER h2_section id = "links", title = "Links and References" %]
 
 <ul>
 
@@ -195,19 +195,19 @@ repository containing the same lists of impossible deals</a>
 
 <li>
 <p>
-<a href="{{ base_path }}charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
+<a href="[% base_path %]charts/fc-pro--4fc-intractable-deals--report/data/">Log/output files of the runs</a>
 </p>
 </li>
 
 <li>
 <p>
-<a href="{{ base_path }}faq.html#what_are_ms_deals">Explanation of what
+<a href="[% base_path %]faq.html#what_are_ms_deals">Explanation of what
 the Microsoft Freecell deals are</a> - entry in the Freecell Solver FAQ.
 </p>
 </li>
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
