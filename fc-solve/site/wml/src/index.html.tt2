@@ -1,17 +1,16 @@
-{% set more_keywords = "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" %}
-{% extends "template.jinja" %}
-{% block title %}Freecell Solver{% endblock %}
-{% block body %}
+[% SET more_keywords = "Seahaven Towers solver, Baker's Game solver, Baker's Dozen solver, solitaire solver" %]
 
+[%- SET title = "Freecell Solver" -%]
 
+[%- WRAPPER wrap_html -%]
 
 <ul class="emphasis">
-<li><a href="{{ base_path }}js-fc-solve/text/">Use Freecell Solver Online!</a></li>
-<li><a href="{{ base_path }}download.html">Download Freecell Solver</a></li>
-<li><a href="{{ base_path }}links.html#other_solvers">Other Solvers</a></li>
+<li><a href="[% base_path %]js-fc-solve/text/">Use Freecell Solver Online!</a></li>
+<li><a href="[% base_path %]download.html">Download Freecell Solver</a></li>
+<li><a href="[% base_path %]links.html#other_solvers">Other Solvers</a></li>
 </ul>
 
-{% call h2_section(id="about",title="About") %}
+[% WRAPPER h2_section id = "about", title = "About" %]
 <p>
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
@@ -23,9 +22,9 @@ Simon</a> boards. Freecell Solver is
 <a href="http://en.wikipedia.org/wiki/Free_and_open_source_software">free
 and open source software</a> freely available under the
 <a href="http://en.wikipedia.org/wiki/MIT_License">MIT/Expat License</a>.
-It can be <a href="{{ base_path }}js-fc-solve/text/">used online</a> (which
+It can be <a href="[% base_path %]js-fc-solve/text/">used online</a> (which
 requires a modern enough web browser with JavaScript support),
-or <a href="{{ base_path }}download.html">downloaded</a> either as
+or <a href="[% base_path %]download.html">downloaded</a> either as
 Microsoft Windows 32-bit binaries, or as the C source distribution.
 </p>
 
@@ -40,16 +39,16 @@ Solitaire implementations. A more detailed list of features can be found
 in the <a href="features.html"><b>Features List</b></a>.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="news",title="News") %}
+[% WRAPPER h2_section id = "news", title = "News" %]
 
-{{ front_page_news }}
+[% front_page_news %]
 
 <h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="links",title="Links") %}
+[% WRAPPER h2_section id = "links", title = "Links" %]
 
 <ul>
 
@@ -118,7 +117,7 @@ Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 
 <li>
 <p>
-<a href="{{ presentation_url }}">A Presentation about Freecell Solver</a>
+<a href="[% presentation_url %]">A Presentation about Freecell Solver</a>
 </p>
 </li>
 
@@ -126,6 +125,6 @@ Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
 
 <h3 class="plain"><a href="links.html">More Links</a></h3>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]

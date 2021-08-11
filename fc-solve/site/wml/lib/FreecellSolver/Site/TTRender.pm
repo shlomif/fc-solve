@@ -88,9 +88,10 @@ has vars => (
                     . "Baker's Game, Seahaven Towers, Shlomi Fish, games"
             ),
 
-            cpan  => $cpan,
-            host  => $LATEMP_SERVER,
-            mytan =>
+            cpan            => $cpan,
+            front_page_news => _htmlish('front-page-news'),
+            host            => $LATEMP_SERVER,
+            mytan           =>
 qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             d2url           => "http://divisiontwo.shlomifish.org/",
             old_news        => _htmlish('old-news'),
@@ -157,7 +158,7 @@ sub proc
     $$tail = '' if ( exists $INDEX{$$tail} );
     $base_path =
         ( '../' x ( scalar(@fn) - 1 ) );
-    my $fn2 = join( '/', @fn_nav ) || '/';
+    my $fn2 = ( join( '/', @fn_nav ) || '' );
 
     my $vars = $self->vars;
     $vars->{base_path} = $base_path;
