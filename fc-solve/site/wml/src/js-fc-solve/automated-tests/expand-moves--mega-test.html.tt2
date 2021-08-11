@@ -1,21 +1,21 @@
-{% extends "template.jinja" %}
-{% block title %}Online Freecell solver (Automated tests){% endblock %}
+[%- SET title = "Online Freecell solver (Automated tests)" -%]
 
 
-{% block page_extra_head_elements %}
-{{ load_javascript_srcs("jquery.querystring.js") }}
-{{ jquery_ui_head_elements() }}
-{{ js_requirejs() }}
-<link rel="stylesheet" href="{{ base_path }}web-fc-solve.css" />
-{{ load_javascript_srcs("jquery.ajaxQueue.min.js") }}
-{% endblock %}
+[% BLOCK page_extra_head_elements %]
+[% load_javascript_srcs("jquery.querystring.js") %]
+[% INCLUDE jquery_ui_head_elements %]
+[% INCLUDE js_requirejs %]
+<link rel="stylesheet" href="[% base_path %]web-fc-solve.css" />
+[% load_javascript_srcs("jquery.ajaxQueue.min.js") %]
+[% END %]
 
-{% block body %}
+[%- WRAPPER wrap_html -%]
 
 <h2 id="deal_idx_update" style="color: red">Not started</h2>
 
 <script>
-{{ requirejs_conf() }}
+[% requirejs_conf() %]
+[% "\n" %]
 require(["web-fc-solve--expand-moves--mega-test"], function (t) {
       try {
           t.test_js_fc_solve_class(jQuery.ajaxQueue);
@@ -41,4 +41,4 @@ require(["web-fc-solve--expand-moves--mega-test"], function (t) {
 <ol id="qunit-tests"></ol>
 <div id="qunit-fixture">test markup, will be hidden</div>
 
-{% endblock %}
+[% END %]
