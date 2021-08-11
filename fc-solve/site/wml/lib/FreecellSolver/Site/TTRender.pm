@@ -259,6 +259,8 @@ EOF
     $vars->{requirejs_conf}       = sub {
         return "requirejs.config({ baseUrl: '${base_path}js', });";
     };
+    $vars->{enable_jquery_ui} =
+        ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
 
     if ( $self->stdout )
     {
