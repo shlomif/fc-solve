@@ -1,9 +1,8 @@
-{% extends "template.jinja" %}
-{% block title %}Online Demos of Freecell Solver{% endblock %}
-{% block body %}
+[%- SET title = "Online Demos of Freecell Solver" -%]
 
+[%- WRAPPER wrap_html -%]
 
-{% call h2_section(id="about",title="About") %}
+[% WRAPPER h2_section id = "about", title = "About" %]
 
 <p>
 These are online demos of Freecell Solver that you can run in the convenience
@@ -11,9 +10,9 @@ of your own browser. They require JavaScript to be available, enabled,
 and whitelisted.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="text-based",title="Solver") %}
+[% WRAPPER h2_section id = "text-based", title = "Solver" %]
 
 <p>
 A functional version of the solver with both an animated, graphical,
@@ -31,9 +30,9 @@ solve any arbitrary Freecell deal online.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="find-deal",title="Freecell Deal Index Finder") %}
+[% WRAPPER h2_section id = "find-deal", title = "Freecell Deal Index Finder" %]
 
 <p>
 Find the deal number of a Freecell deal based on its initial layout.
@@ -49,9 +48,9 @@ Find the deal number of a Freecell deal based on its initial layout.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="rich-webui-based",title="Rich Web-UI") %}
+[% WRAPPER h2_section id = "rich-webui-based", title = "Rich Web-UI" %]
 
 <p>
 The Rich Web User-interface version based on
@@ -59,9 +58,9 @@ The Rich Web User-interface version based on
 is now live at <a href="text/">the solver page</a>.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section(id="automated-tests",title="Automated Tests (For Developers)") %}
+[% WRAPPER h2_section id = "automated-tests", title = "Automated Tests (For Developers)" %]
 
 <p>
 These are <a href="https://github.com/shlomif/what-you-should-know-about-automated-testing">automated
@@ -85,6 +84,6 @@ code is functional) but may be used by developers, co-developers and other contr
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]
