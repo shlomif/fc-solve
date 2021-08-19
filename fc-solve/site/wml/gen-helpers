@@ -64,6 +64,7 @@ HTML::Latemp::DocBook::GenMake->new(
 _exec( [ "gmake", "--silent", "-f", "lib/make/build-deps/build-deps.mak" ],
     "build-deps failed!" );
 _exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );
+_exec( [ 'python3', 'bin/gen_listboxes.py', ], "listboxes" );
 
 my $DIR = "lib/make/";
 my @jinja;

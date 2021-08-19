@@ -1,17 +1,13 @@
-{% extends "template.jinja" %}
-{% import "Inc/js_fc_solve.jinja" as jsfcs %}
-{% block title %}Online Freecell solver{% endblock %}
-{% block page_extra_head_elements %}
-{{ jsfcs.insert__page_extra_head_elements__macro(enable_jquery_ui) }}
-{% endblock %}
-{% block body %}
+[% PROCESS "Inc/js_fc_solve.tt2" %]
+[% UNLESS title %]
+[%- SET title = "Online Freecell solver" -%]
+[% END %]
 
+[% BLOCK page_extra_head_elements %]
+[% INCLUDE insert__page_extra_head_elements__macro %]
+[% END %]
 
-
-
-
-{% block run_emscripten_common %}
-{% macro gen_desc() %}
+[% BLOCK gen_desc %]
 <p>
 An online solver for
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
@@ -20,33 +16,45 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 </p>
 <section class="h2 note" id="ms_fc_w10_note">
     <header><h2>Note to Microsoft Windows 10's FreeCell Users!</h2></header>
-    {{ msfreecell_note }}
+    [% msfreecell_note %]
     <button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
 </section>
-{% endmacro %}
-{% macro emscripten_common(incs='', subject='', suffix='') %}
-{{ jsfcs.emscripten_common__header(subject, gen_desc()) }}
+[% END %]
+
+[%- WRAPPER wrap_html -%]
+
+[% BLOCK emscripten_common %]
+[% INCLUDE emscripten_common__header subject=subject , %]
 <script>
-{{ jsfcs.set_up_requirejs()}}
+[% INCLUDE set_up_requirejs %]
+[% "\n" %]
 require(['./solver-freecell'], function (solver) {
-    {{ incs }} {
-    {% if enable_jquery_ui %}
-    {{ jsfcs.set_up_tabs()}}
-    {% endif %}
+    [% incs %] {
+[% "\n\n" %]
+[% IF enable_jquery_ui %]
+[% INCLUDE set_up_tabs %]
+[% END %]
+[% "\n\n" %]
     window.my_web_fc_solve_ui = web_fc_solve_ui;
     web_fc_solve_ui.set_up(module_wrapper, solver);
-    {% if enable_jquery_ui %}
+[% "\n" %]
+[% IF enable_jquery_ui %]
     $( "#output_tabs" ).tabs();
-    {% endif %}
-{{ suffix }}
+[% END %]
+[% suffix %][% "\n\n" %]
 });
 });
 });
 </script>
 
-{% endmacro %}
-{{ emscripten_common(incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_fc_solve_ui; web_fc_solve_ui.init_module((module_wrapper) =>" , subject="Solver", suffix='' ) }}
-{% endblock %}
+[% END %]
+
+[% BLOCK run_emscripten_common %]
+[% INCLUDE emscripten_common incs="require([\"web-fc-solve-ui\", 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_fc_solve_ui; web_fc_solve_ui.init_module((module_wrapper) =>" , subject="Solver", suffix='' %]
+[% END %]
+
+[%- INCLUDE run_emscripten_common -%]
+
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
 <ul>
@@ -64,7 +72,7 @@ require(['./solver-freecell'], function (solver) {
 
 <div class="fcs_common">
 
-{{ jsfcs.stdin_and_buttons(main_id="run_do_solve",main_text="Solve!")}}
+[% INCLUDE stdin_and_buttons main_id = "run_do_solve", main_text = "Solve!" %]
 <br />
 <label for="preset">Solving method:</label>
 <select id="preset" class="phoenix">
@@ -81,7 +89,7 @@ require(['./solver-freecell'], function (solver) {
 <div id="fc_solve_tabs__any_board" class="tab">
 
 <p class="first">
-Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distro/README.html">fc-solve format</a>:<br />
+Input a card patience/solitaire layout in the <a href="[% base_path %]docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
@@ -107,37 +115,37 @@ Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distr
 </div>
 
 <div id="fcs_advanced">
-{{ games1 }}
-{{ fc_listbox }}
-{{ cols_listbox }}
+[% games1 %]
+[% fc_listbox %]
+[% cols_listbox %]
 <br />
 <label for="string_params">Command Line (<a href="https://en.wikipedia.org/wiki/Command-line_interface"><abbr title="Command-line interface">CLI</abbr></a>) arguments (for advanced use):</label><br />
 <textarea class="emscripten phoenix" id="string_params" cols="50" placeholder="--load-config &quot;toons-for-twenty-somethings&quot;" rows="15"></textarea>
 <p>
 (Format as a preset file, with backslashes at the end of lines. See the
-<a href="{{ base_path }}docs/">online documentation</a> for information regarding syntax.)
+<a href="[% base_path %]docs/">online documentation</a> for information regarding syntax.)
 </p>
 </div>
 
-{% macro output_opt(id_base, value, title, sel=false) %}
-<input name="unicode_suits" id="unicode_suits__{{ id_base }}" type="radio" title="{{ title }}" class="phoenix" value="{{ value }}" {%if sel %} checked="checked"{%endif%}/><label for="unicode_suits__{{ id_base }}">{{ title }}</label><br />
-{% endmacro %}
+[% BLOCK output_opt %]
+<input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [%IF sel %] checked="checked"[%END%]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
+[% END %]
 
-{% macro output_controls() %}
+[% BLOCK output_controls %]
 <div class="out_controls">
 
 <input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
 <fieldset>
 <legend>Cards display</legend>
-{{ output_opt(id_base="ascii",value="0",title="ASCII",sel="true") }}
-{{ output_opt(id_base="unisuits",value="1",title="Unicode Suits") }}
-{{ output_opt(id_base="unicards",value="2",title="Unicode Cards") }}
+[% INCLUDE output_opt id_base="ascii", value="0", title="ASCII", sel="true"  %]
+[% INCLUDE output_opt id_base="unisuits", value="1", title="Unicode Suits"  %]
+[% INCLUDE output_opt id_base="unicards", value="2", title="Unicode Cards"  %]
 </fieldset>
 <br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
 </div>
 
-{% endmacro %}
+[% END %]
 
 
 <label id="output_label" for="output">Output:</label>
@@ -151,7 +159,7 @@ Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distr
 <div class="solitairey_body_margin">
 <div class="solitairey_body" id="solitairey_body">
 
-{% if false %}
+[% IF 0 %]
 
 <img src="loading.gif" class="loading hidden" alt="Loading" />
 <button id="redeal">Redeal</button>
@@ -167,14 +175,14 @@ Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distr
         </a>
 	</div>
 
-{% endif %}
+[% END %]
 
 </div>
 </div>
 </div>
 <div id="output_tabs__text" class="tab">
 <div class="output_form">
-{{ output_controls() }}
+[% INCLUDE output_controls %]
 
 <div id="dynamic_output"></div>
 <textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
@@ -184,9 +192,9 @@ Input a card patience/solitaire layout in the <a href="{{ base_path }}docs/distr
 </div>
 <br />
 
-{{ jsfcs.fc_solve_bookmark__form() }}
+[% INCLUDE fc_solve_bookmark__form %]
 
-{% call h2_section( id="how_to_use", title="How to Use" ) %}
+[% WRAPPER h2_section id = "how_to_use", title = "How to Use" %]
 
 <p>
 Enter a board in <a href="#stdin">the input text area</a> in
@@ -207,19 +215,19 @@ and/or copy the output from <a href="#output">the output box</a>.
 Enjoy!
 </p>
 
-{% call h3_section( id="other_games", title="Solving other, similar, games" ) %}
+[% WRAPPER h3_section id = "other_games", title = "Solving other, similar, games" %]
 
 <p>
 Select the game from <a href="#game_type_label">the drop-down</a>.
 </p>
 
-{% endcall %}
+[% END %]
 
-{% endcall %}
+[% END %]
 
-{% call h2_section( id="technology", title="Technology" ) %}
+[% WRAPPER h2_section id = "technology", title = "Technology" %]
 
-{{ jsfcs.fc_solve_jsfcs__credits__common()}}
+[% INCLUDE fc_solve_jsfcs__credits__common %]
 
 <li>
 <p>
@@ -254,9 +262,9 @@ attractive font for the button leading to this page.
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section( id="credits", title="Credits" ) %}
+[% WRAPPER h2_section id = "credits", title = "Credits" %]
 
 <ul>
 
@@ -293,9 +301,11 @@ unsolvable deals.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% block extended_body %}
-{% endblock %}
+[% TRY %]
+[% INCLUDE extended_body %]
+[% CATCH file %]
+[% END %]
 
-{% endblock %}
+[% END %]

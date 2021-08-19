@@ -82,6 +82,7 @@ has vars => (
             ( $self->printable ? ( PRINTABLE => 1 ) : () ),
             charts1         => _htmlish('4fc-deals-charts'),
             charts2         => _htmlish('4fc-deals-charts2'),
+            cols_listbox    => _htmlish('cols_listbox'),
             common_keywords => (
                       "Freecell, Freecell Solver, solvers, "
                     . "AI, artificial intelligence, solitaire, Simple Simon, "
@@ -89,8 +90,11 @@ has vars => (
             ),
 
             cpan            => $cpan,
+            fc_listbox      => _htmlish('fc_listbox'),
             front_page_news => _htmlish('front-page-news'),
+            games1          => _htmlish('games'),
             host            => $LATEMP_SERVER,
+            msfreecell_note => _htmlish('msfreecell-note'),
             mytan           =>
 qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             d2url           => "http://divisiontwo.shlomifish.org/",
@@ -255,8 +259,17 @@ EOF
         );
     };
 
-    $vars->{load_javascript_srcs} = $load_javascript_srcs;
-    $vars->{requirejs_conf}       = sub {
+    my $pre_requirejs_javascript_tags = sub {
+        return $load_javascript_srcs->(
+            [
+                "jquery.querystring.js", "jquery.phoenix.js",
+                "lodash.custom.min.js"
+            ]
+        );
+    };
+    $vars->{load_javascript_srcs}          = $load_javascript_srcs;
+    $vars->{pre_requirejs_javascript_tags} = $pre_requirejs_javascript_tags;
+    $vars->{requirejs_conf}                = sub {
         return "requirejs.config({ baseUrl: '${base_path}js', });";
     };
     $vars->{enable_jquery_ui} =
