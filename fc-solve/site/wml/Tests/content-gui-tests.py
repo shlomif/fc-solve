@@ -27,6 +27,14 @@ class MyTests(unittest.TestCase):
         def _count_jquery_ui(root):
             return len(root.xpath(
                 ".//script[contains(@src, 'js/jquery-ui/tabs.js')]"))
+
+        def _count_require_js(root):
+            return len(root.xpath(
+                ".//script[contains(text(), 'require')]"))
+
+        def _count_tabs(root):
+            return len(root.xpath(
+                ".//script[contains(text(), '\"#output_tabs\"')]"))
         input_fn = './dest/js-fc-solve/text/gui-tests.xhtml'
         root = _html_tree(input_fn)
         self.assertTrue(len(root.xpath(
@@ -37,6 +45,8 @@ class MyTests(unittest.TestCase):
         input_fn = './dest/js-fc-solve/text/index.html'
         root = _html_tree(input_fn)
         self.assertTrue(_count_jquery_ui(root))
+        self.assertTrue(_count_require_js(root))
+        self.assertTrue(_count_tabs(root))
 
     def test_production(self):
         input_fn = './dest-prod/js-fc-solve/text/index.html'
