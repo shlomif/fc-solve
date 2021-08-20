@@ -11,10 +11,11 @@
 """
 import re
 import subprocess
-import yaml
 
 from jinja2 import Environment
 from jinja2 import FileSystemLoader
+
+import yaml
 
 
 def _calc_env():
@@ -44,30 +45,9 @@ charts2 = _htmlish('4fc-deals-charts2')
 msfreecell_note = _htmlish('msfreecell-note')
 tocs = []
 
-listbox_template = (
-    '<div class="widget_wrapper {id}">'
-    '<label for="{id}">{label_text}</label>' +
-    '<select id="{id}" class="phoenix">' +
-    '<option value="default" selected="selected">' +
-    'Default</option>{options}</select>' +
-    '</div>'
-)
 
-fc_listbox_id = "num_freecells"
-fc_listbox = (listbox_template).format(
-        id=fc_listbox_id,
-        label_text='Freecells Number:',
-        options=''.join(
-            ['<option value="{num}">{num}</option>'.format(num=num)
-             for num in range(8+1)]))
-
-cols_listbox_id = "num_columns"
-cols_listbox = (listbox_template).format(
-        id=cols_listbox_id,
-        label_text='Columns Number:',
-        options=''.join(
-            ['<option value="{num}">{num}</option>'.format(num=num)
-             for num in range(1, 12+1)]))
+fc_listbox = _htmlish('fc_listbox')
+cols_listbox = _htmlish('cols_listbox')
 
 
 def _get_files():
