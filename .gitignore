@@ -52,6 +52,7 @@
 /fc-solve/site/wml/lib/babel/js/jquery.phoenix.js
 /fc-solve/site/wml/lib/babel/js/jquery.phoenix.min.js
 /fc-solve/site/wml/lib/cache/
+/fc-solve/site/wml/lib/cols_listbox.htmlish
 /fc-solve/site/wml/lib/docbook/5/epub/fcs-book.epub
 /fc-solve/site/wml/lib/docbook/5/epub/fcs_arch_doc.epub
 /fc-solve/site/wml/lib/docbook/5/essays/fcs-book/all-in-one.xhtml
@@ -82,6 +83,7 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve/patsolve/*.bc
+/fc-solve/site/wml/lib/fc_listbox.htmlish
 /fc-solve/site/wml/lib/for-node/js/*.js
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/for-node/js/libfreecell-solver.wasm
@@ -102,6 +104,7 @@
 /fc-solve/site/wml/lib/make/jinja.txt
 /fc-solve/site/wml/lib/make/rules.mak
 /fc-solve/site/wml/lib/make/shlomif_common.mak
+/fc-solve/site/wml/lib/make/tt2.txt
 /fc-solve/site/wml/lib/msfreecell-note.htmlish
 /fc-solve/site/wml/lib/old-news.htmlish
 /fc-solve/site/wml/lib/out-babel/js/*.js
