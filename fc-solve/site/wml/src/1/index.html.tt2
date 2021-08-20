@@ -1,0 +1,22 @@
+[% PROCESS "Inc/js_fc_solve.tt2" %]
+[% UNLESS title %]
+[%- SET title = "Freecell Deal Finder" -%]
+[% END %]
+
+[%- BLOCK page_extra_head_elements -%]
+[% INCLUDE insert__page_extra_head_elements__macro %]
+[% END %]
+
+[%- BLOCK gen_desc -%]
+<p>
+string to indices test. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
+</p>
+
+[% END %]
+
+[%- WRAPPER wrap_html -%]
+
+[% INCLUDE moved__emscripten_common incs="require([\"s2i-test\"], function (t)", subject="string to indices test", %]
+
+[% END %]
