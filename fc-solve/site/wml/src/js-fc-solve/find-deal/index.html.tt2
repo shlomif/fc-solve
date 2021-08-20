@@ -1,22 +1,80 @@
-{% extends "template.jinja" %}
-{% import "Inc/js_fc_solve.jinja" as jsfcs %}
-{% block title %}Freecell Deal Finder{% endblock %}
-{% block page_extra_head_elements %}
-{{ jsfcs.insert__page_extra_head_elements__macro(enable_jquery_ui) }}
-{% endblock %}
-{% block body %}
+[% PROCESS "Inc/js_fc_solve.tt2" %]
+[% UNLESS title %]
+[%- SET title = "Freecell Deal Finder" -%]
+[% END %]
+[%- BLOCK page_extra_head_elements -%]
+[% INCLUDE insert__page_extra_head_elements__macro %]
+[% END %]
 
-
-{% macro gen_desc() %}
+[% BLOCK gen_desc %]
 <p>
 Find the deal number of a Microsoft
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> deal, a kind of
 card solitaire game. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>
 </p>
-{% endmacro %}
+[% END %]
 
-{{ jsfcs.emscripten_common(incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)",subject="Deal Finder",desc=gen_desc()) }}
+[%- WRAPPER wrap_html -%]
+
+[% BLOCK emscripten_common %]
+[% INCLUDE emscripten_common__header subject=subject , %]
+<script>
+[% INCLUDE set_up_requirejs %]
+[% "\n" %]
+    [% incs %] {
+[% IF 0 && enable_jquery_ui %]
+[% INCLUDE set_up_tabs %]
+[% END %]
+    window.my_web_fc_solve_ui = web_fc_solve_ui;
+    web_fc_solve_ui.init_module((module_wrapper)=>{
+    web_fc_solve_ui.set_up(module_wrapper);
+
+    $(function() {
+        const controls = $('.phoenix');
+        if (window.location.search.length) {
+            controls.phoenix('remove');
+        } else {
+            controls.phoenix();
+        }
+        $( "#fc_solve_tabs" ).tabs({
+            activate: function () {
+                window.my_web_fc_solve_ui = web_fc_solve_ui;
+                web_fc_solve_ui.set_up_handlers(module_wrapper);
+
+                return;
+            },
+            beforeActivate: function( event, ui) {
+                var mynew = ui.newPanel;
+                var old = ui.oldPanel;
+
+                var common_old = old.find('.fcs_common');
+                var old_text = common_old.find('textarea').val();
+
+                var common_html = common_old.html();
+
+                common_old.html('');
+
+                var common_new = mynew.find('.fcs_common');
+
+                common_new.html(common_html);
+                common_new.find('textarea').val(old_text);
+
+                return;
+            }
+        });
+        return;
+    });
+;
+    });
+[% suffix %]
+});
+</script>
+
+[% END %]
+
+
+[% INCLUDE emscripten_common incs="require([\"find-fc-deal-ui\"], function (web_fc_solve_ui)",subject="Deal Finder", %]
 
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 
@@ -30,12 +88,12 @@ card solitaire game. <span class="enable_js">Please enable
 <div id="fc_solve_tabs__ms" class="tab">
 
 <p class="first">
-Input a Freecell layout in the <a href="{{ base_path }}docs/distro/README.html">fc-solve format</a>:<br />
+Input a Freecell layout in the <a href="[% base_path %]docs/distro/README.html">fc-solve format</a>:<br />
 </p>
 
 <div class="fcs_common">
 
-{{ jsfcs.stdin_and_buttons(main_id="run_do_solve",main_text="Find!")}}
+[% INCLUDE stdin_and_buttons main_id = "run_do_solve", main_text = "Find!" %]
 
 </div>
 
@@ -62,9 +120,9 @@ Input a Freecell layout in the <a href="{{ base_path }}docs/distro/README.html">
 
 </p>
 
-{{ jsfcs.fc_solve_bookmark__form() }}
+[% INCLUDE fc_solve_bookmark__form %]
 
-{% call h2_section( id="how_to_use", title="How to Use" ) %}
+[% WRAPPER h2_section id = "how_to_use", title = "How to Use" %]
 
 <p>
 Enter a board in <a href="#stdin">the input text area</a> in
@@ -80,11 +138,12 @@ to read and/or copy the output from the status display.
 Enjoy!
 </p>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section( id="technology", title="Technology" ) %}
+[% WRAPPER h2_section id = "technology", title = "Technology" %]
 
-{{ jsfcs.fc_solve_jsfcs__credits__common()}}
+[% INCLUDE fc_solve_jsfcs__credits__common %]
+
 <li>
 <p>
 <a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
@@ -106,9 +165,9 @@ compiler.
 </li>
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% call h2_section( id="credits", title="Credits" ) %}
+[% WRAPPER h2_section id = "credits", title = "Credits" %]
 
 <ul>
 
@@ -139,6 +198,6 @@ and he is maintaining it.
 
 </ul>
 
-{% endcall %}
+[% END %]
 
-{% endblock %}
+[% END %]

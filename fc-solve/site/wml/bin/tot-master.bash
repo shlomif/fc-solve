@@ -1,7 +1,7 @@
 touch lib/blocks.tt2
 ./gen-helpers && make fastrender && make -j 17
 a="dest/index.html"
-a="dest/js-fc-solve/text/gui-tests.xhtml"
+a="dest/js-fc-solve/find-deal/index.html"
 b="/home/shlomif/Backup/Arcs/fcs-site--post-dest/post-incs/${a##dest/}"
 adest=have.xhtml
 bdest=want.xhtml
