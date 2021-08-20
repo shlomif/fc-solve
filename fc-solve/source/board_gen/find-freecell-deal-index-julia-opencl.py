@@ -17,8 +17,9 @@ For now, you can try using these as drivers:
 
 import sys
 
-import perl
 from make_pysol_freecell_board import find_index_main
+
+import perl
 
 COMMON_RAND = '((r[gid] = (r[gid]*214013 + 2531011)) >> 16)'
 

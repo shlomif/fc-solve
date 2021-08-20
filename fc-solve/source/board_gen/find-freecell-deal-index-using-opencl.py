@@ -9,10 +9,10 @@
 
 import sys
 
+from make_pysol_freecell_board import find_index_main
+
 # from opencl_find_index_lib_py import ffi, lib
 from opencl_find_index_lib_py import lib
-
-from make_pysol_freecell_board import find_index_main
 
 
 def _to_bytes(s):
