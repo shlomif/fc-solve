@@ -67,7 +67,6 @@ _exec( [ $^X, 'bin/gen-deps-mak.pl' ], "gen-deps-mak" );
 _exec( [ 'python3', 'bin/gen_listboxes.py', ], "listboxes" );
 
 my $DIR = "lib/make/";
-my @jinja;
 my @tt2;
 
 my $generator = HTML::Latemp::GenMakeHelpers->new(
@@ -90,11 +89,7 @@ my $generator = HTML::Latemp::GenMakeHelpers->new(
         my @ret;
         foreach my $fn (@$filenames)
         {
-            if ( $fn =~ s#\.jinja\z## )
-            {
-                push @jinja, $fn;
-            }
-            elsif ( $fn =~ s#\.tt2\z## )
+            if ( $fn =~ s#\.tt2\z## )
             {
                 push @tt2, $fn;
             }
@@ -136,7 +131,6 @@ s#^(\$\(SRC_DOCS_DEST\)[^\n]+\n\t)[^\n]+#${1}\$(call SRC_INCLUDE_WML_RENDER)#ms
 $r_fh->spew_utf8($text);
 
 path('Makefile')->spew_utf8("include $DIR/main.mak\n");
-path("$DIR/jinja.txt")->spew_raw( join "\n", @jinja, "" );
 path("$DIR/tt2.txt")->spew_raw( join "\n", @tt2, "" );
 
 foreach my $p ( ['PROD=1'], [] )

@@ -180,15 +180,15 @@ PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 perl bin/post-incs-v2.pl --mode=minify \
                --dest-dir=$1 \
                --
 
-jinja_rend := bin/jinja-render.py
-jinja_bases := $(shell cat lib/make/jinja.txt)
-dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
+# jinja_rend := bin/jinja-render.py
+# jinja_bases := $(shell cat lib/make/jinja.txt)
+# dest_jinjas := $(patsubst %,dest/%,$(jinja_bases))
 # prod_dest_jinjas := $(patsubst %,dest-prod/%,$(jinja_bases))
-
-$(dest_jinjas): $(jinja_rend) lib/template.jinja
-	python3 $(jinja_rend)
-	@$(call PROCESS_ALL_INCLUDES,dest) $(jinja_bases)
-	@$(call PROCESS_ALL_INCLUDES,dest-prod) $(jinja_bases)
+#
+# $(dest_jinjas): $(jinja_rend) lib/template.jinja
+# 	python3 $(jinja_rend)
+# 	@$(call PROCESS_ALL_INCLUDES,dest) $(jinja_bases)
+# 	@$(call PROCESS_ALL_INCLUDES,dest-prod) $(jinja_bases)
 
 tt2_rend := bin/tt-render.pl
 tt2_bases := $(shell cat lib/make/tt2.txt)
@@ -467,7 +467,7 @@ $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xm
 $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
 	cp -f $< $@
 
-fastrender: all_deps $(dest_jinjas) $(dest_tt2s)
+fastrender: all_deps $(dest_tt2s)
 
 DBTOEPUB := ZIPOPT="-X" $(DBTOEPUB)
 
@@ -504,7 +504,7 @@ $(SRC_pngs__webps): %.webp: %.png
 	gm convert $< $@
 
 real_all: \
-	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE) $(dest_jinjas)
+	$(DEST_BABEL_JSES) $(DEST_JS_DIR)/yui-unpack $(JS_DEST_FILES__NODE) $(OUT_BABEL_JSES) $(TYPESCRIPT_DEST_FILES) $(TYPESCRIPT_DEST_FILES__NODE)
 
 real_all: lib/cache/epub.stamp
 
