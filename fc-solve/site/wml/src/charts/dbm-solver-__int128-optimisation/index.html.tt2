@@ -1100,7 +1100,6 @@ OldIterations	OldTimeSinceStart	NewTimeSinceStart
     </div>
 <script>
 [%- requirejs_conf() -%]
-[% "\n" %]
 require(["chart-using-flot--int128-opt"], function (chart) { });
 </script>
 </body>

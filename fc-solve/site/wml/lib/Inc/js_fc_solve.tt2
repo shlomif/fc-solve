@@ -105,12 +105,10 @@ $(function() {
 [% INCLUDE emscripten_common__header %]
 <script>
 [% INCLUDE set_up_requirejs %]
-[% "\n" %]
     [% incs %] {
     window.my_web_fc_solve_ui = web_fc_solve_ui;
     web_fc_solve_ui.init_module((module_wrapper)=>{
     web_fc_solve_ui.set_up(module_wrapper);
-[% "\n" %]
 [% INCLUDE set_up_tabs %];
     });
 });

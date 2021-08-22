@@ -7,7 +7,6 @@
 
 <script>
 [% requirejs_conf() %]
-[% "\n" %]
 require(["chart-using-flot--4fc-intractable"], function (chart) { $(function() { _fcs_chart_all(chart.process_and_chart_data); }) } );
 </script>
 

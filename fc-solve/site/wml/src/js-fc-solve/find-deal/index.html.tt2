@@ -21,8 +21,7 @@ card solitaire game. <span class="enable_js">Please enable
 [% INCLUDE emscripten_common__header subject=subject , %]
 <script>
 [% INCLUDE set_up_requirejs %]
-[% "\n" %]
-    [% incs %] {
+[% incs %] {
 [% IF 0 && enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]

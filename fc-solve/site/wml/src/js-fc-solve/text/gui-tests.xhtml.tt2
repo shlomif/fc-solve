@@ -10,21 +10,18 @@ UI (User-Interface) Tests for the online Freecell Solvers (intended for develope
 [% INCLUDE emscripten_common__header subject=subject , %]
 <script>
 [% INCLUDE set_up_requirejs %]
-[% "\n" %]
 require(["ui-tests-driver"], function (tests_runner) {
 require(['./solver-freecell'], function (solver) {
-    [% incs %] {
+[% incs %] {
 [% IF enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]
-[% "\n" %]
     window.my_web_fc_solve_ui = web_fc_solve_ui;
     web_fc_solve_ui.set_up(module_wrapper, solver);
     tests_runner.run_after_delay(tests_runner.run_tests);
 [%- IF enable_jquery_ui -%]
     $( "#output_tabs" ).tabs();
 [% END %]
-[% "\n\n" %]
 [% suffix %]
 );
 });
