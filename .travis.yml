@@ -7,11 +7,12 @@ addons:
             - cmake-data
             - cpanminus
             - dbtoepub
-            - docbook5-xml
             - docbook-xsl
             - docbook-xsl-ns
-            - graphicsmagick
+            - docbook5-xml
+            - golang-go
             - gperf
+            - graphicsmagick
             - libapr1-dev
             - libc6-dbg
             - libcmocka-dev

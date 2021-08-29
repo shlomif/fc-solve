@@ -49,6 +49,12 @@ def main():
     steps.append({"run": ("sudo apt-get update -qq"), })
     steps.append({
         "run": ("sudo apt-get --no-install-recommends install -y " +
+                " ".join(["eatmydata"])
+                ),
+        }
+    )
+    steps.append({
+        "run": ("sudo eatmydata apt-get --no-install-recommends install -y " +
                 " ".join(data['addons']['apt']['packages'])
                 ),
         }
@@ -72,6 +78,8 @@ def main():
                 x: "${{ matrix.env." + x + " }}"
                 for x in env_keys
             }
+            o['jobs'][job]['if'] = \
+                "${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}"
         else:
             assert False
     with open(".github/workflows/use-github-actions.yml", "wt") as outfh:
