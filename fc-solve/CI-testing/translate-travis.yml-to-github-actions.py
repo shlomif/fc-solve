@@ -79,7 +79,7 @@ def main():
                 for x in env_keys
             }
             o['jobs'][job]['if'] = \
-                "${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}"
+                "${{ ! contains(env['ACT_SKIP'], matrix.env.WHAT) }}"
         else:
             assert False
     with open(".github/workflows/use-github-actions.yml", "wt") as outfh:
