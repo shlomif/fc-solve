@@ -2,6 +2,7 @@ jobs:
     test-fc-solve:
         env:
             WHAT: ${{ matrix.env.WHAT }}
+        if: ${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}
         runs-on: ubuntu-latest
         steps:
         -   uses: actions/checkout@v2

@@ -15,25 +15,22 @@ import re
 import yaml
 
 
-env_keys = set()
-
-
-def _process_env(env):
-    ret = {}
-    for line in env:
-        m = re.match(
-            '\\A([A-Za-z0-9_]+)=([A-Za-z0-9_]+)\\Z',
-            line)
-        key = m.group(1)
-        val = m.group(2)
-        assert key not in ret
-        ret[key] = val
-        env_keys.add(key)
-    return ret
-
-
-def main():
+def generate(output_path, is_act):
     """docstring for main"""
+    env_keys = set()
+
+    def _process_env(env):
+        ret = {}
+        for line in env:
+            m = re.match(
+                '\\A([A-Za-z0-9_]+)=([A-Za-z0-9_]+)\\Z',
+                line)
+            key = m.group(1)
+            val = m.group(2)
+            assert key not in ret
+            ret[key] = val
+            env_keys.add(key)
+        return ret
     with open("./.travis.yml", "rt") as infh:
         data = yaml.safe_load(infh)
     steps = []
@@ -78,13 +75,25 @@ def main():
                 x: "${{ matrix.env." + x + " }}"
                 for x in env_keys
             }
-            o['jobs'][job]['if'] = \
-                "${{ ! contains(env['ACT_SKIP'], matrix.env.WHAT) }}"
+            if is_act:
+                o['jobs'][job]['if'] = \
+                    "${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}"
         else:
             assert False
-    with open(".github/workflows/use-github-actions.yml", "wt") as outfh:
+    with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(o, stream=outfh, canonical=False, indent=4, )
+
+
+def main():
+    generate(
+        output_path=".github/workflows/use-github-actions.yml",
+        is_act=False,
+    )
+    generate(
+        output_path=".act-github/workflows/use-github-actions.yml",
+        is_act=True,
+    )
 
 
 main()
