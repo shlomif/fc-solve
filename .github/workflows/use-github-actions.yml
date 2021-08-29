@@ -1,0 +1,39 @@
+jobs:
+    test-fc-solve:
+        env:
+            WHAT: ${{ matrix.env.WHAT }}
+        runs-on: ubuntu-latest
+        steps:
+        -   uses: actions/checkout@v2
+        -   run: sudo apt-get update -qq
+        -   run: sudo apt-get --no-install-recommends install -y asciidoc cmake cmake-data
+                cpanminus dbtoepub docbook5-xml docbook-xsl docbook-xsl-ns graphicsmagick
+                gperf libapr1-dev libc6-dbg libcmocka-dev libdb5.3-dev libgd-dev libgmp-dev
+                libgoogle-perftools-dev libhunspell-dev libperl-dev libxml2-dev lynx
+                mercurial ninja-build optipng perl pysassc python3 python3-pip python3-setuptools
+                silversearcher-ag strip-nondeterminism valgrind xsltproc
+        -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
+                } ; local_lib_shim ; if test "$WHAT" = "normal"; then     sudo rm
+                -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
+        -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
+                } ; local_lib_shim ; if test "$WHAT" = "normal"; then     sudo rm
+                -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
+        -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
+                } ; local_lib_shim ; if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash
+                ; elif test "$WHAT" = "buildproc"; then . fc-solve/scripts/ci-docker-test--install.bash
+                ; fi
+        -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
+                } ; local_lib_shim ; if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog
+                $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash
+                ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl
+                ../scripts/docker-test.pl ; fi
+        strategy:
+            matrix:
+                include:
+                -   env:
+                        WHAT: normal
+                -   env:
+                        WHAT: buildproc
+name: use-github-actions
+'on':
+- push
