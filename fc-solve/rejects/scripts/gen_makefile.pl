@@ -155,11 +155,12 @@ my_edit_file(
                 )
             {
                 print {$out_fh} "EXTRA_DIST += "
-                    . join( " ",
-                    map { "$_.h" }
-                        @headers_no_gen[ ( $i * 5 )
-                        .. min( $i * 5 + 4, $#headers_no_gen ) ] )
-                    . "\n";
+                    . join(
+                    " ",
+                    map { "$_.h" } @headers_no_gen[
+                        ( $i * 5 ) .. min( $i * 5 + 4, $#headers_no_gen )
+                    ]
+                    ) . "\n";
             }
             print {$out_fh} "#>>>HEADERS.END\n";
         }

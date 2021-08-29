@@ -6,6 +6,7 @@
 # Distributed under terms of the MIT license.
 #
 set -e -x
+. fc-solve/scripts/common-defs.bash
 mkdir -p ~/bin
 ln -fs /usr/bin/make ~/bin/gmake
 export PATH="$PATH:$HOME/bin"

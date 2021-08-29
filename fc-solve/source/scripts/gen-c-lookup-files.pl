@@ -280,8 +280,9 @@ sub _array
     my $type     = $args->{type};
     my $len      = @$contents;
     return (
-        decl =>
-            ( "${DECL}" . ( $lang eq 'rust' ? ": [$type;$len]" : "[$len]" ) ),
+        decl => (
+            "${DECL}" . ( $lang eq 'rust' ? ": [$type;$len]" : "[$len]" )
+        ),
         contents       => $contents,
         header_headers => [ q/<stddef.h>/, ],
     );
