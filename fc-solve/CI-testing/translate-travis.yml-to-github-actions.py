@@ -15,6 +15,20 @@ import re
 import yaml
 
 
+def _add_condition_while_excluding_gh_actions(job_dict, is_act):
+    """
+    See:
+
+    https://github.com/actions/runner/issues/480
+
+    Workflow level `env` does not work properly in all fields. · Issue #480
+
+    """
+    if is_act:
+        job_dict['if'] = \
+            "${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}"
+
+
 def generate(output_path, is_act):
     """docstring for main"""
     env_keys = set()
@@ -75,9 +89,10 @@ def generate(output_path, is_act):
                 x: "${{ matrix.env." + x + " }}"
                 for x in env_keys
             }
-            if is_act:
-                o['jobs'][job]['if'] = \
-                    "${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}"
+            _add_condition_while_excluding_gh_actions(
+                job_dict=o['jobs'][job],
+                is_act=is_act,
+            )
         else:
             assert False
     with open(output_path, "wt") as outfh:
