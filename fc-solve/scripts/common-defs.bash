@@ -7,3 +7,5 @@
 #
 
 PATH+=":${HOME}/.local/bin"
+userbin="$HOME/bin"
+PATH+=":$userbin"

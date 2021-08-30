@@ -26,7 +26,7 @@ eval "$(GIMME_GO_VERSION=1.16 gimme)"
 cpanm local::lib
 eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     # For the fc-solve docs
-gem install asciidoctor
+gem install --bindir "$userbin" --user asciidoctor
     # For wml
 cpanm --notest Bit::Vector Carp::Always Class::XSAccessor File::Which GD Getopt::Long HTML::Toc HTML::TocGenerator IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
 cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
