@@ -22,7 +22,9 @@ addons:
             - libgoogle-perftools-dev
             - libhunspell-dev
             - libperl-dev
+            - libxml-libxslt-perl
             - libxml2-dev
+            - libxslt1-dev
             - lynx
             - mercurial
             - ninja-build
@@ -36,6 +38,7 @@ addons:
             - silversearcher-ag
             - strip-nondeterminism
             - valgrind
+            - vim
             - xsltproc
 os: linux
 dist: focal
