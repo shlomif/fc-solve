@@ -33,10 +33,12 @@ required:
     perl5_modules:
         Code::TidyAll::Plugin::ESLint: 0
         Dir::Manifest: 0
+        HTML::Acronyms: 0
         HTML::T5: 0
         HTML::Toc: 0
         HTML::TocGenerator: 0
         Markdent: 0.32
+        Module::Format::AsHTML: 0
         Moo: 0
         MooX: 0
         MooX::late: 0
