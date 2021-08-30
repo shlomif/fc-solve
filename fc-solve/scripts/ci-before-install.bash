@@ -9,6 +9,8 @@ set -e -x
 . fc-solve/scripts/common-defs.bash
 mkdir -p ~/bin
 ln -fs /usr/bin/make ~/bin/gmake
+# rsync is needed by fc-solve/site/wml/bin/my-cookiecutter.pl
+which rsync
 export PATH="$PATH:$HOME/bin"
 eval "$(GIMME_GO_VERSION=1.16 gimme)"
 # go get -u github.com/tdewolff/minify/cmd/minify
