@@ -23,6 +23,7 @@ eval "$(GIMME_GO_VERSION=1.16 gimme)"
     cd minify
     go install ./cmd/minify
 )
+which minify
       # - docker run -dit --name emscripten -v $(pwd):/src trzeci/emscripten:sdk-incoming-64bit bash
       # - sudo cpanm Text::Hunspell
 cpanm local::lib

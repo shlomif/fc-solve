@@ -10,6 +10,7 @@ set -x
 set -o pipefail
 emsdk_path="`pwd`/../emsdk"
 . fc-solve/scripts/common-defs.bash
+which minify
 git clone https://github.com/emscripten-core/emsdk "$emsdk_path"
 a="`pwd`"
 cd "$emsdk_path"

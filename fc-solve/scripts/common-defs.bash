@@ -9,3 +9,5 @@
 PATH+=":${HOME}/.local/bin"
 userbin="$HOME/bin"
 PATH+=":$userbin"
+export GOPATH="$HOME/golang"
+PATH+=":$GOPATH/bin"
