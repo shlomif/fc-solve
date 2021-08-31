@@ -7,6 +7,13 @@
 # Licensed under the terms of the MIT license.
 
 """
+fc-solve/CI-testing/translate-travis.yml-to-github-actions.py :
+
+This program translates fc-solve's .travis.yml to GitHub actions
+and ACT workflows ( https://github.com/nektos/act ).
+
+While ostensibly FOSS, it most probably is not generic enough
+for your use cases.
 
 """
 
