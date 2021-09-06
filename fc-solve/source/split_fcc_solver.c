@@ -474,6 +474,8 @@ static inline void instance_check_key(
                         &(instance->fingerprint_line_size),
                         instance->fingerprint_fh) <= 0)
                 {
+                    // https://github.com/shlomif/fc-solve/issues/83
+                    fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
                     abort();
                 }
 #else
