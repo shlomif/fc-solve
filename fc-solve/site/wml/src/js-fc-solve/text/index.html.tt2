@@ -27,21 +27,17 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% INCLUDE emscripten_common__header subject=subject , %]
 <script>
 [% INCLUDE set_up_requirejs %]
-[% "\n" %]
 require(['./solver-freecell'], function (solver) {
     [% incs %] {
-[% "\n\n" %]
 [% IF enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]
-[% "\n\n" %]
     window.my_web_fc_solve_ui = web_fc_solve_ui;
     web_fc_solve_ui.set_up(module_wrapper, solver);
-[% "\n" %]
 [% IF enable_jquery_ui %]
     $( "#output_tabs" ).tabs();
 [% END %]
-[% suffix %][% "\n\n" %]
+[% suffix %]
 });
 });
 });

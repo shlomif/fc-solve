@@ -2,7 +2,8 @@
 [% UNLESS title %]
 [%- SET title = "Freecell Deal Finder" -%]
 [% END %]
-[%- BLOCK page_extra_head_elements -%]
+
+[% BLOCK page_extra_head_elements %]
 [% INCLUDE insert__page_extra_head_elements__macro %]
 [% END %]
 
