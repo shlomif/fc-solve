@@ -759,6 +759,9 @@ export class FC_Solve {
                                 "CommandLineArgsMayContainCardsArrangement";
                         } else {
                             unrecognized_opt_s =
+                                "The Command Line arguments' textbox should " +
+                                "normally be kept " +
+                                "empty. (It is intended for advanced use!) " +
                                 "There was an unrecognized command line flag: «" +
                                 that._unrecognized_opt +
                                 "».";
