@@ -3,8 +3,9 @@
 ## Dependencies:
 
 1. [Latemp](https://github.com/thewml/latemp) , python3
-and [Jinja2](http://jinja.pocoo.org/),
-[Website Meta Language](https://bitbucket.org/shlomif/website-meta-language) .
+and [Jinja2](http://jinja.pocoo.org/);
+[Website Meta Language](https://github.com/thewml/website-meta-language) is
+probably no longer needed.
 2. [Emscripten](https://emscripten.org/)
 3. [CMake](https://cmake.org/)
 4. [GNU Make](https://www.gnu.org/software/make/)
