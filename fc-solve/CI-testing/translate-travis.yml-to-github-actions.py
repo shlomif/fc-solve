@@ -134,6 +134,7 @@ def generate_windows_yaml(output_path, is_act):
 
     def _calc_batch_code(cmds):
         batch = ""
+        batch += "@echo on\n"
         for k, v in sorted(data['environment'].items()):
             batch += "SET " + k + "=\"" + v + "\"\n"
         for cmd in cmds:
@@ -145,7 +146,7 @@ def generate_windows_yaml(output_path, is_act):
         steps.append({'name': "install code", "run": _calc_batch_code(
             cmds=data['install']), "shell": "cmd", })
     steps.append({
-        'name': "install+test_script code",
+        'name': "install and test_script code",
         "run": _calc_batch_code(
             cmds=(data['install']+data['test_script'])
         ),

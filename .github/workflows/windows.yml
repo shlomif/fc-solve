@@ -16,9 +16,11 @@ jobs:
         -   uses: actions/checkout@v2
         -   name: perl -V
             run: perl -V
-        -   name: install+test_script code
-            run: 'SET MSYS_PACKAGES="mingw-w64-x86_64-cmocka mingw-w64-i686-cmocka
-                mingw-w64-x86_64-pkg-config mingw-w64-i686-pkg-config"
+        -   name: install and test_script code
+            run: '@echo on
+
+                SET MSYS_PACKAGES="mingw-w64-x86_64-cmocka mingw-w64-i686-cmocka mingw-w64-x86_64-pkg-config
+                mingw-w64-i686-pkg-config"
 
                 SET PY3MODS="cffi freecell_solver pycotap pysol_cards random2 six"
 
