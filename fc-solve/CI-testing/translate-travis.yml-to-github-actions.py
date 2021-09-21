@@ -136,7 +136,8 @@ def generate_windows_yaml(output_path, is_act):
         batch = ""
         batch += "@echo on\n"
         for k, v in sorted(data['environment'].items()):
-            batch += "SET " + k + "=\"" + v + "\"\n"
+            # batch += "SET " + k + "=\"" + v + "\"\n"
+            batch += "SET " + k + "=" + v + "\n"
         for cmd in cmds:
             if "choco install strawberryperl" not in cmd:
                 batch += cmd + "\n"
