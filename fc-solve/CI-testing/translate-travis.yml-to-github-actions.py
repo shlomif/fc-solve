@@ -131,14 +131,20 @@ def generate_windows_yaml(output_path, is_act):
     steps = skel['jobs']['perl']['steps']
     while steps[-1]['name'] != 'perl -V':
         steps.pop()
-    batch = ""
-    for k, v in sorted(data['environment'].items()):
-        batch += "SET " + k + "=\"" + v + "\"\n"
-    for cmd in data['install']:
-        if "choco install strawberryperl" not in cmd:
-            batch += cmd + "\n"
 
-    steps.append({'name': "install code", "run": batch, "shell": "cmd", })
+    def _calc_batch_code(cmds):
+        batch = ""
+        for k, v in sorted(data['environment'].items()):
+            batch += "SET " + k + "=\"" + v + "\"\n"
+        for cmd in cmds:
+            if "choco install strawberryperl" not in cmd:
+                batch += cmd + "\n"
+        return batch
+
+    steps.append({'name': "install code", "run": _calc_batch_code(
+        cmds=data['install']), "shell": "cmd", })
+    steps.append({'name': "test_script code", "run": _calc_batch_code(
+        cmds=data['test_script']), "shell": "cmd", })
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
