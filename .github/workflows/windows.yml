@@ -1,11 +1,3 @@
-name: windows
-true:
-    pull_request: null
-    push:
-        branches:
-        - '*'
-        tags-ignore:
-        - '*'
 jobs:
     perl:
         runs-on: windows-latest
@@ -145,3 +137,11 @@ jobs:
             matrix:
                 perl-version:
                 - '5.30'
+name: windows
+'on':
+    pull_request: null
+    push:
+        branches:
+        - '*'
+        tags-ignore:
+        - '*'
