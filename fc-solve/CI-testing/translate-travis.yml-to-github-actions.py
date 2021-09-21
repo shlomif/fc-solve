@@ -141,10 +141,16 @@ def generate_windows_yaml(output_path, is_act):
                 batch += cmd + "\n"
         return batch
 
-    steps.append({'name': "install code", "run": _calc_batch_code(
-        cmds=data['install']), "shell": "cmd", })
-    steps.append({'name': "test_script code", "run": _calc_batch_code(
-        cmds=data['test_script']), "shell": "cmd", })
+    if 0:
+        steps.append({'name': "install code", "run": _calc_batch_code(
+            cmds=data['install']), "shell": "cmd", })
+    steps.append({
+        'name': "install+test_script code",
+        "run": _calc_batch_code(
+            cmds=(data['install']+data['test_script'])
+        ),
+        "shell": "cmd",
+    })
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
