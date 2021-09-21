@@ -1,0 +1,147 @@
+name: windows
+true:
+    pull_request: null
+    push:
+        branches:
+        - '*'
+        tags-ignore:
+        - '*'
+jobs:
+    perl:
+        runs-on: windows-latest
+        steps:
+        -   name: Setup perl
+            uses: shogo82148/actions-setup-perl@v1
+            with:
+                distribution: strawberry
+                perl-version: ${{ matrix.perl-version }}
+        -   name: Set git to use LF
+            run: 'git config --global core.autocrlf false
+
+                git config --global core.eol lf
+
+                '
+        -   uses: actions/checkout@v2
+        -   name: perl -V
+            run: perl -V
+        -   name: install code
+            run: 'SET MSYS_PACKAGES="mingw-w64-x86_64-cmocka mingw-w64-i686-cmocka
+                mingw-w64-x86_64-pkg-config mingw-w64-i686-pkg-config"
+
+                SET PY3MODS="cffi freecell_solver pycotap pysol_cards random2 six"
+
+                dir
+
+                cd
+
+                c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
+
+                c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
+
+                choco install ag
+
+                exit 1
+
+                if not exist C:\libtap mkdir C:\libtap
+
+                copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
+
+                SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+
+                python3 -mpip install %PY3MODS%
+
+                perl -v
+
+                copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
+
+                SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+
+                SET PERL5LIB=C:/_P5/lib/perl5
+
+                SET PERL_LOCAL_LIB_ROOT=C:/_P5
+
+                SET PERL_MB_OPT=--install_base C:/_P5
+
+                SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
+
+                perl -v
+
+                cpanm --notest Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount
+                CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune Perl::Tidy
+                Task::FreecellSolver::Testing Test::Code::TidyAll
+
+                if not exist C:\libtap\gperf-3.0.4.tar.gz curl -fsS -o C:\libtap\gperf-3.0.4.tar.gz
+                http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
+
+                copy C:\libtap\gperf-3.0.4.tar.gz .
+
+                tar -xvf gperf-3.0.4.tar.gz
+
+                cd gperf-3.0.4 && perl -e "if (-e qq#C:\\libtap\\bin\\gperf.exe#)
+                { exit(0); } $ENV{PATH} = qq#C:\\msys64\\mingw64\\bin;$ENV{PATH}#;
+                system(''sh configure --prefix=C:/libtap'') or system(''gmake'') or
+                system(''gmake install'');" && cd ..
+
+                git clone https://github.com/clibs/cmocka libtap
+
+                mkdir libtap\b
+
+                cd libtap\b
+
+                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
+
+                cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
+                -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+
+                echo %PATH%
+
+                gmake
+
+                gmake install
+
+                cd ..\..\
+
+                git clone https://github.com/shlomif/rinutils rinutils
+
+                mkdir rinutils\b
+
+                cd rinutils\b
+
+                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
+
+                cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
+                -DCMAKE_INSTALL_PREFIX=C:\libtap ..
+
+                echo %PATH%
+
+                gmake
+
+                gmake install
+
+                SET MYOLDPATH_=%PATH%
+
+                SET PATH=C:\MinGW\bin;%PATH%
+
+                mkdir ..\b32
+
+                cd ..\b32
+
+                cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
+                -DCMAKE_INSTALL_PREFIX=C:\libtap32 ..
+
+                echo %PATH%
+
+                gmake
+
+                gmake install
+
+                SET PATH=%MYOLDPATH_%
+
+                cd ..\..\
+
+                '
+        strategy:
+            fail-fast: true
+            matrix:
+                perl-version:
+                - '5.30'

@@ -107,6 +107,43 @@ def generate(output_path, is_act):
         yaml.safe_dump(o, stream=outfh, canonical=False, indent=4, )
 
 
+def generate_windows_yaml(output_path, is_act):
+    """docstring for main"""
+    env_keys = set()
+
+    def _process_env(env):
+        ret = {}
+        for line in env:
+            m = re.match(
+                '\\A([A-Za-z0-9_]+)=([A-Za-z0-9_]+)\\Z',
+                line)
+            key = m.group(1)
+            val = m.group(2)
+            assert key not in ret
+            ret[key] = val
+            env_keys.add(key)
+        return ret
+    with open("./.appveyor.yml", "rt") as infh:
+        data = yaml.safe_load(infh)
+    with open("./fc-solve/CI-testing/gh-actions--" +
+              "windows-yml--from-p5-UV.yml", "rt") as infh:
+        skel = yaml.safe_load(infh)
+    steps = skel['jobs']['perl']['steps']
+    while steps[-1]['name'] != 'perl -V':
+        steps.pop()
+    batch = ""
+    for k, v in sorted(data['environment'].items()):
+        batch += "SET " + k + "=\"" + v + "\"\n"
+    for cmd in data['install']:
+        if "choco install strawberryperl" not in cmd:
+            batch += cmd + "\n"
+
+    steps.append({'name': "install code", "run": batch, })
+    with open(output_path, "wt") as outfh:
+        # yaml.safe_dump(o, outfh)
+        yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
+
+
 def main():
     generate(
         output_path=".github/workflows/use-github-actions.yml",
@@ -115,6 +152,10 @@ def main():
     generate(
         output_path=".act-github/workflows/use-github-actions.yml",
         is_act=True,
+    )
+    generate_windows_yaml(
+        output_path=".github/workflows/windows.yml",
+        is_act=False,
     )
 
 
