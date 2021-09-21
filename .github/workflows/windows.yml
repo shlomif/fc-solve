@@ -132,6 +132,7 @@ jobs:
                 cd ..\..\
 
                 '
+            shell: cmd
         strategy:
             fail-fast: true
             matrix:

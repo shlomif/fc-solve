@@ -138,7 +138,7 @@ def generate_windows_yaml(output_path, is_act):
         if "choco install strawberryperl" not in cmd:
             batch += cmd + "\n"
 
-    steps.append({'name': "install code", "run": batch, })
+    steps.append({'name': "install code", "run": batch, "shell": "cmd", })
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
