@@ -155,10 +155,13 @@ def generate_windows_yaml(output_path, is_act):
                 cpanm_step['with'] = {"install": "\n".join(dw), }
                 continue
             if "choco install strawberryperl" not in cmd:
-                r = re.sub(
-                    "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
-                    "lwp-download \\2 \\1",
-                    cmd)
+                if 0:
+                    r = re.sub(
+                        "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
+                        "lwp-download \\2 \\1",
+                        cmd)
+                else:
+                    r = cmd
                 batch += r + "\n"
         return batch
 
