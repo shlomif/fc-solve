@@ -59,8 +59,8 @@ jobs:
                 perl -v
 
                 cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount
-                CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune Perl::Tidy
-                Task::FreecellSolver::Testing Test::Code::TidyAll libwww-perl
+                CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune LWP
+                Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
 
                 if not exist C:\libtap\gperf-3.0.4.tar.gz lwp-download http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
                 C:\libtap\gperf-3.0.4.tar.gz
