@@ -16,6 +16,7 @@ install:
     - choco install ag
     - choco install strawberryperl || type C:\ProgramData\chocolatey\logs\chocolatey.log
     # - exit 1
+    - cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune LWP Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
     - if not exist C:\libtap mkdir C:\libtap
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
     - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
@@ -28,7 +29,6 @@ install:
     - SET PERL_MB_OPT=--install_base C:/_P5
     - SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
     - perl -v
-    - cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune LWP Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
     # - if not exist C:\libtap\gperf-3.0.4.tar.gz curl -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
     - curl -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
     - copy C:\libtap\gperf-3.0.4.tar.gz .
