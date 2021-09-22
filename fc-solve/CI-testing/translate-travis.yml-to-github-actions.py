@@ -132,6 +132,12 @@ def generate_windows_yaml(output_path, is_act):
     while steps[-1]['name'] != 'perl -V':
         steps.pop()
 
+    cpanm_step = {
+        "name": "install cpanm and mult modules",
+        "uses": "perl-actions/install-with-cpanm@v1",
+    }
+    steps.append(cpanm_step)
+
     def _calc_batch_code(cmds):
         batch = ""
         batch += "@echo on\n"
@@ -139,6 +145,15 @@ def generate_windows_yaml(output_path, is_act):
             # batch += "SET " + k + "=\"" + v + "\"\n"
             batch += "SET " + k + "=" + v + "\n"
         for cmd in cmds:
+            if cmd.startswith("cpanm "):
+                words = cmd.split(' ')[1:]
+                dw = []
+                for w in words:
+                    if not w.startswith("-"):
+                        dw.append(w)
+                nonlocal cpanm_step
+                cpanm_step['with'] = {"install": " ".join(dw), }
+                continue
             if "choco install strawberryperl" not in cmd:
                 r = re.sub(
                     "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
