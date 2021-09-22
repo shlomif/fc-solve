@@ -36,7 +36,8 @@ jobs:
 
                 cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount
                 CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune LWP
-                Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
+                Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll || echo
+                "shortcircuit as true"
 
                 if not exist C:\libtap mkdir C:\libtap
 
