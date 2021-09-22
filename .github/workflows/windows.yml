@@ -58,7 +58,7 @@ jobs:
 
                 perl -v
 
-                cpanm --notest Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount
+                cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount
                 CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune Perl::Tidy
                 Task::FreecellSolver::Testing Test::Code::TidyAll
 
