@@ -19,16 +19,23 @@ jobs:
         -   name: install cpanm and mult modules
             uses: perl-actions/install-with-cpanm@v1
             with:
-                install:
-                - Code::TidyAll::Plugin::ClangFormat
-                - Code::TidyAll::Plugin::TestCount
-                - CHI
-                - Devel::Trace
-                - Games::Solitaire::Verify::HorneAutomovePrune
-                - LWP
-                - Perl::Tidy
-                - Task::FreecellSolver::Testing
-                - Test::Code::TidyAll
+                install: 'Code::TidyAll::Plugin::ClangFormat
+
+                    Code::TidyAll::Plugin::TestCount
+
+                    CHI
+
+                    Devel::Trace
+
+                    Games::Solitaire::Verify::HorneAutomovePrune
+
+                    LWP
+
+                    Perl::Tidy
+
+                    Task::FreecellSolver::Testing
+
+                    Test::Code::TidyAll'
         -   name: install and test_script code
             run: '@echo on
 
