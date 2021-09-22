@@ -152,7 +152,7 @@ def generate_windows_yaml(output_path, is_act):
                     if not w.startswith("-"):
                         dw.append(w)
                 nonlocal cpanm_step
-                cpanm_step['with'] = {"install": " ".join(dw), }
+                cpanm_step['with'] = {"install": dw, }
                 continue
             if "choco install strawberryperl" not in cmd:
                 r = re.sub(
