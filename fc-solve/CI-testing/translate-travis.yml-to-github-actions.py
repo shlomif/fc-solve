@@ -140,7 +140,11 @@ def generate_windows_yaml(output_path, is_act):
             batch += "SET " + k + "=" + v + "\n"
         for cmd in cmds:
             if "choco install strawberryperl" not in cmd:
-                batch += cmd + "\n"
+                r = re.sub(
+                    "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
+                    "lwp-download \\2 \\1",
+                    cmd)
+                batch += r + "\n"
         return batch
 
     if 0:
