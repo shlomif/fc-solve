@@ -62,8 +62,7 @@ jobs:
                 CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune LWP
                 Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
 
-                if not exist C:\libtap\gperf-3.0.4.tar.gz lwp-download http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
-                C:\libtap\gperf-3.0.4.tar.gz
+                lwp-download http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz C:\libtap\gperf-3.0.4.tar.gz
 
                 copy C:\libtap\gperf-3.0.4.tar.gz .
 
