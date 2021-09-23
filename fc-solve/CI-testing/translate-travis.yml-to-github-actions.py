@@ -175,6 +175,11 @@ def generate_windows_yaml(output_path, is_act):
         ),
         "shell": "cmd",
     })
+    steps += [{
+        'name': "upload build artifacts - " + art['name'],
+        'uses': "actions/upload-artifact@v2",
+        'with': art
+    } for art in data['artifacts']]
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
