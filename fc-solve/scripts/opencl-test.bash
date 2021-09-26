@@ -22,5 +22,9 @@ run_deal="$deal"
         python3 "$gen_ocl_py_prog" --ms <(pi-make-microsoft-freecell-board -t "$deal")
         ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" ${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL
     fi
+    if ! test "$SKIP_CISH" == 1
+    then
+        time python3 "$board_gen_dir"/find-freecell-deal-index-cish.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")
+    fi
     time python3 "$board_gen_dir"/find-freecell-deal-index-using-opencl.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")
 )
