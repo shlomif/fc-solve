@@ -733,9 +733,20 @@ _chdir_run(
     }
 );
 
+use Getopt::Long qw/ GetOptions /;
+
+my $include_filter;
+
+GetOptions( "include=s" => \$include_filter, )
+    or die $!;
+
+RUN_TESTS:
 while ( my ( $idx, $run ) = each @tests )
 {
-    # next if $run->[0]->{blurb} !~ /prepare_dist/;
+    if ( $include_filter and $run->[0]->{blurb} !~ /$include_filter/ )
+    {
+        next RUN_TESTS;
+    }
     run_tests( $TEST_BASE_IDX + $idx, @$run );
 }
 
