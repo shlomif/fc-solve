@@ -735,6 +735,7 @@ _chdir_run(
 
 while ( my ( $idx, $run ) = each @tests )
 {
+    # next if $run->[0]->{blurb} !~ /prepare_dist/;
     run_tests( $TEST_BASE_IDX + $idx, @$run );
 }
 

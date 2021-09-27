@@ -62,10 +62,10 @@ _check_deal( { deal => 50, } );
 _check_deal( { deal => 2_000_000_000, } );
 
 # TEST
-_check_deal( { deal => ((1 << 31) - 1), } );
+_check_deal( { deal => ( ( 1 << 31 ) - 1 ), } );
 
 # TEST
-_check_deal( { deal => ((1 << 32) - 1), } );
+_check_deal( { deal => ( ( 1 << 32 ) - 1 ), } );
 
 # TEST
 _check_deal( { deal => ( ( ( 1 << 33 ) - 1 ) ), } );
