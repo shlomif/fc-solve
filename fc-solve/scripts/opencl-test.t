@@ -2,7 +2,7 @@
 
 use strict;
 use warnings;
-use Test::More tests => 5;
+use Test::More tests => 7;
 
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 my $lib           = "libopencl_find_deal_idx.so";
@@ -65,7 +65,13 @@ _check_deal( { deal => 2_000_000_000, } );
 _check_deal( { deal => ( ( 1 << 31 ) - 1 ), } );
 
 # TEST
+_check_deal( { deal => ( ( 1 << 31 ) - 0 ), } );
+
+# TEST
 _check_deal( { deal => ( ( 1 << 32 ) - 1 ), } );
+
+# TEST
+_check_deal( { deal => ( ( 1 << 32 ) - 0 ), } );
 
 # TEST
 _check_deal( { deal => ( ( ( 1 << 33 ) - 1 ) ), } );
