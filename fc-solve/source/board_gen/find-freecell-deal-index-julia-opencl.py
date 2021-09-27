@@ -188,7 +188,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         {
             is_right = true;
             [% int_type %] rr = ([% int_type %])(r_buff_arr[myiterint]);
-            for (int n = num_remaining_ints; n >=1; --n)
+            for ([% int_type %] n = num_remaining_ints; n >=1; --n)
             {
                 rr = ((rr * (([% int_type %])214013) +
                     (([% int_type %])2531011)) & (([% int_type %])0xFFFFFFFF));
