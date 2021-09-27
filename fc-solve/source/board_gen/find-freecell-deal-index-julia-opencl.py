@@ -19,8 +19,6 @@ import sys
 
 from make_pysol_freecell_board import find_index_main
 
-import perl
-
 COMMON_RAND = '((r[gid] = (r[gid]*214013 + 2531011)) >> 16)'
 
 
@@ -85,15 +83,6 @@ def find_ret(ints, num_ints_in_first=4):
 
     def _tt3_myformat(template, extra_fields={}):
         nonlocal _tt3_pkg
-        # _tt3_pkg += "t"
-        perl.eval(
-            _tt3_r(
-                """use Template (); $PyTT3::input=''; $PyTT3::o='';
-                $PyTT3::template = Template->new(); %PyTT3::vars=();"""
-            )
-        )
-        h = perl.get_ref(_tt3_r("%PyTT3::vars"))
-        perl.get_ref(_tt3_r("$PyTT3::input")).__value__ = template
         fields = {
                 'apply_limit': '0',
                 'bufsize': 300000,
@@ -105,6 +94,31 @@ def find_ret(ints, num_ints_in_first=4):
                 'num_ints_in_first': num_ints_in_first,
                 **extra_fields,
             }
+        import re
+
+        def repl(m):
+            ret = fields[m.group(1)]
+            if isinstance(ret, str):
+                return ret
+            if isinstance(ret, int):
+                return "%d" % ret
+            assert 0
+        return re.sub(
+            pattern='\\[%\\s*?([a-zA-Z0-9_]+)\\s*?%\\]',
+            flags=re.M | re.S,
+            repl=repl,
+            string=template, count=0)
+        import perl
+
+        # _tt3_pkg += "t"
+        perl.eval(
+            _tt3_r(
+                """use Template (); $PyTT3::input=''; $PyTT3::o='';
+                $PyTT3::template = Template->new(); %PyTT3::vars=();"""
+            )
+        )
+        h = perl.get_ref(_tt3_r("%PyTT3::vars"))
+        perl.get_ref(_tt3_r("$PyTT3::input")).__value__ = template
         if True:
             h.update(fields)
         else:
@@ -337,9 +351,9 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 
         cl_uint i = 0;
         err = clSetKernelArg(vecinit_k, i++, sizeof(r_buff), &r_buff);
-        ocl_check(err, "r_buff set vecinit arg", i-1);
+        ocl_check(err, "r_buff set vecinit arg %u", i-1);
         err = clSetKernelArg(vecinit_k, i++, sizeof(mystart), &mystart);
-        ocl_check(err, "mystart set vecinit arg", i-1);
+        ocl_check(err, "mystart set vecinit arg %u", i-1);
 
 
         err = clEnqueueNDRangeKernel(que, vecinit_k, 1,
@@ -367,10 +381,10 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
         cl_uint i = 0;
         err = clSetKernelArg(vecsum_k, i++,
             sizeof(r_buff), &r_buff);
-        ocl_check(err, "r_buff set vecsum arg", i-1);
+        ocl_check(err, "r_buff set vecsum arg %u", i-1);
         err = clSetKernelArg(vecsum_k, i++,
             sizeof(i_buff), &i_buff);
-        ocl_check(err, "i_buff set vecsum arg", i-1);
+        ocl_check(err, "i_buff set vecsum arg %u", i-1);
 
         err = clEnqueueNDRangeKernel(que, vecsum_k, 1,
                 NULL, gws, NULL,
