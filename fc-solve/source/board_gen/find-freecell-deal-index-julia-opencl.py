@@ -213,7 +213,8 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         }
     }
 
-    const [% int_type %] newstart = ([% int_type %])(mystart + num_elems);
+    const [% int_type %] newstart = ([% int_type %])(mystart +
+    [% IF int_type == "int" %]cl_int_num_elems[% ELSE %]num_elems[% END %]);
     #if [% apply_limit %]
     if (mystart > [% limit %])
     #else
@@ -243,9 +244,14 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
     c_loop_two_g = _tt3_myformat(
         template=c_loop_template,
         extra_fields={
-            'check_ret': '',
+            'apply_limit': '1',
+            'check_ret': '''
+                if (ret >= 0x80000000U)
+                {
+                    ret = -1;
+                }\n''',
             'cleanup_label': ('c_loop_two_g' + '__cleanup'),
-            'int_type': 'int',
+            'int_type': 'unsigned',
             'mask': '0x7fff',
             'my_vecsum_var': 'vecsum_k',
             'ret_offset': '',
