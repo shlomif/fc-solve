@@ -160,7 +160,7 @@ cl_event sum_evt = NULL;
 while (! is_right)
 {
     init_evt = vecinit(
-        obj->vecinit_k, obj->que, obj->r_buff, mystart, num_elems);
+        obj->vecinit_k, obj->que, obj->r_buff, (cl_int)mystart, num_elems);
     sum_evt = vecsum(
         obj->[% my_vecsum_var %], obj->que, obj->i_buff, obj->r_buff,
         num_elems, init_evt
@@ -187,7 +187,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         if (i_buff_arr[myiterint] == first_int)
         {
             is_right = true;
-            [% int_type %] rr = r_buff_arr[myiterint];
+            [% int_type %] rr = ([% int_type %])(r_buff_arr[myiterint]);
             for (int n = num_remaining_ints; n >=1; --n)
             {
                 rr = ((rr * (([% int_type %])214013) +
@@ -213,7 +213,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         }
     }
 
-    const [% int_type %] newstart = mystart + num_elems;
+    const [% int_type %] newstart = ([% int_type %])(mystart + num_elems);
     #if [% apply_limit %]
     if (mystart > [% limit %])
     #else
@@ -394,9 +394,9 @@ cl_platform_id p;
 cl_mem r_buff , i_buff ;
 } fcs_ocl;
 
-        const size_t num_elems = [% bufsize %];
-        const cl_int cl_int_num_elems = (cl_int)num_elems;
-        const size_t bufsize = num_elems * sizeof(cl_int);
+        static const size_t num_elems = [% bufsize %];
+        static const cl_int cl_int_num_elems = (cl_int)num_elems;
+        static const size_t bufsize = num_elems * sizeof(cl_int);
 
 DLLEXPORT void * fc_solve_user__opencl_create(void)
 {
