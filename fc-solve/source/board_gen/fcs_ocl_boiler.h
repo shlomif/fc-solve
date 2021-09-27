@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
 /* Check an OpenCL error status, printing a message and exiting
  * in case of failure
  */
-void ocl_check(cl_int err, const char *msg, ...)
+static void ocl_check(cl_int err, const char *msg, ...)
 {
     if (err != CL_SUCCESS)
     {
@@ -56,13 +56,14 @@ void ocl_check(cl_int err, const char *msg, ...)
 #define status_printf(...) printf(__VA_ARGS__)
 #else
 #define status_printf(...)                                                     \
+    do                                                                         \
     {                                                                          \
-    }
+    } while (false)
 #endif
 
 // Return the ID of the platform specified in the OCL_PLATFORM
 // environment variable (or the first one if none specified)
-cl_platform_id select_platform()
+static cl_platform_id select_platform()
 {
     cl_uint nplats;
     cl_int err;
@@ -70,7 +71,7 @@ cl_platform_id select_platform()
     const char *const env = getenv("OCL_PLATFORM");
     cl_uint nump = 0;
     if (env && env[0] != '\0')
-        nump = atoi(env);
+        nump = (cl_uint)atoi(env);
 
     err = clGetPlatformIDs(0, NULL, &nplats);
     ocl_check(err, "counting platforms");
@@ -102,7 +103,7 @@ cl_platform_id select_platform()
 
 // Return the ID of the device (of the given platform p) specified in the
 // OCL_DEVICE environment variable (or the first one if none specified)
-cl_device_id select_device(cl_platform_id p)
+static cl_device_id select_device(cl_platform_id p)
 {
     cl_uint ndevs;
     cl_int err;
@@ -110,7 +111,7 @@ cl_device_id select_device(cl_platform_id p)
     const char *const env = getenv("OCL_DEVICE");
     cl_uint numd = 0;
     if (env && env[0] != '\0')
-        numd = atoi(env);
+        numd = (cl_uint)atoi(env);
 
     err = clGetDeviceIDs(p, CL_DEVICE_TYPE_ALL, 0, NULL, &ndevs);
     ocl_check(err, "counting devices");
@@ -141,7 +142,7 @@ cl_device_id select_device(cl_platform_id p)
 }
 
 // Create a one-device context
-cl_context create_context(cl_platform_id p, cl_device_id d)
+static cl_context create_context(cl_platform_id p, cl_device_id d)
 {
     cl_int err;
 
@@ -155,7 +156,7 @@ cl_context create_context(cl_platform_id p, cl_device_id d)
 }
 
 // Create a command queue for the given device in the given context
-cl_command_queue create_queue(cl_context ctx, cl_device_id d)
+static cl_command_queue create_queue(cl_context ctx, cl_device_id d)
 {
     cl_int err;
 
@@ -167,7 +168,7 @@ cl_command_queue create_queue(cl_context ctx, cl_device_id d)
 
 // Compile the device part of the program, stored in the external
 // file `fname`, for device `dev` in context `ctx`
-cl_program create_program(
+static cl_program create_program(
     const char *const fname, cl_context ctx, cl_device_id dev)
 {
     cl_int err, errlog;
@@ -214,11 +215,12 @@ cl_program create_program(
     return prg;
 }
 
+#if 0
 // Runtime of an event, in nanoseconds. Note that if NS is the
 // runtimen of an event in nanoseconds and NB is the number of byte
 // read and written during the event, NB/NS is the effective bandwidth
 // expressed in GB/s
-cl_ulong runtime_ns(cl_event evt)
+static cl_ulong runtime_ns(cl_event evt)
 {
     cl_int err;
     cl_ulong start, end;
@@ -231,7 +233,7 @@ cl_ulong runtime_ns(cl_event evt)
     return (end - start);
 }
 
-cl_ulong total_runtime_ns(cl_event from, cl_event to)
+static cl_ulong total_runtime_ns(cl_event from, cl_event to)
 {
     cl_int err;
     cl_ulong start, end;
@@ -245,15 +247,16 @@ cl_ulong total_runtime_ns(cl_event from, cl_event to)
 }
 
 // Runtime of an event, in milliseconds
-double runtime_ms(cl_event evt) { return runtime_ns(evt) * 1.0e-6; }
+static double runtime_ms(cl_event evt) { return (((double)runtime_ns(evt)) * 1.0e-6); }
 
 double total_runtime_ms(cl_event from, cl_event to)
 {
     return total_runtime_ns(from, to) * 1.0e-6;
 }
+#endif
 
 /* round gws to the next multiple of lws */
-size_t round_mul_up(size_t gws, size_t lws)
+static size_t round_mul_up(size_t gws, size_t lws)
 {
     return ((gws + lws - 1) / lws) * lws;
 }

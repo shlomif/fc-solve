@@ -308,7 +308,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
 #include <stdlib.h>
 #include <stdio.h>
 #include <time.h>
-#include "freecell-solver/fcs_dllexport.h"
+#include "fcs_ocl_exports.h"
 
 #define CL_TARGET_OPENCL_VERSION 120
 
