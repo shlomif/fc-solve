@@ -213,8 +213,7 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
         }
     }
 
-    const [% int_type %] newstart = ([% int_type %])(mystart +
-    [% IF int_type == "int" %]cl_int_num_elems[% ELSE %]num_elems[% END %]);
+    const [% int_type %] newstart = ([% int_type %])(mystart + num_elems);
     #if [% apply_limit %]
     if (mystart > [% limit %])
     #else
