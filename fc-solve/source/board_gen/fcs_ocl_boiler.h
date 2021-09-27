@@ -38,8 +38,8 @@ int main(int argc, char *argv[])
 /* Check an OpenCL error status, printing a message and exiting
  * in case of failure
  */
-static __attribute__((format(printf, 2, 3)))
-void ocl_check(cl_int err, const char *msg, ...)
+static __attribute__((format(printf, 2, 3))) void ocl_check(
+    cl_int err, const char *msg, ...)
 {
     if (err != CL_SUCCESS)
     {
