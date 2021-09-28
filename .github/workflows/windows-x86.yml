@@ -238,7 +238,7 @@ jobs:
             matrix:
                 perl-version:
                 - '5.30'
-name: windows
+name: windows-x86
 'on':
     pull_request: null
     push:

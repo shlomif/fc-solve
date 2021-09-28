@@ -209,6 +209,7 @@ def generate_windows_yaml(plat, output_path, is_act):
         'uses': "actions/upload-artifact@v2",
         'with': art
     } for art in data['artifacts'] if _myfilt(art['path'])]
+    skel['name'] = ("windows-x86" if plat == 'x86' else 'windows-x64')
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
