@@ -4,6 +4,18 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-07-23
 :Revision: $Id$
 
+Version 6.4.0: (28-Sep-2021)
+----------------------------
+
+1. Ignore the `FCS_SINGLE_HARD_THREAD` and `FCS_DISABLE_MULTI_NEXT_INSTS`
+options while removing complexity from the source code.
+
+2. Better https://github.com/shlomif/rinutils/[rinutils] bootstrap shim.
+
+3. Add an experimental OpenCL-optimised MS FreeCell deal finder in
+`board_gen/find-freecell-deal-index-julia-opencl.py` (it uses C
+instead of Julia).
+
 Version 6.2.0: (10-Oct-2020)
 ----------------------------
 

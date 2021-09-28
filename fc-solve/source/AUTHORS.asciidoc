@@ -156,3 +156,5 @@ kpat which inspired some bug fixes in Freecell Solver.
 
 * https://github.com/a17r[Andreas Sturmlechner] - contributed to converting
 the build system to GNU install dirs.
+
+* *Giuseppe Bilotta* - Providing OpenCL C boilerplate and help.
