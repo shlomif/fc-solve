@@ -107,7 +107,7 @@ def generate(output_path, is_act):
         yaml.safe_dump(o, stream=outfh, canonical=False, indent=4, )
 
 
-def generate_windows_yaml(output_path, is_act):
+def generate_windows_yaml(plat, output_path, is_act):
     """docstring for main"""
     env_keys = set()
 
@@ -137,6 +137,15 @@ def generate_windows_yaml(output_path, is_act):
         "uses": "perl-actions/install-with-cpanm@v1",
     }
     steps.append(cpanm_step)
+    if plat == 'x86':
+        mingw = {
+            "name": "Set up MinGW",
+            "uses": "egor-tensin/setup-mingw@v2",
+            "with": {
+                "platform": plat,
+            },
+        }
+        steps.append(mingw)
 
     def _calc_batch_code(cmds):
         batch = ""
@@ -144,6 +153,22 @@ def generate_windows_yaml(output_path, is_act):
         for k, v in sorted(data['environment'].items()):
             # batch += "SET " + k + "=\"" + v + "\"\n"
             batch += "SET " + k + "=" + v + "\n"
+        if plat == 'x86':
+            start = 'mkdir pkg-build-win64'
+            end = "^cpack -G WIX"
+        else:
+            start = 'mkdir pkg-build'
+            end = "^7z a"
+        start_idx = [
+            i for i, cmd in enumerate(cmds)
+            if cmd == "cd .." and
+            cmds[i+1] == start
+        ][0]
+        end_idx = start_idx + 1
+        while not re.search(end, cmds[end_idx]):
+            end_idx += 1
+        cmds = cmds[:start_idx] + cmds[(end_idx+1):]
+
         for cmd in cmds:
             if cmd.startswith("cpanm "):
                 words = cmd.split(' ')[1:]
@@ -175,11 +200,15 @@ def generate_windows_yaml(output_path, is_act):
         ),
         "shell": "cmd",
     })
+
+    def _myfilt(path):
+        is32 = ("\\pkg-build\\" in path)
+        return (is32 if plat == 'x86' else (not is32))
     steps += [{
         'name': "upload build artifacts - " + art['name'],
         'uses': "actions/upload-artifact@v2",
         'with': art
-    } for art in data['artifacts']]
+    } for art in data['artifacts'] if _myfilt(art['path'])]
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
         yaml.safe_dump(skel, stream=outfh, canonical=False, indent=4, )
@@ -195,7 +224,13 @@ def main():
         is_act=True,
     )
     generate_windows_yaml(
-        output_path=".github/workflows/windows.yml",
+        plat='x86',
+        output_path=".github/workflows/windows-x86.yml",
+        is_act=False,
+    )
+    generate_windows_yaml(
+        plat='x64',
+        output_path=".github/workflows/windows-x64.yml",
         is_act=False,
     )
 
