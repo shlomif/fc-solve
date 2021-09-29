@@ -19,11 +19,11 @@ install:
     - cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount CHI Devel::Trace Games::Solitaire::Verify::HorneAutomovePrune LWP Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
     - if not exist C:\libtap mkdir C:\libtap
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
-    - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    # - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install %PY3MODS%
     - perl -v
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    # - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - SET PERL5LIB=C:/_P5/lib/perl5
     - SET PERL_LOCAL_LIB_ROOT=C:/_P5
     - SET PERL_MB_OPT=--install_base C:/_P5
@@ -52,7 +52,7 @@ install:
     - gmake
     - gmake install
     - SET MYOLDPATH_=%PATH%
-    - SET PATH=C:\MinGW\bin;%PATH%
+    # - SET PATH=C:\MinGW\bin;%PATH%
     - mkdir ..\b32
     - cd ..\b32
     - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap32 ..
@@ -70,12 +70,10 @@ test_script:
     - set CMAKE_PREFIX_PATH=C:/libtap;c:/libtap32
     - set LD_LIBRARY_PATH=C:\libtap\lib
     - set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig;
-    # - set PKG_CONFIG_PATH=c:/libtap/lib/pkgconfig/
-    # - set PKG_CONFIG_PATH=/c/libtap/lib/pkgconfig/
     - dir c:\libtap /s
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
-    - set PATH=C:\msys64\mingw64\bin;%PATH%
+    # - set PATH=C:\msys64\mingw64\bin;%PATH%
     # - python3 -mpip install %PY3MODS%
     - del c:\msys64\mingw64\bin\python*.exe
     - set HARNESS_BREAK=1
@@ -90,8 +88,9 @@ test_script:
     - gmake
     - gmake boards
     # Trying this hack to take more precendence for Inline::C / etc.
-    - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
+    # - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
     - perl ../source/run-tests.pl
+    - echo %PATH%
     - cd ..
     - mkdir pkg-build-win64
     - cd pkg-build-win64
@@ -103,7 +102,7 @@ test_script:
     - mkdir pkg-build
     - cd pkg-build
     # For generating 32-bit release binaries.
-    - SET PATH=C:\MinGW\bin;%PATH%
+    # - SET PATH=C:\MinGW\bin;%PATH%
     - perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r --dbm=none
     - gmake package
     # See https://stackoverflow.com/questions/29754510/generating-an-installer-using-cmake-cpack-wix

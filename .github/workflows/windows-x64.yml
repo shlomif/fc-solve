@@ -58,15 +58,11 @@ jobs:
 
                 copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
 
-                SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
-
                 python3 -mpip install %PY3MODS%
 
                 perl -v
 
                 copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-
-                SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
 
                 SET PERL5LIB=C:/_P5/lib/perl5
 
@@ -127,8 +123,6 @@ jobs:
 
                 SET MYOLDPATH_=%PATH%
 
-                SET PATH=C:\MinGW\bin;%PATH%
-
                 mkdir ..\b32
 
                 cd ..\b32
@@ -164,8 +158,6 @@ jobs:
 
                 set PATH=C:\libtap\bin;%PATH%
 
-                set PATH=C:\msys64\mingw64\bin;%PATH%
-
                 del c:\msys64\mingw64\bin\python*.exe
 
                 set HARNESS_BREAK=1
@@ -186,9 +178,9 @@ jobs:
 
                 gmake boards
 
-                SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
-
                 perl ../source/run-tests.pl
+
+                echo %PATH%
 
                 SET CC=cc
 
