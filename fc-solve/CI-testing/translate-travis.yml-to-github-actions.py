@@ -137,7 +137,7 @@ def generate_windows_yaml(plat, output_path, is_act):
         "uses": "perl-actions/install-with-cpanm@v1",
     }
     steps.append(cpanm_step)
-    if plat == 'x86':
+    if True:  # plat == 'x86':
         mingw = {
             "name": "Set up MinGW",
             "uses": "egor-tensin/setup-mingw@v2",
