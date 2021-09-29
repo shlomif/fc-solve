@@ -322,14 +322,24 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
                 break;
             }
         }
-#else
-        const int max_freecell_idx = (int)FREECELLS_NUM__VAL - 1;
-#endif
-
         if (max_freecell_idx >= 0)
         {
             append_char(' ');
         }
+#else
+        const int max_freecell_idx = (int)FREECELLS_NUM__VAL - 1;
+#if defined(HARD_CODED_NUM_FREECELLS)
+#if FREECELLS_NUM__VAL > 0
+        append_char(' ');
+#endif
+#else
+        if (max_freecell_idx >= 0)
+        {
+            append_char(' ');
+        }
+#endif
+#endif
+
         for (int i = 0; i <= max_freecell_idx; i++)
         {
             one_card_buffer freecell;

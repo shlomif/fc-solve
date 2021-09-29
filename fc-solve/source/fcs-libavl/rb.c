@@ -91,6 +91,8 @@ rb_create (rb_comparison_func *compare, void *param GCC_UNUSED,
   if (tree == NULL)
     return NULL;
 
+  tree->rb_proto_root.rb_mylink[0] = 0;
+  tree->rb_proto_root.rb_mylink[1] = 0;
 #define SET_TREE_AVL_ROOT(tree, val) rb_set_link(&(tree->rb_proto_root), 0, val)
   SET_TREE_AVL_ROOT(tree, NULL);
   tree->rb_compare = compare;
