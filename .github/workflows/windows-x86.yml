@@ -194,6 +194,10 @@ jobs:
 
                 perl ../source/run-tests.pl
 
+                SET CC=cc
+
+                SET CXX=c++
+
                 cd ..
 
                 mkdir pkg-build
