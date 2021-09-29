@@ -322,10 +322,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
                 break;
             }
         }
-        if (max_freecell_idx >= 0)
-        {
-            append_char(' ');
-        }
+#define DO_APPEND
 #else
         const int max_freecell_idx = (int)FREECELLS_NUM__VAL - 1;
 #if defined(HARD_CODED_NUM_FREECELLS)
@@ -333,11 +330,15 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
         append_char(' ');
 #endif
 #else
+#define DO_APPEND
+#endif
+#endif
+
+#ifdef DO_APPEND
         if (max_freecell_idx >= 0)
         {
             append_char(' ');
         }
-#endif
 #endif
 
         for (int i = 0; i <= max_freecell_idx; i++)
