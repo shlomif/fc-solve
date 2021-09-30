@@ -213,7 +213,7 @@ jobs:
             uses: actions/upload-artifact@v2
             with:
                 name: Freecell Solver Win64 MSI Package
-                path: fc-solve\pkg-build-win64\freecell-solver-*.msi
+                path: fc-solve\pkg-build-win64\freecell-solver-*-win64.msi
         strategy:
             fail-fast: true
             matrix:
@@ -221,9 +221,4 @@ jobs:
                 - '5.30'
 name: windows-x64
 'on':
-    pull_request: null
-    push:
-        branches:
-        - '*'
-        tags-ignore:
-        - '*'
+- push
