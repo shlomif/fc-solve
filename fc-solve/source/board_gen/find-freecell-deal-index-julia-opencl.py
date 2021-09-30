@@ -81,8 +81,7 @@ def find_ret(ints, num_ints_in_first=4):
         """docstring for _tt3_r"""
         return s.replace("PyTT3", _tt3_pkg)
 
-    def _tt3_myformat(template, extra_fields={}):
-        nonlocal _tt3_pkg
+    def _calc_fields(extra_fields):
         fields = {
                 'apply_limit': '0',
                 'bufsize': 300000,
@@ -94,6 +93,10 @@ def find_ret(ints, num_ints_in_first=4):
                 'num_ints_in_first': num_ints_in_first,
                 **extra_fields,
             }
+        return fields
+
+    def _tt3_myformat(template, extra_fields={}):
+        fields = _calc_fields(extra_fields)
         import re
 
         def repl(m):
@@ -108,6 +111,11 @@ def find_ret(ints, num_ints_in_first=4):
             flags=re.M | re.S,
             repl=repl,
             string=template, count=0)
+
+    # based on pyperl: not needed for now
+    def _old_tt3_myformat(template, extra_fields={}):
+        nonlocal _tt3_pkg
+        fields = _calc_fields(extra_fields)
         import perl
 
         # _tt3_pkg += "t"
