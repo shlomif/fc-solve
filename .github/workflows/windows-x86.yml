@@ -193,8 +193,6 @@ jobs:
 
                 gmake boards || ( echo Failed & exit /B 1 )
 
-                perl ../source/run-tests.pl || ( echo Failed & exit /B 1 )
-
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
                 SET CC=cc

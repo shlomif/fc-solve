@@ -195,6 +195,8 @@ def generate_windows_yaml(plat, output_path, is_act):
                         "lwp-download \\2 \\1",
                         cmd)
                 elif plat == 'x86':
+                    if cmd.startswith("perl ../source/run-tests.pl"):
+                        continue
                     r = re.sub(
                         "--dbm=kaztree",
                         "--dbm=none",
