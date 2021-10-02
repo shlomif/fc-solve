@@ -192,7 +192,9 @@ def generate_windows_yaml(plat, output_path, is_act):
                         cmd)
                 else:
                     r = cmd
-                batch += r + "\n"
+                # See:
+                # https://serverfault.com/questions/157173
+                batch += r + " || ( echo Failed & exit /B 1 )" + "\n"
         return batch
 
     if 0:
