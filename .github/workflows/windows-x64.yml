@@ -193,10 +193,6 @@ jobs:
 
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
-                SET CC=cc
-
-                SET CXX=c++
-
                 cd .. || ( echo Failed & exit /B 1 )
 
                 mkdir pkg-build-win64 || ( echo Failed & exit /B 1 )
