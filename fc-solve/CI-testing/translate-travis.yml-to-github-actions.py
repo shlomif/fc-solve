@@ -184,6 +184,8 @@ def generate_windows_yaml(plat, output_path, is_act):
                 nonlocal cpanm_step
                 cpanm_step['with'] = {"install": "\n".join(dw), }
                 continue
+            if re.search("copy.*?python\\.exe", cmd):
+                continue
             if "choco install strawberryperl" not in cmd:
                 if 0:
                     r = re.sub(

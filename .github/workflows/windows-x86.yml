@@ -63,9 +63,6 @@ jobs:
                 if not exist C:\libtap mkdir C:\libtap || ( echo Failed & exit /B
                 1 )
 
-                copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe || ( echo
-                Failed & exit /B 1 )
-
                 python3 -mpip install %PY3MODS% || ( echo Failed & exit /B 1 )
 
                 perl -v || ( echo Failed & exit /B 1 )
