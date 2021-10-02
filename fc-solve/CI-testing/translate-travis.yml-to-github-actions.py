@@ -192,11 +192,20 @@ def generate_windows_yaml(plat, output_path, is_act):
                         "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
                         "lwp-download \\2 \\1",
                         cmd)
+                elif plat == 'x86':
+                    r = re.sub(
+                        "--dbm=kaztree",
+                        "--dbm=none",
+                        cmd
+                    )
                 else:
                     r = cmd
                 # See:
                 # https://serverfault.com/questions/157173
-                batch += r + " || ( echo Failed & exit /B 1 )" + "\n"
+                shim = ''
+                if not (r.lower().startswith("set ")):
+                    shim = " || ( echo Failed & exit /B 1 )"
+                batch += r + shim + "\n"
         return batch
 
     if 0:

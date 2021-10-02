@@ -70,14 +70,13 @@ jobs:
                 copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
                 || ( echo Failed & exit /B 1 )
 
-                SET PERL5LIB=C:/_P5/lib/perl5 || ( echo Failed & exit /B 1 )
+                SET PERL5LIB=C:/_P5/lib/perl5
 
-                SET PERL_LOCAL_LIB_ROOT=C:/_P5 || ( echo Failed & exit /B 1 )
+                SET PERL_LOCAL_LIB_ROOT=C:/_P5
 
-                SET PERL_MB_OPT=--install_base C:/_P5 || ( echo Failed & exit /B 1
-                )
+                SET PERL_MB_OPT=--install_base C:/_P5
 
-                SET PERL_MM_OPT=INSTALL_BASE=C:/_P5 || ( echo Failed & exit /B 1 )
+                SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
 
                 perl -v || ( echo Failed & exit /B 1 )
 
@@ -101,8 +100,7 @@ jobs:
 
                 cd libtap\b || ( echo Failed & exit /B 1 )
 
-                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe || ( echo Failed
-                & exit /B 1 )
+                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
 
                 cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
                 -DCMAKE_INSTALL_PREFIX=C:\libtap .. || ( echo Failed & exit /B 1 )
@@ -122,8 +120,7 @@ jobs:
 
                 cd rinutils\b || ( echo Failed & exit /B 1 )
 
-                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe || ( echo Failed
-                & exit /B 1 )
+                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
 
                 cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
                 -DCMAKE_INSTALL_PREFIX=C:\libtap .. || ( echo Failed & exit /B 1 )
@@ -134,7 +131,7 @@ jobs:
 
                 gmake install || ( echo Failed & exit /B 1 )
 
-                SET MYOLDPATH_=%PATH% || ( echo Failed & exit /B 1 )
+                SET MYOLDPATH_=%PATH%
 
                 mkdir ..\b32 || ( echo Failed & exit /B 1 )
 
@@ -150,38 +147,34 @@ jobs:
 
                 gmake install || ( echo Failed & exit /B 1 )
 
-                SET PATH=%MYOLDPATH_% || ( echo Failed & exit /B 1 )
+                SET PATH=%MYOLDPATH_%
 
                 cd ..\..\ || ( echo Failed & exit /B 1 )
 
-                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe || ( echo Failed
-                & exit /B 1 )
+                set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
 
-                set LIBRARY_PATH=C:\libtap\lib || ( echo Failed & exit /B 1 )
+                set LIBRARY_PATH=C:\libtap\lib
 
-                set CMAKE_LIBRARY_PATH=C:\libtap\lib || ( echo Failed & exit /B 1
-                )
+                set CMAKE_LIBRARY_PATH=C:\libtap\lib
 
-                set CMAKE_PREFIX_PATH=C:/libtap;c:/libtap32 || ( echo Failed & exit
-                /B 1 )
+                set CMAKE_PREFIX_PATH=C:/libtap;c:/libtap32
 
-                set LD_LIBRARY_PATH=C:\libtap\lib || ( echo Failed & exit /B 1 )
+                set LD_LIBRARY_PATH=C:\libtap\lib
 
-                set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig; || ( echo Failed & exit
-                /B 1 )
+                set PKG_CONFIG_PATH=C:\libtap\lib\pkgconfig;
 
                 dir c:\libtap /s || ( echo Failed & exit /B 1 )
 
-                set CPATH=C:\libtap\include || ( echo Failed & exit /B 1 )
+                set CPATH=C:\libtap\include
 
-                set PATH=C:\libtap\bin;%PATH% || ( echo Failed & exit /B 1 )
+                set PATH=C:\libtap\bin;%PATH%
 
                 del c:\msys64\mingw64\bin\python*.exe || ( echo Failed & exit /B 1
                 )
 
-                set HARNESS_BREAK=1 || ( echo Failed & exit /B 1 )
+                set HARNESS_BREAK=1
 
-                set FCS_USE_TEST_RUN=1 || ( echo Failed & exit /B 1 )
+                set FCS_USE_TEST_RUN=1
 
                 mkdir fc-solve\b || ( echo Failed & exit /B 1 )
 
@@ -190,8 +183,7 @@ jobs:
                 perl ../scripts/Tatzer -G "MinGW Makefiles" -l x64t --dbm=kaztree
                 || ( echo Failed & exit /B 1 )
 
-                SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH% || ( echo
-                Failed & exit /B 1 )
+                SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
 
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
@@ -203,9 +195,9 @@ jobs:
 
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
-                SET CC=cc || ( echo Failed & exit /B 1 )
+                SET CC=cc
 
-                SET CXX=c++ || ( echo Failed & exit /B 1 )
+                SET CXX=c++
 
                 cd .. || ( echo Failed & exit /B 1 )
 
