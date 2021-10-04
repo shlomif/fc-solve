@@ -228,8 +228,8 @@ endif
 ifeq ($(FREECELL_ONLY),0)
 	SOURCE_OBJECTS += card.o
 	SOURCE_OBJECTS += fc_pro_iface.o
-else
 	SOURCE_OBJECTS += preset.o
+else
 	FC_PRO_OBJS += fc_pro_iface.o
 endif
 
