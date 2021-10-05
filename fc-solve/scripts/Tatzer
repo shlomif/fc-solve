@@ -12,7 +12,7 @@ use warnings;
 use autodie;
 
 use Getopt::Long qw/ GetOptions /;
-use Path::Tiny qw/path/;
+use Path::Tiny qw/ cwd path /;
 
 my $HOME = $ENV{HOME} // $ENV{userprofile} // "";
 
@@ -161,7 +161,7 @@ my %themes = (
     'citest-speed-noiter' => [qw(-l citest-extra-speed --without-iter-handler)],
     'citest-max-speed'    => [qw(-l citest-extra-speed --disable-err-strs)],
     'citest-extra-speed'  => [qw(-l citest-arch-b -l extra_speed)],
-    'citest-arch-b' =>
+    'citest-arch-b'       =>
         [qw(-l preferred-arch-b --states-type=INDIRECT_STACK_STATES)],
     'citest-arch-t' =>
         [qw(-l preferred-arch-t --states-type=INDIRECT_STACK_STATES)],
@@ -169,9 +169,9 @@ my %themes = (
     'citest-disable-patsolve' => [qw(-l citest-arch-t --disable-patsolve)],
     'citest-nosingle-ht'      => [qw(-l citest-arch-t --nosingle-ht)],
     'citest-apr_hash'         => [qw(-l citest-arch-t --dbmtree=apr_hash)],
-    'citest-fc-nocompat' =>
+    'citest-fc-nocompat'      =>
         [qw(-l citest-arch-t --break-back-compat-1 --fc-only)],
-    'citest-compact-t' => [qw(-l preferred-arch-t)],
+    'citest-compact-t'                 => [qw(-l preferred-arch-t)],
     'citest-avl-INDIRECT_STACK_STATES' =>
         [qw(-l citest-arch-t --libavl2-p=prb)],
     'citest-avl-COMPACT_STATES' => [qw(-l citest-compact-t --libavl2-p=prb)],
@@ -186,9 +186,9 @@ my %themes = (
     mem_reduction_settings => [
         qw(
             --rcs --with-compact-moves --without-depth-field
-            )
+        )
     ],
-    reduce_mem => [qw(-l bench -l mem_reduction_settings)],
+    reduce_mem    => [qw(-l bench -l mem_reduction_settings)],
     fc_reduce_mem =>
         [qw(-l fc_bench -l mem_reduction_settings --scan-buckets-num=2)],
     testing     => [ qw(--rwd --dbm=kaztree --test-suite --num-stacks=13), ],
@@ -353,8 +353,9 @@ foreach my $rec (
     $bb_def->( t => [qw(-l testing)] );
 
     # For use by PySolFC
-    $bb_def->( _pysol =>
-            [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ] );
+    $bb_def->(
+        _pysol => [ '-l', 'pysol_defs', "--prefix=$HOME/apps/fcs-for-pysol", ]
+    );
 }
 
 my @new_argv = @ARGV;
@@ -575,6 +576,7 @@ push @cmd, $path_to_source_dir;
 
 if ($cmdl_compile)
 {
+    local $ENV{FCS_BIN_PATH} = cwd()->stringify();
     system( $^X, "../scripts/cmd-line-compiler", "compile", "-mi", "700000" );
 }
 
