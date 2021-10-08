@@ -1174,6 +1174,22 @@ the provided APIs.
 
 [% END %]
 
+[% WRAPPER h3_section id = "black_hole_solver" title = "How is Freecell Solver different from the Black Hole Solitaire Solver?" %]
+
+<p>
+First of all note that <a href="https://www.shlomifish.org/open-source/projects/black-hole-solitaire-solver/">Black Hole Solitaire Solver</a>
+<b>is different</b> from Freecell Solver, and you may catch me
+talking about either one.
+</p>
+
+<p>
+Otherwise, Black Hole Solitaire Solver was written, after fc-solve, to solve
+some variants of <a href="#what_is_solitaire">card solitaire</a> whose rules
+enabled it to use less <a href="https://en.wikipedia.org/wiki/Random-access_memory">memory</a> than a straightforward adaptation of fc-solve's architecture. In theory, Freecell Solver can be modified to solve them, but it will be more wasteful.
+</p>
+
+[% END %]
+
 [% END %]
 
 </div>
