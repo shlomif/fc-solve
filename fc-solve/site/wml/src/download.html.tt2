@@ -53,7 +53,7 @@ large number of Solitaire variants.
 </tr>
 <tr>
 <td>
-[% INCLUDE link_to_download_file fn="freecell-solver-6.4.0.tar.xz"  %]
+[% INCLUDE link_to_download_file fn="freecell-solver-6.6.0.tar.xz"  %]
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
@@ -280,6 +280,7 @@ message</a> titled “[Better Version] Final Report for the 2-Freecells-based
 
 <ul class="old_vers">
 [% SET download_suffix="xz" %]
+[% INCLUDE ver major_minor="6.4", patch_ver="0"  %]
 [% INCLUDE ver major_minor="6.2", patch_ver="0"  %]
 [% INCLUDE ver major_minor="6.0", patch_ver="1"  %]
 [% INCLUDE ver major_minor="5.24", patch_ver="0"  %]
