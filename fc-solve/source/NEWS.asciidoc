@@ -4,6 +4,15 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-07-23
 :Revision: $Id$
 
+Version 6.6.0: (09-Oct-2021)
+----------------------------
+
+1. Fixed the Windows binaries builds on GitHub Actions.
+
+2. Avoid the need of pyperl in the OpenCL code.
+
+3. Silence some compiler warnings.
+
 Version 6.4.0: (28-Sep-2021)
 ----------------------------
 
