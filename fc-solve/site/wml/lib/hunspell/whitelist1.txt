@@ -387,6 +387,7 @@ Nullsoft
 Oberhumer
 Olaf
 Online
+OpenCL
 OpenID
 PDF
 PDFs
@@ -858,6 +859,8 @@ shlomifish
 simple
 simple-simon-stats-analysis
 simple_simon
+smartphone
+smartphones
 soft-DFS
 soft-dfs
 soft_dfs
@@ -1089,6 +1092,7 @@ technopeasant
 
 Archlinux
 BSDLed
+Bilotta
 Bondt
 Bortnik
 Ciarniello
@@ -1236,13 +1240,16 @@ ABI
 DD-MMM-YYYY
 DeltaStater
 FCS_DEAL_ONLY_UP_TO_2G
+FCS_DISABLE_MULTI_NEXT_INSTS
 FCS_HARD_CODE_STATE_DEPTH_FIELD
+FCS_SINGLE_HARD_THREAD
 FCS_STATE_SOFT_SUSPEND_PROCESS
 FCS_ZERO_FREECELLS_MODE
 FccFingerPrint
 GNUInstallDirs
 Golf_
 MAX_NUM_DECKS
+OpenCL-optimised
 PACKAGE_VERSION
 Refactorings
 antonio-rojas
@@ -1264,6 +1271,7 @@ fc-solve-temp
 fc-solvers
 fc_solve_stack_compare_for_canonize
 fcs_game_limit
+find-freecell-deal-index-julia-opencl
 freecell_solver_user_limit_iterations_long
 freecell_solver_user_soft_limit_iterations_long
 gen-multiple-pysol-layouts
@@ -1281,6 +1289,7 @@ macOS
 make_multi_boards
 msi
 obf
+pyperl
 pysol-cards
 rinutils
 runtimes

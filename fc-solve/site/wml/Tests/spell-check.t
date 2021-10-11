@@ -16,7 +16,7 @@ else
     plan tests => 1;
 }
 
-require Shlomif::Spelling::Iface;
+use Shlomif::Spelling::Iface_Local ();
 
 # TEST
-Shlomif::Spelling::Iface->new->test_spelling("No spelling errors.");
+Shlomif::Spelling::Iface_Local->new->test_spelling("No spelling errors.");
