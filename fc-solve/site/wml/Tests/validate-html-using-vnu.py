@@ -24,7 +24,9 @@ class MyTests(vnu_validator.VnuTest):
         return self.vnu_test_dir(
             './dest',
             _xhtml_cb,
-            _create_cb('(?:jquery-ui|yui-unpack)|(?:\\.raw\\.html$)'))
+            _create_cb(
+                '(?:jquery-ui|mail-lists|yui-unpack)' +
+                '|(?:\\.raw\\.html$)'))
 
 
 if __name__ == '__main__':

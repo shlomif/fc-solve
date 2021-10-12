@@ -13,6 +13,7 @@ my @prunes = (
     qr#\Adest/js/yui-unpack/#,
 
     qr#\A dest/js-fc-solve/text/gui-tests\.xhtml \z#msx,
+    qr#\Adest/mail-lists/#,
 
     # qr#\A dest/book--freecell-solver--evolution-of-a-c-program/#msx,
 );

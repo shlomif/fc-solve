@@ -527,6 +527,19 @@ $(PNG_FAVICON): $(FAVICON_SOURCE)
 
 real_all: $(FAVICON) $(PNG_FAVICON)
 
+MLARCHIVE_DEST_DIR_c := $(D)/mail-lists/fc-solve-discuss
+MLARCHIVE_DEST_DIR_bn := archive
+MLARCHIVE_DEST_DIR := $(MLARCHIVE_DEST_DIR_c)/$(MLARCHIVE_DEST_DIR_bn)
+MLARCHIVE_DEST_pivot := $(MLARCHIVE_DEST_DIR)/index.html
+
+$(MLARCHIVE_DEST_pivot): $(PWD)/lib/data/mbox/fc-solve-discuss--yahoogroups.mbox
+	mkdir -p $(MLARCHIVE_DEST_DIR_c)
+	( cd $(MLARCHIVE_DEST_DIR_c) && hypermail -d $(MLARCHIVE_DEST_DIR_bn) < $< )
+
+ml_archive: $(MLARCHIVE_DEST_pivot)
+
+real_all: ml_archive
+
 BROWSER_TESTS_URL = $(BROWSER_TESTS_URL__BASE)$(TEST_SITE_URL_SUFFIX)
 
 browser-tests: all

@@ -30,7 +30,7 @@ Test::HTML::Tidy::Recursive::Tidy5->new(
             my $fn = shift;
             return not( exists $whitelist{$fn}
                 or $fn =~
-m#\A \Q$T2_POST_DEST\E (?: MathVentures | js/( jquery-ui | yui-unpack )/ ) #x
+m#\A \Q$T2_POST_DEST\E (?: js/(?: jquery-ui | yui-unpack )/ | mail-lists/ ) #x
             );
         },
         targets => [$T2_POST_DEST],

@@ -18,6 +18,8 @@ my $finder = Test::TrailingSpace->new(
             |
         (?:lib/jquery/qunit/)
             |
+        (?:lib/data/mbox/)
+            |
         (?: lib/repos/Solitairey )
             |
         (?:lib/out-babel/js/$bigint)
@@ -39,6 +41,8 @@ my $finder = Test::TrailingSpace->new(
                 (?:js/(?:(?:$lib)|$bigint))
                     |
                 (?:js-fc-solve/(?:text|automated-tests)/$lib\z)
+                    |
+                (?:mail-lists/)
             )
        )
     )
