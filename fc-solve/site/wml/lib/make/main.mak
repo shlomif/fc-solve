@@ -535,6 +535,7 @@ MLARCHIVE_DEST_pivot := $(MLARCHIVE_DEST_DIR)/index.html
 $(MLARCHIVE_DEST_pivot): $(PWD)/lib/data/mbox/fc-solve-discuss--yahoogroups.mbox
 	mkdir -p $(MLARCHIVE_DEST_DIR_c)
 	( cd $(MLARCHIVE_DEST_DIR_c) && hypermail -d $(MLARCHIVE_DEST_DIR_bn) < $< )
+	find $(MLARCHIVE_DEST_DIR_c) -print | xargs touch -d 2021-10-12T10:20:00Z
 
 ml_archive: $(MLARCHIVE_DEST_pivot)
 
