@@ -2683,10 +2683,10 @@ static inline fcs_compile_flares_ret user_compile_all_flares_plans(
         switch (item->type)
         {
         case FLARES_PLAN_RUN_COUNT_ITERS:
-            item->initial_quota =
-                normalize_iters_quota((typeof(item->initial_quota))(
-                    flares_iters_factor *
-                    (typeof(flares_iters_factor))item->count_iters));
+            item->initial_quota = normalize_iters_quota(
+                (typeof(item->initial_quota))(flares_iters_factor *
+                                              (typeof(flares_iters_factor))
+                                                  item->count_iters));
             break;
 
         case FLARES_PLAN_CHECKPOINT:
@@ -4165,10 +4165,11 @@ freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 {
     fcs_user *const user = (fcs_user *)api_instance;
 
-    return (fcs_int_limit_t)(
-        user->iterations_board_started_at.num_states_in_collection +
-        OBJ_STATS(user).num_states_in_collection -
-        user->init_num_checked_states.num_states_in_collection);
+    return (fcs_int_limit_t)(user->iterations_board_started_at
+                                 .num_states_in_collection +
+                             OBJ_STATS(user).num_states_in_collection -
+                             user->init_num_checked_states
+                                 .num_states_in_collection);
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1

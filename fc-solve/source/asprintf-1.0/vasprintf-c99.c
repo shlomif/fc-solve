@@ -28,27 +28,31 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 
 int vasprintf(char **strp, const char *fmt, va_list ap)
 {
-  int r = -1, size;
+  int r = -1;
 
   va_list ap2;
   va_copy(ap2, ap);
 
-  size = vsnprintf(0, 0, fmt, ap2);
+  const int size = vsnprintf(0, 0, fmt, ap2);
+  *strp = 0;
 
   if ((size >= 0) && (size < INT_MAX))
   {
-    *strp = (char *)malloc(size+1); //+1 for null
-    if (*strp)
+    char *str = malloc(size+1); //+1 for null
+    if (str)
     {
       r = vsnprintf(*strp, size+1, fmt, ap);  //+1 for null
       if ((r < 0) || (r > size))
       {
-        insane_free(*strp);
+        free(str);
         r = -1;
+      }
+      else
+      {
+        *strp = str;
       }
     }
   }
-  else { *strp = 0; }
 
   va_end(ap2);
 

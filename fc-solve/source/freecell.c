@@ -657,8 +657,8 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_stack_cards_to_different_stacks)
                 const stack_i dest_cards_num =
                     fcs_state_col_len(state_key, ds) - (stack_i)dc - 1;
                 if (!unlikely(check_if_can_relocate(
-                        (fcs_game_limit)(
-                            dest_cards_num + (stack_i)col_num_cards),
+                        (fcs_game_limit)(dest_cards_num +
+                                         (stack_i)col_num_cards),
                         num_vacant_freecells, num_virtual_vacant_stacks,
                         &iter PASS_sequences_are_built_by(instance))))
                 {
