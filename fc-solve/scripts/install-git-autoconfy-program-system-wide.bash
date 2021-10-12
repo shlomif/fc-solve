@@ -20,7 +20,7 @@ clone_dir='mygit'
 "$vcs_tool" clone $branch "$url" "$clone_dir" || exit -1
 (cd "$clone_dir/$d" &&
 ( fn=src/Makefile.in ;
-test -e "$fn" && perl -i -lpE 's/$/ -lm/ms if /\AMISC_LIBS *=/ms'
+test -e "$fn" && perl -i -lpE 's/$/ -lm/ms if /\AMISC_LIBS\s*=/ms' "$fn"
 true
 )
 ( ./configure && make && sudo make install ) || exit -1
