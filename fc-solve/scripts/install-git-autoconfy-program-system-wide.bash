@@ -19,7 +19,10 @@ fi
 clone_dir='mygit'
 "$vcs_tool" clone $branch "$url" "$clone_dir" || exit -1
 (cd "$clone_dir/$d" &&
-
+( fn=src/Makefile.in ;
+test -e "$fn" && perl -i -lpE 's/$/ -lm/ms if /\AMISC_LIBS *=/ms'
+true
+)
 ( ./configure && make && sudo make install ) || exit -1
 ) || exit -1
 # Cleanup to avoid trailing space problems.
