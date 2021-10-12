@@ -167,3 +167,11 @@ FreecellSolver::GenDealsCharts1->gen_progress_charts(
 
 close $out;
 close $out2;
+
+_exec(
+    [
+        "touch", "-d", "2021-10-10T10:20:00Z",
+        "lib/data/mbox/fc-solve-discuss--yahoogroups.mbox"
+    ],
+    "mbox date for make",
+);
