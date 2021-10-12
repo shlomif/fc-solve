@@ -3,6 +3,7 @@ addons:
         update: true
         packages:
             - asciidoc
+            - bison
             - cmake
             - cmake-data
             - cpanminus

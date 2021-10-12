@@ -8,12 +8,13 @@ jobs:
         -   run: sudo apt-get update -qq
         -   run: sudo apt-get --no-install-recommends install -y eatmydata
         -   run: sudo eatmydata apt-get --no-install-recommends install -y asciidoc
-                cmake cmake-data cpanminus dbtoepub docbook-xsl docbook-xsl-ns docbook5-xml
-                golang-go gperf graphicsmagick libapr1-dev libc6-dbg libcmocka-dev
-                libdb5.3-dev libgd-dev libgmp-dev libgoogle-perftools-dev libhunspell-dev
-                libperl-dev libxml-libxslt-perl libxml2-dev libxslt1-dev lynx mercurial
-                ninja-build optipng perl pysassc python3 python3-pip python3-setuptools
-                rsync silversearcher-ag strip-nondeterminism valgrind vim xsltproc
+                bison cmake cmake-data cpanminus dbtoepub docbook-xsl docbook-xsl-ns
+                docbook5-xml golang-go gperf graphicsmagick libapr1-dev libc6-dbg
+                libcmocka-dev libdb5.3-dev libgd-dev libgmp-dev libgoogle-perftools-dev
+                libhunspell-dev libperl-dev libxml-libxslt-perl libxml2-dev libxslt1-dev
+                lynx mercurial ninja-build optipng perl pysassc python3 python3-pip
+                python3-setuptools rsync silversearcher-ag strip-nondeterminism valgrind
+                vim xsltproc
         -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
                 } ; local_lib_shim ; if test "$WHAT" = "normal"; then     sudo rm
                 -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi

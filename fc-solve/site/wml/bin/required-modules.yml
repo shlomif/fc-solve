@@ -7,6 +7,8 @@ required:
           url: "http://www.shlomifish.org/open-source/projects/docmake/"
         - exe: "gm"
           url: "http://www.graphicsmagick.org/"
+        - exe: "hypermail"
+          url: "https://github.com/hypermail-project/hypermail"
         - exe: "markdent-html"
           url: "https://metacpan.org/pod/distribution/Markdent/bin/markdent-html"
         - exe: "minify"
