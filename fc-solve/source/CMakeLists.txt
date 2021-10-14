@@ -795,6 +795,9 @@ IF ("${FCS_ENABLE_DBM_SOLVER}")
         TARGET_LINK_LIBRARIES("${TGT}" ${DBM_LIBS} ${LIBTCMALLOC_LIB_LIST} ${LIBGMP_LIB} ${APR_LIBRARIES})
         SET_TARGET_PROPERTIES("${TGT}" PROPERTIES COMPILE_DEFINITIONS "${DBM_DEFINITIONS}")
     ENDFOREACH ()
+
+    target_compile_definitions(split_fcc_fc_solver PRIVATE FCS_SPLIT_FCC_SOLVER=1 PRIVATE FCS_DBM__VAL_IS_ANCESTOR=1)
+
 ELSE ()
     gen_error_exe( depth-dbm-fc-solver )
     gen_error_exe( dbm-fc-solver )

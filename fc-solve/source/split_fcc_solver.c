@@ -10,6 +10,10 @@
 // reduce the memory consumption. See
 // ../docs/split-fully-connected-components-based-solver-planning.txt
 // in the Freecell Solver git repository.
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
+#error FCS_DBM__VAL_IS_ANCESTOR must be defined
+#endif
+
 #include "dbm_solver_head.h"
 #include <sys/tree.h>
 #include "depth_multi_queue.h"
@@ -343,8 +347,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token, &derived_list, &derived_list_recycle_bin,
-                    &derived_list_allocator, true))
+                    &state, token->ancestor, &derived_list,
+                    &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->global_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
@@ -400,7 +404,7 @@ static inline void instance_alloc_num_moves(
 static inline void instance_check_key(
     dbm_solver_thread *const thread, dbm_solver_instance *const instance,
     const size_t key_depth, fcs_encoded_state_buffer *const key,
-    fcs_dbm_record *const parent, const unsigned char move GCC_UNUSED,
+    fcs_dbm_store_val parent, const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
@@ -450,17 +454,24 @@ static inline void instance_check_key(
                     which_irreversible_moves_bitmask->s[i] +
                     instance->fingerprint_which_irreversible_moves_bitmask.s[i];
             }
-            size_t trace_num;
-            fcs_encoded_state_buffer *trace;
             fcs_lock_lock(&instance->fcc_exit_points_output_lock);
             // instance->storage_lock is already locked in
             // instance_check_multiple_keys and we should not lock it here.
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
+            size_t trace_num;
+            fcs_encoded_state_buffer *trace;
             calc_trace(token, &trace, &trace_num);
+#else
+            fcs_dbm_store_val trace = token->ancestor;
+#endif
             {
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
                 FccEntryPointNode fcc_entry_key;
                 fcc_entry_key.kv.key.key = trace[trace_num - 1];
                 FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
-                    &(instance->fcc_entry_points), &fcc_entry_key);
+#else
+                FccEntryPointNode *val_proto = trace;
+#endif
                 if (!val_proto)
                 {
                     goto cleanup;
@@ -499,6 +510,15 @@ static inline void instance_check_key(
                     &(instance->moves_to_state_len));
             }
 
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+            const fcs_encoded_state_buffer outkey = token->key;
+            const size_t keysize = sizeof(outkey);
+            const_SLOT(moves_to_state_len, instance);
+            const size_t added_moves_to_output = moves_to_state_len + keysize;
+            instance_alloc_num_moves(instance, added_moves_to_output);
+            unsigned char *const moves_to_state = instance->moves_to_state;
+            memcpy(&moves_to_state[moves_to_state_len], &outkey, keysize);
+#else
             const_SLOT(moves_to_state_len, instance);
             const size_t added_moves_to_output =
                 moves_to_state_len + trace_num - 1;
@@ -512,6 +532,7 @@ static inline void instance_check_key(
                         &(thread->delta_stater), trace[i], trace[i - 1]);
             }
 
+#endif
             const size_t new_max_enc_len =
                 ((added_moves_to_output * 4) / 3) + 20;
 
@@ -706,7 +727,11 @@ int main(int argc, char *argv[])
     {
         FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
             &(instance.fcc_entry_points_allocator), sizeof(*entry_point));
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+        entry_point->kv.key.ancestor = entry_point;
+#else
         fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
+#endif
         char state_base64[100];
         int state_depth;
         sscanf(

@@ -142,7 +142,7 @@ typedef struct
 static inline void instance_check_key(
     dbm_solver_thread *const thread, dbm_solver_instance *const instance,
     const size_t key_depth, fcs_encoded_state_buffer *const key,
-    fcs_dbm_record *const parent, const uint8_t move,
+    fcs_dbm_store_val parent, const uint8_t move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
 #ifndef FCS_DBM_WITHOUT_CACHES
     ,
@@ -251,6 +251,7 @@ static inline void instance_debug_out_state(
     }
 #endif
 
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
 static void calc_trace(fcs_dbm_record *const ptr_initial_record,
     fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
 {
@@ -335,6 +336,8 @@ static inline void mark_and_sweep_old_states(
         (unsigned long)curr_depth);
 #endif
 }
+
+#endif
 
 #ifdef FCS_DBM_SINGLE_THREAD
 #define NUM_THREADS() 1
@@ -486,7 +489,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
 
 static inline fcs_dbm_record *cache_store__has_key(
     fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent)
+    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
     if (cache_does_key_exist(&(cache_store->cache), key))

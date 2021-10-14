@@ -65,6 +65,15 @@ typedef struct
 
 #ifdef FCS_DBM_RECORD_POINTER_REPR
 
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+typedef struct FccEntryPointNode *fcs_dbm_store_val;
+typedef struct
+{
+    fcs_encoded_state_buffer key;
+    fcs_dbm_store_val ancestor;
+} fcs_dbm_record;
+#else
+
 typedef struct
 {
     fcs_encoded_state_buffer key;
@@ -74,8 +83,11 @@ typedef struct
 #endif
 } fcs_dbm_record;
 
+typedef fcs_dbm_record *fcs_dbm_store_val;
+#endif
 #define FCS_DBM_RECORD_SHIFT ((sizeof(rec->parent_and_refcount) - 1) * 8)
 
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
 #ifdef FCS_EXPLICIT_REFCOUNT
 static inline fcs_dbm_record *fcs_dbm_record_get_parent_ptr(
     fcs_dbm_record *const rec)
@@ -147,6 +159,8 @@ static inline uint8_t fcs_dbm_record_decrement_refcount(
     return new_val;
 }
 
+#endif
+
 #else
 
 typedef struct
@@ -155,6 +169,7 @@ typedef struct
     fcs_encoded_state_buffer parent;
 } fcs_dbm_record;
 
+typedef fcs_dbm_record *fcs_dbm_store_val;
 #endif
 
 static inline void fcs_init_encoded_state(fcs_encoded_state_buffer *enc_state)

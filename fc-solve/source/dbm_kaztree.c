@@ -42,7 +42,7 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 
 // Returns true if the key was added (it didn't already exist.)
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer *key, fcs_dbm_record *const parent,
+    const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent,
     const bool should_modify_parent GCC_UNUSED)
 {
 #ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
@@ -67,7 +67,12 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 
 #ifdef FCS_DBM_RECORD_POINTER_REPR
     to_check->key = *key;
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+    to_check->ancestor = parent;
+#else
     fcs_dbm_record_set_parent_ptr(to_check, parent);
+#endif
+
 #else
     to_check->key = *key;
     to_check->parent = parent->parent;
@@ -82,10 +87,12 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 #endif
         return NULL;
     }
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
     if (should_modify_parent && parent)
     {
         fcs_dbm_record_increment_refcount(parent);
     }
+#endif
 
     return ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
         db->kaz_tree, to_check)));
@@ -102,6 +109,10 @@ bool fc_solve_dbm_store_lookup_parent(
     {
         return false;
     }
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+    *((fcs_dbm_store_val *)parent) = ((fcs_dbm_store_val)existing);
+#else
+
 #ifdef FCS_DBM_RECORD_POINTER_REPR
     fcs_dbm_record *const p =
         fcs_dbm_record_get_parent_ptr((fcs_dbm_record *)existing);
@@ -117,6 +128,8 @@ bool fc_solve_dbm_store_lookup_parent(
 #else
     *(fcs_encoded_state_buffer *)parent = ((fcs_dbm_record *)existing)->parent;
 #endif
+#endif
+
     return true;
 }
 

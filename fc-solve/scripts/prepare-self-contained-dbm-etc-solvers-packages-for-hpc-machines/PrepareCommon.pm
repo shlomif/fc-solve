@@ -259,6 +259,11 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
     {
         $more_cflags .= ' -DFCS_DBM_USE_RWLOCK=1 ';
     }
+    if ( $self->fcc_solver )
+    {
+        $more_cflags .=
+            " -DFCS_SPLIT_FCC_SOLVER=1 -DFCS_DBM__VAL_IS_ANCESTOR=1 ";
+    }
 
     my $num_threads = $self->num_threads;
     my $num_hours   = $self->num_hours;

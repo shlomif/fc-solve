@@ -60,6 +60,7 @@ static inline void dbm__free_threads(dbm_solver_instance *const instance,
     TRACE("%s\n", "instance_run_all_threads end");
 }
 
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
 static uint8_t get_move_from_parent_to_child(
     dbm_solver_instance *const instance, fcs_delta_stater *delta,
     fcs_encoded_state_buffer parent, fcs_encoded_state_buffer child)
@@ -134,6 +135,7 @@ static void trace_solution(dbm_solver_instance *const instance,
     free(trace);
 #endif
 }
+#endif
 
 static inline void read_state_from_file(
     const fcs_dbm_variant_type local_variant GCC_UNUSED,

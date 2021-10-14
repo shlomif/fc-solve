@@ -49,7 +49,7 @@ bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store, const unsigned char *const, unsigned char *const);
 
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer *key, fcs_dbm_record *parent,
+    const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent,
     const bool should_modify_parent);
 
 #ifndef FCS_DBM_WITHOUT_CACHES

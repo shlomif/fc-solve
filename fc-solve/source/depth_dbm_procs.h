@@ -62,7 +62,9 @@ static bool handle_and_destroy_instance_solution(
     instance_print_stats(instance);
     if (instance->common.queue_solution_was_found)
     {
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
         trace_solution(instance, out_fh, delta);
+#endif
         ret = true;
     }
     else if (instance->common.should_terminate != DONT_TERMINATE)
