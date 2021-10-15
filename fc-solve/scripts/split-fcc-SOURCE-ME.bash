@@ -3,9 +3,9 @@ rel2abs()
     perl -MFile::Spec -e 'print File::Spec->rel2abs(shift(@ARGV))' "$1"
 }
 
-if test -z "$FCS_PATH"
+if test -z "$FCS_BIN_PATH"
 then
-    export FCS_PATH="$(rel2abs ".")"
+    export FCS_BIN_PATH="$(rel2abs ".")"
 fi
 
 if test -z "$FCS_SRC_PATH"
@@ -16,13 +16,14 @@ fi
 export DEAL_IDX=384243
 export DEAL_IDX=24
 export DEAL_IDX=798194
-PATH="$FCS_PATH:$PATH"
+export DEAL_IDX=11982
+PATH="$FCS_BIN_PATH:$PATH"
 
 export SCRIPTS_DIR="$(rel2abs "$FCS_SRC_PATH/../scripts/")"
 export PERL5LIB="$PERL5LIB:$(rel2abs "$FCS_SRC_PATH/t/lib"):$SCRIPTS_DIR"
-export BOARD_FN="$(rel2abs "$FCS_PATH/$DEAL_IDX.board")"
-export INIT_BOARD_FN="$(rel2abs "$FCS_PATH/SPLIT_FCC/${DEAL_IDX}.init.board")"
-export INIT_INPUT_TXTISH="$(rel2abs "$FCS_PATH/SPLIT_FCC/${DEAL_IDX}.input.txtish")"
+export BOARD_FN="$(rel2abs "$FCS_BIN_PATH/$DEAL_IDX.board")"
+export INIT_BOARD_FN="$(rel2abs "$FCS_BIN_PATH/SPLIT_FCC/${DEAL_IDX}.init.board")"
+export INIT_INPUT_TXTISH="$(rel2abs "$FCS_BIN_PATH/SPLIT_FCC/${DEAL_IDX}.input.txtish")"
 
 # mkdir -p SPLIT_FCC/by-depth/{0..104}/active
 run()
