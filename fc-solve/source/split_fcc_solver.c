@@ -461,8 +461,6 @@ static inline void instance_check_key(
             size_t trace_num;
             fcs_encoded_state_buffer *trace;
             calc_trace(token, &trace, &trace_num);
-#else
-            fcs_dbm_store_val trace = token->ancestor;
 #endif
             {
 #ifndef FCS_DBM__VAL_IS_ANCESTOR
@@ -470,7 +468,7 @@ static inline void instance_check_key(
                 fcc_entry_key.kv.key.key = trace[trace_num - 1];
                 FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
 #else
-                FccEntryPointNode *val_proto = trace;
+                FccEntryPointNode *val_proto = token->ancestor;
 #endif
                 if (!val_proto)
                 {
@@ -576,7 +574,9 @@ static inline void instance_check_key(
             fflush(instance->fcc_exit_points_out_fh);
         cleanup:
             fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
             free(trace);
+#endif
         }
     }
 }
