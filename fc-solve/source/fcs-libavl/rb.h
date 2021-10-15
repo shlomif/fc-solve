@@ -68,7 +68,11 @@ typedef fcs_dbm_record avl_key_type;
 #define NODE_DATA_PTR(p) (&((p)->rb_data))
 #define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = *(fcs_dbm_record *)ptr)
 #define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record *)ptr)
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+#define AVL_KEY_EQUAL_TO_PTR(key_, ptr) (!memcmp(&((key_).key), (ptr), sizeof((key_).key)))
+#else
 #define AVL_KEY_EQUAL_TO_PTR(key, ptr) (!memcmp(&(key), (ptr), sizeof(key)))
+#endif
 #else
 typedef void * avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (*(p))

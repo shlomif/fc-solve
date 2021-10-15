@@ -3,8 +3,8 @@ set -e
 set -x
 mkdir -p ../B
 cd ../B
-# ../scripts/Tatzer -l extra_speed2 -l pdfs --nfc=2
-../scripts/Tatzer -l pdfs --nfc=2
+# ../scripts/Tatzer -l extra_speed2 -l pdfs --nfc=2 --dbm-single-thread
+../scripts/Tatzer -l pdfs --nfc=2 --dbm-single-thread
 make
 # Defines startup() and depth_run()
 . ../scripts/split-fcc-SOURCE-ME.bash

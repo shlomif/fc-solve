@@ -276,7 +276,8 @@ void *
 rb_insert (struct rb_table *table, void *item)
 {
   avl_key_type*p = rb_probe (table, item);
-  return p == NULL || AVL_KEY_EQUAL_TO_PTR(*p, item) ? NULL : AVL_KEY_PTR_PTR(p);
+  void * ret =  p == NULL || (AVL_KEY_EQUAL_TO_PTR(*p, item)) ? NULL : AVL_KEY_PTR_PTR(p);
+  return ret;
 }
 
 /* Inserts |item| into |table|, replacing any duplicate item.
@@ -287,7 +288,7 @@ void *
 rb_replace (struct rb_table *table, void *item)
 {
   avl_key_type *p = rb_probe (table, item);
-  if (p == NULL || AVL_KEY_EQUAL_TO_PTR(p, item))
+  if (p == NULL || AVL_KEY_EQUAL_TO_PTR(*p, item))
     return NULL;
   else
     {

@@ -117,6 +117,11 @@ static inline bool fcs_depth_multi_queue__extract(
     while (q_stats_is_empty(&queue->queues_by_depth[depth].stats))
     {
         ++depth;
+#if 0
+        if (depth + queue->min_depth > queue->max_depth) {
+            return false;
+        }
+#endif
     }
 
     *return_depth = depth + (int)queue->min_depth;

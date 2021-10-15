@@ -77,10 +77,10 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     to_check->key = *key;
     to_check->parent = parent->parent;
 #endif
-    const bool ret =
+    const bool was_item_inserted_now =
         (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
-    if (!ret)
+    if (!was_item_inserted_now)
     {
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
         fcs_compact_alloc_release(&(db->allocator));
@@ -94,8 +94,12 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     }
 #endif
 
-    return ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
-        db->kaz_tree, to_check)));
+    var_AUTO(ret_ptr, ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
+                          db->kaz_tree, to_check))));
+#if 0
+    printf("fc_solve_dbm_store_insert_key_value ret_ptr=%p\n", ret_ptr);
+#endif
+    return ret_ptr;
 }
 
 bool fc_solve_dbm_store_lookup_parent(
