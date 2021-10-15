@@ -162,16 +162,8 @@ rb_probe (struct rb_table *tree, void *item)
                     , tree->rb_param
 #endif
         );
-// #ifndef FCS_DBM__VAL_IS_ANCESTOR
-#if 1
       if (cmp == 0)
         return NODE_DATA_PTR(p);
-#else
-      if (cmp == 0)
-      {
-          return NULL;
-      }
-#endif
 
       pa[k] = p;
       da[k++] = cmp > 0;

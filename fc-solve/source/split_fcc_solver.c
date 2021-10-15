@@ -429,25 +429,13 @@ static inline void instance_check_key(
 #if 0
         printf("key_depth = %zu ; curr_depth = %zu\n", key_depth, instance->curr_depth);
 #endif
-        if (
-//#ifndef FCS_DBM__VAL_IS_ANCESTOR
-#if 1
-            key_depth == instance->curr_depth
-#else
-            false
-#endif
-        )
+        if (key_depth == instance->curr_depth)
         {
             // Now insert it into the queue.
             fcs_lock_lock(&instance->global_lock);
 
             fcs_depth_multi_queue__insert(&(coll->depth_queue),
-//#ifndef FCS_DBM__VAL_IS_ANCESTOR
-#if 1
                 thread->state_depth + 1,
-#else
-                thread->state_depth,
-#endif
                 (const offloading_queue_item *)(&token));
 
             ++instance->common.count_of_items_in_queue;
