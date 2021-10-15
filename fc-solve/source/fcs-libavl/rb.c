@@ -162,8 +162,16 @@ rb_probe (struct rb_table *tree, void *item)
                     , tree->rb_param
 #endif
         );
+// #ifndef FCS_DBM__VAL_IS_ANCESTOR
+#if 1
       if (cmp == 0)
         return NODE_DATA_PTR(p);
+#else
+      if (cmp == 0)
+      {
+          return NULL;
+      }
+#endif
 
       pa[k] = p;
       da[k++] = cmp > 0;
@@ -265,7 +273,12 @@ rb_probe (struct rb_table *tree, void *item)
   rb_set_color(TREE_AVL_ROOT(tree), RB_BLACK);
 
 
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
   return NODE_DATA_PTR(n);
+#else
+  return NULL;
+#endif
+
 }
 
 /* Inserts |item| into |table|.
@@ -276,7 +289,11 @@ void *
 rb_insert (struct rb_table *table, void *item)
 {
   avl_key_type*p = rb_probe (table, item);
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
   void * ret =  p == NULL || (AVL_KEY_EQUAL_TO_PTR(*p, item)) ? NULL : AVL_KEY_PTR_PTR(p);
+#else
+  void * ret =  p == NULL ? NULL : AVL_KEY_PTR_PTR(p);
+#endif
   return ret;
 }
 

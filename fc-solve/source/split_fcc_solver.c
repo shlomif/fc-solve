@@ -426,8 +426,12 @@ static inline void instance_check_key(
         cache_store__insert_key(
             &(coll->cache_store), key, parent, moves_to_parent, move);
 #endif
+#if 0
+        printf("key_depth = %zu ; curr_depth = %zu\n", key_depth, instance->curr_depth);
+#endif
         if (
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
+//#ifndef FCS_DBM__VAL_IS_ANCESTOR
+#if 1
             key_depth == instance->curr_depth
 #else
             false
@@ -438,7 +442,8 @@ static inline void instance_check_key(
             fcs_lock_lock(&instance->global_lock);
 
             fcs_depth_multi_queue__insert(&(coll->depth_queue),
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
+//#ifndef FCS_DBM__VAL_IS_ANCESTOR
+#if 1
                 thread->state_depth + 1,
 #else
                 thread->state_depth,
