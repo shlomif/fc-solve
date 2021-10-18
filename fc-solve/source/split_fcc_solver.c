@@ -347,8 +347,14 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token->ancestor, &derived_list,
-                    &derived_list_recycle_bin, &derived_list_allocator, true))
+                    &state,
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+                    token->ancestor,
+#else
+                    token,
+#endif
+                    &derived_list, &derived_list_recycle_bin,
+                    &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->global_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
