@@ -2,9 +2,18 @@
 
 [%- WRAPPER wrap_html -%]
 
-<toc />
+<p>
+This page contains links to past and present Internet forums where one
+can discuss Freecell Solver.
+</p>
 
 [% WRAPPER h2_section id = "fc-solve-discuss", title = "fc-solve-discuss" %]
+
+<p>
+<b>fc-solve-discuss</b> was a mailing list at the now defunct
+<a href="https://en.wikipedia.org/wiki/Yahoo!_Groups">Yahoo Groups</a>.
+We mirror the old messages here.
+</p>
 
 <ul>
 
