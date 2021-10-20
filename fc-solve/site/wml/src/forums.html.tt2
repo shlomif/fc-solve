@@ -1,0 +1,27 @@
+[%- SET title = "Forums for discussing Freecell Solver" -%]
+
+[%- WRAPPER wrap_html -%]
+
+<toc />
+
+[% WRAPPER h2_section id = "fc-solve-discuss", title = "fc-solve-discuss" %]
+
+<ul>
+
+<li>
+<p>
+<a href="[% base_path %]mail-lists/fc-solve-discuss/archive/">HTML archive</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://github.com/shlomif/fc-solve/tree/ef987b6b68349dc0c7f83339351a2995a35e0474/fc-solve/site/wml/lib/data/mbox">Archive in mbox format</a>
+</p>
+</li>
+
+</ul>
+
+[% END %]
+
+[% END %]

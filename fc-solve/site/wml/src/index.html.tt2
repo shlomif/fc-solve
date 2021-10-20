@@ -104,8 +104,8 @@ Freecode App-Index Record</a>
 
 <li>
 <p>
-<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">Freecell Solver's
-Mailing-List</a> (at <a href="http://groups.yahoo.com/">YahooGroups</a>).
+<a href="[% fcs_discuss_url %]">Freecell Solver's
+Mailing-List</a> (formerly at YahooGroups).
 </p>
 </li>
 

@@ -316,7 +316,7 @@ solving technique, that is greater than the sum of both parts.
 <p>
 The short answer is that: yes, some people care. As of November 2016, I received
 over 900 E-mails about the project to my private inbox and my
-<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">fc-solve-discuss group</a>’s
+<a href="[% fcs_discuss_url %]">fc-solve-discuss group</a>’s
 folder also contains over 900 E-mails. Furthermore, some people to whom
 I mentioned my solver in real life, expressed interest in it, in part due to
 the fact that in <a href="https://en.wikipedia.org/wiki/Israel">Israel</a>,
@@ -364,7 +364,7 @@ note that their code (and especially Freecell Solver’s) may be somewhat
 complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
 <a href="[% base_path %]docs/">Freecell Solver documentation</a> as well as the
-<a href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/info">archives of
+<a href="[% fcs_discuss_url %]">archives of
 the fc-solve-discuss mailing list</a> for some insights and ideas.
 </p>
 

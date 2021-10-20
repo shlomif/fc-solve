@@ -13,7 +13,7 @@ Freecell Solver Resources on the Net.
 <ul>
 <li>
 <p>
-<a href="http://groups.yahoo.com/group/fc-solve-discuss/">Freecell Solver's
+<a href="[% fcs_discuss_url %]">Freecell Solver's
 Mailing-List</a> - a mailing-list dedicated to discussing the usage
 and development of Freecell Solver and general techniques for solving
 card solitaire games. Hosted by
