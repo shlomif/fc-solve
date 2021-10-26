@@ -273,6 +273,8 @@ rb_probe (struct rb_table *tree, void *item)
 
 }
 
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+#else
 /* Inserts |item| into |table|.
    Returns |NULL| if |item| was successfully inserted
    or if a memory allocation error occurred.
@@ -288,6 +290,7 @@ rb_insert (struct rb_table *table, void *item)
 #endif
   return ret;
 }
+#endif
 
 /* Inserts |item| into |table|, replacing any duplicate item.
    Returns |NULL| if |item| was inserted without replacing a duplicate,
