@@ -11,7 +11,7 @@ use PDL ();
 
 has start_board => ( is => 'ro', isa => 'Int', default => 1 );
 has num_boards  => ( is => 'ro', isa => 'Int', default => 32000 );
-has input_obj   => (
+has input_obj => (
     is      => 'ro',
     isa     => 'AI::Pathfinding::OptimizeMultiple::DataInputObj',
     lazy    => 1,

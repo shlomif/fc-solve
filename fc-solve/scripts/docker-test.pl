@@ -11,8 +11,7 @@ use Docker::CLI::Wrapper::Container v0.0.4 ();
 my $SYS       = "fedora:33";
 my $CONTAINER = "fcsfed";
 my $obj       = Docker::CLI::Wrapper::Container->new(
-    { container => $CONTAINER, sys => $SYS, },
-);
+    { container => $CONTAINER, sys => $SYS, }, );
 
 my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;

@@ -10,7 +10,7 @@ use MooX qw/ late /;
 
 has 'depth_dbm'  => ( is => 'ro', isa => 'Bool', required => 1 );
 has 'fcc_solver' => ( is => 'ro', isa => 'Bool', default  => 0 );
-has compiler     => (
+has compiler => (
     is      => 'ro',
     isa     => 'Str',
     default => sub {
@@ -166,7 +166,8 @@ sub run
     $build_dir->mkpath;
 
     chdir($build_dir);
-    system( $src_path->parent->child( "scripts", "Tatzer" ),
+    system(
+        $src_path->parent->child( "scripts", "Tatzer" ),
         qw{-l x64b},
         "--nfc=$num_freecells",
         qw{--states-type=COMPACT_STATES --dbm=kaztree},

@@ -16,7 +16,7 @@ sub _build_argv
 }
 
 has input_argv => ( is => 'ro', isa => 'ArrayRef[Str]', required => 1, );
-has argv       => (
+has argv => (
     is      => 'ro',
     isa     => 'ArrayRef[Str]',
     lazy    => 1,

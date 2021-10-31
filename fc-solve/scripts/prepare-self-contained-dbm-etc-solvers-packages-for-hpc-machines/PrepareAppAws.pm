@@ -12,7 +12,7 @@ has 'disable_threading' => ( is => 'ro', isa => 'Bool', default => '' );
 has 'num_freecells'     => ( is => 'ro', isa => 'Int',  default => 4 );
 has 'deals'          => ( is => 'ro', isa => 'ArrayRef[Int]', required => 1 );
 has 'deal_num_width' => ( is => 'ro', isa => 'Int',           default  => 0 );
-has compiler         => (
+has compiler => (
     is      => 'ro',
     isa     => 'Str',
     default => sub {

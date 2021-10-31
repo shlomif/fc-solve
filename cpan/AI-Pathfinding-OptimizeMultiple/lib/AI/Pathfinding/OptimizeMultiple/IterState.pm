@@ -11,7 +11,7 @@ use PDL ();
 
 use vars (qw(@fields));
 
-has _main       => ( is => 'rw' );
+has _main => ( is => 'rw' );
 has _num_solved =>
     ( isa => 'Int', is => 'ro', init_arg => 'num_solved', required => 1 );
 has _quota => ( isa => 'Int', is => 'ro', init_arg => 'quota', required => 1 );

@@ -228,8 +228,9 @@ LINES_PREFIX:
                         ) < $card->rank() - 2 - (
                             (
                                 $card->color_for_suit(
-                                    $card->get_suits_seq->[ $other_suit_idx %
-                                        4 ]
+                                    $card->get_suits_seq->[
+                                        $other_suit_idx % 4
+                                    ]
                                 ) eq $card->color()
                             ) ? 1 : 0
                         )

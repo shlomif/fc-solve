@@ -55,8 +55,7 @@ sub _perform_move
     {
         my @src_s = $self->_find_card_src_string($src_card_s);
         $self->_perform_and_output_move(
-            sprintf( "Move a card from %s to the foundations", $src_s[1] ),
-        );
+            sprintf( "Move a card from %s to the foundations", $src_s[1] ), );
     }
     elsif ( ($src_card_s) = $move_line =~ /\A(.[HCDS]) to empty pile\z/ )
     {
@@ -68,8 +67,7 @@ sub _perform_move
         my @src_s = $self->_find_card_src_string($src_card_s);
 
         $self->_perform_and_output_move(
-            sprintf( "Move %s from %s to stack %d", @src_s, $dest_col_idx ),
-        );
+            sprintf( "Move %s from %s to stack %d", @src_s, $dest_col_idx ), );
     }
     elsif ( ( $src_card_s, ( my $dest_card_s ) ) =
         $move_line =~ /\A(.[HCDS]) to (.[HCDS])\z/ )

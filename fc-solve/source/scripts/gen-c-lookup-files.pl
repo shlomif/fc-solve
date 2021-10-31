@@ -9,7 +9,7 @@ package Code::Gen::Emitter;
 
 use Moo;
 
-has lang    => ( is => 'ro', required => 1 );
+has lang => ( is => 'ro', required => 1 );
 has is_rust => (
     is      => 'lazy',
     default => sub {

@@ -26,8 +26,7 @@ my @deps;    #= map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
 my $SYS       = "debian:sid";
 my $CONTAINER = "pypi-pysol-cards--deb--test-build";
 my $obj       = Docker::CLI::Wrapper::Container->new(
-    { container => $CONTAINER, sys => $SYS, },
-);
+    { container => $CONTAINER, sys => $SYS, }, );
 my $USER                  = "mygbp";
 my $HOMEDIR               = "/home/$USER";
 my $PYPI_BASE             = "pysol-cards";

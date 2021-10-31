@@ -136,8 +136,7 @@ sub extract
         else
         {
             $self->_page_to_read_from->read_next_from_disk(
-                $self->_offload_dir_path(),
-            );
+                $self->_offload_dir_path(), );
         }
     }
 

@@ -11,8 +11,7 @@ my $gen_ocl_py_prog = "$board_gen_dir/find-freecell-deal-index-julia-opencl.py";
 my $container       = "foo";
 my $sys             = "fedora33";
 my $obj             = Docker::CLI::Wrapper::Container->new(
-    { container => $container, sys => $sys, },
-);
+    { container => $container, sys => $sys, }, );
 if ( not -d "$board_gen_dir" )
 {
     die qq#wrong place! "$board_gen_dir" not found.#;

@@ -27,9 +27,9 @@ has _status => ( isa => 'Str',           is => 'rw' );
 has _quotas => ( isa => 'ArrayRef[Int]', is => 'ro', init_arg => 'quotas' );
 has _total_boards_solved => ( isa => 'Int', is => 'rw' );
 has _total_iters         => ( isa => 'Int', is => 'rw' );
-has _trace_cb            =>
+has _trace_cb =>
     ( isa => 'Maybe[CodeRef]', is => 'ro', init_arg => 'trace_cb' );
-has _scans_meta_data  => ( isa => 'ArrayRef', is => 'ro', init_arg => 'scans' );
+has _scans_meta_data => ( isa => 'ArrayRef', is => 'ro', init_arg => 'scans' );
 has _scans_iters_pdls =>
     ( isa => 'HashRef', is => 'rw', init_arg => 'scans_iters_pdls' );
 has _stats_factors => (
@@ -259,8 +259,7 @@ sub _get_selected_scan
 
     my $iter_state =
         AI::Pathfinding::OptimizeMultiple::IterState->new(
-        $self->_get_iter_state_params(),
-        );
+        $self->_get_iter_state_params(), );
 
     $iter_state->attach_to($self);
 

@@ -29,7 +29,7 @@ has _num_boards      => ( isa => 'Int', is  => 'rw' );
 has _offset_quotas   => ( isa => 'Int', is  => 'rw' );
 has _optimize_for    => ( isa => 'Str', is  => 'rw' );
 has _output_filename => ( isa => 'Str', is  => 'rw' );
-has _post_processor  => (
+has _post_processor => (
     isa => 'Maybe[AI::Pathfinding::OptimizeMultiple::PostProcessor]',
     is  => 'rw'
 );
@@ -39,7 +39,7 @@ has _should_rle_be_done   => ( isa => 'Bool',       is => 'rw' );
 has _should_trace_be_done => ( isa => 'Bool',       is => 'rw' );
 has _simulate_to          => ( isa => 'Maybe[Str]', is => 'rw' );
 has _start_board          => ( isa => 'Int',        is => 'rw' );
-has _stats_factors        =>
+has _stats_factors =>
     ( isa => 'HashRef', is => 'rw', default => sub { return +{}; }, );
 
 my $_component_re = qr/[A-Za-z][A-Za-z0-9_]*/;

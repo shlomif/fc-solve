@@ -25,7 +25,7 @@ use MooX qw/late/;
 
 has 'deal'   => ( is => 'ro' );
 has 'output' => ( is => 'ro', lazy => 1 );
-has 'iters'  => (
+has 'iters' => (
     is      => 'ro',
     lazy    => 1,
     default => sub { my $self = shift; return FindSeed::f( $self->output ); },
