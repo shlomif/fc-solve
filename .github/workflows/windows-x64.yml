@@ -40,7 +40,7 @@ jobs:
                     Test::Code::TidyAll'
         -   if: runner.os == 'Windows'
             name: Remove Chocolatey's CPack
-            run: del /F /Q %ChocolateyInstall%/bin/cpack.exe
+            run: Remove-Item -Path C:\ProgramData\Chocolatey\bin\cpack.exe -Force
         -   name: install and test_script code
             run: '@echo on
 

@@ -155,7 +155,8 @@ def generate_windows_yaml(plat, output_path, is_act):
     cpack_fix = {
         "if": "runner.os == 'Windows'",
         "name": "Remove Chocolatey's CPack",
-        "run": "del /F /Q %ChocolateyInstall%/bin/cpack.exe",
+        "run": "Remove-Item -Path " +
+        "C:\\ProgramData\\Chocolatey\\bin\\cpack.exe -Force",
     }
     steps.append(cpack_fix)
 
