@@ -148,6 +148,17 @@ def generate_windows_yaml(plat, output_path, is_act):
         }
         steps.append(mingw)
 
+    # See:
+    #
+    # https://github.com/sithlord48/blackchocobo/actions/runs/1207252836/workflow#L100
+    # https://github.community/t/windows-actions-suddenly-fail-needing-a-nuspec-file/199483
+    cpack_fix = {
+        "if": "runner.os == 'Windows'",
+        "name": "Remove Chocolatey's CPack",
+        "run": "del /F /Q %ChocolateyInstall%/bin/cpack.exe",
+    }
+    steps.append(cpack_fix)
+
     def _calc_batch_code(cmds):
         batch = ""
         batch += "@echo on\n"
