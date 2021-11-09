@@ -33,4 +33,17 @@ We mirror the old messages here.
 
 [% END %]
 
+[% WRAPPER h2_section id = "foss-card-games" title = "FOSS Card Games" %]
+
+<ul>
+<li>
+<p>
+<a href="https://groups.google.com/g/foss-card-games/">Google Group</a> -
+currently active.
+</p>
+</li>
+</ul>
+
+[% END %]
+
 [% END %]
