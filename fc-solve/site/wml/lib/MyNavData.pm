@@ -145,6 +145,12 @@ my $tree_contents = {
             'text'  => "Support",
             'url'   => "support.html",
             'title' => "Report bugs, get help, and get other support",
+            subs    => [
+                {
+                    'text' => "Forums",
+                    'url'  => "forums.html",
+                },
+            ],
         },
         {
             'separator' => 1,
