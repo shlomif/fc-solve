@@ -135,7 +135,6 @@ def find_ret(ints, num_ints_in_first=4):
         perl.eval(_tt3_r(
             "$PyTT3::template->process(" +
             "\\$PyTT3::input, \\%PyTT3::vars, \\$PyTT3::o)"))
-        # sys.exit(0)
         return perl.get_ref(_tt3_r("$PyTT3::o")).__value__
 
     def _tt3_update_file_using_template(fn, template, extra_fields={
@@ -221,9 +220,6 @@ for(cl_int myiterint=0;myiterint < cl_int_num_elems; ++myiterint)
                     break;
                 }
             }
-                #if 0
-                printf("%lu\\n", ((unsigned long)(mystart+0)));
-                #endif
             if ( is_right)
             {
                 ret =
@@ -349,11 +345,6 @@ static cl_event vecinit(cl_kernel vecinit_k, cl_command_queue que,
 {
         const size_t gws[] = { round_mul_up(((size_t)num_elems),
             gws_align_init) };
-#if 0
-        printf("vecinit gws: mystart = %d ; num_elems = %d | gws_align_init ="
-            " %zu ; gws[0] = %zu\\n",
-            mystart, num_elems, gws_align_init, gws[0]);
-#endif
         cl_event vecinit_evt;
         cl_int err;
 
@@ -379,10 +370,6 @@ static cl_event vecsum(cl_kernel vecsum_k, cl_command_queue que,
 {
         const size_t gws[] = {
         round_mul_up(((size_t)num_elems), gws_align_sum) };
-        #if 0
-        printf("vecsum gws: %d | %zu = %zu\\n",
-        num_elems, gws_align_sum, gws[0]);
-        #endif
         cl_event vecsum_evt;
         cl_int err;
 
@@ -496,7 +483,6 @@ DLLEXPORT long long fc_solve_user__opencl_release(
 {
     fcs_ocl * const obj = proto_obj;
     cl_int err = 0;
-    #if 1
     clReleaseMemObject(obj->i_buff);
     clReleaseMemObject(obj->r_buff);
         clReleaseKernel(obj->vecinit_k);
@@ -515,7 +501,6 @@ clReleaseCommandQueue(obj->que);
 clReleaseContext(obj->ctx);
 clReleaseDevice(obj->d);
 clUnloadPlatformCompiler(obj->p);
-#endif
 free(obj);
 return 0;
 }
