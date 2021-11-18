@@ -47,7 +47,7 @@ class Expander {
         initial_src_state_str: string,
     ) {
         const expander = this;
-        const col_matches = initial_src_state_str.match(/(\n:[^\n]+)/g);
+        const col_matches = initial_src_state_str.match(/(\n:[^\n]*)/g);
 
         if (!col_matches || col_matches.length !== num_stacks) {
             throw "Miscount of stacks.";

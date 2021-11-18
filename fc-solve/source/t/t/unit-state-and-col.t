@@ -109,12 +109,11 @@ sub new
     return FC_Solve::FCS_Perl_State::_proto_new($string);
 }
 
-use FC_Solve::Trim qw/trim_trail_ws/;
 use Test::Differences (qw( eq_or_diff ));
 
 sub as_str
 {
-    return trim_trail_ws( shift->as_string() );
+    return shift->as_string();
 }
 
 sub is_str

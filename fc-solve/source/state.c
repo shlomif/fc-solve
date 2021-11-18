@@ -305,14 +305,10 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
             fc_solve_append_string_sprintf(" H-%s C-%s D-%s S-%s", founds[i],
                 founds[i + 1], founds[i + 2], founds[i + 3]);
         }
-#ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
-        append_char(' ');
-#endif
 
         fc_solve_append_string_sprintf("%s", "\nFreecells:");
 
 #if MAX_NUM_FREECELLS > 0
-#ifdef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
         int max_freecell_idx = -1;
         for (int i = (int)FREECELLS_NUM__VAL - 1; i >= 0; i--)
         {
@@ -323,16 +319,6 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
             }
         }
 #define DO_APPEND
-#else
-        const int max_freecell_idx = (int)FREECELLS_NUM__VAL - 1;
-#if defined(HARD_CODED_NUM_FREECELLS)
-#if FREECELLS_NUM__VAL > 0
-        append_char(' ');
-#endif
-#else
-#define DO_APPEND
-#endif
-#endif
 
 #ifdef DO_APPEND
         if (max_freecell_idx >= 0)
@@ -369,12 +355,6 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
                 fc_solve_append_string_sprintf(" %s", stack_card_str);
             }
 
-#ifndef FC_SOLVE__REMOVE_TRAILING_WHITESPACE_IN_OUTPUT
-            if (!col_len)
-            {
-                append_char(' ');
-            }
-#endif
             append_char('\n');
         }
     }

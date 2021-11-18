@@ -17,7 +17,6 @@
 #include "state.c"
 #include "delta_states_any.h"
 #include "indirect_buffer.h"
-#include "trim_trailing_whitespace.h"
 #include "render_state.h"
 #ifdef FCS_FREECELL_ONLY
 #include "is_parent.c"
@@ -40,7 +39,6 @@ static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant,
 
     char as_str[1000];
     FCS__RENDER_STATE(as_str, &(new_derived_state.s), &locs);
-    trim_trailing_whitespace(as_str);
 
     assert_string_equal(as_str, expected_str); //, "%s", blurb);
 #if 0

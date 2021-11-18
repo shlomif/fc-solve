@@ -137,7 +137,6 @@ q#Test skipped because it uses flares, and we are running on a build without fla
                 }
                 substr( $$s, $pos + $TRIM_NEEDLE_LEN ) = '';
             }
-            $$s =~ s/ +(\n)/$1/g;
             return $s;
         }
     );

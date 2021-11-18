@@ -11,7 +11,6 @@ use Test::Trap
 
 use FC_Solve::Paths
     qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf src_script /;
-use FC_Solve::Trim qw/trim_trail_ws/;
 use Math::BigInt lib => 'GMP';
 
 sub _test_out
@@ -106,7 +105,7 @@ sub _test_ms
 
     my $cmd_line_args = $args->{cmd};
 
-    my $got = trim_trail_ws( scalar `$MAKE_MS_EXE @$cmd_line_args` );
+    my $got = scalar `$MAKE_MS_EXE @$cmd_line_args`;
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 
@@ -764,9 +763,8 @@ sub _test_autoplay
 
     my $cmd_line_args = $args->{cmd};
 
-    my $got = trim_trail_ws(
-        scalar
-            `$^X @{[src_script('horne-autoplay-board.pl')]} @$cmd_line_args` );
+    my $got =
+        scalar `$^X @{[src_script('horne-autoplay-board.pl')]} @$cmd_line_args`;
 
     eq_or_diff( $got, $args->{expected}, $args->{blurb} );
 

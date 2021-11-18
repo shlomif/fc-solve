@@ -323,7 +323,6 @@ static void main_tests(void **state GCC_UNUSED)
              ": AH 5S 6S AD 8H JD\n"
              ": 2H\n"));
 
-        trim_trailing_whitespace(s);
         // TEST
         assert_string_equal(s, ("Foundations: H-0 C-0 D-0 S-4\n"
                                 "Freecells:  TD  KS\n"
