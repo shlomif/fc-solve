@@ -158,7 +158,9 @@ def generate_windows_yaml(plat, output_path, is_act):
         "run": "Remove-Item -Path " +
         "C:\\ProgramData\\Chocolatey\\bin\\cpack.exe -Force",
     }
-    steps.append(cpack_fix)
+    cpack_fix_needed = False
+    if cpack_fix_needed:
+        steps.append(cpack_fix)
 
     def _calc_batch_code(cmds):
         batch = ""

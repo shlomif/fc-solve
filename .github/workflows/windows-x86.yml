@@ -42,9 +42,6 @@ jobs:
             uses: egor-tensin/setup-mingw@v2
             with:
                 platform: x86
-        -   if: runner.os == 'Windows'
-            name: Remove Chocolatey's CPack
-            run: Remove-Item -Path C:\ProgramData\Chocolatey\bin\cpack.exe -Force
         -   name: install and test_script code
             run: '@echo on
 
