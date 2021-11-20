@@ -12,7 +12,7 @@ First of all see link:split-fully-connected-components-based-solver-planning.asc
 the game state using 52 enums of three states (= { ORIG_POS = 0, ABOVE_PARENT_CARD_OR_EMPTY_SPACE = 1, IN_FOUNDATIONS = 2 } ) each.
 
 Now, if card is at ORIG_POS or IN_FOUNDATIONS then its deBondt encoding is
-already known. If it is at ABOVE_PARENT_CARD_OR_EMPTY_SPACE then it can be of 4
+already known. If it is at ABOVE_PARENT_CARD_OR_EMPTY_SPACE then it can be in one of 4
 different states:
 
 1. In a Freecell.
@@ -25,6 +25,9 @@ So we need at most 2 bits for each card, so 52*2 = 104 bits and 13 octets.
 We can improve on that by noting that a King card is only at #1 or #2 (thus
 requiring only one bit) while an Ace card requires 0 bits due to https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/messages/1300[Horne automove]
 so we can shave off 8 + 4 bits for a total of 92 bits or 11½ octets.
+
+Let's take "5H", "5D", "4C", and "4S" as a case study. If 4C is at #3, then 5H
+cannot be at #1 (= in a freecell).
 
 One option would be to pack two such encodings into three consecutive 64-bit
 quadwords.

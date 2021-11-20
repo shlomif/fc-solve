@@ -49,11 +49,16 @@ sub new
     return FC_Solve::VarBaseDigitsReader::XS::_proto_new( $args->{data} );
 }
 
+use 5.014;
+
 sub read
 {
     my ( $self, $base ) = @_;
 
-    return _var_base_reader__read( $self, $base );
+    my $item = _var_base_reader__read( $self, $base );
+
+    # say "read $base / $item";
+    return $item;
 }
 
 1;

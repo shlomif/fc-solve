@@ -52,6 +52,10 @@ sub new
     return FC_Solve::VarBaseDigitsWriter::XS::_proto_new();
 }
 
+use Carp ();
+
+use 5.014;
+
 sub write
 {
     my ( $self, $args ) = @_;
@@ -59,6 +63,15 @@ sub write
     my $base = $args->{base};
     my $item = $args->{item};
 
+    # say "write $base / $item";
+    if ( $item >= $base )
+    {
+        Carp::confess("write");
+    }
+    if ( $item < 0 )
+    {
+        Carp::confess("negative");
+    }
     $self->_proto_write( $base, $item );
 
     return;

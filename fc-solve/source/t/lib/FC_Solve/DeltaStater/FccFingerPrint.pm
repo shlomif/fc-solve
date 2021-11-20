@@ -8,7 +8,7 @@ use 5.014;
 use parent 'FC_Solve::DeltaStater::DeBondt';
 
 use Carp ();
-use List::Util qw/ first max /;
+use List::Util qw/ first max uniq /;
 
 use Games::Solitaire::Verify::Card        ();
 use Games::Solitaire::Verify::Foundations ();
@@ -46,6 +46,10 @@ my $INFERRED_SUB_STATE               = -1;
 sub _assert_def
 {
     my $val = shift;
+    if ( $val < 0 )
+    {
+        Carp::confess("negative");
+    }
     return $val // do { Carp::confess("undefined"); };
 }
 
@@ -101,13 +105,27 @@ sub _add_state_pair
         $rec->CARD_PAIR_STATES_MAP()->[$y]->[$x] = $val;
         $rec->REVERSE_CARD_PAIR_STATES_MAP()->[$val] = [
             map {
-                FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
-                    $_)
+                1
+                    ? $rec->single_card_states->{$_}
+                    : (
+                    FC_Solve::DeltaStater::FccFingerPrint::StatesRecord::_string_to_int(
+                        $_)
+                    )
             } @input
         ];
     }
     return;
 
+}
+
+sub _assert_def
+{
+    my $val = shift;
+    if ( $val < 0 )
+    {
+        Carp::confess("negative");
+    }
+    return $val // do { Carp::confess("undefined"); };
 }
 
 sub finalize
@@ -139,6 +157,7 @@ sub finalize
     $_add->( 'PARENT_0',       'PARENT_1' );
     $_add->( 'PARENT_1',       'PARENT_0' );
     $rec->CARD_PAIR_STATE_BASE( $rec->state_opt_next() );
+    _assert_def( $rec->rev_single_card_states->[1] );
     return;
 }
 
@@ -173,6 +192,19 @@ sub _my_add_state
     $rev_hash->[$val] = _string_to_int($state);
     $hash->{$state} = $val;
     return;
+}
+
+sub _calc_initial_possible_pair_states
+{
+    my ($rec) = @_;
+    return {
+        map {
+            my $pair = $_;
+            $pair =>
+                +{ map { $_ => [ 0 .. ( $rec->CARD_PAIR_STATE_BASE() - 1 ) ], }
+                    ( 1 .. $RANK_KING ) };
+        } 0 .. 1
+    };
 }
 
 package FC_Solve::DeltaStater::FccFingerPrint;
@@ -277,6 +309,17 @@ sub _init
 
 package FC_Solve::DeltaStater::FccFingerPrint;
 
+__PACKAGE__->mk_acc_ref(
+    [
+        qw[
+            _color
+            _rank
+            _possible_pair_states
+            _variant_states
+        ]
+    ]
+);
+
 sub _set_opt
 {
     my ( $self, $ref, $opt ) = @_;
@@ -288,19 +331,43 @@ sub _set_opt
     return;
 }
 
+use List::MoreUtils qw/ firstidx /;
+
 sub _encode_single_uknown_info_card
 {
-    my ( $self, $state_writer, $opt, $is_king, $variant_states ) = @_;
-    my $state_o = $opt->sub_state;
+    my ( $self, $card_idx, $state_writer, $opt, $is_king, $variant_states ) =
+        @_;
+    my $suit_pair_idx         = $self->_color;
+    my $rank                  = $self->_rank;
+    my $_possible_pair_states = $self->_possible_pair_states();
+    my @options        = @{ $_possible_pair_states->{$suit_pair_idx}{$rank} };
+    my @single_options = sort { $a <=> $b } uniq(
+        map {
+            my $xx = $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
+                ->[$card_idx];
+
+            $xx
+        } @options
+    );
+    if ( @single_options > $variant_states->num_single_card_states )
+    {
+        die;
+    }
+    $self->_set_card_opt( $suit_pair_idx, $rank, $opt->sub_state );
     if ($is_king)
     {
+        my $state_o = $opt->sub_state;
         $state_writer->write( { base => 2, item => $state_o } );
     }
     else
     {
+        my $state_o = _assert_def(
+            scalar firstidx { $_ == $opt->sub_state }
+            @single_options
+        );
         $state_writer->write(
             {
-                base => $variant_states->num_single_card_states(),
+                base => ( scalar @single_options ),
                 item => $state_o
             }
         );
@@ -311,7 +378,19 @@ sub _encode_single_uknown_info_card
 sub _encode_a_pair_of_uknown_info_cards
 {
     my ( $self, $state_writer, $opt1, $opt2, $is_king, $variant_states ) = @_;
-    my @states = ( $opt1->sub_state, $opt2->sub_state );
+    my @states                = ( $opt1->sub_state, $opt2->sub_state );
+    my $suit_pair_idx         = $self->_color;
+    my $rank                  = $self->_rank;
+    my $_possible_pair_states = $self->_possible_pair_states();
+    foreach my $s (@states)
+    {
+        $self->_set_card_opt( $suit_pair_idx, $rank, $s );
+    }
+    my @options = @{ $_possible_pair_states->{$suit_pair_idx}{$rank} };
+    if ( @options > $variant_states->CARD_PAIR_STATE_BASE )
+    {
+        die;
+    }
     if ($is_king)
     {
         foreach my $state_o (@states)
@@ -321,13 +400,16 @@ sub _encode_a_pair_of_uknown_info_cards
     }
     else
     {
+        my $state_o = firstidx
+        {
+            $_ == $variant_states->CARD_PAIR_STATES_MAP()->[ $states[0] ]
+                ->[ $states[1] ]
+        }
+        @options;
         $state_writer->write(
             {
-                base => _assert_def( $variant_states->CARD_PAIR_STATE_BASE() ),
-                item => _assert_def(
-                    $variant_states->CARD_PAIR_STATES_MAP()->[ $states[0] ]
-                        ->[ $states[1] ]
-                ),
+                base => _assert_def( scalar(@options) ),
+                item => _assert_def($state_o),
             }
         );
     }
@@ -347,7 +429,7 @@ sub _encode_cards_pair
         }
         else
         {
-            $self->_encode_single_uknown_info_card( $state_writer,
+            $self->_encode_single_uknown_info_card( 1, $state_writer,
                 $opt2, $is_king, $variant_states );
         }
     }
@@ -355,7 +437,7 @@ sub _encode_cards_pair
     {
         if ( $fingerprint2 != $ABOVE_PARENT_CARD_OR_EMPTY_SPACE )
         {
-            $self->_encode_single_uknown_info_card( $state_writer,
+            $self->_encode_single_uknown_info_card( 0, $state_writer,
                 $opt1, $is_king, $variant_states );
         }
         else
@@ -424,6 +506,9 @@ sub encode_composite
     my $variant_states      = $self->_calc_variant_states();
     my $should_skip_is_king = $variant_states->should_skip_is_king();
 
+    my $_possible_pair_states = $self->_possible_pair_states(
+        $variant_states->_calc_initial_possible_pair_states() );
+
     $self->_initialize_card_states_for_encode();
 
     my $state_writer       = FC_Solve::VarBaseDigitsWriter::XS->new;
@@ -441,6 +526,7 @@ sub encode_composite
             my $o =
                 $self->_calc_encoded_OptRecord( $col, $height, $card,
                 $variant_states );
+
             $self->_mark_suit_rank_as_true( $self->_get_suit_idx($card),
                 $card->rank, $o );
         }
@@ -470,8 +556,10 @@ sub encode_composite
     my $cnt = 0;
     foreach my $rank ( 1 .. $RANK_KING )
     {
+        $self->_rank($rank);
         foreach my $color ( 0 .. 1 )
         {
+            $self->_color($color);
             my $suit1 = $color;
             my $suit2 = ( $color | 2 );
             my $rank1 = $derived->get_foundation_value( $suits[$suit1], 0 );
@@ -513,8 +601,6 @@ sub encode_composite
                     $opt1, $opt2, $is_king, $variant_states );
             }
 
-            # print("$rank $color $fingerprint1 $fingerprint2\n");
-
             $fingerprint_writer->write( { base => 3, item => $fingerprint1 } );
             $fingerprint_writer->write( { base => 3, item => $fingerprint2 } );
             $cnt += 2;
@@ -552,7 +638,9 @@ sub encode_composite
 
 sub _calc_variant_states
 {
-    return shift()->_init_state->num_freecells ? $positive_rec : $zero_rec;
+    my ($self) = @_;
+    return $self->_variant_states(
+        $self->_init_state->num_freecells ? $positive_rec : $zero_rec );
 }
 
 my @SUIT_INDEXES =
@@ -560,6 +648,41 @@ my @SUIT_INDEXES =
 
 my $CARD_STATES_SKIP              = -1;
 my $CARD_STATES__TO_BE_DETERMINED = -2;
+
+sub _set_card_opt
+{
+    my ( $self, $suit_pair_idx, $rank, $opt ) = @_;
+    if ( $rank == $RANK_KING )
+    {
+        return $opt;
+    }
+    my $variant_states        = $self->_variant_states;
+    my $_possible_pair_states = $self->_possible_pair_states();
+    if ( $variant_states->does_have_zero_freecells() )
+    {
+        return $opt;
+    }
+    my $parentrank = $rank + 1;
+    my $card_idx   = (
+        _assert_def($opt) ==
+            _assert_def( $variant_states->single_card_states->{'PARENT_1'} )
+        ? 1
+        : _assert_def($opt) ==
+            _assert_def( $variant_states->single_card_states->{'PARENT_0'} ) ? 0
+        : ( return $opt )
+    );
+    my $aref   = $_possible_pair_states->{ 0b1 ^ $suit_pair_idx }{$parentrank};
+    my @before = @$aref;
+    @$aref = (
+        grep {
+            _assert_def( $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
+                    ->[$card_idx] ) != _assert_def(
+                $variant_states->single_card_states->{'ABOVE_FREECELL'} )
+        } @before
+    );
+
+    return $opt;
+}
 
 sub decode
 {
@@ -593,6 +716,8 @@ sub decode
     my @queue;
     my @fingerprints;
     my @card_states;
+    my $_possible_pair_states = $self->_possible_pair_states(
+        $variant_states->_calc_initial_possible_pair_states() );
 
     my $foundations_obj = Games::Solitaire::Verify::Foundations->new(
         {
@@ -602,7 +727,7 @@ sub decode
     foreach my $rank ( 1 .. $RANK_KING )
     {
         my $is_king = ( $rank == $RANK_KING );
-        foreach my $indexes (@SUIT_INDEXES)
+        while ( my ( $suit_pair_idx, $indexes ) = each(@SUIT_INDEXES) )
         {
             my @are_not_set;
             foreach my $suit_idx (@$indexes)
@@ -612,7 +737,6 @@ sub decode
                 my $newval;
                 if ( $f == $IN_FOUNDATIONS )
                 {
-                    # say "ff=$f $suit_idx";
                     $foundations_obj->assign( $suits[$suit_idx], 0, $rank );
                     $newval = $OPT_DONT_CARE;
                 }
@@ -641,38 +765,97 @@ sub decode
             }
             if ( $are_not_set[0] or $are_not_set[1] )
             {
-                if ( $are_not_set[0] and $are_not_set[1] )
+                if ($is_king)
                 {
-                    my $s = $state_reader->read(
-                        _assert_def( $variant_states->CARD_PAIR_STATE_BASE() )
-                    );
-                    my @pos = @{
-                        _assert_def(
-                            $variant_states->REVERSE_CARD_PAIR_STATES_MAP()
-                                ->[$s]
-                        )
-                    };
-                    for my $i ( keys @pos )
+                    if ( $are_not_set[0] and $are_not_set[1] )
                     {
-                        $card_states[ $indexes->[$i] ][$rank] = $pos[$i];
+                        my $s = $state_reader->read(
+                            _assert_def(
+                                $variant_states->CARD_PAIR_STATE_BASE()
+                            )
+                        );
+                        my @pos = @{
+                            _assert_def(
+                                $variant_states->REVERSE_CARD_PAIR_STATES_MAP()
+                                    ->[$s]
+                            )
+                        };
+                        for my $i ( keys @pos )
+                        {
+                            $card_states[ $indexes->[$i] ][$rank] =
+                                _assert_def(
+                                $variant_states->rev_single_card_states->[
+                                    $pos[$i]
+                                ]
+                                );
+                        }
+                    }
+                    else
+                    {
+                        my $s = $state_reader->read(
+                            _assert_def(
+                                $variant_states->num_single_card_states()
+                            )
+                        );
+                        my $pos = _assert_def($s);
+                        $card_states[
+                            $indexes->[
+                            first { $are_not_set[$_] }
+                        0 .. 1
+                            ]
+                            ][$rank] =
+                            _assert_def(
+                            $variant_states->rev_single_card_states->[$pos] );
                     }
                 }
                 else
                 {
-                    my $s = $state_reader->read(
-                        _assert_def(
-                            $variant_states->num_single_card_states()
-                        )
-                    );
-                    my $pos =
-                        _assert_def(
-                        $variant_states->rev_single_card_states()->[$s] );
-                    $card_states[
-                        $indexes->[
-                        first { $are_not_set[$_] }
-                    0 .. 1
-                        ]
-                    ][$rank] = $pos;
+                    my @options =
+                        @{ $_possible_pair_states->{$suit_pair_idx}{$rank} };
+                    my $set = sub {
+                        my ($opt) = @_;
+                        my $v =
+                            $self->_set_card_opt( $suit_pair_idx, $rank, $opt );
+                        return _assert_def(
+                            $variant_states->rev_single_card_states->[$v] );
+                    };
+                    if ( $are_not_set[0] and $are_not_set[1] )
+                    {
+                        my $s =
+                            $options[ $state_reader->read( scalar(@options) ) ];
+                        my @pos = @{
+                            _assert_def(
+                                $variant_states->REVERSE_CARD_PAIR_STATES_MAP()
+                                    ->[$s]
+                            )
+                        };
+                        for my $i ( keys @pos )
+                        {
+                            $card_states[ $indexes->[$i] ][$rank] =
+                                $set->( $pos[$i] );
+                        }
+                    }
+                    else
+                    {
+                        my $card_idx = _assert_def(
+                            scalar( first { $are_not_set[$_] } 0 .. 1 ) );
+                        my @single_options = sort { $a <=> $b } uniq(
+                            map {
+                                _assert_def(
+                                    $variant_states
+                                        ->REVERSE_CARD_PAIR_STATES_MAP(
+                                    )->[$_]->[$card_idx]
+                                )
+                            } @options
+                        );
+                        my $s = $single_options[ $state_reader->read(
+                                scalar @single_options ) ];
+
+                        my $pos = _assert_def($s);
+
+                        $card_states[ $indexes->[$card_idx] ][$rank] =
+                            $set->($pos);
+                    }
                 }
             }
         }
@@ -683,7 +866,6 @@ sub decode
         push @queue, $foundations_obj->value( $suits[$suit_idx], 0 );
     }
 
-    # say "@queue";
     foreach my $rank ( 1 .. $self->_get_top_rank_for_iter() )
     {
         foreach my $suit_idx ( 0 .. $#suits )
@@ -691,7 +873,7 @@ sub decode
             my $val = $card_states[$suit_idx][$rank];
             if ( $val >= 0 )
             {
-                push @queue, $val;
+                push @queue, _assert_def($val);
             }
             else
             {
@@ -750,9 +932,9 @@ sub read
 
     my $ret = shift( @{ $self->{_q} } );
 
-    die if $ret ne int($ret);
-    die if $ret < 0;
-    die if $ret >= $base;
+    die                             if $ret ne int($ret);
+    die                             if $ret < 0;
+    Carp::confess("big $ret $base") if $ret >= $base;
 
     return $ret;
 }
@@ -772,3 +954,4 @@ or distributed except according to the terms contained in the COPYING file.
 Copyright (c) 2020 Shlomi Fish
 
 =cut
+

@@ -97,7 +97,7 @@ Freecell Solver from within your programs.
 %setup
 
 %build
-%cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12
+%cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12 -DDISABLE_APPLYING_RPATH:BOOL=TRUE
 %cmake_build
 
 %check

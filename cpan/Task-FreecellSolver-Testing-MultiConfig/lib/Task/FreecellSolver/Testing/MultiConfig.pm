@@ -22,6 +22,8 @@ the Freecell Solver multi-config test suite.
 
 =pkg Code::TidyAll::Plugin::TSLint
 
+=pkg Dir::Manifest
+
 =pkg Dist::Zilla::Plugin::Test::Kwalitee
 
 =pkg Dist::Zilla::Plugin::Test::TidyAll
@@ -38,6 +40,8 @@ the Freecell Solver multi-config test suite.
 
 =pkg Parallel::ForkManager::Segmented
 
+=pkg Pod::Coverage::TrustPod
+
 =pkg Perl::Critic::Freenode
 
 =pkg Pod::Weaver::PluginBundle::SHLOMIF
@@ -51,6 +55,8 @@ the Freecell Solver multi-config test suite.
 =pkg Test::HTML::Recursive::DeprecatedTags
 
 =pkg Test::Perl::Critic::Policy
+
+=pkg Test::Pod
 
 =pkg Test::Pod::Coverage
 

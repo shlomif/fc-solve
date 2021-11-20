@@ -73,7 +73,8 @@ qq#$FC_SOLVE_EXE -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 ${boar
             if ( $this_len > 7 )
             {
                 $DB::single = 1;
-                die "exceeded len in deal $DEAL_IDX";
+
+                die "exceeded len = $this_len in deal $DEAL_IDX";
             }
             if ( $state_str !~ m#^:[^\n]*? A[CDHS]\n#ms )
             {
