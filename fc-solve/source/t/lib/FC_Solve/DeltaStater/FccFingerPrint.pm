@@ -356,8 +356,21 @@ sub _encode_single_uknown_info_card
     $self->_set_card_opt( $color, $rank, $opt->sub_state );
     if ($is_king)
     {
-        my $state_o = $opt->sub_state;
-        $state_writer->write( { base => 2, item => $state_o } );
+        if (
+            ( !$variant_states->does_have_zero_freecells() )
+            and (
+                any
+                {
+                    $_ == $variant_states->single_card_states()
+                        ->{'ABOVE_FREECELL'}
+                }
+                @single_options
+            )
+            )
+        {
+            my $state_o = $opt->sub_state;
+            $state_writer->write( { base => 2, item => $state_o } );
+        }
     }
     else
     {
@@ -393,9 +406,24 @@ sub _encode_a_pair_of_uknown_info_cards
     }
     if ($is_king)
     {
-        foreach my $state_o (@states)
+        while ( my ( $card_idx, $state_o ) = each(@states) )
         {
-            $state_writer->write( { base => 2, item => $state_o } );
+            if (
+                ( !$variant_states->does_have_zero_freecells() )
+                and (
+                    any
+                    {
+                        my $xx = $variant_states->REVERSE_CARD_PAIR_STATES_MAP()
+                            ->[$_]->[$card_idx];
+                        $xx == $variant_states->single_card_states()
+                            ->{'ABOVE_FREECELL'}
+                    }
+                    @options
+                )
+                )
+            {
+                $state_writer->write( { base => 2, item => $state_o } );
+            }
         }
     }
     else
@@ -675,7 +703,8 @@ sub _set_card_opt
     my @before = @$aref;
     @$aref = (
         grep {
-            _assert_def( $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
+            _assert_def(
+                $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
                     ->[$card_idx] ) != _assert_def(
                 $variant_states->single_card_states->{'ABOVE_FREECELL'} )
         } @before
@@ -767,45 +796,36 @@ sub decode
             {
                 if ($is_king)
                 {
-                    if ( $are_not_set[0] and $are_not_set[1] )
+                    my @options = @{ $_possible_pair_states->{$color}{$rank} };
+                KINGS:
+                    while ( my ( $card_idx, $state_o ) = each(@are_not_set) )
                     {
-                        my $s = $state_reader->read(
-                            _assert_def(
-                                $variant_states->CARD_PAIR_STATE_BASE()
-                            )
-                        );
-                        my @pos = @{
-                            _assert_def(
-                                $variant_states->REVERSE_CARD_PAIR_STATES_MAP()
-                                    ->[$s]
-                            )
-                        };
-                        for my $i ( keys @pos )
+                        if ( !$state_o )
                         {
-                            $card_states[ $indexes->[$i] ][$rank] =
-                                _assert_def(
-                                $variant_states->rev_single_card_states->[
-                                    $pos[$i]
-                                ]
-                                );
+                            next KINGS;
                         }
-                    }
-                    else
-                    {
-                        my $s = $state_reader->read(
-                            _assert_def(
-                                $variant_states->num_single_card_states()
+                        my $data = 0;
+                        if (
+                            ( !$variant_states->does_have_zero_freecells() )
+                            and (
+                                any
+                                {
+                                    my $xx =
+                                        $variant_states
+                                        ->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
+                                        ->[$card_idx];
+                                    $xx == $variant_states->single_card_states()
+                                        ->{'ABOVE_FREECELL'}
+                                }
+                                @options
                             )
-                        );
-                        my $pos = _assert_def($s);
-                        $card_states[
-                            $indexes->[
-                            first { $are_not_set[$_] }
-                        0 .. 1
-                            ]
-                            ][$rank] =
+                            )
+                        {
+                            $data = $state_reader->read( { base => 2, } );
+                        }
+                        $card_states[ $indexes->[$card_idx] ][$rank] =
                             _assert_def(
-                            $variant_states->rev_single_card_states->[$pos] );
+                            $variant_states->rev_single_card_states->[$data] );
                     }
                 }
                 else
