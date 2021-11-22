@@ -1,5 +1,8 @@
 Revision history for Task-FreecellSolver-Testing-MultiConfig
 
+0.0.5   2021-11-22
+    * Add GSV ( Games::Solitaire::Verify ) dzil deps.
+
 0.0.4   2020-10-03
         * Add some newer deps
         * Add scripts/tag-release.pl
