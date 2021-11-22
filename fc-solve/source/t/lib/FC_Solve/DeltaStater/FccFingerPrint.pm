@@ -337,11 +337,11 @@ sub _encode_single_uknown_info_card
 {
     my ( $self, $card_idx, $state_writer, $opt, $is_king, $variant_states ) =
         @_;
-    my $suit_pair_idx         = $self->_color;
+    my $color                 = $self->_color;
     my $rank                  = $self->_rank;
     my $_possible_pair_states = $self->_possible_pair_states();
-    my @options        = @{ $_possible_pair_states->{$suit_pair_idx}{$rank} };
-    my @single_options = sort { $a <=> $b } uniq(
+    my @options               = @{ $_possible_pair_states->{$color}{$rank} };
+    my @single_options        = sort { $a <=> $b } uniq(
         map {
             my $xx = $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
                 ->[$card_idx];
@@ -353,7 +353,7 @@ sub _encode_single_uknown_info_card
     {
         die;
     }
-    $self->_set_card_opt( $suit_pair_idx, $rank, $opt->sub_state );
+    $self->_set_card_opt( $color, $rank, $opt->sub_state );
     if ($is_king)
     {
         my $state_o = $opt->sub_state;
@@ -379,14 +379,14 @@ sub _encode_a_pair_of_uknown_info_cards
 {
     my ( $self, $state_writer, $opt1, $opt2, $is_king, $variant_states ) = @_;
     my @states                = ( $opt1->sub_state, $opt2->sub_state );
-    my $suit_pair_idx         = $self->_color;
+    my $color                 = $self->_color;
     my $rank                  = $self->_rank;
     my $_possible_pair_states = $self->_possible_pair_states();
     foreach my $s (@states)
     {
-        $self->_set_card_opt( $suit_pair_idx, $rank, $s );
+        $self->_set_card_opt( $color, $rank, $s );
     }
-    my @options = @{ $_possible_pair_states->{$suit_pair_idx}{$rank} };
+    my @options = @{ $_possible_pair_states->{$color}{$rank} };
     if ( @options > $variant_states->CARD_PAIR_STATE_BASE )
     {
         die;
@@ -651,7 +651,7 @@ my $CARD_STATES__TO_BE_DETERMINED = -2;
 
 sub _set_card_opt
 {
-    my ( $self, $suit_pair_idx, $rank, $opt ) = @_;
+    my ( $self, $color, $rank, $opt ) = @_;
     if ( $rank == $RANK_KING )
     {
         return $opt;
@@ -671,7 +671,7 @@ sub _set_card_opt
             _assert_def( $variant_states->single_card_states->{'PARENT_0'} ) ? 0
         : ( return $opt )
     );
-    my $aref   = $_possible_pair_states->{ 0b1 ^ $suit_pair_idx }{$parentrank};
+    my $aref   = $_possible_pair_states->{ 0b1 ^ $color }{$parentrank};
     my @before = @$aref;
     @$aref = (
         grep {
@@ -727,7 +727,7 @@ sub decode
     foreach my $rank ( 1 .. $RANK_KING )
     {
         my $is_king = ( $rank == $RANK_KING );
-        while ( my ( $suit_pair_idx, $indexes ) = each(@SUIT_INDEXES) )
+        while ( my ( $color, $indexes ) = each(@SUIT_INDEXES) )
         {
             my @are_not_set;
             foreach my $suit_idx (@$indexes)
@@ -811,11 +811,10 @@ sub decode
                 else
                 {
                     my @options =
-                        @{ $_possible_pair_states->{$suit_pair_idx}{$rank} };
+                        @{ $_possible_pair_states->{$color}{$rank} };
                     my $set = sub {
                         my ($opt) = @_;
-                        my $v =
-                            $self->_set_card_opt( $suit_pair_idx, $rank, $opt );
+                        my $v = $self->_set_card_opt( $color, $rank, $opt );
                         return _assert_def(
                             $variant_states->rev_single_card_states->[$v] );
                     };
