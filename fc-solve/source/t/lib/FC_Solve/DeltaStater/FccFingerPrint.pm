@@ -8,7 +8,7 @@ use 5.014;
 use parent 'FC_Solve::DeltaStater::DeBondt';
 
 use Carp ();
-use List::Util qw/ first max uniq /;
+use List::Util qw/ any first max uniq /;
 
 use Games::Solitaire::Verify::Card        ();
 use Games::Solitaire::Verify::Foundations ();
@@ -249,25 +249,6 @@ sub _init
     }
 
     return;
-}
-
-my $zero_fc_variant =
-    Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
-
-$zero_fc_variant->num_freecells(0);
-
-sub _calc_state_obj_generic
-{
-    my ( $self, $args ) = @_;
-    return $self->_is_bakers_dozen()
-        ? ( die "unimpl" )
-        : Games::Solitaire::Verify::State->new(
-        {
-            variant        => 'custom',
-            variant_params => $zero_fc_variant,
-            %{$args},
-        },
-        );
 }
 
 sub _initialize_card_states
@@ -667,6 +648,8 @@ sub encode_composite
 sub _calc_variant_states
 {
     my ($self) = @_;
+
+    # Carp::confess( "numfc = " . $self->_init_state->num_freecells );
     return $self->_variant_states(
         $self->_init_state->num_freecells ? $positive_rec : $zero_rec );
 }

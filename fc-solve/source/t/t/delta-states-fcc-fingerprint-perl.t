@@ -5,7 +5,7 @@ use warnings;
 
 use Path::Tiny qw/ path /;
 
-use Test::More tests => 1;
+use Test::More tests => 2;
 use Test::Differences qw/ eq_or_diff /;
 use FC_Solve::Paths qw/
     $FC_SOLVE_EXE
@@ -21,23 +21,27 @@ sub _canonicalize_board_string_columns
 {
     my $s = shift;
     return $s =~
-        s#((?:^:[^\n]*\n)+)#join"",sort { $a cmp $b} split/^/ms, $1#emrs;
+s#^(Freecells:)([^\n]+)#my($s,$e)=($1,$2);$s.join("",map{" $_"}sort split/\s+/,$e)#emrs
+        =~ s#((?:^:[^\n]*\n)+)#join"",sort { $a cmp $b} split/^/ms, $1#emrs;
 }
-my $zero_fc_variant =
-    Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id('freecell');
-
-$zero_fc_variant->num_freecells(0);
 
 sub mytest
 {
-    my $DEAL_IDX = shift;
+    my ($args)        = @_;
+    my $DEAL_IDX      = $args->{DEAL_IDX};
+    my $num_freecells = $args->{num_freecells};
 
     my $maxlen   = 0;
     my $board_fn = bin_board("$DEAL_IDX.board");
-    my $delta    = FC_Solve::DeltaStater::FccFingerPrint->new(
+    my $fc_variant =
+        Games::Solitaire::Verify::VariantsMap->new->get_variant_by_id(
+        'freecell');
+
+    $fc_variant->num_freecells($num_freecells);
+    my $delta = FC_Solve::DeltaStater::FccFingerPrint->new(
         {
             variant        => 'custom',
-            variant_params => $zero_fc_variant,
+            variant_params => $fc_variant,
             init_state_str => normalize_lf(
                       "Foundations: H-0 C-0 D-0 S-0\n"
                     . "Freecells:\n"
@@ -49,7 +53,7 @@ sub mytest
     my $was_printed = '';
     my $count       = 0;
     open my $exe_fh,
-qq#$FC_SOLVE_EXE -l tfts --freecells-num 0 -sam -sel -c -p -t -mi 3000000 ${board_fn} |#;
+qq#$FC_SOLVE_EXE -l tfts --freecells-num $num_freecells -sam -sel -c -p -t -mi 3000000 ${board_fn} |#;
     while ( my $l = <$exe_fh> )
     {
         if ( $l =~ /\AFoundations:/ )
@@ -103,11 +107,14 @@ SKIP:
         if ( is_freecell_only() )
         {
             Test::More::skip(
-                "freecells hard coded to 4 - we need zero freecells", 1 );
+                "freecells hard coded to 4 - we need zero freecells", 2 );
         }
 
         # TEST
-        mytest(164);
+        mytest( +{ DEAL_IDX => 164, num_freecells => 0, } );
+
+        # TEST
+        mytest( +{ DEAL_IDX => 164, num_freecells => 2, } );
     }
 }
 __END__
