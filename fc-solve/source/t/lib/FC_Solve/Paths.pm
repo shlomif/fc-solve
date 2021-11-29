@@ -10,7 +10,7 @@ use File::Temp qw( tempdir );
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL FCS_STATE_STORAGE_INTERNAL_HASH bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_rcs_states is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -66,12 +66,15 @@ sub _is_tag
 
     return ( ( $ENV{FCS_TEST_TAGS} // '' ) =~ /\b\Q$tag\E\b/ );
 }
-my $BREAK_TAG   = _is_tag('break_backcompat');
-my $FC_ONLY     = _is_tag('fc_only');
+my $BREAK_TAG = _is_tag('break_backcompat');
+my $FC_ONLY   = _is_tag('fc_only');
+my $FCS_STATE_STORAGE_INTERNAL_HASH =
+    _is_tag('FCS_STATE_STORAGE_INTERNAL_HASH');
 my $NO_FLARES   = _is_tag('no_flares');
 my $NO_PATSOLVE = _is_tag('no_pats');
 my $NO_VALGRIND = _is_tag('no_valg');
 my $NO_DBM      = _is_tag('no_dbm');
+my $rcs_states  = _is_tag('rcs_states');
 my $DBM_APR     = _is_tag('dbm_apr');
 
 # A file in the output/binaries directory where fc-solve was compiled.
@@ -107,6 +110,11 @@ sub is_break
     return $BREAK_TAG;
 }
 
+sub is_rcs_states
+{
+    return $rcs_states;
+}
+
 sub is_freecell_only
 {
     return $FC_ONLY;
@@ -130,6 +138,11 @@ sub is_without_patsolve
 sub is_without_valgrind
 {
     return $NO_VALGRIND;
+}
+
+sub FCS_STATE_STORAGE_INTERNAL_HASH
+{
+    return $FCS_STATE_STORAGE_INTERNAL_HASH;
 }
 
 sub is_dbm_apr

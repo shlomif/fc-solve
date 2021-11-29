@@ -31,10 +31,18 @@ sub import
         C    => $src,
         name => $pkg,
         NAME => $pkg,
-        INC  => join( " ",
+        INC  => join(
+            " ",
             map     { "-I$_" }
-                map { bin_file($_), src_file($_) }
-                ( ["include"], ["rinutils/rinutils/include"], [] ) ),
+                map { bin_file($_), src_file($_) } (
+                ["include"],
+                ["rinutils/rinutils/include"],
+                ["patsolve/patsolve"],
+                ["xxHash-wrapper"],
+                ["xxHash-wrapper/xxHash-0.8.0/"],
+                [],
+                )
+        ),
         CCFLAGS           => $ccflags,
         CLEAN_AFTER_BUILD => 0,
         LIBS              => "-L$ENV{FCS_BIN_PATH} $libs",
