@@ -41,7 +41,7 @@ use FC_Solve::InlineWrap (
 typedef struct
 {
     meta_allocator meta_alloc;
-    hash_table pq;
+    hash_table ht;
 } PqInC;
 
 SV* _proto_new() {
@@ -52,7 +52,7 @@ SV* _proto_new() {
 
  fc_solve_meta_compact_allocator_init(
     &(s->meta_alloc));
-        fc_solve_hash_init(&(s->meta_alloc), &(s->pq),
+        fc_solve_hash_init(&(s->meta_alloc), &(s->ht),
 #ifdef FCS_INLINED_HASH_COMPARISON
     FCS_INLINED_HASH__STATES
 #else
@@ -75,7 +75,7 @@ static inline PqInC * deref(SV * const obj) {
 }
 
 static inline hash_table * q(SV * const obj) {
-    return &(deref(obj)->pq);
+    return &(deref(obj)->ht);
 }
 
 typedef long tok;
@@ -118,11 +118,11 @@ sub new
 package main;
 
 {
-    my $pq = FcsHashTable->new;
+    my $ht = FcsHashTable->new;
 
     # TEST
-    ok( scalar( not $pq->insert(24) ), 'insert new' );
+    ok( scalar( not $ht->insert(24) ), 'insert new' );
 
     # TEST
-    ok( scalar( $pq->insert(24) ), 'insert old exists' );
+    ok( scalar( $ht->insert(24) ), 'insert old exists' );
 }
