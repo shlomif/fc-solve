@@ -96,6 +96,14 @@ memset(new_state_key, '\\0', sizeof(*new_state_key));
 #endif
     void * ret = fc_solve_hash_insert(q(obj), FCS_MY_STATE,
     DO_XXH(new_state_key, sizeof(*new_state_key)));
+    if (ret)
+    {
+        fcs_kv_state existing_state;
+        fcs_kv_state *const existing_state_raw = &existing_state;
+        FCS_STATE_collectible_to_kv(existing_state_raw, ret);
+        assert(
+!memcmp(new_state_key, existing_state_raw->key, sizeof(*new_state_key)));
+    }
     return (ret ? EXISTS : ADDED);
 }
 
