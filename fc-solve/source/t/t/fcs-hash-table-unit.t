@@ -20,7 +20,7 @@ BEGIN
     }
     else
     {
-        plan tests => 2;
+        plan tests => 5;
     }
 }
 
@@ -122,6 +122,15 @@ package main;
 
     # TEST
     ok( scalar( not $ht->insert(24) ), 'insert new' );
+
+    # TEST
+    ok( scalar( $ht->insert(24) ), 'insert old exists' );
+
+    # TEST
+    ok( scalar( not $ht->insert(4) ), 'insert new' );
+
+    # TEST
+    ok( scalar( $ht->insert(4) ), 'insert old exists' );
 
     # TEST
     ok( scalar( $ht->insert(24) ), 'insert old exists' );
