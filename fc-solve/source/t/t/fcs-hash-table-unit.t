@@ -24,7 +24,7 @@ BEGIN
     }
 }
 
-package PQ;
+package FcsHashTable;
 
 use FC_Solve::InlineWrap (
     C => <<"EOF",
@@ -47,7 +47,7 @@ typedef struct
 SV* _proto_new() {
         PqInC * s;
         SV*      obj_ref = newSViv(0);
-        SV*      obj = newSVrv(obj_ref, "PQ");
+        SV*      obj = newSVrv(obj_ref, "FcsHashTable");
         New(42, s, 1, PqInC);
 
  fc_solve_meta_compact_allocator_init(
@@ -112,13 +112,13 @@ EOF
 
 sub new
 {
-    return PQ::_proto_new();
+    return FcsHashTable::_proto_new();
 }
 
 package main;
 
 {
-    my $pq = PQ->new;
+    my $pq = FcsHashTable->new;
 
     # TEST
     ok( scalar( not $pq->insert(24) ), 'insert new' );
