@@ -17,6 +17,13 @@ if ( !delete( $ENV{'FCS_TEST_BUILD'} ) )
     plan skip_all => "Skipping because FCS_TEST_BUILD is not set";
 }
 
+# delete( $ENV{'CPATH'} );
+if ( exists $ENV{'LD_LIBRARY_PATH__ORIG'} )
+{
+    $ENV{'LD_LIBRARY_PATH'} =
+        delete( $ENV{'LD_LIBRARY_PATH__ORIG'} );
+}
+
 plan tests => 20;
 
 # Change directory to the Freecell Solver base distribution directory.
@@ -63,6 +70,10 @@ sub test_cmd
         # TEST
         test_cmd( [ "cmake", "-DCMAKE_INSTALL_PREFIX=$install_dir", $src_path ],
             "cmake succeeded" );
+        0
+            and system(
+qq#set -x ; grep -rnE "FREECELL_SOLVER_PKG_DATA_DIR|root" \$HOME /tmp ; printenv#
+            );
 
         # TEST
         test_cmd( [ "make", "boards" ] );
@@ -72,6 +83,8 @@ sub test_cmd
 
         $run_dir->mkpath;
         chdir($run_dir);
+
+0 and        system("set -x ; find $install_dir");
 
         # TEST
         test_cmd(

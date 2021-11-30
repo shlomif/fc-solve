@@ -35,11 +35,9 @@ sub import
             " ",
             map     { "-I$_" }
                 map { bin_file($_), src_file($_) } (
-                ["include"],
-                ["rinutils/rinutils/include"],
-                ["patsolve/patsolve"],
-                ["xxHash-wrapper"],
-                ["xxHash-wrapper/xxHash-0.8.0/"],
+                ["include"],           ["rinutils/rinutils/include"],
+                ["patsolve/patsolve"], ["patsolve/patsolve/include"],
+                ["xxHash-wrapper"],    ["xxHash-wrapper/xxHash-0.8.0/"],
                 [],
                 )
         ),

@@ -207,6 +207,8 @@ sub myglob
 
     Env::Path->CPATH->Prepend( $abs_bindir, );
 
+    $ENV{'LD_LIBRARY_PATH__ORIG'} =
+        ( $ENV{'LD_LIBRARY_PATH'} // "" );
     Env::Path->LD_LIBRARY_PATH->Prepend($fcs_bin_path);
     if ($FC_Solve::Paths::Base::IS_WIN)
     {

@@ -8,7 +8,7 @@ use autodie;
 use Path::Tiny qw/ path /;
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 
-my $SYS       = "fedora:33";
+my $SYS       = "fedora:35";
 my $CONTAINER = "fcsfed";
 my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, }, );
@@ -17,8 +17,8 @@ my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
 $obj->clean_up();
 $obj->run_docker();
-$obj->docker( { cmd => [ 'cp', "../source",  "fcsfed:source", ] } );
-$obj->docker( { cmd => [ 'cp', "../scripts", "fcsfed:scripts", ] } );
+$obj->docker( { cmd => [ 'cp', "../source",  "fcsfed:root/source", ] } );
+$obj->docker( { cmd => [ 'cp', "../scripts", "fcsfed:root/scripts", ] } );
 
 my $REMOVED_SANITY_CHECK = <<'EOF';
 curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
@@ -26,6 +26,7 @@ EOF
 
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
+cd ~
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
 sudo pip3 install --prefix=/usr freecell_solver
 pip3 install --user freecell_solver
@@ -33,6 +34,8 @@ mkdir b
 cd b
 perl ../scripts/Tatzer
 make
+# export HARNESS_VERBOSE=1
+# FCS_TEST_BUILD=1 perl ../source/run-tests.pl --execute="perl `pwd`/../source/t/t/build*.t"
 FCS_TEST_BUILD=1 perl ../source/run-tests.pl --glob='build*.t'
 EOSCRIPTTTTTTT
 
