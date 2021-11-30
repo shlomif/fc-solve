@@ -42,13 +42,13 @@ typedef struct
 {
     meta_allocator meta_alloc;
     hash_table ht;
-} PqInC;
+} HashTableInC;
 
 SV* _proto_new() {
-        PqInC * s;
+        HashTableInC * s;
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FcsHashTable");
-        New(42, s, 1, PqInC);
+        New(42, s, 1, HashTableInC);
 
  fc_solve_meta_compact_allocator_init(
     &(s->meta_alloc));
@@ -70,8 +70,8 @@ SV* _proto_new() {
         return obj_ref;
 }
 
-static inline PqInC * deref(SV * const obj) {
-    return (PqInC*)SvIV(SvRV(obj));
+static inline HashTableInC * deref(SV * const obj) {
+    return (HashTableInC*)SvIV(SvRV(obj));
 }
 
 static inline hash_table * q(SV * const obj) {
