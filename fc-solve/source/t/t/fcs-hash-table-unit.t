@@ -20,7 +20,7 @@ BEGIN
     }
     else
     {
-        plan tests => 25;
+        plan tests => 125;
     }
 }
 
@@ -213,12 +213,14 @@ package main;
 {
     my $h = MultiHash->new( { names => [qw/ one two /] } );
 
+    srand(8);
     foreach my $token (
         ( map { [ 'one', $_ ] } 1 .. 5, reverse( 1 .. 5 ), ),
         ( map { [ 'two', $_ ] } 1 .. 5, reverse( 1 .. 5 ), ),
+        ( map { [ 'one', int( rand(20) ), ] } 1 .. 100 ),
         )
     {
-        # TEST*(10+10)
+        # TEST*(10+10+100)
         $h->insert($token);
     }
 }
