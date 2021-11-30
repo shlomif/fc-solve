@@ -20,7 +20,7 @@ BEGIN
     }
     else
     {
-        plan tests => 5;
+        plan tests => 15;
     }
 }
 
@@ -115,6 +115,80 @@ sub new
     return FcsHashTable::_proto_new();
 }
 
+package OneHash;
+
+use Test::More;
+
+sub new
+{
+    my $class = shift;
+
+    my $self = bless {}, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
+
+sub _init
+{
+    my ( $self, $args ) = @_;
+
+    $self->{'c'}    = FcsHashTable->new;
+    $self->{'perl'} = +{};
+
+    return;
+}
+
+sub insert
+{
+    my ( $self, $token ) = @_;
+
+    my $r1 = $self->{'c'}->insert($token);
+    my $r2 = exists( $self->{'perl'}->{$token} );
+
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my $ret = is( ( !$r1 ), ( !$r2 ), "same" );
+    $self->{'perl'}->{$token} = 1;
+    return $ret;
+}
+
+package MultiHash;
+
+sub new
+{
+    my $class = shift;
+
+    my $self = bless {}, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
+
+sub _init
+{
+    my ( $self, $args ) = @_;
+
+    $self->{'h'} = +{ map { $_ => OneHash->new } @{ $args->{names} } };
+
+    return;
+}
+
+sub insert
+{
+    local $Test::Builder::Level = $Test::Builder::Level + 1;
+    my ( $self, $name, $token ) = @_;
+    if ( ref($name) )
+    {
+        ( $name, $token ) = @$name;
+    }
+
+    return $self->{'h'}->{$name}->insert($token);
+}
+
+1;
+
 package main;
 
 {
@@ -134,4 +208,14 @@ package main;
 
     # TEST
     ok( scalar( $ht->insert(24) ), 'insert old exists' );
+}
+
+{
+    my $h = MultiHash->new( { names => [qw/ one two /] } );
+
+    foreach my $token ( map { [ 'one', $_ ] } 1 .. 5, reverse( 1 .. 5 ), )
+    {
+        # TEST*(10)
+        $h->insert($token);
+    }
 }
