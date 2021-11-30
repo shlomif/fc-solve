@@ -84,7 +84,7 @@ qq#set -x ; grep -rnE "FREECELL_SOLVER_PKG_DATA_DIR|root" \$HOME /tmp ; printenv
         $run_dir->mkpath;
         chdir($run_dir);
 
-0 and        system("set -x ; find $install_dir");
+        0 and system("set -x ; find $install_dir");
 
         # TEST
         test_cmd(
