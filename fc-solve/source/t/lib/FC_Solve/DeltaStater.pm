@@ -83,6 +83,7 @@ sub _calc_state_obj_generic
         ? Games::Solitaire::Verify::State->new(
         {
             variant => $self->_variant(),
+            %{ $self->_orig_args() },
             %{$args},
         }
         )
@@ -90,6 +91,7 @@ sub _calc_state_obj_generic
         {
             variant        => 'custom',
             variant_params => $two_fc_variant,
+            %{ $self->_orig_args() },
             %{$args},
         },
         );
@@ -100,7 +102,7 @@ sub _calc_state_obj_from_string
     my ( $self, $args ) = @_;
 
     return $self->_calc_state_obj_generic(
-        { string => $args->{str}, %$args, } );
+        { %{ $self->_orig_args() }, string => $args->{str}, %$args, } );
 }
 
 sub _calc_new_empty_state_obj

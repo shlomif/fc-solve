@@ -39,15 +39,15 @@ sub mytest
         'freecell');
 
     $fc_variant->num_freecells($num_freecells);
+    my $init_state_str =
+        normalize_lf( "Foundations: H-0 C-0 D-0 S-0\n"
+            . "Freecells:\n"
+            . ( path($board_fn)->slurp_raw() =~ s/^/: /gmrs ) );
     my $delta = FC_Solve::DeltaStater::FccFingerPrint->new(
         {
             variant        => 'custom',
             variant_params => $fc_variant,
-            init_state_str => normalize_lf(
-                      "Foundations: H-0 C-0 D-0 S-0\n"
-                    . "Freecells:\n"
-                    . ( path($board_fn)->slurp_raw() =~ s/^/: /gmrs )
-            ),
+            init_state_str => $init_state_str,
         }
     );
 
@@ -68,13 +68,23 @@ READ_BOARD:
             {
                 next READ_BOARD;
             }
-            $delta->set_derived(
-                {
-                    state_str => normalize_lf($l),
-                }
-            );
-            my $state_str = $delta->_derived_state->to_string;
-            my $encoded   = $delta->encode_composite();
+            my $state_str;
+            my $encoded;
+            eval {
+                $delta->set_derived(
+                    {
+                        state_str => normalize_lf($l),
+                    }
+                );
+                $state_str = $delta->_derived_state->to_string;
+                $encoded   = $delta->encode_composite();
+            };
+            if ( my $err = $@ )
+            {
+                print "error <$err> when processing <$init_state_str> <$l> <>.";
+                die $err;
+            }
+
             die if @$encoded != 2;
 
             # say "gotencoded=<@$encoded>";

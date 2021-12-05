@@ -28,6 +28,7 @@ See git/fc-solve/fc-solve/docs/debondt-compact-freecell-positions--document.asci
 __PACKAGE__->mk_acc_ref( [qw(_proxied_worker)] );
 
 use FC_Solve::DeltaStater::Constants qw/
+    $NUM_KING_OPTS
     $NUM_OPTS
     $OPT_DONT_CARE
     $OPT_FREECELL
@@ -56,6 +57,7 @@ sub _assert_def
 package FC_Solve::DeltaStater::FccFingerPrint::StatesRecord;
 
 use parent 'Games::Solitaire::Verify::Base';
+use List::Util qw/ any first max uniq /;
 
 __PACKAGE__->mk_acc_ref(
     [
@@ -197,14 +199,57 @@ sub _my_add_state
 sub _calc_initial_possible_pair_states
 {
     my ($rec) = @_;
+    my $variant_states = $rec;
     return {
         map {
             my $pair = $_;
-            $pair =>
-                +{ map { $_ => [ 0 .. ( $rec->CARD_PAIR_STATE_BASE() - 1 ) ], }
-                    ( 1 .. $RANK_KING ) };
+            $pair => +{
+                map {
+                    my $rank   = $_;
+                    my $values = [ 0 .. ( $rec->CARD_PAIR_STATE_BASE() - 1 ) ];
+                    if ( $rank == $RANK_KING )
+                    {
+                        @$values = (
+                            grep {
+                                my $i = $_;
+                                not any
+                                {
+                                    $_ == $variant_states->single_card_states()
+                                        ->{'PARENT_0'}
+                                        or $_ ==
+                                        $variant_states->single_card_states()
+                                        ->{'PARENT_1'}
+                                }
+                                @{ $rec->REVERSE_CARD_PAIR_STATES_MAP->[$i] }
+                            } @$values
+                        );
+
+                        # say "values = @$values";
+                    }
+                    $rank => $values
+                } ( 1 .. $RANK_KING )
+            };
         } 0 .. 1
     };
+}
+
+sub _calc__remaining__single_options
+{
+    my ( $variant_states, $card_idx, $options ) = @_;
+
+    my @single_options = sort { $a <=> $b } uniq(
+        map {
+            my $xx = $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
+                ->[$card_idx];
+
+            $xx
+        } @$options
+    );
+    if ( @single_options > $variant_states->num_single_card_states )
+    {
+        die;
+    }
+    return \@single_options;
 }
 
 package FC_Solve::DeltaStater::FccFingerPrint;
@@ -322,18 +367,9 @@ sub _encode_single_uknown_info_card
     my $rank                  = $self->_rank;
     my $_possible_pair_states = $self->_possible_pair_states();
     my @options               = @{ $_possible_pair_states->{$color}{$rank} };
-    my @single_options        = sort { $a <=> $b } uniq(
-        map {
-            my $xx = $variant_states->REVERSE_CARD_PAIR_STATES_MAP()->[$_]
-                ->[$card_idx];
-
-            $xx
-        } @options
-    );
-    if ( @single_options > $variant_states->num_single_card_states )
-    {
-        die;
-    }
+    my $single_options =
+        $variant_states->_calc__remaining__single_options( $card_idx,
+        \@options );
     $self->_set_card_opt( $color, $rank, $opt->sub_state );
     if ($is_king)
     {
@@ -345,11 +381,14 @@ sub _encode_single_uknown_info_card
                     $_ == $variant_states->single_card_states()
                         ->{'ABOVE_FREECELL'}
                 }
-                @single_options
+                @$single_options
             )
             )
         {
-            my $state_o = $opt->sub_state;
+            my $state_o = _assert_def(
+                scalar firstidx { $_ == $opt->sub_state }
+                @$single_options
+            );
             $state_writer->write( { base => 2, item => $state_o } );
         }
     }
@@ -357,11 +396,11 @@ sub _encode_single_uknown_info_card
     {
         my $state_o = _assert_def(
             scalar firstidx { $_ == $opt->sub_state }
-            @single_options
+            @$single_options
         );
         $state_writer->write(
             {
-                base => ( scalar @single_options ),
+                base => ( scalar @$single_options ),
                 item => $state_o
             }
         );
@@ -595,7 +634,7 @@ sub encode_composite
                 : ${ $self->_opt_by_suit_rank( $suit2, $rank ) };
             die if !( defined $opt1->fingerprint_state );
 
-            if ( !( defined $opt2->fingerprint_state ) )
+            if ( ( !defined $opt2 ) or !( defined $opt2->fingerprint_state ) )
             {
                 $DB::single = 1;
                 Carp::confess("opt2");
@@ -804,11 +843,21 @@ sub decode
                             )
                             )
                         {
-                            $data = $state_reader->read( { base => 2, } );
+                            $data = $state_reader->read(2);
                         }
-                        $card_states[ $indexes->[$card_idx] ][$rank] =
-                            _assert_def(
-                            $variant_states->rev_single_card_states->[$data] );
+                        my $single_options =
+                            $variant_states->_calc__remaining__single_options(
+                            $card_idx, \@options );
+                        Carp::confess("outofbound $data [ @$single_options ]")
+                            if $data >= @$single_options;
+                        my $oval = _assert_def(
+                            $variant_states->rev_single_card_states->[
+                                $single_options->[$data]
+                            ]
+                        );
+                        die "big $oval >= $NUM_KING_OPTS"
+                            if $oval >= $NUM_KING_OPTS;
+                        $card_states[ $indexes->[$card_idx] ][$rank] = $oval;
                     }
                 }
                 else
@@ -875,6 +924,10 @@ sub decode
             my $val = $card_states[$suit_idx][$rank];
             if ( $val >= 0 )
             {
+                if ( $rank == $RANK_KING )
+                {
+                    die "big $val >= $NUM_KING_OPTS" if $val >= $NUM_KING_OPTS;
+                }
                 push @queue, _assert_def($val);
             }
             else
@@ -931,6 +984,10 @@ sub _init
 sub read
 {
     my ( $self, $base ) = @_;
+    if ( ref($base) ne "" or ( $base != int($base) ) )
+    {
+        Carp::confess("wrong $base");
+    }
 
     my $ret = shift( @{ $self->{_q} } );
 
