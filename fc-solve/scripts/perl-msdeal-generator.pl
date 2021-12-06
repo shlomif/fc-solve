@@ -9,45 +9,7 @@
 use strict;
 use warnings;
 
-package Freecell::Deal::MS;
-
-use strict;
-use warnings;
-
-use Math::RNG::Microsoft ();
-
-use Class::XSAccessor {
-    constructor => 'new',
-    accessors   => [qw(deal)],
-};
-
-sub as_str
-{
-    my ($self) = @_;
-
-    my @cards = (
-        map {
-            my $s = $_;
-            map { $s . $_ } qw/C D H S/;
-        } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
-    );
-    Math::RNG::Microsoft->new( seed => scalar( $self->deal ) )
-        ->shuffle( \@cards );
-    my @lines = ( map { [ ':', ] } 0 .. 7 );
-    my $i     = 0;
-    while (@cards)
-    {
-        push @{ $lines[$i] }, pop(@cards);
-        $i = ( ( $i + 1 ) & 7 );
-    }
-    my $str = join "", map { "@$_\n" } @lines;
-    return $str;
-}
-
-package main;
-
-use strict;
-use warnings;
+use Freecell::Deal::MS ();
 use Getopt::Long qw/ GetOptions /;
 
 my $dir;
