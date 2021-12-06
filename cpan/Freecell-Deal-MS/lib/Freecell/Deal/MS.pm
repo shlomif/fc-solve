@@ -47,8 +47,15 @@ Freecell::Deal::MS - deal Windows FreeCell / FC Pro layouts
 
 =head1 METHODS
 
-=head2
+=head2 Freecell::Deal::MS->new(deal => 11982)
 
-=head2
+Constructor.
 
+=head2 $obj->as_str()
+
+Returns the deal layout as a string.
+
+=head2 $obj->deal()
+
+B<For internal use!>
 =cut
