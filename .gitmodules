@@ -1,0 +1,3 @@
+[submodule "fc-solve/source/xxHash-wrapper"]
+	path = fc-solve/source/xxHash-wrapper
+	url = https://github.com/shlomif/xxHash-wrapper
