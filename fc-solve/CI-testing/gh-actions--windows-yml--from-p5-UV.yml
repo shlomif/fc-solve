@@ -33,6 +33,8 @@ jobs:
           git config --global core.autocrlf false
           git config --global core.eol lf
       - uses: actions/checkout@v2
+        with:
+          submodules: "true"
       - name: perl -V
         run: perl -V
       - name: Install Alien::libuv
