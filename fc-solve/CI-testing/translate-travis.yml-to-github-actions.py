@@ -55,7 +55,12 @@ def generate(output_path, is_act):
     with open("./.travis.yml", "rt") as infh:
         data = yaml.safe_load(infh)
     steps = []
-    steps.append({"uses": ("actions/checkout@v2"), })
+    steps.append({
+        "uses": ("actions/checkout@v2"),
+        "with": {
+            "submodules": "true",
+        },
+    })
     if 0:
         steps.append({
             "run":

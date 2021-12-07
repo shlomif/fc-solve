@@ -6,6 +6,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         -   uses: actions/checkout@v2
+            with:
+                submodules: 'true'
         -   run: sudo apt-get update -qq
         -   run: sudo apt-get --no-install-recommends install -y eatmydata
         -   run: sudo eatmydata apt-get --no-install-recommends install -y asciidoc
