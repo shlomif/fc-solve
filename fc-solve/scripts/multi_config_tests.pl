@@ -733,6 +733,13 @@ _chdir_run(
     }
 );
 
+_chdir_run(
+    '../../cpan/Freecell-Deal-MS/',
+    sub {
+        run_cmd( "Freecell-Deal-MS dzil", { cmd => [qw(dzil test --all)] } );
+    }
+);
+
 use Getopt::Long qw/ GetOptions /;
 
 my $include_filter;
