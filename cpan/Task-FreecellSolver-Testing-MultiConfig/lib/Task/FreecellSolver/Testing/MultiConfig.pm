@@ -38,6 +38,8 @@ the Freecell Solver multi-config test suite.
 
 =pkg Markdent
 
+=pkg Math::RNG::Microsoft
+
 =pkg Parallel::ForkManager::Segmented
 
 =pkg Pod::Coverage::TrustPod
