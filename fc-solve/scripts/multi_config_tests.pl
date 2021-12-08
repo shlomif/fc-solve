@@ -1,4 +1,4 @@
-#!/usr/bin/perl
+#!/usr/bin/env perl
 
 # The aim of this program is to run Freecell Solver’s test suite with
 # several different  build-time configurations of the solver, to make sure
@@ -725,20 +725,19 @@ _chdir_run(
     }
 );
 
-_chdir_run(
+foreach my $dir (
     '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
-    sub {
-        run_cmd( "Games-Solitaire-Verify dzil",
-            { cmd => [qw(dzil test --all)] } );
-    }
-);
-
-_chdir_run(
     '../../cpan/Freecell-Deal-MS/',
-    sub {
-        run_cmd( "Freecell-Deal-MS dzil", { cmd => [qw(dzil test --all)] } );
-    }
-);
+    )
+{
+    _chdir_run(
+        $dir,
+        sub {
+            my ($mod) = ( $dir =~ m#/([^/]+)/\z#ms ) or Carp::confess("$dir");
+            return run_cmd( "$mod dzil", { cmd => [qw(dzil test --all)] } );
+        }
+    );
+}
 
 use Getopt::Long qw/ GetOptions /;
 
