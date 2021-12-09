@@ -6,7 +6,7 @@ use warnings;
 use parent 'Games::Solitaire::Verify::Base';
 
 use YAML::XS qw(DumpFile LoadFile);
-use FC_Solve::Paths qw( is_freecell_only is_without_flares );
+use FC_Solve::Paths qw( is_freecell_only is_tag is_without_flares );
 
 use Carp ();
 
@@ -76,6 +76,11 @@ q#Test skipped because it's a non-Freecell variant on a Freecell-only build.#
         return ok( 1,
 q#Test skipped because it uses flares, and we are running on a build without flares.#
         );
+    }
+
+    if ( $args->{visited_iter} and is_tag('FCS_WITHOUT_VISITED_ITER') )
+    {
+        return ok( 1, q#Test skipped because it needs visited-iter.# );
     }
 
     my $id = $args->{id};

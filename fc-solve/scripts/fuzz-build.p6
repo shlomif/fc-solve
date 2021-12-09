@@ -12,7 +12,7 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     if ($g)
     {
         %*ENV{"FCS_GCC"}=1;
-        $seed = $rb ?? 1 !! 1;
+        $seed = $rb ?? 1 !! 2;
     }
     else
     {
@@ -34,16 +34,19 @@ sub MAIN(Bool :$g=False, Bool :$t=False, Bool :$rb=False)
     }
     while True
     {
-        say "Checking seed=$seed";
-        %*ENV{"FCS_THEME_RAND"}="$seed";
-        if shell($cmd)
-        {
-            ++$seed;
+        for 1 .. 10 -> $num-args {
+            say "Checking seed=$seed numargs=$num-args";
+            %*ENV{"FCS_THEME_RAND"}="$seed";
+            %*ENV{"FCS_THEME_RAND_COUNT"}="$num-args";
+            if shell($cmd)
+            {
+            }
+            else
+            {
+                say "seed=$seed failed";
+                exit;
+            }
         }
-        else
-        {
-            say "seed=$seed failed";
-            last;
-        }
+        ++$seed;
     }
 }

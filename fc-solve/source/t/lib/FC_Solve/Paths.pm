@@ -10,7 +10,7 @@ use File::Temp qw( tempdir );
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL FCS_STATE_STORAGE_INTERNAL_HASH bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_rcs_states is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL FCS_STATE_STORAGE_INTERNAL_HASH bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_rcs_states is_tag is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -66,6 +66,12 @@ sub _is_tag
 
     return ( ( $ENV{FCS_TEST_TAGS} // '' ) =~ /\b\Q$tag\E\b/ );
 }
+
+sub is_tag
+{
+    return _is_tag(@_);
+}
+
 my $BREAK_TAG = _is_tag('break_backcompat');
 my $FC_ONLY   = _is_tag('fc_only');
 my $FCS_STATE_STORAGE_INTERNAL_HASH =

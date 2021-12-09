@@ -197,10 +197,11 @@ __PACKAGE__->populate(
         },
         'freecell24_children_playing_ball' => {
             args => {
-                id          => "freecell24_children_playing_ball",
-                deal        => 24,
-                theme       => [ "-l", "children-playing-ball" ],
-                with_flares => 1
+                id           => "freecell24_children_playing_ball",
+                deal         => 24,
+                theme        => [ "-l", "children-playing-ball" ],
+                visited_iter => 1,
+                with_flares  => 1
             },
             msg => "Verifying the solution of deal No. 24 with -l cpb",
         },

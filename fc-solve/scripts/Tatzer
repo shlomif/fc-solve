@@ -263,16 +263,40 @@ if ( defined $SEED )
         keys %k;
 
     require Math::Random::MT;
-    my $gen = Math::Random::MT->new($SEED);
-    my @subset;
-    foreach my $key (@k)
-    {
-        if ( $gen->rand() < 0.5 )
+    my $gen     = Math::Random::MT->new($SEED);
+    my $shuffle = sub {
+        my ($deck) = @_;
+
+        if (@$deck)
         {
-            push @subset, $key;
+            my $i = @$deck;
+            while ( --$i )
+            {
+                my $j = int $gen->rand( $i + 1 );
+                @$deck[ $i, $j ] = @$deck[ $j, $i ];
+            }
+        }
+
+        return $deck;
+    };
+    my $COUNT = $ENV{FCS_THEME_RAND_COUNT};
+    my @subset;
+    if (0)
+    {
+        foreach my $key (@k)
+        {
+            if ( $gen->rand() < 0.5 )
+            {
+                push @subset, $key;
+            }
         }
     }
-    my $FN = "run-t-$SEED.bash";
+    else
+    {
+        $shuffle->( \@k );
+        @subset = @k[ 0 .. $COUNT - 1 ];
+    }
+    my $FN = "run-t-$SEED-$COUNT.bash";
     @subset = grep { not /libavl/i } @subset;
     path($FN)->spew_utf8("$^X $0 @subset\n");
     delete $ENV{$SEED_KEY};
