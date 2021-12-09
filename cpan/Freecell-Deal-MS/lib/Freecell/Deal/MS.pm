@@ -3,7 +3,7 @@ package Freecell::Deal::MS;
 use strict;
 use warnings;
 
-use Math::RNG::Microsoft ();
+use Math::RNG::Microsoft::FCPro ();
 
 use Class::XSAccessor {
     constructor => 'new',
@@ -20,7 +20,7 @@ sub as_str
             map { $s . $_ } qw/C D H S/;
         } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
     );
-    Math::RNG::Microsoft->new( seed => scalar( $self->deal ) )
+    Math::RNG::Microsoft::FCPro->new( seed => scalar( $self->deal ) )
         ->shuffle( \@cards );
     my @lines = ( map { [ ':', ] } 0 .. 7 );
     my $i     = 0;
@@ -78,10 +78,6 @@ Returns the deal layout as a string.
 =head2 $obj->deal()
 
 B<For internal use!>
-
-=head1 LIMITATIONS
-
-Does not handle deals above 2 Gi .
 
 =head1 SEE ALSO
 
