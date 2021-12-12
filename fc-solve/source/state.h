@@ -446,6 +446,11 @@ extern int fc_solve_state_compare_with_context(
 extern void fc_solve_card_stringify(
     const fcs_card card, char *const str PASS_T(const bool t));
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wreserved-identifier"
+#endif
+
 #ifdef FC_SOLVE__STRICTER_BOARD_PARSING
 #define FC_SOLVE_MAP_CHAR(c) (c)
 #else
@@ -530,6 +535,11 @@ static inline __attribute__((pure)) fcs_card fcs_str2rank(const char *string)
         }
     }
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
 // This function converts an entire card from its string representations
 // (e.g: "AH", "KS", "8D"), to a fcs_card data type.
 static inline __attribute__((pure)) fcs_card fc_solve_card_parse_str(
