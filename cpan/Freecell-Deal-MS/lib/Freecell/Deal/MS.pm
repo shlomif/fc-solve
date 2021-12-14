@@ -25,11 +25,10 @@ sub as_str
     Math::RNG::Microsoft::FCPro->new( seed => scalar( $self->deal ) )
         ->shuffle( \@cards );
     my @lines = ( map { [ ':', ] } 0 .. 7 );
-    my $i     = 0;
+    my $i     = -1;
     while (@cards)
     {
-        push @{ $lines[$i] }, pop(@cards);
-        $i = ( ( $i + 1 ) & 7 );
+        push @{ $lines[ ( ( ++$i ) & 7 ) ] }, pop(@cards);
     }
     my $str = join "", map { "@$_\n" } @lines;
     return $str;
