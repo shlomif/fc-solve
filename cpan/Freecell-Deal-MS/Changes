@@ -1,5 +1,9 @@
 Revision history for Freecell-Deal-MS
 
+0.4.0       2021-12-14
+    - Optimizations
+    - Documentation improvements.
+
 0.2.0       2021-12-09
     - Handle extended Freecell Pro deals (> 2 Gi).
 

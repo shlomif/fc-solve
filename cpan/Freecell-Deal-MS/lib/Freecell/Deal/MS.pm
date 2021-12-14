@@ -36,6 +36,8 @@ sub as_str
 
 1;
 
+__END__
+
 =encoding utf8
 
 =head1 NAME
@@ -66,6 +68,9 @@ Freecell::Deal::MS - deal Windows FreeCell / FC Pro layouts
     EOF
 
 =head1 DESCRIPTION
+
+Deals FC Pro deals: L<http://rosettacode.org/wiki/Deal_cards_for_FreeCell>
+and L<https://fc-solve.shlomifish.org/faq.html#what_are_ms_deals> .
 
 =head1 METHODS
 
