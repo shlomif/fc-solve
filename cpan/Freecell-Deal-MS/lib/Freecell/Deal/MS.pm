@@ -10,16 +10,18 @@ use Class::XSAccessor {
     accessors   => [qw(deal)],
 };
 
+my @INITIAL_CARDS = (
+    map {
+        my $s = $_;
+        map { $s . $_ } qw/C D H S/;
+    } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
+);
+
 sub as_str
 {
     my ($self) = @_;
 
-    my @cards = (
-        map {
-            my $s = $_;
-            map { $s . $_ } qw/C D H S/;
-        } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
-    );
+    my @cards = @INITIAL_CARDS;
     Math::RNG::Microsoft::FCPro->new( seed => scalar( $self->deal ) )
         ->shuffle( \@cards );
     my @lines = ( map { [ ':', ] } 0 .. 7 );
@@ -63,6 +65,7 @@ Freecell::Deal::MS - deal Windows FreeCell / FC Pro layouts
     : 9D JC 2C QS TH 2D
     : AH 7C 6D 8D TD 7H
     EOF
+
 =head1 DESCRIPTION
 
 =head1 METHODS
