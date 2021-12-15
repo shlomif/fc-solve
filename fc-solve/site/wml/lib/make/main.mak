@@ -521,12 +521,13 @@ BROWSER_TESTS_URL = $(BROWSER_TESTS_URL__BASE)$(TEST_SITE_URL_SUFFIX)
 QUNIT_PUP_copy_path = node_modules/.bin/q2.js
 
 QUNIT_PUP = qunit-puppeteer
-# I don't know why we need that, but we do; otherwise
-# qunit-puppeteer silently does nothing.
+# We used to need that due to an outdated 'puppeteer'
+# in https://github.com/shlomif/qunit-puppeteer , but we
+# no longer do. Otherwise qunit-puppeteer silently did nothing.
 # QUNIT_PUP = node $(QUNIT_PUP_copy_path)
 
 browser-tests: all
-	cp -f node_modules/.bin/qunit-puppeteer $(QUNIT_PUP_copy_path)
+	# cp -f node_modules/.bin/qunit-puppeteer $(QUNIT_PUP_copy_path)
 	$(QUNIT_PUP) "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
 	$(QUNIT_PUP) "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
 
