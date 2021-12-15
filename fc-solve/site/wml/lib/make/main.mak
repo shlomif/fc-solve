@@ -518,11 +518,19 @@ real_all: ml_archive
 
 BROWSER_TESTS_URL = $(BROWSER_TESTS_URL__BASE)$(TEST_SITE_URL_SUFFIX)
 
+QUNIT_PUP_copy_path = node_modules/.bin/q2.js
+
+QUNIT_PUP = qunit-puppeteer
+# I don't know why we need that, but we do; otherwise
+# qunit-puppeteer silently does nothing.
+QUNIT_PUP = node $(QUNIT_PUP_copy_path)
+
 browser-tests: all
-	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
-	qunit-puppeteer "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
+	cp -f node_modules/.bin/qunit-puppeteer $(QUNIT_PUP_copy_path)
+	$(QUNIT_PUP) "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
+	$(QUNIT_PUP) "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
 
 MAKE_WITH_PROD = $(MAKE) PROD=$(PROD) LOCAL_BROWSER_TESTS=$(LOCAL_BROWSER_TESTS)
 
 smoke-tests:
-	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && $(MAKE_WITH_PROD) test && $(MAKE_WITH_PROD) upload_local upload_staging && $(MAKE_WITH_PROD) browser-tests
+	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && ($(MAKE_WITH_PROD) test || false) && $(MAKE_WITH_PROD) upload_local upload_staging && $(MAKE_WITH_PROD) browser-tests
