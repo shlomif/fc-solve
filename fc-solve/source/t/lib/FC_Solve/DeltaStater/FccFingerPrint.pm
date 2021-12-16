@@ -914,7 +914,10 @@ sub decode
 
     foreach my $suit_idx ( 0 .. $#suits )
     {
-        push @queue, $foundations_obj->value( $suits[$suit_idx], 0 );
+        push @queue,
+            [
+            14, _assert_def( $foundations_obj->value( $suits[$suit_idx], 0 ) )
+            ];
     }
 
     foreach my $rank ( 1 .. $self->_get_top_rank_for_iter() )
@@ -924,11 +927,13 @@ sub decode
             my $val = $card_states[$suit_idx][$rank];
             if ( $val >= 0 )
             {
+                my $base = $NUM_OPTS;
                 if ( $rank == $RANK_KING )
                 {
+                    $base = $NUM_KING_OPTS;
                     die "big $val >= $NUM_KING_OPTS" if $val >= $NUM_KING_OPTS;
                 }
-                push @queue, _assert_def($val);
+                push @queue, [ _assert_def($base), _assert_def($val) ];
             }
             else
             {
@@ -989,8 +994,9 @@ sub read
         Carp::confess("wrong $base");
     }
 
-    my $ret = shift( @{ $self->{_q} } );
+    my ( $retbase, $ret ) = @{ shift( @{ $self->{_q} } ) };
 
+    die                             if $retbase ne $base;
     die                             if $ret ne int($ret);
     die                             if $ret < 0;
     Carp::confess("big $ret $base") if $ret >= $base;
