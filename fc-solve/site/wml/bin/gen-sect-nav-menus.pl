@@ -170,7 +170,8 @@ foreach my $host (qw(fc-solve))
 
     Parallel::Map::Segmented->new()->run(
         {
-            items => [
+            WITH_PM => 1,
+            items   => [
                 ( $host eq 'fc-solve' )
                 ? @ARGV
                 : (qw(index.html lecture/index.html))
