@@ -65,6 +65,7 @@ static inline void fcs_lock_destroy(fcs_lock *const lock)
 
 static const pthread_mutex_t initial_mutex_constant = PTHREAD_MUTEX_INITIALIZER;
 static const pthread_cond_t initial_cond_constant = PTHREAD_COND_INITIALIZER;
+static const int FCS_LOCK_FAILURE_EXIT_CODE = 2;
 
 typedef pthread_mutex_t fcs_lock;
 typedef pthread_cond_t fcs_condvar;
@@ -74,7 +75,7 @@ static inline void fcs_lock_lock(fcs_lock *const lock)
     // See: https://github.com/shlomif/fc-solve/issues/85
     if (unlikely(ret))
     {
-        exit(2);
+        exit(FCS_LOCK_FAILURE_EXIT_CODE);
     }
 }
 static inline void fcs_lock_init(fcs_lock *const lock)
@@ -86,7 +87,7 @@ static inline void fcs_lock_unlock(fcs_lock *const lock)
     const_AUTO(ret, pthread_mutex_unlock(lock));
     if (unlikely(ret))
     {
-        exit(2);
+        exit(FCS_LOCK_FAILURE_EXIT_CODE);
     }
 }
 static inline void fcs_lock_destroy(fcs_lock *const lock)
