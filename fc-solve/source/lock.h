@@ -70,7 +70,12 @@ typedef pthread_mutex_t fcs_lock;
 typedef pthread_cond_t fcs_condvar;
 static inline void fcs_lock_lock(fcs_lock *const lock)
 {
-    pthread_mutex_lock(lock);
+    const_AUTO(ret, pthread_mutex_lock(lock));
+    // See: https://github.com/shlomif/fc-solve/issues/85
+    if (unlikely(ret))
+    {
+        exit(2);
+    }
 }
 static inline void fcs_lock_init(fcs_lock *const lock)
 {
@@ -78,7 +83,11 @@ static inline void fcs_lock_init(fcs_lock *const lock)
 }
 static inline void fcs_lock_unlock(fcs_lock *const lock)
 {
-    pthread_mutex_unlock(lock);
+    const_AUTO(ret, pthread_mutex_unlock(lock));
+    if (unlikely(ret))
+    {
+        exit(2);
+    }
 }
 static inline void fcs_lock_destroy(fcs_lock *const lock)
 {
