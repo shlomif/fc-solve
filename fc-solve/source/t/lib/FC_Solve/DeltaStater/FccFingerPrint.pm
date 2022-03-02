@@ -219,8 +219,8 @@ sub _calc_initial_possible_pair_states
                                         or $_ ==
                                         $variant_states->single_card_states()
                                         ->{'PARENT_1'}
-                                }
-                                @{ $rec->REVERSE_CARD_PAIR_STATES_MAP->[$i] }
+                                    } @{ $rec->REVERSE_CARD_PAIR_STATES_MAP
+                                        ->[$i] }
                             } @$values
                         );
 
@@ -380,8 +380,7 @@ sub _encode_single_uknown_info_card
                 {
                     $_ == $variant_states->single_card_states()
                         ->{'ABOVE_FREECELL'}
-                }
-                @$single_options
+                } @$single_options
             )
             )
         {
@@ -437,8 +436,7 @@ sub _encode_a_pair_of_uknown_info_cards
                             ->[$_]->[$card_idx];
                         $xx == $variant_states->single_card_states()
                             ->{'ABOVE_FREECELL'}
-                    }
-                    @options
+                    } @options
                 )
                 )
             {
@@ -838,8 +836,7 @@ sub decode
                                         ->[$card_idx];
                                     $xx == $variant_states->single_card_states()
                                         ->{'ABOVE_FREECELL'}
-                                }
-                                @options
+                                } @options
                             )
                             )
                         {

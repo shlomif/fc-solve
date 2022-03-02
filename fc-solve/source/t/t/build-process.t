@@ -204,10 +204,7 @@ EOF
 
         # TEST
         ok(
-            (
-                none { m{/freecell-solver-range-parallel-solve\z} }
-                @tar_lines
-            ),
+            ( none { m{/freecell-solver-range-parallel-solve\z} } @tar_lines ),
             "Archive does not contain the range solver executable"
         );
 

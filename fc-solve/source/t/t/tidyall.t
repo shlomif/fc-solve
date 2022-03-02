@@ -15,7 +15,7 @@ Test::Code::TidyAll::tidyall_ok(
     conf_file => "$ENV{FCS_SRC_PATH}/.tidyallrc",
     (
         !$ENV{FCS_TEST_CLANG_FORMAT}
-        ? ( selected_plugins => [qw(PerlTidy)], )
+        ? ( selected_plugins => [qw(PerlTidy TestCount)], )
         : ()
     ),
 );
