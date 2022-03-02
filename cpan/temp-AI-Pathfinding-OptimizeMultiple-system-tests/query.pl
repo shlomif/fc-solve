@@ -39,7 +39,7 @@ my $input_obj = MyInput->new(
 
 my $scan_idx =
     first { $input_obj->selected_scans()->[$_]->id() == $scan_id }
-( 0 .. $#{ $input_obj->selected_scans() } );
+    ( 0 .. $#{ $input_obj->selected_scans() } );
 
 if ($with_len)
 {

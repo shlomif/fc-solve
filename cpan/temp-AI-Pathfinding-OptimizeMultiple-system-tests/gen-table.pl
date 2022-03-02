@@ -38,7 +38,7 @@ my @scan_indexes = (
     map {
         my $scan_id = $_;
         first { $input_obj->selected_scans()->[$_]->id() == $scan_id }
-        ( 0 .. $#{ $input_obj->selected_scans() } )
+            ( 0 .. $#{ $input_obj->selected_scans() } )
     } (@scans)
 );
 

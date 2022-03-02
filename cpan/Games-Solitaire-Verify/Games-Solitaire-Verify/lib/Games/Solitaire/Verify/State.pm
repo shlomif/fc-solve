@@ -626,7 +626,7 @@ sub _mv_stack_to_foundation
     my $suit = $card->suit();
 
     my $f_idx = first { $self->get_foundation_value( $suit, $_ ) == $rank - 1 }
-    ( 0 .. ( $self->num_decks() - 1 ) );
+        ( 0 .. ( $self->num_decks() - 1 ) );
 
     if ( defined($f_idx) )
     {
@@ -677,7 +677,7 @@ sub _mv_stack_seq_to_foundation
     my $suit = $card->suit();
 
     my $f_idx = first { $self->get_foundation_value( $suit, $_ ) == 0 }
-    ( 0 .. ( $self->num_decks() - 1 ) );
+        ( 0 .. ( $self->num_decks() - 1 ) );
 
     if ( defined($f_idx) )
     {
@@ -800,7 +800,7 @@ sub _mv_freecell_to_foundation
     my $suit = $card->suit();
 
     my $f_idx = first { $self->get_foundation_value( $suit, $_ ) == $rank - 1 }
-    ( 0 .. ( $self->num_decks() - 1 ) );
+        ( 0 .. ( $self->num_decks() - 1 ) );
 
     if ( defined($f_idx) )
     {

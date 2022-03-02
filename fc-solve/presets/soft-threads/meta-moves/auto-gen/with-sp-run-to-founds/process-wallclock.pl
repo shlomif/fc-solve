@@ -64,11 +64,10 @@ my $quota = 0;
 my @prelude;
 QUOTAS:
 while (
-    any
-    {
-        any { $_->[$STATUS_IDX] } @{ $_->{r} }
-    }
-    @scans
+    any {
+        any { $_->[$STATUS_IDX] }
+            @{ $_->{r} }
+    } @scans
     )
 {
     print "Solved $num_boards_solved\n";

@@ -298,8 +298,7 @@ EOF
             {
                 $canonize_state_sub->( $_->get_state_string() ) eq
                     $canonized_state
-            }
-            @{ $obj->states() }
+            } @{ $obj->states() }
         ),
 "Intermediate states in the FCC are not placed in the list of start points.",
     );

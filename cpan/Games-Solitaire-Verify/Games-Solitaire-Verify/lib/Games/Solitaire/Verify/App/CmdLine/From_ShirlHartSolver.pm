@@ -95,7 +95,7 @@ sub _analyze_shirl_hart_move
             $src_card = substr( $src_card, 0, 2 );
             my $col = $self->_st->get_column($src_col_idx);
             my $idx = first { $col->pos($_)->to_string eq $src_card }
-            ( 0 .. $col->len - 1 );
+                ( 0 .. $col->len - 1 );
             if ( !defined $idx )
             {
                 die "wrong move stack to stack - $move_line";

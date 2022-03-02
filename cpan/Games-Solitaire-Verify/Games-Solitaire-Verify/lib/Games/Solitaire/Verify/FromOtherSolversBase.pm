@@ -197,19 +197,16 @@ sub _find_col_card
     {
         my $col = $self->_st->get_column($_);
         ( $col->len == 0 ) ? 0 : $col->top->fast_s eq $card_s
-    }
-    ( 0 .. $self->_st->num_columns - 1 );
+    } ( 0 .. $self->_st->num_columns - 1 );
 }
 
 sub _find_empty_col
 {
     my ($self) = @_;
 
-    return first
-    {
-        $self->_st->get_column($_)->len == 0
-    }
-    ( 0 .. $self->_st->num_columns - 1 );
+    return
+        first { $self->_st->get_column($_)->len == 0 }
+        ( 0 .. $self->_st->num_columns - 1 );
 }
 
 sub _find_fc_card
@@ -219,8 +216,7 @@ sub _find_fc_card
     {
         my $card = $self->_st->get_freecell($_);
         defined($card) ? ( $card->fast_s eq $card_s ) : 0;
-    }
-    ( 0 .. $self->_st->num_freecells - 1 );
+    } ( 0 .. $self->_st->num_freecells - 1 );
 }
 
 sub _find_card_src_string

@@ -32,11 +32,8 @@ sub _perform_move
             die "Cannot find card.";
         }
 
-        my $dest_fc_idx = first
-        {
-            !defined( $self->_st->get_freecell($_) )
-        }
-        ( 0 .. $self->_st->num_freecells - 1 );
+        my $dest_fc_idx = first { !defined( $self->_st->get_freecell($_) ) }
+            ( 0 .. $self->_st->num_freecells - 1 );
 
         if ( not defined($dest_fc_idx) )
         {
