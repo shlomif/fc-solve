@@ -5,7 +5,7 @@
 # Distributed under terms of the MIT license.
 #
 set -e
-npm install
+pnpm install
 exit
 
 #     amdefine big-integer browserify camel-case coffeescript eslint eslint-config-google flatted html-minifier jquery prettier qunit requirejs rollup sass typescript uglify-es yarn \
