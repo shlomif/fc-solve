@@ -222,6 +222,9 @@ def generate_windows_yaml(plat, output_path, is_act):
                         cmd
                     )
                 else:
+                    if plat == 'x64':
+                        if "mingw32-make" in cmd.lower():
+                            continue
                     r = cmd
                 # See:
                 # https://serverfault.com/questions/157173
