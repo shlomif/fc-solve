@@ -208,6 +208,9 @@ def generate_windows_yaml(plat, output_path, is_act):
             if re.search("copy.*?python\\.exe", cmd):
                 continue
             if "choco install strawberryperl" not in cmd:
+                if True:  # plat == 'x64':
+                    if "mingw32-make" in cmd.lower():
+                        continue
                 if 0:
                     r = re.sub(
                         "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
@@ -222,9 +225,6 @@ def generate_windows_yaml(plat, output_path, is_act):
                         cmd
                     )
                 else:
-                    if plat == 'x64':
-                        if "mingw32-make" in cmd.lower():
-                            continue
                     r = cmd
                 # See:
                 # https://serverfault.com/questions/157173

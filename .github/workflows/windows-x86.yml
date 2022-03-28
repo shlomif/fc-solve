@@ -71,9 +71,6 @@ jobs:
 
                 perl -v || ( echo Failed & exit /B 1 )
 
-                copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-                || ( echo Failed & exit /B 1 )
-
                 SET PERL5LIB=C:/_P5/lib/perl5
 
                 SET PERL_LOCAL_LIB_ROOT=C:/_P5
