@@ -31,6 +31,8 @@ jobs:
 
                     Devel::Trace
 
+                    Docker::CLI::Wrapper::Container
+
                     Games::Solitaire::Verify::HorneAutomovePrune
 
                     LWP
@@ -88,11 +90,8 @@ jobs:
 
                 tar -xvf gperf-3.0.4.tar.gz || ( echo Failed & exit /B 1 )
 
-                cd gperf-3.0.4 && perl -e "if (-e qq#C:\\libtap\\bin\\gperf.exe#)
-                { exit(0); } $ENV{PATH} = qq#C:\\msys64\\mingw64\\bin;$ENV{PATH}#;
-                system(''sh configure --prefix=C:/libtap'') or system(''gmake'') or
-                system(''gmake install'');" && cd .. || ( echo Failed & exit /B 1
-                )
+                cd gperf-3.0.4 && perl ../fc-solve/scripts/ci-build-gperf-mswin.pl
+                && cd .. || ( echo Failed & exit /B 1 )
 
                 git clone https://github.com/clibs/cmocka libtap || ( echo Failed
                 & exit /B 1 )
