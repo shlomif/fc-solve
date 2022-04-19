@@ -1,6 +1,9 @@
 # Quicktask v1.2
 
 CURRENT TASKS:
+    - Get rid of Solitairey / js-fc-solve 's use of YUI3.
+        * jQuery is acceptable: https://www.arp242.net/jquery.html
+      @ Added [Tue 2022-04-19]
     - Add some code to transpose rows/columns in playstacks vs. lines
       * Some code in py under "source/board_gen"
       @ Added [Tue 2020-09-15]
