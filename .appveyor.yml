@@ -21,7 +21,7 @@ install:
     - cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount CHI Devel::Trace Docker::CLI::Wrapper::Container Games::Solitaire::Verify::HorneAutomovePrune LWP Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
     - if not exist C:\libtap mkdir C:\libtap
     - copy c:\Python35-x64\python.exe c:\Python35-x64\python3.exe
-    # - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
+    - SET PATH=C:\Python35-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install %PY3MODS%
     - perl -v
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
