@@ -30,41 +30,7 @@ card solitaire game. <span class="enable_js">Please enable
     web_fc_solve_ui.init_module((module_wrapper)=>{
     web_fc_solve_ui.set_up(module_wrapper);
 
-    $(function() {
-        const controls = $('.phoenix');
-        if (window.location.search.length) {
-            controls.phoenix('remove');
-        } else {
-            controls.phoenix();
-        }
-        $( "#fc_solve_tabs" ).tabs({
-            activate: function () {
-                window.my_web_fc_solve_ui = web_fc_solve_ui;
-                web_fc_solve_ui.set_up_handlers(module_wrapper);
-
-                return;
-            },
-            beforeActivate: function( event, ui) {
-                var mynew = ui.newPanel;
-                var old = ui.oldPanel;
-
-                var common_old = old.find('.fcs_common');
-                var old_text = common_old.find('textarea').val();
-
-                var common_html = common_old.html();
-
-                common_old.html('');
-
-                var common_new = mynew.find('.fcs_common');
-
-                common_new.html(common_html);
-                common_new.find('textarea').val(old_text);
-
-                return;
-            }
-        });
-        return;
-    });
+    $(window._find_deal_set_up);
 ;
     });
 [% suffix %]
