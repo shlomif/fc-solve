@@ -1,4 +1,4 @@
-window["_set_up_tabs"] = function () {
+window._set_up_tabs = () => {
     const controls = $(".phoenix");
     if (window.location.search.length) {
         controls.phoenix("remove");
@@ -6,13 +6,13 @@ window["_set_up_tabs"] = function () {
         controls.phoenix();
     }
     $("#fc_solve_tabs").tabs({
-        activate: function () {
+        activate: () => {
             window["my_web_fc_solve_ui"] = web_fc_solve_ui;
             web_fc_solve_ui.set_up_handlers(module_wrapper);
 
             return;
         },
-        beforeActivate: function (event, ui) {
+        beforeActivate: (event, ui) => {
             const mynew = ui.newPanel;
             const old = ui.oldPanel;
 
