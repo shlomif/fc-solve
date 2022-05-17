@@ -219,6 +219,7 @@ interface DisplaySolArgs {
     expand: boolean;
 }
 
+const ptr_type: string = "i32";
 export class FC_Solve {
     public proto_states_and_moves_seq: any[];
     private dir_base: string;
@@ -623,7 +624,7 @@ export class FC_Solve {
 
                 const error_string_ptr = that.module_wrapper.Module.getValue(
                     error_string_ptr_buf,
-                    "*",
+                    ptr_type,
                 );
 
                 const error_string =
@@ -682,12 +683,12 @@ export class FC_Solve {
                 that.module_wrapper.Module.setValue(
                     args_buf,
                     read_from_file_str_ptr,
-                    "*",
+                    ptr_type,
                 );
                 that.module_wrapper.Module.setValue(
                     args_buf + 4,
                     arg_str_ptr,
-                    "*",
+                    ptr_type,
                 );
 
                 const last_arg_ptr = that.module_wrapper.alloc_wrap(
@@ -717,7 +718,7 @@ export class FC_Solve {
 
                 const error_string_ptr = that.module_wrapper.Module.getValue(
                     error_string_ptr_buf,
-                    "*",
+                    ptr_type,
                 );
 
                 const error_string =
