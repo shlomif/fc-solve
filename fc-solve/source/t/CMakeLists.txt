@@ -46,12 +46,14 @@ ENDMACRO ()
 IF (FCS_WITH_TEST_SUITE)
 
     SET (MODULE "Task::FreecellSolver::Testing")
-    EXECUTE_PROCESS (
-        COMMAND "${PERL_EXECUTABLE}" "-M${MODULE}=" "-e" "exit(0)"
-        RESULT_VARIABLE "RESULT"
-    )
-    IF (NOT RESULT EQUAL 0)
-        MESSAGE(WARNING "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
+    if (NOT SKIP_PERL_TESTING_TASK_CHECK)
+        EXECUTE_PROCESS (
+            COMMAND "${PERL_EXECUTABLE}" "-M${MODULE}=" "-e" "exit(0)"
+            RESULT_VARIABLE "RESULT"
+        )
+        IF (NOT RESULT EQUAL 0)
+            MESSAGE(WARNING "You need the Perl 5/CPAN distribution ${MODULE} to run the test suite. Either skip the test suite using -DFCS_WITH_TEST_SUITE=OFF or see http://perl-begin.org/topics/cpan/ for installing from CPAN.")
+        ENDIF ()
     ENDIF ()
     FOREACH (mod_ "cffi" "freecell_solver")
         ASSERT_PYTHON3_MODULE_PRESENCE("${mod_}" " It is needed by the test suite which was enabled.")

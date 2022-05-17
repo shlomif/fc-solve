@@ -10,6 +10,8 @@ Requires: libfreecell-solver0 = %{version}
 Summary: The Freecell Solver Executable
 BuildRequires: asciidoctor
 BuildRequires: cmake
+BuildRequires: gcc-c++
+BuildRequires: glibc-devel
 BuildRequires: gmp-devel
 BuildRequires: gperf
 BuildRequires: perl(CHI)
@@ -34,6 +36,7 @@ BuildRequires: perl(MooX::late)
 BuildRequires: perl(Path::Tiny)
 BuildRequires: perl(Storable)
 BuildRequires: perl(String::ShellQuote)
+# BuildRequires: perl(Task::FreecellSolver::Testing)
 BuildRequires: perl(Template)
 BuildRequires: perl(Test::Data::Split)
 BuildRequires: perl(Test::Data::Split::Backend::Hash)
@@ -53,6 +56,7 @@ BuildRequires: perl-devel >= 5.14.0
 BuildRequires: pkgconfig(cmocka)
 BuildRequires: pkgconfig(librinutils)
 BuildRequires: python3-cffi
+BuildRequires: python3-freecell_solver
 BuildRequires: python3-pycotap
 BuildRequires: python3-pysol-cards
 BuildRequires: python3-random2
@@ -97,7 +101,8 @@ Freecell Solver from within your programs.
 %setup
 
 %build
-%cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12 -DDISABLE_APPLYING_RPATH:BOOL=TRUE
+export SKIP_TASK_CHECK=1
+%cmake -DLOCALE_INSTALL_DIR=%{_datadir}/locale -DLIB_INSTALL_DIR=%{_libdir} -DMAX_NUM_FREECELLS=8 -DMAX_NUM_STACKS=12 -DDISABLE_APPLYING_RPATH:BOOL=TRUE -DSKIP_PERL_TESTING_TASK_CHECK:BOOL=TRUE
 %cmake_build
 
 %check

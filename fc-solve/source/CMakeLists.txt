@@ -154,6 +154,7 @@ option (FCS_USE_PRECOMPILED_CMD_LINE_THEME "Hard code a command line theme as ge
 option (FCS_AVOID_INT128 "Avoid using GCC's __int128 extension (used for debugging)")
 option (FCS_RANGE_SOLVERS_PRINT_SOLVED "Print solved boards.")
 option (FCS_DBM_SINGLE_THREAD "single threaded DBM solvers")
+option (SKIP_PERL_TESTING_TASK_CHECK "skip check on testing")
 
 IF (FCS_ZERO_FREECELLS_MODE)
     SET (FCS_DBM_FREECELLS_NUM 0)
