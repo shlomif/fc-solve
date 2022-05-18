@@ -137,7 +137,7 @@ $(DEST_Solitairey_JS): $(DEST_JS_DIR)/%: $(SOLITAIREY_REPO)/src/js/%
 $(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js $(OUT_PREF)/qunit.js: %:
 	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
 
-STRIP_TRAIL_SPACE = perl -i -lpe 's/[ \t]+$$//'
+STRIP_TRAIL_SPACE = $(PERL) -i -lpe 's/[ \t]+$$//'
 
 SASS_STYLE = compressed
 # SASS_STYLE = expanded
@@ -174,7 +174,7 @@ $(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cp -f "$<" "$@"
 
-PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 perl bin/post-incs-v2.pl --mode=minify \
+PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 $(PERL) bin/post-incs-v2.pl --mode=minify \
                --minifier-conf=bin/html-min-cli-config-file.conf \
                --source-dir=$1 \
                --dest-dir=$1 \
@@ -324,7 +324,7 @@ $(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
 TYPESCRIPT_COMMON_DEPS = src/ts/web-fc-solve.ts src/ts/web-fcs-tests-strings.ts
 
 src/ts/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/list.txt
-	perl $<
+	$(PERL) $<
 
 # run_tsc = tsc --target es6 --moduleResolution node --module $1 --outDir $$(dirname $@) $<
 run_tsc = tsc --project lib/typescript/$1/tsconfig.json
@@ -357,10 +357,10 @@ FC_PRO_4FC_TSVS = $(patsubst %.dump.txt,$(D)/%.tsv,$(FC_PRO_4FC_DUMPS))
 FC_PRO_4FC_FILTERED_TSVS = $(patsubst %.dump.txt,$(D)/%.filtered.tsv,$(FC_PRO_4FC_DUMPS))
 
 $(FC_PRO_4FC_TSVS): $(D)/%.tsv: src/%.dump.txt
-	perl ../../scripts/convert-dbm-fc-solver-log-to-reduced-tsv.pl "$<" > "$@"
+	$(PERL) ../../scripts/convert-dbm-fc-solver-log-to-reduced-tsv.pl "$<" > "$@"
 
 $(FC_PRO_4FC_FILTERED_TSVS): %.filtered.tsv : %.tsv
-	perl -lanE 'say if ((not /\A[0-9]/) or ($$F[0] eq "0") or ($$F[0] =~ /000000\z/))' < "$<" > "$@"
+	$(PERL) -lanE 'say if ((not /\A[0-9]/) or ($$F[0] eq "0") or ($$F[0] =~ /000000\z/))' < "$<" > "$@"
 
 $(Solver_Dest_Dir)/index.html: lib/FreecellSolver/ExtractGames.pm $(BASE_FC_SOLVE_SOURCE_DIR)/USAGE.asciidoc
 
@@ -394,7 +394,7 @@ ALL_HTACCESSES = $(D)/.htaccess $(D)/js-fc-solve/automated-tests/.htaccess $(D)/
 GEN_SECT_NAV_MENUS = ./bin/gen-sect-nav-menus.pl
 T2_CACHE_ALL_STAMP = lib/cache/STAMP.one
 $(T2_CACHE_ALL_STAMP): $(GEN_SECT_NAV_MENUS) $(FACTOIDS_NAV_JSON) $(ALL_SUBSECTS_DEPS)
-	perl $(GEN_SECT_NAV_MENUS) $(SRC_DOCS) $(jinja_bases) $(tt2_bases)
+	$(PERL) $(GEN_SECT_NAV_MENUS) $(SRC_DOCS) $(jinja_bases) $(tt2_bases)
 	touch $@
 
 make-dirs: $(D) $(SUBDIRS)
