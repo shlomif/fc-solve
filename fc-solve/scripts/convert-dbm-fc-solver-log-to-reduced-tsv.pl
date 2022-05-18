@@ -7,25 +7,7 @@ my $last_reached = 0;
 my $reached;
 my $in_collection;
 
-sub print_tsv_line_generic
-{
-    my $callback = shift;
-    my $hash_ref = shift;
-
-    my @vals;
-    foreach my $key ( 'Iterations', 'InQueue', )
-    {
-        my $val = $callback->( $hash_ref, $key );
-        if ( !defined($val) )
-        {
-            die "Hash reference does not contain '$key'";
-        }
-        push @vals, $val;
-    }
-    print join( "\t", @vals ), "\n";
-}
-
-print_tsv_line_generic( sub { my ( $hash_ref, $key ) = @_; return $key }, {} );
+print "Iterations\tInQueue\n";
 
 my $is_finished = 0;
 
