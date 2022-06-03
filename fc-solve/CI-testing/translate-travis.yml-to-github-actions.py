@@ -193,8 +193,9 @@ def generate_windows_yaml(plat, output_path, is_act):
             idx = len(cmds) - 1
             while cmds[idx] != 'cd ..':
                 idx -= 1
-            cmds.insert(idx, "SET CXX=c++")
-            cmds.insert(idx, "SET CC=cc")
+            if False:
+                cmds.insert(idx, "SET CXX=c++")
+                cmds.insert(idx, "SET CC=cc")
 
         for cmd in cmds:
             if cmd.startswith("cpanm "):
