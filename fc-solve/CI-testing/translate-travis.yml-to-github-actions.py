@@ -143,7 +143,8 @@ def generate_windows_yaml(plat, output_path, is_act):
     }
     steps.append(cpanm_step)
     # if True:  # plat == 'x86':
-    if plat == 'x86':
+    # if plat == 'x86':
+    if False:
         mingw = {
             "name": "Set up MinGW",
             "uses": "egor-tensin/setup-mingw@v2",
@@ -206,6 +207,8 @@ def generate_windows_yaml(plat, output_path, is_act):
                 cpanm_step['with'] = {"install": "\n".join(dw), }
                 continue
             if re.search("copy.*?python\\.exe", cmd):
+                continue
+            if re.search("^(?:SET|set) PATH=.*?strawberry", cmd):
                 continue
             if "choco install strawberryperl" not in cmd:
                 if True:  # plat == 'x64':
