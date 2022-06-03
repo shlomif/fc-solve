@@ -113,6 +113,7 @@ def generate_linux_yaml(output_path, is_act):
 
 
 def generate_windows_yaml(plat, output_path, is_act):
+    x86 = (plat == 'x86')
     with open("./.appveyor.yml", "rt") as infh:
         data = yaml.safe_load(infh)
     with open("./fc-solve/CI-testing/gh-actions--" +
@@ -127,8 +128,6 @@ def generate_windows_yaml(plat, output_path, is_act):
         "uses": "perl-actions/install-with-cpanm@v1",
     }
     steps.append(cpanm_step)
-    # if True:  # plat == 'x86':
-    # if plat == 'x86':
     if False:
         mingw = {
             "name": "Set up MinGW",
@@ -159,7 +158,7 @@ def generate_windows_yaml(plat, output_path, is_act):
         for k, v in sorted(data['environment'].items()):
             # batch += "SET " + k + "=\"" + v + "\"\n"
             batch += "SET " + k + "=" + v + "\n"
-        if plat == 'x86':
+        if x86:
             start = 'mkdir pkg-build-win64'
             end = "^cpack -G WIX"
         else:
@@ -174,7 +173,7 @@ def generate_windows_yaml(plat, output_path, is_act):
         while not re.search(end, cmds[end_idx]):
             end_idx += 1
         cmds = cmds[:start_idx] + cmds[(end_idx+1):]
-        if plat == 'x86':
+        if x86:
             idx = len(cmds) - 1
             while cmds[idx] != 'cd ..':
                 idx -= 1
@@ -197,15 +196,14 @@ def generate_windows_yaml(plat, output_path, is_act):
             if re.search("^(?:SET|set) PATH=.*?strawberry", cmd):
                 continue
             if "choco install strawberryperl" not in cmd:
-                if True:  # plat == 'x64':
-                    if "mingw32-make" in cmd.lower():
-                        continue
+                if "mingw32-make" in cmd.lower():
+                    continue
                 if 0:
                     r = re.sub(
                         "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
                         "lwp-download \\2 \\1",
                         cmd)
-                elif plat == 'x86':
+                elif x86:
                     if cmd.startswith("perl ../source/run-tests.pl"):
                         continue
                     r = re.sub(
@@ -233,13 +231,13 @@ def generate_windows_yaml(plat, output_path, is_act):
 
     def _myfilt(path):
         is32 = ("\\pkg-build\\" in path)
-        return (is32 if plat == 'x86' else (not is32))
+        return (is32 if x86 else (not is32))
     steps += [{
         'name': "upload build artifacts - " + art['name'],
         'uses': "actions/upload-artifact@v2",
         'with': art
     } for art in data['artifacts'] if _myfilt(art['path'])]
-    skel['name'] = ("windows-x86" if plat == 'x86' else 'windows-x64')
+    skel['name'] = ("windows-x86" if x86 else 'windows-x64')
     skel['on'] = ['push']
     with open(output_path, "wt") as outfh:
         # yaml.safe_dump(o, outfh)
