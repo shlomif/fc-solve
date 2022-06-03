@@ -93,21 +93,19 @@ def generate_linux_yaml(output_path, is_act):
          'steps': steps, }},
          'name': 'use-github-actions', 'on': ['push', ], }
     if 'matrix' in data:
-        if 'include' in data['matrix']:
-            o['jobs'][job]['strategy'] = {'matrix': {'include': [
-                {'env': _process_env(x['env']), }
-                for x in data['matrix']['include']
-            ], }, }
-            o['jobs'][job]['env'] = {
-                x: "${{ matrix.env." + x + " }}"
-                for x in env_keys
-            }
-            _add_condition_while_excluding_gh_actions(
-                job_dict=o['jobs'][job],
-                is_act=is_act,
-            )
-        else:
-            assert False
+        assert 'include' in data['matrix']
+        o['jobs'][job]['strategy'] = {'matrix': {'include': [
+            {'env': _process_env(x['env']), }
+            for x in data['matrix']['include']
+        ], }, }
+        o['jobs'][job]['env'] = {
+            x: "${{ matrix.env." + x + " }}"
+            for x in env_keys
+        }
+        _add_condition_while_excluding_gh_actions(
+            job_dict=o['jobs'][job],
+            is_act=is_act,
+        )
     with open(output_path, "wt") as outfh:
         yaml.safe_dump(o, stream=outfh, canonical=False, indent=4, )
 
