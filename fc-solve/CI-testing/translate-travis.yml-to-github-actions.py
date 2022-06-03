@@ -84,7 +84,7 @@ def generate_linux_yaml(output_path, is_act):
         '-Mlocal::lib=$HOME/' + \
         'perl_modules)"; } ; local_lib_shim ; '
     for arr in ['before_install', 'install', 'script']:
-        steps += [{"run": local_lib_shim + x} for x in data[arr]]
+        steps += [{"run": local_lib_shim + cmd} for cmd in data[arr]]
     job = 'test-fc-solve'
     o = {'jobs': {job: {'runs-on': 'ubuntu-latest',
          'steps': steps, }},
@@ -93,12 +93,12 @@ def generate_linux_yaml(output_path, is_act):
         assert 'include' in data['matrix']
         env_keys = set()
         o['jobs'][job]['strategy'] = {'matrix': {'include': [
-            {'env': _process_env(x['env'], env_keys), }
-            for x in data['matrix']['include']
+            {'env': _process_env(env['env'], env_keys), }
+            for env in data['matrix']['include']
         ], }, }
         o['jobs'][job]['env'] = {
-            x: "${{ matrix.env." + x + " }}"
-            for x in env_keys
+            key: "${{ matrix.env." + key + " }}"
+            for key in env_keys
         }
         _add_condition_while_excluding_gh_actions(
             job_dict=o['jobs'][job],
@@ -106,6 +106,22 @@ def generate_linux_yaml(output_path, is_act):
         )
     with open(output_path, "wt") as outfh:
         yaml.safe_dump(o, stream=outfh, canonical=False, indent=4, )
+
+
+def _apply_cpack_fix(steps):
+    # See:
+    #
+    # https://github.com/sithlord48/blackchocobo/actions/runs/1207252836/workflow#L100
+    # https://github.community/t/windows-actions-suddenly-fail-needing-a-nuspec-file/199483
+    cpack_fix = {
+        "if": "runner.os == 'Windows'",
+        "name": "Remove Chocolatey's CPack",
+        "run": "Remove-Item -Path " +
+        "C:\\ProgramData\\Chocolatey\\bin\\cpack.exe -Force",
+    }
+    cpack_fix_needed = False
+    if cpack_fix_needed:
+        steps.append(cpack_fix)
 
 
 def generate_windows_yaml(plat, output_path, is_act):
@@ -134,19 +150,7 @@ def generate_windows_yaml(plat, output_path, is_act):
         }
         steps.append(mingw)
 
-    # See:
-    #
-    # https://github.com/sithlord48/blackchocobo/actions/runs/1207252836/workflow#L100
-    # https://github.community/t/windows-actions-suddenly-fail-needing-a-nuspec-file/199483
-    cpack_fix = {
-        "if": "runner.os == 'Windows'",
-        "name": "Remove Chocolatey's CPack",
-        "run": "Remove-Item -Path " +
-        "C:\\ProgramData\\Chocolatey\\bin\\cpack.exe -Force",
-    }
-    cpack_fix_needed = False
-    if cpack_fix_needed:
-        steps.append(cpack_fix)
+    _apply_cpack_fix(steps=steps,)
 
     def _calc_batch_code(cmds):
         batch = ""
@@ -169,13 +173,6 @@ def generate_windows_yaml(plat, output_path, is_act):
         while not re.search(end, cmds[end_idx]):
             end_idx += 1
         cmds = cmds[:start_idx] + cmds[(end_idx+1):]
-        if x86:
-            idx = len(cmds) - 1
-            while cmds[idx] != 'cd ..':
-                idx -= 1
-            if False:
-                cmds.insert(idx, "SET CXX=c++")
-                cmds.insert(idx, "SET CC=cc")
 
         for cmd in cmds:
             if cmd.startswith("cpanm "):
@@ -194,12 +191,7 @@ def generate_windows_yaml(plat, output_path, is_act):
             if "choco install strawberryperl" not in cmd:
                 if "mingw32-make" in cmd.lower():
                     continue
-                if 0:
-                    r = re.sub(
-                        "curl\\s+-o\\s+(\\S+)\\s+(\\S+)",
-                        "lwp-download \\2 \\1",
-                        cmd)
-                elif x86:
+                if x86:
                     if cmd.startswith("perl ../source/run-tests.pl"):
                         continue
                     r = re.sub(
