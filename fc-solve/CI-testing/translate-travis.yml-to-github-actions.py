@@ -36,7 +36,16 @@ def _add_condition_while_excluding_gh_actions(job_dict, is_act):
             "${{ ! contains(env.ACT_SKIP, matrix.env.WHAT) }}"
 
 
-def generate(output_path, is_act):
+def _ls_step(steps):
+    steps.append({
+        "run":
+        ("cd workflow ; (ls -lrtA ; false)"), })
+    steps.append({
+        "run":
+        ("cd . ; (ls -lrtA ; false)"), })
+
+
+def generate_linux_yaml(output_path, is_act):
     """docstring for main"""
     env_keys = set()
 
@@ -61,14 +70,6 @@ def generate(output_path, is_act):
             "submodules": "true",
         },
     })
-    if 0:
-        steps.append({
-            "run":
-            ("cd workflow ; (ls -lrtA ; false)"), })
-    elif 0:
-        steps.append({
-            "run":
-            ("cd . ; (ls -lrtA ; false)"), })
     steps.append({"run": ("sudo apt-get update -qq"), })
     steps.append({
         "run": ("sudo apt-get --no-install-recommends install -y " +
@@ -108,26 +109,10 @@ def generate(output_path, is_act):
         else:
             assert False
     with open(output_path, "wt") as outfh:
-        # yaml.safe_dump(o, outfh)
         yaml.safe_dump(o, stream=outfh, canonical=False, indent=4, )
 
 
 def generate_windows_yaml(plat, output_path, is_act):
-    """docstring for main"""
-    env_keys = set()
-
-    def _process_env(env):
-        ret = {}
-        for line in env:
-            m = re.match(
-                '\\A([A-Za-z0-9_]+)=([A-Za-z0-9_]+)\\Z',
-                line)
-            key = m.group(1)
-            val = m.group(2)
-            assert key not in ret
-            ret[key] = val
-            env_keys.add(key)
-        return ret
     with open("./.appveyor.yml", "rt") as infh:
         data = yaml.safe_load(infh)
     with open("./fc-solve/CI-testing/gh-actions--" +
@@ -238,9 +223,6 @@ def generate_windows_yaml(plat, output_path, is_act):
                 batch += r + shim + "\n"
         return batch
 
-    if 0:
-        steps.append({'name': "install code", "run": _calc_batch_code(
-            cmds=data['install']), "shell": "cmd", })
     steps.append({
         'name': "install and test_script code",
         "run": _calc_batch_code(
@@ -269,11 +251,11 @@ def generate_windows_yaml(plat, output_path, is_act):
 
 
 def main():
-    generate(
+    generate_linux_yaml(
         output_path=".github/workflows/use-github-actions.yml",
         is_act=False,
     )
-    generate(
+    generate_linux_yaml(
         output_path=".act-github/workflows/use-github-actions.yml",
         is_act=True,
     )
