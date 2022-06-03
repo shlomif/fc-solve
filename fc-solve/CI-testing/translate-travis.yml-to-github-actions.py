@@ -46,10 +46,7 @@ def _ls_step(steps):
 
 
 def generate_linux_yaml(output_path, is_act):
-    """docstring for main"""
-    env_keys = set()
-
-    def _process_env(env):
+    def _process_env(env, env_keys):
         ret = {}
         for line in env:
             m = re.match(
@@ -94,8 +91,9 @@ def generate_linux_yaml(output_path, is_act):
          'name': 'use-github-actions', 'on': ['push', ], }
     if 'matrix' in data:
         assert 'include' in data['matrix']
+        env_keys = set()
         o['jobs'][job]['strategy'] = {'matrix': {'include': [
-            {'env': _process_env(x['env']), }
+            {'env': _process_env(x['env'], env_keys), }
             for x in data['matrix']['include']
         ], }, }
         o['jobs'][job]['env'] = {
