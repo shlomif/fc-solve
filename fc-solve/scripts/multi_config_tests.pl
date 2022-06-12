@@ -303,11 +303,6 @@ sub run_tests
                     { cmd => [ $^X, 'gen-helpers' ] }
                 );
 
-          # (
-          #                 'docker', 'exec', '-it', 'emscripten', 'bash', '-c',
-          #                 qq#cd "$DIR" && make#,
-          #                 )
-          # run_cmd( "$blurb_base : make_foo", { cmd => [ 'make', ] } );
                 if ( $ENV{FC_SOLVE__MULT_CONFIG_TESTS__DOCKER} )
                 {
                     foreach my $component (qw# travis emscripten #)
