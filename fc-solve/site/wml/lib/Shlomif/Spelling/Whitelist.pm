@@ -3,7 +3,7 @@ package Shlomif::Spelling::Whitelist;
 use strict;
 use warnings;
 
-use MooX qw/late/;
+use MooX       qw/late/;
 use Path::Tiny qw/ path /;
 
 extends('HTML::Spelling::Site::Whitelist');
