@@ -6,7 +6,7 @@ use warnings;
 use Test::More;
 use Test::Differences qw( eq_or_diff );
 
-use File::Which qw( which );
+use File::Which        qw( which );
 use String::ShellQuote qw/ shell_quote /;
 
 my $flake8 = which('flake8');

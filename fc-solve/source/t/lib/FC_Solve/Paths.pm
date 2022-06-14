@@ -3,9 +3,9 @@ package FC_Solve::Paths;
 use 5.014;
 use strict;
 use warnings;
-use Socket qw(:crlf);
+use Socket             qw(:crlf);
 use String::ShellQuote qw/shell_quote/;
-use File::Temp qw( tempdir );
+use File::Temp         qw( tempdir );
 
 use parent 'Exporter';
 

@@ -7,7 +7,7 @@ use 5.014;
 
 use parent 'FC_Solve::DeltaStater::DeBondt';
 
-use Carp ();
+use Carp       ();
 use List::Util qw/ any first max uniq /;
 
 use Games::Solitaire::Verify::Card        ();

@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 4312;
 use Test::Differences qw(eq_or_diff);
-use Path::Tiny qw/ path /;
+use Path::Tiny        qw/ path /;
 
 use FC_Solve::DepthMultiQueuePrototype ();
 use FC_Solve::DepthMultiQueueInC       ();

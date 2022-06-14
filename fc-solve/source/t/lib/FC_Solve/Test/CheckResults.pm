@@ -3,7 +3,7 @@ package FC_Solve::Test::CheckResults;
 use strict;
 use warnings;
 
-use FC_Solve::Paths qw( data_file );
+use FC_Solve::Paths        qw( data_file );
 use FC_Solve::CheckResults ();
 
 my $v = FC_Solve::CheckResults->new(

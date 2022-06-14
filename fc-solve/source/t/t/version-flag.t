@@ -6,7 +6,7 @@ use autodie;
 
 use Test::More;
 use String::ShellQuote qw/ shell_quote /;
-use FC_Solve::Paths qw( $FC_SOLVE_EXE is_break src_file );
+use FC_Solve::Paths    qw( $FC_SOLVE_EXE is_break src_file );
 if ( is_break() )
 {
     plan skip_all => "Does not work with BREAK_BACK_COMPAT";

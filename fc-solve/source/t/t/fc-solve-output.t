@@ -6,8 +6,8 @@ use warnings;
 use Test::More tests => 14;
 use FC_Solve::GetOutput ();
 use Carp                ();
-use String::ShellQuote qw/ shell_quote /;
-use Test::Differences qw/ eq_or_diff /;
+use String::ShellQuote  qw/ shell_quote /;
+use Test::Differences   qw/ eq_or_diff /;
 use FC_Solve::Paths
     qw/ $IS_WIN bin_board bin_exe_raw is_dbm_apr is_without_dbm normalize_lf offload_arg samp_board /;
 

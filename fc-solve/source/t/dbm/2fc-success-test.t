@@ -5,8 +5,8 @@ use warnings;
 
 use Test::More tests => 1;
 use Test::Differences qw/ eq_or_diff /;
-use Path::Tiny qw/ path /;
-use FC_Solve::Paths qw/ offload_arg samp_board samp_sol /;
+use Path::Tiny        qw/ path /;
+use FC_Solve::Paths   qw/ offload_arg samp_board samp_sol /;
 
 {
     my $expected_text = path( samp_sol('dbm-24-mid.sol') )->slurp_utf8;

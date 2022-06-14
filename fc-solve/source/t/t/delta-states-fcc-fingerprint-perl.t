@@ -7,7 +7,7 @@ use Path::Tiny qw/ path /;
 
 use Test::More tests => 3;
 use Test::Differences qw/ eq_or_diff /;
-use FC_Solve::Paths qw/
+use FC_Solve::Paths   qw/
     $FC_SOLVE_EXE
     bin_board
     is_freecell_only

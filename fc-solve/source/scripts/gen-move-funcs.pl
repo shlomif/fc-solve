@@ -1,7 +1,7 @@
 use strict;
 use warnings;
 use Path::Tiny qw/ path /;
-use FindBin ();
+use FindBin    ();
 use lib "$FindBin::Bin/../t/lib";
 use FC_Solve::MoveFuncs ();
 

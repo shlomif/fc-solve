@@ -1,7 +1,7 @@
 use 5.014;
 use strict;
 use warnings;
-use Path::Tiny qw/ path /;
+use Path::Tiny   qw/ path /;
 use Getopt::Long qw/ GetOptions /;
 
 my $output;

@@ -5,11 +5,11 @@ use strict;
 use warnings;
 use autodie;
 
-use Getopt::Long qw/ GetOptions /;
-use Env::Path ();
-use Path::Tiny qw/ path /;
+use Getopt::Long   qw/ GetOptions /;
+use Env::Path      ();
+use Path::Tiny     qw/ path /;
 use File::Basename qw/ basename /;
-use CHI ();
+use CHI            ();
 
 my $glob_was_set = 0;
 my $rerun        = 0;

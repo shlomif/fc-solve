@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use FC_Solve::SplitCmdLine ();
-use Path::Tiny qw/ path /;
+use Path::Tiny             qw/ path /;
 
 use MooX qw/ late /;
 

@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use Carp qw/confess/;
+use Carp               qw/confess/;
 use String::ShellQuote qw/shell_quote/;
 
 use FC_Solve::Paths qw( $FC_SOLVE_EXE $IS_WIN $MAKE_PYSOL );

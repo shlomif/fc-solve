@@ -6,8 +6,8 @@ use warnings;
 use Test::More tests => 1;
 
 use Test::Differences qw/ eq_or_diff /;
-use Path::Tiny qw/ path /;
-use FC_Solve::Paths qw( src_file );
+use Path::Tiny        qw/ path /;
+use FC_Solve::Paths   qw( src_file );
 
 my $data = src_file( [] )->visit(
     sub {

@@ -5,7 +5,7 @@ use warnings;
 
 use parent 'Games::Solitaire::Verify::Base';
 
-use YAML::XS qw(DumpFile LoadFile);
+use YAML::XS        qw(DumpFile LoadFile);
 use FC_Solve::Paths qw( is_freecell_only is_tag is_without_flares );
 
 use Carp ();

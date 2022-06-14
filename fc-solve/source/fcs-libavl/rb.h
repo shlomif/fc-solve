@@ -32,13 +32,13 @@
 
 /* Function types. */
 #ifdef AVL_with_rb_param
-typedef int rb_comparison_func (const void *rb_a, const void *rb_b,
-                                 void *rb_param);
+typedef int rb_comparison_func(
+    const void *rb_a, const void *rb_b, void *rb_param);
 #else
-typedef int rb_comparison_func (const void *rb_a, const void *rb_b);
+typedef int rb_comparison_func(const void *rb_a, const void *rb_b);
 #endif
-typedef void rb_item_func (void *rb_item, void *rb_param);
-typedef void *rb_copy_func (void *rb_item, void *rb_param);
+typedef void rb_item_func(void *rb_item, void *rb_param);
+typedef void *rb_copy_func(void *rb_item, void *rb_param);
 
 #if 0
 #ifndef LIBAVL_ALLOCATOR
@@ -66,16 +66,18 @@ void rb_free (struct libavl_allocator *, void *);
 typedef fcs_dbm_record avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (p)
 #define NODE_DATA_PTR(p) (&((p)->rb_data))
-#define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = *(fcs_dbm_record *)ptr)
+#define NODE_ASSIGN_DATA_PTR(node_p, ptr)                                      \
+    (((node_p)->rb_data) = *(fcs_dbm_record *)ptr)
 #define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record *)ptr)
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
 #define rb_insert(t, i) rb_probe((t), (i))
-#define AVL_KEY_EQUAL_TO_PTR(key_, ptr) (!memcmp(&((key_).key), (ptr), sizeof((key_).key)))
+#define AVL_KEY_EQUAL_TO_PTR(key_, ptr)                                        \
+    (!memcmp(&((key_).key), (ptr), sizeof((key_).key)))
 #else
 #define AVL_KEY_EQUAL_TO_PTR(key, ptr) (!memcmp(&(key), (ptr), sizeof(key)))
 #endif
 #else
-typedef void * avl_key_type;
+typedef void *avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (*(p))
 #define NODE_DATA_PTR(p) ((p)->rb_data)
 #define NODE_ASSIGN_DATA_PTR(node_p, ptr) (((node_p)->rb_data) = ptr)
@@ -83,7 +85,7 @@ typedef void * avl_key_type;
 #define AVL_KEY_EQUAL_TO_PTR(key, ptr) ((key) == (ptr))
 #endif
 
-#define AVL_NEXT(p) (*((struct rb_node * *)(NODE_DATA_PTR(p))))
+#define AVL_NEXT(p) (*((struct rb_node **)(NODE_DATA_PTR(p))))
 #define AVL_SET_NEXT(p, val) (AVL_NEXT(p) = (val))
 /* Tree data structure. */
 #define rb_root rb_proto_root.rb_mylink[0]
@@ -91,82 +93,83 @@ typedef void * avl_key_type;
 
 /* An RB tree node. */
 struct rb_node
-  {
-    avl_key_type rb_data;                /* Pointer to data. */
-    uintptr_t rb_mylink[2];  /* Subtrees. */
+{
+    avl_key_type rb_data;   /* Pointer to data. */
+    uintptr_t rb_mylink[2]; /* Subtrees. */
 #ifdef WITH_AVL_BALANCE_FIELD
-    unsigned char rb_color;       /* Balance factor. */
+    unsigned char rb_color; /* Balance factor. */
 #endif
-  };
+};
 
 struct rb_table
-  {
-    struct rb_node rb_proto_root;          /* Tree's root. */
-    rb_comparison_func *rb_compare;   /* Comparison function. */
+{
+    struct rb_node rb_proto_root;   /* Tree's root. */
+    rb_comparison_func *rb_compare; /* Comparison function. */
 #ifdef AVL_with_rb_param
-    void *rb_param;                    /* Extra argument to |rb_compare|. */
+    void *rb_param; /* Extra argument to |rb_compare|. */
 #endif
     compact_allocator dict_allocator;
-    struct rb_node * * rb_recycle_bin;
-    size_t rb_count;                   /* Number of items in tree. */
-    unsigned long rb_generation;       /* Generation number. */
-  };
+    struct rb_node **rb_recycle_bin;
+    size_t rb_count;             /* Number of items in tree. */
+    unsigned long rb_generation; /* Generation number. */
+};
 
 /* Color of a red-black node. */
 enum rb_color
-  {
-    RB_BLACK,   /* Black. */
-    RB_RED      /* Red. */
-  };
+{
+    RB_BLACK, /* Black. */
+    RB_RED    /* Red. */
+};
 
 /* RB traverser structure. */
 struct rb_traverser
-  {
-    struct rb_table *rb_table;        /* Tree being traversed. */
-    struct rb_node *rb_node;          /* Current node in tree. */
+{
+    struct rb_table *rb_table; /* Tree being traversed. */
+    struct rb_node *rb_node;   /* Current node in tree. */
     struct rb_node *rb_stack[RB_MAX_HEIGHT];
-                                        /* All the nodes above |rb_node|. */
-    size_t rb_height;                  /* Number of nodes in |rb_parent|. */
-    unsigned long rb_generation;       /* Generation number. */
-  };
+    /* All the nodes above |rb_node|. */
+    size_t rb_height;            /* Number of nodes in |rb_parent|. */
+    unsigned long rb_generation; /* Generation number. */
+};
 
 /* Table functions. */
-struct rb_table *rb_create (rb_comparison_func *, void *,
-                              meta_allocator *, void * * common_recycle_bin);
-struct rb_table *rb_copy (const struct rb_table *, rb_copy_func *,
-                            rb_item_func *);
-void rb_destroy (struct rb_table *, rb_item_func *);
-avl_key_type *rb_probe (struct rb_table *, void *);
+struct rb_table *rb_create(
+    rb_comparison_func *, void *, meta_allocator *, void **common_recycle_bin);
+struct rb_table *rb_copy(
+    const struct rb_table *, rb_copy_func *, rb_item_func *);
+void rb_destroy(struct rb_table *, rb_item_func *);
+avl_key_type *rb_probe(struct rb_table *, void *);
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
 #else
-void *rb_insert (struct rb_table *, void *);
+void *rb_insert(struct rb_table *, void *);
 #endif
-void *rb_replace (struct rb_table *, void *);
-void *rb_delete (struct rb_table *, const void *);
-void *rb_find (const struct rb_table *, const void *);
-void rb_assert_insert (struct rb_table *, void *);
-void *rb_assert_delete (struct rb_table *, void *);
+void *rb_replace(struct rb_table *, void *);
+void *rb_delete(struct rb_table *, const void *);
+void *rb_find(const struct rb_table *, const void *);
+void rb_assert_insert(struct rb_table *, void *);
+void *rb_assert_delete(struct rb_table *, void *);
 
-#define rb_count(table) ((size_t) (table)->rb_count)
+#define rb_count(table) ((size_t)(table)->rb_count)
 
 /* Table traverser functions. */
-void rb_t_init (struct rb_traverser *, struct rb_table *);
-void *rb_t_first (struct rb_traverser *, struct rb_table *);
-void *rb_t_last (struct rb_traverser *, struct rb_table *);
-void *rb_t_find (struct rb_traverser *, struct rb_table *, void *);
-void *rb_t_insert (struct rb_traverser *, struct rb_table *, void *);
-void *rb_t_copy (struct rb_traverser *, const struct rb_traverser *);
-void *rb_t_next (struct rb_traverser *);
-void *rb_t_prev (struct rb_traverser *);
-void *rb_t_cur (struct rb_traverser *);
-void *rb_t_replace (struct rb_traverser *, void *);
+void rb_t_init(struct rb_traverser *, struct rb_table *);
+void *rb_t_first(struct rb_traverser *, struct rb_table *);
+void *rb_t_last(struct rb_traverser *, struct rb_table *);
+void *rb_t_find(struct rb_traverser *, struct rb_table *, void *);
+void *rb_t_insert(struct rb_traverser *, struct rb_table *, void *);
+void *rb_t_copy(struct rb_traverser *, const struct rb_traverser *);
+void *rb_t_next(struct rb_traverser *);
+void *rb_t_prev(struct rb_traverser *);
+void *rb_t_cur(struct rb_traverser *);
+void *rb_t_replace(struct rb_traverser *, void *);
 
 static inline bool rb_get_decommissioned_flag(struct rb_node *const node)
 {
     return ((bool)(node->rb_mylink[1] & 0x1));
 }
 
-static inline void rb_set_decommissioned_flag(struct rb_node *const node, const bool decommissioned_flag)
+static inline void rb_set_decommissioned_flag(
+    struct rb_node *const node, const bool decommissioned_flag)
 {
     node->rb_mylink[1] &= (~0x1UL);
     node->rb_mylink[1] |= (decommissioned_flag ? 0x1UL : 0x0UL);

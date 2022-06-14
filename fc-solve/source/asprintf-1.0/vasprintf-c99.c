@@ -1,5 +1,6 @@
 /*
-Copyright (C) 2014 insane coder (http://insanecoding.blogspot.com/, http://asprintf.insanecoding.org/)
+Copyright (C) 2014 insane coder (http://insanecoding.blogspot.com/,
+http://asprintf.insanecoding.org/)
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -20,41 +21,41 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include "asprintf.h"
 
 /*
-//Define the following, and this will work with MSVC or other platforms that lack va_copy, but a simple copying of va_list does the trick
-#ifndef va_copy
+//Define the following, and this will work with MSVC or other platforms that
+lack va_copy, but a simple copying of va_list does the trick #ifndef va_copy
 #define va_copy(dest, src) dest = src
 #endif
 */
 
 int vasprintf(char **strp, const char *fmt, va_list ap)
 {
-  int r = -1;
+    int r = -1;
 
-  va_list ap2;
-  va_copy(ap2, ap);
+    va_list ap2;
+    va_copy(ap2, ap);
 
-  const int size = vsnprintf(0, 0, fmt, ap2);
-  *strp = 0;
+    const int size = vsnprintf(0, 0, fmt, ap2);
+    *strp = 0;
 
-  if ((size >= 0) && (size < INT_MAX))
-  {
-    char *str = malloc(size+1); //+1 for null
-    if (str)
+    if ((size >= 0) && (size < INT_MAX))
     {
-      r = vsnprintf(*strp, size+1, fmt, ap);  //+1 for null
-      if ((r < 0) || (r > size))
-      {
-        free(str);
-        r = -1;
-      }
-      else
-      {
-        *strp = str;
-      }
+        char *str = malloc(size + 1); //+1 for null
+        if (str)
+        {
+            r = vsnprintf(*strp, size + 1, fmt, ap); //+1 for null
+            if ((r < 0) || (r > size))
+            {
+                free(str);
+                r = -1;
+            }
+            else
+            {
+                *strp = str;
+            }
+        }
     }
-  }
 
-  va_end(ap2);
+    va_end(ap2);
 
-  return(r);
+    return (r);
 }

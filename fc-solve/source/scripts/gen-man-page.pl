@@ -2,7 +2,7 @@ use strict;
 use warnings;
 
 use Getopt::Long qw/ GetOptions /;
-use Path::Tiny qw/ path /;
+use Path::Tiny   qw/ path /;
 
 =head1 NAME
 

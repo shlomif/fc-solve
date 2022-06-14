@@ -1,5 +1,6 @@
 /*
-Copyright (C) 2014 insane coder (http://insanecoding.blogspot.com/, http://asprintf.insanecoding.org/)
+Copyright (C) 2014 insane coder (http://insanecoding.blogspot.com/,
+http://asprintf.insanecoding.org/)
 
 Permission to use, copy, modify, and distribute this software for any
 purpose with or without fee is hereby granted, provided that the above
@@ -19,8 +20,7 @@ OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
 #include <stdarg.h>
 #else
 #include <cstdarg>
-extern "C"
-{
+extern "C" {
 #endif
 
 int vasprintf(char **strp, const char *fmt, va_list ap);
