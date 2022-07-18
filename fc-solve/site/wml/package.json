@@ -31,7 +31,7 @@
     "flatted": "^3.2.5",
     "html-minifier": "^4.0.0",
     "jquery": "^3.6.0",
-    "jquery-ui": "^1.13.1",
+    "jquery-ui": "^1.13.2",
     "lodash": "^4.17.21",
     "minimist": "^1.2.6",
     "node-qunit": "^0.7.2",
