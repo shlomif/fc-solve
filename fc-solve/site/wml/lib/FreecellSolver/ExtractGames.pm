@@ -3,7 +3,7 @@ package FreecellSolver::ExtractGames;
 use strict;
 use warnings;
 use Path::Tiny qw/ path /;
-use CGI qw/ escapeHTML /;
+use CGI        qw/ escapeHTML /;
 
 use MooX qw/ late /;
 

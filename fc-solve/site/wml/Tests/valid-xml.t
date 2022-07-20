@@ -5,7 +5,7 @@ use warnings;
 
 package Test::HTML::Tidy::Recursive::XML;
 
-use MooX qw/ late /;
+use MooX        qw/ late /;
 use XML::LibXML ();
 use lib './lib';
 

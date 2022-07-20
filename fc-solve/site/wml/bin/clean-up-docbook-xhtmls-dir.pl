@@ -7,7 +7,7 @@ use autodie;
 use lib './lib';
 
 use Getopt::Long qw/ GetOptions /;
-use Path::Tiny qw/ path /;
+use Path::Tiny   qw/ path /;
 
 use Shlomif::RenderDocBookIndiv ();
 

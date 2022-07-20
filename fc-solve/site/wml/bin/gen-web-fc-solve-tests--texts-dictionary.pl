@@ -5,7 +5,7 @@
 # Author Shlomi Fish <shlomif@cpan.org>
 use strict;
 use warnings;
-use Path::Tiny qw/ path /;
+use Path::Tiny    qw/ path /;
 use Dir::Manifest ();
 use JSON::MaybeXS ();
 

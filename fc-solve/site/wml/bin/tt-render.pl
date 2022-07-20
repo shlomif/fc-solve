@@ -6,9 +6,9 @@ use 5.014;
 
 use lib './lib';
 
-use Getopt::Long qw/ GetOptions /;
-use Parallel::Map::Segmented ();
-use Path::Tiny qw/ path /;
+use Getopt::Long                   qw/ GetOptions /;
+use Parallel::Map::Segmented       ();
+use Path::Tiny                     qw/ path /;
 use FreecellSolver::Site::TTRender ();
 
 my $printable;

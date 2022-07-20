@@ -3,7 +3,7 @@ package Shlomif::Spelling::FindFiles;
 use strict;
 use warnings;
 
-use MooX qw/late/;
+use MooX            qw/late/;
 use List::MoreUtils qw/any/;
 
 use HTML::Spelling::Site::Finder ();

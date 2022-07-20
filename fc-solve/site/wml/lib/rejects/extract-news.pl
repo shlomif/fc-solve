@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Data::Dumper ();
-use IO::All qw/ io /;
+use IO::All      qw/ io /;
 
 my @results;
 my $last_time;

@@ -8,8 +8,8 @@ use lib './lib';
 
 use XML::LibXML               ();
 use XML::LibXML::XPathContext ();
-use Getopt::Long qw/ GetOptions /;
-use Path::Tiny qw/ path /;
+use Getopt::Long              qw/ GetOptions /;
+use Path::Tiny                qw/ path /;
 
 use Shlomif::DocBookClean ();
 

@@ -6,12 +6,12 @@ use warnings;
 use lib './lib';
 
 use Carp::Always;
-use Path::Tiny qw/ path /;
-use NavDataRender ();
-use MyNavData     ();
-use URI::Escape qw(uri_escape);
+use Path::Tiny                         qw/ path /;
+use NavDataRender                      ();
+use MyNavData                          ();
+use URI::Escape                        qw(uri_escape);
 use HTML::Widgets::NavMenu::EscapeHtml qw(escape_html);
-use Parallel::Map::Segmented ();
+use Parallel::Map::Segmented           ();
 
 sub get_page_path
 {

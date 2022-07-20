@@ -6,8 +6,8 @@ use autodie;
 use utf8;
 use parent 'HTML::Widgets::NavMenu::Object';
 use Path::Tiny qw/ path /;
-use MyOldNews ();
-use DateTime  ();
+use MyOldNews  ();
+use DateTime   ();
 
 __PACKAGE__->mk_accessors(
     qw(

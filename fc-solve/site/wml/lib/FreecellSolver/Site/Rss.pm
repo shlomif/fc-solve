@@ -7,7 +7,7 @@ use parent 'HTML::Widgets::NavMenu::Object';
 
 use XML::Feed ();
 use CGI       ();
-use Encode qw/ decode /;
+use Encode    qw/ decode /;
 
 sub feed
 {
