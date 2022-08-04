@@ -6,7 +6,7 @@ use warnings;
 use autodie;
 
 use Path::Tiny qw/ path /;
-use MooX qw/ late /;
+use MooX       qw/ late /;
 
 has 'depth_dbm'  => ( is => 'ro', isa => 'Bool', required => 1 );
 has 'fcc_solver' => ( is => 'ro', isa => 'Bool', default  => 0 );

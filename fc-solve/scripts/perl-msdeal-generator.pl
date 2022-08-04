@@ -10,7 +10,7 @@ use strict;
 use warnings;
 
 use Freecell::Deal::MS ();
-use Getopt::Long qw/ GetOptions /;
+use Getopt::Long       qw/ GetOptions /;
 
 my $dir;
 my $suffix = '';

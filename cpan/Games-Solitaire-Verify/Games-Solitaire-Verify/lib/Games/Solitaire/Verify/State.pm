@@ -22,7 +22,7 @@ use Games::Solitaire::Verify::VariantParams ();
 use Games::Solitaire::Verify::VariantsMap   ();
 
 use List::Util qw(first);
-use POSIX qw();
+use POSIX      qw();
 
 __PACKAGE__->mk_acc_ref(
     [

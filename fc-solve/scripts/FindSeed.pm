@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use autodie;
 
-use Storable qw/nfreeze thaw/;
+use Storable     qw/nfreeze thaw/;
 use MIME::Base64 qw/encode_base64 decode_base64/;
 
 sub enc
@@ -233,7 +233,7 @@ sub par_handle_seed
 
     package FindSeed::Parallel::Child;
     use parent qw(Process::Async::Child);
-    use POSIX qw(strftime);
+    use POSIX  qw(strftime);
 
     sub finished { $_[0]->{finished} ||= $_[0]->loop->new_future }
 
@@ -311,7 +311,7 @@ sub par_handle_seed
 
 package FindSeed;
 
-use List::Util qw/max min/;
+use List::Util    qw/max min/;
 use List::UtilsBy qw/min_by/;
 use bytes;
 use integer;

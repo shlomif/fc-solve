@@ -4,9 +4,9 @@ use strict;
 use warnings;
 
 use IO::All;
-use List::Util qw(max);
+use List::Util      qw(max);
 use List::MoreUtils qw(any);
-use List::UtilsBy qw(max_by min_by);
+use List::UtilsBy   qw(max_by min_by);
 
 my $start_scan              = 1;
 my $end_scan                = 27;

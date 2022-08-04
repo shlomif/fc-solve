@@ -6,7 +6,7 @@ use warnings;
 use MooX qw/late/;
 
 use Getopt::Long qw(GetOptionsFromArray);
-use IO::File ();
+use IO::File     ();
 
 use AI::Pathfinding::OptimizeMultiple                ();
 use AI::Pathfinding::OptimizeMultiple::PostProcessor ();
