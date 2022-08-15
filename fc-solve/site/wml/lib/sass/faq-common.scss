@@ -1,0 +1,137 @@
+span.indiv_node {
+    float: right;
+    padding: 0.3em;
+}
+
+a.indiv_node {
+    @include faq_link;
+}
+
+@mixin next_link {
+    &:after {
+        content: " 🠪  ]";
+    }
+    &:before {
+        content: "[ ";
+    }
+    padding: 0.3em;
+    // float: right;
+}
+
+a.next {
+    @include next_link;
+}
+
+@mixin previous_link {
+    &:after {
+        content: " ]";
+    }
+    &:before {
+        content: "[ 🠨 ";
+    }
+    padding: 0.3em;
+    // float: right;
+}
+
+a.previous {
+    @include previous_link;
+}
+
+.faq,
+.indiv_nodes_wrapper,
+.screenplay {
+    img.faq_float {
+        float: right;
+        margin: 0 2em;
+    }
+    header {
+        padding-bottom: 1em;
+        > h2,
+        > h3,
+        > h4 {
+            display: inline;
+        }
+    }
+}
+
+a.back_to_faq {
+    @include faq_link;
+}
+
+.fancy_sects {
+    @include big-screen {
+        article,
+        nav,
+        section,
+        .sub_section,
+        &section {
+            @include mysection($left_hover_color: #0b0);
+        }
+    }
+    li {
+        margin-left: 0;
+        padding-left: 0;
+    }
+    ol,
+    ul {
+        margin-left: 2em;
+        padding-left: 0;
+    }
+    table {
+        td,
+        th {
+            padding: 0.5em;
+        }
+    }
+}
+
+blockquote {
+    border: grey thin solid;
+    padding: 0.5em;
+    // font-style: italic;
+    margin-left: 0.5em;
+    overflow: auto;
+
+    @if false {
+        > p:first-child {
+            &:before {
+                content: "‶";
+            }
+
+            padding-top: 0;
+            margin-top: 0;
+        }
+
+        > p:last-child {
+            &:after {
+                content: "″";
+            }
+            margin-bottom: 0;
+            padding-top: 0;
+        }
+    }
+}
+
+@include quote-iframe-styles(false, ".my_rpf.fancy_sects");
+
+.limit_imgs_width,
+.lim_width {
+    img {
+        max-width: 90%;
+    }
+    pre {
+        overflow: scroll;
+    }
+    @include small-screen {
+        &.my_rpf {
+            .page_toc * {
+                overflow: hidden;
+            }
+        }
+    }
+    &.ride_celestia {
+        img {
+            max-width: 400px;
+        }
+    }
+}

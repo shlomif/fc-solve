@@ -50,6 +50,7 @@ else
 endif
 
 
+POST_DEST = $(D)
 DEST_JS_DIR = $(D)/js
 BASE_FC_SOLVE_SOURCE_DIR := ../../source
 IMAGES = $(addprefix $(D)/,$(SRC_IMAGES))
@@ -94,8 +95,6 @@ BASE_yui_Solitairey_JS = yui-debug.js
 DEST_yui_Solitairey_JS = $(call dest_jsify,$(BASE_yui_Solitairey_JS))
 DEST_yui_min_Solitairey_JS = $(call dest_jsify,$(BASE_yui_min_Solitairey_JS))
 
-CSS_TARGETS = $(D)/jqui-override.css $(D)/print.css $(D)/solitairey-cards.css $(D)/style.css $(D)/web-fc-solve.css
-
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
 
 ifeq ($(SKIP_EMCC),1)
@@ -108,7 +107,7 @@ endif
 
 include lib/make/deps.mak
 
-real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) $(CSS_TARGETS) htaccesses_target
+real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) htaccesses_target
 
 real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
 real_all: $(DEST_yui_min_Solitairey_JS)
@@ -138,22 +137,6 @@ $(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js $(OUT_PREF)/qunit.js: %:
 	base="$(patsubst $(OUT_PREF)/%.js,%,$@)" ; browserify -s "$$base" -r "$$base" -o $@
 
 STRIP_TRAIL_SPACE = $(PERL) -i -lpe 's/[ \t]+$$//'
-
-SASS_STYLE = compressed
-# SASS_STYLE = expanded
-SASS_CMD = pysassc $(SASS_DEBUG_FLAGS) -I lib/repos/Solitairey/ --style $(SASS_STYLE)
-
-SASS_HEADERS = lib/sass/common-style.scss lib/repos/Solitairey/solitairey-cards--common.scss
-
-$(CSS_TARGETS): $(D)/%.css: lib/sass/%.scss $(SASS_HEADERS)
-	$(SASS_CMD) $< $@
-
-SCSS_TARGETS = $(patsubst %.css,%.scss,$(CSS_TARGETS))
-
-$(SCSS_TARGETS): $(D)/%.scss: lib/sass/%.scss
-	$(call COPY)
-
-real_all: $(SCSS_TARGETS)
 
 $(D) $(SUBDIRS): % :
 	@if [ ! -e $@ ] ; then \
@@ -432,8 +415,18 @@ clean:
 edit:
 	gvim -o src/ts/fcs-validate.ts src/ts/web-fc-solve-tests--fcs-validate.ts
 
-include lib/make/docbook/sf-docbook-common.mak
+include lib/make/sf-css.mak
 
+real_all: $(SRC_CSS_TARGETS)
+
+SCSS_TARGETS = $(patsubst %.css,%.scss,$(SRC_CSS_TARGETS))
+
+$(SCSS_TARGETS): $(D)/%.scss: lib/sass/%.scss
+	$(call COPY)
+
+real_all: $(SCSS_TARGETS)
+
+include lib/make/docbook/sf-docbook-common.mak
 real_all: docbook_targets
 
 $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml

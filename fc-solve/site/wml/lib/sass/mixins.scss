@@ -1,0 +1,243 @@
+@import "defs";
+
+@mixin bottom_bg {
+    background: #01698f;
+}
+
+@mixin body-background {
+    background-color: #e0ebef;
+}
+
+@mixin faq_link {
+    &:after {
+        content: " ]";
+    }
+    &:before {
+        content: "[ ";
+    }
+    padding: 0.3em;
+    // float: right;
+}
+
+@mixin indent {
+    margin-left: 3em;
+}
+
+/* Style for the google search box */
+
+$navbar_margin: 0.5em;
+
+@mixin navbar_box {
+    border: 1.5pt solid #207020;
+    margin-bottom: 0.5cm;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0.5em;
+
+    h2 {
+        font-size: large;
+        font-weight: bold;
+    }
+
+    img {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    p {
+        margin: $navbar_margin;
+    }
+}
+
+@mixin logo_margin {
+    margin-top: 1em;
+}
+
+@mixin logo_image {
+    margin-left: 1em;
+    margin-bottom: 1em;
+    margin-right: 1em;
+
+    @include logo_margin;
+}
+
+@mixin highlight_div_frame {
+    border: 2pt solid darkgreen;
+    padding: 1em;
+    margin-bottom: 2em;
+    overflow: hidden;
+
+    &:hover {
+        border-color: #787;
+    }
+
+    @include rounded_corners(10px);
+}
+
+$ss_margin: 2em;
+
+@mixin mysection($left_hover_color: #555555) {
+    $ss_padding: 0.3em;
+    margin-bottom: $ss_margin;
+    margin-top: $ss_margin;
+    margin-left: 0.5em;
+
+    padding-left: 1em;
+    border-left: black solid 3px;
+    padding-bottom: $ss_padding;
+    padding-top: $ss_padding;
+
+    &:hover {
+        border-left-color: $left_hover_color;
+    }
+
+    > p:last-child,
+    > ul:last-child > li:last-child > p:last-child,
+    > ol:last-child > li:last-child > p:last-child {
+        padding-bottom: 1em;
+    }
+}
+
+@mixin img_align__cell {
+    vertical-align: top;
+}
+
+@mixin navbarwrap_common {
+    height: auto;
+}
+
+@mixin max_width_lim_common {
+    max-width: 99%;
+    @include navbarwrap_common;
+}
+
+@mixin text_document_h_tags_sizes {
+    h2 {
+        font-size: 160%;
+    }
+    h3 {
+        font-size: 140%;
+    }
+    h4 {
+        font-size: 130%;
+    }
+
+    h5 {
+        font-size: 120%;
+    }
+
+    h6 {
+        font-size: 110%;
+    }
+}
+
+@mixin visible_focus {
+    *:focus {
+        outline: red solid 2px;
+    }
+}
+
+@mixin float-contain {
+    &::after {
+        display: block;
+        content: "";
+        clear: right;
+    }
+}
+
+@mixin left-float-contain {
+    &::after {
+        display: block;
+        content: "";
+        clear: left;
+    }
+}
+
+@mixin fancy_blockquote {
+    blockquote.fancy {
+        border: none;
+        @if false {
+            font: 14px/22px normal helvetica, sans-serif;
+        }
+        margin-top: 10px;
+        margin-bottom: 10px;
+        margin-left: 0.5em;
+        padding-left: 15px;
+        border-left: 3px solid darkgreen;
+        /* Asciidoctor default stylesheet | MIT License | https://asciidoctor.org */
+        margin: 0 0 1.25em;
+        padding: 0.5625em 1.25em 0 1.1875em;
+        @if false {
+            border-left: 1px solid #ddd;
+        }
+        cite {
+            display: block;
+            font-size: 0.9375em;
+            color: rgba(0, 0, 0, 0.6);
+            &::before {
+                content: "\2014 \0020";
+            }
+            a,
+            a:visited {
+                color: rgba(0, 0, 0, 0.6);
+            }
+        }
+        font-size: 1em;
+        orphans: 3;
+        widows: 3;
+        page-break-inside: avoid;
+        &::before {
+            content: "\201c";
+            float: left;
+            font-size: 2.75em;
+            font-weight: bold;
+            line-height: 0.6em;
+            // margin-left: -0.6em;
+            color: #7a2518;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+        @if false {
+            blockquote,
+            .quoteblock p {
+                color: rgba(0, 0, 0, 0.85);
+                font-size: 1.15rem;
+                line-height: 1.75;
+                word-spacing: 0.1em;
+                letter-spacing: 0;
+                font-style: italic;
+                text-align: justify;
+            }
+            blockquote {
+                margin: 0;
+                padding: 0;
+                border: 0;
+            }
+            blockquote > .paragraph:last-child p {
+                margin-bottom: 0;
+            }
+        }
+    }
+}
+
+@mixin quote-iframe-styles($avoid_img, $sel) {
+    #{$sel},
+    .why_openly_bipolar.fancy_sects {
+        @include fancy_blockquote;
+        @if not $avoid_img {
+            img {
+                float: left;
+                margin: 1em;
+            }
+        }
+        iframe {
+            height: 315px;
+            @include margin-lr(auto);
+            $m: 1em;
+            margin-bottom: $m;
+            margin-top: $m;
+            max-width: 90%;
+            width: 560px;
+        }
+    }
+}

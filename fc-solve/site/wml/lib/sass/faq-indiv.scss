@@ -1,0 +1,114 @@
+@import "mixins";
+@import "charsheet-basics";
+@import "common-body";
+@import "bk2hp";
+@import "footer";
+@import "main-element";
+@import "faq-common";
+
+.faq_indiv_entry {
+    img.faq_float {
+        margin: 2em;
+    }
+    footer {
+        @include bottom_bg;
+        clear: both;
+        @if false {
+            margin-top: 2em;
+            padding-bottom: 2em;
+        }
+    }
+}
+
+body.faq_indiv_entry {
+    @include text_document_h_tags_sizes;
+    @include visible_focus;
+    margin: 0;
+    background-color: #e0ebef;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 150px 1fr minmax(300px, min-content);
+    @if false {
+        height: 100vh;
+        flex-flow: column nowrap;
+        justify-content: space-between;
+    }
+    #header {
+        @include bottom_bg;
+        @if false {
+            padding-top: 0;
+            padding-bottom: 1em;
+            grid-gap: 5px;
+        }
+        display: grid;
+        grid-auto-flow: column;
+        justify-content: left;
+        align-items: end;
+
+        img {
+            margin: 0.5em;
+            max-height: 100px;
+        }
+    }
+    .leading_path {
+        @if false {
+            padding-bottom: 1em;
+            margin-bottom: 1em;
+        }
+    }
+    header {
+        margin-bottom: 2em;
+    }
+    pre {
+        overflow: scroll;
+    }
+    @mixin temp_mobile_friendly_hack() {
+        // I'm not sure if img is required
+        img,
+        pre {
+            overflow: scroll;
+        }
+        main {
+            display: inline;
+            overflow: scroll;
+        }
+    }
+    // @include temp_mobile_friendly_hack();
+}
+
+#faux {
+    @include body-background;
+    padding: 1em;
+}
+
+/* This is for the breadcrumbs trail (= leading path) at the top. */
+.leading_path {
+    color: white;
+    padding-bottom: 0.5em;
+    padding-left: 0.5em;
+    @if false {
+        margin-bottom: 0.2em;
+        padding-left: 0.2em;
+        padding-top: 0.1em;
+        padding-bottom: 0.15em;
+        margin-right: 10pt;
+    }
+
+    a {
+        text-decoration: underline;
+        font-weight: bold;
+
+        &:link {
+            color: white;
+        }
+
+        &:visited {
+            color: #ff8800;
+        }
+
+        &:hover {
+            color: #40ff40;
+            background-color: transparent;
+        }
+    }
+}

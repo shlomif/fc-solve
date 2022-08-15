@@ -1,0 +1,28 @@
+@mixin default_font_family {
+    font-family: Arial, Sans-Serif;
+    font-size: 16px;
+}
+
+@mixin margin-lr($mar) {
+    margin-left: $mar;
+    margin-right: $mar;
+}
+
+@mixin padding-lr($mar) {
+    padding-left: $mar;
+    padding-right: $mar;
+}
+
+@mixin padding-vert($mar) {
+    padding-bottom: $mar;
+    padding-top: $mar;
+}
+
+@mixin rounded_corners($radius) {
+    border-radius: $radius;
+}
+
+@mixin border-vert($val) {
+    border-bottom: $val;
+    border-top: $val;
+}

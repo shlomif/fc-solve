@@ -1,4 +1,7 @@
 @import "common-style";
+@import "mixins";
+@import "charsheet-basics";
+@import "faq-common";
 
 @mixin body-background {
     background-color: white;
