@@ -9,7 +9,7 @@
 <toc />
 </section>
 
-[% WRAPPER h2_section id = "questions", title = "The Questions" %]
+[% WRAPPER h2_section id = "questions", sect_class = "faq", title = "The Questions" %]
 
 [% WRAPPER h3_section id = "what_is_it", title = "What is Freecell Solver? What is a solver for Freecell in general?" %]
 
