@@ -30,6 +30,14 @@ ifeq ($(PROD),1)
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
     MULTI_YUI = terser --compress --comments "false"
     SASS_DEBUG_FLAGS =
+
+FAQ_PIVOT := $(D)/faq-indiv-nodes/which_prog_lang.xhtml
+
+$(FAQ_PIVOT): $(D)/faq.html
+	python3 lib/split-html/faq_splitter_prog.py
+
+real_all: $(FAQ_PIVOT)
+
 else
     TEST_SITE_URL_SUFFIX = $(TESTING_ENV__URL_SUFFIX)
     MULTI_YUI = ./bin/cat-o
