@@ -33,7 +33,7 @@ def _process_title(self, title):
     )
 
 
-COMMON_TITLE_CBS = {
+COMMON_TITLE_CALLBACKS = {
     'process_header_text': _process_title,
     'process_main_title': _process_title,
 }
@@ -112,7 +112,6 @@ INDIVIDUAL_NODE_CSS_CLASS = "indiv_node"
 
 def _wrap(ns):
     return ns
-    return '{' + ns + '}'
 
 
 XML_NS = "http://www.w3.org/XML/1998/namespace"
@@ -122,17 +121,13 @@ NAMESPACES = {
 }
 
 
-def main():
-    _faq_gen()
-
-
-def _faq_gen():
-    OUT_DN = "./dest-prod/faq-indiv-nodes"
-    input_fn = "./dest-prod/faq.html"
+def _faq_gen(dest_dir):
+    OUT_DN = dest_dir + "/faq-indiv-nodes"
+    input_fn = dest_dir + "/faq.html"
     TOP_LEVEL_CLASS = 'faq fancy_sects lim_width wrap-me'
     TOP_LEVEL_CLASS = 'h2 faq'
     splitter = XhtmlSplitter(
-        **COMMON_TITLE_CBS,
+        **COMMON_TITLE_CALLBACKS,
         back_to_source_page_css_class=BACK_TO_SOURCE_PAGE_CSS_CLASS,
         individual_node_css_class=INDIVIDUAL_NODE_CSS_CLASS,
         input_fn=input_fn,
@@ -147,13 +142,9 @@ def _faq_gen():
     splitter.process()
 
 
-_BASE_COUNT = "./dest/post-incs/t2".count('/')
-
-
-def _calc_base_path(OUT_DN):
-    """docstring for _calc_base_path"""
-    base_path = '../' * (OUT_DN.count('/') - _BASE_COUNT)
-    return base_path
+def main():
+    dest_dir = "./dest-prod"
+    _faq_gen(dest_dir=dest_dir)
 
 
 if __name__ == '__main__':
