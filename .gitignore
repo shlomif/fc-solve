@@ -100,7 +100,7 @@
 /fc-solve/site/wml/lib/make/docbook/sf-docbook-common-docbook4.mak
 /fc-solve/site/wml/lib/make/docbook/sf-docbook-common.mak
 /fc-solve/site/wml/lib/make/docbook/sf-homepage-docbook-gen.tt
-/fc-solve/site/wml/lib/make/docbook/sf-homepage-docbooks-generated.mak
+/fc-solve/site/wml/lib/make/generated/sf-homepage-docbooks-generated.mak
 /fc-solve/site/wml/lib/make/include.mak
 /fc-solve/site/wml/lib/make/jinja.txt
 /fc-solve/site/wml/lib/make/rules.mak
