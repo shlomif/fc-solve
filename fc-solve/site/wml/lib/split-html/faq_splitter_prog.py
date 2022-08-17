@@ -76,8 +76,7 @@ FAQ_SECTION_FORMAT = '''<?xml version="1.0" encoding="utf-8"?>
 <a href="{base_path}"><img src="{base_path}images/evilphish-flipped.png"
 alt="EvilPHish site logo"/></a>
 <div class="leading_path"><a href="{base_path}">Freecell Solver’s
-Homepage</a> → <a href="../" title=
-"Information about this Site">Meta Info</a> → <a href="./" title=
+Homepage</a> → <a href="{base_path}faq.html" title=
 "Frequently Asked Questions and Answers List (FAQ)">FAQ</a>
 {breadcrumbs_trail}
 → <b>{title}</b>
@@ -89,20 +88,14 @@ Homepage</a> → <a href="../" title=
 <div class="foot_left">
 <ul class="bt_nav">
 <li><a href="{base_path}">Home</a></li>
-<li><a href="{base_path}me/">About</a></li>
-<li><a href="{base_path}me/contact-me/">Contact Us</a></li>
-<li><a href="{base_path}meta/privacy-policy/">Privacy Policy</a></li>
-<li><a href="{base_path}meta/anti-spam-policy/">Anti-Spam
-Policy</a></li>
-<li><a href="{base_path}meta/FAQ/" title=
-"Frequently asked questions list">FAQ</a></li>
-<li><a href="{base_path}me/blogs/">RSS/Atom Feeds</a></li>
+<li><a href="https://www.shlomifish.org/me/contact-me/">Contact Us</a></li>
 </ul>
 <p>Written, designed, and maintained by Shlomi Fish, <a href=
 "mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a>.</p>
 </div>
-<a href="{base_path}"><img src="{base_path}images/bk2hp-v2.min.svg" class=
-"bk2hp" alt="Back to my Homepage"/></a></footer>
+<a href="https://www.shlomifish.org/"><img
+src="{base_path}images/bk2hp-v2.min.svg" class="bk2hp"
+alt="Back to my Homepage"/></a></footer>
 </body>
 </html>'''
 
