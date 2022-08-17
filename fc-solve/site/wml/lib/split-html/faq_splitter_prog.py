@@ -82,7 +82,7 @@ Homepage</a> → <a href="{base_path}faq.html" title=
 → <b>{title}</b>
 </div>
 </div>
-<main class="faq faux main">
+<main class="faq faux">
 {body}</main>
 <footer>
 <div class="foot_left">
