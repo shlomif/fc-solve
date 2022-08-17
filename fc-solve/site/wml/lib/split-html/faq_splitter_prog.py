@@ -60,11 +60,11 @@ FAQ_SECTION_FORMAT = '''<?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-<title>Shlomi Fish’s FAQ - {title}</title>
+<title>Freecell Solver’s FAQ - {title}</title>
 <meta charset="utf-8"/>
 <meta name="description" content=
-"Shlomi Fish’s Frequently Asked Questions (FAQ) List - {title}"/>
-<link rel="stylesheet" href="{base_path}faq-indiv.css" media="screen" title=
+"Freecell Solver’s Frequently Asked Questions (FAQ) List - {title}"/>
+<link rel="stylesheet" href="{base_path}style.css" media="screen" title=
 "Normal"/>
 <link rel="stylesheet" href="{base_path}print.css" media="print"/>
 <link rel="shortcut icon" href="{base_path}favicon.ico" type=
@@ -75,7 +75,7 @@ FAQ_SECTION_FORMAT = '''<?xml version="1.0" encoding="utf-8"?>
 <div class="header" id="header">
 <a href="{base_path}"><img src="{base_path}images/evilphish-flipped.png"
 alt="EvilPHish site logo"/></a>
-<div class="leading_path"><a href="{base_path}">Shlomi Fish’s
+<div class="leading_path"><a href="{base_path}">Freecell Solver’s
 Homepage</a> → <a href="../" title=
 "Information about this Site">Meta Info</a> → <a href="./" title=
 "Frequently Asked Questions and Answers List (FAQ)">FAQ</a>
