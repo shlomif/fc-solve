@@ -87,10 +87,12 @@ body {
     .wrap-me * {
         @include wrap;
     }
-    p {
-        $p: 2em;
-        padding-left: $p;
-        padding-right: $p;
+    @if false {
+        p {
+            $p: 2em;
+            padding-left: $p;
+            padding-right: $p;
+        }
     }
 }
 
@@ -184,13 +186,15 @@ p.desc {
 }
 
 .main {
-    ol,
-    ul,
-    dl {
-        padding-left: 1em;
-        padding-right: 1em;
-        margin-left: 1.5em;
-        margin-right: 1em;
+    @if false {
+        ol,
+        ul,
+        dl {
+            padding-left: 1em;
+            padding-right: 1em;
+            margin-left: 1.5em;
+            margin-right: 1em;
+        }
     }
 }
 
