@@ -137,17 +137,19 @@ a {
 
 h2 {
     background-color: #ffee77;
-    font-size: 140%;
+    font-size: 160%;
 }
 
 h3 {
     background-color: #77d077;
-    font-size: 120%;
+    font-size: 130%;
 }
 
 h2,
 h3 {
-    border-radius: 0 5px 5px 5px;
+    @if false {
+        border-radius: 0 5px 5px 5px;
+    }
     clear: right;
     padding: 5px;
 }
@@ -166,10 +168,12 @@ h3 {
 h2,
 h3,
 h4 {
-    padding-left: 4pt;
-    padding-right: 4pt;
-    padding-top: 1pt;
-    padding-bottom: 1pt;
+    @if false {
+        padding-left: 4pt;
+        padding-right: 4pt;
+        padding-top: 1pt;
+        padding-bottom: 1pt;
+    }
 }
 
 .main {
