@@ -737,10 +737,17 @@ foreach my $dir (
 use Getopt::Long qw/ GetOptions /;
 
 my $include_filter;
+my $only_check_ready;
 
-GetOptions( "include=s" => \$include_filter, )
-    or die $!;
+GetOptions(
+    "include=s"         => \$include_filter,
+    "only-check-ready!" => \$only_check_ready,
+) or die $!;
 
+if ($only_check_ready)
+{
+    exit(0);
+}
 RUN_TESTS:
 while ( my ( $idx, $run ) = each @tests )
 {
