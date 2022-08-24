@@ -260,6 +260,9 @@ table.downloads,
     th {
         text-align: left;
     }
+    * {
+        overflow-wrap: break-word;
+    }
 }
 
 .downloads,

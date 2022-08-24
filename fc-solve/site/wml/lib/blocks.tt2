@@ -36,6 +36,7 @@
 [% INCLUDE page_extra_head_elements %]
 [% CATCH file %]
 [% END %]
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
 
 </head>
 
