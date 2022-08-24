@@ -669,6 +669,7 @@ gcc-2
 gcc-4
 gcc-compatible
 github
+gmail
 gmplib
 gnu11
 gnu99
@@ -1152,7 +1153,6 @@ IS'
 Kaz
 Kylheku
 NONINFRINGEMENT
-gmail
 kaz_tree
 kkylheku
 sublicense

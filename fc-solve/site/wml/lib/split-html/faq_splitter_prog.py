@@ -87,12 +87,19 @@ Homepage</a> → <a href="{base_path}faq.html" title=
 <li><a href="{base_path}">Home</a></li>
 <li><a href="https://www.shlomifish.org/me/contact-me/">Contact Us</a></li>
 </ul>
-<p>Written, designed, and maintained by Shlomi Fish, <a href=
-"mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a>.</p>
 </div>
-<a href="https://www.shlomifish.org/"><img
-src="{base_path}images/bk2hp-v2.min.svg" class="bk2hp"
-alt="Back to my Homepage"/></a></footer>
+<div class="foot_left">
+<p><b>Webmaster:</b> <a href="https://www.shlomifish.org/">Shlomi
+Fish</a>. He can be
+<a href="https://www.shlomifish.org/me/contact-me/">contacted
+using
+many electronic means</a>, and while he can be reached using email (<a href=
+"mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a> and
+<a href="mailto:shlomif@gmail.com">shlomif@gmail.com</a>),
+more reliable messaging means such as XMPP or IRC are preferable.
+.</p>
+</div>
+</footer>
 </body>
 </html>'''
 
