@@ -73,8 +73,6 @@ FAQ_SECTION_FORMAT = '''<?xml version="1.0" encoding="utf-8"?>
 </head>
 <body class="fancy_sects faq_indiv_entry">
 <div class="header" id="header">
-<a href="{base_path}"><img src="{base_path}images/evilphish-flipped.png"
-alt="EvilPHish site logo"/></a>
 <div class="leading_path"><a href="{base_path}">Freecell Solver’s
 Homepage</a> → <a href="{base_path}faq.html" title=
 "Frequently Asked Questions and Answers List (FAQ)">FAQ</a>
@@ -82,8 +80,7 @@ Homepage</a> → <a href="{base_path}faq.html" title=
 → <b>{title}</b>
 </div>
 </div>
-<main class="faq faux">
-{body}</main>
+<main class="faq faux">{body}</main>
 <footer>
 <div class="foot_left">
 <ul class="bt_nav">
