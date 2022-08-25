@@ -80,6 +80,7 @@ class XhtmlSplitter:
             main_title=None,
             process_header_text=_dummy_process_title,
             process_main_title=_dummy_process_title,
+            section_format_cb=None,
     ):
         self.process_header_text = process_header_text
         self.process_main_title = process_main_title
@@ -95,7 +96,11 @@ class XhtmlSplitter:
         self.ns = ns
         self.output_dirname = output_dirname
         self.relative_output_dirname = relative_output_dirname
-        self.section_format = section_format
+        if not section_format_cb:
+            def _myformat(args):
+                return section_format.format(**args)
+            section_format_cb = _myformat
+        self.section_format_cb = section_format_cb
         self.input_is_plain_html = input_is_plain_html
         self._fromstring = (
             lxml.html.fragment_fromstring
@@ -284,7 +289,7 @@ class XhtmlSplitter:
         elem.set(self._protect_attr_name, "true")
 
     def process(self):
-        SECTION_FORMAT = self.section_format
+        SECTION_FORMAT = self.section_format_cb
         output_dirname = self.output_dirname
         os.makedirs(output_dirname, exist_ok=True)
 
@@ -489,6 +494,6 @@ class XhtmlSplitter:
                      for rec in reversed(parents)]),
             }
             fn = "{}/{}.xhtml".format(output_dirname, id_)
-            _out_page_text = SECTION_FORMAT.format(**formats)
+            _out_page_text = SECTION_FORMAT(args=formats)
             _out_page_text = _out_page_text.encode()
             self._write_file(fn, _out_page_text)
