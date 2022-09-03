@@ -113,25 +113,33 @@ if ( $FC_Solve::Paths::Base::IS_WIN || $force_rebuild )
 }
 else
 {
-    foreach my $prog ( keys %progs )
+    eval {
+        foreach my $prog ( keys %progs )
+        {
+            say $prog;
+            die if !-e $prog;
+            foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
+            {
+                say "bin $prog $bin";
+                $progs{$prog}{binaries}{$bin} //= (
+                    $binaries{$bin} //= do
+                    {
+                        Digest->new('SHA-256')->addfile($bin)->b64digest;
+                    }
+                );
+            }
+            my $val = $cache->get( $progs{$prog} );
+            if ( !$val )
+            {
+                ++$rerun;
+            }
+        }
+
+    };
+    if ( my $Err = $@ )
     {
-        say $prog;
-        die if !-e $prog;
-        foreach my $bin ( $prog, `ldd "$prog"` =~ m# => (\S+)#g )
-        {
-            say "bin $prog $bin";
-            $progs{$prog}{binaries}{$bin} //= (
-                $binaries{$bin} //= do
-                {
-                    Digest->new('SHA-256')->addfile($bin)->b64digest;
-                }
-            );
-        }
-        my $val = $cache->get( $progs{$prog} );
-        if ( !$val )
-        {
-            ++$rerun;
-        }
+        warn $Err;
+        ++$rerun;
     }
 }
 $glob_was_set ||= $exclude_re_s;
