@@ -116,6 +116,7 @@ CFLAGS = $(OPT_FLAGS) -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINU
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
 
+EMCC = emcc
 EMCC_CFLAGS = $(CFLAGS) $(ASSERT_FLAGS)
 EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
 
@@ -127,11 +128,11 @@ PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRES
 EMCC_POST_FLAGS := $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
 $(LLVM_BITCODE_CMAKE_FILES): %.bc: $(CMAKE_DIR)/%.c
-	emcc $(EMCC_CFLAGS) $< -c -o $@
+	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
 $(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
 	mkdir -p "$$(dirname "$@")"
-	emcc $(EMCC_CFLAGS) $< -c -o $@
+	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
 LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
 
@@ -141,10 +142,10 @@ $(RINUTILS_PIVOT):
 	rin="$$(perl -MPath::Tiny -e 'print path(shift)->absolute' "$(RINUTILS_DIR)")"; unset CFLAGS ; (git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$$rin" .. && make && make install && cd ../.. && rm -fr rinutils)
 
 $(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS)
-	emcc $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 $(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS)
-	emcc $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_NODE_JS_EXE)
