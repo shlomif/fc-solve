@@ -68,6 +68,13 @@ def generate_linux_yaml(output_path, is_act):
         },
     })
     steps.append({"run": ("sudo apt-get update -qq"), })
+
+    def _libgd_workaround(steps):
+        '''
+        See: https://github.com/actions/runner-images/issues/6153
+        '''
+        steps.append({"run": ("sudo apt-get -y remove libgd3 nginx"), })
+    _libgd_workaround(steps=steps)
     steps.append({
         "run": ("sudo apt-get --no-install-recommends install -y " +
                 " ".join(["eatmydata"])
