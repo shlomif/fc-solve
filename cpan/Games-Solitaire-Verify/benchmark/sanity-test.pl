@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 use autodie;
-use FindBin qw/ $Bin /;
+use FindBin    qw/ $Bin /;
 use File::Path qw/ rmtree /;
 use Env::Path;
 

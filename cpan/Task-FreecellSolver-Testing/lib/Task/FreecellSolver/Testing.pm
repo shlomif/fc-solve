@@ -28,7 +28,7 @@ use Inline::C                ();
 use List::MoreUtils          ();
 use List::Util               ();
 use Moo                      ();
-use MooX qw(late);
+use MooX                     qw(late);
 use Path::Tiny 0.077;
 use Storable                                           ();
 use String::ShellQuote                                 ();

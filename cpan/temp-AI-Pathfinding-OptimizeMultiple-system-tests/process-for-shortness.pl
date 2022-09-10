@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Getopt::Long qw / GetOptions /;
-use IO::All qw/ io /;
+use IO::All      qw/ io /;
 
 use List::Util qw(min);
 

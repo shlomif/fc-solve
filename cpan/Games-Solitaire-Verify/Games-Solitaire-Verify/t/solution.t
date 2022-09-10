@@ -8,7 +8,7 @@ use Test::More tests => 16;
 use Data::Dumper;
 
 use Games::Solitaire::Verify::Solution ();
-use Path::Tiny qw/ path /;
+use Path::Tiny                         qw/ path /;
 
 sub _samp_sol
 {

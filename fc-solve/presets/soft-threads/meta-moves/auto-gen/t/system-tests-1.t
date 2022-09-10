@@ -8,7 +8,7 @@ use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
 use Test::Differences qw( eq_or_diff );
-use IO::All qw(io);
+use IO::All           qw(io);
 
 use Carp;
 

@@ -7,7 +7,7 @@ use Test::More tests => 5;
 use Test::Differences qw/ eq_or_diff /;
 
 use Path::Tiny qw/ path /;
-use Storable qw(retrieve);
+use Storable   qw(retrieve);
 
 my $data_dir          = path(__FILE__)->parent->child('data');
 my $verifier_data_dir = $data_dir->child('range-verifier');

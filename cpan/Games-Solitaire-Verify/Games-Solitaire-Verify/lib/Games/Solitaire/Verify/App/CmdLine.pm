@@ -8,7 +8,7 @@ use parent 'Games::Solitaire::Verify::Base';
 use Data::Dumper qw(Dumper);
 
 use Getopt::Long qw(GetOptionsFromArray);
-use Pod::Usage qw/ pod2usage /;
+use Pod::Usage   qw/ pod2usage /;
 
 use Games::Solitaire::Verify::VariantsMap ();
 use Games::Solitaire::Verify::Solution    ();

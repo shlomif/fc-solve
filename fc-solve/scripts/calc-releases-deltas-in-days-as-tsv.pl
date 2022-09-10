@@ -5,7 +5,7 @@ use warnings;
 
 use DateTime                   ();
 use DateTime::Format::Strptime ();
-use Time::JulianDay qw/ gm_julian_day /;
+use Time::JulianDay            qw/ gm_julian_day /;
 
 use IO::All qw/ io /;
 

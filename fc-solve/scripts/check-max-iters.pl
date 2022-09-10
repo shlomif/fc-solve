@@ -6,7 +6,7 @@ use warnings;
 use autodie;
 
 use Getopt::Long qw/ GetOptions /;
-use Path::Tiny qw/path/;
+use Path::Tiny   qw/path/;
 
 # require Math::Random::MT;
 for my $deal ( 1 .. 1e9 )

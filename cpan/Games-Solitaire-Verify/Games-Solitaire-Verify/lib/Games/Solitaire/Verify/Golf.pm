@@ -46,7 +46,7 @@ Process the solution with the line iterator. Throws an exception if there is an 
 
 =cut
 
-use Carp ();
+use Carp       ();
 use List::Util qw/ sum /;
 
 use Games::Solitaire::Verify::Card      ();

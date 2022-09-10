@@ -1,7 +1,7 @@
 package Class::Data::Inheritable;
 
 use strict qw(vars subs);
-use vars qw($VERSION);
+use vars   qw($VERSION);
 $VERSION = '0.08';
 
 use Carp ();

@@ -4,7 +4,7 @@ use strict;
 use warnings;
 
 use Test::More tests => 5;
-use Path::Tiny qw/ cwd /;
+use Path::Tiny                     qw/ cwd /;
 use Dir::Manifest                  ();
 use Games::Solitaire::Verify::Golf ();
 

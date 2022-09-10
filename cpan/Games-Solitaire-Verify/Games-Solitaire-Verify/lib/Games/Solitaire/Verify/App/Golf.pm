@@ -5,7 +5,7 @@ use warnings;
 use autodie;
 
 use Games::Solitaire::Verify::Golf ();
-use Path::Tiny qw/ path /;
+use Path::Tiny                     qw/ path /;
 
 =head1 NAME
 
