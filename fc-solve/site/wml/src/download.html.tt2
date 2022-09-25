@@ -330,10 +330,19 @@ message</a> titled “[Better Version] Final Report for the 2-Freecells-based
 [% INCLUDE ver major_minor="2.32", patch_ver="1"  %]
 [% INCLUDE ver major_minor="2.30", patch_ver="0"  %]
 [% INCLUDE ver major_minor="2.28", patch_ver="1"  %]
-[% SET download_suffix="gz" %]
+[% BLOCK arcsuf %]
+
 [% FOREACH rec IN archives_versions.$download_suffix.vers %]
 [% INCLUDE ver major_minor = (rec.major _ "." _ rec.minor) , patch_ver = (rec.patch), %]
 [% END %]
+
+[% END %]
+
+[% IF 0 %]
+[% INCLUDE arcsuf download_suffix="gz" %]
+[% PROCESS arcsuf %]
+[% END %]
+[% INCLUDE arcsuf download_suffix="gz" %]
 </ul>
 
 [% END %]
