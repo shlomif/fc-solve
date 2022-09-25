@@ -100,6 +100,32 @@ my $archives_versions = +{
 
         ],
     },
+    'bz2' => +{
+        vers => [
+            +{ major => "3", minor => "26", patch => "0", },
+            +{ major => "3", minor => "24", patch => "0", },
+            +{ major => "3", minor => "22", patch => "0", },
+            +{ major => "3", minor => "20", patch => "1", },
+            +{ major => "3", minor => "18", patch => "1", },
+            +{ major => "3", minor => "16", patch => "0", },
+            +{ major => "3", minor => "14", patch => "1", },
+            +{ major => "3", minor => "12", patch => "0", },
+            +{ major => "3", minor => "10", patch => "0", },
+            +{ major => "3", minor => "8",  patch => "0", },
+            +{ major => "3", minor => "6",  patch => "0", },
+            +{ major => "3", minor => "4",  patch => "0", },
+            +{ major => "3", minor => "2",  patch => "0", },
+            +{ major => "3", minor => "0",  patch => "0", },
+            +{ major => "2", minor => "42", patch => "0", },
+            +{ major => "2", minor => "40", patch => "0", },
+            +{ major => "2", minor => "38", patch => "0", },
+            +{ major => "2", minor => "36", patch => "0", },
+            +{ major => "2", minor => "34", patch => "0", },
+            +{ major => "2", minor => "32", patch => "1", },
+            +{ major => "2", minor => "30", patch => "0", },
+            +{ major => "2", minor => "28", patch => "1", },
+        ],
+    },
 };
 
 has vars => (
