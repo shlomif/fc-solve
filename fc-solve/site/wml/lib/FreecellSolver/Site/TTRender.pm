@@ -70,6 +70,38 @@ sub _htmlish
     };
 }
 
+my $archives_versions = +{
+    'gz' => +{
+        vers => [
+            +{ major => "2", minor => "26", patch => "0", },
+            +{ major => "2", minor => "24", patch => "0", },
+            +{ major => "2", minor => "22", patch => "0", },
+            +{ major => "2", minor => "20", patch => "0", },
+            +{ major => "2", minor => "18", patch => "0", },
+            +{ major => "2", minor => "16", patch => "0", },
+            +{ major => "2", minor => "14", patch => "0", },
+            +{ major => "2", minor => "12", patch => "0", },
+            +{ major => "2", minor => "8",  patch => "14", },
+            +{ major => "2", minor => "6",  patch => "3", },
+            +{ major => "2", minor => "4",  patch => "3", },
+            +{ major => "2", minor => "2",  patch => "6", },
+            +{ major => "2", minor => "0",  patch => "2", },
+            +{ major => "1", minor => "10", patch => "4", },
+            +{ major => "1", minor => "8",  patch => "3", },
+            +{ major => "1", minor => "6",  patch => "4", },
+            +{ major => "1", minor => "4",  patch => "6", },
+            +{ major => "1", minor => "2",  patch => "0", },
+            +{ major => "1", minor => "0",  patch => "2", },
+            +{ major => "0", minor => "10", patch => "0", },
+            +{ major => "0", minor => "8",  patch => "1", },
+            +{ major => "0", minor => "6",  patch => "2", },
+            +{ major => "0", minor => "4",  patch => "2", },
+            +{ major => "0", minor => "2",  patch => "1", },
+
+        ],
+    },
+};
+
 has vars => (
     is      => 'ro',
     default => sub {
@@ -79,6 +111,7 @@ has vars => (
                 YAML::XS::LoadFile("lib/static_constant_params.yaml")
                     ->{static_constant_params}
             },
+            archives_versions => $archives_versions,
             ( $self->printable ? ( PRINTABLE => 1 ) : () ),
             charts1         => _htmlish('4fc-deals-charts'),
             charts2         => _htmlish('4fc-deals-charts2'),
