@@ -151,6 +151,10 @@ we would like to see such a solver written.
 
 [% END %]
 
+[% WRAPPER h3_section id = "eliminating-use-of-yui" title = "avoid use of YUI by Solitairey" %]
+
+[% END %]
+
 [% WRAPPER h3_section id = "generalising", title = "Generalising Freecell Solver to non-card Games" %]
 
 <p>
