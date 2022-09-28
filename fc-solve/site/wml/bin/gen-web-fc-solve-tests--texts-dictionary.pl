@@ -17,5 +17,19 @@ my $TEXTS = Dir::Manifest->new(
     }
 )->texts_dictionary( { slurp_opts => {} } );
 
-path("src/ts/web-fcs-tests-strings.ts")->spew_utf8( "export const dict = ",
-    JSON::MaybeXS->new->ascii->canonical(1)->encode($TEXTS), ";" );
+foreach my $out ( path("src/ts/web-fcs-tests-strings.ts") )
+{
+    # body...
+    $out->spew_utf8(
+        "export const dict = ",
+
+        JSON::MaybeXS->new->ascii->canonical(1)->encode($TEXTS), ";"
+    );
+
+    system(
+        qw#
+            prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write #,
+        $out
+    );
+
+}
