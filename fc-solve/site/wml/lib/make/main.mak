@@ -435,6 +435,7 @@ $(SCSS_TARGETS): $(D)/%.scss: lib/sass/%.scss
 real_all: $(SCSS_TARGETS)
 
 include lib/make/docbook/sf-docbook-common.mak
+
 real_all: docbook_targets
 
 $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
