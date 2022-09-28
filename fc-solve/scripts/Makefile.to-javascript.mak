@@ -16,6 +16,7 @@ ifeq ($(CMAKE_DIR),)
 	CMAKE_DIR := .
 endif
 
+BITCODE_EXT = o
 DATA_DESTDIR ?= __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
 RESULT_JS_LIB = libfreecell-solver$(LIBSUF).js
@@ -60,9 +61,9 @@ C_FILES = $(LIB_C_FILES)
 
 SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
 SRC_CMAKE_C_FILES = $(patsubst %.c,$(CMAKE_DIR)/%.c,$(CMAKE_C_FILES))
-LLVM_BITCODE_FILES = $(patsubst %.c,%.bc,$(C_FILES))
-LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.bc,$(LIB_C_FILES))
-LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.bc,$(CMAKE_C_FILES))
+LLVM_BITCODE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(C_FILES))
+LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(LIB_C_FILES))
+LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(CMAKE_C_FILES))
 
 all: $(RESULT_JS_LIB)
 
@@ -127,10 +128,10 @@ PRESET_FILES_LOCAL := $(shell perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR) $(PRES
 
 EMCC_POST_FLAGS := $(patsubst %,--embed-file %,$(PRESET_FILES_LOCAL))
 
-$(LLVM_BITCODE_CMAKE_FILES): %.bc: $(CMAKE_DIR)/%.c
+$(LLVM_BITCODE_CMAKE_FILES): %.$(BITCODE_EXT): $(CMAKE_DIR)/%.c
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
-$(LLVM_BITCODE_FILES): %.bc: $(SRC_DIR)/%.c
+$(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c
 	mkdir -p "$$(dirname "$@")"
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
