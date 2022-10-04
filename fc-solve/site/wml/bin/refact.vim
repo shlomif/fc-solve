@@ -16,6 +16,7 @@ fun RefactForEach()
 endf
 command! RefactForEach call RefactForEach()
 if 0
+    'a,'es/\v.*nor\=\"([0-9]+)\.([0-9]+)\".*ver\=\"([0-9]+)\".*/+{major=>"\1", minor=>"\2", patch=>"\3", },/
     map <F2> Oconsole.log("<<line no. <C-r>=line(".")<cr> at <c-r>% : trace>>");<esc>
 endif
 fun TsReplace()
