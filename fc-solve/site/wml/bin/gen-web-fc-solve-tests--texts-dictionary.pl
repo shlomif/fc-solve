@@ -6,6 +6,7 @@
 use strict;
 use warnings;
 use Path::Tiny    qw/ path /;
+use File::Spec    ();
 use Dir::Manifest ();
 use JSON::MaybeXS ();
 
@@ -25,8 +26,8 @@ foreach my $out ( path("src/ts/web-fcs-tests-strings.ts") )
         JSON::MaybeXS->new->ascii->canonical(1)->encode($TEXTS), ";"
     );
 
-    my $null = "/dev/null";
+    my $devnull = File::Spec->devnull();
     system(
-qq#prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write "$out" >$null 2>$null#,
+qq#prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write "$out" >$devnull 2>$devnull#,
     );
 }
