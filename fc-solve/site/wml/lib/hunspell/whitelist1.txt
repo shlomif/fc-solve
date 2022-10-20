@@ -1282,6 +1282,7 @@ int128
 int128-optimisation
 io
 kde
+ldd
 libGMP
 libapr
 libtap

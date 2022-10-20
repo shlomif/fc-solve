@@ -4,6 +4,17 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2020-07-23
 :Revision: $Id$
 
+Version 6.8.0: (20-Oct-2022)
+----------------------------
+
+1. Workaround an ldd regression: https://github.com/shlomif/fc-solve/issues/87 .
+
+2. OpenCL deal finder cleanups.
+
+3. Made the tests suite pass on more CMake options' configurations.
+
+4. Cleanups.
+
 Version 6.6.0: (09-Oct-2021)
 ----------------------------
 
