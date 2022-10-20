@@ -27,6 +27,6 @@ foreach my $out ( path("src/ts/web-fcs-tests-strings.ts") )
 
     my $null = "/dev/null";
     system(
-qq#prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write "$out" 2>$null#,
+qq#prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write "$out" >$null 2>$null#,
     );
 }
