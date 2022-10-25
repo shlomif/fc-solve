@@ -87,11 +87,17 @@ body {
     .wrap-me * {
         @include wrap;
     }
-    @if false {
-        p {
-            $p: 2em;
-            padding-left: $p;
-            padding-right: $p;
+    @if true {
+        article,
+        section {
+            > ol,
+            > p,
+            > pre,
+            > ul {
+                $p: 2em;
+                padding-left: $p;
+                padding-right: $p;
+            }
         }
     }
 }
@@ -151,7 +157,7 @@ h3 {
         border-radius: 0 5px 5px 5px;
     }
     clear: right;
-    padding: 5px;
+    padding: 10px;
 }
 
 .dist_logo {

@@ -1,12 +1,11 @@
-
 [%- SET title = "Freecell Solver's Code of Conduct and Diversity Statement" -%]
-[%- WRAPPER wrap_html -%]
 
+[%- WRAPPER wrap_html -%]
 
 [% BLOCK diversity_statement %]
 <div class="diversity" id="diversity_statement">
 
-<h2 id="diversity">Diversity Statement</h2>
+[% WRAPPER h2_section id="diversity" title="Diversity Statement" %]
 
 <p>
 Based on the <a href="http://padre.perlide.org/code_of_conduct.html">Code
@@ -89,6 +88,9 @@ who are too busy to get involved in the development itself.
 <p>
 Come code with us.
 </p>
+
+[% END %]
+
 </div>
 [% END %]
 
