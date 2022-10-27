@@ -1,3 +1,8 @@
+0.0.17      2022-10-27
+    - Fix tests with latest PDL.
+        - https://rt.cpan.org/Ticket/Display.html?id=144651
+        - Thanks to SREZIC
+
 0.0.16      2020-10-20
     - dist.ini / weaver.ini / .tidyallrc / etc. cleanup
         - Move to @SHLOMIF
