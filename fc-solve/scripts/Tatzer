@@ -12,7 +12,7 @@ use warnings;
 use autodie;
 
 use Getopt::Long qw/ GetOptions /;
-use Path::Tiny qw/ cwd path /;
+use Path::Tiny   qw/ cwd path /;
 
 my $HOME = $ENV{HOME} // $ENV{userprofile} // "";
 
@@ -414,7 +414,10 @@ if ( $ENV{VERBOSE} )
     print "<@ARGV>";
 }
 
+my %cmake_defines;
+
 GetOptions(
+    'cmakedefine=s'    => \%cmake_defines,
     'cmdline-compile!' => \$cmdl_compile,
     'd|debug'          => sub {
         my ( $opt, $val ) = @_;
@@ -529,6 +532,13 @@ $STR_OPTS{dbm}{value} //= '';
 
 my @cmd = (
     "cmake",
+    (
+        map {
+            my $k = $_;
+            my $v = $cmake_defines{$k};
+            "-D$k=$v";
+        } sort { $a cmp $b } keys(%cmake_defines)
+    ),
     (
         defined( $ENV{CMAKE_MAKE_PROGRAM} )
         ? "-DCMAKE_MAKE_PROGRAM=$ENV{CMAKE_MAKE_PROGRAM}"
