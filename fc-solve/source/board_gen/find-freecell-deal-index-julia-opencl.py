@@ -141,8 +141,11 @@ def find_ret(ints, num_ints_in_first=4):
             }):
         return _update_file(fn=fn, newtext=_tt3_myformat(
             template=template, extra_fields=extra_fields,))
-    _tt3_update_file_using_template(fn="vecinit_prog.ocl", template=(
-                '''kernel void vecinit(global unsigned * restrict r, unsigned mystart)
+    _tt3_update_file_using_template(
+        fn="vecinit_prog.ocl",
+        template=(
+            'kernel void vecinit(global unsigned * restrict r'
+            ''', unsigned mystart)
     {
       const unsigned gid = get_global_id(0);
       r[gid] = gid + mystart;
