@@ -12,17 +12,23 @@ run_deal="$(( 20004000 ))"
 run_deal="$deal"
 (
     set -e
+
+    should_rebuild()
+    {
+        test \( \! -e "$lib" \) -o \( "$REBUILD" = "1" \)
+    }
+
     board_gen_dir="../../source/board_gen"
     test -d "$board_gen_dir"
     gen_ocl_py_prog="$board_gen_dir"/find-freecell-deal-index-julia-opencl.py
     lib=libfcs_find_deal.so
-    if test \( \! -e "$lib" \) -o \( "$REBUILD" = "1" \)
+    if should_rebuild
     then
-        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" -I "$board_gen_dir/.." ${WCFLAGS:--Weverything} "find_deal.c"
+        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" -I "$board_gen_dir/.." ${WCFLAGS:--Weverything} "$board_gen_dir/find_deal.c"
     fi
     test -f "$gen_ocl_py_prog"
     lib=libopencl_find_deal_idx.so
-    if test \( \! -e "$lib" \) -o \( "$REBUILD" = "1" \)
+    if should_rebuild
     then
         python3 "$gen_ocl_py_prog" --ms <(pi-make-microsoft-freecell-board -t "$deal")
         ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" ${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL
