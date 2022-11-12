@@ -53,7 +53,7 @@ sub _calc_existing_input
     }
 
     return max(
-        map { ( $_->filename() =~ /\Ainput.txtish\.(\d+)\z/ ) ? $1 : (-1) }
+        map { ( $_->filename() =~ /\Ainput.txtish\.([0-9]+)\z/ ) ? $1 : (-1) }
             ( io->dir($target_dir)->all_files() ) );
 }
 
@@ -196,7 +196,7 @@ EOF
         while ( defined( my $line = $by_fingerprint_fh->chomp->getline() ) )
         {
             if ( my ( $state, $depth, $moves ) =
-                $line =~ /\A\S+ (\S+) (\d+) (\S+)\z/ )
+                $line =~ /\A\S+ (\S+) ([0-9]+) (\S+)\z/ )
             {
                 $proc_state->( $state, $depth, $moves );
             }

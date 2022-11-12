@@ -13,7 +13,7 @@ use Path::Tiny qw/ path /;
 sub get_time
 {
     my $l = shift;
-    if ( $l =~ m{ at (\d+\.\d+)} )
+    if ( $l =~ m{ at ([0-9]+\.[0-9]+)} )
     {
         return $1;
     }

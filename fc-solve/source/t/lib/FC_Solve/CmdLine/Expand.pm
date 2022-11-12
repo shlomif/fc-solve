@@ -38,7 +38,7 @@ sub _process_cmd_line
             my $s        = $argv[$idx];
             my $num_skip = 0;
 
-            if ( $s =~ s/\A(\d+),// )
+            if ( $s =~ s/\A([0-9]+),// )
             {
                 $num_skip = $1;
             }

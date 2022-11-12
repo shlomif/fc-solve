@@ -36,7 +36,7 @@ LINE_LOOP:
     while ( my $line = <$fc_solve_output> )
     {
         chomp($line);
-        if ( $line =~ m{\AIteration: (\d+)\z} )
+        if ( $line =~ m{\AIteration: ([0-9]+)\z} )
         {
             my $new_iter = $1;
             if ( !defined($last_iter) )
@@ -79,7 +79,7 @@ LINE_LOOP:
                 }
             }
         }
-        elsif ( $line =~ m{\ATotal number of states checked is (\d+)\.\z} )
+        elsif ( $line =~ m{\ATotal number of states checked is ([0-9]+)\.\z} )
         {
             $iters_count = $1;
         }

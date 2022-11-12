@@ -57,7 +57,7 @@ foreach my $class (
     # TEST*$num_classes
     unlike(
         $got_buffer,
-        qr/Move (?:[2-9]\d*|1\d+) cards/,
+        qr/Move (?:[2-9][0-9]*|1[0-9]+) cards/,
         "Class=$class No column moves."
     );
 

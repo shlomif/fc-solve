@@ -45,7 +45,7 @@ sub file_to_news_item
     $text     =~ s!<ul>!<ul class="newsitem">!g;
     $text     =~ s#<div class="blogger-post-footer"><img.*?</div>##ms;
     $text     =~ s#<(/?)tt#<${1}code#g;
-    $filename =~ /\A(\d{4})-(\d{2})-(\d{2})\.html\z/;
+    $filename =~ /\A([0-9]{4})-([0-9]{2})-([0-9]{2})\.html\z/;
     my ( $y, $m, $d ) = ( $1, $2, $3 );
     return +{
         'date'  => DateTime->new( year => $y, month => $m, day => $d ),
@@ -61,7 +61,7 @@ sub calc_rss_items
     opendir my $dir, $self->dir();
     my @files = readdir($dir);
     closedir($dir);
-    @files = ( grep { /\A\d{4}-\d{2}-\d{2}\.html\z/ms } @files );
+    @files = ( grep { /\A[0-9]{4}-[0-9]{2}-[0-9]{2}\.html\z/ms } @files );
     @files = sort { $a cmp $b } @files;
     return [ map { $self->file_to_news_item($_) } @files ];
 }

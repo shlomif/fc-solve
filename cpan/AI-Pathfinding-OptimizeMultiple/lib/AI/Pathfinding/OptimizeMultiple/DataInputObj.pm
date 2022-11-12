@@ -217,7 +217,7 @@ sub _filter_scans_based_on_black_list_ids
 {
     my ( $scans, $black_list_ids ) = @_;
 
-    my %black_list = ( map { /(\d+)/ ? ( $1 => 1 ) : () } @$black_list_ids );
+    my %black_list = ( map { /([0-9]+)/ ? ( $1 => 1 ) : () } @$black_list_ids );
 
     return [ grep { !exists( $black_list{ $_->id() } ) } @$scans ];
 }

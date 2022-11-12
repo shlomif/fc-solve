@@ -269,29 +269,31 @@ MOVES:
         my @tentative_fc_indexes   = @fc_indexes;
         my @tentative_cols_indexes = @cols_indexes;
         if ( ( $src, $dest ) =
-            $move_line =~ m{\AColumn (\d+) -> Freecell (\d+)\z} )
+            $move_line =~ m{\AColumn ([0-9]+) -> Freecell ([0-9]+)\z} )
         {
             $dest_move =
 "Move a card from stack $tentative_cols_indexes[$src] to freecell $tentative_fc_indexes[$dest]";
         }
         elsif ( ( $src, $dest ) =
-            $move_line =~ m{\AColumn (\d+) -> Column (\d+)\z} )
+            $move_line =~ m{\AColumn ([0-9]+) -> Column ([0-9]+)\z} )
         {
             $dest_move =
 "Move 1 cards from stack $tentative_cols_indexes[$src] to stack $tentative_cols_indexes[$dest]";
         }
         elsif ( ( $src, $dest ) =
-            $move_line =~ m{\AFreecell (\d+) -> Column (\d+)\z} )
+            $move_line =~ m{\AFreecell ([0-9]+) -> Column ([0-9]+)\z} )
         {
             $dest_move =
 "Move a card from freecell $tentative_fc_indexes[$src] to stack $tentative_cols_indexes[$dest]";
         }
-        elsif ( ($src) = $move_line =~ m{\AColumn (\d+) -> Foundation \d+\z} )
+        elsif ( ($src) =
+            $move_line =~ m{\AColumn ([0-9]+) -> Foundation [0-9]+\z} )
         {
             $dest_move =
 "Move a card from stack $tentative_cols_indexes[$src] to the foundations";
         }
-        elsif ( ($src) = $move_line =~ m{\AFreecell (\d+) -> Foundation \d+\z} )
+        elsif ( ($src) =
+            $move_line =~ m{\AFreecell ([0-9]+) -> Foundation [0-9]+\z} )
         {
             $dest_move =
 "Move a card from freecell $tentative_fc_indexes[$src] to the foundations";

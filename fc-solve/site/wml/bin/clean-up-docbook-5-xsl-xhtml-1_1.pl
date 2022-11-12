@@ -30,7 +30,7 @@ my $filename = shift(@ARGV)
     $s =~ s{</body>.*\z}{}ms;
 
     # Fixed in Perl 6...
-    $s =~ s{<(/?)h(\d)}{"<".$1."h".($2+1)}ge;
+    $s =~ s{<(/?)h([0-9])}{"<".$1."h".($2+1)}ge;
 
     $s =~ s/[ \t]+$//gms;
     path($out_fn)->spew_utf8($s);

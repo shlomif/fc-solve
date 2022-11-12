@@ -93,8 +93,8 @@ foreach my $board_idx ( 1 .. $LAST_INDEX )
         $sol_len = () = ( $fc_solve_output =~ m{^Move}msg );
     }
 
-    my ($num_iters) = (
-        $fc_solve_output =~ m{^Total number of states checked is (\d+)\.$}ms );
+    my ($num_iters) = ( $fc_solve_output =~
+            m{^Total number of states checked is ([0-9]+)\.$}ms );
     print "Verdict: "
         . (
           $is_solvable ? "Solved"
