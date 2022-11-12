@@ -43,7 +43,7 @@ in the <a href="features.html"><b>Features List</b></a>.
 
 [% WRAPPER h2_section id = "news", title = "News" %]
 
-[% front_page_news %]
+[% front_page_news() %]
 
 <h3 class="plain"><a href="old-news/">Previous News Items</a></h3>
 [% END %]

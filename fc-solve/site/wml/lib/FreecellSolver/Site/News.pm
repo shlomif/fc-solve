@@ -61,7 +61,7 @@ sub calc_rss_items
     opendir my $dir, $self->dir();
     my @files = readdir($dir);
     closedir($dir);
-    @files = ( grep { /^\d{4}-\d{2}-\d{2}\.html$/ } @files );
+    @files = ( grep { /\A\d{4}-\d{2}-\d{2}\.html\z/ms } @files );
     @files = sort { $a cmp $b } @files;
     return [ map { $self->file_to_news_item($_) } @files ];
 }
