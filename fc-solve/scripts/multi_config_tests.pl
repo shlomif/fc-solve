@@ -195,6 +195,8 @@ sub _chdir_run
 
 my $GENERATOR = ( ( delete $ENV{CMAKE_GEN} ) || 'make' );
 
+my $filtered_idx = 0;
+
 sub run_tests
 {
     my ( $idx, $blurb_rec, $args ) = @_;
@@ -212,15 +214,25 @@ sub run_tests
 
     $args = +{ @TRAVIS_CI_SKIP_FAILING_TESTS, %$args };
     my $blurb_base_base = $blurb_rec->{blurb};
+    my $total_filtered  = @tests - keys(%skip_indices);
+    my $is_filtered     = ( exists $skip_indices{ $idx - $TEST_BASE_IDX } );
+    my $filtered_idx_snapshot = $filtered_idx + 0;
 
-    my $blurb_base = sprintf "%s [ idx = %d / %d ]", $blurb_base_base, $idx,
-        scalar(@tests);
+    my $blurb_base = sprintf "%s [ idx = %d / %d ; filtered-idx = %d / %d ]",
+        $blurb_base_base, $idx,
+        scalar(@tests),
+        $filtered_idx_snapshot + $TEST_BASE_IDX,
+        $total_filtered;
     my $run = sub {
         my ( $DESC, $cmd ) = @_;
         run_cmd( "$blurb_base : $DESC", { cmd => [@$cmd] } );
     };
 
-    if ( exists $skip_indices{ $idx - $TEST_BASE_IDX } )
+    if ( not $is_filtered )
+    {
+        ++$filtered_idx;
+    }
+    if ($is_filtered)
     {
         if ( not $blurb_rec->{randomly_avoid} )
         {
