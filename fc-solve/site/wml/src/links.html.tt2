@@ -581,9 +581,15 @@ available as open-source software under the GPLv3.
 </p>
 </li>
 
+[% IF 0 %]
+[% SET oreilly_url = "http://broadcast.oreilly.com/2009/01/january-column-graph-algorithm.html" %]
+[% ELSE %]
+[% SET oreilly_url = "https://web.archive.org/web/20180325064535/http://broadcast.oreilly.com/2009/01/january-column-graph-algorithm.html" %]
+[% END %]
+
 <li>
 <p>
-<a href="http://broadcast.oreilly.com/2009/01/january-column-graph-algorithm.html">Algorithm to Solve FreeCell Solitaire Games</a> - George T. Heineman's
+<a href="[% oreilly_url %]">Algorithm to Solve FreeCell Solitaire Games</a> - George T. Heineman's
 step-by-step tutorial on O'Reilly-Net about how to construct a solver for
 Freecell in Java.
 </p>
