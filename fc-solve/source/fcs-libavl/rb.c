@@ -971,7 +971,10 @@ void rb_destroy(struct rb_table *tree, rb_item_func *destroy)
             if (rb_process_link(p->rb_mylink[0]) == NULL)
             {
                 q = rb_process_link(p->rb_mylink[1]);
+#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
                 if (NODE_DATA_PTR(p) != NULL)
+#endif
+                {
                     destroy(NODE_DATA_PTR(p),
 #ifdef AVL_with_rb_param
                         tree->rb_param
@@ -979,6 +982,7 @@ void rb_destroy(struct rb_table *tree, rb_item_func *destroy)
                         NULL
 #endif
                     );
+                }
 #if 0
         tree->rb_alloc->libavl_free (tree->rb_alloc, p);
 #endif

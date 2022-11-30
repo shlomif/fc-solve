@@ -561,7 +561,7 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter *const iter)
     }
 }
 
-static inline col_seqs_iter col_seqs_iter__create(
+static inline col_seqs_iter __attribute__((pure)) col_seqs_iter__create(
     fcs_state *const s, const stack_i stack_idx PASS_sequences_are_built_by(
                             const int sequences_are_built_by))
 {

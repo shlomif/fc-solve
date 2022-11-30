@@ -298,6 +298,7 @@ static inline void init_instance(fcs_instance *const instance)
                 move_funcs[num_move_funcs++].idx = bit_idx;
             }
         }
+#if 0
         const_AUTO(old_move_funcs, move_funcs);
         move_funcs = SREALLOC(move_funcs,
             ((num_move_funcs & (~(MOVES_GROW_BY - 1))) + MOVES_GROW_BY));
@@ -305,6 +306,7 @@ static inline void init_instance(fcs_instance *const instance)
         {
             free(old_move_funcs);
         }
+#endif
         instance->opt_moves = (typeof(instance->opt_moves)){
             .num = 1,
 #ifndef FCS_ZERO_FREECELLS_MODE
@@ -3814,7 +3816,7 @@ freecell_solver_user_get_num_times(void *const api_instance)
     return (int)freecell_solver_user_get_num_times_long(api_instance);
 }
 
-int DLLEXPORT __attribute__((const))
+int DLLEXPORT __attribute__((pure))
 freecell_solver_user_get_limit_iterations(void *const api_instance GCC_UNUSED)
 {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
@@ -4539,11 +4541,7 @@ int DLLEXPORT fc_solve_user_INTERNAL_compile_all_flares_plans(
 #endif
 }
 
-#ifdef FCS_WITH_FLARES
-#define FLARES_ATTR __attribute__((const))
-#else
 #define FLARES_ATTR __attribute__((pure))
-#endif
 int DLLEXPORT FLARES_ATTR fc_solve_user_INTERNAL_get_flares_plan_num_items(
     void *const api_instance GCC_UNUSED)
 {
