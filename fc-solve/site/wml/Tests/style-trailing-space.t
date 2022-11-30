@@ -13,6 +13,8 @@ my $finder = Test::TrailingSpace->new(
         root              => '.',
         filename_regex    => qr/./,
         abs_path_prune_re => qr#
+        (?: \.pyc \z)
+            |
      (?:\A (?:\./)?
         (?:node_modules)
             |

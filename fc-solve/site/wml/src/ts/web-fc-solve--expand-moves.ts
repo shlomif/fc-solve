@@ -54,7 +54,7 @@ class Expander {
         }
 
         for (let idx = 0; idx < num_stacks; ++idx) {
-            let cards = col_matches[idx].match(/\w{2}/g);
+            let cards: any = col_matches[idx].match(/\w{2}/g);
 
             if (!cards) {
                 cards = [];
