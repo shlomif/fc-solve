@@ -20,12 +20,12 @@ from subprocess import check_call, check_output
 def main(g, t, rb):
     if g:
         os.environ["FCS_GCC"] = "1"
-        seed = 1 if rb else 2
-    else:
-        os.environ["CC"] = check_output(['which', 'clang']).trim()
-        os.environ["CXX"] = check_output(['which', 'clang++']).trim()
-        os.environ["FCS_CLANG"] = "1"
         seed = 1 if rb else 1
+    else:
+        os.environ["CC"] = check_output(['which', 'clang']).decode().strip()
+        os.environ["CXX"] = check_output(['which', 'clang++']).decode().strip()
+        os.environ["FCS_CLANG"] = "1"
+        seed = 1 if rb else 3
     os.environ["HARNESS_BREAK"] = "1"
     SLIGHTLY_WRONG_GCC_FLAG_SEE_man_gcc =\
         "-frandom-seed = 24"
