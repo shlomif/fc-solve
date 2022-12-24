@@ -29,17 +29,27 @@ sub check_file
 
 package main;
 
-my %whitelist = ( map { $_ => 1 } (), );
+use vars qw/ $TODO /;
 
-Test::HTML::Tidy::Recursive::XML->new(
-    {
-        filename_filter => sub {
-            my $fn = shift;
-            return not( exists $whitelist{$fn}
-                or $fn =~
+TODO:
+{
+    local $TODO = (
+        $ENV{FC_SOLVE__MULT_CONFIG_TESTS__TRACE}
+        ? "FC_SOLVE__MULT_CONFIG_TESTS__TRACE"
+        : undef()
+    );
+    my %whitelist = ( map { $_ => 1 } (), );
+
+    Test::HTML::Tidy::Recursive::XML->new(
+        {
+            filename_filter => sub {
+                my $fn = shift;
+                return not( exists $whitelist{$fn}
+                    or $fn =~
 m#\A \Q$T2_POST_DEST\E (?: js/(?: jquery-ui | yui-unpack )/ | mail-lists/ ) #x
-            );
-        },
-        targets => [$T2_POST_DEST],
-    }
-)->run;
+                );
+            },
+            targets => [$T2_POST_DEST],
+        }
+    )->run;
+}

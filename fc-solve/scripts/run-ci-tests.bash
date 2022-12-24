@@ -14,7 +14,6 @@ which minify
 git clone https://github.com/emscripten-core/emsdk "$emsdk_path"
 a="`pwd`"
 cd "$emsdk_path"
-./emsdk update-tags
 ./emsdk install latest
 ./emsdk activate latest
 . "emsdk_env.sh"
