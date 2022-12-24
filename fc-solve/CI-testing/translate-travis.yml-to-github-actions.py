@@ -73,7 +73,9 @@ def generate_linux_yaml(output_path, is_act):
         '''
         See: https://github.com/actions/runner-images/issues/6153
         '''
-        steps.append({"run": ("sudo apt-get -y remove libgd3 nginx"), })
+        steps.append({
+            "run": ("sudo apt-get -y remove "
+                    "libgd3 libunwind-dev nginx"), })
     _libgd_workaround(steps=steps)
     steps.append({
         "run": ("sudo apt-get --no-install-recommends install -y " +
