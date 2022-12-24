@@ -11,7 +11,7 @@ jobs:
             with:
                 submodules: 'true'
         -   run: sudo apt-get update -qq
-        -   run: sudo apt-get -y remove libgd3 libunwind-dev nginx
+        -   run: sudo apt-get -y remove libgd3 libunwind-14 libunwind-dev nginx
         -   run: sudo apt-get --no-install-recommends install -y eatmydata
         -   run: sudo eatmydata apt-get --no-install-recommends install -y asciidoc
                 bison cmake cmake-data cpanminus dbtoepub docbook-xsl docbook-xsl-ns
