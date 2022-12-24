@@ -743,8 +743,8 @@ int main(int argc, char *argv[])
 #endif
         char state_base64[100];
         int state_depth;
-        sscanf(
-            instance.fingerprint_line, "%99s %d", state_base64, &state_depth);
+        assert(2 == sscanf(instance.fingerprint_line, "%99s %d", state_base64,
+                        &state_depth));
         size_t unused_size;
         base64_decode(state_base64, strlen(state_base64),
             ((unsigned char *)&(entry_point->kv.key.key)), &(unused_size));
