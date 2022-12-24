@@ -29,6 +29,7 @@ sub check_file
 
 package main;
 
+use Test::More tests => 2;
 use vars qw/ $TODO /;
 
 TODO:
@@ -40,16 +41,27 @@ TODO:
     );
     my %whitelist = ( map { $_ => 1 } (), );
 
-    Test::HTML::Tidy::Recursive::XML->new(
-        {
-            filename_filter => sub {
-                my $fn = shift;
-                return not( exists $whitelist{$fn}
-                    or $fn =~
+    my $err = '';
+
+    # TEST
+    subtest "wrapper" => sub {
+        eval {
+            Test::HTML::Tidy::Recursive::XML->new(
+                {
+                    filename_filter => sub {
+                        my $fn = shift;
+                        return not( exists $whitelist{$fn}
+                            or $fn =~
 m#\A \Q$T2_POST_DEST\E (?: js/(?: jquery-ui | yui-unpack )/ | mail-lists/ ) #x
-                );
-            },
-            targets => [$T2_POST_DEST],
-        }
-    )->run;
+                        );
+                    },
+                    targets => [$T2_POST_DEST],
+                }
+            )->run;
+        };
+        $err = $@;
+    };
+
+    # TEST
+    is( $err, "", "no exception." );
 }
