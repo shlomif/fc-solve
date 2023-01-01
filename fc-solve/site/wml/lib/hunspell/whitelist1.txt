@@ -1362,11 +1362,14 @@ pkg
 Alfille
 Dominus
 HPC
+Hasn
 NNN
 NRG
+Prev
 Solvitaire
 gen_ms_boards__rand
 mis-attributed
+na
 num_columns
 patsolve-shlomif
 range_solvers_gen_ms_boards

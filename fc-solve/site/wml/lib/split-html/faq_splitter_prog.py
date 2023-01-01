@@ -12,6 +12,9 @@ into individual pages per sections.
 """
 
 import re
+# import sys
+
+import click
 
 from lxml.html import XHTML_NAMESPACE
 
@@ -139,8 +142,10 @@ def _faq_gen(dest_dir):
     splitter.process()
 
 
-def main():
-    dest_dir = "./dest-prod"
+@click.command()
+@click.option('--dest-dir')
+def main(dest_dir):
+    # dest_dir = sys.argv[1]
     _faq_gen(dest_dir=dest_dir)
 
 

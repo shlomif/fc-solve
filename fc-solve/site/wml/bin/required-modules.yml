@@ -50,5 +50,6 @@ required:
         Test::Differences: 0
         XML::Feed: 0
     py3_modules:
+        click: 0
         jinja2: 0
         vnu_validator: 0

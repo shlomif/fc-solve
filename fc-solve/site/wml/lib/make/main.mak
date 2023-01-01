@@ -14,10 +14,12 @@ D = dest
 TESTING_ENV__URL_SUFFIX := fc-solve-temp
 
 BASE_LOCAL_UPLOAD_PREFIX := /var/www/html/shlomif
+
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(TESTING_ENV__URL_SUFFIX)
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
-TEMP_UPLOAD_URL_LOCAL = $(BASE_LOCAL_UPLOAD_PREFIX)/$(TESTING_ENV__URL_SUFFIX)/
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/1
+
+TEMP_UPLOAD_URL_LOCAL = $(BASE_LOCAL_UPLOAD_PREFIX)/$(TESTING_ENV__URL_SUFFIX)/
 UPLOAD_URL = $(TEMP_UPLOAD_URL)
 
 STAGING_URL_SUFFIX := fc-solve-staging
@@ -30,13 +32,6 @@ ifeq ($(PROD),1)
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--prod
     MULTI_YUI = terser --compress --comments "false"
     SASS_DEBUG_FLAGS =
-
-FAQ_PIVOT := $(D)/faq-indiv-nodes/which_prog_lang.xhtml
-
-$(FAQ_PIVOT): $(D)/faq.html
-	python3 lib/split-html/faq_splitter_prog.py
-
-real_all: $(FAQ_PIVOT)
 
 else
     TEST_SITE_URL_SUFFIX = $(TESTING_ENV__URL_SUFFIX)
@@ -57,6 +52,12 @@ else
 
 endif
 
+FAQ_PIVOT := $(D)/faq-indiv-nodes/which_prog_lang.xhtml
+
+$(FAQ_PIVOT): $(D)/faq.html
+	python3 lib/split-html/faq_splitter_prog.py --dest-dir "$(D)"
+
+real_all: $(FAQ_PIVOT)
 
 POST_DEST = $(D)
 DEST_JS_DIR = $(D)/js
