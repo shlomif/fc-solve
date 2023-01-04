@@ -98,7 +98,7 @@ NEEDED_FUNCTIONS = \
 	malloc \
 
 
-NEEDED_FUNCTIONS_STR := $(shell perl -e 'print join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV)' $(NEEDED_FUNCTIONS))
+NEEDED_FUNCTIONS_STR := $(shell perl -e 'print qq/-s EXPORTED_FUNCTIONS="[/ . join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV) . qq/]"/' $(NEEDED_FUNCTIONS))
 
 # OPT_FLAGS = -g
 # OPT_FLAGS = -O2
@@ -124,7 +124,7 @@ ASSERT_FLAGS =
 
 EMCC = emcc
 EMCC_CFLAGS = $(CFLAGS) $(ASSERT_FLAGS)
-EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" -s EXPORTED_FUNCTIONS="[$(NEEDED_FUNCTIONS_STR)]" -s EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
+EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" $(NEEDED_FUNCTIONS_STR) -s EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 
