@@ -25,6 +25,7 @@ UPLOAD_URL = $(TEMP_UPLOAD_URL)
 STAGING_URL_SUFFIX := fc-solve-staging
 
 ifeq ($(PROD),1)
+
     TEST_SITE_URL_SUFFIX = $(STAGING_URL_SUFFIX)
     D = dest-prod
     UPLOAD_URL = hostgator:domains/fc-solve/public_html
@@ -34,11 +35,12 @@ ifeq ($(PROD),1)
     SASS_DEBUG_FLAGS =
 
 else
+
     TEST_SITE_URL_SUFFIX = $(TESTING_ENV__URL_SUFFIX)
     MULTI_YUI = ./bin/cat-o
-
     BETA_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-animated-sol--debug2
     SASS_DEBUG_FLAGS = --sourcemap-embed
+
 endif
 
 ifeq ($(LOCAL_BROWSER_TESTS),0)
@@ -107,11 +109,15 @@ DEST_yui_min_Solitairey_JS = $(call dest_jsify,$(BASE_yui_min_Solitairey_JS))
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
 
 ifeq ($(SKIP_EMCC),1)
+
     LIBFREECELL_SOLVER_JS__NODE__TARGETS =
     LIBFREECELL_SOLVER_JS__TARGETS =
+
 else
+
     LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js lib/for-node/js/libfreecell-solver-asm.js
     LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM) $(DEST_LIBFREECELL_SOLVER_ASMJS_JS) $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS)
+
 endif
 
 include lib/make/deps.mak
@@ -167,10 +173,10 @@ $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
 	cp -f "$<" "$@"
 
 PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 $(PERL) bin/post-incs-v2.pl --mode=minify \
-               --minifier-conf=bin/html-min-cli-config-file.conf \
-               --source-dir=$1 \
-               --dest-dir=$1 \
-               --
+   --minifier-conf=bin/html-min-cli-config-file.conf \
+   --source-dir=$1 \
+   --dest-dir=$1 \
+   --
 
 # jinja_rend := bin/jinja-render.py
 # jinja_bases := $(shell cat lib/make/jinja.txt)
