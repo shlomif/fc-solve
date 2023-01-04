@@ -113,7 +113,11 @@ RINUTILS_INCLUDE_DIR := $(RINUTILS_DIR)/include
 RINUTILS_PIVOT = $(RINUTILS_INCLUDE_DIR)/rinutils/rinutils.h
 
 INCLUDE_CFLAGS = -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINUTILS_INCLUDE_DIR) -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.8.1 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include
-CFLAGS = $(OPT_FLAGS) $(INCLUDE_CFLAGS) -m32 -std=gnu18 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
+INCLUDE_CFLAGS_FN = inc.cflags.txt
+$(INCLUDE_CFLAGS_FN):
+	printf "%s\n" "$(INCLUDE_CFLAGS)" > $@
+
+CFLAGS = $(OPT_FLAGS) `cat $(INCLUDE_CFLAGS_FN)` -m32 -std=gnu18 -DFC_SOLVE_JAVASCRIPT_QUERYING=1
 
 # ASSERT_FLAGS = -s ASSERTIONS=1
 ASSERT_FLAGS =
@@ -128,10 +132,10 @@ PRESET_FILES_LOCAL := $$(perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR))
 
 EMCC_POST_FLAGS := $(PRESET_FILES_LOCAL)
 
-$(LLVM_BITCODE_CMAKE_FILES): %.$(BITCODE_EXT): $(CMAKE_DIR)/%.c
+$(LLVM_BITCODE_CMAKE_FILES): %.$(BITCODE_EXT): $(CMAKE_DIR)/%.c $(INCLUDE_CFLAGS_FN)
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
-$(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c
+$(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
 	mkdir -p "$$(dirname "$@")"
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
@@ -142,10 +146,10 @@ $(LLVM_AND_FILES_TARGETS): $(RINUTILS_PIVOT)
 $(RINUTILS_PIVOT):
 	rin="$$(perl -MPath::Tiny -e 'print path(shift)->absolute' "$(RINUTILS_DIR)")"; unset CFLAGS ; (git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$$rin" .. && make && make install && cd ../.. && rm -fr rinutils)
 
-$(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS)
+$(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN)
 	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
-$(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS)
+$(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN)
 	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 clean:
