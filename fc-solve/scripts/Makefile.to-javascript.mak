@@ -98,10 +98,10 @@ NEEDED_FUNCTIONS = \
 	malloc \
 
 NEEDED_FUNCTIONS_STR__FN := funcs.lflags.txt
-NEEDED_FUNCTIONS_STR = $(shell > $@ perl -e 'print qq/-s EXPORTED_FUNCTIONS=[/ . join(",", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV) . qq/]/' $(NEEDED_FUNCTIONS))
+NEEDED_FUNCTIONS_STR = > $@ perl -e 'print qq/-s EXPORTED_FUNCTIONS=[/ . join(",", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV) . qq/]/' $(NEEDED_FUNCTIONS)
 
 $(NEEDED_FUNCTIONS_STR__FN):
-	$(call NEEDED_FUNCTIONS_STR)
+	@$(call NEEDED_FUNCTIONS_STR)
 
 # OPT_FLAGS = -g
 # OPT_FLAGS = -O2
