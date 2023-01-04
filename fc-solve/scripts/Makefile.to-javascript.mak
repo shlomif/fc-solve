@@ -97,8 +97,11 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_stringify_move_ptr \
 	malloc \
 
+NEEDED_FUNCTIONS_STR__FN := funcs.lflags.txt
+NEEDED_FUNCTIONS_STR = $(shell > $@ perl -e 'print qq/-s EXPORTED_FUNCTIONS=[/ . join(",", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV) . qq/]/' $(NEEDED_FUNCTIONS))
 
-NEEDED_FUNCTIONS_STR := $(shell perl -e 'print qq/-s EXPORTED_FUNCTIONS="[/ . join(", ", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV) . qq/]"/' $(NEEDED_FUNCTIONS))
+$(NEEDED_FUNCTIONS_STR__FN):
+	$(call NEEDED_FUNCTIONS_STR)
 
 # OPT_FLAGS = -g
 # OPT_FLAGS = -O2
@@ -124,7 +127,7 @@ ASSERT_FLAGS =
 
 EMCC = emcc
 EMCC_CFLAGS = $(CFLAGS) $(ASSERT_FLAGS)
-EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" $(NEEDED_FUNCTIONS_STR) -s EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
+EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" `cat $(NEEDED_FUNCTIONS_STR__FN)` -s EXPORTED_RUNTIME_METHODS="['allocate', 'cwrap', 'getValue', 'intArrayFromString', 'setValue', 'ALLOC_STACK', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 
@@ -146,10 +149,10 @@ $(LLVM_AND_FILES_TARGETS): $(RINUTILS_PIVOT)
 $(RINUTILS_PIVOT):
 	rin="$$(perl -MPath::Tiny -e 'print path(shift)->absolute' "$(RINUTILS_DIR)")"; unset CFLAGS ; (git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$$rin" .. && make && make install && cd ../.. && rm -fr rinutils)
 
-$(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN)
+$(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN) $(NEEDED_FUNCTIONS_STR__FN)
 	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
-$(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN)
+$(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN) $(NEEDED_FUNCTIONS_STR__FN)
 	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
 
 clean:
