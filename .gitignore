@@ -73,6 +73,8 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/*.o
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/board_gen/
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/finish.stamp
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/funcs.lflags.txt
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/inc.cflags.txt
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver-asm.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/libfreecell-solver-asm.js.mem
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/patsolve/patsolve/*.o
@@ -81,6 +83,8 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/__DESTDIR/
 /fc-solve/site/wml/lib/fc-solve-for-javascript/board_gen/
 /fc-solve/site/wml/lib/fc-solve-for-javascript/finish.stamp
+/fc-solve/site/wml/lib/fc-solve-for-javascript/funcs.lflags.txt
+/fc-solve/site/wml/lib/fc-solve-for-javascript/inc.cflags.txt
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.js
 /fc-solve/site/wml/lib/fc-solve-for-javascript/libfreecell-solver.wasm
 /fc-solve/site/wml/lib/fc-solve-for-javascript/patsolve/patsolve/*.o
