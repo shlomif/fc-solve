@@ -4,7 +4,7 @@
 [% END %]
 
 [% BLOCK page_extra_head_elements %]
-[% INCLUDE insert__page_extra_head_elements__macro skip_yui = 1 %]
+[% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = 1 , %]
 [% END %]
 
 [% BLOCK gen_desc %]

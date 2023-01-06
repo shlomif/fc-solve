@@ -33,7 +33,9 @@ requirejs.config({
 [% END %]
 
 <link rel="stylesheet" href="[% base_path %]web-fc-solve.css" />
+[% IF NOT skip_solitairey %]
 <link rel="stylesheet" href="[% base_path %]solitairey-cards.css" />
+[% END %]
 [% END %]
 
 [%- BLOCK emscripten_common__header -%]
