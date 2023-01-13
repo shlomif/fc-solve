@@ -86,7 +86,7 @@ jobs:
 
                 tar -xvf gperf-3.0.4.tar.gz || ( echo Failed & exit /B 1 )
 
-                set MAKE=C:\strawberry\c\bin\gmake.exe
+                set MAKE=C:/strawberry/c/bin/gmake.exe
 
                 cd gperf-3.0.4 && perl ../fc-solve/scripts/ci-build-gperf-mswin.pl
                 && cd .. || ( echo Failed & exit /B 1 )
