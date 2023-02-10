@@ -41,8 +41,9 @@ and <a href="https://en.wikipedia.org/wiki/Open_content">open content</a> licens
 
 <p>
 Note that building the site requires quite a few dependencies, so it may not be for
-the non-initiated. One can refer to <a href="https://github.com/shlomif/fc-solve/blob/master/.travis.yml">Travis-CI set-up</a> for help.
+the non-initiated. One can refer to <a href="https://github.com/shlomif/fc-solve/blob/master/fc-solve/CI-testing/translate-travis.yml-to-github-actions.py">the CI set-up</a> for help.
 </p>
+
 [% END %]
 
 </div>
