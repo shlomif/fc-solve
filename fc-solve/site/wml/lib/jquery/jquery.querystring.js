@@ -55,16 +55,25 @@
           for(subKey in currentValue) {
             if(currentValue.hasOwnProperty(subKey)) {
               // If subKey is an integer, we have an array. In that case, use `person[]` instead of `person[0]`.
-              pairs.push(currentKey + '[' + (isNaN(subKey, 10) ? subKey : '') + ']=' + encodeURIComponent(currentValue[subKey]));
+              // pairs.push(currentKey + '[' + (isNaN(subKey, 10) ? subKey : '') + ']=' + encodeURIComponent(currentValue[subKey]));
+              pairs.push([currentKey + '[' + (isNaN(subKey, 10) ? subKey : '') + ']', (currentValue[subKey])]);
             }
           }
         } else {
-          pairs.push(currentKey + '=' + encodeURIComponent(currentValue));
+          pairs.push([currentKey , (currentValue)]);
         }
       }
     }
 
-    return pairs.join("&");
+      pairs.sort(
+                 function  (a, b) {
+                     var v = a[0].localeCompare(b[0]);
+                     if (v) {return v;};
+                     v = a[1].localeCompare(b[1]);
+                     return v;
+                 }
+      );
+    return pairs.map(x => (x[0] + '=' + encodeURIComponent(x[1]))).join("&");
   };
 
   // Public interface.
