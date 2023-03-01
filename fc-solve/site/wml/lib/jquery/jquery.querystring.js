@@ -65,14 +65,15 @@
       }
     }
 
-      pairs.sort(
-                 function  (a, b) {
-                     var v = a[0].localeCompare(b[0]);
-                     if (v) {return v;};
-                     v = a[1].localeCompare(b[1]);
-                     return v;
-                 }
-      );
+    pairs.sort(
+      function (a, b) {
+        var v = a[0].localeCompare(b[0]);
+        if (v) {return v;};
+        v = a[1].localeCompare(b[1]);
+        return v;
+      }
+    );
+
     return pairs.map(x => (x[0] + '=' + encodeURIComponent(x[1]))).join("&");
   };
 
