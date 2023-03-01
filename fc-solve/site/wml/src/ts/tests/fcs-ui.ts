@@ -105,19 +105,6 @@ const on_change_initial_layout = (my_operations: Ops, assert, done) => {
 };
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
-        if (false) {
-            qunit.test("jq_querystring", (assert) => {
-                assert.expect(1);
-
-                const hash = {
-                    z: "26",
-                    a: "1",
-                    b: "2",
-                };
-                const got = jq_querystring(hash);
-                assert.deepEqual(got, "a=1&b=2&z=26", "jq_querystring");
-            });
-        }
         qunit.test("populate_deal", (assert) => {
             assert.expect(9);
 
