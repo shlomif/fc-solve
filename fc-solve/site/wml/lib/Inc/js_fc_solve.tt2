@@ -178,6 +178,15 @@ licence</a>.
 Solitairey.
 </p>
 </li>
+
+<li>
+<p>
+<a href="https://en.wikipedia.org/wiki/TypeScript">TypeScript</a> - a
+static-typing superset of JavaScript. I am not a static-typing-purist,
+but I find TypeScript a significant improvement.
+</p>
+</li>
+
 [% END %]
 
 [%- BLOCK stdin_and_buttons -%]

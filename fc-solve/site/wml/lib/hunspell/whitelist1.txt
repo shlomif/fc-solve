@@ -482,6 +482,7 @@ Tunstall-Pedoe's
 Tuo
 Turnage
 Tuxedo
+TypeScript
 UI
 UNIXes
 USR1
