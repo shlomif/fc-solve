@@ -1364,10 +1364,12 @@ Alfille
 Dominus
 HPC
 Hasn
+IDF
 NNN
 NRG
 Prev
 Solvitaire
+Tzahal
 gen_ms_boards__rand
 mis-attributed
 na

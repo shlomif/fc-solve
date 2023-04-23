@@ -140,6 +140,7 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 <a href="https://github.com/theodorepringle/MicrosoftFreeCell32000-minimal-freecells/">The minimal number of freecells needed to win for each deal in the original Microsoft FreeCell 32,000 deals.</a>
 </p>
 </li>
+
 </ol>
 
 [% END %]
@@ -198,6 +199,7 @@ Theodore Pringle has constructed <a href="https://groups.yahoo.com/neo/groups/fc
 which is impossible to win with 8 freecells or fewer.
 </p>
 </li>
+
 </ol>
 
 [% END %]
@@ -322,8 +324,9 @@ I mentioned my solver in real life, expressed interest in it, in part due to
 the fact that in <a href="https://en.wikipedia.org/wiki/Israel">Israel</a>,
 where I live, many people played it on
 <a href="http://en.wikipedia.org/wiki/Israel_Defense_Forces">the
-Israeli military</a>’s computers during their draft/etc. service. An
-<a href="http://www.nrg.co.il/online/10/ART/782/006.html">internal survey</a>
+Israeli military (= “IDF”, “Tzahal”)</a>’s computers during their draft/etc.
+service. An <a href="http://www.nrg.co.il/online/10/ART/782/006.html">internal
+survey</a>
 conducted in 2004 found that it was the preferable game of 29% of the
 surveyed soldiers - thanks to <a href="https://he.wikipedia.org/wiki/%D7%A4%D7%A8%D7%99%D7%A1%D7%9C">the Hebrew wikipedia page about Freecell</a> for the link. One should note that Israel has instated a draft for girls as well
 as boys, so some of the people who were impressed were females (and often quite attractive ones).
@@ -600,6 +603,7 @@ on Ido Kanner’s blog</a>. His blog contains many
 C++.
 </p>
 </li>
+
 </ul>
 
 <p>
@@ -705,7 +709,7 @@ purpose of a solver for it. Just to clarify the matters,
 card game, with some rules about what constitutes a legal move, and since there
 are 52 cards (Ace-to-King in the four suits), which are usually placed in
 8 columns (although a different number is possible), there are about
-1.75 × 10<sup>64</sup> distinct initial layout (according to the Wikipedia
+1.75 × 10<sup>64</sup> distinct initial layouts (according to the Wikipedia
 page), and many more if we consider mid-play layouts.
 </p>
 
@@ -844,7 +848,7 @@ That deal was found to be impossible by most human
 players, and all automated solvers that tried to solve it (including
 <a href="https://github.com/boundedvariation/Freecell">a solver</a> which
 is written in <a href="https://en.wikipedia.org/wiki/Haskell_%28programming_language%29">Haskell</a>,
-which is a statically typed programming language, and which code that is written in
+which is a statically-typed programming language, and which code that is written in
 it tends to exhibit very few bugs.). Nevertheless, we would welcome a proof
 to the contrary given it actually refers to the actual deal.
 </p>
@@ -1039,6 +1043,7 @@ For some more information, see:
 <a href="https://en.wikipedia.org/wiki/PySol">Wikipedia Page</a>
 </p>
 </li>
+
 </ol>
 
 [% END %]
@@ -1144,6 +1149,7 @@ line</a> programs that are part of the Freecell Solver distribution, you can opt
 </p>
 
 <ol>
+
 <li>
 <p>
 <a href="[% base_path %]js-fc-solve/">The web-based solver</a>
@@ -1165,6 +1171,7 @@ Freecell Solver.
 a desktop game.
 </p>
 </li>
+
 </ol>
 
 <p>
