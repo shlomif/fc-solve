@@ -8,13 +8,13 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.21.0",
-    "@babel/core": "^7.21.4",
-    "@babel/preset-env": "^7.21.4",
+    "@babel/cli": "^7.21.5",
+    "@babel/core": "^7.21.8",
+    "@babel/preset-env": "^7.21.5",
     "@types/jquery": "^3.5.16",
-    "@types/qunit": "^2.19.4",
-    "@typescript-eslint/eslint-plugin": "^5.59.1",
-    "@typescript-eslint/parser": "^5.59.1",
+    "@types/qunit": "^2.19.5",
+    "@typescript-eslint/eslint-plugin": "^5.59.2",
+    "@typescript-eslint/parser": "^5.59.2",
     "acorn": "^8.8.2",
     "amdefine": "^1.0.1",
     "babel-eslint": "^10.1.0",
@@ -35,24 +35,24 @@
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
     "node-qunit": "^2.0.0",
-    "npm": "^9.6.5",
+    "npm": "^9.6.6",
     "param-case": "^3.0.4",
     "prettier": "^2.8.8",
-    "puppeteer": "^19.11.1",
+    "puppeteer": "^20.1.1",
     "qunit": "^2.19.4",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
-    "rollup": "^3.21.0",
+    "rollup": "^3.21.5",
     "tap": "^16.3.4",
-    "tar": "^6.1.13",
+    "tar": "^6.1.14",
     "terser": "^5.17.1",
     "typescript": "^5.0.4",
-    "webpack": "^5.80.0",
-    "webpack-cli": "^5.0.2",
+    "webpack": "^5.82.0",
+    "webpack-cli": "^5.1.0",
     "yarn": "^1.22.19"
   },
   "devDependencies": {
-    "eslint": "^8.39.0"
+    "eslint": "^8.40.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
