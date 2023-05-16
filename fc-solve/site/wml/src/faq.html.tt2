@@ -2,7 +2,6 @@
 
 [%- WRAPPER wrap_html -%]
 
-
 <div class="wrap-me">
 
 <section>
@@ -693,6 +692,12 @@ that are Up For Adoption”.
 <p>
 <a href="https://www.joelonsoftware.com/2001/07/21/good-software-takes-ten-years-get-used-to-it/">"Good Software Takes Ten Years. Get Used To it."
 ( Joel on Software )</a>
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://twitter.com/shlomif/status/1618814013424685056">My tweet</a> - "you divorce wives, not children".
 </p>
 </li>
 
