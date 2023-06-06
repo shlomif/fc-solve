@@ -6,7 +6,7 @@ use autodie;
 
 use Carp                         ();
 use HTML::Latemp::GenMakeHelpers ();
-use Path::Tiny qw/ path /;
+use Path::Tiny                   qw/ path /;
 use lib './lib';
 
 sub _exec
@@ -130,7 +130,7 @@ s#^(\$\(SRC_DOCS_DEST\)[^\n]+\n\t)[^\n]+#${1}\$(call SRC_INCLUDE_WML_RENDER)#ms
 
 $r_fh->spew_utf8($text);
 
-path('Makefile')->spew_utf8("include $DIR/main.mak\n");
+path('Makefile')->spew_utf8("include ${DIR}main.mak\n");
 path("$DIR/tt2.txt")->spew_raw( join "\n", @tt2, "" );
 
 foreach my $p ( ['PROD=1'], [] )
