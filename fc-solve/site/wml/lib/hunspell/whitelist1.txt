@@ -1375,6 +1375,7 @@ mis-attributed
 na
 num_columns
 patsolve-shlomif
+pysol_cards
 range_solvers_gen_ms_boards
 s3fs-fuse
 

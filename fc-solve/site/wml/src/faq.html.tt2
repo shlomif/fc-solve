@@ -140,6 +140,12 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 </p>
 </li>
 
+<li>
+<p>
+<a href="https://github.com/shlomif/pysol_cards">The PyPI pysol_cards module</a> - implementation of the dealing algorithm in python under the MIT/Expat licence.
+</p>
+</li>
+
 </ol>
 
 [% END %]
