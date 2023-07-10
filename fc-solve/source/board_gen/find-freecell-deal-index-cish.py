@@ -9,7 +9,8 @@
 
 import sys
 
-from find_index_lib_py import ffi, lib
+from find_index_lib_py import ffi
+from find_index_lib_py import lib
 
 from make_pysol_freecell_board import find_index_main
 

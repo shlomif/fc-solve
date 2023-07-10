@@ -9,7 +9,9 @@
 import re
 
 
-from pysol_cards.cards import CardRenderer, createCards, ms_rearrange
+from pysol_cards.cards import CardRenderer
+from pysol_cards.cards import createCards
+from pysol_cards.cards import ms_rearrange
 
 
 def find_index__board_string_to_ints(content):
