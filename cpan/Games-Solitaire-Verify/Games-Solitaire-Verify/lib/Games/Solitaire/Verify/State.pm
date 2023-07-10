@@ -523,7 +523,7 @@ sub _calc_freecell_max_seq_move
     my $to_empty = ( defined( $args->{to_empty} ) ? $args->{to_empty} : 0 );
 
     return ( ( $self->num_empty_freecells() + 1 )
-        << ( $self->num_empty_columns() - $to_empty ) );
+            << ( $self->num_empty_columns() - $to_empty ) );
 }
 
 sub _calc_empty_stacks_filled_by_any_card_max_seq_move

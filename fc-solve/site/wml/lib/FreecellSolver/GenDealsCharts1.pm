@@ -20,9 +20,9 @@ sub format_num
 sub _calc_deal_nums
 {
     return [
-        sort     { $a <=> $b }
-            grep { /\A[0-9]+\z/ }
-            map  { s#.*/##mrs =~ s#\.dump\.txt\z##mrs } glob(
+        sort { $a <=> $b }
+        grep { /\A[0-9]+\z/ }
+        map  { s#.*/##mrs =~ s#\.dump\.txt\z##mrs } glob(
             "src/charts/fc-pro--4fc-intractable-deals--report/data/*.dump.txt")
     ];
 }

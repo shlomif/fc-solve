@@ -100,8 +100,8 @@ qq#Unknown option "-invalidopt". Type "$FC_SOLVE__RAW --help" for usage informat
                 /\A\[\[Num FCS Moves\]\]=([0-9]+)\r?\z/
                     ? ( not( $1 > 0 ) )
                     : 1;
-                }
-                grep { /\A\[\[Num FCS Moves\]\]/ } @lines
+            }
+            grep { /\A\[\[Num FCS Moves\]\]/ } @lines
         ],
         [],
         "All FCS Move counts are valid",
@@ -114,8 +114,8 @@ qq#Unknown option "-invalidopt". Type "$FC_SOLVE__RAW --help" for usage informat
                 /\A\[\[Num FCPro Moves\]\]=([0-9]+)\r?\z/
                     ? ( not( $1 > 0 ) )
                     : 1;
-                }
-                grep { /\A\[\[Num FCPro Moves\]\]/ } @lines
+            }
+            grep { /\A\[\[Num FCPro Moves\]\]/ } @lines
         ],
         [],
         "All FCPro Move counts are valid.",
