@@ -374,7 +374,9 @@ a.solve_online_button {
 
     /* Google original is: */
     /* src: local("Audiowide"), local("Audiowide-Regular"), url(http://themes.googleusercontent.com/static/fonts/audiowide/v1/8XtYtNKEyyZh481XVWfVOj8E0i7KZn-EPnyo3HZu7kw.woff) format("woff") */
-    src: local("Audiowide"), local("Audiowide-Regular"),
+    src:
+        local("Audiowide"),
+        local("Audiowide-Regular"),
         url(css/fonts/audiowide-v1.woff) format("woff");
 }
 

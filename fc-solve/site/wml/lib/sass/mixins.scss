@@ -158,7 +158,9 @@ $ss_margin: 2em;
     blockquote.fancy {
         border: none;
         @if false {
-            font: 14px/22px normal helvetica, sans-serif;
+            font:
+                14px/22px normal helvetica,
+                sans-serif;
         }
         margin-top: 10px;
         margin-bottom: 10px;
