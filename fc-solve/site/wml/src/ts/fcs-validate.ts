@@ -28,7 +28,10 @@ for (const suit of _suits) {
 }
 
 class Card {
-    constructor(private rank: number, private suit: number) {
+    constructor(
+        private rank: number,
+        private suit: number,
+    ) {
         if (!is_int(rank)) {
             throw "rank is not an integer.";
         }
@@ -238,7 +241,10 @@ class CardsStringParser<CardType> extends StringParser {
     public cards: CardType[] = [];
     private is_start: boolean = true;
 
-    constructor(s: string, private card_mapper: (string) => CardType) {
+    constructor(
+        s: string,
+        private card_mapper: (string) => CardType,
+    ) {
         super(s);
     }
 
@@ -346,7 +352,10 @@ export function fcs_js__column_from_string(
 type MaybeCard = Card | null;
 
 class Freecells {
-    constructor(private num_freecells: number, private cards: MaybeCard[]) {
+    constructor(
+        private num_freecells: number,
+        private cards: MaybeCard[],
+    ) {
         if (!is_int(num_freecells)) {
             throw "num_freecells is not an integer.";
         }
