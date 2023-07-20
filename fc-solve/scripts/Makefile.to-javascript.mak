@@ -85,6 +85,8 @@ LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(CMAKE_C_FILES))
 all: $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
+	black_hole_solver_create \
+	black_hole_solver_free \
 	fc_solve__hll_ms_rand__get_singleton \
 	fc_solve__hll_ms_rand__init \
 	fc_solve__hll_ms_rand__mod_rand \
@@ -178,10 +180,10 @@ $(RINUTILS_PIVOT):
 	rin="$$(perl -MPath::Tiny -e 'print path(shift)->absolute' "$(RINUTILS_DIR)")"; unset CFLAGS ; (git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$$rin" .. && make && make install && cd ../.. && rm -fr rinutils)
 
 $(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN) $(NEEDED_FUNCTIONS_STR__FN)
-	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_AND_FILES_TARGETS) $(EMCC_POST_FLAGS)
 
 $(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN) $(NEEDED_FUNCTIONS_STR__FN)
-	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_AND_FILES_TARGETS) $(EMCC_POST_FLAGS)
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_NODE_JS_EXE)
