@@ -24,6 +24,8 @@ my $finder = Test::TrailingSpace->new(
             |
         (?: lib/repos/Solitairey )
             |
+        (?: lib/repos/black-hole-solitaire--build )
+            |
         (?:lib/out-babel/js/$bigint)
             |
         (?:
