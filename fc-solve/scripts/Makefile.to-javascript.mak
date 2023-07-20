@@ -16,6 +16,10 @@ ifeq ($(CMAKE_DIR),)
 	CMAKE_DIR := .
 endif
 
+BHS_SRC_DIR := ../../lib/repos/black-hole-solitaire/black-hole-solitaire/c-solver
+BHS_CMAKE_DIR := ../../lib/repos/black-hole-solitaire--build
+BHS_DEST_DIR := ./bhsolver-dest
+
 BITCODE_EXT = o
 DATA_DESTDIR ?= __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
@@ -58,8 +62,17 @@ rate_state.c \
 
 C_FILES = $(LIB_C_FILES)
 
+BHS_LIB_C_FILES = \
+				  fcs_hash.c \
+				  meta_alloc.c \
+				  rank_reach_prune.c \
+
+BHS_C_FILES = $(BHS_LIB_C_FILES)
+
 
 SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
+SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
+DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
 SRC_CMAKE_C_FILES = $(patsubst %.c,$(CMAKE_DIR)/%.c,$(CMAKE_C_FILES))
 LLVM_BITCODE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(C_FILES))
 LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(LIB_C_FILES))
@@ -142,7 +155,14 @@ $(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
 	mkdir -p "$$(dirname "$@")"
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
-LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
+# SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
+# DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
+
+$(DEST_BHS_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
+	mkdir -p "$$(dirname "$@")"
+	$(EMCC) $(EMCC_CFLAGS) -I $(BHS_CMAKE_DIR) -I $(BHS_SRC_DIR)/include -I $(BHS_SRC_DIR) $< -c -o $@
+
+LLVM_AND_FILES_TARGETS = $(DEST_BHS_LLVM_BITCODE_FILES) $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
 
 $(LLVM_AND_FILES_TARGETS): $(RINUTILS_PIVOT)
 
