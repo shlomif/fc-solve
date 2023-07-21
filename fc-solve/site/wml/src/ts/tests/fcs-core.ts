@@ -501,6 +501,26 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 );
             }
         });
+        qunit.test("black_hole_solver_create", (assert) => {
+            assert.expect(3);
+
+            const ptr_buf = module_wrapper.alloc_wrap(4 * 2, "ptr buf", "Seed");
+            {
+                const ret = module_wrapper.bh_create(ptr_buf);
+                // TEST
+                assert.equal(ret, 0, "bh_create ret");
+            }
+            const ptr_type: string = "i32";
+            const ptr = module_wrapper.Module.getValue(ptr_buf, ptr_type);
+            // TEST
+            assert.ok(ptr, "ptr");
+
+            {
+                const ret = module_wrapper.bh_free(ptr);
+                // TEST
+                assert.equal(ret, 0, "bh_free ret");
+            }
+        });
     });
 
     my_callback();
