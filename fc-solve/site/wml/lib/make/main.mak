@@ -13,7 +13,7 @@ SKIP_EMCC ?= 0
 D = dest
 TESTING_ENV__URL_SUFFIX := fc-solve-temp
 
-BASE_LOCAL_UPLOAD_PREFIX := /var/www/html/shlomif
+BASE_LOCAL_UPLOAD_PREFIX := $(HOME)/Arcs/temp/var/www/html/shlomif
 
 TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/$(TESTING_ENV__URL_SUFFIX)
 # TEMP_UPLOAD_URL = $${__HOMEPAGE_REMOTE_PATH}/fc-solve-t2
