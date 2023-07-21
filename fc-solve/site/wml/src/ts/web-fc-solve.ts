@@ -5,6 +5,8 @@ import { rank_re, suit_re } from "./french-cards";
 
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     alloc_wrap: (size: number, desc: string, error: string) => number;
+    bh_create: (buffer: number) => number;
+    bh_free: (instance: number) => number;
     c_free: (buffer: number) => number;
     fc_solve_allocate_i8: (pointer: number) => number;
     fc_solve_Pointer_stringify: (buffer: number) => string;
@@ -32,6 +34,14 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     module_wrapper.fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
+    module_wrapper.bh_create = Module.cwrap(
+        "black_hole_solver_create",
+        "number",
+        ["number"],
+    );
+    module_wrapper.bh_free = Module.cwrap("black_hole_solver_free", "number", [
+        "number",
+    ]);
     module_wrapper.user_alloc = Module.cwrap(
         "freecell_solver_user_alloc",
         "number",
