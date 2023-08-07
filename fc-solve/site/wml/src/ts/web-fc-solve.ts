@@ -8,7 +8,7 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     c_free: (buffer: number) => number;
     fc_solve_allocate_i8: (pointer: number) => number;
     fc_solve_Pointer_stringify: (buffer: number) => string;
-    user_alloc: (...args: any) => any;
+    user_alloc: () => number;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
     user_current_state_stringify: (...args: any) => any;
