@@ -20,7 +20,7 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_get_unrecognized_cmd_line_flag: (...args: any) => any;
     user_get_unrecognized_cmd_line_flag_status: (...args: any) => any;
     user_limit_iterations_long: (...args: any) => any;
-    user_resume_solution: (...args: any) => any;
+    user_resume_solution: (instance: number) => number;
     user_solve_board: (...args: any) => any;
     user_stringify_move_ptr: (...args: any) => any;
 }
@@ -38,11 +38,8 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         "number",
         ["number", "string"],
     );
-    module_wrapper.user_resume_solution = Module.cwrap(
-        "freecell_solver_user_resume_solution",
-        "number",
-        ["number"],
-    );
+    module_wrapper.user_resume_solution =
+        Module._freecell_solver_user_resume_solution;
     module_wrapper.user_cmd_line_read_cmd_line_preset = Module.cwrap(
         "freecell_solver_user_cmd_line_read_cmd_line_preset",
         "number",
