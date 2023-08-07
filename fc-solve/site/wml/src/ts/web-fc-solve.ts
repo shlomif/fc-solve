@@ -32,11 +32,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     module_wrapper.fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
-    module_wrapper.user_alloc = Module.cwrap(
-        "freecell_solver_user_alloc",
-        "number",
-        [],
-    );
+    module_wrapper.user_alloc = Module._freecell_solver_user_alloc;
     module_wrapper.user_solve_board = Module.cwrap(
         "freecell_solver_user_solve_board",
         "number",
