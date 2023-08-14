@@ -11,7 +11,13 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_alloc: () => number;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
-    user_current_state_stringify: (...args: any) => any;
+    user_current_state_stringify: (
+        instance: number,
+        a1: number,
+        a2: number,
+        a3: number,
+        a4: number,
+    ) => number;
     user_free: (instance: number) => number;
     user_get_invalid_state_error_into_string: (...args: any) => any;
     user_get_next_move: (...args: any) => any;
@@ -64,11 +70,8 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         "number",
         ["number", "number"],
     );
-    module_wrapper.user_current_state_stringify = Module.cwrap(
-        "freecell_solver_user_current_state_stringify",
-        "number",
-        ["number", "number", "number", "number", "number"],
-    );
+    module_wrapper.user_current_state_stringify =
+        Module._freecell_solver_user_current_state_stringify;
     module_wrapper.user_stringify_move_ptr = Module.cwrap(
         "freecell_solver_user_stringify_move_ptr",
         "number",
