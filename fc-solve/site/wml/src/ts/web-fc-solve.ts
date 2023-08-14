@@ -10,19 +10,25 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     c_free: (buffer: number) => number;
     fc_solve_allocate_i8: (pointer: number) => number;
     fc_solve_Pointer_stringify: (buffer: number) => string;
-    user_alloc: (...args: any) => any;
+    user_alloc: () => number;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
-    user_current_state_stringify: (...args: any) => any;
-    user_free: (...args: any) => any;
+    user_current_state_stringify: (
+        instance: number,
+        a1: number,
+        a2: number,
+        a3: number,
+        a4: number,
+    ) => number;
+    user_free: (instance: number) => number;
     user_get_invalid_state_error_into_string: (...args: any) => any;
     user_get_next_move: (...args: any) => any;
-    user_get_num_freecells: (...args: any) => any;
-    user_get_num_stacks: (...args: any) => any;
+    user_get_num_freecells: (instance: number) => number;
+    user_get_num_stacks: (instance: number) => number;
     user_get_unrecognized_cmd_line_flag: (...args: any) => any;
     user_get_unrecognized_cmd_line_flag_status: (...args: any) => any;
-    user_limit_iterations_long: (...args: any) => any;
-    user_resume_solution: (...args: any) => any;
+    user_limit_iterations_long: (instance: number, limit: number) => number;
+    user_resume_solution: (instance: number) => number;
     user_solve_board: (...args: any) => any;
     user_stringify_move_ptr: (...args: any) => any;
 }
@@ -34,29 +40,16 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     module_wrapper.fc_solve_allocate_i8 = (p1) => {
         return Module.allocate(p1, "i8", Module.ALLOC_STACK);
     };
-    module_wrapper.bh_create = Module.cwrap(
-        "black_hole_solver_create",
-        "number",
-        ["number"],
-    );
-    module_wrapper.bh_free = Module.cwrap("black_hole_solver_free", "number", [
-        "number",
-    ]);
-    module_wrapper.user_alloc = Module.cwrap(
-        "freecell_solver_user_alloc",
-        "number",
-        [],
-    );
+    module_wrapper.bh_create = Module._black_hole_solver_create;
+    module_wrapper.bh_free = Module._black_hole_solver_free;
+    module_wrapper.user_alloc = Module._freecell_solver_user_alloc;
     module_wrapper.user_solve_board = Module.cwrap(
         "freecell_solver_user_solve_board",
         "number",
         ["number", "string"],
     );
-    module_wrapper.user_resume_solution = Module.cwrap(
-        "freecell_solver_user_resume_solution",
-        "number",
-        ["number"],
-    );
+    module_wrapper.user_resume_solution =
+        Module._freecell_solver_user_resume_solution;
     module_wrapper.user_cmd_line_read_cmd_line_preset = Module.cwrap(
         "freecell_solver_user_cmd_line_read_cmd_line_preset",
         "number",
@@ -67,16 +60,10 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         "number",
         ["number", "number"],
     );
-    module_wrapper.user_get_num_freecells = Module.cwrap(
-        "freecell_solver_user_get_num_freecells",
-        "number",
-        ["number"],
-    );
-    module_wrapper.user_get_num_stacks = Module.cwrap(
-        "freecell_solver_user_get_num_stacks",
-        "number",
-        ["number"],
-    );
+    module_wrapper.user_get_num_freecells =
+        Module._freecell_solver_user_get_num_freecells;
+    module_wrapper.user_get_num_stacks =
+        Module._freecell_solver_user_get_num_stacks;
     module_wrapper.user_get_unrecognized_cmd_line_flag = Module.cwrap(
         "freecell_solver_user_get_unrecognized_cmd_line_flag",
         "number",
@@ -87,26 +74,16 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         "number",
         ["number", "number"],
     );
-    module_wrapper.user_current_state_stringify = Module.cwrap(
-        "freecell_solver_user_current_state_stringify",
-        "number",
-        ["number", "number", "number", "number", "number"],
-    );
+    module_wrapper.user_current_state_stringify =
+        Module._freecell_solver_user_current_state_stringify;
     module_wrapper.user_stringify_move_ptr = Module.cwrap(
         "freecell_solver_user_stringify_move_ptr",
         "number",
         ["number", "number", "number", "number"],
     );
-    module_wrapper.user_free = Module.cwrap(
-        "freecell_solver_user_free",
-        "number",
-        ["number"],
-    );
-    module_wrapper.user_limit_iterations_long = Module.cwrap(
-        "freecell_solver_user_limit_iterations_long",
-        "number",
-        ["number", "number"],
-    );
+    module_wrapper.user_free = Module._freecell_solver_user_free;
+    module_wrapper.user_limit_iterations_long =
+        Module._freecell_solver_user_limit_iterations_long;
     module_wrapper.user_get_invalid_state_error_into_string = Module.cwrap(
         "freecell_solver_user_get_invalid_state_error_into_string",
         "number",
