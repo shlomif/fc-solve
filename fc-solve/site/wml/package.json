@@ -38,11 +38,11 @@
     "npm": "^9.8.1",
     "param-case": "^3.0.4",
     "prettier": "^3.0.1",
-    "puppeteer": "^21.0.1",
+    "puppeteer": "^21.0.3",
     "qunit": "^2.19.4",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
-    "rollup": "^3.27.2",
+    "rollup": "^3.28.0",
     "tap": "^16.3.8",
     "tar": "^6.1.15",
     "terser": "^5.19.2",
@@ -52,7 +52,7 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
-    "eslint": "^8.46.0"
+    "eslint": "^8.47.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
