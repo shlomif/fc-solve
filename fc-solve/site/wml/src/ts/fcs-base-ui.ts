@@ -49,7 +49,7 @@ export function populate_input_with_numbered_deal(
 export function set_up__capitalize_cards(): void {
     const capitalize_cards_widget = $("#capitalize_cards");
     capitalize_cards_widget.off("click");
-    capitalize_cards_widget.click(() => {
+    capitalize_cards_widget.on("click", () => {
         const ctl = $("#stdin");
         ctl.val(capitalize_cards(ctl.val() as string));
         return;

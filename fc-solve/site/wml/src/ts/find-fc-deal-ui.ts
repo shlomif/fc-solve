@@ -98,13 +98,7 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     populate_input_pressed = () => {
         return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
     };
-    if (false) {
-        $("#populate_input").click(populate_input_pressed);
-    }
     on__run_do_solve__click = find_deal_ui;
-    if (false) {
-        $("#run_do_solve").click(on__run_do_solve__click);
-    }
     base_ui.set_up__capitalize_cards();
 
     return;
@@ -115,7 +109,7 @@ export function set_up(module_wrapper: w.ModuleWrapper): void {
     set_up_handlers(module_wrapper);
     const fc_solve_bookmark_button = $("#fc_solve_bookmark_button");
     fc_solve_bookmark_button.off("click");
-    fc_solve_bookmark_button.click(on_bookmarking);
+    fc_solve_bookmark_button.on("click", on_bookmarking);
 
     return;
 }

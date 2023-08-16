@@ -54,7 +54,7 @@ const on_flip_stdin = (my_operations: Ops, assert, done) => {
     done();
     if (++count < 2) {
         $("#stdin").val(get_flipped_deal_with_leading_empty_line());
-        $("#run_do_solve").click();
+        $("#run_do_solve").trigger("click");
     }
 };
 const on_flip_output = (my_operations: Ops, assert, done) => {
@@ -73,7 +73,7 @@ const on_flip_output = (my_operations: Ops, assert, done) => {
             "got the single-flipped leading lins text",
         );
     }
-    $("#fcs_flip_deal").click();
+    $("#fcs_flip_deal").trigger("click");
     done();
 };
 const on_stdin_initial_layout = (my_operations: Ops, assert, done) => {
@@ -88,7 +88,7 @@ const on_stdin_initial_layout = (my_operations: Ops, assert, done) => {
 
     // TEST
     assert.deepEqual(_get_solution(), "", "solution is empty at start");
-    $("#run_do_solve").click();
+    $("#run_do_solve").trigger("click");
     done();
 };
 const on_change_initial_layout = (my_operations: Ops, assert, done) => {
@@ -99,7 +99,7 @@ const on_change_initial_layout = (my_operations: Ops, assert, done) => {
     my_operations.on_stdin_change = (a, b, c) => {};
     my_operations.on_output_change = on_flip_output;
     $("#stdin").val(get_flipped_deal_with_comment_prefix());
-    $("#run_do_solve").click();
+    $("#run_do_solve").trigger("click");
 
     done();
 };
@@ -132,7 +132,7 @@ function my_func(qunit: QUnit, my_callback: () => void) {
             $("#deal_number").val("24");
             $("#preset").val("default");
             $("#one_based").prop("checked", false);
-            $("#populate_input").click();
+            $("#populate_input").trigger("click");
             done();
         });
     });

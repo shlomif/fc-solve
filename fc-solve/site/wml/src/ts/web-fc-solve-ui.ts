@@ -190,7 +190,7 @@ class FC_Solve_UI {
             parse_error_control.html(err_s);
             $(".err_s button.loc")
                 .off("click")
-                .click(function () {
+                .on("click", function () {
                     const button = $(this);
                     function _n(cl) {
                         return parseInt(button.find(cl).text(), 10);
@@ -623,13 +623,7 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     populate_input_pressed = () => {
         return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
     };
-    if (false) {
-        $("#populate_input").click(populate_input_pressed);
-    }
     on__run_do_solve__click = fc_solve_do_solve;
-    if (false) {
-        $("#run_do_solve").click(on__run_do_solve__click);
-    }
     base_ui.set_up__capitalize_cards();
 
     return;
@@ -641,9 +635,9 @@ export function set_up(module_wrapper: w.ModuleWrapper, graphics_) {
     }
     restore_bookmark();
     set_up_handlers(module_wrapper);
-    $("#one_based").off("click").click(on_toggle_one_based);
-    $("#clear_output").off("click").click(clear_output);
-    $("#fc_solve_bookmark_button").off("click").click(on_bookmarking);
+    $("#one_based").off("click").on("click", on_toggle_one_based);
+    $("#clear_output").off("click").on("click", clear_output);
+    $("#fc_solve_bookmark_button").off("click").on("click", on_bookmarking);
     $('input[name="unicode_suits"]').change(() => {
         fcs_ui.update_output();
     });
