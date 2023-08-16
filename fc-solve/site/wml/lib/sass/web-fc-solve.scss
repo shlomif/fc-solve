@@ -340,3 +340,13 @@ $mgn: 1em;
     margin-bottom: 0.75em;
     margin-top: $mgn;
 }
+
+.upper_buttons__wrapper {
+    clear: left;
+    // margin: 1em;
+    padding: 1em;
+    button {
+        font-size: 200%;
+        padding: 0.5em;
+    }
+}
