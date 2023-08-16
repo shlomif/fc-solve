@@ -157,9 +157,9 @@ Input a card patience/solitaire layout in the <a href="[% base_path %]docs/distr
 [% END %]
 
 <div class="upper_buttons__wrapper">
-[% INCLUDE upper_button targetclass = "rewind" text = "Prev" title = "Previous move" %]
-[% INCLUDE upper_button targetclass = "play" text = "Play" title = "Play" %]
-[% INCLUDE upper_button targetclass = "fastforward" text = "Next" title = "Next move" %]
+[% INCLUDE upper_button targetclass = "rewind" text = "⏮ Prev" title = "Previous move" %]
+[% INCLUDE upper_button targetclass = "play" text = "▶ Play" title = "Play" %]
+[% INCLUDE upper_button targetclass = "fastforward" text = "Next ⏭" title = "Next move" %]
 </div>
 
 [% IF 0 %]
