@@ -208,6 +208,12 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             retrieved_slurp => \&retrieved_slurp,
             path_slurp      => \&path_slurp,
             shlomif_include_colorized_file => \&_shlomif_include_colorized_file,
+            solver_bar_css                 => sub {
+                my $args = shift;
+
+                my $arr = $args;
+                return join( " , ", map { "#solver_bar button.$_" } @$arr );
+            },
         };
     }
 );
