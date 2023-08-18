@@ -348,5 +348,8 @@ $mgn: 1em;
     button {
         font-size: 200%;
         padding: 0.5em;
+        $m: 10px;
+        margin-left: $m;
+        margin-right: $m;
     }
 }
