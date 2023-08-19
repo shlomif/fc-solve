@@ -32,6 +32,22 @@ qq#cd lib/repos/ && ( test -e rinutils || git clone https://github.com/shlomif/r
     );
 }
 
+my $bhsolver    = path("lib/repos/black-hole-solitaire--build")->absolute;
+my $bhsolversrc = path("lib/repos/black-hole-solitaire")->absolute;
+my $bhsolversrcsrc =
+    path("lib/repos/black-hole-solitaire/black-hole-solitaire/c-solver")
+    ->absolute;
+
+if ( not -e $bhsolver )
+{
+    _exec(
+        [
+qq#cd lib/repos/ && ( test -e black-hole-solitaire || git clone --recurse-submodules https://github.com/shlomif/black-hole-solitaire ) && mkdir "$bhsolver" && cd "$bhsolver" && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$bhsolver" "$bhsolversrcsrc" && cd ..#
+        ],
+        "rinutils"
+    );
+}
+
 if ( not -e "lib/jquery/jquery-phoenix/" )
 {
     _exec(

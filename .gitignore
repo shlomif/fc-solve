@@ -115,6 +115,8 @@
 /fc-solve/site/wml/lib/out-babel/js/*.js
 /fc-solve/site/wml/lib/out-babel/js/tests/*.js
 /fc-solve/site/wml/lib/repos/Solitairey/
+/fc-solve/site/wml/lib/repos/black-hole-solitaire--build/
+/fc-solve/site/wml/lib/repos/black-hole-solitaire/
 /fc-solve/site/wml/lib/repos/rinutils-include/
 /fc-solve/site/wml/lib/repos/rinutils/
 /fc-solve/site/wml/lib/sgml/

@@ -16,6 +16,10 @@ ifeq ($(CMAKE_DIR),)
 	CMAKE_DIR := .
 endif
 
+BHS_SRC_DIR := ../../lib/repos/black-hole-solitaire/black-hole-solitaire/c-solver
+BHS_CMAKE_DIR := ../../lib/repos/black-hole-solitaire--build
+BHS_DEST_DIR := ./bhsolver-dest
+
 BITCODE_EXT = o
 DATA_DESTDIR ?= __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
@@ -58,8 +62,21 @@ rate_state.c \
 
 C_FILES = $(LIB_C_FILES)
 
+BHS_LIB_C_FILES = \
+fcs_hash.c \
+meta_alloc.c \
+rank_reach_prune.c \
+
+BHS_cmakedir_C_FILES = \
+can_move.c \
+generated/lib.c \
+
+BHS_C_FILES = $(BHS_LIB_C_FILES)
 
 SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
+SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
+DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
+DEST_BHS_cmakedir_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_cmakedir_C_FILES))
 SRC_CMAKE_C_FILES = $(patsubst %.c,$(CMAKE_DIR)/%.c,$(CMAKE_C_FILES))
 LLVM_BITCODE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(C_FILES))
 LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(LIB_C_FILES))
@@ -68,6 +85,8 @@ LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(CMAKE_C_FILES))
 all: $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
+	black_hole_solver_create \
+	black_hole_solver_free \
 	fc_solve__hll_ms_rand__get_singleton \
 	fc_solve__hll_ms_rand__init \
 	fc_solve__hll_ms_rand__mod_rand \
@@ -142,7 +161,18 @@ $(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
 	mkdir -p "$$(dirname "$@")"
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
-LLVM_AND_FILES_TARGETS = $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES)
+# SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
+# DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
+
+$(DEST_BHS_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
+	mkdir -p "$$(dirname "$@")"
+	$(EMCC) -I $(BHS_CMAKE_DIR) -I $(BHS_SRC_DIR)/include -I $(BHS_SRC_DIR) $(EMCC_CFLAGS) $< -c -o $@
+
+$(DEST_BHS_cmakedir_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_CMAKE_DIR)/%.c $(INCLUDE_CFLAGS_FN)
+	mkdir -p "$$(dirname "$@")"
+	$(EMCC) -I $(BHS_CMAKE_DIR) -I $(BHS_SRC_DIR)/include -I $(BHS_SRC_DIR) $(EMCC_CFLAGS) $< -c -o $@
+
+LLVM_AND_FILES_TARGETS = $(DEST_BHS_LLVM_BITCODE_FILES) $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(DEST_BHS_cmakedir_LLVM_BITCODE_FILES)
 
 $(LLVM_AND_FILES_TARGETS): $(RINUTILS_PIVOT)
 
@@ -150,10 +180,10 @@ $(RINUTILS_PIVOT):
 	rin="$$(perl -MPath::Tiny -e 'print path(shift)->absolute' "$(RINUTILS_DIR)")"; unset CFLAGS ; (git clone https://github.com/shlomif/rinutils && cd rinutils && mkdir b && cd b && cmake -DWITH_TEST_SUITE=OFF -DCMAKE_INSTALL_PREFIX="$$rin" .. && make && make install && cd ../.. && rm -fr rinutils)
 
 $(RESULT_NODE_JS_EXE): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN) $(NEEDED_FUNCTIONS_STR__FN)
-	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_AND_FILES_TARGETS) $(EMCC_POST_FLAGS)
 
 $(RESULT_JS_LIB): $(LLVM_AND_FILES_TARGETS) $(INCLUDE_CFLAGS_FN) $(NEEDED_FUNCTIONS_STR__FN)
-	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_BITCODE_LIB_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(EMCC_POST_FLAGS)
+	$(EMCC) $(EMCC_LDFLAGS) -o $@ $(LLVM_AND_FILES_TARGETS) $(EMCC_POST_FLAGS)
 
 clean:
 	rm -f $(LLVM_BITCODE_FILES) $(RESULT_NODE_JS_EXE)
