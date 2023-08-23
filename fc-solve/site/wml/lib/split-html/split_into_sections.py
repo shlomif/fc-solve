@@ -12,8 +12,8 @@ Split XHTML5 / HTML5 documents into individual sections.
 
 import copy
 import html
-import os
 import lxml.html
+import os
 
 from lxml import etree
 from lxml.html import XHTML_NAMESPACE
@@ -81,6 +81,7 @@ class XhtmlSplitter:
             process_header_text=_dummy_process_title,
             process_main_title=_dummy_process_title,
             section_format_cb=None,
+            prune_and_graft_xpath=None,
     ):
         self.process_header_text = process_header_text
         self.process_main_title = process_main_title
@@ -126,6 +127,12 @@ class XhtmlSplitter:
             self.xhtml_article_tag,
             self.xhtml_section_tag,
         ])
+        self._hn_xpath = self._x_format(
+            "./{xhtml_prefix}header/*[" + " or ".join([
+                "(local-name() = 'h{}')".format(i)
+                for i in range(1, 6+1)
+            ]) + "]"
+        )
         if self.input_is_plain_html:
             self._whole_r_mode = 'rt'
         else:
@@ -159,6 +166,10 @@ class XhtmlSplitter:
             if self.input_is_plain_html
             else _xhtml_to_string
         )
+        if prune_and_graft_xpath:
+            self._prune_and_graft_xpath = self._x_format(prune_and_graft_xpath)
+        else:
+            self._prune_and_graft_xpath = None
 
     def _get_header(self, elem):
         return _first(
@@ -209,21 +220,45 @@ class XhtmlSplitter:
                 return "{" + str(self.elem) + " => [" +\
                     ", ".join([str(x) for x in self.childs]) + "]" + "}"
 
-        def genTreeNode(elem):
+        def genTreeNode(level, diffs, elem):
             kids = []
-            for x in elem:
-                kids += wrap_genTreeNode(x)
             if _xpath(self.ns, elem, self.list_sections_xpath):
+                delta = 1
+            else:
+                delta = 0
+            for x in elem:
+                kids += wrap_genTreeNode(level+delta, diffs, x)
+            if delta:
+                is_found = _xpath(
+                    self.ns,
+                    elem,
+                    self._header_xpath,
+                )
+                # print(is_found)
+                if is_found:
+                    found_h_tag = _xpath(
+                        self.ns,
+                        elem,
+                        self._hn_xpath,
+                    )
+                    assert len(found_h_tag) == 1
+                    hlevel = int(
+                        etree.QName(found_h_tag[0].tag).localname[1:]
+                    )
+                    diff = hlevel - level
+                    diffs.add(diff)
                 return [TreeNode(elem=elem, childs=kids)]
             else:
                 return kids
 
-        def wrap_genTreeNode(elem):
-            ret = genTreeNode(elem)
+        def wrap_genTreeNode(level, diffs, elem):
+            ret = genTreeNode(level, diffs, elem)
             assert isinstance(ret, list)
             return ret
 
-        self.tree = wrap_genTreeNode(self.container_elem)
+        diffs = set()
+        self.tree = wrap_genTreeNode(0, diffs, self.container_elem)
+        assert len(diffs) == 1
         if len(self.tree) > 1:
             self.tree = [
                 TreeNode(elem=self.container_elem, childs=self.tree, )
@@ -369,6 +404,22 @@ class XhtmlSplitter:
                     if not fmt:
                         continue
                     tot += fmt
+                if self._prune_and_graft_xpath:
+                    section_tag = header_tag.getparent()
+                    try:
+                        a2_tag = _first(
+                            self.ns,
+                            section_tag,
+                            self._prune_and_graft_xpath,
+                            False,
+                        )
+                        tot += ("<{xhtml_prefix}br/>" * 2)
+                        tot += self._to_string_cb(
+                            dom=a2_tag, add_prefix=False,
+                        ).decode('utf-8')
+                        section_tag.remove(a2_tag)
+                    except MyXmlNoResultsFoundError:
+                        pass
                 tot += "</{xhtml_prefix}span>"
 
                 a_tag = self._fromstring(tot.format(
