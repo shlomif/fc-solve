@@ -2,12 +2,12 @@
 
 rebuild()
 {
-    ./Tatzer -l x64bb --nobuild-docs --prefix="$HOME/fcs-bin" && \
+    "$FCS_SRC_PATH"/../scripts/Tatzer -l x64bb --nobuild-docs --prefix="$HOME/fcs-bin" && \
         make
 }
 
 # Comment out to rebuild everything.
-rebuild() { true ; }
+# rebuild() { true ; }
 
 set -x
 
@@ -25,6 +25,6 @@ rsync -a -v --progress --exclude='**/.svn/**' "$script_dirname/../.." "$FCS_PATH
 cd "$FCS_PATH" && \
     rebuild && \
 rm -f FAULT.txt sync.lock sync.txt summary.txt summary.lock \
-    global-params.txt summary.stats.perl-storable &&
-perl scripts/parallel-range-solver-total --mode setup &&
+    global-params.txt summary.stats.perl-storable && \
+perl "$FCS_SRC_PATH"/../scripts/parallel-solve-from-source-distro/parallel-range-solver-total --mode setup && \
 rm -f range-queue.sock

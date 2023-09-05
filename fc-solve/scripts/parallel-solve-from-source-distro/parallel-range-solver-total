@@ -56,28 +56,27 @@ package VerifierConn;
 use strict;
 use warnings;
 
+use IO::Socket::UNIX qw( SOCK_STREAM );
+
 use MooX qw/ late /;
 
 extends(qw(FC_Solve::Socket));
 
-sub _init
-{
-    my ( $self, $args ) = @_;
+has '+_client_sock' => (
+    default => sub {
+        my $sock = IO::Socket::UNIX->new(
+            Type => SOCK_STREAM(),
+            Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
+        );
 
-    my $sock = IO::Socket::UNIX->new(
-        Type => SOCK_STREAM(),
-        Peer => $RANGE_TO_VERIFY_SOCKET_PATH,
-    );
+        if ( !$sock )
+        {
+            Carp::confess("Cannot initialize connection - $!.\n");
+        }
 
-    if ( !$sock )
-    {
-        Carp::confess("Cannot initialize connection - $!.\n");
-    }
-
-    $self->_client_sock($sock);
-
-    return;
-}
+        return $sock;
+    },
+);
 
 sub DESTROY
 {
@@ -171,24 +170,20 @@ use warnings;
 use MooX qw/ late /;
 extends(qw(FC_Solve::Socket));
 
-has [qw(_server_sock)] => ( is => 'rw' );
+has [qw(_server_sock)] => (
+    default => sub {
 
-sub _init
-{
-    my ( $self, $args ) = @_;
-
-    my $server_sock = IO::Socket::UNIX->new(
-        Type   => SOCK_STREAM(),
-        Local  => $RANGE_TO_VERIFY_SOCKET_PATH,
-        Listen => 1,
-        )
-        or Carp::confess(
-        "Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
-
-    $self->_server_sock($server_sock);
-
-    return;
-}
+        my $server_sock = IO::Socket::UNIX->new(
+            Type   => SOCK_STREAM(),
+            Local  => $RANGE_TO_VERIFY_SOCKET_PATH,
+            Listen => 1,
+            )
+            or Carp::confess(
+            "Cannot listen to socket at '$RANGE_TO_VERIFY_SOCKET_PATH' - $!");
+        return $server_sock;
+    },
+    is => 'rw'
+);
 
 sub _accept
 {
@@ -243,18 +238,18 @@ use MooX qw/ late /;
 use strict;
 use warnings;
 
-has [qw(_registry _was_placed _next_id)] => ( is => 'rw' );
-
-sub _init
-{
-    my $self = shift;
-
-    $self->_registry( {} );
-    $self->_was_placed(0);
-    $self->_next_id(1);
-
-    return;
-}
+has [qw(_registry )] => (
+    default => sub { return +{}; },
+    is      => 'rw'
+);
+has [qw( _was_placed )] => (
+    default => sub { return 0; },
+    is      => 'rw'
+);
+has [qw( _next_id)] => (
+    default => sub { return 1; },
+    is      => 'rw'
+);
 
 sub register
 {
@@ -305,21 +300,16 @@ use strict;
 use warnings;
 
 use MooX qw/ late /;
-has '_active' => ( is => 'rw' );
-
-sub _init
-{
-    my $self = shift;
-
-    $self->_active(
-        {
+has '_active' => (
+    default => sub {
+        return {
             solver   => ProcessesRegistry->new,
             verifier => ProcessesRegistry->new
-        }
-    );
+        };
 
-    return;
-}
+    },
+    is => 'rw'
+);
 
 sub get_types
 {
@@ -384,8 +374,10 @@ use warnings;
 
 use MooX qw/ late /;
 
-has [qw(_log_cb _queue)] => ( is => 'rw' );
+has [qw(_log_cb)] => ( is      => 'rw' );
+has [qw(_queue)]  => ( default => sub { return []; }, is => 'rw' );
 has [qw(_service)] => (
+    default => sub { return QueueServerSocket->new; },
     is      => 'rw',
     handles => {
         _write      => 'write',
@@ -394,6 +386,7 @@ has [qw(_service)] => (
 );
 
 has [qw(_active)] => (
+    default => sub { return QueueServerRegistry->new; },
     is      => 'rw',
     handles => {
         _has_solvers         => 'has_solvers',
@@ -408,21 +401,6 @@ sub _log
     my $self = shift;
 
     return $self->_log_cb->(@_);
-}
-
-sub _init
-{
-    my $self = shift;
-    my $args = shift;
-
-    $self->_queue( [] );
-
-    # The state variables of the verifiers and solvers.
-    $self->_active( QueueServerRegistry->new );
-    $self->_service( QueueServerSocket->new );
-    $self->_log_cb( $args->{log_cb} );
-
-    return;
 }
 
 sub extract
@@ -561,9 +539,9 @@ use strict;
 use warnings;
 
 use Getopt::Long qw( GetOptions );
-use Fcntl qw(:flock);
-use File::Path qw(rmtree);
-use Path::Tiny qw/ path /;
+use Fcntl        qw(:flock);
+use File::Path   qw(rmtree);
+use Path::Tiny   qw/ path /;
 
 use Test::Trap qw( trap $trap
     :flow:stderr(systemsafe):stdout(systemsafe):warn
@@ -724,7 +702,7 @@ sub _mode_setup
         path($empty_file_path)->spew_raw('');
     }
 
-    my $start_from = $ENV{FCS_MIN_DEAL_IDX};
+    my $start_from      = $ENV{FCS_MIN_DEAL_IDX};
     my $deals_per_batch = ( $ENV{FCS_DEALS_PER_BATCH} || 1000 );
 
     path($GLOBAL_CONFIG_PATH)->spew_utf8(
