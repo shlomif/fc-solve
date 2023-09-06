@@ -167,6 +167,8 @@ package QueueServerSocket;
 use strict;
 use warnings;
 
+use IO::Socket::UNIX qw( SOCK_STREAM );
+
 use MooX qw/ late /;
 extends(qw(FC_Solve::Socket));
 
