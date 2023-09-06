@@ -26,5 +26,5 @@ cd "$FCS_PATH" && \
     rebuild && \
 rm -f FAULT.txt sync.lock sync.txt summary.txt summary.lock \
     global-params.txt summary.stats.perl-storable && \
-perl "$FCS_SRC_PATH"/../scripts/parallel-solve-from-source-distro/parallel-range-solver-total --mode setup && \
+( _run_mode --mode setup ) && \
 rm -f range-queue.sock
