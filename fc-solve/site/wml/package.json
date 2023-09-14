@@ -9,13 +9,13 @@
   },
   "dependencies": {
     "@babel/cli": "^7.22.15",
-    "@babel/core": "^7.22.15",
+    "@babel/core": "^7.22.17",
     "@babel/eslint-parser": "^7.22.15",
     "@babel/preset-env": "^7.22.15",
     "@types/jquery": "^3.5.18",
     "@types/qunit": "^2.19.6",
-    "@typescript-eslint/eslint-plugin": "^6.6.0",
-    "@typescript-eslint/parser": "^6.6.0",
+    "@typescript-eslint/eslint-plugin": "^6.7.0",
+    "@typescript-eslint/parser": "^6.7.0",
     "acorn": "^8.10.0",
     "amdefine": "^1.0.1",
     "big-integer": "^1.6.51",
@@ -35,14 +35,14 @@
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
     "node-qunit": "^2.0.0",
-    "npm": "^10.0.0",
+    "npm": "^10.1.0",
     "param-case": "^3.0.4",
     "prettier": "^3.0.3",
-    "puppeteer": "^21.1.1",
+    "puppeteer": "^21.2.1",
     "qunit": "^2.19.4",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
-    "rollup": "^3.28.1",
+    "rollup": "^3.29.1",
     "tap": "^16.3.8",
     "tar": "^6.2.0",
     "terser": "^5.19.4",
@@ -52,7 +52,7 @@
     "yarn": "^1.22.19"
   },
   "devDependencies": {
-    "eslint": "^8.48.0"
+    "eslint": "^8.49.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
