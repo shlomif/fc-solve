@@ -7,7 +7,8 @@ my @x_params = (qw(4 1 8 -1 7 11 4 2 2 1 2));
 
 my @y_params = ( 0.0032, 0.32, -3.0 );
 
-exec( $^X,
+exec(
+    $^X,
     "time-scan.pl",
     "--method",
     "patsolve",

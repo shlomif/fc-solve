@@ -16,7 +16,8 @@ my $MID24_BOARD = samp_board('24-mid.board');
 {
     trap
     {
-        system( $FC_SOLVE__RAW,
+        system(
+            $FC_SOLVE__RAW,
             qw/-s -i -p -t -sam -sel -to j/,
             samp_board('24-mod-to-test-fc-to-empty-s.board')
         );
@@ -152,7 +153,8 @@ qr/^1591 = Verdict: Intractable.*?^1592 = Verdict: Solved.*?^1593 = Verdict: Sol
 
     trap
     {
-        $status = system( $FC_SOLVE__RAW,
+        $status = system(
+            $FC_SOLVE__RAW,
             qw#
                 --flare-name prefix_of_a_long_name --method soft-dfs -to 0123456789 -sp r:tf -opt -opt-to 0123456789ABCDE
                 -nf --flare-name another_long_name --method soft-dfs -to 0123467 -sp r:tf -opt -opt-to 0123456789ABCDE
