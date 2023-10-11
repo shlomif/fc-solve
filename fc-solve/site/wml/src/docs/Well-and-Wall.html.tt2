@@ -2,7 +2,7 @@
 
 [%- WRAPPER wrap_html -%]
 
-<h2 id="prologue">Prologue</h2>
+[% WRAPPER h2_section id = "prologue" title = "Prologue" %]
 
 <p>
 The well of a project is the developer or two that do most of the work.
@@ -27,7 +27,9 @@ Solver is a category killer) and that I'm happy that I did it this way,
 albeit may have done better the next time.
 </p>
 
-<h2 id="how-it-started">How it all started</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "how-it-started" title = "How it all started" %]
 
 <p>
 I must have told the story a lot of different times in different contexts.
@@ -39,16 +41,21 @@ conclusions:
 <ol>
 
 <li>
+<p>
 A depth-first scan would probably be better than a breadth-first scan.
 (I figured the number of states as the function of the depth N grows very
 largely).
+</p>
 </li>
 
 <li>
+<p>
 Using atomic moves (moving one card or one sequence at a time) would be
 silly, and I have to make meta-moves (= compound moves of doing more than
 one move at a time) to achieve good results.
+</p>
 </li>
+
 </ol>
 
 <p>
@@ -109,7 +116,9 @@ in Haskell, etc.). I like to code, and I like the look of a blank
 <a href="http://www.vim.org/">gvim</a> window eager to accept my input.
 </p>
 
-<h2 id="useful-contrib">A useful contribution</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "useful-contrib" title = "A useful contribution" %]
 
 <p>
 Eric Warmenhoven sent me a program to generate the boards of GNOME Freecell.
@@ -124,7 +133,9 @@ the program was useful to someone. There's nothing that beats that feeling.
 A thank you goes along way. E-mail a developer today.
 </p>
 
-<h2 id="freshmeat-effect">The Freshmeat Effect</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "freshmeat-effect" title = "The Freshmeat Effect" %]
 
 <p>
 Naming the program "Freecell Solver" made it the first hit for the query
@@ -146,7 +157,9 @@ I regret not giving Freecell Solver a more original name, because I still
 hated to see Google and other search engines clogged like this.
 </p>
 
-<h2 id="what-people-did">What people did with the code</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "what-people-did" title = "What people did with the code" %]
 
 <p>
 On my TODO list I had an item of "Integrate with PySol and/or GNOME Freecell
@@ -285,8 +298,9 @@ to keep it under the Public Domain. So far, all contributors respected
 that.
 </p>
 
-<h2 id="getting-people-to-contrib">Getting People to Contribute</h2>
+[% END %]
 
+[% WRAPPER h2_section id = "getting-people-to-contrib" title = "Getting People to Contribute" %]
 
 <p>
 Getting people to contribute on Freecell Solver has turned out to be hard
@@ -296,20 +310,26 @@ for more than one reason:
 <ol>
 
 <li>
+<p>
 I hate those developers that whine about people not contributing. (it
 usually is a bad idea)
+</p>
 </li>
 
 <li>
+<p>
 I like working on Freecell Solver, and albeit am not over-possessive
 about the code, I do like to do things on my own.
+</p>
 </li>
 
 <li>
+<p>
 Freecell Solver's source code contains some very advanced (IMHO)
 techniques, and some relatively optimised for speed code. I do announce
 what I intend to do next and what I did to the mailing list. However,
 I do not know how many of its members understand it enough to contribute.
+</p>
 </li>
 
 </ol>
@@ -320,7 +340,9 @@ there to hear about the cool techniques and re-organizations I add there,
 so I don't try to avoid posting such stuff there..
 </p>
 
-<h2 id="usability">Usability and Social Engineering</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "usability" title = "Usability and Social Engineering" %]
 
 <p>
 As I noted in <a href="http://www.advogato.org/article/458.html">an Advogato
@@ -349,7 +371,9 @@ the program (whose configuration lines became quit insane) in one way or
 another.
 </p>
 
-<h2 id="mailing-list">The Mailing List</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "mailing-list" title = "The Mailing List" %]
 
 <p>
 I formed the mailing list in an attempt to centralize the discussions I
@@ -387,24 +411,30 @@ The mailing list has some colour besides myself. Most notable are:
 <ol>
 
 <li>
+<p>
 Bill Raymond - a Freecell solver guru who claims to have written the
 best solver that ever was, yet is reluctant to release it to the public
 in one form or another. Bill tends to be a little flamatory, but since
 he knows what he is saying (and naturally adds spice to the list) I am
 still keeping him.
+</p>
 </li>
 
 <li>
+<p>
 Adrian Ettlinger - Adrian is not as good a computer scientist as I
 or Bill Or Tom Holroyd, but he is still an expert in Freecell solving.
 He tends to be very kind and restrained.
+</p>
 </li>
 
 <li>
+<p>
 Tom Holroyd - the author of patsolve, another solve for Freecell and
 Freecell-like games, he makes very few posts, usually related to patsolve,
 somehow. He is a formidable computer scientist and also a good Freecell and
 Seahaven Towers enthusiast.
+</p>
 </li>
 
 </ol>
@@ -415,7 +445,9 @@ welcome to join it if the topic interests you. Contributions to the Freecell
 Solver code-base are welcome, but are not absolutely necessary.
 </p>
 
-<h2 id="publish-or-perish">Publish or Perish</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "publish-or-perish" title = "Publish or Perish" %]
 
 <p>
 Freecell Solver had a dedicated site all along. The site took several
@@ -440,7 +472,9 @@ making it the category killer. It also makes perfect sense that it would
 be considering those circumstances.
 </p>
 
-<h2 id="footnotes">Footnotes</h2>
+[% END %]
+
+[% WRAPPER h2_section id = "footnotes" title = "Footnotes" %]
 
 <ul class="footnotes">
 
@@ -470,15 +504,22 @@ screenplay.
 <ol>
 
 <li>
+<p>
 <a href="http://www.shlomifish.org/humour/bits/GPL-is-not-Compatible-with-Itself/">"The GPL is not Compatible with itself"</a>
+</p>
 </li>
 
 <li>
+<p>
 <a href="http://code.google.com/p/fc-solve/source/browse/fc-solve/source/COPYING.txt">The "COPYING" file of Freecell Solver</a>
+</p>
 </li>
 
 </ol>
 </li>
+
 </ul>
+
+[% END %]
 
 [% END %]
