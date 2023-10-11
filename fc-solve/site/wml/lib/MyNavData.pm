@@ -88,6 +88,12 @@ my $tree_contents = {
                     'title' => "Hypertext Cross-Reference",
                     'url'   => "michael_mann/",
                 },
+                {
+                    'hide' => 1,
+                    'skip' => 1,
+                    'text' => "“The Well and the Wall”",
+                    'url'  => "docs/Well-and-Wall.html",
+                },
             ],
         },
         {
