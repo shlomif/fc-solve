@@ -117,8 +117,8 @@ function build_toggler(args: TogglerParams): void {
         const in_storage: boolean = _is_null(in_storage_s)
             ? default_state
             : in_storage_s == "1"
-            ? true
-            : false;
+              ? true
+              : false;
 
         const in_elem: boolean = toggler_wrapper.calc_in_elem();
 
