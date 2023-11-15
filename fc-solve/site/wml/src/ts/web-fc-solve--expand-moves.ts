@@ -29,11 +29,17 @@ function _render_move(my_move: Expander_Move): string {
         return "Move a card from freecell " + src + " to stack " + dest;
     }
 }
+
+interface Expander_RetElem {
+    str: string;
+    type: string;
+}
+
 class Expander {
     public modified_state = { f: [], c: [] };
     public empty_fc_indexes: number[] = [];
     public empty_stack_indexes: number[] = [];
-    public ret_array: any[] = [];
+    public ret_array: Expander_RetElem[] = [];
     public foundations_str: string;
     public step_width: number;
     constructor() {
@@ -253,7 +259,7 @@ export function fc_solve_expand_move(
     initial_src_state_str: string,
     initial_move: { str: string },
     initial_dest_state_str: string,
-) {
+): Expander_RetElem[] {
     const matched = initial_move.str.match(
         /^Move ([0-9]+) cards from stack ([0-9]+) to stack ([0-9]+)$/,
     );
