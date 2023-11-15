@@ -258,15 +258,22 @@ export function fc_solve_expand_move(
         /^Move ([0-9]+) cards from stack ([0-9]+) to stack ([0-9]+)$/,
     );
 
+    const raw_ret = [
+        {
+            str: initial_move.str,
+            type: "m",
+        },
+    ];
+
     if (!matched) {
-        return [initial_move];
+        return raw_ret;
     }
 
     const ultimate_num_cards = _to_int(matched[1]);
 
     // TODO : Implement the case where the sequence move is unlimited.
     if (ultimate_num_cards === 1) {
-        return [initial_move];
+        return raw_ret;
     }
 
     const ultimate_source = _to_int(matched[2]);
