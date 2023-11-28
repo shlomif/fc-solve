@@ -1,3 +1,6 @@
+LATEMP_ROOT_SOURCE_DIR := .
+LATEMP_ABS_ROOT_SOURCE_DIR := $(realpath $(LATEMP_ROOT_SOURCE_DIR))
+
 all: real_all
 
 include lib/make/shlomif_common.mak
@@ -418,7 +421,7 @@ upload_temp: all
 upload_local: all
 	$(RSYNC) -a $(D)/ $(BASE_LOCAL_UPLOAD_PREFIX)/$(TESTING_ENV__URL_SUFFIX)
 
-TEST_ENV = SKIP_EMCC="$(SKIP_EMCC)"
+TEST_ENV = PYTHONPATH="$${PYTHONPATH}:$(LATEMP_ABS_ROOT_SOURCE_DIR)/Tests/lib" SKIP_EMCC="$(SKIP_EMCC)"
 TEST_TARGETS = Tests/*.{py,t}
 
 clean:
