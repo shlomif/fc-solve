@@ -154,23 +154,21 @@ $(OUT_PREF)/big-integer.js $(OUT_PREF)/flatted.js $(OUT_PREF)/qunit.js: %:
 STRIP_TRAIL_SPACE = $(PERL) -i -lpe 's/[ \t]+$$//'
 
 $(D) $(SUBDIRS): % :
-	@if [ ! -e $@ ] ; then \
-		mkdir $@ ; \
-	fi
+	@if ! test -e $@ ; then mkdir $@ ; fi
 
 RECENT_STABLE_VERSION = $(shell ./get-recent-stable-version.sh)
 
 $(ARC_DOCS): $(D)/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%.asciidoc
-	cp -f "$<" "$@"
+	$(call COPY)
 
 $(DOCS_AUX_DIR)/$(ADOC_CSS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
-	cp -f "$<" "$@"
+	$(call COPY)
 
 # $(DOCS_AUX_DIR)/$(ADOC_JS): $(DOCS_AUX_DIR)/%: $(BASE_FC_SOLVE_SOURCE_DIR)/%
 #	$(MULTI_YUI) -o $@ $<
 
 $(DOCS_HTMLS): $(D)/docs/distro/% : $(BASE_FC_SOLVE_SOURCE_DIR)/%
-	cp -f "$<" "$@"
+	$(call COPY)
 
 PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 $(PERL) bin/post-incs-v2.pl --mode=minify \
    --minifier-conf=bin/html-min-cli-config-file.conf \
@@ -199,7 +197,7 @@ $(dest_tt2s): $(tt2_rend) lib/blocks.tt2
 	$(call PROCESS_ALL_INCLUDES,dest-prod) $(tt2_bases)
 
 $(IMAGES): $(D)/% : src/%
-	cp -f $< $@
+	$(call COPY)
 
 $(RAW_SUBDIRS): $(D)/% : src/%
 	rm -fr $@
@@ -272,7 +270,7 @@ $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE): $(Phoenix_DIR)/src/$(Phoenix_CS_BASE
 include lib/make/jquery-ui-webpack.mak
 
 $(Phoenix_JS_DEST): $(Phoenix_JS)
-	cp -f $< $@
+	$(call COPY)
 
 $(Phoenix_JS): $(BABEL_SRC_DIR)/$(Phoenix_JS_nonmin_BASE)
 	$(MULTI_YUI) -o $@ $<
@@ -288,7 +286,7 @@ $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
 
 $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
-	cp -f $< $@
+	$(call COPY)
 
 $(DEST_LIBFREECELL_SOLVER_JS_MEM): %: $(WASM_STAMP)
 	cp -f $(LIBFREECELL_SOLVER_JS_DIR)/$(JS_MEM_BASE) $@
@@ -317,7 +315,7 @@ $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js
 
 $(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
-	cp -f $< $@
+	$(call COPY)
 
 TYPESCRIPT_COMMON_DEPS = src/ts/web-fc-solve.ts src/ts/web-fcs-tests-strings.ts
 
@@ -401,7 +399,7 @@ sects_cache: make-dirs $(T2_CACHE_ALL_STAMP)
 htaccesses_target: $(ALL_HTACCESSES)
 
 $(ALL_HTACCESSES): $(D)/%.htaccess: src/%my_htaccess.conf
-	cp -f $< $@
+	$(call COPY)
 
 upload: all
 	$(RSYNC) -a -l $(D)/ $(UPLOAD_URL)
@@ -446,10 +444,10 @@ include lib/make/docbook/sf-docbook-common.mak
 real_all: docbook_targets
 
 $(DOCBOOK5_SOURCES_DIR)/fcs_arch_doc.xml: ../../arch_doc/docbook/fcs_arch_doc.xml
-	cp -f $< $@
+	$(call COPY)
 
 $(DOCBOOK5_SOURCES_DIR)/fcs-book.xml: ../../docs/Freecell-Solver--Evolution-of-a-C-Program/text/fcs-book.xml
-	cp -f $< $@
+	$(call COPY)
 
 fastrender: all_deps $(dest_tt2s)
 
@@ -465,10 +463,10 @@ $(D)/js/jq.js: node_modules/jquery/dist/jquery.min.js
 real_all: $(D)/js/jq.js
 
 $(Solver_Dest_Dir)/ChromeWebStore_Badge_v2_206x58.png $(Solver_Dest_Dir)/loading.gif: $(Solver_Dest_Dir)/%: $(SOLITAIREY_REPO)/%
-	cp -f $< $@
+	$(call COPY)
 
 $(D)/green.jpg: $(SOLITAIREY_REPO)/green.jpg
-	cp -f $< $@
+	$(call COPY)
 
 $(D)/green.webp: $(SOLITAIREY_REPO)/green.jpg
 	gm convert $< $@
