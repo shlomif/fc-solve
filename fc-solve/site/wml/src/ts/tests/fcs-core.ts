@@ -7,6 +7,7 @@
 import * as s2i from "../s2ints_js";
 import Module from "../libfcs-wrap";
 import * as w from "../web-fc-solve";
+import * as expander from "../web-fc-solve--expand-moves";
 import * as deal_finder from "../find-fc-deal";
 import * as test_strings from "../web-fcs-tests-strings";
 import { perl_range } from "../prange";
@@ -520,6 +521,23 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 // TEST
                 assert.equal(ret, 0, "bh_free ret");
             }
+        });
+        qunit.test("expand-sol-text", (assert) => {
+            assert.expect(2);
+
+            const ret_str = expander.fc_solve_expand_moves_filter_solution_text(
+                8,
+                4,
+                solution_for_deal_24__default,
+            );
+            // TEST
+            assert.ok(true, "True is, well, true.");
+            // TEST
+            assert.equal(
+                ret_str,
+                solution_for_deal_24__expanded_moves,
+                "Freecell_Deal_Finder",
+            );
         });
     });
 

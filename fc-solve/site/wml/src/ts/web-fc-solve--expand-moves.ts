@@ -123,7 +123,15 @@ class Expander {
             "\n" +
             expander.modified_state.c
                 .map((col) => {
-                    return ": " + col.join(" ") + "\n";
+                    return (
+                        ":" +
+                        col
+                            .map((card) => {
+                                return " " + card;
+                            })
+                            .join("") +
+                        "\n"
+                    );
                 })
                 .join("");
 
@@ -303,4 +311,75 @@ export function fc_solve_expand_move(
     );
 
     return expander.ret_array;
+}
+
+export function fc_solve_expand_moves_filter_solution_text(
+    num_stacks: number,
+    num_freecells: number,
+    initial_str: string,
+): string {
+    const fo = "^Foundations:[^\\n]*\\n";
+    const fc = "^Freecells:[^\\n]*\\n";
+    const m =
+        "^Move (?:[2-9][0-9]*|1[0-9]+) cards from stack [0-9]+ to stack [0-9]+$";
+    const bo = fo + fc + "(?:^:[^\\n]*\\n)+";
+    const b2m = "\n\n====================\n\n";
+    const m2b = "\n";
+    const m2bout = "\n\n";
+    let ret_str = initial_str;
+    let changes = 0;
+    do {
+        changes = 0;
+        ret_str = ret_str.replace(
+            new RegExp(
+                "(" +
+                    bo +
+                    ")" +
+                    b2m +
+                    "(" +
+                    m +
+                    ")" +
+                    "\\n" +
+                    m2b +
+                    "(?=" +
+                    "(" +
+                    bo +
+                    ")" +
+                    ")",
+                "gms",
+            ),
+            function replacer(match, initial_str, move, fin) {
+                ++changes;
+                let r = "";
+                let arr = fc_solve_expand_move(
+                    num_stacks,
+                    num_freecells,
+                    initial_str,
+                    { str: move },
+                    fin,
+                );
+                r += initial_str;
+                r += b2m;
+                let i;
+                // arr.pop();
+                for (i = 0; i < arr.length - 1; i += 2) {
+                    if (arr[i].type != "m") {
+                        throw "wrong KI.T ''" + arr[i].type + "''";
+                    }
+                    if (arr[i + 1].type != "s") {
+                        throw "wrong m";
+                    }
+                    r += arr[i].str;
+                    r += m2bout;
+                    r += arr[i + 1].str;
+                    r += b2m;
+                }
+                r += arr[i].str;
+                r += m2bout;
+                return r;
+            },
+        );
+    } while (changes != 0);
+
+    return ret_str;
 }
