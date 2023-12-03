@@ -325,7 +325,7 @@ export function fc_solve_expand_moves_filter_solution_text(
     const board_pat = founds_pat + freecells_pat + "(?:^:[^\\n]*\\n)+";
     const board2move_sep = "\n\n====================\n\n";
     const move2board_sep = "\n";
-    const m2bout = "\n\n";
+    const move2board_sep4output = "\n\n";
     let expanded_sol = initial_str;
     let changes = 0;
     do {
@@ -368,7 +368,7 @@ export function fc_solve_expand_moves_filter_solution_text(
                         throw "wrong KI.T ''" + m_elem.type + "''";
                     }
                     ret += m_elem.str;
-                    ret += m2bout;
+                    ret += move2board_sep4output;
                     const s_elem = arr[i + 1];
                     if (s_elem.type != "s") {
                         throw "wrong K[I+1].T ''" + s_elem.type + "''";
@@ -377,7 +377,7 @@ export function fc_solve_expand_moves_filter_solution_text(
                     ret += board2move_sep;
                 }
                 ret += arr[i].str;
-                ret += m2bout;
+                ret += move2board_sep4output;
                 return ret;
             },
         );
