@@ -326,28 +326,29 @@ export function fc_solve_expand_moves_filter_solution_text(
     const board2move_sep = "\n\n====================\n\n";
     const move2board_sep = "\n";
     const move2board_sep4output = "\n\n";
+    const re = new RegExp(
+        "(" +
+            board_pat +
+            ")" +
+            board2move_sep +
+            "(" +
+            move_line_pat +
+            ")" +
+            "\\n" +
+            move2board_sep +
+            "(?=" +
+            "(" +
+            board_pat +
+            ")" +
+            ")",
+        "gms",
+    );
     let expanded_sol = initial_str;
     let changes = 0;
     do {
         changes = 0;
         expanded_sol = expanded_sol.replace(
-            new RegExp(
-                "(" +
-                    board_pat +
-                    ")" +
-                    board2move_sep +
-                    "(" +
-                    move_line_pat +
-                    ")" +
-                    "\\n" +
-                    move2board_sep +
-                    "(?=" +
-                    "(" +
-                    board_pat +
-                    ")" +
-                    ")",
-                "gms",
-            ),
+            re,
             function replacer(match, initial_str, move, fin) {
                 ++changes;
                 let ret = "";
