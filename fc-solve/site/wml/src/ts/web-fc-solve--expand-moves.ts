@@ -351,7 +351,7 @@ export function fc_solve_expand_moves_filter_solution_text(
             function replacer(match, initial_str, move, fin) {
                 ++changes;
                 let ret = "";
-                let arr = fc_solve_expand_move(
+                const arr = fc_solve_expand_move(
                     num_stacks,
                     num_freecells,
                     initial_str,
@@ -363,15 +363,17 @@ export function fc_solve_expand_moves_filter_solution_text(
                 let i;
                 // arr.pop();
                 for (i = 0; i < arr.length - 1; i += 2) {
-                    if (arr[i].type != "m") {
-                        throw "wrong KI.T ''" + arr[i].type + "''";
+                    const m_elem = arr[i];
+                    if (m_elem.type != "m") {
+                        throw "wrong KI.T ''" + m_elem.type + "''";
                     }
-                    if (arr[i + 1].type != "s") {
-                        throw "wrong K[I+1].T ''" + arr[i + 1].type + "''";
-                    }
-                    ret += arr[i].str;
+                    ret += m_elem.str;
                     ret += m2bout;
-                    ret += arr[i + 1].str;
+                    const s_elem = arr[i + 1];
+                    if (s_elem.type != "s") {
+                        throw "wrong K[I+1].T ''" + s_elem.type + "''";
+                    }
+                    ret += s_elem.str;
                     ret += board2move_sep;
                 }
                 ret += arr[i].str;
