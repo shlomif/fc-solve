@@ -326,11 +326,11 @@ export function fc_solve_expand_moves_filter_solution_text(
     const board2move_sep = "\n\n====================\n\n";
     const move2board_sep = "\n";
     const m2bout = "\n\n";
-    let ret_str = initial_str;
+    let expanded_sol = initial_str;
     let changes = 0;
     do {
         changes = 0;
-        ret_str = ret_str.replace(
+        expanded_sol = expanded_sol.replace(
             new RegExp(
                 "(" +
                     board_pat +
@@ -350,7 +350,7 @@ export function fc_solve_expand_moves_filter_solution_text(
             ),
             function replacer(match, initial_str, move, fin) {
                 ++changes;
-                let r = "";
+                let ret = "";
                 let arr = fc_solve_expand_move(
                     num_stacks,
                     num_freecells,
@@ -358,8 +358,8 @@ export function fc_solve_expand_moves_filter_solution_text(
                     { str: move },
                     fin,
                 );
-                r += initial_str;
-                r += board2move_sep;
+                ret += initial_str;
+                ret += board2move_sep;
                 let i;
                 // arr.pop();
                 for (i = 0; i < arr.length - 1; i += 2) {
@@ -367,19 +367,19 @@ export function fc_solve_expand_moves_filter_solution_text(
                         throw "wrong KI.T ''" + arr[i].type + "''";
                     }
                     if (arr[i + 1].type != "s") {
-                        throw "wrong m";
+                        throw "wrong K[I+1].T ''" + arr[i + 1].type + "''";
                     }
-                    r += arr[i].str;
-                    r += m2bout;
-                    r += arr[i + 1].str;
-                    r += board2move_sep;
+                    ret += arr[i].str;
+                    ret += m2bout;
+                    ret += arr[i + 1].str;
+                    ret += board2move_sep;
                 }
-                r += arr[i].str;
-                r += m2bout;
-                return r;
+                ret += arr[i].str;
+                ret += m2bout;
+                return ret;
             },
         );
     } while (changes != 0);
 
-    return ret_str;
+    return expanded_sol;
 }
