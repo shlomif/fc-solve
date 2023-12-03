@@ -322,7 +322,7 @@ export function fc_solve_expand_moves_filter_solution_text(
     const freecells_pat = "^Freecells:[^\\n]*\\n";
     const move_line_pat =
         "^Move (?:[2-9][0-9]*|1[0-9]+) cards from stack [0-9]+ to stack [0-9]+$";
-    const bo = founds_pat + freecells_pat + "(?:^:[^\\n]*\\n)+";
+    const board_pat = founds_pat + freecells_pat + "(?:^:[^\\n]*\\n)+";
     const b2m = "\n\n====================\n\n";
     const m2b = "\n";
     const m2bout = "\n\n";
@@ -333,7 +333,7 @@ export function fc_solve_expand_moves_filter_solution_text(
         ret_str = ret_str.replace(
             new RegExp(
                 "(" +
-                    bo +
+                    board_pat +
                     ")" +
                     b2m +
                     "(" +
@@ -343,7 +343,7 @@ export function fc_solve_expand_moves_filter_solution_text(
                     m2b +
                     "(?=" +
                     "(" +
-                    bo +
+                    board_pat +
                     ")" +
                     ")",
                 "gms",
