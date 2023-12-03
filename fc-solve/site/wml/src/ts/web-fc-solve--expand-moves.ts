@@ -362,7 +362,6 @@ export function fc_solve_expand_moves_filter_solution_text(
                 ret += initial_str;
                 ret += board2move_sep;
                 let i;
-                // arr.pop();
                 for (i = 0; i < arr.length - 1; i += 2) {
                     const m_elem = arr[i];
                     if (m_elem.type != "m") {
