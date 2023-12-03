@@ -318,11 +318,11 @@ export function fc_solve_expand_moves_filter_solution_text(
     num_freecells: number,
     initial_str: string,
 ): string {
-    const fo = "^Foundations:[^\\n]*\\n";
-    const fc = "^Freecells:[^\\n]*\\n";
-    const m =
+    const founds_pat = "^Foundations:[^\\n]*\\n";
+    const freecells_pat = "^Freecells:[^\\n]*\\n";
+    const move_line_pat =
         "^Move (?:[2-9][0-9]*|1[0-9]+) cards from stack [0-9]+ to stack [0-9]+$";
-    const bo = fo + fc + "(?:^:[^\\n]*\\n)+";
+    const bo = founds_pat + freecells_pat + "(?:^:[^\\n]*\\n)+";
     const b2m = "\n\n====================\n\n";
     const m2b = "\n";
     const m2bout = "\n\n";
@@ -337,7 +337,7 @@ export function fc_solve_expand_moves_filter_solution_text(
                     ")" +
                     b2m +
                     "(" +
-                    m +
+                    move_line_pat +
                     ")" +
                     "\\n" +
                     m2b +
