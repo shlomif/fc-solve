@@ -323,8 +323,8 @@ export function fc_solve_expand_moves_filter_solution_text(
     const move_line_pat =
         "^Move (?:[2-9][0-9]*|1[0-9]+) cards from stack [0-9]+ to stack [0-9]+$";
     const board_pat = founds_pat + freecells_pat + "(?:^:[^\\n]*\\n)+";
-    const b2m = "\n\n====================\n\n";
-    const m2b = "\n";
+    const board2move_sep = "\n\n====================\n\n";
+    const move2board_sep = "\n";
     const m2bout = "\n\n";
     let ret_str = initial_str;
     let changes = 0;
@@ -335,12 +335,12 @@ export function fc_solve_expand_moves_filter_solution_text(
                 "(" +
                     board_pat +
                     ")" +
-                    b2m +
+                    board2move_sep +
                     "(" +
                     move_line_pat +
                     ")" +
                     "\\n" +
-                    m2b +
+                    move2board_sep +
                     "(?=" +
                     "(" +
                     board_pat +
@@ -359,7 +359,7 @@ export function fc_solve_expand_moves_filter_solution_text(
                     fin,
                 );
                 r += initial_str;
-                r += b2m;
+                r += board2move_sep;
                 let i;
                 // arr.pop();
                 for (i = 0; i < arr.length - 1; i += 2) {
@@ -372,7 +372,7 @@ export function fc_solve_expand_moves_filter_solution_text(
                     r += arr[i].str;
                     r += m2bout;
                     r += arr[i + 1].str;
-                    r += b2m;
+                    r += board2move_sep;
                 }
                 r += arr[i].str;
                 r += m2bout;
