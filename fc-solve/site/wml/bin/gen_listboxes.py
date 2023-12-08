@@ -18,21 +18,23 @@ listbox_template = (
     '</div>'
 )
 
+def _gen_options(start, end):
+    """docstring for _gen_options"""
+    return ''.join(
+            ['<option value="{num}">{num}</option>'.format(num=num)
+             for num in range(start, end+1)])
+
 fc_listbox_id = "num_freecells"
 fc_listbox = (listbox_template).format(
         id=fc_listbox_id,
         label_text='Freecells Number:',
-        options=''.join(
-            ['<option value="{num}">{num}</option>'.format(num=num)
-             for num in range(8+1)]))
+        options=_gen_options(start=0, end=8))
 
 cols_listbox_id = "num_columns"
 cols_listbox = (listbox_template).format(
         id=cols_listbox_id,
         label_text='Columns Number:',
-        options=''.join(
-            ['<option value="{num}">{num}</option>'.format(num=num)
-             for num in range(1, 12+1)]))
+        options=_gen_options(start=1, end=12))
 
 def out(out_fn, text):
     """docstring for out"""
