@@ -1,0 +1,233 @@
+[% PROCESS "Inc/js_fc_solve.tt2" %]
+[% UNLESS title %]
+[%- SET title = "Online Freecell moves’ expander" -%]
+[% END %]
+
+[% BLOCK page_extra_head_elements %]
+[% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = 1 , %]
+[% END %]
+
+[% BLOCK gen_desc %]
+<p>
+An online moves’ expander for
+<a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a>, a kind of
+card solitaire game, and <a href="#other_games">several related solitaire games</a>. <span class="enable_js">Please enable
+<strong>JavaScript</strong>.</span>
+</p>
+[% END %]
+
+[%- WRAPPER wrap_html -%]
+
+[% BLOCK emscripten_common %]
+[% INCLUDE emscripten_common__header subject=subject , %]
+<script>
+[% INCLUDE set_up_requirejs %]
+require(['./solver-freecell'], function (solver) {
+    [% incs %] {
+[% IF enable_jquery_ui %]
+[% INCLUDE set_up_tabs %]
+[% END %]
+    window.my_expand_moves_ui = expand_moves_ui;
+    expand_moves_ui.set_up(module_wrapper, solver);
+[% IF enable_jquery_ui %]
+    $( "#output_tabs" ).tabs();
+[% END %]
+[% suffix %]
+});
+});
+});
+</script>
+
+[% END %]
+
+[% BLOCK run_emscripten_common %]
+[% INCLUDE emscripten_common incs="require(['expand-moves-ui', ], function (expand_moves_ui) { window.expand_moves_ui = expand_moves_ui; expand_moves_ui.init_module((module_wrapper) =>" , subject="Solver" , suffix='' %]
+[% END %]
+
+[%- INCLUDE run_emscripten_common -%]
+
+<div class="diags_wrap">
+
+<p id="status_wrap">
+
+<strong>Status:</strong> <span class="not_started" id="fc_solve_status">Not started</span> <br />
+
+</p>
+
+<div class="hide" id="board_parse__wrap">
+<h2>Board Input Parsing Errors:</h2>
+<div id="board_parse_error"></div>
+</div>
+
+</div>
+
+[%- BLOCK stdin_and_buttons -%]
+
+<label for="stdin">Input:</label><br />
+<textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
+<button id="[% main_id %]" onclick="javascript:window.my_expand_moves_ui.on__expand__click()">[% main_text %]</button>
+<button id="capitalize_cards" title="Convert the cards in the input to uppercase letters">Capitalize the Cards</button>
+
+[% END %]
+
+[% INCLUDE stdin_and_buttons main_id = "expand_button" , main_text = "Expand" %]
+
+<div id="fcs_advanced">
+[%# games1() %]
+[% fc_listbox() %]
+[% cols_listbox() %]
+<br />
+[% IF 0 %]
+<label for="string_params">Command Line (<a href="https://en.wikipedia.org/wiki/Command-line_interface"><abbr title="Command-line interface">CLI</abbr></a>) arguments (for advanced use):</label><br />
+<textarea class="emscripten phoenix" id="string_params" cols="50" placeholder="--load-config &quot;toons-for-twenty-somethings&quot;" rows="15"></textarea>
+<p>
+(Format as a preset file, with backslashes at the end of lines. See the
+<a href="[% base_path %]docs/">online documentation</a> for information regarding syntax.)
+</p>
+[% END %]
+</div>
+
+[% BLOCK output_opt %]
+<input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [%IF sel %] checked="checked"[%END%]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
+[% END %]
+
+[% BLOCK output_controls %]
+<div class="out_controls">
+
+<input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
+<fieldset>
+<legend>Cards display</legend>
+[% INCLUDE output_opt id_base="ascii", value="0", title="ASCII", sel="true"  %]
+[% INCLUDE output_opt id_base="unisuits", value="1", title="Unicode Suits"  %]
+[% INCLUDE output_opt id_base="unicards", value="2", title="Unicode Cards"  %]
+</fieldset>
+<br />
+<button id="clear_output" title="Clear the Output Box">Clear Output</button>
+</div>
+
+[% END %]
+
+<label id="output_label" for="output">Output:</label>
+
+<div id="output_tabs" class="output_tabs">
+<ul>
+<li><a href="#output_tabs__animated">Animated</a></li>
+<li><a href="#output_tabs__text">Text</a></li>
+</ul>
+<div id="output_tabs__animated" class="tab">
+[%- BLOCK upper_button -%]
+<button onclick="$('[% solver_bar_css(targetclasses) %]').trigger('click');" title="[% title %]">[% text %]</button>
+[%- END -%]
+
+<div class="upper_buttons__wrapper">
+[%- INCLUDE upper_button targetclasses = ["rewind"] text = "⏮ Prev" title = "Previous move" -%]
+[%- INCLUDE upper_button targetclasses = ["pause", "play"] text = "▶ Play" title = "Play" -%]
+[%- INCLUDE upper_button targetclasses = ["fastforward"] text = "Next ⏭" title = "Next move" -%]
+</div>
+
+<div class="solitairey_body_margin">
+<div class="solitairey_body" id="solitairey_body">
+
+</div>
+</div>
+</div>
+<div id="output_tabs__text" class="tab">
+<div class="output_form">
+[% INCLUDE output_controls %]
+
+<div id="dynamic_output"></div>
+<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
+
+</div>
+</div>
+</div>
+<br />
+
+[% INCLUDE fc_solve_bookmark__form %]
+
+[% WRAPPER h2_section id = "how_to_use", title = "How to Use" %]
+
+<p>
+TODO : Update.
+Enter a board in <a href="#stdin">the input text area</a> in
+<a href="http://fc-solve.shlomifish.org/docs/distro/README.html">Freecell
+Solver’s input format</a> with each line of input representing a column (or
+stack) of cards. Freecells and foundations can also be specified. Numbered
+layouts (compatible with
+<a href="http://en.wikipedia.org/wiki/FreeCell_%28Windows%29">Microsoft
+Windows FreeCell</a>, FreeCell Pro and compatible
+Freecell implementations) can be input using the
+<a href="#deal_number">deal number feature</a>. Press the <a href="#run_do_solve">“Solve” button</a> to
+run the solver, and assuming it was successful, you will be able to preview
+an <a href="#solitairey_body">animated solution</a> or read
+and/or copy the output from <a href="#output">the output box</a>.
+</p>
+
+<p>
+Enjoy!
+</p>
+
+[% WRAPPER h3_section id = "other_games", title = "Solving other, similar, games" %]
+
+<p>
+Select the game from <a href="#game_type_label">the drop-down</a>.
+</p>
+
+[% END %]
+
+[% END %]
+
+[% WRAPPER h2_section id = "technology", title = "Technology" %]
+
+[% INCLUDE fc_solve_jsfcs__credits__common %]
+
+<li>
+<p>
+<a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
+</p>
+</li>
+
+</ul>
+
+[% END %]
+
+[% WRAPPER h2_section id = "credits", title = "Credits" %]
+
+<ul>
+
+<li>
+<p>
+<a href="https://github.com/kripken">Alon Zakai</a> - writing
+<a href="https://emscripten.org/">emscripten</a>, the
+LLVM-to-JavaScript compiler that was used to prepare this page, based
+on the original C (gnu99) source, and answering some bug reports and questions
+I filed about it.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://garage-coding.com/">Stefan Petrea</a> - inspired the
+implementation of the populate-with-sample-board button.
+</p>
+</li>
+
+<li>
+<p>
+<a href="http://en.wikipedia.org/wiki/User:Amire80">Amir Aharoni</a> - tipped
+me regarding integrating <code>@font-face</code> into my CSS.
+</p>
+</li>
+
+<li>
+<p>
+<a href="mailto:ari.i.becker@gmail.com">Ari Becker</a> - tipped me regarding
+unsolvable deals.
+</p>
+</li>
+
+</ul>
+
+[% END %]
+
+[% END %]

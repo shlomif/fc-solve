@@ -1397,15 +1397,7 @@ solv
 transpose-freecell-board
 v6
 
-==== In: dest/js-fc-solve/find-deal/index.html
-
-JdeH
-Transcrypt
-YUI
-doconix
-transcrypt
-
-==== In: dest/js-fc-solve/text/index.html
+==== In: dest/js-fc-solve/expand-moves/index.html , dest/js-fc-solve/text/index.html
 
 10's
 CLI
@@ -1417,6 +1409,14 @@ YUI
 io
 js
 pysolfc
+
+==== In: dest/js-fc-solve/find-deal/index.html
+
+JdeH
+Transcrypt
+YUI
+doconix
+transcrypt
 
 ==== In: dest/links.html
 
