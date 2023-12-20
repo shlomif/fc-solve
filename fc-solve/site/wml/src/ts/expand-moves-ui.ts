@@ -62,11 +62,13 @@ export function expand_ui(): void {
     }
     const num_columns = _calc(8, "num_columns");
     const num_freecells = _calc(4, "num_freecells");
+
     const ret_str = expander.fc_solve_expand_moves_filter_solution_text(
         num_columns,
         num_freecells,
         input_str,
     );
+    $("#output").val(ret_str);
 
     return;
 }
