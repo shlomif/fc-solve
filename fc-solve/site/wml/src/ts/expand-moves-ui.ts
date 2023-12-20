@@ -1,6 +1,7 @@
 import * as s2i from "./s2ints_js";
 import * as BaseApi from "./web-fcs-api-base";
 import * as base_ui from "./fcs-base-ui";
+import * as expander from "./web-fc-solve--expand-moves";
 import Module from "./libfcs-wrap";
 import * as w from "./find-fc-deal";
 
@@ -45,7 +46,7 @@ function getRounderNumber(str: string): string {
 }
 
 export function expand_ui(): void {
-    const deal_str = ($("#stdin").val() as string)
+    const input_str = ($("#stdin").val() as string)
         .replace(/#[^\r\n]*\r?\n?/g, "")
         .replace(/\r+\n/, "\n")
         .replace(/([^\n])$/, "$1\n");
@@ -59,47 +60,13 @@ export function expand_ui(): void {
         }
         return parseInt(option_value, 10);
     }
-    const num_freecells = _calc(4, "num_freecells");
     const num_columns = _calc(8, "num_columns");
-    const ints = s2i.find_index__board_string_to_ints(deal_str);
-    const ints_s = ints
-        .map((i) => {
-            const ret = i.toString();
-            return " ".repeat(10 - ret.length) + ret;
-        })
-        .join("");
-    const df = new w.Freecell_Deal_Finder({ module_wrapper: _module_wrapper });
-    df.fill(ints_s);
-    const ctl = $("#fc_solve_status");
-    df.run(1, "8589934591", (args) => {
-        ctl.html(
-            base_ui.escapeHtml(
-                "Reached No. " +
-                    numberWithCommas(getRounderNumber(args.start.toString())),
-            ),
-        );
-        return;
-    });
-
-    function resume() {
-        const ret_Deal = df.cont();
-        if (ret_Deal.found) {
-            ctl.html(
-                'Found: <input id="found_result" ' +
-                    'name="found_result" value="' +
-                    ret_Deal.result.toString() +
-                    '" readonly="readonly" />',
-            );
-        } else if (ret_Deal.cont) {
-            setTimeout(() => {
-                resume();
-            }, 1);
-        } else {
-            ctl.html("No such deal");
-        }
-    }
-
-    resume();
+    const num_freecells = _calc(4, "num_freecells");
+    const ret_str = expander.fc_solve_expand_moves_filter_solution_text(
+        num_columns,
+        num_freecells,
+        input_str,
+    );
 
     return;
 }
