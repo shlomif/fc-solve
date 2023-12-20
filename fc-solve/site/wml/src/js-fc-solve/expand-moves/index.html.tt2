@@ -4,7 +4,7 @@
 [% END %]
 
 [% BLOCK page_extra_head_elements %]
-[% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = 1 , %]
+[% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = "" , %]
 [% END %]
 
 [% BLOCK gen_desc %]
@@ -27,7 +27,7 @@ require(['./solver-freecell'], function (solver) {
 [% IF enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]
-    window.my_expand_moves_ui = expand_moves_ui;
+    window.my_web_fc_solve_ui = expand_moves_ui;
     expand_moves_ui.set_up(module_wrapper, solver);
 [% IF enable_jquery_ui %]
     $( "#output_tabs" ).tabs();
@@ -65,7 +65,7 @@ require(['./solver-freecell'], function (solver) {
 
 <label for="stdin">Input:</label><br />
 <textarea class="emscripten phoenix" id="stdin" cols="30" rows="10"></textarea><br />
-<button id="[% main_id %]" onclick="javascript:window.my_expand_moves_ui.on__expand__click()">[% main_text %]</button>
+<button id="[% main_id %]" onclick="javascript:window.my_web_fc_solve_ui.on__expand__click()">[% main_text %]</button>
 <button id="capitalize_cards" title="Convert the cards in the input to uppercase letters">Capitalize the Cards</button>
 
 [% END %]
