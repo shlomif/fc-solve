@@ -107,13 +107,19 @@ require(['./solver-freecell'], function (solver) {
 
 [% END %]
 
+[% SET with_output_tabs__animated = '' %]
+
 <label id="output_label" for="output">Output:</label>
 
 <div id="output_tabs" class="output_tabs">
 <ul>
+[% IF with_output_tabs__animated %]
 <li><a href="#output_tabs__animated">Animated</a></li>
+[% END %]
 <li><a href="#output_tabs__text">Text</a></li>
 </ul>
+
+[% IF with_output_tabs__animated %]
 <div id="output_tabs__animated" class="tab">
 [%- BLOCK upper_button -%]
 <button onclick="$('[% solver_bar_css(targetclasses) %]').trigger('click');" title="[% title %]">[% text %]</button>
@@ -131,6 +137,9 @@ require(['./solver-freecell'], function (solver) {
 </div>
 </div>
 </div>
+<!-- / output_tabs__animated -->
+[% END %]
+
 <div id="output_tabs__text" class="tab">
 <div class="output_form">
 [% INCLUDE output_controls %]
