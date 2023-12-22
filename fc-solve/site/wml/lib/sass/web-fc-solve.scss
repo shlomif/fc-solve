@@ -106,6 +106,7 @@ textarea.emscripten {
 }
 
 #capitalize_cards,
+#expand_button,
 #run_do_solve {
     // @include styled_button;
     font-size: 130%;
@@ -115,6 +116,7 @@ textarea.emscripten {
     padding: 0.3em;
 }
 
+#expand_button,
 #run_do_solve {
     // @include button_orange_color;
     /*
