@@ -88,18 +88,18 @@ require(['./solver-freecell'], function (solver) {
 </div>
 
 [% BLOCK output_opt %]
-<input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [%IF sel %] checked="checked"[%END%]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
+<input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [% IF sel %] checked="checked"[% END %]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
 [% END %]
 
 [% BLOCK output_controls %]
-<div class="out_controls">
 
+<div class="out_controls">
 <input id="one_based" type="checkbox" title="1-based offset" class="phoenix" checked="checked" /><label for="one_based">1-based</label><br />
 <fieldset>
 <legend>Cards display</legend>
-[% INCLUDE output_opt id_base="ascii", value="0", title="ASCII", sel="true"  %]
-[% INCLUDE output_opt id_base="unisuits", value="1", title="Unicode Suits"  %]
-[% INCLUDE output_opt id_base="unicards", value="2", title="Unicode Cards"  %]
+[% INCLUDE output_opt id_base="ascii", value="0", title="ASCII", sel="true" %]
+[% INCLUDE output_opt id_base="unisuits", value="1", title="Unicode Suits" %]
+[% INCLUDE output_opt id_base="unicards", value="2", title="Unicode Cards" %]
 </fieldset>
 <br />
 <button id="clear_output" title="Clear the Output Box">Clear Output</button>
