@@ -552,4 +552,4 @@ else
 endif
 
 smoke-tests:
-	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/template.jinja && ($(MAKE_WITH_PROD) test || $(SKIP_)) && $(MAKE_WITH_PROD) upload_local upload_staging && $(MAKE_WITH_PROD) browser-tests
+	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/blocks.tt2 && ($(MAKE_WITH_PROD) test || $(SKIP_)) && $(MAKE_WITH_PROD) upload_local upload_staging && $(MAKE_WITH_PROD) browser-tests
