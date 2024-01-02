@@ -20,6 +20,7 @@
 /fc-solve/site/wml/Makefile
 /fc-solve/site/wml/Tests/case-insense-file-collision.t
 /fc-solve/site/wml/Tests/data/cache/spelling-timestamp.json
+/fc-solve/site/wml/Tests/lib/__pycache__/
 /fc-solve/site/wml/Tests/scss.t
 /fc-solve/site/wml/Tests/spell-check-is-sorted.t
 /fc-solve/site/wml/Tests/tidyall.t
@@ -71,6 +72,11 @@
 /fc-solve/site/wml/lib/docbook/5/xml/fcs-book.xml
 /fc-solve/site/wml/lib/docbook/5/xml/fcs_arch_doc.xml
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/*.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/bhsolver-dest/can_move.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/bhsolver-dest/fcs_hash.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/bhsolver-dest/generated/lib.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/bhsolver-dest/meta_alloc.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/bhsolver-dest/rank_reach_prune.o
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/board_gen/
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/finish.stamp
 /fc-solve/site/wml/lib/fc-solve-for-javascript-asmjs/funcs.lflags.txt
@@ -81,6 +87,11 @@
 /fc-solve/site/wml/lib/fc-solve-for-javascript/*.o
 /fc-solve/site/wml/lib/fc-solve-for-javascript/CMAKE-BUILD-dir/
 /fc-solve/site/wml/lib/fc-solve-for-javascript/__DESTDIR/
+/fc-solve/site/wml/lib/fc-solve-for-javascript/bhsolver-dest/can_move.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript/bhsolver-dest/fcs_hash.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript/bhsolver-dest/generated/lib.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript/bhsolver-dest/meta_alloc.o
+/fc-solve/site/wml/lib/fc-solve-for-javascript/bhsolver-dest/rank_reach_prune.o
 /fc-solve/site/wml/lib/fc-solve-for-javascript/board_gen/
 /fc-solve/site/wml/lib/fc-solve-for-javascript/finish.stamp
 /fc-solve/site/wml/lib/fc-solve-for-javascript/funcs.lflags.txt
