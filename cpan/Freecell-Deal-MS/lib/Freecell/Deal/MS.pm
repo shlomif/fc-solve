@@ -46,6 +46,8 @@ Freecell::Deal::MS - deal Windows FreeCell / FC Pro layouts
 
 =head1 SYNOPSIS
 
+    use Test::More tests => 2;
+
     use Freecell::Deal::MS ();
 
     {
@@ -66,6 +68,8 @@ Freecell::Deal::MS - deal Windows FreeCell / FC Pro layouts
     : 9D JC 2C QS TH 2D
     : AH 7C 6D 8D TD 7H
     EOF
+
+    }
 
 =head1 DESCRIPTION
 
@@ -91,5 +95,7 @@ B<For internal use!>
 L<https://github.com/shlomif/fc-solve/blob/master/fc-solve/source/board_gen/make_multi_boards.c>
 
 L<https://pypi.org/project/pysol-cards/>
+
+L<https://fc-solve.shlomifish.org/faq.html#what_are_ms_deals>
 
 =cut
