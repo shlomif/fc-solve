@@ -60,6 +60,7 @@ __PACKAGE__->mk_acc_ref(
         qw(
             _columns
             _foundation
+            _num_foundations
             _place_queens_on_kings
             _talon
             _variant
@@ -84,25 +85,47 @@ sub _init
 
     my $variant = $self->_variant( $args->{variant} );
     if (
-        not
-        exists { golf => 1, all_in_a_row => 1, black_hole => 1, }->{$variant} )
+        not exists {
+            all_in_a_row => 1,
+            binary_star  => 1,
+            black_hole   => 1,
+            golf         => 1,
+        }->{$variant}
+        )
     {
         Carp::confess("Unknown variant '$variant'!");
     }
+    my $is_binary_star = ( $variant eq "binary_star" );
     $self->_place_queens_on_kings( $args->{queens_on_kings} // '' );
     $self->_wrap_ranks( $args->{wrap_ranks}                 // '' );
+    my $num_foundations = ( $is_binary_star ? 2 : 1 );
+    $self->_num_foundations($num_foundations);
     $self->_foundation(
-        Games::Solitaire::Verify::Freecells->new( { count => 1 } ) );
+        Games::Solitaire::Verify::Freecells->new(
+            { count => $num_foundations, }
+        )
+    );
     my $board_string = $args->{board_string};
 
     my @lines = split( /\n/, $board_string );
 
     my $_set_found_line = sub {
         my $foundation_str = shift;
-        if ( my ($card_s) = $foundation_str =~ m#\AFoundations: (\S{2})\z# )
+        if ( my ($card_s) = $foundation_str =~
+            m#\AFoundations:((?: \S{2}){$num_foundations})\z# )
         {
-            $self->_set_found(
-                Games::Solitaire::Verify::Card->new( { string => $card_s } ) );
+            $card_s =~ s/\A //ms or die;
+            my @c = split( / /, $card_s );
+            if ( @c != $num_foundations )
+            {
+                die;
+            }
+            for my $i ( keys @c )
+            {
+                my $s = $c[$i];
+                $self->_set_found( $i,
+                    Games::Solitaire::Verify::Card->new( { string => $s } ) );
+            }
         }
         else
         {
@@ -166,8 +189,8 @@ sub _init
 
 sub _set_found
 {
-    my ( $self, $card ) = @_;
-    $self->_foundation->assign( 0, $card );
+    my ( $self, $i, $card ) = @_;
+    $self->_foundation->assign( $i, $card, );
     return;
 }
 
@@ -315,7 +338,7 @@ MOVES:
             --$remaining_cards;
         }
 
-        $self->_set_found($card);
+        $self->_set_found( 0, $card, );
         if ($CHECK_EMPTY)
         {
             if ( $remaining_cards == 0 )
