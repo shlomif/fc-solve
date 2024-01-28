@@ -242,6 +242,8 @@ MOVES:
         my ( $move_line, $move_line_idx ) = $get_line->();
 
         my $card;
+        my $col_idx;
+        my $foundation_idx;
         if (    $IS_GOLF
             and $move_line =~ m/\ADeal talon\z/ )
         {
@@ -249,16 +251,22 @@ MOVES:
             {
                 die "Talon is empty on line no. $move_line_idx";
             }
-            $card = shift @{ $self->_talon };
+            $card           = shift @{ $self->_talon };
+            $foundation_idx = 0;
         }
-        elsif ( $move_line !~
-            m/\AMove a card from stack ([0-9]+) to the foundations\z/ )
+        else
         {
-            die
+            if ( ($col_idx) = $move_line =~
+                m/\AMove a card from stack ([0-9]+) to the foundations\z/ )
+            {
+                $foundation_idx = 0;
+            }
+            else
+            {
+                die
 "Incorrect format for move line no. $move_line_idx - '$move_line'";
+            }
         }
-
-        my $col_idx = $1;
 
         if ( !defined $card )
         {
@@ -345,8 +353,11 @@ MOVES:
             $card = $col->pop;
             --$remaining_cards;
         }
-
-        $self->_set_found( 0, $card, );
+        if ( not defined $foundation_idx )
+        {
+            die "\$foundation_idx not set";
+        }
+        $self->_set_found( $foundation_idx, $card, );
         if ($CHECK_EMPTY)
         {
             if ( $remaining_cards == 0 )
