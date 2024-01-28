@@ -19,7 +19,7 @@ of black-hole-solve (or a similar solver)
         }
     );
 
-    open my $fh, '<', $solution_fn;
+    open my $fh, '<:encoding(utf-8)', $solution_fn;
     $verifier->process_solution( sub { my $l = <$fh>; chomp $l; return $l; } );
     print "Solution is OK.\n";
     exit(0);
@@ -72,6 +72,13 @@ __PACKAGE__->mk_acc_ref(
 my $MAX_RANK  = 13;
 my $NUM_SUITS = 4;
 
+sub _is_binary_star
+{
+    my $self = shift;
+
+    return $self->_variant eq 'binary_star';
+}
+
 sub _is_golf
 {
     my $self = shift;
@@ -95,10 +102,10 @@ sub _init
     {
         Carp::confess("Unknown variant '$variant'!");
     }
-    my $is_binary_star = ( $variant eq "binary_star" );
+    my $IS_BINARY_STAR = $self->_is_binary_star;
     $self->_place_queens_on_kings( $args->{queens_on_kings} // '' );
     $self->_wrap_ranks( $args->{wrap_ranks}                 // '' );
-    my $num_foundations = ( $is_binary_star ? 2 : 1 );
+    my $num_foundations = ( $IS_BINARY_STAR ? 2 : 1 );
     $self->_num_foundations($num_foundations);
     $self->_foundation(
         Games::Solitaire::Verify::Freecells->new(
@@ -224,8 +231,9 @@ sub process_solution
     {
         die "First line is '$l' instead of 'Solved!'";
     }
-    my $IS_GOLF     = $self->_is_golf;
-    my $CHECK_EMPTY = ( $IS_GOLF or $self->_variant eq "black_hole" );
+    my $IS_BINARY_STAR = $self->_is_binary_star;
+    my $IS_GOLF        = $self->_is_golf;
+    my $CHECK_EMPTY    = ( $IS_GOLF or $self->_variant eq "black_hole" );
 
     # As many moves as the number of cards.
 MOVES:
