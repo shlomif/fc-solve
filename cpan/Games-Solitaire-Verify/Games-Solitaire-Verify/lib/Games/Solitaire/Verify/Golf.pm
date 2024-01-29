@@ -220,7 +220,7 @@ sub process_solution
 
         if ( $s ne '' )
         {
-            die "Line '$line_idx' is not empty, but '$s'";
+            Carp::confess("Line '$line_idx' is not empty, but '$s'");
         }
 
         return;
@@ -232,14 +232,16 @@ sub process_solution
     {
         die "First line is '$l' instead of 'Solved!'";
     }
-    my $IS_BINARY_STAR   = $self->_is_binary_star;
-    my $IS_GOLF          = $self->_is_golf;
-    my $CHECK_EMPTY      = ( $IS_GOLF or $self->_variant eq "black_hole" );
-    my $IS_DETAILED_MOVE = $IS_BINARY_STAR;
+    my $IS_BINARY_STAR     = $self->_is_binary_star;
+    my $IS_GOLF            = $self->_is_golf;
+    my $CHECK_EMPTY        = ( $IS_GOLF or $self->_variant eq "black_hole" );
+    my $IS_DETAILED_MOVE   = $IS_BINARY_STAR;
+    my $IS_DISPLAYED_BOARD = $IS_BINARY_STAR;
+    my $num_decks          = $self->_num_foundations();
 
     # As many moves as the number of cards.
 MOVES:
-    for my $move_idx ( 0 .. ( $MAX_RANK * $NUM_SUITS - 1 ) )
+    for my $move_idx ( 0 .. ( $num_decks * $MAX_RANK * $NUM_SUITS - 1 ) )
     {
         my ( $move_line, $move_line_idx ) = $get_line->();
 
@@ -303,20 +305,20 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
             }
 
             $moved_card_str = $1;
-        }
 
-        $assert_empty_line->();
-        $assert_empty_line->();
+            $assert_empty_line->();
+            $assert_empty_line->();
 
-        my ( $sep_line, $sep_line_idx ) = $get_line->();
+            my ( $sep_line, $sep_line_idx ) = $get_line->();
 
-        if ( $sep_line !~ m/\A=+\z/ )
-        {
-            die
+            if ( $sep_line !~ m/\A=+\z/ )
+            {
+                die
 "Invalid format for separator line no. $sep_line_idx - '$sep_line'";
-        }
+            }
 
-        $assert_empty_line->();
+            $assert_empty_line->();
+        }
 
         if ( defined $card )
         {
@@ -339,7 +341,7 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
 "Card moved should be '$top_card_moved_str', but the info says it is '$moved_card_str' at line $info_line_idx";
             }
 
-            my $found_card = $self->_foundation->cell(0);
+            my $found_card = $self->_foundation->cell($foundation_idx);
             if ( defined($found_card) )
             {
                 my $found_rank = $found_card->rank();
@@ -365,6 +367,10 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                     die
 "Cannot put $top_card_moved_str in the foundations that contain "
                         . $found_card->to_string();
+                }
+                if ($IS_DISPLAYED_BOARD)
+                {
+                    Carp::confess("Unimpl!");
                 }
             }
             $card = $col->pop;
