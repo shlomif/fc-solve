@@ -231,9 +231,10 @@ sub process_solution
     {
         die "First line is '$l' instead of 'Solved!'";
     }
-    my $IS_BINARY_STAR = $self->_is_binary_star;
-    my $IS_GOLF        = $self->_is_golf;
-    my $CHECK_EMPTY    = ( $IS_GOLF or $self->_variant eq "black_hole" );
+    my $IS_BINARY_STAR   = $self->_is_binary_star;
+    my $IS_GOLF          = $self->_is_golf;
+    my $CHECK_EMPTY      = ( $IS_GOLF or $self->_variant eq "black_hole" );
+    my $IS_DETAILED_MOVE = $IS_BINARY_STAR;
 
     # As many moves as the number of cards.
 MOVES:
@@ -244,6 +245,7 @@ MOVES:
         my $card;
         my $col_idx;
         my $foundation_idx;
+        my $moved_card_str;
         if (    $IS_GOLF
             and $move_line =~ m/\ADeal talon\z/ )
         {
@@ -256,10 +258,22 @@ MOVES:
         }
         else
         {
-            if ( ($col_idx) = $move_line =~
-                m/\AMove a card from stack ([0-9]+) to the foundations\z/ )
+            if (
+                $IS_DETAILED_MOVE
+                ? ( ( $moved_card_str, $col_idx, $foundation_idx ) =
+                        $move_line =~
+m/\AMove (\S{2}) from stack ([0-9]+) to foundations ([0-9]+)\z/
+                )
+                : ( ($col_idx) =
+                        $move_line =~
+m/\AMove a card from stack ([0-9]+) to the foundations\z/
+                )
+                )
             {
-                $foundation_idx = 0;
+                if ( not $IS_DETAILED_MOVE )
+                {
+                    $foundation_idx = 0;
+                }
             }
             else
             {
@@ -277,16 +291,20 @@ MOVES:
         }
 
         $assert_empty_line->();
-
-        my ( $info_line, $info_line_idx ) = $get_line->();
-
-        if ( $info_line !~ m/\AInfo: Card moved is ([A23456789TJQK][HCDS])\z/ )
+        my ( $info_line, $info_line_idx );
+        if ( not $IS_DETAILED_MOVE )
         {
-            die
-"Invalid format for info line no. $info_line_idx - '$info_line'";
-        }
+            ( $info_line, $info_line_idx ) = $get_line->();
 
-        my $moved_card_str = $1;
+            if ( $info_line !~
+                m/\AInfo: Card moved is ([A23456789TJQK][HCDS])\z/ )
+            {
+                die
+"Invalid format for info line no. $info_line_idx - '$info_line'";
+            }
+
+            $moved_card_str = $1;
+        }
 
         $assert_empty_line->();
         $assert_empty_line->();
