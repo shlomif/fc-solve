@@ -71,6 +71,7 @@ __PACKAGE__->mk_acc_ref(
 
 my $MAX_RANK  = 13;
 my $NUM_SUITS = 4;
+my $CARD_RE   = qr/[A23456789TJQK][HCDS]/;
 
 sub _is_binary_star
 {
@@ -119,7 +120,7 @@ sub _init
     my $_set_found_line = sub {
         my $foundation_str = shift;
         if ( my ($card_s) = $foundation_str =~
-            m#\AFoundations:((?: \S{2}){$num_foundations})\z# )
+            m#\AFoundations:((?: $CARD_RE){$num_foundations})\z# )
         {
             $card_s =~ s/\A //ms or die;
             my @c = split( / /, $card_s );
@@ -143,7 +144,7 @@ sub _init
     my $foundation_str = shift(@lines);
     if ( $self->_variant eq 'golf' )
     {
-        if ( $foundation_str !~ s#\ATalon: ((?:\S{2} ){15}\S{2})#$1# )
+        if ( $foundation_str !~ s#\ATalon: ((?:$CARD_RE ){15}$CARD_RE)#$1# )
         {
             die "improper talon line <$foundation_str>!";
         }
@@ -262,7 +263,7 @@ MOVES:
                 $IS_DETAILED_MOVE
                 ? ( ( $moved_card_str, $col_idx, $foundation_idx ) =
                         $move_line =~
-m/\AMove (\S{2}) from stack ([0-9]+) to foundations ([0-9]+)\z/
+m/\AMove ($CARD_RE) from stack ([0-9]+) to foundations ([0-9]+)\z/
                 )
                 : ( ($col_idx) =
                         $move_line =~
@@ -295,9 +296,7 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
         if ( not $IS_DETAILED_MOVE )
         {
             ( $info_line, $info_line_idx ) = $get_line->();
-
-            if ( $info_line !~
-                m/\AInfo: Card moved is ([A23456789TJQK][HCDS])\z/ )
+            if ( $info_line !~ m/\AInfo: Card moved is ($CARD_RE)\z/ )
             {
                 die
 "Invalid format for info line no. $info_line_idx - '$info_line'";
