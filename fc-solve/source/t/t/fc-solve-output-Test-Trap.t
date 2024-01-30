@@ -16,7 +16,8 @@ my $MID24_BOARD = samp_board('24-mid.board');
 {
     trap
     {
-        system( $FC_SOLVE__RAW,
+        system(
+            $FC_SOLVE__RAW,
             qw/-s -i -p -t -sam -sel -to j/,
             samp_board('24-mod-to-test-fc-to-empty-s.board')
         );
@@ -100,8 +101,8 @@ qq#Unknown option "-invalidopt". Type "$FC_SOLVE__RAW --help" for usage informat
                 /\A\[\[Num FCS Moves\]\]=([0-9]+)\r?\z/
                     ? ( not( $1 > 0 ) )
                     : 1;
-                }
-                grep { /\A\[\[Num FCS Moves\]\]/ } @lines
+            }
+            grep { /\A\[\[Num FCS Moves\]\]/ } @lines
         ],
         [],
         "All FCS Move counts are valid",
@@ -114,8 +115,8 @@ qq#Unknown option "-invalidopt". Type "$FC_SOLVE__RAW --help" for usage informat
                 /\A\[\[Num FCPro Moves\]\]=([0-9]+)\r?\z/
                     ? ( not( $1 > 0 ) )
                     : 1;
-                }
-                grep { /\A\[\[Num FCPro Moves\]\]/ } @lines
+            }
+            grep { /\A\[\[Num FCPro Moves\]\]/ } @lines
         ],
         [],
         "All FCPro Move counts are valid.",
@@ -152,7 +153,8 @@ qr/^1591 = Verdict: Intractable.*?^1592 = Verdict: Solved.*?^1593 = Verdict: Sol
 
     trap
     {
-        $status = system( $FC_SOLVE__RAW,
+        $status = system(
+            $FC_SOLVE__RAW,
             qw#
                 --flare-name prefix_of_a_long_name --method soft-dfs -to 0123456789 -sp r:tf -opt -opt-to 0123456789ABCDE
                 -nf --flare-name another_long_name --method soft-dfs -to 0123467 -sp r:tf -opt -opt-to 0123456789ABCDE

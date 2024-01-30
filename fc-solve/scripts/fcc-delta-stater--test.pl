@@ -92,7 +92,8 @@ qq#pi-make-microsoft-freecell-board -t "$DEAL_IDX" | fc-solve -l tfts --freecell
             $was_printed = 1;
             if ( ( ++$count ) % 100 == 0 )
             {
-                print( $DEAL_IDX ,
+                print(
+                    $DEAL_IDX,
                     ":",
                     ($count),
                     ": max_len = $maxlen ",

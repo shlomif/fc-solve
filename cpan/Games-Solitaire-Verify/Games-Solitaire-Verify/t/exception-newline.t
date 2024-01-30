@@ -21,7 +21,8 @@ else
     my $exit_code;
     trap(
         sub {
-            $exit_code = system( $^X, "-I", "lib",
+            $exit_code = system(
+                $^X, "-I", "lib",
                 "bin/verify-solitaire-solution",
                 "t/data/sample-solutions/1.fc-wrong.sol.txt"
             );

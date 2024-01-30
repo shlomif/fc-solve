@@ -37,7 +37,7 @@ while ( my $l = <> )
         print "]"
             . (
             join "",
-            map      { "$_\\n" }
+            map { "$_\\n" }
                 sort { $a cmp $b } ( @cols, $normalized_fc_l, $founds_l )
             ) . "\n";
     }

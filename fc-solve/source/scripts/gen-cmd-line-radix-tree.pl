@@ -26,7 +26,7 @@ struct CommandOption
   };
 %%
 EOF
-        map      { "$_, $strings_to_opts_map{$_}\n" }
+        map { "$_, $strings_to_opts_map{$_}\n" }
             sort { $a cmp $b } keys %strings_to_opts_map,
     );
     return;

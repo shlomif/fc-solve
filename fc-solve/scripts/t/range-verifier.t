@@ -34,7 +34,8 @@ sub _test_range_verifier
     local $Test::Builder::Level = $Test::Builder::Level + 1;
 
     return ok(
-        !system( $^X, $ranger_verifier,
+        !system(
+            $^X,                    $ranger_verifier,
             '--summary-lock',       "$verifier_data_dir/summary.lock",
             '--summary-stats-file', $stats_file,
             '--summary-file',       $summary_file,

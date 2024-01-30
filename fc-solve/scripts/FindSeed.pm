@@ -89,7 +89,7 @@ sub from_lines
             %$args,
             results => [
                 sort { $a->iters <=> $b->iters }
-                    map {
+                map {
                     my $s = $_;
                     $s =~ s#\A([0-9]+) = ##;
                     my $deal = $1;
@@ -100,7 +100,7 @@ sub from_lines
                             seed   => $seed,
                         }
                     );
-                    } @{ $args->{lines} },
+                } @{ $args->{lines} },
             ],
         }
     );

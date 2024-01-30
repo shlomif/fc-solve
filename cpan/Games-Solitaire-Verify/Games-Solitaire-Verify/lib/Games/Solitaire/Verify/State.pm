@@ -523,7 +523,7 @@ sub _calc_freecell_max_seq_move
     my $to_empty = ( defined( $args->{to_empty} ) ? $args->{to_empty} : 0 );
 
     return ( ( $self->num_empty_freecells() + 1 )
-        << ( $self->num_empty_columns() - $to_empty ) );
+            << ( $self->num_empty_columns() - $to_empty ) );
 }
 
 sub _calc_empty_stacks_filled_by_any_card_max_seq_move
@@ -636,8 +636,9 @@ sub _mv_stack_to_foundation
     }
     else
     {
-        return Games::Solitaire::Verify::Exception::Move::Dest::Foundation
-            ->new( move => $move );
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+            move => $move );
     }
 }
 
@@ -651,7 +652,8 @@ sub _mv_stack_seq_to_foundation
 
     if ( $rules ne "simple_simon" )
     {
-        return Games::Solitaire::Verify::Exception::Move::Variant::Unsupported
+        return
+            Games::Solitaire::Verify::Exception::Move::Variant::Unsupported
             ->new( move => $move );
     }
 
@@ -668,7 +670,8 @@ sub _mv_stack_seq_to_foundation
 
     if ( $num_seq_components != 1 )
     {
-        return Games::Solitaire::Verify::Exception::Move::Src::Col::NotTrueSeq
+        return
+            Games::Solitaire::Verify::Exception::Move::Src::Col::NotTrueSeq
             ->new( move => $move );
     }
 
@@ -690,8 +693,9 @@ sub _mv_stack_seq_to_foundation
     }
     else
     {
-        return Games::Solitaire::Verify::Exception::Move::Dest::Foundation
-            ->new( move => $move );
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+            move => $move );
     }
 }
 
@@ -705,8 +709,9 @@ sub _mv_stack_to_freecell
 
     if ( !$self->get_column($col_idx)->len() )
     {
-        return Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards
-            ->new( move => $move, );
+        return
+            Games::Solitaire::Verify::Exception::Move::Src::Col::NoCards->new(
+            move => $move, );
     }
 
     if ( defined( $self->get_freecell($fc_idx) ) )
@@ -772,8 +777,9 @@ sub _mv_stack_to_stack
         )
         )
     {
-        return Games::Solitaire::Verify::Exception::Move::NotEnoughEmpties
-            ->new( move => $move, );
+        return
+            Games::Solitaire::Verify::Exception::Move::NotEnoughEmpties->new(
+            move => $move, );
     }
 
     # Now let's actually move them.
@@ -792,7 +798,8 @@ sub _mv_freecell_to_foundation
 
     if ( !defined($card) )
     {
-        return Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty
+        return
+            Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty
             ->new( move => $move, );
     }
 
@@ -810,8 +817,9 @@ sub _mv_freecell_to_foundation
     }
     else
     {
-        return Games::Solitaire::Verify::Exception::Move::Dest::Foundation
-            ->new( move => $move );
+        return
+            Games::Solitaire::Verify::Exception::Move::Dest::Foundation->new(
+            move => $move );
     }
 }
 
@@ -827,7 +835,8 @@ sub _mv_freecell_to_stack
 
     if ( !defined($card) )
     {
-        return Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty
+        return
+            Games::Solitaire::Verify::Exception::Move::Src::Freecell::Empty
             ->new( move => $move, );
     }
 
