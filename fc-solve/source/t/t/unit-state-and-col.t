@@ -56,7 +56,7 @@ SV * as_string(SV * obj) {
 
     fc_solve_state_as_string(
         ret,
-        &(o->state),
+        &(o->state.s),
         &o->locs
         PASS_FREECELLS(4)
         PASS_STACKS(8)
