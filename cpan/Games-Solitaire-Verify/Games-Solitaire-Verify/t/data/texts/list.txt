@@ -1,3 +1,5 @@
+1.binary_star.board
+1.binary_star.sol
 3.all_in_a_row.board
 3.all_in_a_row.sol
 4.golf-wrap-ranks.sol

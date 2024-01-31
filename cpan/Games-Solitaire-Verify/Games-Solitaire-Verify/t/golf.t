@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 5;
+use Test::More tests => 6;
 use Path::Tiny                     qw/ cwd /;
 use Dir::Manifest                  ();
 use Games::Solitaire::Verify::Golf ();
@@ -21,6 +21,14 @@ sub _sol_iter
 {
     my ($fn) = @_;
     my $fh = $mani->get_obj($fn)->fh->openr;
+
+    return sub { my $l = <$fh>; chomp $l; return $l; };
+}
+
+sub _utf8_sol_iter
+{
+    my ($fn) = @_;
+    my $fh = $mani->get_obj($fn)->fh->openr_utf8;
 
     return sub { my $l = <$fh>; chomp $l; return $l; };
 }
@@ -100,4 +108,18 @@ sub _sol_iter
 
     # TEST
     like( $err, qr#\ACannot put \S{2} in the foundations#, "error thrown" );
+}
+
+{
+    my $verifier = Games::Solitaire::Verify::Golf->new(
+        {
+            variant      => "binary_star",
+            board_string => $mani->text("1.binary_star.board"),
+        }
+    );
+
+    $verifier->process_solution( _utf8_sol_iter("1.binary_star.sol") );
+
+    # TEST
+    pass("No error on verifying binary_star wrap ranks pysol fc 1 sol");
 }
