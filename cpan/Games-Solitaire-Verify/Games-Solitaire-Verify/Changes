@@ -1,5 +1,11 @@
 Revision history for Games-Solitaire-Verify
 
+0.2500  2024-01-31
+        - Add support for the "binary_star" variant
+            - https://github.com/shlomif/black-hole-solitaire/issues/8
+        - Change "\d" to "[0-9]" in regexes
+            - https://perl-begin.org/tutorials/bad-elements/#using-character-classes-with-unicode-text
+
 0.2403  2020-05-03
         - Reduce the minimal --severity of Perl-Critic to 1.
             - explicit return values.
