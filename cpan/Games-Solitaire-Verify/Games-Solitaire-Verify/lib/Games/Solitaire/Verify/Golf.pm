@@ -388,6 +388,25 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
                         Carp::confess(
                             "Foundations str is '$line' vs. '$wanted_line'");
                     }
+                    for my $i ( keys @$columns )
+                    {
+                        my $col         = $columns->[$i];
+                        my $wanted_line = $col->to_string();
+                        if ( $i == $col_idx )
+                        {
+                            $wanted_line =~
+                                s# \K(\Q$tstr\E)\z#my$c=$1;"[ $c → ]"#e
+                                or Carp::confess(
+"Failed column substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line tstr='$tstr'"
+                                );
+                        }
+                        my ( $line, $line_idx ) = $get_line->();
+                        if ( $line ne $wanted_line )
+                        {
+                            Carp::confess(
+                                "Column $i str is '$line' vs. '$wanted_line'");
+                        }
+                    }
                 }
             }
             $card = $col->pop;
