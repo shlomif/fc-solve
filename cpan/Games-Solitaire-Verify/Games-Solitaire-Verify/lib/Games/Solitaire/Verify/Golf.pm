@@ -3,6 +3,7 @@ package Games::Solitaire::Verify::Golf;
 use strict;
 use warnings;
 use autodie;
+use utf8;
 
 =head1 NAME
 
@@ -370,7 +371,23 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                 }
                 if ($IS_DISPLAYED_BOARD)
                 {
-                    Carp::confess("Unimpl!");
+                    my ( $line, $line_idx ) = $get_line->();
+                    my $wanted_line = $self->_foundation->to_string();
+                    $wanted_line =~ s#\AFreecells:#Foundations:#
+                        or Carp::confess("Unimpl!");
+                    $wanted_line =~ s#  # #g;
+                    my $fstr = $found_card->to_string();
+                    my $tstr = $top_card->to_string();
+                    $wanted_line =~
+s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $tstr ]"#e
+                        or Carp::confess(
+"Failed substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line fstr='$fstr'"
+                        );
+                    if ( $line ne $wanted_line )
+                    {
+                        Carp::confess(
+                            "Foundations str is '$line' vs. '$wanted_line'");
+                    }
                 }
             }
             $card = $col->pop;
