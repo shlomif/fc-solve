@@ -239,10 +239,17 @@ sub process_solution
     my $IS_DETAILED_MOVE   = $IS_BINARY_STAR;
     my $IS_DISPLAYED_BOARD = $IS_BINARY_STAR;
     my $num_decks          = $self->_num_foundations();
+    my $num_foundations    = $self->_num_foundations();
 
     # As many moves as the number of cards.
 MOVES:
-    for my $move_idx ( 0 .. ( $num_decks * $MAX_RANK * $NUM_SUITS - 1 ) )
+    for my $move_idx (
+        0 .. (
+            $num_decks * $MAX_RANK * $NUM_SUITS -
+                $num_foundations -
+                ( $num_foundations > 1 )
+        )
+        )
     {
         my ( $move_line, $move_line_idx ) = $get_line->();
 
@@ -407,6 +414,7 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
                                 "Column $i str is '$line' vs. '$wanted_line'");
                         }
                     }
+                    $assert_empty_line->();
                 }
             }
             $card = $col->pop;
