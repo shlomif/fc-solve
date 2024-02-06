@@ -196,6 +196,7 @@ sub _chdir_run
 my $GENERATOR = ( ( delete $ENV{CMAKE_GEN} ) || 'make' );
 
 my $filtered_idx = 0;
+my $total_filtered;
 
 sub run_tests
 {
@@ -213,15 +214,34 @@ sub run_tests
     };
 
     $args = +{ @TRAVIS_CI_SKIP_FAILING_TESTS, %$args };
+    if ( not defined($total_filtered) )
+    {
+        Carp::confess("\$total_filtered undefined.");
+    }
     my $blurb_base_base = $blurb_rec->{blurb};
-    my $total_filtered  = @tests - keys(%skip_indices);
     my $is_filtered     = ( exists $skip_indices{ $idx - $TEST_BASE_IDX } );
     my $filtered_idx_snapshot = $filtered_idx + 0;
 
+    my $displayed_filtered_idx_snapshot =
+        $filtered_idx_snapshot + $TEST_BASE_IDX;
+
+    if ( $displayed_filtered_idx_snapshot > $total_filtered )
+    {
+        if ( $displayed_filtered_idx_snapshot == 1 + $total_filtered )
+        {
+            --$displayed_filtered_idx_snapshot;
+        }
+        else
+        {
+            Carp::confess(
+"\$displayed_filtered_idx_snapshot > \$total_filtered undefined."
+            );
+        }
+    }
     my $blurb_base = sprintf "%s [ idx = %d / %d ; filtered-idx = %d / %d ]",
         $blurb_base_base, $idx,
         scalar(@tests),
-        $filtered_idx_snapshot + $TEST_BASE_IDX,
+        $displayed_filtered_idx_snapshot,
         $total_filtered;
     my $run = sub {
         my ( $DESC, $cmd ) = @_;
@@ -231,6 +251,10 @@ sub run_tests
     if ( not $is_filtered )
     {
         ++$filtered_idx;
+        if ( $filtered_idx > $total_filtered )
+        {
+            Carp::confess("\$filtered_idx > \$total_filtered .");
+        }
     }
     if ($is_filtered)
     {
@@ -719,10 +743,19 @@ while ( my ( $idx, $run ) = each @tests )
     }
 }
 use List::Util qw/ shuffle /;
-%skip_indices = map { $_ => $TRUE }
-    ( ( shuffle @l )[ 0 .. ( ( delete( $ENV{AVOID_NUM} ) // 0 ) - 1 ) ] );
+my $AVOID_NUM = int( delete( $ENV{AVOID_NUM} ) // 0 );
+if ( $AVOID_NUM > @l )
+{
+    $AVOID_NUM = @l;
+}
+if ( $AVOID_NUM > 0 )
+{
+    %skip_indices =
+        map { $_ => $TRUE } ( ( shuffle @l )[ 0 .. ( $AVOID_NUM - 1 ) ] );
+}
 
 # say Data::Dumper->new( [ \%skip_indices ] )->Dump;
+$total_filtered = @tests - keys(%skip_indices);
 
 _chdir_run(
     '../../',
