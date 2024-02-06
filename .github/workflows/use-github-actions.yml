@@ -21,17 +21,17 @@ jobs:
                 python3-setuptools rsync silversearcher-ag strip-nondeterminism valgrind
                 vim xsltproc
         -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
-                } ; local_lib_shim ; if test "$WHAT" = "normal"; then     sudo rm
-                -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
+                } ; local_lib_shim ; if test "$WHAT" = "normal" ; then sudo rm -fr
+                ~/gopath ; . fc-solve/scripts/ci-before-install.bash ; fi
         -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
-                } ; local_lib_shim ; if test "$WHAT" = "normal"; then     sudo rm
-                -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
+                } ; local_lib_shim ; if test "$WHAT" = "normal" ; then sudo rm -fr
+                ~/gopath ; . fc-solve/scripts/ci-before-install.bash ; fi
         -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
-                } ; local_lib_shim ; if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash
-                ; elif test "$WHAT" = "buildproc"; then . fc-solve/scripts/ci-docker-test--install.bash
+                } ; local_lib_shim ; if test "$WHAT" = "normal" ; then . fc-solve/scripts/ci-install-stage.bash
+                ; elif test "$WHAT" = "buildproc" ; then . fc-solve/scripts/ci-docker-test--install.bash
                 ; fi
         -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
-                } ; local_lib_shim ; if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog
+                } ; local_lib_shim ; if test "$WHAT" = "normal" ; then export XML_CATALOG_FILES="/etc/xml/catalog
                 $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash
                 ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl
                 ../scripts/docker-test.pl ; fi

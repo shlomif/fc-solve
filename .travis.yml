@@ -49,14 +49,14 @@ language: c
 python:
     - '3.6'
 before_install:
-    - if test "$WHAT" = "normal"; then     sudo rm -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
+    - if test "$WHAT" = "normal" ; then sudo rm -fr ~/gopath ; . fc-solve/scripts/ci-before-install.bash ; fi
 install:
-    - if test "$WHAT" = "normal"; then     sudo rm -fr ~/gopath ;. fc-solve/scripts/ci-before-install.bash ; fi
-    - if test "$WHAT" = "normal"; then . fc-solve/scripts/ci-install-stage.bash ; elif test "$WHAT" = "buildproc"; then . fc-solve/scripts/ci-docker-test--install.bash ; fi
+    - if test "$WHAT" = "normal" ; then sudo rm -fr ~/gopath ; . fc-solve/scripts/ci-before-install.bash ; fi
+    - if test "$WHAT" = "normal" ; then . fc-solve/scripts/ci-install-stage.bash ; elif test "$WHAT" = "buildproc" ; then . fc-solve/scripts/ci-docker-test--install.bash ; fi
 perl:
     - "5.24"
 script:
-    - if test "$WHAT" = "normal"; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl ../scripts/docker-test.pl ; fi
+    - if test "$WHAT" = "normal" ; then export XML_CATALOG_FILES="/etc/xml/catalog $HOME/markup-validator/htdocs/sgml-lib/catalog.xml" ; bash fc-solve/scripts/run-ci-tests.bash ; elif test "$WHAT" = "buildproc" ; then cd fc-solve/source/ && perl ../scripts/docker-test.pl ; fi
 cache:
     ccache: true
     directories:
