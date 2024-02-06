@@ -23,13 +23,11 @@ import yaml
 
 
 def _add_condition_while_excluding_gh_actions(job_dict, is_act):
-    """
-    See:
+    """See:
 
     https://github.com/actions/runner/issues/480
 
     Workflow level `env` does not work properly in all fields. · Issue #480
-
     """
     if is_act:
         job_dict['if'] = \
@@ -70,9 +68,7 @@ def generate_linux_yaml(output_path, is_act):
     steps.append({"run": ("sudo apt-get update -qq"), })
 
     def _libgd_workaround(steps):
-        '''
-        See: https://github.com/actions/runner-images/issues/6153
-        '''
+        # See: https://github.com/actions/runner-images/issues/6153
         steps.append({
             "run": ("sudo apt-get -y remove "
                     "libgd3 libunwind-14 libunwind-dev nginx"), })
@@ -174,8 +170,7 @@ def generate_windows_yaml(plat, output_path, is_act):
             end = "^7z a"
         start_idx = [
             i for i, cmd in enumerate(cmds)
-            if cmd == "cd .." and
-            cmds[i+1] == start
+            if (cmd == "cd .." and cmds[i+1] == start)
         ][0]
         end_idx = start_idx + 1
         while not re.search(end, cmds[end_idx]):

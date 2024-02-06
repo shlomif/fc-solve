@@ -7,17 +7,10 @@ environment:
 install:
     - dir
     - cd
-    # - c:\msys64\usr\bin\bash -l "c:/projects/fc-solve/fc-solve/scripts/ci-appveyor-upgrade-msys2.bash"
-    # - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm"
-    # - c:\msys64\usr\bin\bash -lc "pacman -Suuy --noconfirm ${MSYS_PACKAGES}"
-    # - c:\msys64\usr\bin\bash -lc "set -e -x; rm -r /etc/pacman.d/gnupg/; pacman-key --init ; pacman-key --populate msys2 ; "
-    - c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
     - c:\msys64\usr\bin\bash -lc "pacman --noconfirm -Syuu"
     - choco install ag
     - choco install strawberryperl || type C:\ProgramData\chocolatey\logs\chocolatey.log
-    # - exit 1
     - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
-    # - cd C:\projects\%APPVEYOR_PROJECT_NAME%
     - cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount CHI Devel::Trace Docker::CLI::Wrapper::Container Games::Solitaire::Verify::HorneAutomovePrune LWP Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
     - if not exist C:\libtap mkdir C:\libtap
     - copy c:\Python311-x64\python.exe c:\Python311-x64\python3.exe
@@ -25,18 +18,16 @@ install:
     - python3 -mpip install %PY3MODS%
     - perl -v
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
-    # - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - SET PERL5LIB=C:/_P5/lib/perl5
     - SET PERL_LOCAL_LIB_ROOT=C:/_P5
     - SET PERL_MB_OPT=--install_base C:/_P5
     - SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
     - perl -v
-    # - if not exist C:\libtap\gperf-3.0.4.tar.gz curl -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
-    - curl -o C:\libtap\gperf-3.0.4.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.0.4.tar.gz
-    - copy C:\libtap\gperf-3.0.4.tar.gz .
-    - tar -xvf gperf-3.0.4.tar.gz
+    - if not exist C:\libtap\gperf-3.1.tar.gz curl -o C:\libtap\gperf-3.1.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.1.tar.gz
+    - copy C:\libtap\gperf-3.1.tar.gz .
+    - tar -xvf gperf-3.1.tar.gz
     - set MAKE=C:/strawberry/c/bin/gmake.exe
-    - cd gperf-3.0.4 && perl ../fc-solve/scripts/ci-build-gperf-mswin.pl && cd ..
+    - cd gperf-3.1 && perl ../fc-solve/scripts/ci-build-gperf-mswin.pl && cd ..
     - git clone https://github.com/clibs/cmocka libtap
     - mkdir libtap\b
     - cd libtap\b
@@ -55,7 +46,6 @@ install:
     - gmake
     - gmake install
     - SET MYOLDPATH_=%PATH%
-    # - SET PATH=C:\MinGW\bin;%PATH%
     - mkdir ..\b32
     - cd ..\b32
     - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\libtap32 ..
@@ -76,22 +66,16 @@ test_script:
     - dir c:\libtap /s
     - set CPATH=C:\libtap\include
     - set PATH=C:\libtap\bin;%PATH%
-    # - set PATH=C:\msys64\mingw64\bin;%PATH%
-    # - python3 -mpip install %PY3MODS%
     - del c:\msys64\mingw64\bin\python*.exe
     - set HARNESS_BREAK=1
     - set FCS_USE_TEST_RUN=1
     - mkdir fc-solve\b
     - cd fc-solve\b
-    # - del c:\strawberry\perl\bin\pkg-config.*
     - perl ../scripts/Tatzer -G "MinGW Makefiles" -l x64t --dbm=kaztree
-    # - perl ../scripts/Tatzer -G "MSYS Makefiles" -l x64t --dbm=kaztree
     - SET PATH=C:\projects\fc-solve\fc-solve\scripts\win32;%PATH%
     - echo %PATH%
     - gmake
     - gmake boards
-    # Trying this hack to take more precendence for Inline::C / etc.
-    # - SET PATH=C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;C:\_P5\bin;%PATH%
     - perl ../source/run-tests.pl
     - echo %PATH%
     - cd ..
@@ -105,7 +89,6 @@ test_script:
     - mkdir pkg-build
     - cd pkg-build
     # For generating 32-bit release binaries.
-    # - SET PATH=C:\MinGW\bin;%PATH%
     - perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r --dbm=none
     - gmake package
     # See https://stackoverflow.com/questions/29754510/generating-an-installer-using-cmake-cpack-wix
