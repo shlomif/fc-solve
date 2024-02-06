@@ -50,6 +50,24 @@ Find the deal number of a Freecell deal based on its initial layout.
 
 [% END %]
 
+[% WRAPPER h2_section id = "expand-moves", title = "Freecell Moves Expander" %]
+
+<p>
+An online moves’ expander for a Freecell solution (which may contain multi-card moves).
+</p>
+
+<ul>
+
+<li>
+<p>
+<a href="expand-moves/"><strong>Expand Moves</strong></a>
+</p>
+</li>
+
+</ul>
+
+[% END %]
+
 [% WRAPPER h2_section id = "rich-webui-based", title = "Rich Web-UI" %]
 
 <p>

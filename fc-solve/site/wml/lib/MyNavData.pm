@@ -51,6 +51,10 @@ my $tree_contents = {
                     'url'  => "js-fc-solve/find-deal/",
                 },
                 {
+                    'text' => "Moves Expander",
+                    'url'  => "js-fc-solve/expand-moves/",
+                },
+                {
                     'text'  => "API Automated Tests",
                     'url'   => "js-fc-solve/automated-tests/",
                     'title' =>
