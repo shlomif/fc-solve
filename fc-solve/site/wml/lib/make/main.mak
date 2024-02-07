@@ -60,7 +60,7 @@ endif
 FAQ_PIVOT := $(D)/faq-indiv-nodes/which_prog_lang.xhtml
 
 $(FAQ_PIVOT): $(D)/faq.html
-	python3 lib/split-html/faq_splitter_prog.py --dest-dir "$(D)"
+	python3 lib/split-html/faq_splitter_prog.py --dest-dir "$(D)" && touch "$@"
 
 real_all: $(FAQ_PIVOT)
 
