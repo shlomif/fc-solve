@@ -28,7 +28,7 @@ of black-hole-solve (or a similar solver)
 
 =head1 METHODS
 
-=head2 Games::Solitaire::Verify::Golf->new({board_string=>$str, variant =>"golf"|"all_in_a_row"|"black_hole"})
+=head2 Games::Solitaire::Verify::Golf->new({board_string=>$str, variant =>"golf"|"all_in_a_row"|"binary_star"|"black_hole"})
 
 Construct a new validator / verifier for the variant and the initial board string.
 
@@ -124,11 +124,14 @@ sub _init
         if ( my ($card_s) = $foundation_str =~
             m#\AFoundations:((?: $CARD_RE){$num_foundations})\z# )
         {
-            $card_s =~ s/\A //ms or die;
+            $card_s =~ s/\A //ms
+                or Carp::confess("_set_found_line: no leading space");
             my @c = split( / /, $card_s );
             if ( @c != $num_foundations )
             {
-                die;
+                Carp::confess( "num_foundations is "
+                        . scalar(@c)
+                        . " rather than $num_foundations" );
             }
             for my $i ( keys @c )
             {
@@ -148,7 +151,7 @@ sub _init
     {
         if ( $foundation_str !~ s#\ATalon: ((?:$CARD_RE ){15}$CARD_RE)#$1# )
         {
-            die "improper talon line <$foundation_str>!";
+            Carp::confess("improper talon line <$foundation_str>!");
         }
         $self->_talon(
             [
@@ -232,7 +235,7 @@ sub process_solution
 
     if ( $l ne "Solved!" )
     {
-        die "First line is '$l' instead of 'Solved!'";
+        Carp::confess("First line is '$l' instead of 'Solved!'");
     }
     my $IS_BINARY_STAR     = $self->_is_binary_star;
     my $IS_GOLF            = $self->_is_golf;
@@ -263,7 +266,7 @@ MOVES:
         {
             if ( !@{ $self->_talon } )
             {
-                die "Talon is empty on line no. $move_line_idx";
+                Carp::confess("Talon is empty on line no. $move_line_idx");
             }
             $card           = shift @{ $self->_talon };
             $foundation_idx = 0;
@@ -289,8 +292,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
             }
             else
             {
-                die
-"Incorrect format for move line no. $move_line_idx - '$move_line'";
+                Carp::confess(
+"Incorrect format for move line no. $move_line_idx - '$move_line'"
+                );
             }
         }
 
@@ -298,7 +302,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
         {
             if ( ( $col_idx < 0 ) or ( $col_idx >= $NUM_COLUMNS ) )
             {
-                die "Invalid column index '$col_idx' at $move_line_idx";
+                Carp::confess(
+                    "Invalid column index '$col_idx' at line no. $move_line_idx"
+                );
             }
         }
 
@@ -309,8 +315,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
             ( $info_line, $info_line_idx ) = $get_line->();
             if ( $info_line !~ m/\AInfo: Card moved is ($CARD_RE)\z/ )
             {
-                die
-"Invalid format for info line no. $info_line_idx - '$info_line'";
+                Carp::confess(
+"Invalid format for info line no. $info_line_idx - '$info_line'"
+                );
             }
 
             $moved_card_str = $1;
@@ -322,8 +329,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
 
             if ( $sep_line !~ m/\A=+\z/ )
             {
-                die
-"Invalid format for separator line no. $sep_line_idx - '$sep_line'";
+                Carp::confess(
+"Invalid format for separator line no. $sep_line_idx - '$sep_line'"
+                );
             }
 
             $assert_empty_line->();
@@ -334,8 +342,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
             my $top_card_moved_str = $card->to_string();
             if ( $top_card_moved_str ne $moved_card_str )
             {
-                die
-"Card moved should be '$top_card_moved_str', but the info says it is '$moved_card_str' at line $info_line_idx";
+                Carp::confess(
+"Card moved should be '$top_card_moved_str', but the info says it is '$moved_card_str' at line $info_line_idx"
+                );
             }
         }
         else
@@ -346,8 +355,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
 
             if ( $top_card_moved_str ne $moved_card_str )
             {
-                die
-"Card moved should be '$top_card_moved_str', but the info says it is '$moved_card_str' at line $info_line_idx";
+                Carp::confess(
+"Card moved should be '$top_card_moved_str', but the info says it is '$moved_card_str' at line $info_line_idx"
+                );
             }
 
             my $found_card = $self->_foundation->cell($foundation_idx);
@@ -373,9 +383,9 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                     )
                     )
                 {
-                    die
+                    Carp::confess(
 "Cannot put $top_card_moved_str in the foundations that contain "
-                        . $found_card->to_string();
+                            . $found_card->to_string() );
                 }
                 if ($IS_DISPLAYED_BOARD)
                 {
@@ -423,7 +433,7 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
         }
         if ( not defined $foundation_idx )
         {
-            die "\$foundation_idx not set";
+            Carp::confess("\$foundation_idx not set");
         }
         $self->_set_found( $foundation_idx, $card, );
         if ($CHECK_EMPTY)
