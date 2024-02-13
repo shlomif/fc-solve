@@ -302,7 +302,7 @@ MOVES:
 
         my $card;
         my $col_idx;
-        my $foundation_idx;
+        my $foundation_idx = 0;
         my $moved_card_str;
         if (    $IS_GOLF
             and $move_line =~ m/\ADeal talon\z/ )
@@ -311,29 +311,23 @@ MOVES:
             {
                 Carp::confess("Talon is empty on line no. $move_line_idx");
             }
-            $card           = shift @{ $self->_talon };
-            $foundation_idx = 0;
+            $card = shift @{ $self->_talon };
         }
         else
         {
             if (
-                $IS_DETAILED_MOVE
-                ? ( ( $moved_card_str, $col_idx, $foundation_idx ) =
-                        $move_line =~
+                not(
+                    $IS_DETAILED_MOVE
+                    ? ( ( $moved_card_str, $col_idx, $foundation_idx ) =
+                            $move_line =~
 m/\AMove ($CARD_RE) from stack ([0-9]+) to foundations ([0-9]+)\z/
-                )
-                : ( ($col_idx) =
-                        $move_line =~
+                    )
+                    : ( ($col_idx) =
+                            $move_line =~
 m/\AMove a card from stack ([0-9]+) to the foundations\z/
+                    )
                 )
                 )
-            {
-                if ( not $IS_DETAILED_MOVE )
-                {
-                    $foundation_idx = 0;
-                }
-            }
-            else
             {
                 Carp::confess(
 "Incorrect format for move line no. $move_line_idx - '$move_line'"
