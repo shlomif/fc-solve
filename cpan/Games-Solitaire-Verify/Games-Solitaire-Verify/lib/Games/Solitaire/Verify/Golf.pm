@@ -252,6 +252,21 @@ sub _assert_empty_line
     return;
 }
 
+sub _compare_line
+{
+    my ( $self, $wanted_line, $title, ) = @_;
+
+    my ( $line, $line_idx ) = $self->_get_line;
+    if ( $line ne $wanted_line )
+    {
+        Carp::confess(
+            "$title string is '$line' vs. '$wanted_line' at line no. $line_idx"
+        );
+    }
+
+    return;
+}
+
 package Games::Solitaire::Verify::Golf;
 
 sub process_solution
@@ -263,12 +278,8 @@ sub process_solution
         { _get => $next_line_iter, } );
     my $remaining_cards = sum( map { $_->len } @$columns );
 
-    my ( $l, $first_l ) = $it->_get_line;
+    $it->_compare_line( "Solved!", "First line" );
 
-    if ( $l ne "Solved!" )
-    {
-        Carp::confess("First line is '$l' instead of 'Solved!'");
-    }
     my $IS_BINARY_STAR     = $self->_is_binary_star;
     my $IS_GOLF            = $self->_is_golf;
     my $CHECK_EMPTY        = ( $IS_GOLF or $self->_variant eq "black_hole" );
@@ -421,7 +432,6 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                 }
                 if ($IS_DISPLAYED_BOARD)
                 {
-                    my ( $line, $line_idx ) = $it->_get_line;
                     my $wanted_line = $self->_foundation->to_string();
                     $wanted_line =~ s#\AFreecells:#Foundations:#
                         or Carp::confess("Unimpl!");
@@ -433,11 +443,7 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
                         or Carp::confess(
 "Failed substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line fstr='$fstr'"
                         );
-                    if ( $line ne $wanted_line )
-                    {
-                        Carp::confess(
-                            "Foundations str is '$line' vs. '$wanted_line'");
-                    }
+                    $it->_compare_line( $wanted_line, "Foundations" );
                     for my $i ( keys @$columns )
                     {
                         my $col         = $columns->[$i];
@@ -450,12 +456,7 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
 "Failed column substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line tstr='$tstr'"
                                 );
                         }
-                        my ( $line, $line_idx ) = $it->_get_line;
-                        if ( $line ne $wanted_line )
-                        {
-                            Carp::confess(
-                                "Column $i str is '$line' vs. '$wanted_line'");
-                        }
+                        $it->_compare_line( $wanted_line, "Column $i" );
                     }
                     $it->_assert_empty_line();
                 }
