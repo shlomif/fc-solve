@@ -207,31 +207,63 @@ sub _set_found
     return;
 }
 
+package Games::Solitaire::Verify::Golf::_LinesIter;
+
+sub new
+{
+    my $class = shift;
+
+    my $self = bless {}, $class;
+
+    $self->_init(@_);
+
+    return $self;
+}
+
+sub _init
+{
+    my ( $self, $args ) = @_;
+
+    $self->{_get}      = $args->{_get};
+    $self->{_line_num} = 0;
+
+    return;
+}
+
+sub _get_line
+{
+    my ( $self, ) = @_;
+
+    my $ret = $self->{_get}->();
+    return ( $ret, ++$self->{_line_num} );
+}
+
+sub _assert_empty_line
+{
+    my ( $self, ) = @_;
+
+    my ( $s, $line_idx ) = $self->_get_line;
+
+    if ( $s ne '' )
+    {
+        Carp::confess("Line '$line_idx' is not empty, but '$s'");
+    }
+
+    return;
+}
+
+package Games::Solitaire::Verify::Golf;
+
 sub process_solution
 {
     my ( $self, $next_line_iter ) = @_;
-    my $columns         = $self->_columns;
-    my $NUM_COLUMNS     = @$columns;
-    my $line_num        = 0;
+    my $columns     = $self->_columns;
+    my $NUM_COLUMNS = @$columns;
+    my $it          = Games::Solitaire::Verify::Golf::_LinesIter->new(
+        { _get => $next_line_iter, } );
     my $remaining_cards = sum( map { $_->len } @$columns );
 
-    my $get_line = sub {
-        my $ret = $next_line_iter->();
-        return ( $ret, ++$line_num );
-    };
-
-    my $assert_empty_line = sub {
-        my ( $s, $line_idx ) = $get_line->();
-
-        if ( $s ne '' )
-        {
-            Carp::confess("Line '$line_idx' is not empty, but '$s'");
-        }
-
-        return;
-    };
-
-    my ( $l, $first_l ) = $get_line->();
+    my ( $l, $first_l ) = $it->_get_line;
 
     if ( $l ne "Solved!" )
     {
@@ -255,7 +287,7 @@ MOVES:
         )
         )
     {
-        my ( $move_line, $move_line_idx ) = $get_line->();
+        my ( $move_line, $move_line_idx ) = $it->_get_line;
 
         my $card;
         my $col_idx;
@@ -308,11 +340,11 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
             }
         }
 
-        $assert_empty_line->();
+        $it->_assert_empty_line();
         my ( $info_line, $info_line_idx );
         if ( not $IS_DETAILED_MOVE )
         {
-            ( $info_line, $info_line_idx ) = $get_line->();
+            ( $info_line, $info_line_idx ) = $it->_get_line;
             if ( $info_line !~ m/\AInfo: Card moved is ($CARD_RE)\z/ )
             {
                 Carp::confess(
@@ -322,10 +354,10 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
 
             $moved_card_str = $1;
 
-            $assert_empty_line->();
-            $assert_empty_line->();
+            $it->_assert_empty_line();
+            $it->_assert_empty_line();
 
-            my ( $sep_line, $sep_line_idx ) = $get_line->();
+            my ( $sep_line, $sep_line_idx ) = $it->_get_line;
 
             if ( $sep_line !~ m/\A=+\z/ )
             {
@@ -334,7 +366,7 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                 );
             }
 
-            $assert_empty_line->();
+            $it->_assert_empty_line();
         }
 
         if ( defined $card )
@@ -389,7 +421,7 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                 }
                 if ($IS_DISPLAYED_BOARD)
                 {
-                    my ( $line, $line_idx ) = $get_line->();
+                    my ( $line, $line_idx ) = $it->_get_line;
                     my $wanted_line = $self->_foundation->to_string();
                     $wanted_line =~ s#\AFreecells:#Foundations:#
                         or Carp::confess("Unimpl!");
@@ -418,14 +450,14 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
 "Failed column substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line tstr='$tstr'"
                                 );
                         }
-                        my ( $line, $line_idx ) = $get_line->();
+                        my ( $line, $line_idx ) = $it->_get_line;
                         if ( $line ne $wanted_line )
                         {
                             Carp::confess(
                                 "Column $i str is '$line' vs. '$wanted_line'");
                         }
                     }
-                    $assert_empty_line->();
+                    $it->_assert_empty_line();
                 }
             }
             $card = $col->pop;
