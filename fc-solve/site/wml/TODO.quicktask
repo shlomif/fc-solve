@@ -20,6 +20,8 @@ CURRENT TASKS:
       not match 8cols+4reserves freecell.
       * Requires adding introspection functions to "lib.c".
       * add a text message and a strikethru embellishment.
+      * eg: setting the game-variant to 'Baker's Game' with Microsoft deal 24,
+        the gfx solution is non-functional
       @ Added [Wed 2024-02-14]
 
 LONG TERM:
