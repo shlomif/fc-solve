@@ -79,7 +79,7 @@ typedef struct
 typedef char fcs_locs_type;
 
 #define fcs_state_get_col(state, col_idx)                                      \
-    ((state).data + ((col_idx)*FCS_CARDS_COL_WIDTH))
+    ((state).data + ((col_idx) * FCS_CARDS_COL_WIDTH))
 #define fcs_freecell_card(state, f)                                            \
     ((state).data[(MAX_NUM_STACKS * FCS_CARDS_COL_WIDTH) + (f)])
 #define fcs_foundation_value(state, d)                                         \
@@ -174,7 +174,7 @@ static inline fcs_card fcs_make_card(const fcs_card rank, const fcs_card suit)
 #define fcs_state_col_is_empty(s, i) (fcs_state_col_len((s), (i)) == 0)
 
 #define fcs_card_rank(card) ((card) >> 2U)
-#define fcs_card_suit(card) ((card)&0x03U)
+#define fcs_card_suit(card) ((card) & 0x03U)
 
 static inline fcs_card fcs_col_get_rank(
     const fcs_const_cards_column col, const int card_idx)
