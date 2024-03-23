@@ -4,7 +4,7 @@ LATEMP_ABS_ROOT_SOURCE_DIR := $(realpath $(LATEMP_ROOT_SOURCE_DIR))
 all: real_all
 
 include lib/make/shlomif_common.mak
-include lib/make/rules.mak
+include lib/make/sf-filefind-rules-mak.mak
 include lib/make/include.mak
 
 # Toggle to generate production code with compressed and merged JS code/etc.

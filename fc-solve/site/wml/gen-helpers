@@ -4,9 +4,9 @@ use strict;
 use warnings;
 use autodie;
 
-use Carp                         ();
-use HTML::Latemp::GenMakeHelpers ();
-use Path::Tiny                   qw/ path /;
+use Carp               ();
+use File::Find::Object ();
+use Path::Tiny         qw/ path /;
 use lib './lib';
 
 sub _exec
@@ -84,70 +84,41 @@ _exec( [ 'python3', 'bin/gen_listboxes.py', ], "listboxes" );
 
 my $DIR = "lib/make/";
 my @tt2;
+my @dirs_paths;
+my @images_paths;
+my $tree = File::Find::Object->new( {}, "src" );
 
-my $generator = HTML::Latemp::GenMakeHelpers->new(
-    'hosts' => [
+while ( my $r = $tree->next_obj() )
+{
+    my $path = join "/", @{ $r->full_components() };
+    if ( $r->is_file() )
+    {
+        if ( $path =~ s#\.x?html\K\.tt2\z##ms )
         {
-            'id'         => "common",
-            'source_dir' => "common",
-            'dest_dir'   => "\$(TARGET)",
-        },
-        {
-            'id'         => "src",
-            'source_dir' => "src",
-            'dest_dir'   => q/$(D)/,
-        },
-    ],
-    out_dir                    => $DIR,
-    filename_lists_post_filter => sub {
-        my ($args) = @_;
-        my $filenames = $args->{filenames};
-        my @ret;
-        foreach my $fn (@$filenames)
-        {
-            if ( $fn =~ s#\.tt2\z## )
-            {
-                push @tt2, $fn;
-            }
-            else
-            {
-                # else...
-                push @ret, $fn;
-            }
+            push @tt2, $path;
         }
-        return \@ret;
-    },
-);
-
-eval { $generator->process_all(); };
-
-my $E = $@;
-
-if ($E)
-{
-    print "$E\n";
-}
-
-path("$DIR/include.mak")->edit_utf8(
-    sub {
-s!^((?:T2_DOCS|T2_DIRS) = )([^\n]*)!my ($prefix, $files) = ($1,$2); $prefix . ($files =~ s# +ipp\.\S*##gr)!ems;
+        else
+        {
+            push @images_paths, $path;
+        }
     }
-);
-
-my $r_fh = path("$DIR/rules.mak");
-my $text = $r_fh->slurp_utf8;
-$text =~
-s#^(\$\(SRC_DOCS_DEST\)[^\n]+\n\t)[^\n]+#${1}\$(call SRC_INCLUDE_WML_RENDER)#ms
-    or die "Cannot subt";
-{
-    my $needle = 'cp -f $< $@';
-    $text =~ s#^\t\Q$needle\E$#\t\$(call COPY)#gms;
+    elsif ( $r->is_dir() and length($path) )
+    {
+        push @dirs_paths, $path;
+    }
 }
-
-$r_fh->spew_utf8($text);
+path("$DIR/tt2.txt")->spew_raw( join "\n", ( sort { $a cmp $b } @tt2 ), "" );
+path("$DIR/include.mak")->spew_utf8(
+    map {
+        join( " ",
+            uc( "SRC" . "_" . $_->[0] ),
+            ":=", ( sort ( @{ $_->[1] } ) ) )
+            . "\n"
+    } [ "dirs", \@dirs_paths ],
+    [ "images", \@images_paths ]
+);
 
 path('Makefile')->spew_utf8("include ${DIR}main.mak\n");
-path("$DIR/tt2.txt")->spew_raw( join "\n", @tt2, "" );
 
 foreach my $p ( ['PROD=1'], [] )
 {
