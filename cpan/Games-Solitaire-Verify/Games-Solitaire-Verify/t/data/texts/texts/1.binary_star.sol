@@ -1,7 +1,7 @@
 Solved!
 Move AC from stack 16 to foundations 1
 
-Foundations: AS [ KH → AC ]
+Foundations: AS [ KH -> AC ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -18,11 +18,11 @@ Foundations: AS [ KH → AC ]
 : TC 9S 4H JS 9D 4C
 : 8D 8H 7H 4D KS 5S
 : 4C JH QS 5C 5D 6S
-: JS 4D QC 6C TS [ AC → ]
+: JS 4D QC 6C TS [ AC -> ]
 
 Move 2D from stack 12 to foundations 0
 
-Foundations: [ AS → 2D ] AC
+Foundations: [ AS -> 2D ] AC
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -35,7 +35,7 @@ Foundations: [ AS → 2D ] AC
 : AS AD 8H 6D 9H KH
 : 8C 9H TH TD 3H 5D
 : 6C 8S AH 9C 7S 3H
-: 6H 7D JC 9D 5C [ 2D → ]
+: 6H 7D JC 9D 5C [ 2D -> ]
 : TC 9S 4H JS 9D 4C
 : 8D 8H 7H 4D KS 5S
 : 4C JH QS 5C 5D 6S
@@ -43,7 +43,7 @@ Foundations: [ AS → 2D ] AC
 
 Move 3H from stack 11 to foundations 0
 
-Foundations: [ 2D → 3H ] AC
+Foundations: [ 2D -> 3H ] AC
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -55,7 +55,7 @@ Foundations: [ 2D → 3H ] AC
 : JD 2H 4S KS 2C 2C
 : AS AD 8H 6D 9H KH
 : 8C 9H TH TD 3H 5D
-: 6C 8S AH 9C 7S [ 3H → ]
+: 6C 8S AH 9C 7S [ 3H -> ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D 4C
 : 8D 8H 7H 4D KS 5S
@@ -64,7 +64,7 @@ Foundations: [ 2D → 3H ] AC
 
 Move 4C from stack 13 to foundations 0
 
-Foundations: [ 3H → 4C ] AC
+Foundations: [ 3H -> 4C ] AC
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -78,14 +78,14 @@ Foundations: [ 3H → 4C ] AC
 : 8C 9H TH TD 3H 5D
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
-: TC 9S 4H JS 9D [ 4C → ]
+: TC 9S 4H JS 9D [ 4C -> ]
 : 8D 8H 7H 4D KS 5S
 : 4C JH QS 5C 5D 6S
 : JS 4D QC 6C TS
 
 Move 5S from stack 14 to foundations 0
 
-Foundations: [ 4C → 5S ] AC
+Foundations: [ 4C -> 5S ] AC
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -100,13 +100,13 @@ Foundations: [ 4C → 5S ] AC
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
-: 8D 8H 7H 4D KS [ 5S → ]
+: 8D 8H 7H 4D KS [ 5S -> ]
 : 4C JH QS 5C 5D 6S
 : JS 4D QC 6C TS
 
 Move 6S from stack 15 to foundations 0
 
-Foundations: [ 5S → 6S ] AC
+Foundations: [ 5S -> 6S ] AC
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -122,12 +122,12 @@ Foundations: [ 5S → 6S ] AC
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
 : 8D 8H 7H 4D KS
-: 4C JH QS 5C 5D [ 6S → ]
+: 4C JH QS 5C 5D [ 6S -> ]
 : JS 4D QC 6C TS
 
 Move 5D from stack 15 to foundations 0
 
-Foundations: [ 6S → 5D ] AC
+Foundations: [ 6S -> 5D ] AC
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -143,12 +143,12 @@ Foundations: [ 6S → 5D ] AC
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
 : 8D 8H 7H 4D KS
-: 4C JH QS 5C [ 5D → ]
+: 4C JH QS 5C [ 5D -> ]
 : JS 4D QC 6C TS
 
 Move KS from stack 14 to foundations 1
 
-Foundations: 5D [ AC → KS ]
+Foundations: 5D [ AC -> KS ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -163,13 +163,13 @@ Foundations: 5D [ AC → KS ]
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
-: 8D 8H 7H 4D [ KS → ]
+: 8D 8H 7H 4D [ KS -> ]
 : 4C JH QS 5C
 : JS 4D QC 6C TS
 
 Move 4D from stack 14 to foundations 0
 
-Foundations: [ 5D → 4D ] KS
+Foundations: [ 5D -> 4D ] KS
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -184,13 +184,13 @@ Foundations: [ 5D → 4D ] KS
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
-: 8D 8H 7H [ 4D → ]
+: 8D 8H 7H [ 4D -> ]
 : 4C JH QS 5C
 : JS 4D QC 6C TS
 
 Move 5C from stack 15 to foundations 0
 
-Foundations: [ 4D → 5C ] KS
+Foundations: [ 4D -> 5C ] KS
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -206,12 +206,12 @@ Foundations: [ 4D → 5C ] KS
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
 : 8D 8H 7H
-: 4C JH QS [ 5C → ]
+: 4C JH QS [ 5C -> ]
 : JS 4D QC 6C TS
 
 Move QS from stack 15 to foundations 1
 
-Foundations: 5C [ KS → QS ]
+Foundations: 5C [ KS -> QS ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -227,12 +227,12 @@ Foundations: 5C [ KS → QS ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
 : 8D 8H 7H
-: 4C JH [ QS → ]
+: 4C JH [ QS -> ]
 : JS 4D QC 6C TS
 
 Move JH from stack 15 to foundations 1
 
-Foundations: 5C [ QS → JH ]
+Foundations: 5C [ QS -> JH ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -248,12 +248,12 @@ Foundations: 5C [ QS → JH ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
 : 8D 8H 7H
-: 4C [ JH → ]
+: 4C [ JH -> ]
 : JS 4D QC 6C TS
 
 Move TS from stack 16 to foundations 1
 
-Foundations: 5C [ JH → TS ]
+Foundations: 5C [ JH -> TS ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -270,11 +270,11 @@ Foundations: 5C [ JH → TS ]
 : TC 9S 4H JS 9D
 : 8D 8H 7H
 : 4C
-: JS 4D QC 6C [ TS → ]
+: JS 4D QC 6C [ TS -> ]
 
 Move 6C from stack 16 to foundations 0
 
-Foundations: [ 5C → 6C ] TS
+Foundations: [ 5C -> 6C ] TS
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -291,11 +291,11 @@ Foundations: [ 5C → 6C ] TS
 : TC 9S 4H JS 9D
 : 8D 8H 7H
 : 4C
-: JS 4D QC [ 6C → ]
+: JS 4D QC [ 6C -> ]
 
 Move 7H from stack 14 to foundations 0
 
-Foundations: [ 6C → 7H ] TS
+Foundations: [ 6C -> 7H ] TS
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -310,13 +310,13 @@ Foundations: [ 6C → 7H ] TS
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
-: 8D 8H [ 7H → ]
+: 8D 8H [ 7H -> ]
 : 4C
 : JS 4D QC
 
 Move 8H from stack 14 to foundations 0
 
-Foundations: [ 7H → 8H ] TS
+Foundations: [ 7H -> 8H ] TS
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -331,13 +331,13 @@ Foundations: [ 7H → 8H ] TS
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS 9D
-: 8D [ 8H → ]
+: 8D [ 8H -> ]
 : 4C
 : JS 4D QC
 
 Move 9D from stack 13 to foundations 1
 
-Foundations: 8H [ TS → 9D ]
+Foundations: 8H [ TS -> 9D ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -351,14 +351,14 @@ Foundations: 8H [ TS → 9D ]
 : 8C 9H TH TD 3H 5D
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
-: TC 9S 4H JS [ 9D → ]
+: TC 9S 4H JS [ 9D -> ]
 : 8D
 : 4C
 : JS 4D QC
 
 Move 8D from stack 14 to foundations 1
 
-Foundations: 8H [ 9D → 8D ]
+Foundations: 8H [ 9D -> 8D ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -373,13 +373,13 @@ Foundations: 8H [ 9D → 8D ]
 : 6C 8S AH 9C 7S
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS
-: [ 8D → ]
+: [ 8D -> ]
 : 4C
 : JS 4D QC
 
 Move 7S from stack 11 to foundations 0
 
-Foundations: [ 8H → 7S ] 8D
+Foundations: [ 8H -> 7S ] 8D
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -391,7 +391,7 @@ Foundations: [ 8H → 7S ] 8D
 : JD 2H 4S KS 2C 2C
 : AS AD 8H 6D 9H KH
 : 8C 9H TH TD 3H 5D
-: 6C 8S AH 9C [ 7S → ]
+: 6C 8S AH 9C [ 7S -> ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS
 :
@@ -400,7 +400,7 @@ Foundations: [ 8H → 7S ] 8D
 
 Move 9C from stack 11 to foundations 1
 
-Foundations: 7S [ 8D → 9C ]
+Foundations: 7S [ 8D -> 9C ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -412,7 +412,7 @@ Foundations: 7S [ 8D → 9C ]
 : JD 2H 4S KS 2C 2C
 : AS AD 8H 6D 9H KH
 : 8C 9H TH TD 3H 5D
-: 6C 8S AH [ 9C → ]
+: 6C 8S AH [ 9C -> ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H JS
 :
@@ -421,11 +421,11 @@ Foundations: 7S [ 8D → 9C ]
 
 Move TS from stack 3 to foundations 1
 
-Foundations: 7S [ 9C → TS ]
+Foundations: 7S [ 9C -> TS ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
-: 5S 2H 8C 9S 3C [ TS → ]
+: 5S 2H 8C 9S 3C [ TS -> ]
 : 5H TD 2S 2S JD KD
 : KC 8S 3S QH TC QD
 : KC AC 9C 3C AH 7H
@@ -442,7 +442,7 @@ Foundations: 7S [ 9C → TS ]
 
 Move JS from stack 13 to foundations 1
 
-Foundations: 7S [ TS → JS ]
+Foundations: 7S [ TS -> JS ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -456,14 +456,14 @@ Foundations: 7S [ TS → JS ]
 : 8C 9H TH TD 3H 5D
 : 6C 8S AH
 : 6H 7D JC 9D 5C
-: TC 9S 4H [ JS → ]
+: TC 9S 4H [ JS -> ]
 :
 : 4C
 : JS 4D QC
 
 Move QC from stack 16 to foundations 1
 
-Foundations: 7S [ JS → QC ]
+Foundations: 7S [ JS -> QC ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -480,11 +480,11 @@ Foundations: 7S [ JS → QC ]
 : TC 9S 4H
 :
 : 4C
-: JS 4D [ QC → ]
+: JS 4D [ QC -> ]
 
 Move KH from stack 9 to foundations 1
 
-Foundations: 7S [ QC → KH ]
+Foundations: 7S [ QC -> KH ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -494,7 +494,7 @@ Foundations: 7S [ QC → KH ]
 : KC AC 9C 3C AH 7H
 : 8D 7C 7D 4S QS 3D
 : JD 2H 4S KS 2C 2C
-: AS AD 8H 6D 9H [ KH → ]
+: AS AD 8H 6D 9H [ KH -> ]
 : 8C 9H TH TD 3H 5D
 : 6C 8S AH
 : 6H 7D JC 9D 5C
@@ -505,7 +505,7 @@ Foundations: 7S [ QC → KH ]
 
 Move AH from stack 11 to foundations 1
 
-Foundations: 7S [ KH → AH ]
+Foundations: 7S [ KH -> AH ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -517,7 +517,7 @@ Foundations: 7S [ KH → AH ]
 : JD 2H 4S KS 2C 2C
 : AS AD 8H 6D 9H
 : 8C 9H TH TD 3H 5D
-: 6C 8S [ AH → ]
+: 6C 8S [ AH -> ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H
 :
@@ -526,7 +526,7 @@ Foundations: 7S [ KH → AH ]
 
 Move 8S from stack 11 to foundations 0
 
-Foundations: [ 7S → 8S ] AH
+Foundations: [ 7S -> 8S ] AH
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -538,7 +538,7 @@ Foundations: [ 7S → 8S ] AH
 : JD 2H 4S KS 2C 2C
 : AS AD 8H 6D 9H
 : 8C 9H TH TD 3H 5D
-: 6C [ 8S → ]
+: 6C [ 8S -> ]
 : 6H 7D JC 9D 5C
 : TC 9S 4H
 :
@@ -547,7 +547,7 @@ Foundations: [ 7S → 8S ] AH
 
 Move 9H from stack 9 to foundations 0
 
-Foundations: [ 8S → 9H ] AH
+Foundations: [ 8S -> 9H ] AH
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -557,7 +557,7 @@ Foundations: [ 8S → 9H ] AH
 : KC AC 9C 3C AH 7H
 : 8D 7C 7D 4S QS 3D
 : JD 2H 4S KS 2C 2C
-: AS AD 8H 6D [ 9H → ]
+: AS AD 8H 6D [ 9H -> ]
 : 8C 9H TH TD 3H 5D
 : 6C
 : 6H 7D JC 9D 5C
@@ -568,7 +568,7 @@ Foundations: [ 8S → 9H ] AH
 
 Move 2C from stack 8 to foundations 1
 
-Foundations: 9H [ AH → 2C ]
+Foundations: 9H [ AH -> 2C ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -577,7 +577,7 @@ Foundations: 9H [ AH → 2C ]
 : KC 8S 3S QH TC QD
 : KC AC 9C 3C AH 7H
 : 8D 7C 7D 4S QS 3D
-: JD 2H 4S KS 2C [ 2C → ]
+: JD 2H 4S KS 2C [ 2C -> ]
 : AS AD 8H 6D
 : 8C 9H TH TD 3H 5D
 : 6C
@@ -589,7 +589,7 @@ Foundations: 9H [ AH → 2C ]
 
 Move 3D from stack 7 to foundations 1
 
-Foundations: 9H [ 2C → 3D ]
+Foundations: 9H [ 2C -> 3D ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -597,7 +597,7 @@ Foundations: 9H [ 2C → 3D ]
 : 5H TD 2S 2S JD KD
 : KC 8S 3S QH TC QD
 : KC AC 9C 3C AH 7H
-: 8D 7C 7D 4S QS [ 3D → ]
+: 8D 7C 7D 4S QS [ 3D -> ]
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
 : 8C 9H TH TD 3H 5D
@@ -610,7 +610,7 @@ Foundations: 9H [ 2C → 3D ]
 
 Move 4D from stack 16 to foundations 1
 
-Foundations: 9H [ 3D → 4D ]
+Foundations: 9H [ 3D -> 4D ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -627,11 +627,11 @@ Foundations: 9H [ 3D → 4D ]
 : TC 9S 4H
 :
 : 4C
-: JS [ 4D → ]
+: JS [ 4D -> ]
 
 Move 5C from stack 12 to foundations 1
 
-Foundations: 9H [ 4D → 5C ]
+Foundations: 9H [ 4D -> 5C ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -644,7 +644,7 @@ Foundations: 9H [ 4D → 5C ]
 : AS AD 8H 6D
 : 8C 9H TH TD 3H 5D
 : 6C
-: 6H 7D JC 9D [ 5C → ]
+: 6H 7D JC 9D [ 5C -> ]
 : TC 9S 4H
 :
 : 4C
@@ -652,7 +652,7 @@ Foundations: 9H [ 4D → 5C ]
 
 Move 4C from stack 15 to foundations 1
 
-Foundations: 9H [ 5C → 4C ]
+Foundations: 9H [ 5C -> 4C ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -668,12 +668,12 @@ Foundations: 9H [ 5C → 4C ]
 : 6H 7D JC 9D
 : TC 9S 4H
 :
-: [ 4C → ]
+: [ 4C -> ]
 : JS
 
 Move 5D from stack 10 to foundations 1
 
-Foundations: 9H [ 4C → 5D ]
+Foundations: 9H [ 4C -> 5D ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -684,7 +684,7 @@ Foundations: 9H [ 4C → 5D ]
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
-: 8C 9H TH TD 3H [ 5D → ]
+: 8C 9H TH TD 3H [ 5D -> ]
 : 6C
 : 6H 7D JC 9D
 : TC 9S 4H
@@ -694,7 +694,7 @@ Foundations: 9H [ 4C → 5D ]
 
 Move 4H from stack 13 to foundations 1
 
-Foundations: 9H [ 5D → 4H ]
+Foundations: 9H [ 5D -> 4H ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -708,14 +708,14 @@ Foundations: 9H [ 5D → 4H ]
 : 8C 9H TH TD 3H
 : 6C
 : 6H 7D JC 9D
-: TC 9S [ 4H → ]
+: TC 9S [ 4H -> ]
 :
 :
 : JS
 
 Move 3H from stack 10 to foundations 1
 
-Foundations: 9H [ 4H → 3H ]
+Foundations: 9H [ 4H -> 3H ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -726,7 +726,7 @@ Foundations: 9H [ 4H → 3H ]
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
-: 8C 9H TH TD [ 3H → ]
+: 8C 9H TH TD [ 3H -> ]
 : 6C
 : 6H 7D JC 9D
 : TC 9S
@@ -736,7 +736,7 @@ Foundations: 9H [ 4H → 3H ]
 
 Move TD from stack 10 to foundations 0
 
-Foundations: [ 9H → TD ] 3H
+Foundations: [ 9H -> TD ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -747,7 +747,7 @@ Foundations: [ 9H → TD ] 3H
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
-: 8C 9H TH [ TD → ]
+: 8C 9H TH [ TD -> ]
 : 6C
 : 6H 7D JC 9D
 : TC 9S
@@ -757,7 +757,7 @@ Foundations: [ 9H → TD ] 3H
 
 Move JS from stack 16 to foundations 0
 
-Foundations: [ TD → JS ] 3H
+Foundations: [ TD -> JS ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -774,11 +774,11 @@ Foundations: [ TD → JS ] 3H
 : TC 9S
 :
 :
-: [ JS → ]
+: [ JS -> ]
 
 Move TH from stack 10 to foundations 0
 
-Foundations: [ JS → TH ] 3H
+Foundations: [ JS -> TH ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -789,7 +789,7 @@ Foundations: [ JS → TH ] 3H
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
-: 8C 9H [ TH → ]
+: 8C 9H [ TH -> ]
 : 6C
 : 6H 7D JC 9D
 : TC 9S
@@ -799,7 +799,7 @@ Foundations: [ JS → TH ] 3H
 
 Move 9S from stack 13 to foundations 0
 
-Foundations: [ TH → 9S ] 3H
+Foundations: [ TH -> 9S ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -813,14 +813,14 @@ Foundations: [ TH → 9S ] 3H
 : 8C 9H
 : 6C
 : 6H 7D JC 9D
-: TC [ 9S → ]
+: TC [ 9S -> ]
 :
 :
 :
 
 Move TC from stack 13 to foundations 0
 
-Foundations: [ 9S → TC ] 3H
+Foundations: [ 9S -> TC ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -834,14 +834,14 @@ Foundations: [ 9S → TC ] 3H
 : 8C 9H
 : 6C
 : 6H 7D JC 9D
-: [ TC → ]
+: [ TC -> ]
 :
 :
 :
 
 Move 9H from stack 10 to foundations 0
 
-Foundations: [ TC → 9H ] 3H
+Foundations: [ TC -> 9H ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -852,7 +852,7 @@ Foundations: [ TC → 9H ] 3H
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
-: 8C [ 9H → ]
+: 8C [ 9H -> ]
 : 6C
 : 6H 7D JC 9D
 :
@@ -862,7 +862,7 @@ Foundations: [ TC → 9H ] 3H
 
 Move 8C from stack 10 to foundations 0
 
-Foundations: [ 9H → 8C ] 3H
+Foundations: [ 9H -> 8C ] 3H
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -873,7 +873,7 @@ Foundations: [ 9H → 8C ] 3H
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS 2C
 : AS AD 8H 6D
-: [ 8C → ]
+: [ 8C -> ]
 : 6C
 : 6H 7D JC 9D
 :
@@ -883,7 +883,7 @@ Foundations: [ 9H → 8C ] 3H
 
 Move 2C from stack 8 to foundations 1
 
-Foundations: 8C [ 3H → 2C ]
+Foundations: 8C [ 3H -> 2C ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -892,7 +892,7 @@ Foundations: 8C [ 3H → 2C ]
 : KC 8S 3S QH TC QD
 : KC AC 9C 3C AH 7H
 : 8D 7C 7D 4S QS
-: JD 2H 4S KS [ 2C → ]
+: JD 2H 4S KS [ 2C -> ]
 : AS AD 8H 6D
 :
 : 6C
@@ -904,14 +904,14 @@ Foundations: 8C [ 3H → 2C ]
 
 Move 7H from stack 6 to foundations 0
 
-Foundations: [ 8C → 7H ] 2C
+Foundations: [ 8C -> 7H ] 2C
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S JD KD
 : KC 8S 3S QH TC QD
-: KC AC 9C 3C AH [ 7H → ]
+: KC AC 9C 3C AH [ 7H -> ]
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS
 : AS AD 8H 6D
@@ -925,7 +925,7 @@ Foundations: [ 8C → 7H ] 2C
 
 Move 6C from stack 11 to foundations 0
 
-Foundations: [ 7H → 6C ] 2C
+Foundations: [ 7H -> 6C ] 2C
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -937,7 +937,7 @@ Foundations: [ 7H → 6C ] 2C
 : JD 2H 4S KS
 : AS AD 8H 6D
 :
-: [ 6C → ]
+: [ 6C -> ]
 : 6H 7D JC 9D
 :
 :
@@ -946,14 +946,14 @@ Foundations: [ 7H → 6C ] 2C
 
 Move AH from stack 6 to foundations 1
 
-Foundations: 6C [ 2C → AH ]
+Foundations: 6C [ 2C -> AH ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S JD KD
 : KC 8S 3S QH TC QD
-: KC AC 9C 3C [ AH → ]
+: KC AC 9C 3C [ AH -> ]
 : 8D 7C 7D 4S QS
 : JD 2H 4S KS
 : AS AD 8H 6D
@@ -967,7 +967,7 @@ Foundations: 6C [ 2C → AH ]
 
 Move KS from stack 8 to foundations 1
 
-Foundations: 6C [ AH → KS ]
+Foundations: 6C [ AH -> KS ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
@@ -976,7 +976,7 @@ Foundations: 6C [ AH → KS ]
 : KC 8S 3S QH TC QD
 : KC AC 9C 3C
 : 8D 7C 7D 4S QS
-: JD 2H 4S [ KS → ]
+: JD 2H 4S [ KS -> ]
 : AS AD 8H 6D
 :
 :
@@ -988,13 +988,13 @@ Foundations: 6C [ AH → KS ]
 
 Move QD from stack 5 to foundations 1
 
-Foundations: 6C [ KS → QD ]
+Foundations: 6C [ KS -> QD ]
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH 7S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S JD KD
-: KC 8S 3S QH TC [ QD → ]
+: KC 8S 3S QH TC [ QD -> ]
 : KC AC 9C 3C
 : 8D 7C 7D 4S QS
 : JD 2H 4S
@@ -1009,9 +1009,9 @@ Foundations: 6C [ KS → QD ]
 
 Move 7S from stack 1 to foundations 0
 
-Foundations: [ 6C → 7S ] QD
+Foundations: [ 6C -> 7S ] QD
 : 3D QC 2D 7C AD QD
-: 5H 4H 6H 3S JH [ 7S → ]
+: 5H 4H 6H 3S JH [ 7S -> ]
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S JD KD
@@ -1030,7 +1030,7 @@ Foundations: [ 6C → 7S ] QD
 
 Move 6D from stack 9 to foundations 0
 
-Foundations: [ 7S → 6D ] QD
+Foundations: [ 7S -> 6D ] QD
 : 3D QC 2D 7C AD QD
 : 5H 4H 6H 3S JH
 : JC KD TH QH 6S 6D
@@ -1040,7 +1040,7 @@ Foundations: [ 7S → 6D ] QD
 : KC AC 9C 3C
 : 8D 7C 7D 4S QS
 : JD 2H 4S
-: AS AD 8H [ 6D → ]
+: AS AD 8H [ 6D -> ]
 :
 :
 : 6H 7D JC 9D
@@ -1051,9 +1051,9 @@ Foundations: [ 7S → 6D ] QD
 
 Move JH from stack 1 to foundations 1
 
-Foundations: 6D [ QD → JH ]
+Foundations: 6D [ QD -> JH ]
 : 3D QC 2D 7C AD QD
-: 5H 4H 6H 3S [ JH → ]
+: 5H 4H 6H 3S [ JH -> ]
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S JD KD
@@ -1072,8 +1072,8 @@ Foundations: 6D [ QD → JH ]
 
 Move QD from stack 0 to foundations 1
 
-Foundations: 6D [ JH → QD ]
-: 3D QC 2D 7C AD [ QD → ]
+Foundations: 6D [ JH -> QD ]
+: 3D QC 2D 7C AD [ QD -> ]
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
@@ -1093,12 +1093,12 @@ Foundations: 6D [ JH → QD ]
 
 Move KD from stack 4 to foundations 1
 
-Foundations: 6D [ QD → KD ]
+Foundations: 6D [ QD -> KD ]
 : 3D QC 2D 7C AD
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
-: 5H TD 2S 2S JD [ KD → ]
+: 5H TD 2S 2S JD [ KD -> ]
 : KC 8S 3S QH TC
 : KC AC 9C 3C
 : 8D 7C 7D 4S QS
@@ -1114,8 +1114,8 @@ Foundations: 6D [ QD → KD ]
 
 Move AD from stack 0 to foundations 1
 
-Foundations: 6D [ KD → AD ]
-: 3D QC 2D 7C [ AD → ]
+Foundations: 6D [ KD -> AD ]
+: 3D QC 2D 7C [ AD -> ]
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
@@ -1135,8 +1135,8 @@ Foundations: 6D [ KD → AD ]
 
 Move 7C from stack 0 to foundations 0
 
-Foundations: [ 6D → 7C ] AD
-: 3D QC 2D [ 7C → ]
+Foundations: [ 6D -> 7C ] AD
+: 3D QC 2D [ 7C -> ]
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
@@ -1156,7 +1156,7 @@ Foundations: [ 6D → 7C ] AD
 
 Move 8H from stack 9 to foundations 0
 
-Foundations: [ 7C → 8H ] AD
+Foundations: [ 7C -> 8H ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1166,7 +1166,7 @@ Foundations: [ 7C → 8H ] AD
 : KC AC 9C 3C
 : 8D 7C 7D 4S QS
 : JD 2H 4S
-: AS AD [ 8H → ]
+: AS AD [ 8H -> ]
 :
 :
 : 6H 7D JC 9D
@@ -1177,7 +1177,7 @@ Foundations: [ 7C → 8H ] AD
 
 Move 9D from stack 12 to foundations 0
 
-Foundations: [ 8H → 9D ] AD
+Foundations: [ 8H -> 9D ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1190,7 +1190,7 @@ Foundations: [ 8H → 9D ] AD
 : AS AD
 :
 :
-: 6H 7D JC [ 9D → ]
+: 6H 7D JC [ 9D -> ]
 :
 :
 :
@@ -1198,13 +1198,13 @@ Foundations: [ 8H → 9D ] AD
 
 Move TC from stack 5 to foundations 0
 
-Foundations: [ 9D → TC ] AD
+Foundations: [ 9D -> TC ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S JD
-: KC 8S 3S QH [ TC → ]
+: KC 8S 3S QH [ TC -> ]
 : KC AC 9C 3C
 : 8D 7C 7D 4S QS
 : JD 2H 4S
@@ -1219,7 +1219,7 @@ Foundations: [ 9D → TC ] AD
 
 Move JC from stack 12 to foundations 0
 
-Foundations: [ TC → JC ] AD
+Foundations: [ TC -> JC ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1232,7 +1232,7 @@ Foundations: [ TC → JC ] AD
 : AS AD
 :
 :
-: 6H 7D [ JC → ]
+: 6H 7D [ JC -> ]
 :
 :
 :
@@ -1240,7 +1240,7 @@ Foundations: [ TC → JC ] AD
 
 Move QS from stack 7 to foundations 0
 
-Foundations: [ JC → QS ] AD
+Foundations: [ JC -> QS ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1248,7 +1248,7 @@ Foundations: [ JC → QS ] AD
 : 5H TD 2S 2S JD
 : KC 8S 3S QH
 : KC AC 9C 3C
-: 8D 7C 7D 4S [ QS → ]
+: 8D 7C 7D 4S [ QS -> ]
 : JD 2H 4S
 : AS AD
 :
@@ -1261,12 +1261,12 @@ Foundations: [ JC → QS ] AD
 
 Move JD from stack 4 to foundations 0
 
-Foundations: [ QS → JD ] AD
+Foundations: [ QS -> JD ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
-: 5H TD 2S 2S [ JD → ]
+: 5H TD 2S 2S [ JD -> ]
 : KC 8S 3S QH
 : KC AC 9C 3C
 : 8D 7C 7D 4S
@@ -1282,13 +1282,13 @@ Foundations: [ QS → JD ] AD
 
 Move QH from stack 5 to foundations 0
 
-Foundations: [ JD → QH ] AD
+Foundations: [ JD -> QH ] AD
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD 2S 2S
-: KC 8S 3S [ QH → ]
+: KC 8S 3S [ QH -> ]
 : KC AC 9C 3C
 : 8D 7C 7D 4S
 : JD 2H 4S
@@ -1303,12 +1303,12 @@ Foundations: [ JD → QH ] AD
 
 Move 2S from stack 4 to foundations 1
 
-Foundations: QH [ AD → 2S ]
+Foundations: QH [ AD -> 2S ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
-: 5H TD 2S [ 2S → ]
+: 5H TD 2S [ 2S -> ]
 : KC 8S 3S
 : KC AC 9C 3C
 : 8D 7C 7D 4S
@@ -1324,7 +1324,7 @@ Foundations: QH [ AD → 2S ]
 
 Move AD from stack 9 to foundations 1
 
-Foundations: QH [ 2S → AD ]
+Foundations: QH [ 2S -> AD ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1334,7 +1334,7 @@ Foundations: QH [ 2S → AD ]
 : KC AC 9C 3C
 : 8D 7C 7D 4S
 : JD 2H 4S
-: AS [ AD → ]
+: AS [ AD -> ]
 :
 :
 : 6H 7D
@@ -1345,12 +1345,12 @@ Foundations: QH [ 2S → AD ]
 
 Move 2S from stack 4 to foundations 1
 
-Foundations: QH [ AD → 2S ]
+Foundations: QH [ AD -> 2S ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
-: 5H TD [ 2S → ]
+: 5H TD [ 2S -> ]
 : KC 8S 3S
 : KC AC 9C 3C
 : 8D 7C 7D 4S
@@ -1366,14 +1366,14 @@ Foundations: QH [ AD → 2S ]
 
 Move 3C from stack 6 to foundations 1
 
-Foundations: QH [ 2S → 3C ]
+Foundations: QH [ 2S -> 3C ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD
 : KC 8S 3S
-: KC AC 9C [ 3C → ]
+: KC AC 9C [ 3C -> ]
 : 8D 7C 7D 4S
 : JD 2H 4S
 : AS
@@ -1387,7 +1387,7 @@ Foundations: QH [ 2S → 3C ]
 
 Move 4S from stack 8 to foundations 1
 
-Foundations: QH [ 3C → 4S ]
+Foundations: QH [ 3C -> 4S ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1396,7 +1396,7 @@ Foundations: QH [ 3C → 4S ]
 : KC 8S 3S
 : KC AC 9C
 : 8D 7C 7D 4S
-: JD 2H [ 4S → ]
+: JD 2H [ 4S -> ]
 : AS
 :
 :
@@ -1408,13 +1408,13 @@ Foundations: QH [ 3C → 4S ]
 
 Move 3S from stack 5 to foundations 1
 
-Foundations: QH [ 4S → 3S ]
+Foundations: QH [ 4S -> 3S ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
 : 5H TD
-: KC 8S [ 3S → ]
+: KC 8S [ 3S -> ]
 : KC AC 9C
 : 8D 7C 7D 4S
 : JD 2H
@@ -1429,7 +1429,7 @@ Foundations: QH [ 4S → 3S ]
 
 Move 2H from stack 8 to foundations 1
 
-Foundations: QH [ 3S → 2H ]
+Foundations: QH [ 3S -> 2H ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1438,7 +1438,7 @@ Foundations: QH [ 3S → 2H ]
 : KC 8S
 : KC AC 9C
 : 8D 7C 7D 4S
-: JD [ 2H → ]
+: JD [ 2H -> ]
 : AS
 :
 :
@@ -1450,7 +1450,7 @@ Foundations: QH [ 3S → 2H ]
 
 Move JD from stack 8 to foundations 0
 
-Foundations: [ QH → JD ] 2H
+Foundations: [ QH -> JD ] 2H
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1459,7 +1459,7 @@ Foundations: [ QH → JD ] 2H
 : KC 8S
 : KC AC 9C
 : 8D 7C 7D 4S
-: [ JD → ]
+: [ JD -> ]
 : AS
 :
 :
@@ -1471,12 +1471,12 @@ Foundations: [ QH → JD ] 2H
 
 Move TD from stack 4 to foundations 0
 
-Foundations: [ JD → TD ] 2H
+Foundations: [ JD -> TD ] 2H
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C 9S 3C
-: 5H [ TD → ]
+: 5H [ TD -> ]
 : KC 8S
 : KC AC 9C
 : 8D 7C 7D 4S
@@ -1492,11 +1492,11 @@ Foundations: [ JD → TD ] 2H
 
 Move 3C from stack 3 to foundations 1
 
-Foundations: TD [ 2H → 3C ]
+Foundations: TD [ 2H -> 3C ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
-: 5S 2H 8C 9S [ 3C → ]
+: 5S 2H 8C 9S [ 3C -> ]
 : 5H
 : KC 8S
 : KC AC 9C
@@ -1513,7 +1513,7 @@ Foundations: TD [ 2H → 3C ]
 
 Move 4S from stack 7 to foundations 1
 
-Foundations: TD [ 3C → 4S ]
+Foundations: TD [ 3C -> 4S ]
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1521,7 +1521,7 @@ Foundations: TD [ 3C → 4S ]
 : 5H
 : KC 8S
 : KC AC 9C
-: 8D 7C 7D [ 4S → ]
+: 8D 7C 7D [ 4S -> ]
 :
 : AS
 :
@@ -1534,11 +1534,11 @@ Foundations: TD [ 3C → 4S ]
 
 Move 9S from stack 3 to foundations 0
 
-Foundations: [ TD → 9S ] 4S
+Foundations: [ TD -> 9S ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
-: 5S 2H 8C [ 9S → ]
+: 5S 2H 8C [ 9S -> ]
 : 5H
 : KC 8S
 : KC AC 9C
@@ -1555,13 +1555,13 @@ Foundations: [ TD → 9S ] 4S
 
 Move 8S from stack 5 to foundations 0
 
-Foundations: [ 9S → 8S ] 4S
+Foundations: [ 9S -> 8S ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
 : 5S 2H 8C
 : 5H
-: KC [ 8S → ]
+: KC [ 8S -> ]
 : KC AC 9C
 : 8D 7C 7D
 :
@@ -1576,7 +1576,7 @@ Foundations: [ 9S → 8S ] 4S
 
 Move 7D from stack 12 to foundations 0
 
-Foundations: [ 8S → 7D ] 4S
+Foundations: [ 8S -> 7D ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1589,7 +1589,7 @@ Foundations: [ 8S → 7D ] 4S
 : AS
 :
 :
-: 6H [ 7D → ]
+: 6H [ 7D -> ]
 :
 :
 :
@@ -1597,11 +1597,11 @@ Foundations: [ 8S → 7D ] 4S
 
 Move 8C from stack 3 to foundations 0
 
-Foundations: [ 7D → 8C ] 4S
+Foundations: [ 7D -> 8C ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
-: 5S 2H [ 8C → ]
+: 5S 2H [ 8C -> ]
 : 5H
 : KC
 : KC AC 9C
@@ -1618,7 +1618,7 @@ Foundations: [ 7D → 8C ] 4S
 
 Move 7D from stack 7 to foundations 0
 
-Foundations: [ 8C → 7D ] 4S
+Foundations: [ 8C -> 7D ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S 6D
@@ -1626,7 +1626,7 @@ Foundations: [ 8C → 7D ] 4S
 : 5H
 : KC
 : KC AC 9C
-: 8D 7C [ 7D → ]
+: 8D 7C [ 7D -> ]
 :
 : AS
 :
@@ -1639,10 +1639,10 @@ Foundations: [ 8C → 7D ] 4S
 
 Move 6D from stack 2 to foundations 0
 
-Foundations: [ 7D → 6D ] 4S
+Foundations: [ 7D -> 6D ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
-: JC KD TH QH 6S [ 6D → ]
+: JC KD TH QH 6S [ 6D -> ]
 : 5S 2H
 : 5H
 : KC
@@ -1660,12 +1660,12 @@ Foundations: [ 7D → 6D ] 4S
 
 Move 5H from stack 4 to foundations 0
 
-Foundations: [ 6D → 5H ] 4S
+Foundations: [ 6D -> 5H ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
 : JC KD TH QH 6S
 : 5S 2H
-: [ 5H → ]
+: [ 5H -> ]
 : KC
 : KC AC 9C
 : 8D 7C
@@ -1681,10 +1681,10 @@ Foundations: [ 6D → 5H ] 4S
 
 Move 6S from stack 2 to foundations 0
 
-Foundations: [ 5H → 6S ] 4S
+Foundations: [ 5H -> 6S ] 4S
 : 3D QC 2D
 : 5H 4H 6H 3S
-: JC KD TH QH [ 6S → ]
+: JC KD TH QH [ 6S -> ]
 : 5S 2H
 :
 : KC
@@ -1702,9 +1702,9 @@ Foundations: [ 5H → 6S ] 4S
 
 Move 3S from stack 1 to foundations 1
 
-Foundations: 6S [ 4S → 3S ]
+Foundations: 6S [ 4S -> 3S ]
 : 3D QC 2D
-: 5H 4H 6H [ 3S → ]
+: 5H 4H 6H [ 3S -> ]
 : JC KD TH QH
 : 5S 2H
 :
@@ -1723,11 +1723,11 @@ Foundations: 6S [ 4S → 3S ]
 
 Move 2H from stack 3 to foundations 1
 
-Foundations: 6S [ 3S → 2H ]
+Foundations: 6S [ 3S -> 2H ]
 : 3D QC 2D
 : 5H 4H 6H
 : JC KD TH QH
-: 5S [ 2H → ]
+: 5S [ 2H -> ]
 :
 : KC
 : KC AC 9C
@@ -1744,7 +1744,7 @@ Foundations: 6S [ 3S → 2H ]
 
 Move AS from stack 9 to foundations 1
 
-Foundations: 6S [ 2H → AS ]
+Foundations: 6S [ 2H -> AS ]
 : 3D QC 2D
 : 5H 4H 6H
 : JC KD TH QH
@@ -1754,7 +1754,7 @@ Foundations: 6S [ 2H → AS ]
 : KC AC 9C
 : 8D 7C
 :
-: [ AS → ]
+: [ AS -> ]
 :
 :
 : 6H
@@ -1765,13 +1765,13 @@ Foundations: 6S [ 2H → AS ]
 
 Move KC from stack 5 to foundations 1
 
-Foundations: 6S [ AS → KC ]
+Foundations: 6S [ AS -> KC ]
 : 3D QC 2D
 : 5H 4H 6H
 : JC KD TH QH
 : 5S
 :
-: [ KC → ]
+: [ KC -> ]
 : KC AC 9C
 : 8D 7C
 :
@@ -1786,11 +1786,11 @@ Foundations: 6S [ AS → KC ]
 
 Move 5S from stack 3 to foundations 0
 
-Foundations: [ 6S → 5S ] KC
+Foundations: [ 6S -> 5S ] KC
 : 3D QC 2D
 : 5H 4H 6H
 : JC KD TH QH
-: [ 5S → ]
+: [ 5S -> ]
 :
 :
 : KC AC 9C
@@ -1807,10 +1807,10 @@ Foundations: [ 6S → 5S ] KC
 
 Move QH from stack 2 to foundations 1
 
-Foundations: 5S [ KC → QH ]
+Foundations: 5S [ KC -> QH ]
 : 3D QC 2D
 : 5H 4H 6H
-: JC KD TH [ QH → ]
+: JC KD TH [ QH -> ]
 :
 :
 :
@@ -1828,9 +1828,9 @@ Foundations: 5S [ KC → QH ]
 
 Move 6H from stack 1 to foundations 0
 
-Foundations: [ 5S → 6H ] QH
+Foundations: [ 5S -> 6H ] QH
 : 3D QC 2D
-: 5H 4H [ 6H → ]
+: 5H 4H [ 6H -> ]
 : JC KD TH
 :
 :
@@ -1849,7 +1849,7 @@ Foundations: [ 5S → 6H ] QH
 
 Move 7C from stack 7 to foundations 0
 
-Foundations: [ 6H → 7C ] QH
+Foundations: [ 6H -> 7C ] QH
 : 3D QC 2D
 : 5H 4H
 : JC KD TH
@@ -1857,7 +1857,7 @@ Foundations: [ 6H → 7C ] QH
 :
 :
 : KC AC 9C
-: 8D [ 7C → ]
+: 8D [ 7C -> ]
 :
 :
 :
@@ -1870,7 +1870,7 @@ Foundations: [ 6H → 7C ] QH
 
 Move 8D from stack 7 to foundations 0
 
-Foundations: [ 7C → 8D ] QH
+Foundations: [ 7C -> 8D ] QH
 : 3D QC 2D
 : 5H 4H
 : JC KD TH
@@ -1878,7 +1878,7 @@ Foundations: [ 7C → 8D ] QH
 :
 :
 : KC AC 9C
-: [ 8D → ]
+: [ 8D -> ]
 :
 :
 :
@@ -1891,14 +1891,14 @@ Foundations: [ 7C → 8D ] QH
 
 Move 9C from stack 6 to foundations 0
 
-Foundations: [ 8D → 9C ] QH
+Foundations: [ 8D -> 9C ] QH
 : 3D QC 2D
 : 5H 4H
 : JC KD TH
 :
 :
 :
-: KC AC [ 9C → ]
+: KC AC [ 9C -> ]
 :
 :
 :
@@ -1912,10 +1912,10 @@ Foundations: [ 8D → 9C ] QH
 
 Move TH from stack 2 to foundations 0
 
-Foundations: [ 9C → TH ] QH
+Foundations: [ 9C -> TH ] QH
 : 3D QC 2D
 : 5H 4H
-: JC KD [ TH → ]
+: JC KD [ TH -> ]
 :
 :
 :
@@ -1933,10 +1933,10 @@ Foundations: [ 9C → TH ] QH
 
 Move KD from stack 2 to foundations 1
 
-Foundations: TH [ QH → KD ]
+Foundations: TH [ QH -> KD ]
 : 3D QC 2D
 : 5H 4H
-: JC [ KD → ]
+: JC [ KD -> ]
 :
 :
 :
@@ -1954,14 +1954,14 @@ Foundations: TH [ QH → KD ]
 
 Move AC from stack 6 to foundations 1
 
-Foundations: TH [ KD → AC ]
+Foundations: TH [ KD -> AC ]
 : 3D QC 2D
 : 5H 4H
 : JC
 :
 :
 :
-: KC [ AC → ]
+: KC [ AC -> ]
 :
 :
 :
@@ -1975,10 +1975,10 @@ Foundations: TH [ KD → AC ]
 
 Move JC from stack 2 to foundations 0
 
-Foundations: [ TH → JC ] AC
+Foundations: [ TH -> JC ] AC
 : 3D QC 2D
 : 5H 4H
-: [ JC → ]
+: [ JC -> ]
 :
 :
 :
@@ -1996,8 +1996,8 @@ Foundations: [ TH → JC ] AC
 
 Move 2D from stack 0 to foundations 1
 
-Foundations: JC [ AC → 2D ]
-: 3D QC [ 2D → ]
+Foundations: JC [ AC -> 2D ]
+: 3D QC [ 2D -> ]
 : 5H 4H
 :
 :
@@ -2017,8 +2017,8 @@ Foundations: JC [ AC → 2D ]
 
 Move QC from stack 0 to foundations 0
 
-Foundations: [ JC → QC ] 2D
-: 3D [ QC → ]
+Foundations: [ JC -> QC ] 2D
+: 3D [ QC -> ]
 : 5H 4H
 :
 :
@@ -2038,14 +2038,14 @@ Foundations: [ JC → QC ] 2D
 
 Move KC from stack 6 to foundations 0
 
-Foundations: [ QC → KC ] 2D
+Foundations: [ QC -> KC ] 2D
 : 3D
 : 5H 4H
 :
 :
 :
 :
-: [ KC → ]
+: [ KC -> ]
 :
 :
 :
@@ -2059,8 +2059,8 @@ Foundations: [ QC → KC ] 2D
 
 Move 3D from stack 0 to foundations 1
 
-Foundations: KC [ 2D → 3D ]
-: [ 3D → ]
+Foundations: KC [ 2D -> 3D ]
+: [ 3D -> ]
 : 5H 4H
 :
 :
@@ -2080,9 +2080,9 @@ Foundations: KC [ 2D → 3D ]
 
 Move 4H from stack 1 to foundations 1
 
-Foundations: KC [ 3D → 4H ]
+Foundations: KC [ 3D -> 4H ]
 :
-: 5H [ 4H → ]
+: 5H [ 4H -> ]
 :
 :
 :
@@ -2101,9 +2101,9 @@ Foundations: KC [ 3D → 4H ]
 
 Move 5H from stack 1 to foundations 1
 
-Foundations: KC [ 4H → 5H ]
+Foundations: KC [ 4H -> 5H ]
 :
-: [ 5H → ]
+: [ 5H -> ]
 :
 :
 :
@@ -2122,7 +2122,7 @@ Foundations: KC [ 4H → 5H ]
 
 Move 6H from stack 12 to foundations 1
 
-Foundations: KC [ 5H → 6H ]
+Foundations: KC [ 5H -> 6H ]
 :
 :
 :
@@ -2135,7 +2135,7 @@ Foundations: KC [ 5H → 6H ]
 :
 :
 :
-: [ 6H → ]
+: [ 6H -> ]
 :
 :
 :

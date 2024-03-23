@@ -25,14 +25,6 @@ sub _sol_iter
     return sub { my $l = <$fh>; chomp $l; return $l; };
 }
 
-sub _utf8_sol_iter
-{
-    my ($fn) = @_;
-    my $fh = $mani->get_obj($fn)->fh->openr_utf8;
-
-    return sub { my $l = <$fh>; chomp $l; return $l; };
-}
-
 {
     my $verifier = Games::Solitaire::Verify::Golf->new(
         {
@@ -118,7 +110,7 @@ sub _utf8_sol_iter
         }
     );
 
-    $verifier->process_solution( _utf8_sol_iter("1.binary_star.sol") );
+    $verifier->process_solution( _sol_iter("1.binary_star.sol") );
 
     # TEST
     pass("No error on verifying binary_star wrap ranks pysol fc 1 sol");

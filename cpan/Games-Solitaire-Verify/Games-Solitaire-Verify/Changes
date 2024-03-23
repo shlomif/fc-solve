@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2600  2024-01-31
+        - Convert to support the ASCIIfied output of
+        Games::Solitaire::BlackHole::Solver version 0.10.0
+
 0.2500  2024-01-31
         - Add support for the "binary_star" variant
             - https://github.com/shlomif/black-hole-solitaire/issues/8

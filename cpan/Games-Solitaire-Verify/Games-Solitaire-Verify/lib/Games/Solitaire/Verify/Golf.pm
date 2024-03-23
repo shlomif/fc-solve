@@ -4,7 +4,6 @@ use strict;
 use warnings;
 use 5.014;
 use autodie;
-use utf8;
 
 =head1 NAME
 
@@ -433,7 +432,7 @@ m/\AMove a card from stack ([0-9]+) to the foundations\z/
                     my $fstr = $found_card->to_string();
                     my $tstr = $top_card->to_string();
                     $wanted_line =~
-s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $tstr ]"#e
+s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c -> $tstr ]"#e
                         or Carp::confess(
 "Failed substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line fstr='$fstr'"
                         );
@@ -445,7 +444,7 @@ s#\AFoundations:(?: $CARD_RE){$foundation_idx} \K(\Q$fstr\E)#my$c=$1;"[ $c → $
                         if ( $i == $col_idx )
                         {
                             $wanted_line =~
-                                s# \K(\Q$tstr\E)\z#my$c=$1;"[ $c → ]"#e
+                                s# \K(\Q$tstr\E)\z#my$c=$1;"[ $c -> ]"#e
                                 or Carp::confess(
 "Failed column substitute! foundation_idx=$foundation_idx wanted_line=$wanted_line tstr='$tstr'"
                                 );
