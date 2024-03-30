@@ -29,9 +29,6 @@
 #pragma once
 
 #include "rinutils/unused.h"
-#ifndef _WIN32
-#include <sys/cdefs.h>
-#endif
 
 /*
  * This file defines data structures for different types of trees:
