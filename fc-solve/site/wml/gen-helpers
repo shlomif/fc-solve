@@ -97,7 +97,7 @@ while ( my $r = $tree->next_obj() )
         {
             push @tt2, $path;
         }
-        else
+        elsif ( $path !~ m#(?:\~)\z#ms )
         {
             push @images_paths, $path;
         }
