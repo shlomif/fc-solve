@@ -445,6 +445,11 @@ export class FC_Solve {
 
         return that.module_wrapper.user_get_num_stacks(that.obj);
     }
+    public get_sequence_move(): number {
+        const that = this;
+
+        return that.module_wrapper.user_get_sequence_move(that.obj);
+    }
     private _calc_states_and_moves_seq() {
         const that = this;
 
