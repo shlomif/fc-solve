@@ -104,10 +104,13 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_cmd_line_read_cmd_line_preset \
 	freecell_solver_user_current_state_stringify \
 	freecell_solver_user_free \
+	freecell_solver_user_get_empty_stacks_filled_by \
 	freecell_solver_user_get_invalid_state_error_into_string \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_get_num_freecells \
 	freecell_solver_user_get_num_stacks \
+	freecell_solver_user_get_sequence_move \
+	freecell_solver_user_get_sequences_are_built_by_type \
 	freecell_solver_user_get_unrecognized_cmd_line_flag \
 	freecell_solver_user_get_unrecognized_cmd_line_flag_status \
 	freecell_solver_user_limit_iterations_long \

@@ -4011,6 +4011,17 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
 
     return 0;
 }
+
+#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+int DLLEXPORT freecell_solver_user_get_sequences_are_built_by_type(
+    void *const api_instance)
+{
+    return ((((fcs_user *const)api_instance)
+                    ->common_preset.game_params.game_flags) &
+            0x3);
+}
+#endif
+
 #endif
 
 #ifndef FCS_FREECELL_ONLY
@@ -4026,6 +4037,17 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
     apply_game_params_for_all_instances(user);
     return 0;
 }
+
+#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+int DLLEXPORT freecell_solver_user_get_sequence_move(void *const api_instance)
+{
+    return (((((fcs_user *const)api_instance)
+                     ->common_preset.game_params.game_flags) >>
+                4) &
+            0x1);
+}
+#endif
+
 #endif
 
 #ifndef FCS_FREECELL_ONLY
@@ -4043,6 +4065,18 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     apply_game_params_for_all_instances(user);
     return 0;
 }
+
+#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+int DLLEXPORT freecell_solver_user_get_empty_stacks_filled_by(
+    void *const api_instance)
+{
+    return (((((fcs_user *const)api_instance)
+                     ->common_preset.game_params.game_flags) >>
+                2) &
+            0x3);
+}
+#endif
+
 #endif
 
 int DLLEXPORT freecell_solver_user_set_a_star_weight(
