@@ -467,6 +467,11 @@ export class FC_Solve {
 
         let reasons: string = "";
 
+        const wanted_num_stacks: number = 8;
+        if (that.get_num_stacks() !== wanted_num_stacks) {
+            reasons += "Wrong number of stacks!\n";
+        }
+
         const verdict: boolean = reasons.length == 0;
 
         return { reasons: reasons, verdict: verdict };
