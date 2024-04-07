@@ -471,7 +471,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         qunit.test(
             "FC_Solve user_get_empty_stacks_filled_by after CLI flag",
             (assert) => {
-                assert.expect(1);
+                assert.expect(2);
 
                 const instance: w.FC_Solve = new FC_Solve({
                     module_wrapper,
@@ -488,6 +488,13 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     instance.get_empty_stacks_filled_by(),
                     FCS_ES_FILLED_BY_KINGS_ONLY,
                     "get_empty_stacks_filled_by() returns the modified value after command line.",
+                );
+
+                // TEST
+                const check_ret = instance.check_if_params_match_freecell();
+                assert.notOk(
+                    check_ret.verdict,
+                    "different get_empty_stacks_filled_by setting.",
                 );
             },
         );
