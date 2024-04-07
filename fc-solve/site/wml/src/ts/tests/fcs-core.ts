@@ -431,6 +431,8 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             },
         );
 
+        const FCS_ES_FILLED_BY_KINGS_ONLY: number = 1;
+
         qunit.test("FC_Solve user_get_empty_stacks_filled_by #1", (assert) => {
             assert.expect(1);
 
@@ -449,6 +451,30 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 "get_empty_stacks_filled_by() returns the default.",
             );
         });
+
+        qunit.test(
+            "FC_Solve user_get_empty_stacks_filled_by after CLI flag",
+            (assert) => {
+                assert.expect(1);
+
+                const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
+                    cmd_line_preset: "default",
+                    dir_base: "fcs4",
+                    set_status_callback: () => {
+                        return;
+                    },
+                    string_params: "--empty-stacks-filled-by kings",
+                });
+
+                // TEST
+                assert.equal(
+                    instance.get_empty_stacks_filled_by(),
+                    FCS_ES_FILLED_BY_KINGS_ONLY,
+                    "get_empty_stacks_filled_by() returns the modified value after command line.",
+                );
+            },
+        );
 
         qunit.test("FC_Solve deal_ms_fc_board", (assert) => {
             assert.expect(2);
