@@ -88,6 +88,37 @@ sub _is_golf
     return $self->_variant eq 'golf';
 }
 
+sub _read_foundation_line
+{
+    my ( $self, $foundation_str ) = @_;
+    my $num_foundations = $self->_num_foundations();
+
+    if ( my ($card_s) = $foundation_str =~
+        m#\AFoundations:((?: $CARD_RE){$num_foundations})\z# )
+    {
+        $card_s =~ s/\A //ms
+            or Carp::confess("_set_found_line: no leading space");
+        my @c = split( / /, $card_s );
+        if ( @c != $num_foundations )
+        {
+            Carp::confess( "num_foundations is "
+                    . scalar(@c)
+                    . " rather than $num_foundations" );
+        }
+        for my $i ( keys @c )
+        {
+            my $s = $c[$i];
+            $self->_set_found( $i,
+                Games::Solitaire::Verify::Card->new( { string => $s } ) );
+        }
+    }
+    else
+    {
+        Carp::confess("Foundations str is '$foundation_str'");
+    }
+    return;
+}
+
 sub _init
 {
     my ( $self, $args ) = @_;
@@ -116,35 +147,7 @@ sub _init
     );
     my $board_string = $args->{board_string};
 
-    my @lines = split( /\n/, $board_string );
-
-    my $_set_found_line = sub {
-        my $foundation_str = shift;
-        if ( my ($card_s) = $foundation_str =~
-            m#\AFoundations:((?: $CARD_RE){$num_foundations})\z# )
-        {
-            $card_s =~ s/\A //ms
-                or Carp::confess("_set_found_line: no leading space");
-            my @c = split( / /, $card_s );
-            if ( @c != $num_foundations )
-            {
-                Carp::confess( "num_foundations is "
-                        . scalar(@c)
-                        . " rather than $num_foundations" );
-            }
-            for my $i ( keys @c )
-            {
-                my $s = $c[$i];
-                $self->_set_found( $i,
-                    Games::Solitaire::Verify::Card->new( { string => $s } ) );
-            }
-        }
-        else
-        {
-            Carp::confess("Foundations str is '$foundation_str'");
-        }
-        return;
-    };
+    my @lines          = split( /\n/, $board_string );
     my $foundation_str = shift(@lines);
     if ( $self->_variant eq 'golf' )
     {
@@ -161,8 +164,7 @@ sub _init
         );
 
         $foundation_str = shift(@lines);
-        $_set_found_line->($foundation_str);
-
+        $self->_read_foundation_line($foundation_str);
     }
     else
     {
@@ -176,7 +178,7 @@ sub _init
         }
         else
         {
-            $_set_found_line->($foundation_str);
+            $self->_read_foundation_line($foundation_str);
         }
     }
 
