@@ -464,10 +464,12 @@ export class FC_Solve {
     }
     private _check_if_params_match_preset({
         empty_stacks_filled_by,
+        sequence_move,
         wanted_num_freecells,
         wanted_num_stacks,
     }: {
         empty_stacks_filled_by: number;
+        sequence_move: number;
         wanted_num_freecells: number;
         wanted_num_stacks: number;
     }): GameVariantPresetCheckRet {
@@ -487,6 +489,10 @@ export class FC_Solve {
             reasons += "Wrong number of freecells!\n";
         }
 
+        if (that.get_sequence_move() !== sequence_move) {
+            reasons += "Wrong sequence_move!\n";
+        }
+
         const verdict: boolean = reasons.length == 0;
 
         return { reasons: reasons, verdict: verdict };
@@ -499,9 +505,11 @@ export class FC_Solve {
         const wanted_num_freecells: number = 4;
         const wanted_num_stacks: number = 8;
         const empty_stacks_filled_by: number = FCS_ES_FILLED_BY_ANY_CARD;
+        const sequence_move: number = 0;
 
         return that._check_if_params_match_preset({
             empty_stacks_filled_by: empty_stacks_filled_by,
+            sequence_move: sequence_move,
             wanted_num_freecells: wanted_num_freecells,
             wanted_num_stacks: wanted_num_stacks,
         });

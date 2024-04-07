@@ -521,7 +521,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         qunit.test(
             "FC_Solve user_get_sequence_move after CLI flag",
             (assert) => {
-                assert.expect(1);
+                assert.expect(2);
 
                 const instance: w.FC_Solve = new FC_Solve({
                     module_wrapper,
@@ -538,6 +538,13 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     instance.get_sequence_move(),
                     1,
                     "get_sequence_move() returns the modified value after command line.",
+                );
+
+                // TEST
+                const check_ret = instance.check_if_params_match_freecell();
+                assert.notOk(
+                    check_ret.verdict,
+                    "different get_sequence_move() setting.",
                 );
             },
         );
