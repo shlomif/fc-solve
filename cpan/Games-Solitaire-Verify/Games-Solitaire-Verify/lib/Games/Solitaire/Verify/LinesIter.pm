@@ -2,6 +2,7 @@ package Games::Solitaire::Verify::LinesIter;
 
 use strict;
 use warnings;
+use autodie;
 
 sub new
 {
