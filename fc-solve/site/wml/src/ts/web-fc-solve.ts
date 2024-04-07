@@ -472,6 +472,11 @@ export class FC_Solve {
             reasons += "Wrong number of stacks!\n";
         }
 
+        const wanted_num_freecells: number = 4;
+        if (that.get_num_freecells() !== wanted_num_freecells) {
+            reasons += "Wrong number of freecells!\n";
+        }
+
         const verdict: boolean = reasons.length == 0;
 
         return { reasons: reasons, verdict: verdict };

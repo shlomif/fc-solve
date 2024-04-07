@@ -375,7 +375,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         qunit.test(
             "FC_Solve get_num_stacks command line settings",
             (assert) => {
-                assert.expect(1);
+                assert.expect(2);
 
                 const instance: w.FC_Solve = new FC_Solve({
                     module_wrapper,
@@ -393,6 +393,10 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     6,
                     "get_num_stacks() Returns 6 after command line.",
                 );
+
+                // TEST
+                const check_ret = instance.check_if_params_match_freecell();
+                assert.notOk(check_ret.verdict, "different stacks number.");
             },
         );
 
@@ -418,7 +422,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         qunit.test(
             "FC_Solve get_num_freecells () - after using --freecells-num flag",
             (assert) => {
-                assert.expect(1);
+                assert.expect(2);
 
                 const instance: w.FC_Solve = new FC_Solve({
                     module_wrapper,
@@ -436,6 +440,10 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     2,
                     "get_num_freecells() returns 2 after command line.",
                 );
+
+                // TEST
+                const check_ret = instance.check_if_params_match_freecell();
+                assert.notOk(check_ret.verdict, "different freecells number.");
             },
         );
 
