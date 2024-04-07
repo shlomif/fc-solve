@@ -407,24 +407,46 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             );
         });
 
-        qunit.test("FC_Solve get_num_freecells #1", (assert) => {
+        qunit.test(
+            "FC_Solve get_num_freecells () - after using --freecells-num flag",
+            (assert) => {
+                assert.expect(1);
+
+                const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
+                    cmd_line_preset: "default",
+                    dir_base: "fcs3",
+                    set_status_callback: () => {
+                        return;
+                    },
+                    string_params: "--freecells-num 2",
+                });
+
+                // TEST
+                assert.equal(
+                    instance.get_num_freecells(),
+                    2,
+                    "get_num_freecells() returns 2 after command line.",
+                );
+            },
+        );
+
+        qunit.test("FC_Solve user_get_empty_stacks_filled_by #1", (assert) => {
             assert.expect(1);
 
             const instance: w.FC_Solve = new FC_Solve({
                 module_wrapper,
                 cmd_line_preset: "default",
-                dir_base: "fcs3",
                 set_status_callback: () => {
                     return;
                 },
-                string_params: "--freecells-num 2",
             });
 
             // TEST
             assert.equal(
-                instance.get_num_freecells(),
-                2,
-                "get_num_freecells() returns 2 after command line.",
+                instance.get_empty_stacks_filled_by(),
+                w.FCS_ES_FILLED_BY_ANY_CARD,
+                "get_empty_stacks_filled_by() returns the default.",
             );
         });
 
