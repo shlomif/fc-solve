@@ -137,6 +137,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
 const remove_trailing_space_re = /[ \t]+$/gm;
 
 export const FCS_ES_FILLED_BY_ANY_CARD = 0;
+export const FCS_SEQ_BUILT_BY_ALTERNATE_COLOR = 0;
 export const FCS_STATE_WAS_SOLVED = 0;
 const FCS_STATE_IS_NOT_SOLVEABLE = 1;
 const FCS_STATE_ALREADY_EXISTS = 2;
@@ -449,6 +450,13 @@ export class FC_Solve {
         const that = this;
 
         return that.module_wrapper.user_get_sequence_move(that.obj);
+    }
+    public get_sequences_are_built_by_type(): number {
+        const that = this;
+
+        return that.module_wrapper.user_get_sequences_are_built_by_type(
+            that.obj,
+        );
     }
     private _calc_states_and_moves_seq() {
         const that = this;

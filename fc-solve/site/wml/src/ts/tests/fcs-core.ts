@@ -519,6 +519,54 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             },
         );
 
+        const FCS_SEQ_BUILT_BY_SUIT: number = 1;
+
+        qunit.test(
+            "FC_Solve user_get_sequences_are_built_by_type pristine",
+            (assert) => {
+                assert.expect(1);
+
+                const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
+                    cmd_line_preset: "default",
+                    set_status_callback: () => {
+                        return;
+                    },
+                });
+
+                // TEST
+                assert.equal(
+                    instance.get_sequences_are_built_by_type(),
+                    w.FCS_SEQ_BUILT_BY_ALTERNATE_COLOR,
+                    "get_sequences_are_built_by_type() returns the default.",
+                );
+            },
+        );
+
+        qunit.test(
+            "FC_Solve user_get_sequences_are_built_by_type after CLI flag",
+            (assert) => {
+                assert.expect(1);
+
+                const instance: w.FC_Solve = new FC_Solve({
+                    module_wrapper,
+                    cmd_line_preset: "default",
+                    dir_base: "fcs6",
+                    set_status_callback: () => {
+                        return;
+                    },
+                    string_params: "--sequences-are-built-by suit",
+                });
+
+                // TEST
+                assert.equal(
+                    instance.get_sequences_are_built_by_type(),
+                    FCS_SEQ_BUILT_BY_SUIT,
+                    "get_sequences_are_built_by_type() returns the modified value after command line.",
+                );
+            },
+        );
+
         qunit.test("FC_Solve deal_ms_fc_board", (assert) => {
             assert.expect(2);
 
