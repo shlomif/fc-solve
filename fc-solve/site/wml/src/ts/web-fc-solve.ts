@@ -462,17 +462,21 @@ export class FC_Solve {
             that.obj,
         );
     }
-    public check_if_params_match_freecell(): GameVariantPresetCheckRet {
+    private _check_if_params_match_preset({
+        wanted_num_freecells,
+        wanted_num_stacks,
+    }: {
+        wanted_num_freecells: number;
+        wanted_num_stacks: number;
+    }): GameVariantPresetCheckRet {
         const that = this;
 
         let reasons: string = "";
 
-        const wanted_num_stacks: number = 8;
         if (that.get_num_stacks() !== wanted_num_stacks) {
             reasons += "Wrong number of stacks!\n";
         }
 
-        const wanted_num_freecells: number = 4;
         if (that.get_num_freecells() !== wanted_num_freecells) {
             reasons += "Wrong number of freecells!\n";
         }
@@ -480,6 +484,19 @@ export class FC_Solve {
         const verdict: boolean = reasons.length == 0;
 
         return { reasons: reasons, verdict: verdict };
+    }
+    public check_if_params_match_freecell(): GameVariantPresetCheckRet {
+        const that = this;
+
+        let reasons: string = "";
+
+        const wanted_num_freecells: number = 4;
+        const wanted_num_stacks: number = 8;
+
+        return that._check_if_params_match_preset({
+            wanted_num_freecells: wanted_num_freecells,
+            wanted_num_stacks: wanted_num_stacks,
+        });
     }
     private _calc_states_and_moves_seq() {
         const that = this;
