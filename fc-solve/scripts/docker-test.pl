@@ -8,7 +8,7 @@ use autodie;
 use Path::Tiny qw/ path /;
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 
-my $SYS       = "fedora:35";
+my $SYS       = "fedora:39";
 my $CONTAINER = "fcsfed";
 my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, }, );
