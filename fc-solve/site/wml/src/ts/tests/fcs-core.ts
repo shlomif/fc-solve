@@ -326,7 +326,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         });
 
         qunit.test("FC_Solve get_num_stacks #1", (assert) => {
-            assert.expect(1);
+            assert.expect(2);
 
             const instance: w.FC_Solve = new FC_Solve({
                 module_wrapper,
@@ -342,6 +342,10 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                 8,
                 "get_num_stacks() Returns 8.",
             );
+
+            // TEST
+            const check_ret = instance.check_if_params_match_freecell();
+            assert.ok(check_ret.verdict, "is freecell");
         });
 
         qunit.test("FC_Solve get_num_stacks simple_simon", (assert) => {

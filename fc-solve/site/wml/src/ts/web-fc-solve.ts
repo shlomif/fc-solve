@@ -216,6 +216,10 @@ interface DisplaySolArgs {
     displayer: DisplayFilter;
     expand: boolean;
 }
+interface GameVariantPresetCheckRet {
+    reasons: string;
+    verdict: boolean;
+}
 
 const ptr_type: string = "i32";
 export class FC_Solve {
@@ -457,6 +461,15 @@ export class FC_Solve {
         return that.module_wrapper.user_get_sequences_are_built_by_type(
             that.obj,
         );
+    }
+    public check_if_params_match_freecell(): GameVariantPresetCheckRet {
+        const that = this;
+
+        let reasons: string = "";
+
+        const verdict: boolean = reasons.length == 0;
+
+        return { reasons: reasons, verdict: verdict };
     }
     private _calc_states_and_moves_seq() {
         const that = this;
