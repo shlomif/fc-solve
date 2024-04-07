@@ -53,6 +53,7 @@ use List::Util qw/ sum /;
 use Games::Solitaire::Verify::Card      ();
 use Games::Solitaire::Verify::Column    ();
 use Games::Solitaire::Verify::Freecells ();
+use Games::Solitaire::Verify::LinesIter ();
 
 use parent 'Games::Solitaire::Verify::Base';
 
@@ -208,74 +209,12 @@ sub _set_found
     return;
 }
 
-package Games::Solitaire::Verify::Golf::_LinesIter;
-
-sub new
-{
-    my $class = shift;
-
-    my $self = bless {}, $class;
-
-    $self->_init(@_);
-
-    return $self;
-}
-
-sub _init
-{
-    my ( $self, $args ) = @_;
-
-    $self->{_get}      = $args->{_get};
-    $self->{_line_num} = 0;
-
-    return;
-}
-
-sub _get_line
-{
-    my ( $self, ) = @_;
-
-    my $ret = $self->{_get}->();
-    return ( $ret, ++$self->{_line_num} );
-}
-
-sub _assert_empty_line
-{
-    my ( $self, ) = @_;
-
-    my ( $s, $line_idx ) = $self->_get_line;
-
-    if ( $s ne '' )
-    {
-        Carp::confess("Line '$line_idx' is not empty, but '$s'");
-    }
-
-    return;
-}
-
-sub _compare_line
-{
-    my ( $self, $wanted_line, $title, ) = @_;
-
-    my ( $line, $line_idx ) = $self->_get_line;
-    if ( $line ne $wanted_line )
-    {
-        Carp::confess(
-            "$title string is '$line' vs. '$wanted_line' at line no. $line_idx"
-        );
-    }
-
-    return;
-}
-
-package Games::Solitaire::Verify::Golf;
-
 sub process_solution
 {
     my ( $self, $next_line_iter ) = @_;
     my $columns     = $self->_columns;
     my $NUM_COLUMNS = @$columns;
-    my $it          = Games::Solitaire::Verify::Golf::_LinesIter->new(
+    my $it          = Games::Solitaire::Verify::LinesIter->new(
         { _get => $next_line_iter, } );
     my $remaining_cards = sum( map { $_->len } @$columns );
 
