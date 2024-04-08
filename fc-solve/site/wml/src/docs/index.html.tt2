@@ -134,18 +134,22 @@ and elsewhere. Also see
 recent version</a> (and a publicly editable one) on the English Wikibooks.
 </p>
 
-<h3 class="plain"><a href="http://www.shlomifish.org/philosophy/computers/open-source/foss-licences-wars/">FOSS Licences Wars</a></h3>
+<h3 class="plain"><a href="https://www.shlomifish.org/philosophy/computers/open-source/foss-licences-wars/rev2/">FOSS Licences Wars (Revision 2)</a></h3>
 
 <p>
 An essay about licences of free and operating source software (FOSS) that
-also mentions Freecell Solver as a case study. <b>Note:</b> some of it is
+also mentions Freecell Solver as a case study.
+</p>
+
+[% IF 0 %]
+<b>Note:</b> some of it is
 disinforming or misinforming, and one should refer to
 <a href="http://hamakor.org.il/pipermail/discussions/2009-August/000609.html">some
 errata by Mikhael Goikhman</a> for some corrections, as well as
 my
 <a href="http://www.mail-archive.com/linux-il@cs.huji.ac.il/msg56378.html">"Why
 I prefer BSD-style licences"</a>.
-</p>
+[% END %]
 
 [% END %]
 
