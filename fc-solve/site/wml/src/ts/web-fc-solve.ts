@@ -3,13 +3,31 @@ import * as BaseApi from "./web-fcs-api-base";
 import { fc_solve_expand_move } from "./web-fc-solve--expand-moves";
 import { rank_re, suit_re } from "./french-cards";
 
+let myalert: any;
+try {
+    if (!alert) {
+        myalert = (e) => {
+            console.log(e + "\n");
+            throw e;
+        };
+    } else {
+        myalert = alert;
+    }
+} catch (x) {
+    myalert = (e) => {
+        console.log(e + "\n");
+        throw e;
+    };
+}
+
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     alloc_wrap: (size: number, desc: string, error: string) => number;
     bh_create: (buffer: number) => number;
     bh_free: (instance: number) => number;
     c_free: (buffer: number) => number;
-    fc_solve_allocate_i8: (pointer: number) => number;
     fc_solve_Pointer_stringify: (buffer: number) => string;
+    stringToAscii: (s: string, outPtr: number) => void;
+    stringToUTF8: (s: string, outPtr: number, maxBytes: number) => void;
     user_alloc: () => number;
     user_cmd_line_parse_args_with_file_nesting_count: (...args: any) => any;
     user_cmd_line_read_cmd_line_preset: (...args: any) => any;
@@ -40,9 +58,6 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     const module_wrapper = BaseApi.base_calc_module_wrapper(
         Module,
     ) as ModuleWrapper;
-    module_wrapper.fc_solve_allocate_i8 = (p1) => {
-        return Module.allocate(p1, "i8", Module.ALLOC_STACK);
-    };
     module_wrapper.bh_create = Module._black_hole_solver_create;
     module_wrapper.bh_free = Module._black_hole_solver_free;
     module_wrapper.user_alloc = Module._freecell_solver_user_alloc;
@@ -129,6 +144,16 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     module_wrapper.c_free = Module.cwrap("free", "number", ["number"]);
     module_wrapper.fc_solve_Pointer_stringify = (ptr) => {
         return Module.UTF8ToString(ptr, 10000);
+    };
+    module_wrapper.stringToAscii = (s: string, outPtr: number) => {
+        return Module.writeArrayToMemory(Module.intArrayFromString(s), outPtr);
+    };
+    module_wrapper.stringToUTF8 = (
+        s: string,
+        outPtr: number,
+        maxBytes: number,
+    ) => {
+        return Module.stringToUTF8(s, outPtr, maxBytes);
     };
 
     return module_wrapper;
@@ -221,6 +246,9 @@ interface GameVariantPresetCheckRet {
     verdict: boolean;
 }
 
+const _read_from_file_str_ptr_size: number = 32;
+const _arg_str_ptr_size: number = 128;
+
 const ptr_type: string = "i32";
 export class FC_Solve {
     public proto_states_and_moves_seq: any[];
@@ -237,6 +265,8 @@ export class FC_Solve {
     private _move_buffer: number;
     private _move_string_buffer: number;
     private _state_string_buffer: number;
+    private _read_from_file_str_ptr: number;
+    private _arg_str_ptr: number;
     private _unrecognized_opt: string;
 
     constructor(args) {
@@ -277,22 +307,6 @@ export class FC_Solve {
         that.proto_states_and_moves_seq = null;
         that._pre_expand_states_and_moves_seq = null;
         that._post_expand_states_and_moves_seq = null;
-        const _state_string_buffer_size: number = 500;
-        const _move_string_buffer_size: number = 200;
-        const _move_buffer_size: number = 64;
-        const _total_buffer_size: number =
-            _state_string_buffer_size +
-            _move_string_buffer_size +
-            _move_buffer_size;
-        that._state_string_buffer = that.module_wrapper.alloc_wrap(
-            _total_buffer_size,
-            "state+move string buffer",
-            "Zam",
-        );
-        that._move_string_buffer =
-            that._state_string_buffer + _state_string_buffer_size;
-        that._move_buffer = that._move_string_buffer + _move_string_buffer_size;
-
         return;
     }
     public set_status(myclass, mylabel) {
@@ -728,6 +742,31 @@ export class FC_Solve {
                     throw "Foo";
                 }
             }
+            const _state_string_buffer_size: number = 500;
+            const _move_string_buffer_size: number = 200;
+            const _move_buffer_size: number = 64;
+            const _total_buffer_size: number =
+                _state_string_buffer_size +
+                _move_string_buffer_size +
+                _move_buffer_size +
+                _read_from_file_str_ptr_size +
+                _arg_str_ptr_size;
+            that._state_string_buffer = that.module_wrapper.alloc_wrap(
+                _total_buffer_size,
+                "state+move string buffer",
+                "Zam",
+            );
+            if (!that._state_string_buffer) {
+                alert("that._state_string_buffer is 0");
+            }
+            that._move_string_buffer =
+                that._state_string_buffer + _state_string_buffer_size;
+            that._move_buffer =
+                that._move_string_buffer + _move_string_buffer_size;
+            that._read_from_file_str_ptr =
+                that._move_buffer + _move_buffer_size;
+            that._arg_str_ptr =
+                that._read_from_file_str_ptr + _read_from_file_str_ptr_size;
 
             if (that.string_params) {
                 const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
@@ -752,16 +791,17 @@ export class FC_Solve {
                     "Seed",
                 );
                 // TODO : Is there a memory leak here?
-                const read_from_file_str_ptr =
-                    that.module_wrapper.fc_solve_allocate_i8(
-                        that.module_wrapper.Module.intArrayFromString(
-                            "--read-from-file",
-                        ),
-                    );
-                const arg_str_ptr = that.module_wrapper.fc_solve_allocate_i8(
-                    that.module_wrapper.Module.intArrayFromString(
-                        "0," + string_params_file_path,
-                    ),
+                const read_from_file_str_ptr: number =
+                    that._read_from_file_str_ptr;
+                that.module_wrapper.stringToAscii(
+                    "--read-from-file",
+                    read_from_file_str_ptr,
+                );
+
+                const arg_str_ptr: number = that._arg_str_ptr;
+                that.module_wrapper.stringToAscii(
+                    "0," + string_params_file_path,
+                    arg_str_ptr,
                 );
 
                 that.module_wrapper.Module.setValue(
@@ -866,6 +906,7 @@ export class FC_Solve {
             }
             return 0;
         } catch (e) {
+            console.log("Error = " + e + "\n");
             that.set_status("error", "Error");
             return -1;
         }
