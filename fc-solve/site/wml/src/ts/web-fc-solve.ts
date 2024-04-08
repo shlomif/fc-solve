@@ -246,6 +246,7 @@ interface GameVariantPresetCheckRet {
     verdict: boolean;
 }
 
+const _PTR_SIZE: number = 4;
 const _read_from_file_str_ptr_size: number = 32;
 const _arg_str_ptr_size: number = 128;
 
@@ -747,8 +748,8 @@ export class FC_Solve {
             const _state_string_buffer_size: number = 500;
             const _move_string_buffer_size: number = 200;
             const _move_buffer_size: number = 64;
-            const _args_buffer_size: number = 4 * 2;
-            const _last_arg_ptr_buffer_size: number = 4;
+            const _args_buffer_size: number = _PTR_SIZE * 2;
+            const _last_arg_ptr_buffer_size: number = _PTR_SIZE;
             const _total_buffer_size: number =
                 _state_string_buffer_size +
                 _move_string_buffer_size +
@@ -816,7 +817,7 @@ export class FC_Solve {
                     ptr_type,
                 );
                 that.module_wrapper.Module.setValue(
-                    args_buf + 4,
+                    args_buf + _PTR_SIZE,
                     arg_str_ptr,
                     ptr_type,
                 );
