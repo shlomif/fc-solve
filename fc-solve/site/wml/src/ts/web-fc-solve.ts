@@ -234,8 +234,9 @@ export class FC_Solve {
     private _do_not_alert: boolean;
     private _pre_expand_states_and_moves_seq: any;
     private _post_expand_states_and_moves_seq: any;
-    private _state_string_buffer: number;
+    private _move_buffer: number;
     private _move_string_buffer: number;
+    private _state_string_buffer: number;
     private _unrecognized_opt: string;
 
     constructor(args) {
@@ -276,16 +277,21 @@ export class FC_Solve {
         that.proto_states_and_moves_seq = null;
         that._pre_expand_states_and_moves_seq = null;
         that._post_expand_states_and_moves_seq = null;
+        const _state_string_buffer_size: number = 500;
+        const _move_string_buffer_size: number = 200;
+        const _move_buffer_size: number = 64;
+        const _total_buffer_size: number =
+            _state_string_buffer_size +
+            _move_string_buffer_size +
+            _move_buffer_size;
         that._state_string_buffer = that.module_wrapper.alloc_wrap(
-            500,
-            "state string buffer",
+            _total_buffer_size,
+            "state+move string buffer",
             "Zam",
         );
-        that._move_string_buffer = that.module_wrapper.alloc_wrap(
-            200,
-            "move string buffer",
-            "Plum",
-        );
+        that._move_string_buffer =
+            that._state_string_buffer + _state_string_buffer_size;
+        that._move_buffer = that._move_string_buffer + _move_string_buffer_size;
 
         return;
     }
@@ -559,11 +565,7 @@ export class FC_Solve {
 
         let move_ret_code;
         // 128 bytes are enough to hold a move.
-        const move_buffer = that.module_wrapper.alloc_wrap(
-            128,
-            "a buffer for the move",
-            "maven",
-        );
+        const move_buffer = that._move_buffer;
         while (
             (move_ret_code = that.module_wrapper.user_get_next_move(
                 that.obj,
@@ -603,13 +605,12 @@ export class FC_Solve {
         that._post_expand_states_and_moves_seq = null;
 
         // Cleanup C resources
-        that.module_wrapper.c_free(move_buffer);
         that.module_wrapper.user_free(that.obj);
         that.obj = 0;
         that.module_wrapper.c_free(that._state_string_buffer);
         that._state_string_buffer = 0;
-        that.module_wrapper.c_free(that._move_string_buffer);
         that._move_string_buffer = 0;
+        that._move_buffer = 0;
 
         return;
     }
