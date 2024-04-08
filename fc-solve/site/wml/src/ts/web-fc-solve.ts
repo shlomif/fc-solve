@@ -262,6 +262,7 @@ export class FC_Solve {
     private _do_not_alert: boolean;
     private _pre_expand_states_and_moves_seq: any;
     private _post_expand_states_and_moves_seq: any;
+    private _args_buffer: number;
     private _move_buffer: number;
     private _move_string_buffer: number;
     private _state_string_buffer: number;
@@ -745,12 +746,14 @@ export class FC_Solve {
             const _state_string_buffer_size: number = 500;
             const _move_string_buffer_size: number = 200;
             const _move_buffer_size: number = 64;
+            const _args_buffer_size: number = 4 * 2;
             const _total_buffer_size: number =
                 _state_string_buffer_size +
                 _move_string_buffer_size +
                 _move_buffer_size +
                 _read_from_file_str_ptr_size +
-                _arg_str_ptr_size;
+                _arg_str_ptr_size +
+                _args_buffer_size;
             that._state_string_buffer = that.module_wrapper.alloc_wrap(
                 _total_buffer_size,
                 "state+move string buffer",
@@ -767,6 +770,7 @@ export class FC_Solve {
                 that._move_buffer + _move_buffer_size;
             that._arg_str_ptr =
                 that._read_from_file_str_ptr + _read_from_file_str_ptr_size;
+            that._args_buffer = that._arg_str_ptr + _arg_str_ptr_size;
 
             if (that.string_params) {
                 const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
@@ -785,11 +789,7 @@ export class FC_Solve {
                     {},
                 );
 
-                const args_buf = that.module_wrapper.alloc_wrap(
-                    4 * 2,
-                    "args buf",
-                    "Seed",
-                );
+                const args_buf: number = that._args_buffer;
                 // TODO : Is there a memory leak here?
                 const read_from_file_str_ptr: number =
                     that._read_from_file_str_ptr;
@@ -840,7 +840,6 @@ export class FC_Solve {
                     );
 
                 that.module_wrapper.c_free(last_arg_ptr);
-                that.module_wrapper.c_free(args_buf);
 
                 const error_string_ptr = that.module_wrapper.Module.getValue(
                     error_string_ptr_buf,
