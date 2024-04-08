@@ -703,10 +703,43 @@ export class FC_Solve {
             ? that.module_wrapper.fc_solve_Pointer_stringify(s_ptr)
             : "";
     }
+    private _initialize_object_buffers() {
+        const that = this;
+        const _state_string_buffer_size: number = 500;
+        const _move_string_buffer_size: number = 200;
+        const _move_buffer_size: number = 64;
+        const _args_buffer_size: number = _PTR_SIZE * 2;
+        const _last_arg_ptr_buffer_size: number = _PTR_SIZE;
+        const _total_buffer_size: number =
+            _state_string_buffer_size +
+            _move_string_buffer_size +
+            _move_buffer_size +
+            _read_from_file_str_ptr_size +
+            _arg_str_ptr_size +
+            _args_buffer_size +
+            _last_arg_ptr_buffer_size;
+        that._state_string_buffer = that.module_wrapper.alloc_wrap(
+            _total_buffer_size,
+            "state+move string buffer",
+            "Zam",
+        );
+        if (!that._state_string_buffer) {
+            alert("that._state_string_buffer is 0");
+        }
+        that._move_string_buffer =
+            that._state_string_buffer + _state_string_buffer_size;
+        that._move_buffer = that._move_string_buffer + _move_string_buffer_size;
+        that._read_from_file_str_ptr = that._move_buffer + _move_buffer_size;
+        that._arg_str_ptr =
+            that._read_from_file_str_ptr + _read_from_file_str_ptr_size;
+        that._args_buffer = that._arg_str_ptr + _arg_str_ptr_size;
+        that._last_arg_ptr_buffer = that._args_buffer + _args_buffer_size;
+    }
     private _initialize_obj(obj) {
         const that = this;
         const cmd_line_preset = that.cmd_line_preset;
         try {
+            that._initialize_object_buffers();
             if (cmd_line_preset !== "default") {
                 const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
                     128,
@@ -745,37 +778,6 @@ export class FC_Solve {
                     throw "Foo";
                 }
             }
-            const _state_string_buffer_size: number = 500;
-            const _move_string_buffer_size: number = 200;
-            const _move_buffer_size: number = 64;
-            const _args_buffer_size: number = _PTR_SIZE * 2;
-            const _last_arg_ptr_buffer_size: number = _PTR_SIZE;
-            const _total_buffer_size: number =
-                _state_string_buffer_size +
-                _move_string_buffer_size +
-                _move_buffer_size +
-                _read_from_file_str_ptr_size +
-                _arg_str_ptr_size +
-                _args_buffer_size +
-                _last_arg_ptr_buffer_size;
-            that._state_string_buffer = that.module_wrapper.alloc_wrap(
-                _total_buffer_size,
-                "state+move string buffer",
-                "Zam",
-            );
-            if (!that._state_string_buffer) {
-                alert("that._state_string_buffer is 0");
-            }
-            that._move_string_buffer =
-                that._state_string_buffer + _state_string_buffer_size;
-            that._move_buffer =
-                that._move_string_buffer + _move_string_buffer_size;
-            that._read_from_file_str_ptr =
-                that._move_buffer + _move_buffer_size;
-            that._arg_str_ptr =
-                that._read_from_file_str_ptr + _read_from_file_str_ptr_size;
-            that._args_buffer = that._arg_str_ptr + _arg_str_ptr_size;
-            that._last_arg_ptr_buffer = that._args_buffer + _args_buffer_size;
 
             if (that.string_params) {
                 const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
