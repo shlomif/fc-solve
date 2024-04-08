@@ -793,15 +793,17 @@ export class FC_Solve {
                 // TODO : Is there a memory leak here?
                 const read_from_file_str_ptr: number =
                     that._read_from_file_str_ptr;
-                that.module_wrapper.stringToAscii(
+                that.module_wrapper.stringToUTF8(
                     "--read-from-file",
                     read_from_file_str_ptr,
+                    _read_from_file_str_ptr_size,
                 );
 
                 const arg_str_ptr: number = that._arg_str_ptr;
-                that.module_wrapper.stringToAscii(
+                that.module_wrapper.stringToUTF8(
                     "0," + string_params_file_path,
                     arg_str_ptr,
+                    _arg_str_ptr_size,
                 );
 
                 that.module_wrapper.Module.setValue(
