@@ -75,6 +75,13 @@ my $MAX_RANK  = 13;
 my $NUM_SUITS = 4;
 my $CARD_RE   = qr/[A23456789TJQK][HCDS]/;
 
+my %_VARIANTS = (
+    all_in_a_row => 1,
+    binary_star  => 1,
+    black_hole   => 1,
+    golf         => 1,
+);
+
 sub _is_binary_star
 {
     my $self = shift;
@@ -125,14 +132,7 @@ sub _init
     my ( $self, $args ) = @_;
 
     my $variant = $self->_variant( $args->{variant} );
-    if (
-        not exists {
-            all_in_a_row => 1,
-            binary_star  => 1,
-            black_hole   => 1,
-            golf         => 1,
-        }->{$variant}
-        )
+    if ( not exists $_VARIANTS{$variant} )
     {
         Carp::confess("Unknown variant '$variant'!");
     }
