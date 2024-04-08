@@ -264,6 +264,7 @@ export class FC_Solve {
     private _pre_expand_states_and_moves_seq: any;
     private _post_expand_states_and_moves_seq: any;
     private _args_buffer: number;
+    private _error_string_buffer: number;
     private _last_arg_ptr_buffer: number;
     private _move_buffer: number;
     private _move_string_buffer: number;
@@ -320,11 +321,7 @@ export class FC_Solve {
     public handle_err_code(solve_err_code) {
         const that = this;
         if (solve_err_code === FCS_STATE_INVALID_STATE) {
-            const error_string_ptr = that.module_wrapper.alloc_wrap(
-                300,
-                "state error string",
-                "Gum",
-            );
+            const error_string_ptr: number = that._error_string_buffer;
 
             that.module_wrapper.user_get_invalid_state_error_into_string(
                 that.obj,
@@ -336,7 +333,6 @@ export class FC_Solve {
                 that.module_wrapper.fc_solve_Pointer_stringify(
                     error_string_ptr,
                 );
-            that.module_wrapper.c_free(error_string_ptr);
 
             alert(error_string + "\n");
 
@@ -705,6 +701,7 @@ export class FC_Solve {
     }
     private _initialize_object_buffers() {
         const that = this;
+        const _error_string_buffer_size: number = 512;
         const _state_string_buffer_size: number = 500;
         const _move_string_buffer_size: number = 200;
         const _move_buffer_size: number = 64;
@@ -717,7 +714,8 @@ export class FC_Solve {
             _read_from_file_str_ptr_size +
             _arg_str_ptr_size +
             _args_buffer_size +
-            _last_arg_ptr_buffer_size;
+            _last_arg_ptr_buffer_size +
+            _error_string_buffer_size;
         that._state_string_buffer = that.module_wrapper.alloc_wrap(
             _total_buffer_size,
             "state+move string buffer",
@@ -734,6 +732,8 @@ export class FC_Solve {
             that._read_from_file_str_ptr + _read_from_file_str_ptr_size;
         that._args_buffer = that._arg_str_ptr + _arg_str_ptr_size;
         that._last_arg_ptr_buffer = that._args_buffer + _args_buffer_size;
+        that._error_string_buffer =
+            that._last_arg_ptr_buffer + _last_arg_ptr_buffer_size;
     }
     private _initialize_obj(obj) {
         const that = this;
@@ -741,11 +741,7 @@ export class FC_Solve {
         try {
             that._initialize_object_buffers();
             if (cmd_line_preset !== "default") {
-                const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
-                    128,
-                    "error string buffer",
-                    "Foo",
-                );
+                const error_string_ptr_buf: number = that._error_string_buffer;
                 const preset_ret =
                     that.module_wrapper.user_cmd_line_read_cmd_line_preset(
                         obj,
@@ -765,7 +761,6 @@ export class FC_Solve {
                     that._stringify_possibly_null_ptr(error_string_ptr);
 
                 that.module_wrapper.c_free(error_string_ptr);
-                that.module_wrapper.c_free(error_string_ptr_buf);
 
                 if (preset_ret !== 0) {
                     alert(
@@ -780,11 +775,7 @@ export class FC_Solve {
             }
 
             if (that.string_params) {
-                const error_string_ptr_buf = that.module_wrapper.alloc_wrap(
-                    128,
-                    "error string buffer",
-                    "Engo",
-                );
+                const error_string_ptr_buf: number = that._error_string_buffer;
                 // Create a file with the contents of string_params.
                 // var base_path = '/' + that.dir_base;
                 const base_path = "/";
@@ -850,7 +841,6 @@ export class FC_Solve {
                 const error_string =
                     that._stringify_possibly_null_ptr(error_string_ptr);
                 that.module_wrapper.c_free(error_string_ptr);
-                that.module_wrapper.c_free(error_string_ptr_buf);
 
                 if (args_ret_code !== 0) {
                     const unrecognized_opt_ptr =
