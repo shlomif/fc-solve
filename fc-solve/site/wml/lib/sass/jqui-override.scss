@@ -31,6 +31,13 @@
     }
 }
 
+#output_tabs {
+    .disabled_wrapper {
+        clear: left;
+        margin-top: 5em;
+    }
+}
+
 #output_tabs.disable_animated_output {
     #output_tabs__animated__selector {
         &,

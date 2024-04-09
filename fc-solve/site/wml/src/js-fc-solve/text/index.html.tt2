@@ -153,6 +153,16 @@ Input a card patience/solitaire layout in the <a href="[% base_path %]docs/distr
 <div id="output_tabs__animated" class="tab">
 
 <div class="disabled_wrapper">
+
+<p>
+<b>Note:</b> The animated and graphical display is not
+currently available for the variants of Solitaire which
+do not match the default 8-columns and 4-freecells Freecell
+variant ( <a href="[% base_path %]faq.html#is_freecell_the_ms_game">Reference</a>)
+with limited sequence move-length, tableau built by alternate colours,
+and empty columns that can be filled by any card.
+</p>
+
 </div>
 
 [%- BLOCK upper_button -%]
