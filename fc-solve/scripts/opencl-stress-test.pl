@@ -7,10 +7,11 @@ use Docker::CLI::Wrapper::Container v0.0.4 ();
 my $lib           = "libopencl_find_deal_idx.so";
 my $board_gen_dir = "../../source/board_gen";
 
-my $gen_ocl_py_prog = "$board_gen_dir/find-freecell-deal-index-julia-opencl.py";
-my $container       = "foo";
-my $sys             = "fedora33";
-my $obj             = Docker::CLI::Wrapper::Container->new(
+my $gen_ocl_py_prog =
+    "$board_gen_dir/find-freecell-deal-index-generate-opencl-code.py";
+my $container = "foo";
+my $sys       = "fedora40";
+my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $container, sys => $sys, }, );
 if ( not -d "$board_gen_dir" )
 {
@@ -68,5 +69,4 @@ while (1)
     $deal &= ( ( 1 << 33 ) - 1 );
     next DEAL if ( $deal == 0 );
     _check_deal( { deal => $deal, } );
-
 }
