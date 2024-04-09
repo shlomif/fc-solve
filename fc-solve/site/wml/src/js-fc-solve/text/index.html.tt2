@@ -148,8 +148,8 @@ Input a card patience/solitaire layout in the <a href="[% base_path %]docs/distr
 
 <div id="output_tabs" class="output_tabs">
 <ul>
-<li><a href="#output_tabs__animated">Animated</a></li>
-<li><a href="#output_tabs__text">Text</a></li>
+<li id="output_tabs__animated__selector"><a href="#output_tabs__animated">Animated</a></li>
+<li id="output_tabs__text__selector"><a href="#output_tabs__text">Text</a></li>
 </ul>
 <div id="output_tabs__animated" class="tab">
 [%- BLOCK upper_button -%]

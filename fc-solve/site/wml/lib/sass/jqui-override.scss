@@ -30,3 +30,12 @@
         color: red;
     }
 }
+
+#output_tabs.disable_animated_output {
+    #output_tabs__animated__selector {
+        &,
+        & * {
+            text-decoration-line: line-through;
+        }
+    }
+}

@@ -241,7 +241,7 @@ interface DisplaySolArgs {
     displayer: DisplayFilter;
     expand: boolean;
 }
-interface GameVariantPresetCheckRet {
+export interface GameVariantPresetCheckRet {
     reasons: string;
     verdict: boolean;
 }

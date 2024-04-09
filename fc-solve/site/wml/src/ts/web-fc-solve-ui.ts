@@ -65,6 +65,7 @@ class FC_Solve_UI {
     private _is_expanded = false;
     private _pristine_outputs = null;
     private _board_parse_result: BoardParseResult = null;
+    private _check_ret: w.GameVariantPresetCheckRet = null;
     constructor() {}
     public toggle_expand() {
         const that = this;
@@ -264,6 +265,17 @@ class FC_Solve_UI {
             html += "<ol>\n";
 
             const inst = that._instance;
+            const check_ret = that._check_ret;
+            // that._check_ret = null;
+
+            const output_tabs = () => {
+                return $("#output_tabs");
+            };
+            if (check_ret.verdict) {
+                output_tabs().removeClass("disable_animated_output");
+            } else {
+                output_tabs().addClass("disable_animated_output");
+            }
             graphics.startSolution({
                 instance: inst,
                 board: that._board_parse_result,
@@ -466,6 +478,7 @@ class FC_Solve_UI {
     private _handle_err_code() {
         const that = this;
         if (that._solve_err_code === FCS_STATE_WAS_SOLVED) {
+            that._check_ret = that._instance.check_if_params_match_freecell();
             that._webui_set_output();
         } else if (
             that._solve_err_code === FCS_STATE_SUSPEND_PROCESS &&
