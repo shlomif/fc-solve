@@ -166,10 +166,6 @@ Input a card patience/solitaire layout in the <a href="[% base_path %]docs/distr
 [%- INCLUDE upper_button targetclasses = ["fastforward"] text = "Next ⏭" title = "Next move" -%]
 </div>
 
-[% IF 0 %]
-[% INCLUDE upper_button %]
-[% PROCESS upper_button %]
-[% END %]
 <div class="solitairey_body_margin">
 <div class="solitairey_body" id="solitairey_body">
 
