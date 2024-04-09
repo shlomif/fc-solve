@@ -20,7 +20,7 @@ run_deal="$(( 20004000 ))"
 
     board_gen_dir="../../source/board_gen"
     test -d "$board_gen_dir"
-    gen_ocl_py_prog="$board_gen_dir"/find-freecell-deal-index-julia-opencl.py
+    gen_ocl_py_prog="$board_gen_dir"/find-freecell-deal-index-generate-opencl-code.py
     lib=libfcs_find_deal.so
     include_dir_flags=(-I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" -I "$board_gen_dir/..")
     if false
