@@ -355,3 +355,32 @@ $mgn: 1em;
         margin-right: $m;
     }
 }
+
+#output_tabs {
+    .disabled_wrapper {
+        clear: left;
+        margin-top: 5em;
+    }
+}
+
+#output_tabs.disable_animated_output {
+    #output_tabs__animated__selector {
+        &,
+        & * {
+            text-decoration-line: line-through;
+        }
+    }
+    #output_tabs__animated {
+        .enabled_wrapper {
+            display: none;
+        }
+    }
+}
+
+#output_tabs.enable_animated_output {
+    #output_tabs__animated {
+        .disabled_wrapper {
+            display: none;
+        }
+    }
+}
