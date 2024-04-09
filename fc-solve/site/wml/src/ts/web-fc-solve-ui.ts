@@ -272,14 +272,18 @@ class FC_Solve_UI {
                 return $("#output_tabs");
             };
             if (check_ret.verdict) {
-                output_tabs().removeClass("disable_animated_output");
+                output_tabs()
+                    .addClass("enable_animated_output")
+                    .removeClass("disable_animated_output");
+                graphics.startSolution({
+                    instance: inst,
+                    board: that._board_parse_result,
+                });
             } else {
-                output_tabs().addClass("disable_animated_output");
+                output_tabs()
+                    .addClass("disable_animated_output")
+                    .removeClass("enable_animated_output");
             }
-            graphics.startSolution({
-                instance: inst,
-                board: that._board_parse_result,
-            });
             const seq = inst.proto_states_and_moves_seq;
 
             function _filt(str) {
