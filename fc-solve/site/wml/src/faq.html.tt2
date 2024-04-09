@@ -121,9 +121,9 @@ in optimised C under the MIT/Expat licence.
 
 <li>
 <p>
-<a href="http://rosettacode.org/wiki/Deal_cards_for_FreeCell">“Deal cards
-for FreeCell”</a> on Rosetta Code - implementations in many programming
-languages, but under a problematic licence.
+<a href="http://rosettacode.org/wiki/Deal_cards_for_FreeCell">“Deal cards for
+FreeCell”</a> on Rosetta Code - implementations in many programming languages,
+which should be easy-to-understand, but which are under a problematic licence.
 </p>
 </li>
 
@@ -143,6 +143,14 @@ impossible 4-freecells and 5-freecells deals in Freecell Pro’s Range of Deals<
 <li>
 <p>
 <a href="https://github.com/shlomif/pysol_cards">The PyPI pysol_cards module</a> - implementation of the dealing algorithm in python under the MIT/Expat licence.
+</p>
+</li>
+
+<li>
+<p>
+<a href="https://metacpan.org/pod/Freecell::Deal::MS">Freecell::Deal::MS</a> -
+self-contained, hopefully portable and reliable, implementation in Perl and on
+CPAN, under the MIT/Expat licence.
 </p>
 </li>
 
