@@ -9,7 +9,7 @@ fi
 deal="$(( ( 1 << 33 ) - 1 ))"
 # deal="200"
 run_deal="$(( 20004000 ))"
-run_deal="$deal"
+# run_deal="$deal"
 (
     set -e
 
@@ -22,16 +22,24 @@ run_deal="$deal"
     test -d "$board_gen_dir"
     gen_ocl_py_prog="$board_gen_dir"/find-freecell-deal-index-julia-opencl.py
     lib=libfcs_find_deal.so
+    include_dir_flags=(-I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" -I "$board_gen_dir/..")
+    if false
+    then
+        # Headers should be installed by using
+        # "dnf5 install freecell-solver-devel"
+        # or similar.
+        include_dir_flags+=(-I "$board_gen_dir/../include")
+    fi
     if should_rebuild
     then
-        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" -I "$board_gen_dir/.." ${WCFLAGS:--Weverything} "$board_gen_dir/find_deal.c"
+        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" ${include_dir_flags[*]} ${WCFLAGS:--Weverything} "$board_gen_dir/find_deal.c"
     fi
     test -f "$gen_ocl_py_prog"
     lib=libopencl_find_deal_idx.so
     if should_rebuild
     then
         python3 "$gen_ocl_py_prog" --ms <(pi-make-microsoft-freecell-board -t "$deal")
-        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" ${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL
+        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" ${include_dir_flags[*]} ${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL
     fi
     if ! test "$SKIP_CISH" = 1
     then
