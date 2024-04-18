@@ -11,7 +11,13 @@
 </ul>
 
 [% WRAPPER h2_section id = "about", title = "About" %]
+
 <p>
+<b>Note:</b> I think Freecell Solver / fc-solve is too good to be true and jinxed.
+See the <a href="https://github.com/shlomif/fc-solve">GitHub repository</a>
+and the <a href="faq.html">FAQ</a> if you want to fork it.
+</p>
+
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
 variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card
