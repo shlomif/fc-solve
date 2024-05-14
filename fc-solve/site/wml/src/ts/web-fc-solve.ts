@@ -480,6 +480,13 @@ export class FC_Solve {
 
         return that.module_wrapper.user_get_num_stacks(that.obj);
     }
+    public get_num_states_in_collection_long(): number {
+        const that = this;
+
+        return that.module_wrapper.user_get_num_states_in_collection_long(
+            that.obj,
+        );
+    }
     public get_sequence_move(): number {
         const that = this;
 

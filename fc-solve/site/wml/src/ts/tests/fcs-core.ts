@@ -229,7 +229,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
         );
 
         qunit.test("FC_Solve user_get_num_times_long.", (assert) => {
-            assert.expect(1);
+            assert.expect(2);
 
             const instance: w.FC_Solve = new FC_Solve({
                 module_wrapper,
@@ -252,11 +252,18 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             // The number of iterations of solving deal 24.
             // Has a slight chance of changing in the future.
             const EXPECTED_NUM_TIMES: number = 137;
+            const EXPECTED_NUM_STATES: number = 191;
             // TEST
             assert.equal(
                 instance.get_num_times_long(),
                 EXPECTED_NUM_TIMES,
                 "user_get_num_times_long()",
+            );
+            // TEST
+            assert.equal(
+                instance.get_num_states_in_collection_long(),
+                EXPECTED_NUM_STATES,
+                "user_get_num_states_in_collection_long()",
             );
         });
 
