@@ -109,6 +109,8 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_get_next_move \
 	freecell_solver_user_get_num_freecells \
 	freecell_solver_user_get_num_stacks \
+	freecell_solver_user_get_num_states_in_collection_long \
+	freecell_solver_user_get_num_times_long \
 	freecell_solver_user_get_sequence_move \
 	freecell_solver_user_get_sequences_are_built_by_type \
 	freecell_solver_user_get_unrecognized_cmd_line_flag \

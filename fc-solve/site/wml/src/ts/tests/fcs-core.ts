@@ -228,6 +228,38 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             },
         );
 
+        qunit.test("FC_Solve user_get_num_times_long.", (assert) => {
+            assert.expect(1);
+
+            const instance: w.FC_Solve = new FC_Solve({
+                module_wrapper,
+                cmd_line_preset: "default",
+                dir_base: "fcs1",
+                set_status_callback: () => {
+                    return;
+                },
+            });
+
+            let success = false;
+            const board: string = ms_deal_24;
+            let solve_err_code = instance.do_solve(board);
+
+            if (false) {
+                while (solve_err_code === FCS_STATE_SUSPEND_PROCESS) {
+                    solve_err_code = instance.resume_solution();
+                }
+            }
+            // The number of iterations of solving deal 24.
+            // Has a slight chance of changing in the future.
+            const EXPECTED_NUM_TIMES: number = 137;
+            // TEST
+            assert.equal(
+                instance.get_num_times_long(),
+                EXPECTED_NUM_TIMES,
+                "user_get_num_times_long()",
+            );
+        });
+
         qunit.test(
             "FC_Solve solve board without a trailing newline",
             (assert) => {

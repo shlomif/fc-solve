@@ -44,6 +44,8 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
     user_get_next_move: (...args: any) => any;
     user_get_num_freecells: (instance: number) => number;
     user_get_num_stacks: (instance: number) => number;
+    user_get_num_states_in_collection_long: (instance: number) => number;
+    user_get_num_times_long: (instance: number) => number;
     user_get_sequence_move: (instance: number) => number;
     user_get_sequences_are_built_by_type: (instance: number) => number;
     user_get_unrecognized_cmd_line_flag: (...args: any) => any;
@@ -84,6 +86,10 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
         Module._freecell_solver_user_get_num_freecells;
     module_wrapper.user_get_num_stacks =
         Module._freecell_solver_user_get_num_stacks;
+    module_wrapper.user_get_num_states_in_collection_long =
+        Module._freecell_solver_user_get_num_states_in_collection_long;
+    module_wrapper.user_get_num_times_long =
+        Module._freecell_solver_user_get_num_times_long;
     module_wrapper.user_get_sequence_move =
         Module._freecell_solver_user_get_sequence_move;
     module_wrapper.user_get_sequences_are_built_by_type =
@@ -463,6 +469,11 @@ export class FC_Solve {
         const that = this;
 
         return that.module_wrapper.user_get_num_freecells(that.obj);
+    }
+    public get_num_times_long(): number {
+        const that = this;
+
+        return that.module_wrapper.user_get_num_times_long(that.obj);
     }
     public get_num_stacks(): number {
         const that = this;
