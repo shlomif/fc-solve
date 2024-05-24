@@ -15,7 +15,7 @@ import {
 import {
     get_flipped_deal_with_comment_prefix,
     get_flipped_deal_with_leading_empty_line,
-    get_non_flipped_deal,
+    get_non_flipped_ms240_deal_deal,
 } from "./fcs-common-constants";
 
 export function test_fcs_validate(qunit: QUnit) {
@@ -1424,7 +1424,7 @@ Foundations:
                 // TEST
                 a.deepEqual(
                     flipped_object.getBoardString(),
-                    get_non_flipped_deal(),
+                    get_non_flipped_ms240_deal_deal(),
                     id + "non-flipped board string",
                 );
             },

@@ -430,7 +430,11 @@ class FC_Solve_UI {
             myclass === "solved"
                 ? ' <a class="view_sol" href="#output_label">Go to the solution ⇓</a>'
                 : "";
-        ctl.html(base_ui.escapeHtml(mylabel) + extra_html);
+        const num_iters_html: string =
+            '<p class="status_info" id="status_iters_count">Iterations number: <input id="status_iters_count_result" type="text" value="' +
+            base_ui.escapeHtml("" + that._instance.get_num_times_long() + "") +
+            '" /></p>';
+        ctl.html(base_ui.escapeHtml(mylabel) + extra_html + num_iters_html);
 
         const is_exceed = myclass === "exceeded";
 

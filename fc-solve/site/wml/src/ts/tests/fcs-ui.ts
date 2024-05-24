@@ -4,7 +4,7 @@ import * as test_strings from "../web-fcs-tests-strings";
 import {
     get_flipped_deal_with_comment_prefix,
     get_flipped_deal_with_leading_empty_line,
-    get_non_flipped_deal,
+    get_non_flipped_ms240_deal_deal,
 } from "./fcs-common-constants";
 
 const ms_deal_24 = `4C 2C 9C 8C QS 4S 2H
@@ -48,7 +48,7 @@ function _get_stdin(): string {
 const on_flip_stdin = (my_operations: Ops, assert, done) => {
     assert.deepEqual(
         _get_stdin(),
-        get_non_flipped_deal(),
+        get_non_flipped_ms240_deal_deal(),
         "got the double-flipped text",
     );
     done();
@@ -73,6 +73,22 @@ const on_flip_output = (my_operations: Ops, assert, done) => {
             "got the single-flipped leading lins text",
         );
     }
+    const widget = $("#status_iters_count.status_info");
+    // TEST*2
+    assert.equal(widget.length, 1, "There is a status_iters_count widget");
+    const input_widget = widget.find("input#status_iters_count_result");
+    const iters_num_proto = input_widget.val();
+    const iters_num: string = iters_num_proto + "";
+    // The number of iterations of solving deal 240 (not "24"!).
+    // Has a slight chance of changing in the future.
+    const EXPECTED_NUM_TIMES__FOR_DEAL_240: number = 97;
+    const EXPECTED_NUM_STATES: number = 191;
+    // TEST*2
+    assert.equal(
+        iters_num,
+        "" + EXPECTED_NUM_TIMES__FOR_DEAL_240 + "",
+        "There is a valid iters_num",
+    );
     $("#fcs_flip_deal").trigger("click");
     done();
 };
@@ -106,7 +122,7 @@ const on_change_initial_layout = (my_operations: Ops, assert, done) => {
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(9);
+            assert.expect(13);
 
             const hash = {
                 z: "26",
