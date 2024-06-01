@@ -233,7 +233,15 @@ in Freecell using the formula
 (where “*” is multiplication and “^” is <a href="https://en.wikipedia.org/wiki/Exponentiation">exponentiation</a>.). Note that <code>num_columns</code>
 refers to the number of <b>intermediate/temporary</b> columns one uses in the
 the transfer and if you are trying to transfer cards to an empty column, the
-number will be smaller.
+number will be smaller by a difference of 1.
+</p>
+
+<p>
+Note that the <a href="[% base_path %]js-fc-solve/">web-based solver</a> also
+has an option to expand such moves into atomic, single-card, moves. One can use
+it in most modern JavaScript-enabled browsers, and without needing to install
+any additional software on your computer. See <a href="[% base_path
+%]js-fc-solve/expand-moves/">the Online Freecell moves’ expander</a>.
 </p>
 
 <p>
@@ -241,14 +249,8 @@ One can also try using
 <a href="https://metacpan.org/module/expand-solitaire-multi-cards-moves">expand-solitaire-multi-cards-moves</a>
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
 in order to filter solutions and produce ones with multi-card moves
-expanded into many single-card moves. If you are on Microsoft Windows, you can
+expanded into several single-card moves. If you are on Microsoft Windows, you can
 install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
-</p>
-
-<p>
-Note that the <a href="[% base_path %]js-fc-solve/">web-based solver</a> also has an
-option to expand such moves and one can use it in most modern JavaScript-enabled
-browsers without having to install any additional software on your computer.
 </p>
 
 [% END %]
