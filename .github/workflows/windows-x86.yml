@@ -50,6 +50,8 @@ jobs:
 
                 SET PY3MODS=cffi freecell_solver pycotap pysol_cards random2 six
 
+                choco install pkgconfiglite || ( echo Failed & exit /B 1 )
+
                 dir || ( echo Failed & exit /B 1 )
 
                 cd || ( echo Failed & exit /B 1 )

@@ -175,7 +175,11 @@ def generate_windows_yaml(plat, output_path, is_act):
         end_idx = start_idx + 1
         while not re.search(end, cmds[end_idx]):
             end_idx += 1
-        cmds = cmds[:start_idx] + cmds[(end_idx+1):]
+        # see: https://github.com/actions/runner-images/issues/9693
+        FIX_PKG_CONFIG_ON_WINDOWS__COMMANDS_PREFIX = \
+            ['choco install pkgconfiglite',]
+        cmds = FIX_PKG_CONFIG_ON_WINDOWS__COMMANDS_PREFIX + \
+            cmds[:start_idx] + cmds[(end_idx+1):]
 
         for cmd in cmds:
             if cmd.startswith("cpanm "):
