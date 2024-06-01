@@ -267,6 +267,7 @@ export class FC_Solve {
     private module_wrapper: ModuleWrapper;
     private obj: any;
     private _cached_num_times_long: number;
+    private _cached_num_states_long: number;
     private _do_not_alert: boolean;
     private _pre_expand_states_and_moves_seq: any;
     private _post_expand_states_and_moves_seq: any;
@@ -285,6 +286,7 @@ export class FC_Solve {
         that.module_wrapper = args.module_wrapper;
         that._do_not_alert = false;
         that._cached_num_times_long = -1;
+        that._cached_num_states_long = -1;
 
         that.dir_base = args.dir_base;
         that.string_params = args.string_params ? [args.string_params] : null;
@@ -317,6 +319,7 @@ export class FC_Solve {
             return ret_obj;
         })();
         that._cached_num_times_long = -1;
+        that._cached_num_states_long = -1;
         that.proto_states_and_moves_seq = null;
         that._pre_expand_states_and_moves_seq = null;
         that._post_expand_states_and_moves_seq = null;
@@ -487,6 +490,13 @@ export class FC_Solve {
         }
         return that._cached_num_times_long;
     }
+    private _calc_get_num_states_in_collection_long_based_obj(): number {
+        const that = this;
+
+        return that.module_wrapper.user_get_num_states_in_collection_long(
+            that.obj,
+        );
+    }
     private _calc_get_num_times_long_based_obj(): number {
         const that = this;
 
@@ -500,9 +510,13 @@ export class FC_Solve {
     public get_num_states_in_collection_long(): number {
         const that = this;
 
-        return that.module_wrapper.user_get_num_states_in_collection_long(
-            that.obj,
-        );
+        if (that._is_num_times_invalid(that._cached_num_states_long)) {
+            if (!that.obj) {
+                throw "obj is null when num_times not set.";
+            }
+            return that._calc_get_num_states_in_collection_long_based_obj();
+        }
+        return that._cached_num_states_long;
     }
     public get_sequence_move(): number {
         const that = this;
@@ -653,6 +667,8 @@ export class FC_Solve {
         that._post_expand_states_and_moves_seq = null;
 
         that._cached_num_times_long = that._calc_get_num_times_long_based_obj();
+        that._cached_num_states_long =
+            that._calc_get_num_states_in_collection_long_based_obj();
 
         // Cleanup C resources
         that.module_wrapper.user_free(that.obj);

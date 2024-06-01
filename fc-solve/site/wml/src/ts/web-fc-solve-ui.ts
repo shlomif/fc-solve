@@ -434,7 +434,18 @@ class FC_Solve_UI {
             '<br/><br/><span class="status_info" id="status_iters_count">Iterations number: <input id="status_iters_count_result" type="text" value="' +
             base_ui.escapeHtml("" + that._instance.get_num_times_long() + "") +
             '" /></span>';
-        ctl.html(base_ui.escapeHtml(mylabel) + extra_html + num_iters_html);
+        const num_states_in_collection_html: string =
+            '<br/><br/><span class="status_info" id="status_states_in_collection_count">Number of game-states in the collection: <input id="status_states_in_collection_count_result" type="text" value="' +
+            base_ui.escapeHtml(
+                "" + that._instance.get_num_states_in_collection_long() + "",
+            ) +
+            '" /></span>';
+        ctl.html(
+            base_ui.escapeHtml(mylabel) +
+                extra_html +
+                num_iters_html +
+                num_states_in_collection_html,
+        );
 
         const is_exceed = myclass === "exceeded";
 

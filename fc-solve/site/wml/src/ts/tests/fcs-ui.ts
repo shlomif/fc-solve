@@ -91,12 +91,31 @@ const on_flip_output = (my_operations: Ops, assert, done) => {
     // The number of iterations of solving deal 240 (not "24"!).
     // Has a slight chance of changing in the future.
     const EXPECTED_NUM_TIMES__FOR_DEAL_240: number = 97;
-    const EXPECTED_NUM_STATES: number = 191;
+    const EXPECTED_NUM_STATES: number = 160;
     // TEST*2
     assert.equal(
         iters_num,
         "" + EXPECTED_NUM_TIMES__FOR_DEAL_240 + "",
         "There is a valid iters_num",
+    );
+    const states_widget = $("#status_states_in_collection_count.status_info");
+    // TEST*2
+    assert.equal(
+        states_widget.length,
+        1,
+        "There is a status_states_in_collection_count widget",
+    );
+    const states_input_widget = states_widget.find(
+        "input#status_states_in_collection_count_result",
+    );
+    const states_in_collection_num_proto = states_input_widget.val();
+    const states_in_collection_num: string =
+        states_in_collection_num_proto + "";
+    // TEST*2
+    assert.equal(
+        states_in_collection_num,
+        "" + EXPECTED_NUM_STATES + "",
+        "There is a valid states_in_collection_num",
     );
     $("#fcs_flip_deal").trigger("click");
     done();
@@ -131,7 +150,7 @@ const on_change_initial_layout = (my_operations: Ops, assert, done) => {
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(15);
+            assert.expect(19);
 
             const hash = {
                 z: "26",
