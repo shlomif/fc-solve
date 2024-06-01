@@ -73,6 +73,15 @@ const on_flip_output = (my_operations: Ops, assert, done) => {
             "got the single-flipped leading lins text",
         );
     }
+    {
+        const paras_in_spans = $("span p");
+        // TEST*2
+        assert.equal(
+            paras_in_spans.length,
+            0,
+            "There are no paragraphs as children or descendents of <span/>s",
+        );
+    }
     const widget = $("#status_iters_count.status_info");
     // TEST*2
     assert.equal(widget.length, 1, "There is a status_iters_count widget");
@@ -122,7 +131,7 @@ const on_change_initial_layout = (my_operations: Ops, assert, done) => {
 function my_func(qunit: QUnit, my_callback: () => void) {
     qunit.module("FC_Solve.WebUI", () => {
         qunit.test("populate_deal", (assert) => {
-            assert.expect(13);
+            assert.expect(15);
 
             const hash = {
                 z: "26",
