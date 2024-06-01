@@ -426,20 +426,31 @@ class FC_Solve_UI {
         const ctl = $("#fc_solve_status");
         ctl.removeClass();
         ctl.addClass(myclass);
+        const should_display_status_counts: boolean =
+            myclass === "exceeded" ||
+            myclass === "impossible" ||
+            myclass === "solved";
         const extra_html =
             myclass === "solved"
                 ? ' <a class="view_sol" href="#output_label">Go to the solution ⇓</a>'
                 : "";
-        const num_iters_html: string =
-            '<br/><br/><span class="status_info" id="status_iters_count">Iterations number: <input id="status_iters_count_result" type="text" value="' +
-            base_ui.escapeHtml("" + that._instance.get_num_times_long() + "") +
-            '" /></span>';
+        const num_iters_html: string = should_display_status_counts
+            ? '<br/><br/><span class="status_info" id="status_iters_count">Iterations number: <input id="status_iters_count_result" type="text" value="' +
+              base_ui.escapeHtml(
+                  "" + that._instance.get_num_times_long() + "",
+              ) +
+              '" /></span>'
+            : "";
         const num_states_in_collection_html: string =
-            '<br/><br/><span class="status_info" id="status_states_in_collection_count">Number of game-states in the collection: <input id="status_states_in_collection_count_result" type="text" value="' +
-            base_ui.escapeHtml(
-                "" + that._instance.get_num_states_in_collection_long() + "",
-            ) +
-            '" /></span>';
+            should_display_status_counts
+                ? '<br/><br/><span class="status_info" id="status_states_in_collection_count">Number of game-states in the collection: <input id="status_states_in_collection_count_result" type="text" value="' +
+                  base_ui.escapeHtml(
+                      "" +
+                          that._instance.get_num_states_in_collection_long() +
+                          "",
+                  ) +
+                  '" /></span>'
+                : "";
         ctl.html(
             base_ui.escapeHtml(mylabel) +
                 extra_html +
