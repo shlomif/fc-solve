@@ -34,7 +34,7 @@
     "node-qunit": "^2.0.0",
     "npm": "^10.8.1",
     "param-case": "^3.0.4",
-    "prettier": "^3.2.5",
+    "prettier": "^3.3.0",
     "puppeteer": "^22.10.0",
     "qunit": "^2.21.0",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
