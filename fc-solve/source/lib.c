@@ -3676,7 +3676,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
     return 0;
 }
 
-#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+#ifdef FC_SOLVE_INSTANCE_PARAMS_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_freecells(void *const api_instance)
 {
     return (((fcs_user *const)api_instance)
@@ -3710,7 +3710,7 @@ int DLLEXPORT freecell_solver_user_set_num_stacks(
     return 0;
 }
 
-#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+#ifdef FC_SOLVE_INSTANCE_PARAMS_QUERYING
 int DLLEXPORT freecell_solver_user_get_num_stacks(void *const api_instance)
 {
     return (
@@ -4012,7 +4012,7 @@ int DLLEXPORT freecell_solver_user_set_sequences_are_built_by_type(
     return 0;
 }
 
-#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+#ifdef FC_SOLVE_INSTANCE_PARAMS_QUERYING
 int DLLEXPORT freecell_solver_user_get_sequences_are_built_by_type(
     void *const api_instance)
 {
@@ -4038,7 +4038,7 @@ int DLLEXPORT freecell_solver_user_set_sequence_move(
     return 0;
 }
 
-#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+#ifdef FC_SOLVE_INSTANCE_PARAMS_QUERYING
 int DLLEXPORT freecell_solver_user_get_sequence_move(void *const api_instance)
 {
     return (((((fcs_user *const)api_instance)
@@ -4066,7 +4066,7 @@ int DLLEXPORT freecell_solver_user_set_empty_stacks_filled_by(
     return 0;
 }
 
-#ifdef FC_SOLVE_JAVASCRIPT_QUERYING
+#ifdef FC_SOLVE_INSTANCE_PARAMS_QUERYING
 int DLLEXPORT freecell_solver_user_get_empty_stacks_filled_by(
     void *const api_instance)
 {
