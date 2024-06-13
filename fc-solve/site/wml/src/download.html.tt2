@@ -53,7 +53,7 @@ large number of Solitaire variants.
 </tr>
 <tr>
 <td>
-[% INCLUDE link_to_download_file fn="freecell-solver-6.8.0.tar.xz"  %]
+[% INCLUDE link_to_download_file fn="freecell-solver-6.10.0.tar.xz"  %]
 </td>
 <td>
 Source Code. Can be built as an RPM package by running "rpmbuild -tb" on it.
