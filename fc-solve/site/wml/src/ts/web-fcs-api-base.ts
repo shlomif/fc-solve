@@ -49,15 +49,16 @@ class MSRand {
         that.module_wrapper.ms_rand__init(that.rander, "" + that.gamenumber);
         return;
     }
-    public max_rand(mymax) {
+    public max_rand(mymax: number): number {
         const that = this;
         return that.module_wrapper.ms_rand__mod_rand(that.rander, mymax);
     }
     public shuffle(deck) {
+        const that = this;
         if (deck.length) {
             let i = deck.length;
             while (--i) {
-                const j = this.max_rand(i + 1);
+                const j = that.max_rand(i + 1);
                 const tmp = deck[i];
                 deck[i] = deck[j];
                 deck[j] = tmp;
