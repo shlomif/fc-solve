@@ -1,6 +1,6 @@
 import { jq_querystring } from "./jq_qs";
 import * as BaseApi from "./web-fcs-api-base";
-import { capitalize_cards } from "./fcs-validate";
+import { capitalize_cards } from "./capitalize-cards";
 
 const entityMap = {
     '"': "&quot;",

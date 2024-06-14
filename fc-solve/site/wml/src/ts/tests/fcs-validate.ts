@@ -1,7 +1,8 @@
+import { capitalize_cards } from "../capitalize-cards";
+
 import {
     BoardParseResult,
     ErrorLocationType,
-    capitalize_cards,
     fcs_js__card_from_string,
     fcs_js__column_from_string,
     fcs_js__foundations_from_string,
