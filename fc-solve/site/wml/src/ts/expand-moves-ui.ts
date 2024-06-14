@@ -4,12 +4,8 @@ import * as base_ui from "./fcs-base-ui";
 import * as expander from "./web-fc-solve--expand-moves";
 import * as w from "./find-fc-deal";
 
-let _module_wrapper: w.ModuleWrapper;
-
 export function init_module(cb: (mw: BaseApi.ModuleWrapper) => any): any {
-    const module_wrapper = null;
-    _module_wrapper = module_wrapper;
-    cb(module_wrapper);
+    cb(null);
     return;
 }
 
