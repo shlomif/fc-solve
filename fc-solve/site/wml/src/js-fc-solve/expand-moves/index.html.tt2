@@ -41,7 +41,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% END %]
 
 [% BLOCK run_emscripten_common %]
-[% INCLUDE emscripten_common incs="require(['expand-moves-ui', ], function (expand_moves_ui) { window.expand_moves_ui = expand_moves_ui; expand_moves_ui.init_module((module_wrapper) =>" , subject="Solver" , suffix='' %]
+[% INCLUDE emscripten_common incs="require(['expand-moves-ui', ], function (expand_moves_ui) { window.expand_moves_ui = expand_moves_ui; expand_moves_ui.init_module((module_wrapper) =>" , subject="Moves Expander" , suffix='' %]
 [% END %]
 
 [%- INCLUDE run_emscripten_common -%]
