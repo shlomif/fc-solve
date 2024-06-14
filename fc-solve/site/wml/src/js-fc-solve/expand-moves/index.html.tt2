@@ -48,12 +48,6 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 
 <div class="diags_wrap">
 
-<p id="status_wrap">
-
-<strong>Status:</strong> <span class="not_started" id="fc_solve_status">Not started</span> <br />
-
-</p>
-
 <div class="hide" id="board_parse__wrap">
 <h2>Board Input Parsing Errors:</h2>
 <div id="board_parse_error"></div>
