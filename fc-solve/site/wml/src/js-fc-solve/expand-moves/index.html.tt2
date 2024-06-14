@@ -4,7 +4,7 @@
 [% END %]
 
 [% BLOCK page_extra_head_elements %]
-[% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = "" , %]
+[% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = 1 , %]
 [% END %]
 
 [% BLOCK gen_desc %]
@@ -22,20 +22,20 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% INCLUDE emscripten_common__header subject=subject , %]
 <script>
 [% INCLUDE set_up_requirejs %]
-require(['./solver-freecell'], function (solver) {
+{
     [% incs %] {
 [% IF enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]
     window.my_web_fc_solve_ui = expand_moves_ui;
-    expand_moves_ui.set_up(module_wrapper, solver);
+    expand_moves_ui.set_up(module_wrapper);
 [% IF enable_jquery_ui %]
     $( "#output_tabs" ).tabs();
 [% END %]
 [% suffix %]
 });
 });
-});
+}
 </script>
 
 [% END %]
