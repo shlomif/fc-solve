@@ -12,6 +12,7 @@
 
 [% WRAPPER h2_section id = "about", title = "About" %]
 
+<p>
 This is Freecell Solver - a program that automatically solves layouts of
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> and similar
 variants of <a href="http://en.wikipedia.org/wiki/Solitaire">Card
