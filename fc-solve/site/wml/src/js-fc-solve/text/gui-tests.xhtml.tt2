@@ -7,7 +7,7 @@ UI (User-Interface) Tests for the online Freecell Solvers (intended for develope
 [% END %]
 
 [%- BLOCK emscripten_common -%]
-[% INCLUDE emscripten_common__header subject=subject , %]
+[% INCLUDE emscripten_common__header subject = subject , %]
 <script>
 [% INCLUDE set_up_requirejs %]
 require(["ui-tests-driver"], function (tests_runner) {
@@ -16,14 +16,14 @@ require(['./solver-freecell'], function (solver) {
 [% IF enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]
-    window.my_web_fc_solve_ui = web_fc_solve_ui;
-    web_fc_solve_ui.set_up(module_wrapper, solver);
+    web_ui.set_up(module_wrapper, solver);
     tests_runner.run_after_delay(tests_runner.run_tests);
 [%- IF enable_jquery_ui -%]
     $( "#output_tabs" ).tabs();
 [% END %]
-[% suffix %]
-);
+    };
+});
+});
 });
 });
 </script>
@@ -31,7 +31,7 @@ require(['./solver-freecell'], function (solver) {
 [% END %]
 
 [%- BLOCK run_emscripten_common -%]
-[% INCLUDE emscripten_common incs="require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_fc_solve_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_fc_solve_ui; web_fc_solve_ui.init_module((module_wrapper) => { " , subject="Solver", suffix="}; });}" %]
+[% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) => { " , subject = "Solver" , %]
 [% END %]
 [%- BLOCK page_extra_head_elements -%]
 <link rel="stylesheet" href="[% base_path %]css/qunit.css" />

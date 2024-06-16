@@ -19,16 +19,14 @@ card solitaire game. <span class="enable_js">Please enable
 [%- WRAPPER wrap_html -%]
 
 [% BLOCK emscripten_common %]
-[% INCLUDE emscripten_common__header subject=subject , %]
+[% INCLUDE emscripten_common__header subject = subject , %]
 <script>
 [% INCLUDE set_up_requirejs %]
 [% incs %] {
-    window.my_web_fc_solve_ui = web_fc_solve_ui;
-    web_fc_solve_ui.init_module((module_wrapper)=>{
-    web_fc_solve_ui.set_up(module_wrapper);
-
+    window.my_web_fc_solve_ui = web_ui;
+    web_ui.init_module((module_wrapper)=>{
+    web_ui.set_up(module_wrapper);
     $(window._set_up_tabs);
-;
     });
 });
 </script>
@@ -36,7 +34,7 @@ card solitaire game. <span class="enable_js">Please enable
 [% END %]
 
 
-[% INCLUDE emscripten_common incs="require(['find-fc-deal-ui'], function (web_fc_solve_ui)",subject="Deal Finder", %]
+[% INCLUDE emscripten_common incs = "require(['find-fc-deal-ui'], function (web_ui)" , subject = "Deal Finder", %]
 
 <div id="fc_solve_tabs" class="fc_solve_tabs">
 

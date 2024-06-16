@@ -27,12 +27,10 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% IF enable_jquery_ui %]
 [% INCLUDE set_up_tabs %]
 [% END %]
-    window.my_web_fc_solve_ui = expand_moves_ui;
-    expand_moves_ui.set_up(null);
+    web_ui.set_up(null);
 [% IF enable_jquery_ui %]
     $( "#output_tabs" ).tabs();
 [% END %]
-[% suffix %]
 });
 });
 }
@@ -41,7 +39,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% END %]
 
 [% BLOCK run_emscripten_common %]
-[% INCLUDE emscripten_common incs="require(['expand-moves-ui', ], function (expand_moves_ui) { window.expand_moves_ui = expand_moves_ui; expand_moves_ui.init_module((module_wrapper) =>" , subject="Moves Expander" , suffix='' %]
+[% INCLUDE emscripten_common incs = "require(['expand-moves-ui', ], function (web_ui) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) =>" , subject = "Moves Expander" , %]
 [% END %]
 
 [%- INCLUDE run_emscripten_common -%]
