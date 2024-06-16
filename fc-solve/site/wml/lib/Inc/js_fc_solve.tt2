@@ -54,7 +54,7 @@ $(function() {
 
 <h2 id="ui">[% subject %]</h2>
 
-[% INCLUDE gen_desc %]
+[% INCLUDE generate_description %]
 
 <p>
 <a href="#how_to_use"><strong class="instructions_link">Instructions</strong></a>

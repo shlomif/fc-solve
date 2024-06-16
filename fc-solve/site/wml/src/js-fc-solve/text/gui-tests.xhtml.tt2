@@ -1,6 +1,6 @@
 [%- SET title = "UI (User-Interface) Tests" -%]
 
-[%- BLOCK gen_desc -%]
+[%- BLOCK generate_description -%]
 <p>
 UI (User-Interface) Tests for the online Freecell Solvers (intended for developers and contributors).
 </p>

@@ -7,7 +7,7 @@
 [% INCLUDE insert__page_extra_head_elements__macro %]
 [% END %]
 
-[%- BLOCK gen_desc -%]
+[%- BLOCK generate_description -%]
 <p>
 string to indices test. <span class="enable_js">Please enable
 <strong>JavaScript</strong>.</span>

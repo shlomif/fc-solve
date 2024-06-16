@@ -7,7 +7,7 @@
 [% INCLUDE insert__page_extra_head_elements__macro skip_solitairey = 1 , skip_yui = 1 , %]
 [% END %]
 
-[% BLOCK gen_desc %]
+[% BLOCK generate_description %]
 <p>
 Find the deal number of a Microsoft
 <a href="http://en.wikipedia.org/wiki/FreeCell">Freecell</a> deal, a kind of
