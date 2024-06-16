@@ -23,9 +23,6 @@ card solitaire game. <span class="enable_js">Please enable
 <script>
 [% INCLUDE set_up_requirejs %]
 [% incs %] {
-[% IF 0 && enable_jquery_ui %]
-[% INCLUDE set_up_tabs %]
-[% END %]
     window.my_web_fc_solve_ui = web_fc_solve_ui;
     web_fc_solve_ui.init_module((module_wrapper)=>{
     web_fc_solve_ui.set_up(module_wrapper);
@@ -33,7 +30,6 @@ card solitaire game. <span class="enable_js">Please enable
     $(window._set_up_tabs);
 ;
     });
-[% suffix %]
 });
 </script>
 
