@@ -27,8 +27,8 @@ export function populate_input_with_numbered_deal(
         return;
     }
     const MAX = 8589934591;
-    const previous_deal_idx = parseInt(input_s, 10);
-    if (input_s.length > 10 || previous_deal_idx > MAX) {
+    const deal_idx: number = parseInt(input_s, 10);
+    if (input_s.length > 10 || deal_idx > MAX) {
         alert("Wrong input - deal number must be in the range 1 to " + MAX);
         return;
     }
@@ -36,9 +36,9 @@ export function populate_input_with_numbered_deal(
     const stdin = $("#stdin");
     stdin.val(
         "# MS Freecell Deal #" +
-            previous_deal_idx +
+            deal_idx +
             "\n#\n" +
-            BaseApi.deal_ms_fc_board(module_wrapper, previous_deal_idx),
+            BaseApi.deal_ms_fc_board(module_wrapper, deal_idx),
     );
     // For tests:
     stdin.trigger("change");
