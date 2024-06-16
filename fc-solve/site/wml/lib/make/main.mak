@@ -70,6 +70,8 @@ BASE_FC_SOLVE_SOURCE_DIR := ../../source
 IMAGES = $(addprefix $(D)/,$(SRC_IMAGES))
 HTMLS = $(addprefix $(D)/,$(SRC_DOCS))
 
+FC_SOLVE_SOURCE_DIR := $(PWD)/$(BASE_FC_SOLVE_SOURCE_DIR)
+
 DOCS_PROTO = AUTHORS COPYING HACKING INSTALL NEWS README TODO USAGE
 ADOC_CSS = asciidoctor.css
 # ADOC_JS = asciidoc.js
@@ -81,21 +83,11 @@ DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
 
-JS_MEM_BASE = libfreecell-solver.wasm
-JS_MEM_BASE__ASMJS = libfreecell-solver-asm.js.mem
-LIBFREECELL_SOLVER_JS_DIR := lib/fc-solve-for-javascript
-LIBFREECELL_SOLVER_ASMJS_JS_DIR = $(LIBFREECELL_SOLVER_JS_DIR)-asmjs
-WASM_STAMP := $(LIBFREECELL_SOLVER_JS_DIR)/finish.stamp
-ASMJS_STAMP := $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/finish.stamp
-LIBFREECELL_SOLVER_JS = $(LIBFREECELL_SOLVER_JS_DIR)/libfreecell-solver.js
-LIBFREECELL_SOLVER_ASMJS_JS = $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/libfreecell-solver-asm.js
-DEST_LIBFREECELL_SOLVER_JS = $(DEST_JS_DIR)/libfreecell-solver.min.js
-DEST_LIBFREECELL_SOLVER_ASMJS_JS = $(DEST_JS_DIR)/libfreecell-solver-asm.js
-DEST_LIBFREECELL_SOLVER_JS_NON_MIN = $(DEST_JS_DIR)/libfreecell-solver.js
 Solver_Dest_Dir := $(D)/js-fc-solve/text
 DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(Solver_Dest_Dir) $(D)/js-fc-solve/automated-tests lib/for-node/js/ .
-DEST_LIBFREECELL_SOLVER_JS_MEM = $(patsubst %,%/$(JS_MEM_BASE),$(DEST_mem_dirs))
-DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS = $(patsubst %,%/$(JS_MEM_BASE__ASMJS),$(DEST_mem_dirs))
+
+include lib/make/generated/emcc_libs.mak
+
 DEST_QSTRING_JS = $(D)/js/jquery.querystring.js
 BASE_BROWSERIFY_JS = big-integer.js flatted.js qunit.js
 dest_jsify = $(addprefix $(DEST_JS_DIR)/,$(1))
@@ -111,23 +103,12 @@ DEST_yui_min_Solitairey_JS = $(call dest_jsify,$(BASE_yui_min_Solitairey_JS))
 
 DEST_WEB_FC_SOLVE_UI_MIN_JS = $(DEST_JS_DIR)/web-fcs.min.js
 
-ifeq ($(SKIP_EMCC),1)
-
-    LIBFREECELL_SOLVER_JS__NODE__TARGETS =
-    LIBFREECELL_SOLVER_JS__TARGETS =
-
-else
-
-    LIBFREECELL_SOLVER_JS__NODE__TARGETS = lib/for-node/js/libfreecell-solver.min.js lib/for-node/js/libfreecell-solver-asm.js
-    LIBFREECELL_SOLVER_JS__TARGETS = $(DEST_LIBFREECELL_SOLVER_JS) $(DEST_LIBFREECELL_SOLVER_JS_NON_MIN) $(DEST_LIBFREECELL_SOLVER_JS_MEM) $(DEST_LIBFREECELL_SOLVER_ASMJS_JS) $(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS)
-
-endif
-
 include lib/make/deps.mak
 
 real_all : $(D) $(SUBDIRS) $(HTMLS) $(D)/download.html $(IMAGES) $(RAW_SUBDIRS) $(ARC_DOCS) $(DOCS_AUX) $(DOCS_HTMLS) $(DEST_QSTRING_JS) $(DEST_WEB_FC_SOLVE_UI_MIN_JS) htaccesses_target
 
-real_all: $(LIBFREECELL_SOLVER_JS__TARGETS) $(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
+real_all:$(DEST_BROWSERIFY_JS) $(DEST_Solitairey_JS) $(DEST_yui_Solitairey_JS) $(DEST_lodash_Solitairey_JS)
+
 real_all: $(DEST_yui_min_Solitairey_JS)
 
 OUT_PREF = lib/out-babel/js
@@ -206,50 +187,12 @@ $(RAW_SUBDIRS): $(D)/% : src/%
 	rm -fr $@
 	cp -r $< $@
 
-FC_SOLVE_SOURCE_DIR := $(PWD)/$(BASE_FC_SOLVE_SOURCE_DIR)
-
-LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR = $(LIBFREECELL_SOLVER_JS_DIR)/CMAKE-BUILD-dir
-LIBFREECELL_SOLVER_JS_DIR__CMAKE_CACHE = $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR)/CMakeCache.txt
-LIBFREECELL_SOLVER_JS_DIR__DESTDIR = $(PWD)/$(LIBFREECELL_SOLVER_JS_DIR)/__DESTDIR
-LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA = $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR)/fc-solve/share/freecell-solver/presetrc
-LIBFREECELL_SOLVER_JS_DIR__DESTDIR__ASMJS = $(PWD)/$(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/__DESTDIR
-
-FC_SOLVE_CMAKE_DIR := $(PWD)/$(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR)
-
-$(LIBFREECELL_SOLVER_JS_DIR__CMAKE_CACHE):
-	mkdir -p $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR)
-	( cd $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR) && cmake -DCMAKE_INSTALL_PREFIX=/fc-solve $(FC_SOLVE_SOURCE_DIR) && make -j4 generate_c_files)
-
 $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA): $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_CACHE)
 	( cd $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_DIR)/Presets && make -j4 install DESTDIR=$(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) )
 	# We need that to make sure the timestamps are correct because apparently
 	# the make install process updates the timestamps of CMakeCache.txt and
 	# the Makefile there.
 	find $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) -type f -print0 | xargs -0 touch
-
-$(LIBFREECELL_SOLVER_JS): $(WASM_STAMP)
-
-LIB_FC_SOLVE_JS__gmake = gmake -j4 -f $(FC_SOLVE_SOURCE_DIR)/../scripts/Makefile.to-javascript.mak RINUTILS_DIR="$(PWD)/lib/repos/rinutils-include" SRC_DIR=$(FC_SOLVE_SOURCE_DIR) CMAKE_DIR=$(FC_SOLVE_CMAKE_DIR)
-
-$(WASM_STAMP): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
-	( cd $(LIBFREECELL_SOLVER_JS_DIR) && $(LIB_FC_SOLVE_JS__gmake) ASMJS=0 && $(STRIP_TRAIL_SPACE) *.js )
-	touch $(WASM_STAMP)
-
-$(LIBFREECELL_SOLVER_ASMJS_JS): $(ASMJS_STAMP)
-$(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/$(JS_MEM_BASE__ASMJS): $(ASMJS_STAMP)
-
-$(ASMJS_STAMP): $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA)
-	( cd $(LIBFREECELL_SOLVER_ASMJS_JS_DIR) && $(LIB_FC_SOLVE_JS__gmake) ASMJS=1 DATA_DESTDIR=$(LIBFREECELL_SOLVER_JS_DIR__DESTDIR) && touch $(JS_MEM_BASE__ASMJS) && $(STRIP_TRAIL_SPACE) *.js )
-	touch $@
-
-clean_js:
-	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
-
-$(DEST_LIBFREECELL_SOLVER_JS): $(WASM_STAMP)
-	cp -f $(LIBFREECELL_SOLVER_JS) $@
-
-$(DEST_LIBFREECELL_SOLVER_ASMJS_JS): $(ASMJS_STAMP)
-	cp -f $(LIBFREECELL_SOLVER_ASMJS_JS) $@
 
 $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
@@ -288,15 +231,6 @@ WEB_FCS_UI_JS_SOURCES = $(call dest_jsify,web-fc-solve-ui.js)
 $(DEST_WEB_FC_SOLVE_UI_MIN_JS): $(WEB_FCS_UI_JS_SOURCES)
 	$(MULTI_YUI) -o $@ $(WEB_FCS_UI_JS_SOURCES)
 
-$(DEST_LIBFREECELL_SOLVER_JS_NON_MIN): $(LIBFREECELL_SOLVER_JS)
-	$(call COPY)
-
-$(DEST_LIBFREECELL_SOLVER_JS_MEM): %: $(WASM_STAMP)
-	cp -f $(LIBFREECELL_SOLVER_JS_DIR)/$(JS_MEM_BASE) $@
-
-$(DEST_LIBFREECELL_SOLVER_JS_MEM__ASMJS): %: $(ASMJS_STAMP)
-	cp -f $(LIBFREECELL_SOLVER_ASMJS_JS_DIR)/$(JS_MEM_BASE__ASMJS) $@
-
 FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
 TYPESCRIPT_basenames = capitalize-cards.js chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js expand-moves-ui.js fcs-base-ui.js fcs-chart--base.js fcs-validate.js find-fc-deal-ui.js find-fc-deal.js french-cards.js generic-tests-driver.js prange.js s2ints_js.js tests/fcs-common-constants.js tests/fcs-core.js tests/fcs-ui.js tests/fcs-validate.js toggle_sect.js toggler.js web-fc-solve--expand-moves--mega-test.js web-fc-solve--expand-moves.js web-fc-solve-ui.js web-fc-solve.js web-fcs-api-base.js web-fcs-tests-strings.js
@@ -305,7 +239,7 @@ TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames)
 TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
 TYPESCRIPT_COMMON_DEFS_FILES = src/ts/jq_qs.d.ts
 
-JSES_js_basenames = jq_qs.js libfcs-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js
+JSES_js_basenames = jq_qs.js libfcs-wrap.js libfind-deal-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js
 DEST_BABEL_JSES = $(call dest_jsify,$(JSES_js_basenames) $(TYPESCRIPT_basenames))
 OUT_BABEL_JSES = $(patsubst $(DEST_JS_DIR)/%,$(OUT_PREF)/%,$(DEST_BABEL_JSES))
 
@@ -315,7 +249,7 @@ $(patsubst %,$(OUT_PREF)/%,$(JSES_js_basenames)): $(OUT_PREF)/%.js: $(BABEL_SRC_
 $(DEST_BABEL_JSES): $(DEST_JS_DIR)/%.js: $(OUT_PREF)/%.js
 	$(MULTI_YUI) -o $@ $<
 
-JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js
+JS_DEST_FILES__NODE = $(LIBFREECELL_SOLVER_JS__NODE__TARGETS) lib/for-node/js/libfcs-wrap.js lib/for-node/js/libfind-deal-wrap.js
 
 $(JS_DEST_FILES__NODE): lib/for-node/%.js: $(D)/%.js
 	$(call COPY)
@@ -340,7 +274,7 @@ tsc_www:
 tsc_cmdline:
 	$(call run_tsc,cmdline)
 
-serial_run: tsc_www tsc_cmdline $(LIBFREECELL_SOLVER_JS) $(ASMJS_STAMP)
+serial_run: tsc_www tsc_cmdline $(LIBFREECELL_SOLVER_JS) $(LIBFREECELL_SOLVER_ASMJS_STAMP)
 
 TS_CHART_DEST = $(D)/charts/dbm-solver-__int128-optimisation/chart-using-flot.js
 TS_CHART2_DEST = $(D)/charts/fc-pro--4fc-intractable-deals--report/chart-using-flot.js
@@ -425,7 +359,7 @@ TEST_ENV = PYTHONPATH="$${PYTHONPATH}:$(LATEMP_ABS_ROOT_SOURCE_DIR)/Tests/lib" S
 TEST_TARGETS = Tests/*.{py,t}
 
 clean:
-	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.{bc,js} $(WASM_STAMP) $(ASMJS_STAMP) $(TYPESCRIPT_DEST_FILES__NODE) $(TYPESCRIPT_DEST_FILES) $(TS_CHART_DEST)
+	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.{bc,js} $(LIBFREECELL_SOLVER_WASM_STAMP) $(LIBFREECELL_SOLVER_ASMJS_STAMP) $(TYPESCRIPT_DEST_FILES__NODE) $(TYPESCRIPT_DEST_FILES) $(TS_CHART_DEST)
 
 # A temporary target to edit the active files.
 edit:
@@ -553,3 +487,7 @@ endif
 
 smoke-tests:
 	prettier --parser typescript --arrow-parens always --tab-width 4 --trailing-comma all --write src/ts/**.ts && git add -u . && touch lib/blocks.tt2 && ($(MAKE_WITH_PROD) test || $(SKIP_)) && $(MAKE_WITH_PROD) upload_local upload_staging && $(MAKE_WITH_PROD) browser-tests
+
+clean_js:
+	rm -f $(LIBFREECELL_SOLVER_JS_DIR)/*.js $(LIBFREECELL_SOLVER_JS_DIR)/*.bc
+	rm -f $(LIBFIND_DEAL_JS_DIR)/*.js $(LIBFIND_DEAL_JS_DIR)/*.bc

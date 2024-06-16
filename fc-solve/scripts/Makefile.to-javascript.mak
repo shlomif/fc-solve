@@ -35,7 +35,6 @@ RESULT_JS_LIB__BASENAME = find-deal
 LIB_C_FILES = \
 board_gen/find_deal.c \
 gen_ms_boards__hll_iface.c \
-hacks_for_hlls.c \
 
 CMAKE_C_FILES =
 BHS_LIB_C_FILES =
@@ -135,6 +134,7 @@ NEEDED_FUNCTIONS = \
 	malloc \
 
 endif
+
 RESULT_JS_LIB = lib$(RESULT_JS_LIB__BASENAME)$(LIBSUF).js
 
 C_FILES = $(LIB_C_FILES)

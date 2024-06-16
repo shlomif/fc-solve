@@ -1,7 +1,7 @@
 import * as s2i from "./s2ints_js";
 import * as BaseApi from "./web-fcs-api-base";
 import * as base_ui from "./fcs-base-ui";
-import Module from "./libfcs-wrap";
+import Module from "./libfind-deal-wrap";
 import * as w from "./find-fc-deal";
 
 let _module_wrapper: w.ModuleWrapper;

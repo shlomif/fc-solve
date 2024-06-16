@@ -33,7 +33,9 @@ my $finder = Test::TrailingSpace->new(
                 |
             lib/docbook/5
                 |
-            lib/fc-solve-for-javascript
+            lib/freecell-solver-for-javascript
+                |
+            lib/find-deal-for-javascript
                 |
             lib/transcrypt_module/src
                 |
