@@ -3,9 +3,6 @@ requirejs.config({
     baseUrl: '[% base_path %]js',
     });
 [% END %]
-[%- BLOCK set_up_tabs -%]
-    $(window._set_up_tabs);
-[% END %]
 [%- BLOCK insert__page_extra_head_elements__macro -%]
 <script>
 (function() {
