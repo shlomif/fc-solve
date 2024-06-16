@@ -664,7 +664,7 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
         throw "ms_rand__get_singleton does not exist in set_up_handlers()";
     }
     populate_input_pressed = () => {
-        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+        return base_ui.populate_input_with_numbered_deal(module_wrapper);
     };
     on__run_do_solve__click = fc_solve_do_solve;
     base_ui.set_up__capitalize_cards();

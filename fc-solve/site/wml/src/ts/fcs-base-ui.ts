@@ -19,7 +19,6 @@ export function escapeHtml(str: string): string {
 // feature.
 export function populate_input_with_numbered_deal(
     module_wrapper: BaseApi.ModuleWrapper,
-    w: any,
 ): void {
     const input_s: string = $("#deal_number").val() as string;
     if (!input_s.match(/^[1-9][0-9]*$/)) {

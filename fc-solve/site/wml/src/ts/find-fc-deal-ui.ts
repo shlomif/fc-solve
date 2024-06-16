@@ -96,7 +96,7 @@ export let on__run_do_solve__click: () => void = null;
 export let populate_input_pressed: () => void = null;
 export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
     populate_input_pressed = () => {
-        return base_ui.populate_input_with_numbered_deal(module_wrapper, w);
+        return base_ui.populate_input_with_numbered_deal(module_wrapper);
     };
     on__run_do_solve__click = find_deal_ui;
     base_ui.set_up__capitalize_cards();
