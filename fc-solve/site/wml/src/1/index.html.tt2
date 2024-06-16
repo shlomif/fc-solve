@@ -17,6 +17,20 @@ string to indices test. <span class="enable_js">Please enable
 
 [%- WRAPPER wrap_html -%]
 
-[% INCLUDE moved__emscripten_common incs="require([\"s2i-test\"], function (t)", subject="string to indices test", %]
+[%- BLOCK moved__emscripten_common -%]
+[% INCLUDE emscripten_common__header %]
+<script>
+[% INCLUDE set_up_requirejs %]
+    [% incs %] {
+    window.my_web_fc_solve_ui = web_fc_solve_ui;
+    web_fc_solve_ui.init_module((module_wrapper)=>{
+    web_fc_solve_ui.set_up(module_wrapper);
+[% INCLUDE set_up_tabs %];
+    });
+});
+</script>
+[% END %]
+
+[% INCLUDE moved__emscripten_common incs = "require([\"s2i-test\"], function (t)" , subject = "string to indices test" , %]
 
 [% END %]
