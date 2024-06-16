@@ -23,13 +23,14 @@ BHS_DEST_DIR := ./bhsolver-dest
 BITCODE_EXT = o
 DATA_DESTDIR ?= __DESTDIR
 RESULT_NODE_JS_EXE = fc-solve.js
-RESULT_JS_LIB = libfreecell-solver$(LIBSUF).js
 PROCESS_PL = $(SRC_DIR)/scripts/process-js-html.pl
 EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 
 PATS_C_FILES = $(patsubst %,patsolve/patsolve/%,pat.c patsolve.c tree.c)
 
 ifeq ($(FIND_DEAL_ONLY),1)
+
+RESULT_JS_LIB__BASENAME = find-deal
 
 LIB_C_FILES = \
 board_gen/find_deal.c \
@@ -53,6 +54,8 @@ NEEDED_FUNCTIONS = \
 
 
 else
+
+RESULT_JS_LIB__BASENAME = freecell-solver
 
 LIB_C_FILES = \
 board_gen/find_deal.c \
@@ -132,6 +135,7 @@ NEEDED_FUNCTIONS = \
 	malloc \
 
 endif
+RESULT_JS_LIB = lib$(RESULT_JS_LIB__BASENAME)$(LIBSUF).js
 
 C_FILES = $(LIB_C_FILES)
 
