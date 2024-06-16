@@ -29,6 +29,31 @@ EMBED_FILE_MUNGE_PL = $(SRC_DIR)/../scripts/emscripten-embed-munge.pl
 
 PATS_C_FILES = $(patsubst %,patsolve/patsolve/%,pat.c patsolve.c tree.c)
 
+ifeq ($(FIND_DEAL_ONLY),1)
+
+LIB_C_FILES = \
+board_gen/find_deal.c \
+gen_ms_boards__hll_iface.c \
+hacks_for_hlls.c \
+
+CMAKE_C_FILES =
+BHS_LIB_C_FILES =
+BHS_cmakedir_C_FILES =
+
+NEEDED_FUNCTIONS = \
+	fc_solve__hll_ms_rand__get_singleton \
+	fc_solve__hll_ms_rand__init \
+	fc_solve__hll_ms_rand__mod_rand \
+	fc_solve_user__find_deal__alloc \
+	fc_solve_user__find_deal__fill \
+	fc_solve_user__find_deal__free \
+	fc_solve_user__find_deal__run \
+	free \
+	malloc \
+
+
+else
+
 LIB_C_FILES = \
 board_gen/find_deal.c \
 card.c \
@@ -60,8 +85,6 @@ pos_by_rank__freecell.c \
 rate_state.c \
 
 
-C_FILES = $(LIB_C_FILES)
-
 BHS_LIB_C_FILES = \
 fcs_hash.c \
 meta_alloc.c \
@@ -70,19 +93,6 @@ rank_reach_prune.c \
 BHS_cmakedir_C_FILES = \
 can_move.c \
 generated/lib.c \
-
-BHS_C_FILES = $(BHS_LIB_C_FILES)
-
-SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
-SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
-DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
-DEST_BHS_cmakedir_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_cmakedir_C_FILES))
-SRC_CMAKE_C_FILES = $(patsubst %.c,$(CMAKE_DIR)/%.c,$(CMAKE_C_FILES))
-LLVM_BITCODE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(C_FILES))
-LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(LIB_C_FILES))
-LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(CMAKE_C_FILES))
-
-all: $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS = \
 	black_hole_solver_create \
@@ -120,6 +130,23 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_solve_board \
 	freecell_solver_user_stringify_move_ptr \
 	malloc \
+
+endif
+
+C_FILES = $(LIB_C_FILES)
+
+BHS_C_FILES = $(BHS_LIB_C_FILES)
+
+SRC_C_FILES = $(patsubst %.c,$(SRC_DIR)/%.c,$(C_FILES))
+SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
+DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
+DEST_BHS_cmakedir_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_cmakedir_C_FILES))
+SRC_CMAKE_C_FILES = $(patsubst %.c,$(CMAKE_DIR)/%.c,$(CMAKE_C_FILES))
+LLVM_BITCODE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(C_FILES))
+LLVM_BITCODE_LIB_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(LIB_C_FILES))
+LLVM_BITCODE_CMAKE_FILES = $(patsubst %.c,%.$(BITCODE_EXT),$(CMAKE_C_FILES))
+
+all: $(RESULT_JS_LIB)
 
 NEEDED_FUNCTIONS_STR__FN := funcs.lflags.txt
 NEEDED_FUNCTIONS_STR = > $@ perl -e 'print qq/-s EXPORTED_FUNCTIONS=[/ . join(",", map { chr(0x27) . "_" . $$_ . chr(0x27) } @ARGV) . qq/]/' $(NEEDED_FUNCTIONS)
