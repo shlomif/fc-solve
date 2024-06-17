@@ -50,6 +50,8 @@ NEEDED_FUNCTIONS = \
 	fc_solve_user__find_deal__run \
 
 
+EMCC_TOTAL_MEMORY = "$$((256 * 1024))"
+
 else
 
 RESULT_JS_LIB__BASENAME = freecell-solver
@@ -131,6 +133,9 @@ NEEDED_FUNCTIONS = \
 	freecell_solver_user_stringify_move_ptr \
 	malloc \
 
+
+EMCC_TOTAL_MEMORY = "$$((128 * 1024 * 1024))"
+
 endif
 
 RESULT_JS_LIB = lib$(RESULT_JS_LIB__BASENAME)$(LIBSUF).js
@@ -180,7 +185,7 @@ ASSERT_FLAGS =
 
 EMCC = emcc
 EMCC_CFLAGS = $(CFLAGS) $(ASSERT_FLAGS)
-EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY="$$((128 * 1024 * 1024))" `cat $(NEEDED_FUNCTIONS_STR__FN)` -s EXPORTED_RUNTIME_METHODS="['cwrap', 'getValue', 'intArrayFromString', 'setValue', 'stringToUTF8', 'writeArrayToMemory', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
+EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMCC_TOTAL_MEMORY) `cat $(NEEDED_FUNCTIONS_STR__FN)` -s EXPORTED_RUNTIME_METHODS="['cwrap', 'getValue', 'intArrayFromString', 'setValue', 'stringToUTF8', 'writeArrayToMemory', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 
