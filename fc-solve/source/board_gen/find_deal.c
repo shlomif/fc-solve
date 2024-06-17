@@ -38,10 +38,17 @@ typedef struct
     char ret[128];
 } find_deal;
 
+static find_deal singleton;
+
 DLLEXPORT void *fc_solve_user__find_deal__alloc(void)
 {
     find_deal *const ret = SMALLOC1(ret);
     return ret;
+}
+
+DLLEXPORT void *fc_solve_user__find_deal__get_singleton(void)
+{
+    return &singleton;
 }
 
 void DLLEXPORT fc_solve_user__find_deal__free(void *obj) { free(obj); }
