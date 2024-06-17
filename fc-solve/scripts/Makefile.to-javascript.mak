@@ -48,8 +48,6 @@ NEEDED_FUNCTIONS = \
 	fc_solve_user__find_deal__fill \
 	fc_solve_user__find_deal__free \
 	fc_solve_user__find_deal__run \
-	free \
-	malloc \
 
 
 else
