@@ -51,6 +51,8 @@ NEEDED_FUNCTIONS = \
 
 EMCC_TOTAL_MEMORY = "$$((256 * 1024))"
 
+EMCC_EXPORTED_RUNTIME_METHODS = "['cwrap', 'writeArrayToMemory', 'FS', 'UTF8ToString']"
+
 else
 
 RESULT_JS_LIB__BASENAME = freecell-solver
@@ -135,6 +137,8 @@ NEEDED_FUNCTIONS = \
 
 EMCC_TOTAL_MEMORY = "$$((128 * 1024 * 1024))"
 
+EMCC_EXPORTED_RUNTIME_METHODS = "['cwrap', 'getValue', 'intArrayFromString', 'setValue', 'stringToUTF8', 'writeArrayToMemory', 'FS', 'UTF8ToString']"
+
 endif
 
 RESULT_JS_LIB = lib$(RESULT_JS_LIB__BASENAME)$(LIBSUF).js
@@ -184,13 +188,21 @@ ASSERT_FLAGS =
 
 EMCC = emcc
 EMCC_CFLAGS = $(CFLAGS) $(ASSERT_FLAGS)
-EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMCC_TOTAL_MEMORY) `cat $(NEEDED_FUNCTIONS_STR__FN)` -s EXPORTED_RUNTIME_METHODS="['cwrap', 'getValue', 'intArrayFromString', 'setValue', 'stringToUTF8', 'writeArrayToMemory', 'FS', 'UTF8ToString']" $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
+EMCC_LDFLAGS = --closure=1 -s WASM=$(WASM) -s TOTAL_MEMORY=$(EMCC_TOTAL_MEMORY) `cat $(NEEDED_FUNCTIONS_STR__FN)` -s EXPORTED_RUNTIME_METHODS=$(EMCC_EXPORTED_RUNTIME_METHODS) $(WASM_FLAGS) -s MODULARIZE=1 $(EMCC_CFLAGS)
 
 PRESET_DIR = /fc-solve/share/freecell-solver/
 
 PRESET_FILES_LOCAL := $$(perl $(EMBED_FILE_MUNGE_PL) $(DATA_DESTDIR))
 
+ifeq ($(FIND_DEAL_ONLY),1)
+
+EMCC_POST_FLAGS :=
+
+else
+
 EMCC_POST_FLAGS := $(PRESET_FILES_LOCAL)
+
+endif
 
 $(LLVM_BITCODE_CMAKE_FILES): %.$(BITCODE_EXT): $(CMAKE_DIR)/%.c $(INCLUDE_CFLAGS_FN)
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
