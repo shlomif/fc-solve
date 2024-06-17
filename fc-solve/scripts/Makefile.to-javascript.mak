@@ -51,7 +51,7 @@ NEEDED_FUNCTIONS = \
 
 EMCC_TOTAL_MEMORY = "$$((256 * 1024))"
 
-EMCC_EXPORTED_RUNTIME_METHODS = "['cwrap', 'writeArrayToMemory', 'FS', 'UTF8ToString']"
+EMCC_EXPORTED_RUNTIME_METHODS = "['cwrap']"
 
 else
 
