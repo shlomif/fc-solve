@@ -146,8 +146,6 @@
 /fc-solve/site/wml/lib/repos/rinutils/
 /fc-solve/site/wml/lib/sgml/
 /fc-solve/site/wml/lib/split-html/__pycache__/
-/fc-solve/site/wml/libfreecell-solver-asm.js.mem
-/fc-solve/site/wml/libfreecell-solver.wasm
 /fc-solve/site/wml/node_modules
 /fc-solve/site/wml/src/ts/web-fcs-tests-strings.ts
 /fc-solve/site/wml/tslint.json

@@ -84,7 +84,7 @@ DOCS_HTMLS = $(patsubst %,$(D)/docs/distro/%.html,$(DOCS_PROTO))
 SUBDIRS = $(addprefix $(D)/,$(SRC_DIRS))
 
 Solver_Dest_Dir := $(D)/js-fc-solve/text
-DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(Solver_Dest_Dir) $(D)/js-fc-solve/automated-tests lib/for-node/js/ .
+DEST_mem_dirs = $(DEST_JS_DIR) $(D)/js-fc-solve/find-deal $(Solver_Dest_Dir) $(D)/js-fc-solve/automated-tests lib/for-node/js/
 
 include lib/make/generated/emcc_libs.mak
 
