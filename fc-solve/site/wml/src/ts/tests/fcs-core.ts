@@ -751,7 +751,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
             assert.equal(
                 ret_str,
                 solution_for_deal_24__expanded_moves,
-                "Freecell_Deal_Finder",
+                "Expanded-Moves-Test",
             );
         });
     });

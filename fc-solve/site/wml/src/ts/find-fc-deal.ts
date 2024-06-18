@@ -2,22 +2,18 @@ import bigInt from "big-integer";
 import * as BaseApi from "./web-fcs-api-base";
 
 export interface ModuleWrapper extends BaseApi.ModuleWrapper {
-    find_deal__fill: (...args: any) => any;
-    find_deal__get: (...args: any) => any;
-    find_deal__run: (...args: any) => any;
+    find_deal__fill: (obj: number, s: string) => void;
+    find_deal__get: () => number;
+    find_deal__run: (obj: number, start: string, stop: string) => string;
 }
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
+    ret.find_deal__get = Module._fc_solve_user__find_deal__get_singleton;
     ret.find_deal__fill = Module.cwrap(
         "fc_solve_user__find_deal__fill",
-        "number",
+        "void",
         ["number", "string"],
-    );
-    ret.find_deal__get = Module.cwrap(
-        "fc_solve_user__find_deal__get_singleton",
-        "number",
-        [],
     );
     ret.find_deal__run = Module.cwrap(
         "fc_solve_user__find_deal__run",
