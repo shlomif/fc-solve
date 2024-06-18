@@ -14,10 +14,9 @@ if ( !defined($version) )
     die "Version is undefined!";
 }
 
-my @cmd = (
-    "git", "tag", "-m", "Tagging Freecell-Deal-MS as $version",
-    "Freecell-Deal-MS-$version",
-);
+my $DIST = "Freecell-Deal-MS";
+my @cmd =
+    ( "git", "tag", "-m", "Tagging $DIST as $version", "${DIST}-$version", );
 
 print join( " ", map { /\s/ ? qq{"$_"} : $_ } @cmd ), "\n";
 exec(@cmd);
