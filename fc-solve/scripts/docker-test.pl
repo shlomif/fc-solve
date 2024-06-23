@@ -8,7 +8,7 @@ use autodie;
 use Path::Tiny qw/ path /;
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 
-my $SYS       = "fedora:40";
+my $SYS       = "fedora:39";
 my $CONTAINER = "fcsfed";
 my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, }, );
@@ -36,10 +36,14 @@ perl ../scripts/Tatzer
 make
 # export HARNESS_VERBOSE=1
 # FCS_TEST_BUILD=1 perl ../source/run-tests.pl --execute="perl `pwd`/../source/t/t/build*.t"
-FCS_TEST_BUILD=1 perl ../source/run-tests.pl --glob='build*.t'
+export FCS_TEST_KEEP_SOLS_DIR="`pwd`/../sols"
+rm -f ../source/t/t/tidyall.t
+# FCS_TEST_BUILD=1 perl ../source/run-tests.pl
+perl ../source/run-tests.pl
 EOSCRIPTTTTTTT
 
 $obj->exe_bash_code( { code => $script, } );
+$obj->docker( { cmd => [ 'cp', "fcsfed:root/sols", "../sols0", ] } );
 $obj->clean_up();
 
 __END__
