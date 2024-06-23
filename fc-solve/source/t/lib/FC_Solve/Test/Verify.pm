@@ -35,6 +35,11 @@ sub r
     my $fc_solve_output = $cmd_line->open_cmd_line->{fh};
     my $contents        = do { local $/; <$fc_solve_output>; };
     close($fc_solve_output);
+    if ( my $DIR = $ENV{FCS_TEST_KEEP_SOLS_DIR} )
+    {
+        $DIR = path($DIR);
+        $DIR->child("$id.sol")->touchpath()->spew_raw($contents);
+    }
     $contents =~ s/ +$//gm;
     require Digest;
     my $hasher = Digest->new('SHA-256');

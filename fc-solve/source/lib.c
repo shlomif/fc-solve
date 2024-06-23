@@ -3497,8 +3497,8 @@ void DLLEXPORT freecell_solver_user_free(void *const api_instance)
     free(user);
 }
 
-int DLLEXPORT __attribute__((pure))
-freecell_solver_user_get_current_depth(void *const api_instance)
+int DLLEXPORT __attribute__((pure)) freecell_solver_user_get_current_depth(
+    void *const api_instance)
 {
     return (int)(DFS_VAR(api_soft_thread(api_instance), depth));
 }
@@ -3810,14 +3810,14 @@ freecell_solver_user_get_num_times_long(void *api_instance)
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT __attribute__((pure))
-freecell_solver_user_get_num_times(void *const api_instance)
+int DLLEXPORT __attribute__((pure)) freecell_solver_user_get_num_times(
+    void *const api_instance)
 {
     return (int)freecell_solver_user_get_num_times_long(api_instance);
 }
 
-int DLLEXPORT __attribute__((pure))
-freecell_solver_user_get_limit_iterations(void *const api_instance GCC_UNUSED)
+int DLLEXPORT __attribute__((pure)) freecell_solver_user_get_limit_iterations(
+    void *const api_instance GCC_UNUSED)
 {
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     return (int)active_obj(api_instance)->effective_max_num_checked_states;
@@ -3908,20 +3908,20 @@ void DLLEXPORT freecell_solver_user_limit_depth(
 #endif
 
 #if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
-int DLLEXPORT __attribute__((const))
-freecell_solver_user_get_max_num_freecells(void)
+int DLLEXPORT __attribute__((const)) freecell_solver_user_get_max_num_freecells(
+    void)
 {
     return MAX_NUM_FREECELLS;
 }
 
-int DLLEXPORT __attribute__((const))
-freecell_solver_user_get_max_num_stacks(void)
+int DLLEXPORT __attribute__((const)) freecell_solver_user_get_max_num_stacks(
+    void)
 {
     return MAX_NUM_STACKS;
 }
 
-int DLLEXPORT __attribute__((const))
-freecell_solver_user_get_max_num_decks(void)
+int DLLEXPORT __attribute__((const)) freecell_solver_user_get_max_num_decks(
+    void)
 {
     return MAX_NUM_DECKS;
 }
