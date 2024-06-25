@@ -2,13 +2,14 @@
 # -*- coding: utf-8 -*-
 # vim:fenc=utf-8
 #
-# Copyright © 2019 Shlomi Fish <shlomif@cpan.org>
+# Copyright © 2024 Shlomi Fish <shlomif@cpan.org>
 #
 # Distributed under terms of the MIT license.
 
 """
-Split Shlomi Fish's XHTML5 / HTML5 documents (for example his FAQ-list)
-into individual pages per sections.
+Check a URL for being online, and somewhat functional.
+
+( https://en.wiktionary.org/wiki/litmus_test )
 """
 
 import click
