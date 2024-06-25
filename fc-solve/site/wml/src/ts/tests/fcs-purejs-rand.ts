@@ -44,14 +44,14 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 
             // TEST
             assert.equal(
-                deal_ms_fc_board(module_wrapper, "24"),
+                deal_ms_fc_board("24"),
                 ms_deal_24_with_colons,
                 "deal_ms_fc_board for 24 ( A small, non-overflowing deal-index)",
             );
 
             // TEST
             assert.equal(
-                deal_ms_fc_board(module_wrapper, "3000000000"),
+                deal_ms_fc_board("3000000000"),
                 `: 8D TS JS TD JH JD JC
 : 4D QS TH AD 4S TC 3C
 : 9H KH QH 4C 5C KD AS
@@ -66,7 +66,7 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
 
             // TEST
             assert.equal(
-                deal_ms_fc_board(module_wrapper, "6000000000"),
+                deal_ms_fc_board("6000000000"),
                 `: 2D 2C QS 8D KD 8C 4C
 : 3D AH 2H 4H TS 6H QD
 : 4D JS AD 6S JH JC JD

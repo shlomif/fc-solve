@@ -17,8 +17,8 @@ class MSRand {
     constructor(args) {
         const that = this;
         that.gamenumber = args.gamenumber;
-        that._seed = BigInt(that.gamenumber);
-        const _seed = that._seed;
+        const _seed = BigInt(that.gamenumber);
+        that._seed = _seed;
         that._seedx = _seed < X ? _seed : _seed - X;
         return;
     }
@@ -87,10 +87,9 @@ class MSRand {
  *
  * */
 
-export function deal_ms_fc_board(module_wrapper: any, seed: string): string {
+export function deal_ms_fc_board(gamenumber: string): string {
     const randomizer = new MSRand({
-        module_wrapper: module_wrapper,
-        gamenumber: seed,
+        gamenumber: gamenumber,
     });
     const num_cols = 8;
 
