@@ -472,10 +472,17 @@ QUNIT_PUP = qunit-puppeteer
 # no longer do. Otherwise qunit-puppeteer silently did nothing.
 # QUNIT_PUP = node $(QUNIT_PUP_copy_path)
 
+CHECK_URL = python3 bin/check_url.py
+AUTOMATED_TESTS_URL = $(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/
+GUI_TESTS_URL = $(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml
+
 browser-tests: all
 	# cp -f node_modules/.bin/qunit-puppeteer $(QUNIT_PUP_copy_path)
-	$(QUNIT_PUP) "$(BROWSER_TESTS_URL)/js-fc-solve/automated-tests/"
-	$(QUNIT_PUP) "$(BROWSER_TESTS_URL)/js-fc-solve/text/gui-tests.xhtml"
+	$(CHECK_URL) --match "Freecell [sS]olver" --title "Front Page" --url "$(BROWSER_TESTS_URL)"
+	$(CHECK_URL) --match "Freecell [sS]olver" --title "js-fc-solve automated-tests Page" --url "$(AUTOMATED_TESTS_URL)"
+	$(CHECK_URL) --match "Freecell [sS]olver" --title "js-fc-solve gui-tests Page" --url "$(GUI_TESTS_URL)"
+	$(QUNIT_PUP) "$(AUTOMATED_TESTS_URL)"
+	$(QUNIT_PUP) "$(GUI_TESTS_URL)"
 
 MAKE_WITH_PROD = $(MAKE) PROD=$(PROD) LOCAL_BROWSER_TESTS=$(LOCAL_BROWSER_TESTS)
 

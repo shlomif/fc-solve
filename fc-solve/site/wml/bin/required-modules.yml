@@ -52,4 +52,5 @@ required:
     py3_modules:
         click: 0
         jinja2: 0
+        requests: 0
         vnu_validator: 0
