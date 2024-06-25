@@ -60,7 +60,7 @@ class MSRand {
         const that = this;
         return that.raw_rand() % mymax;
     }
-    public shuffle(deck) {
+    public shuffle(deck: Array<any>): Array<any> {
         const that = this;
         if (deck.length) {
             let i = deck.length;
@@ -91,29 +91,31 @@ export function deal_ms_fc_board(gamenumber: string): string {
     const randomizer = new MSRand({
         gamenumber: gamenumber,
     });
-    const num_cols = 8;
+    const num_cols: number = 8;
 
-    const columns = perl_range(0, num_cols - 1).map(() => {
-        return [];
-    });
-    let deck = perl_range(0, 4 * 13 - 1);
+    const columns: Array<Array<number>> = perl_range(0, num_cols - 1).map(
+        () => {
+            return [];
+        },
+    );
+    let deck: Array<number> = perl_range(0, 4 * 13 - 1);
 
     randomizer.shuffle(deck);
 
     deck = deck.reverse();
 
-    for (let i = 0; i < 52; i++) {
+    for (let i = 0; i < 52; ++i) {
         columns[i % num_cols].push(deck[i]);
     }
 
-    function render_card(card) {
+    function render_card(card: number): String {
         const suit = card % 4;
         const rank = Math.floor(card / 4);
 
         return "A23456789TJQK".charAt(rank) + "CDHS".charAt(suit);
     }
 
-    function render_column(col) {
+    function render_column(col: Array<number>): String {
         return ": " + col.map(render_card).join(" ") + "\n";
     }
 
