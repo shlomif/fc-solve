@@ -34,6 +34,7 @@ SET (base_with_ver "freecell-solver-[0-9]+\\\\.[0-9]+\\\\.[0-9]+")
 SET(CPACK_SOURCE_GENERATOR "TXZ")
 SET(CPACK_SOURCE_IGNORE_FILES
     "/.deps/"
+    "\\\\.tidyall\\\\.d"
     "~$"
     "\\\\.pyc$"
     "/tags$"
