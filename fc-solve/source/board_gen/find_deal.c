@@ -8,9 +8,9 @@
 #include <rinutils/longlong.h>
 #include "gen_ms_boards__find_deal.h"
 
-long long DLLEXPORT __attribute__((pure))
-fc_solve_find_deal_in_range(const fc_solve_ms_deal_idx_type start,
-    const fc_solve_ms_deal_idx_type end, const uint_fast32_t *const ints)
+long long DLLEXPORT __attribute__((pure)) fc_solve_find_deal_in_range(
+    const fc_solve_ms_deal_idx_type start, const fc_solve_ms_deal_idx_type end,
+    const uint_fast32_t *const ints)
 {
     for (fc_solve_ms_deal_idx_type deal_idx = (microsoft_rand)start;
          deal_idx <= end; ++deal_idx)
@@ -38,7 +38,7 @@ typedef struct
     char ret[128];
 } find_deal;
 
-static find_deal singleton;
+static find_deal global_instance;
 
 DLLEXPORT void *fc_solve_user__find_deal__alloc(void)
 {
@@ -46,9 +46,9 @@ DLLEXPORT void *fc_solve_user__find_deal__alloc(void)
     return ret;
 }
 
-DLLEXPORT void *fc_solve_user__find_deal__get_singleton(void)
+DLLEXPORT void *fc_solve_user__find_deal__get_global_instance(void)
 {
-    return &singleton;
+    return &global_instance;
 }
 
 void DLLEXPORT fc_solve_user__find_deal__free(void *obj) { free(obj); }

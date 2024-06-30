@@ -8,11 +8,11 @@
 // gen_ms_boards__hll_iface.c - high-level-language interface to the rand.
 #include "gen_ms_boards__hll_iface.h"
 
-static fc_solve__hll_ms_rand singleton = {.deal_idx = 1, .seedx = 1};
+static fc_solve__hll_ms_rand global_instance = {.deal_idx = 1, .seedx = 1};
 
-fc_solve__hll_ms_rand *fc_solve__hll_ms_rand__get_singleton(void)
+fc_solve__hll_ms_rand *fc_solve__hll_ms_rand__get_global_instance(void)
 {
-    return &singleton;
+    return &global_instance;
 }
 
 void fc_solve__hll_ms_rand__init(

@@ -660,8 +660,8 @@ function toggle_expand_moves() {
 export let on__run_do_solve__click: () => void = null;
 export let populate_input_pressed: () => void = null;
 export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
-    if (!module_wrapper["ms_rand__get_singleton"]) {
-        throw "ms_rand__get_singleton does not exist in set_up_handlers()";
+    if (!module_wrapper["ms_rand__get"]) {
+        throw "ms_rand__get does not exist in set_up_handlers()";
     }
     populate_input_pressed = () => {
         return base_ui.populate_input_with_numbered_deal(module_wrapper);
@@ -673,8 +673,8 @@ export function set_up_handlers(module_wrapper: w.ModuleWrapper): void {
 }
 
 export function set_up(module_wrapper: w.ModuleWrapper, graphics_) {
-    if (!module_wrapper["ms_rand__get_singleton"]) {
-        throw "ms_rand__get_singleton does not exist in set_up()";
+    if (!module_wrapper["ms_rand__get"]) {
+        throw "ms_rand__get does not exist in set_up()";
     }
     restore_bookmark();
     set_up_handlers(module_wrapper);

@@ -41,10 +41,10 @@ BHS_LIB_C_FILES =
 BHS_cmakedir_C_FILES =
 
 NEEDED_FUNCTIONS = \
-	fc_solve__hll_ms_rand__get_singleton \
+	fc_solve__hll_ms_rand__get_global_instance \
 	fc_solve__hll_ms_rand__init \
 	fc_solve__hll_ms_rand__mod_rand \
-	fc_solve_user__find_deal__get_singleton \
+	fc_solve_user__find_deal__get_global_instance \
 	fc_solve_user__find_deal__fill \
 	fc_solve_user__find_deal__run \
 
@@ -100,7 +100,7 @@ generated/lib.c \
 NEEDED_FUNCTIONS = \
 	black_hole_solver_create \
 	black_hole_solver_free \
-	fc_solve__hll_ms_rand__get_singleton \
+	fc_solve__hll_ms_rand__get_global_instance \
 	fc_solve__hll_ms_rand__init \
 	fc_solve__hll_ms_rand__mod_rand \
 	fc_solve_user__find_deal__alloc \

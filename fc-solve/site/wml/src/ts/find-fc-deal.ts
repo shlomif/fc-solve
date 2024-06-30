@@ -9,7 +9,7 @@ export interface ModuleWrapper extends BaseApi.ModuleWrapper {
 
 export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
     const ret = BaseApi.base_calc_module_wrapper(Module) as ModuleWrapper;
-    ret.find_deal__get = Module._fc_solve_user__find_deal__get_singleton;
+    ret.find_deal__get = Module._fc_solve_user__find_deal__get_global_instance;
     ret.find_deal__fill = Module.cwrap(
         "fc_solve_user__find_deal__fill",
         "void",
