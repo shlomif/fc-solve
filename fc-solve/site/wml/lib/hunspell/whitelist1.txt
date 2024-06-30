@@ -1279,11 +1279,13 @@ freecell_solver_user_soft_limit_iterations_long
 gen-multiple-pysol-layouts
 get_board__setup_string
 get_board_l__without_setup
+global_instance
 includable
 int128
 int128-optimisation
 io
 kde
+krop
 ldd
 libGMP
 libapr
@@ -1301,6 +1303,7 @@ solution_moves
 sp
 stackoverflow
 summarizing_solver
+tidyall
 transpose-freecell-board
 uint16_t
 uint_fast32_t
