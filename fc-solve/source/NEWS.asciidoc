@@ -1,8 +1,16 @@
 Freecell Solver's News File
 ===========================
 Shlomi Fish <shlomif@cpan.org>
-:Date: 2020-07-23
+:Date: 2024-06-30
 :Revision: $Id$
+
+Version 6.12.0: (30-Jun-2024)
+----------------------------
+
+1. Avoid packaging /.tidyall.d ( https://github.com/shlomif/fc-solve/issues/99 )
+Thanks to @krop .
+
+2. Renames to "global_instance" and clean-ups.
 
 Version 6.10.0: (13-Jun-2024)
 ----------------------------
