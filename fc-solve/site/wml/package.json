@@ -40,14 +40,14 @@
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.6",
     "rollup": "^4.18.0",
-    "tap": "^20.0.1",
+    "tap": "^20.0.3",
     "tar": "^7.4.0",
     "terser": "^5.31.1",
     "webpack": "^5.92.1",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
-    "eslint": "^9.5.0",
+    "eslint": "^9.6.0",
     "typescript": "^5.5.2"
   },
   "scripts": {
