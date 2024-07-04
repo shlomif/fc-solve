@@ -13,7 +13,7 @@
     "@babel/preset-env": "^7.24.7",
     "@types/jquery": "^3.5.30",
     "@types/qunit": "^2.19.10",
-    "acorn": "^8.12.0",
+    "acorn": "^8.12.1",
     "amdefine": "^1.0.1",
     "big-integer": "^1.6.52",
     "braces": "^3.0.3",
@@ -48,7 +48,7 @@
   },
   "devDependencies": {
     "eslint": "^9.6.0",
-    "typescript": "^5.5.2"
+    "typescript": "^5.5.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
