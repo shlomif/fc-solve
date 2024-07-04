@@ -3,10 +3,10 @@ select = lib/babel/js/*.js lib/babel/old/*.js
 argv = -c $ROOT/eslint.js-rather-than-ts.config.mjs --color
 ignore = lib/babel/js/jquery.phoenix.js lib/babel/js/jquery.phoenix.min.js
 
-; [ESLint typescript]
-; argv = -c $ROOT/eslint.config.mjs
-; select = src/**/*.ts
-; ignore = src/ts/jquery.flot.d.ts src/ts/jq_qs.d.ts src/ts/web-fcs-tests-strings.ts src/ts/libfcs-wrap.d.ts src/js/dist/fc_solve_find_index_s2ints.d.ts
+[ESLint typescript]
+argv = -c $ROOT/eslint.config.mjs
+select = src/**/*.ts
+ignore = src/ts/jquery.flot.d.ts src/ts/jq_qs.d.ts src/ts/web-fcs-tests-strings.ts src/ts/libfcs-wrap.d.ts src/js/dist/fc_solve_find_index_s2ints.d.ts
 
 [PerlTidy]
 select = **/*.{pl,pm,t}

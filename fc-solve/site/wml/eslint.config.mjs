@@ -1,68 +1,30 @@
-import eslint from '@eslint/js';
-import tseslint from 'typescript-eslint';
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+import js from "@eslint/js";
+import { FlatCompat } from "@eslint/eslintrc";
 
-if (false) {
-    function _removed() {
-        return {
-            "parser": "@typescript-eslint/parser",
-            "plugins": ["@typescript-eslint"],
-            "extends": ["eslint:recommended", "plugin:@typescript-eslint/recommended",
-                "plugin:prettier/recommended"],
-            "parserOptions": {
-                "ecmaVersion": 6,
-                "sourceType": "module"
-            }
-        }
-    }
-}
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+    baseDirectory: __dirname,
+    recommendedConfig: js.configs.recommended,
+    allConfig: js.configs.all
+});
 
-const rules = {
-    "rules": {
-        "@typescript-eslint/camelcase": 0,
-        "@typescript-eslint/class-name-casing": 0,
-        "@typescript-eslint/explicit-function-return-type": 0,
-        "@typescript-eslint/no-empty-function": 0,
-        "@typescript-eslint/no-explicit-any": 0,
-        "@typescript-eslint/no-inferrable-types": 0,
-        "@typescript-eslint/no-this-alias": 0,
-        "@typescript-eslint/no-unused-vars": 0,
-        "@typescript-eslint/no-use-before-define": 0,
-        "arrow-return-shorthand": 0,
-        "class-name": 0,
-        "max-classes-per-file": 0,
-        "no-bitwise": 0,
-        "no-conditional-assignment": 0,
-        "no-console": 0,
-        "no-constant-condition": 0,
-        "no-inner-declarations": 0,
-        "no-string-throw": 0,
-        "no-this-assignment": 0,
-        "no-undef": 0,
-        "no-useless-escape": 0,
-        "prefer-const": 0,
-        "prefer-template": 0,
-        /*"prettier/prettier": [2,
-            {
-                "arrowParens": "always",
-                "tabWidth": 4,
-                "trailingComma": "all"
-            }],*/
-        "quotemark": 0,
-        "variable-name": 0
-    }
-};
+export default [...compat.extends("google"), {
+    languageOptions: {
+        ecmaVersion: 7,
+        sourceType: "script",
+    },
 
-export default tseslint.config(
-   eslint.configs.recommended,
-   ...tseslint.configs.recommended,
-   ...tseslint.configs.recommendedTypeChecked,
-   {
-       languageOptions: {
-           parserOptions: {
-               project: true,
-               tsconfigRootDir: import.meta.dirname,
-           },
-       },
-   },
-   rules,
-);
+    rules: {
+        camelcase: "off",
+        indent: ["error", 4],
+        "new-cap": "off",
+        "no-invalid-this": "off",
+        "no-throw-literal": "off",
+        "no-unused-vars": "off",
+        quotes: "off",
+        "require-jsdoc": "off",
+    },
+}];
