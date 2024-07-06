@@ -240,8 +240,11 @@ number will be smaller by a difference of 1.
 Note that the <a href="[% base_path %]js-fc-solve/">web-based solver</a> also
 has an option to expand such moves into atomic, single-card, moves. One can use
 it in most modern JavaScript-enabled browsers, and without needing to install
-any additional software on your computer. See <a href="[% base_path
-%]js-fc-solve/expand-moves/">the Online Freecell moves’ expander</a>.
+any additional software on your computer. Note that we also have set-up a <a
+href="[% base_path
+%]js-fc-solve/expand-moves/">dedicated Online Freecell moves’ expander
+web application</a> on its own web-page. (Albeit calling it a “web-application”
+may be somewhat of a stretch.)
 </p>
 
 <p>
@@ -250,7 +253,7 @@ One can also try using
 from the <a href="https://metacpan.org/release/Games-Solitaire-Verify">Games-Solitaire-Verify CPAN distribution</a> (by the same author of Freecell Solver),
 in order to filter solutions and produce ones with multi-card moves
 expanded into several single-card moves. If you are on Microsoft Windows, you can
-install <a href="http://strawberryperl.com/">Strawberry Perl</a> and run it.
+install <a href="http://strawberryperl.com/">Strawberry Perl</a> to run it.
 </p>
 
 [% END %]
