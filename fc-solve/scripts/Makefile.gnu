@@ -231,6 +231,7 @@ ifeq ($(FREECELL_ONLY),0)
 	SOURCE_OBJECTS += preset.o
 else
 	FC_PRO_OBJS += fc_pro_iface.o
+	CFLAGS += -DFCS_DISABLE_MOVES_TRACKING=1
 endif
 
 OBJECTS := $(GEN_C_OBJECTS) $(SOURCE_OBJECTS)
