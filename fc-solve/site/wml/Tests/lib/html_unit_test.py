@@ -14,7 +14,20 @@ import os
 from os.path import join
 import unittest
 
+from lxml import etree
 from lxml import html
+from lxml.html import XHTML_NAMESPACE
+
+
+XML_NS = "http://www.w3.org/XML/1998/namespace"
+dbns = "http://docbook.org/ns/docbook"
+ns = {
+    "db": dbns,
+    "ncx": "http://www.daisy.org/z3986/2005/ncx/",
+    "xhtml": XHTML_NAMESPACE,
+    "xlink": "http://www.w3.org/1999/xlink",
+    "xml": XML_NS,
+}
 
 
 class HtmlTestsDocQuery:
@@ -30,18 +43,29 @@ class HtmlTestsDocQuery:
 
 class HtmlTestsDoc:
     """A single HTML document wrapper"""
-    def __init__(self, harness, fn):
+    def __init__(self, harness, fn, filetype='html'):
+        self.filetype = filetype
         self.harness = harness
         if isinstance(fn, dict):
             assert fn['type'] == 'text'
             self.fn = fn['fn']
-            self.root = html.document_fromstring(html=fn['text'])
+            if filetype == 'html':
+                self.root = html.document_fromstring(html=fn['text'])
+            elif filetype == 'docbook5':
+                assert False
             return
         self.fn = fn
-        self.root = html.parse(fn)
+        if filetype == 'html':
+            self.root = html.parse(fn)
+        elif filetype == 'docbook5':
+            self.root = etree.parse(fn)
 
     def xpath(self, xpath_s):
-        return HtmlTestsDocQuery(self, self.root.xpath(xpath_s))
+        if self.filetype == 'html':
+            return HtmlTestsDocQuery(self, self.root.xpath(xpath_s))
+        elif self.filetype == 'docbook5':
+            return HtmlTestsDocQuery(self, self.root.xpath(
+                xpath_s, namespaces=ns))
 
     def has_count(self, xpath_s, count_, blurb=""):
         """is the length of xpath_s’s results count_"""
@@ -57,8 +81,8 @@ class HtmlTestsDoc:
 
 
 class TestCase(unittest.TestCase):
-    def doc(self, path):
-        return HtmlTestsDoc(self, path)
+    def doc(self, path, filetype='html'):
+        return HtmlTestsDoc(self, path, filetype=filetype)
 
 
 def _find_htmls(root):
