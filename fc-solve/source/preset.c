@@ -31,10 +31,8 @@ enum
 
 #define MAKE_GAME_PARAMS(freecells_num, stacks_num, decks_num, seqs_build_by,  \
     seq_move, empty_stacks_fill)                                               \
-    {                                                                          \
-        freecells_num, stacks_num, decks_num,                                  \
-            (seqs_build_by | (empty_stacks_fill << 2) | (seq_move << 4))       \
-    }
+    {freecells_num, stacks_num, decks_num,                                     \
+        (seqs_build_by | (empty_stacks_fill << 2) | (seq_move << 4))}
 
 #include "fcs_presets_generated.h"
 

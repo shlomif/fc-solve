@@ -23,9 +23,9 @@
 // because lru_side had been an unsigned long.
 typedef const char *lru_side;
 
-extern int __attribute__((pure))
-fc_solve_compare_lru_cache_keys(const void *const void_a,
-    const void *const void_b, void *const context GCC_UNUSED)
+extern int __attribute__((pure)) fc_solve_compare_lru_cache_keys(
+    const void *const void_a, const void *const void_b,
+    void *const context GCC_UNUSED)
 {
 #define GET_PARAM(p) ((lru_side)(((const fcs_cache_key_info *)(p))->val_ptr))
     const lru_side a = GET_PARAM(void_a), b = GET_PARAM(void_b);

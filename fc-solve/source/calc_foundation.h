@@ -1,7 +1,7 @@
 #pragma once
-static inline int_fast32_t __attribute__((pure))
-calc_foundation_to_put_card_on(CALC_FOUNDATION_ARG(),
-    const fcs_state *const ptr_state, const fcs_card card)
+static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
+    CALC_FOUNDATION_ARG(), const fcs_state *const ptr_state,
+    const fcs_card card)
 {
     CALC_FOUNDATION__calc_sequences_are_built_by();
     const fcs_card rank = fcs_card_rank(card);

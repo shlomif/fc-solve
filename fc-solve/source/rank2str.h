@@ -20,10 +20,8 @@ extern "C" {
 #endif
 
 #define GEN_CARD_MAP(t_card)                                                   \
-    {                                                                          \
-        CARD_ZERO()                                                            \
-        , "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J", "Q", "K"   \
-    }
+    {CARD_ZERO(), "A", "2", "3", "4", "5", "6", "7", "8", "9", t_card, "J",    \
+        "Q", "K"}
 
 static inline void rank2str(
     const int rank_idx, char *const str PASS_T(const bool display_T))
