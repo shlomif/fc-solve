@@ -483,6 +483,8 @@ browser-tests: all
 	$(CHECK_URL) --match "Freecell [sS]olver" --title "js-fc-solve gui-tests Page" --url "$(GUI_TESTS_URL)"
 	$(QUNIT_PUP) "$(AUTOMATED_TESTS_URL)"
 	$(QUNIT_PUP) "$(GUI_TESTS_URL)"
+	$(QUNIT_PUP) --browser "firefox" "$(AUTOMATED_TESTS_URL)"
+	$(QUNIT_PUP) --browser "firefox" "$(GUI_TESTS_URL)"
 
 MAKE_WITH_PROD = $(MAKE) PROD=$(PROD) LOCAL_BROWSER_TESTS=$(LOCAL_BROWSER_TESTS)
 
