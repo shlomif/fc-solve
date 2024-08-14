@@ -21,7 +21,7 @@
     "cached-path-relative": "^1.1.0",
     "camel-case": "^5.0.0",
     "coffeescript": "^2.7.0",
-    "elliptic": "^6.5.6",
+    "elliptic": "^6.5.7",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
