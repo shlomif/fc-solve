@@ -9,9 +9,23 @@ BEGIN
     {
         print <<'EOF';
 To run do:
-export FCS_PATH="`pwd`" FCS_SRC_PATH="`pwd`/../source"
+export FCS_BIN_PATH="`pwd`" FCS_SRC_PATH="`pwd`/../source"
+export FCS_PATH="${FCS_BIN_PATH}"
 perl ../scripts/cmd-line-compiler compile
 EOF
+    }
+    my $FCS_BIN_PATH = $ENV{FCS_BIN_PATH};
+    if (   ( !defined $FCS_BIN_PATH )
+        or ( $FCS_BIN_PATH !~ /\S/ )
+        or ( not -d $FCS_BIN_PATH ) )
+    {
+        print <<'EOF';
+To run do:
+export FCS_BIN_PATH="`pwd`" FCS_SRC_PATH="`pwd`/../source"
+export FCS_PATH="${FCS_BIN_PATH}"
+perl ../scripts/cmd-line-compiler compile
+EOF
+
     }
 }
 
