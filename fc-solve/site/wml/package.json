@@ -21,7 +21,7 @@
     "cached-path-relative": "^1.1.0",
     "camel-case": "^5.0.0",
     "coffeescript": "^2.7.0",
-    "elliptic": "^6.5.6",
+    "elliptic": "^6.5.7",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
@@ -35,19 +35,19 @@
     "npm": "^10.8.2",
     "param-case": "^4.0.0",
     "prettier": "^3.3.3",
-    "puppeteer": "^23.0.2",
+    "puppeteer": "^23.1.0",
     "qunit": "^2.21.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
     "rollup": "^4.20.0",
-    "tap": "^21.0.0",
+    "tap": "^21.0.1",
     "tar": "^7.4.3",
-    "terser": "^5.31.5",
+    "terser": "^5.31.6",
     "webpack": "^5.93.0",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
-    "eslint": "^9.8.0",
+    "eslint": "^9.9.0",
     "typescript": "^5.5.4"
   },
   "scripts": {
