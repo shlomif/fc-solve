@@ -4,8 +4,6 @@ use strict;
 use warnings;
 use utf8;
 
-use Encode      qw/ decode_utf8 /;
-use URI::Escape qw( uri_escape );
 use Moo;
 use Path::Tiny                         qw/ path /;
 use HTML::Widgets::NavMenu             ();
@@ -125,13 +123,7 @@ sub proc
 
     $vars->{nav_bar} = $nav_bar;
     my $nav_html = $rendered_results->{html};
-    $vars->{nav_menu_html} = join( '', @$nav_html );
-    $vars->{share_link}    = escape_html(
-        uri_escape(
-            MyNavData::get_hosts()->{ $nav_bar->current_host() }->{'base_url'}
-                . $nav_bar->path_info()
-        )
-    );
+    $vars->{nav_menu_html}  = join( '', @$nav_html );
     $vars->{index_filename} = $fn2;
 
     my $load_javascript_srcs;
