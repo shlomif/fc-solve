@@ -8,7 +8,6 @@ use Encode      qw/ decode_utf8 /;
 use URI::Escape qw( uri_escape );
 use Moo;
 use Path::Tiny                         qw/ path /;
-use HTML::Acronyms                     ();
 use HTML::Latemp::AddToc               ();
 use HTML::Widgets::NavMenu             ();
 use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
@@ -30,9 +29,7 @@ my $cpan            = Module::Format::AsHTML->new;
 
 my $base_path;
 
-my $ACRONYMS_FN = "lib/acronyms/list1.yaml";
-my $latemp_acroman =
-    HTML::Acronyms->new( dict => scalar( YAML::XS::LoadFile($ACRONYMS_FN) ) );
+my $ACRONYMS_FN  = "lib/acronyms/list1.yaml";
 my $shlomif_cpan = $cpan->homepage( +{ who => 'shlomif' } );
 my $LONGBLANK    = ( "<br/>" x 72 );
 
@@ -196,14 +193,8 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
                 my $args = shift;
                 return _render_nav_block( $args->{name} );
             },
-            longblank  => $LONGBLANK,
-            main_email => 'shlomif@shlomifish.org',
-            my_acronym => sub {
-                my $args = shift;
-
-                return $latemp_acroman->abbr( { key => $args->{key}, } )
-                    ->{html};
-            },
+            longblank       => $LONGBLANK,
+            main_email      => 'shlomif@shlomifish.org',
             shlomif_cpan    => $shlomif_cpan,
             default_toc     => $DEFAULT_TOC_DIV,
             toc_div         => \&Shlomif::Homepage::TocDiv::toc_div,
