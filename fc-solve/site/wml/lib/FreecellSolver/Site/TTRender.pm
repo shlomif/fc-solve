@@ -8,7 +8,6 @@ use Encode      qw/ decode_utf8 /;
 use URI::Escape qw( uri_escape );
 use Moo;
 use Path::Tiny                         qw/ path /;
-use HTML::Latemp::AddToc               ();
 use HTML::Widgets::NavMenu             ();
 use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
 use Module::Format::AsHTML             ();
@@ -22,7 +21,6 @@ has printable => ( is => 'ro', required => 1 );
 has stdout    => ( is => 'ro', required => 1 );
 
 my $LATEMP_SERVER = "fc-solve";
-my $toc           = HTML::Latemp::AddToc->new;
 
 my $DEFAULT_TOC_DIV = Shlomif::Homepage::TocDiv::toc_div();
 my $cpan            = Module::Format::AsHTML->new;
@@ -373,7 +371,6 @@ EOF
             $vars, \$html, binmode => ':utf8', )
             or die $template->error();
 
-        $toc->add_toc( \$html );
         print $html;
     }
     else
@@ -387,7 +384,6 @@ EOF
                 $vars, \$html, binmode => ':utf8', )
                 or die $template->error();
 
-            $toc->add_toc( \$html );
             path( @$d, @fn, )->touchpath()->spew_utf8($html);
         }
     }
