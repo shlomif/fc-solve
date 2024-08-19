@@ -15,7 +15,7 @@ use MyNavData                          ();
 use MyNavLinks                         ();
 use Template                           ();
 
-has stdout    => ( is => 'ro', required => 1 );
+has stdout => ( is => 'ro', required => 1 );
 
 my $LATEMP_SERVER = "fc-solve";
 
@@ -23,9 +23,7 @@ my $cpan = Module::Format::AsHTML->new;
 
 my $base_path;
 
-my $ACRONYMS_FN  = "lib/acronyms/list1.yaml";
-my $shlomif_cpan = $cpan->homepage( +{ who => 'shlomif' } );
-my $LONGBLANK    = ( "<br/>" x 72 );
+my $LONGBLANK = ( "<br/>" x 72 );
 
 sub slurp
 {
@@ -159,10 +157,10 @@ has vars => (
         my $self = shift;
         return +{
             archives_versions => $archives_versions,
-            charts1         => _htmlish('4fc-deals-charts'),
-            charts2         => _htmlish('4fc-deals-charts2'),
-            cols_listbox    => _htmlish('cols_listbox'),
-            common_keywords => (
+            charts1           => _htmlish('4fc-deals-charts'),
+            charts2           => _htmlish('4fc-deals-charts2'),
+            cols_listbox      => _htmlish('cols_listbox'),
+            common_keywords   => (
                       "Freecell, Freecell Solver, solvers, "
                     . "AI, artificial intelligence, solitaire, Simple Simon, "
                     . "Baker's Game, Seahaven Towers, Shlomi Fish, games"
@@ -184,7 +182,6 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             },
             longblank       => $LONGBLANK,
             main_email      => 'shlomif@shlomifish.org',
-            shlomif_cpan    => $shlomif_cpan,
             toc_div         => \&Shlomif::Homepage::TocDiv::toc_div,
             retrieved_slurp => \&retrieved_slurp,
             path_slurp      => \&path_slurp,
@@ -265,23 +262,6 @@ sub proc
         'root'          => $base_path,
     );
 
-    my $nav_links_html = '';
-
-LINKS:
-    foreach my $key ( sort { $a cmp $b } keys(%$nav_links_obj) )
-    {
-        if ( ( $key eq 'top' ) or ( $key eq 'up' ) )
-        {
-            next LINKS;
-        }
-        my $val        = $nav_links_obj->{$key};
-        my $url        = escape_html( $val->direct_url() );
-        my $title      = $val->title();
-        my $title_attr = defined($title) ? " title=\"$title\"" : "";
-        $nav_links_html .= "<link rel=\"$key\" href=\"$url\"$title_attr />\n";
-    }
-    my $leading_path_string = join( " → ",
-        ( map { _render_leading_path_component($_) } @$leading_path ) );
     my $get_nav_links = sub {
         my $with_accesskey = shift;
         my $ret            = '';
@@ -297,9 +277,7 @@ LINKS:
     $vars->{latemp_get_html_body_nav_links} = $get_nav_links->(1);
     $vars->{latemp_get_html_body_nav_links__no_accesskey} =
         $get_nav_links->('');
-    $vars->{leading_path_string} = $leading_path_string;
-    $vars->{nav_bar}             = $nav_bar;
-    $vars->{nav_links}           = $nav_links_html;
+    $vars->{nav_bar} = $nav_bar;
     my $nav_html = $rendered_results->{html};
     $vars->{nav_menu_html} = join( '', @$nav_html );
     $vars->{share_link}    = escape_html(
