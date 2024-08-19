@@ -76,56 +76,6 @@ require(['./solver-freecell'], function (solver) {
 </ul>
 <div id="output_tabs__animated" class="tab">
 
-<div class="disabled_wrapper">
-
-<p>
-<b>Note:</b> The animated and graphical display is not
-currently available for the variants of Solitaire which
-do not match the default 8-columns and 4-freecells Freecell
-variant ( <a href="[% base_path %]faq.html#is_freecell_the_ms_game">Reference</a>)
-with limited sequence move-length, tableau built by alternate colours,
-and empty columns that can be filled by any card.
-</p>
-
-</div>
-
-[%- BLOCK upper_button -%]
-<button onclick="$('[% solver_bar_css(targetclasses) %]').trigger('click');" title="[% title %]">[% text %]</button>
-[%- END -%]
-
-<div class="enabled_wrapper">
-<div class="upper_buttons__wrapper">
-[%- INCLUDE upper_button targetclasses = ["rewind"] text = "⏮ Prev" title = "Previous move" -%]
-[%- INCLUDE upper_button targetclasses = ["pause", "play"] text = "▶ Play" title = "Play" -%]
-[%- INCLUDE upper_button targetclasses = ["fastforward"] text = "Next ⏭" title = "Next move" -%]
-</div>
-
-<div class="solitairey_body_margin">
-<div class="solitairey_body" id="solitairey_body">
-
-[% IF 0 %]
-
-<img src="loading.gif" class="loading hidden" alt="Loading" />
-<button id="redeal">Redeal</button>
-<span style="color:white;">Deal Number:</span> <input id="deal_num_shlomify" size="30" name="deal_num_shlomify" readonly="readonly"/>
-	<div id="game-chooser">
-        <button id="close-chooser">Return to game</button>
-	</div>
-	<img src="loading.gif" class="loading hidden" alt="Loading" />
-	<div class="chromestore hidden">
-		<a class="hide">[Hide]</a>
-        <a href="https://chrome.google.com/webstore/detail/dofbnmhnoodmmlhflbcihicmbnhhinhp">
-            <img alt="Chrome Web Store" src="ChromeWebStore_Badge_v2_206x58.png" />
-        </a>
-	</div>
-
-[% END %]
-
-</div>
-</div>
-</div>
-</div>
-
 <div id="output_tabs__text" class="tab">
 <div class="output_form">
 [% INCLUDE output_controls %]
