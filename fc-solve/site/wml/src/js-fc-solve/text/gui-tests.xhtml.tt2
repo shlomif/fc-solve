@@ -15,9 +15,6 @@ require(['./solver-freecell'], function (solver) {
 [% incs %] {
     web_ui.set_up(module_wrapper, solver);
     tests_runner.run_after_delay(tests_runner.run_tests);
-[%- IF enable_jquery_ui -%]
-    $( "#output_tabs" ).tabs();
-[% END %]
     };
 });
 });
