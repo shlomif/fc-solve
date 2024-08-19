@@ -5,10 +5,9 @@ use warnings;
 use utf8;
 
 use Moo;
-use Path::Tiny                         qw/ path /;
-use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
-use MyNavData                          ();
-use Template                           ();
+use Path::Tiny qw/ path /;
+use MyNavData  ();
+use Template   ();
 
 has stdout => ( is => 'ro', required => 1 );
 
