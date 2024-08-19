@@ -10,7 +10,6 @@ use Moo;
 use Path::Tiny                         qw/ path /;
 use HTML::Widgets::NavMenu             ();
 use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
-use Module::Format::AsHTML             ();
 use MyNavData                          ();
 use Template                           ();
 
@@ -35,17 +34,6 @@ sub retrieved_slurp
 sub path_slurp
 {
     return slurp( "lib/" . shift );
-}
-
-sub _shlomif_include_colorized_file
-{
-    my $args = shift;
-
-    return decode_utf8(
-        VimIface::get_syntax_highlighted_html_from_file(
-            +{ 'filename' => $args->{fn}, }
-        )
-    );
 }
 
 sub _htmlish
@@ -88,8 +76,7 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             toc_div         => \&Shlomif::Homepage::TocDiv::toc_div,
             retrieved_slurp => \&retrieved_slurp,
             path_slurp      => \&path_slurp,
-            shlomif_include_colorized_file => \&_shlomif_include_colorized_file,
-            solver_bar_css                 => sub {
+            solver_bar_css  => sub {
                 my $args = shift;
 
                 my $arr = $args;
