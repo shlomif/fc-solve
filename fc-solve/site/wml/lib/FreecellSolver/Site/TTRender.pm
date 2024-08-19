@@ -6,7 +6,6 @@ use utf8;
 
 use Moo;
 use Path::Tiny                         qw/ path /;
-use HTML::Widgets::NavMenu             ();
 use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
 use MyNavData                          ();
 use Template                           ();
@@ -89,18 +88,6 @@ sub proc
     $vars->{filename}  = $input_tt2_page_path;
     $vars->{raw_fn_path} =
         $input_tt2_page_path =~ s#(?:\A|/)\Kindex\.x?html\z##r;
-    my $nav_bar = HTML::Widgets::NavMenu->new(
-        'path_info'    => ( join( '/', @fn_nav ) || '/' ),
-        'current_host' => $LATEMP_SERVER,
-        MyNavData::get_params(),
-        'ul_classes'     => [],
-        'no_leading_dot' => 1,
-    );
-    my $rendered_results = $nav_bar->render();
-
-    $vars->{nav_bar} = $nav_bar;
-    my $nav_html = $rendered_results->{html};
-
     my $load_javascript_srcs;
 
     $load_javascript_srcs = sub {
