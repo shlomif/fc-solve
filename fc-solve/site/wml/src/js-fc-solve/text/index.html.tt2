@@ -47,65 +47,6 @@ require(['./solver-freecell'], function (solver) {
 
 [% INCLUDE run_emscripten_common %]
 
-<div id="fc_solve_tabs" class="fc_solve_tabs">
-
-<ul>
-<li><a href="#fc_solve_tabs__numbered_deal">Solve a Numbered Deal</a></li>
-<li><a href="#fc_solve_tabs__any_board">Solve any Board</a></li>
-</ul>
-
-<div id="fc_solve_tabs__numbered_deal" class="tab">
-
-<p class="first">
-<label for="deal_number">Enter an MS Freecell Deal:</label>
-<input type="text" id="deal_number" size="12" class="phoenix" />
-<button id="populate_input" title="Populate Input with a Windows Freecell Numbered Deal" onclick="javascript:window.my_web_fc_solve_ui.populate_input_pressed()">Populate</button><br />
-</p>
-
-<div class="fcs_common">
-
-[% INCLUDE stdin_and_buttons main_id = "run_do_solve", main_text = "Solve!" %]
-<br />
-<label for="preset">Solving method:</label>
-<select id="preset" class="phoenix">
-<option value="lg" selected="selected">“Looking Glass” (fastest on average)</option>
-<option value="ve">“Video Editing” (short solutions)</option>
-<option value="obf">“One Big Family” (fast on average)</option>
-<option value="default">Default</option>
-</select>
-
-</div>
-
-</div>
-
-<div id="fc_solve_tabs__any_board" class="tab">
-
-<p class="first">
-Input a card patience/solitaire layout in the <a href="[% base_path %]docs/distro/README.html">fc-solve format</a>:<br />
-</p>
-
-<div class="fcs_common">
-</div>
-
-</div>
-
-</div>
-
-<div class="diags_wrap">
-
-<p id="status_wrap">
-
-<strong>Status:</strong> <span id="fc_solve_status" class="not_started">Not started</span> <br />
-
-</p>
-
-<div class="hide" id="board_parse__wrap">
-<h2>Board Input Parsing Errors:</h2>
-<div id="board_parse_error"></div>
-</div>
-
-</div>
-
 <div id="fcs_advanced">
 [% games1() %]
 [% fc_listbox() %]
