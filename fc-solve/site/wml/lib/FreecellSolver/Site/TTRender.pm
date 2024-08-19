@@ -97,14 +97,9 @@ sub proc
         'no_leading_dot' => 1,
     );
     my $rendered_results = $nav_bar->render();
-    my $nav_links_obj    = $rendered_results->{nav_links_obj};
-    my $nav_links        = $rendered_results->{nav_links};
-    my $leading_path     = $rendered_results->{leading_path};
 
     $vars->{nav_bar} = $nav_bar;
     my $nav_html = $rendered_results->{html};
-    $vars->{nav_menu_html}  = join( '', @$nav_html );
-    $vars->{index_filename} = $fn2;
 
     my $load_javascript_srcs;
 
