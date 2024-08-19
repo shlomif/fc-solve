@@ -13,7 +13,6 @@ use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
 use Module::Format::AsHTML             ();
 use MyNavData                          ();
 use MyNavLinks                         ();
-use Shlomif::Homepage::TocDiv          ();
 use Template                           ();
 use YAML::XS                           ();
 
@@ -22,8 +21,7 @@ has stdout    => ( is => 'ro', required => 1 );
 
 my $LATEMP_SERVER = "fc-solve";
 
-my $DEFAULT_TOC_DIV = Shlomif::Homepage::TocDiv::toc_div();
-my $cpan            = Module::Format::AsHTML->new;
+my $cpan = Module::Format::AsHTML->new;
 
 my $base_path;
 
@@ -194,7 +192,6 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             longblank       => $LONGBLANK,
             main_email      => 'shlomif@shlomifish.org',
             shlomif_cpan    => $shlomif_cpan,
-            default_toc     => $DEFAULT_TOC_DIV,
             toc_div         => \&Shlomif::Homepage::TocDiv::toc_div,
             retrieved_slurp => \&retrieved_slurp,
             path_slurp      => \&path_slurp,
