@@ -1,8 +1,5 @@
 [% SET html_lang = "en-US" %]
 
-[% SET desc = "Freecell Solver - a Program and a Library written in C for Solving Games of Freecell and similar Solitaire Variants" %]
-[% SET fcs_discuss_url = base_path _ "forums.html" %]
-
 [%- BLOCK start_html -%]
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
@@ -16,7 +13,6 @@
 <meta charset="utf-8"/>
 [% END %]
 <meta name="author" content="Shlomi Fish"/>
-<meta name="description" content="[% desc || title %]"/>
 <meta name="keywords" content="[% common_keywords %][% more_keywords ? (", " _ more_keywords) : "" %]"/>
 <link rel="canonical" href="[% canonical_base_url %][% index_filename %]"/>
 <link rel="stylesheet" href="[% base_path %]style.css" media="screen" title="Normal"/>
