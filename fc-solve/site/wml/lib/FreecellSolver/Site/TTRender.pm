@@ -59,108 +59,15 @@ sub _htmlish
     };
 }
 
-my $archives_versions = +{
-    'gz' => +{
-        vers => [
-            +{ major => "2", minor => "26", patch => "0", },
-            +{ major => "2", minor => "24", patch => "0", },
-            +{ major => "2", minor => "22", patch => "0", },
-            +{ major => "2", minor => "20", patch => "0", },
-            +{ major => "2", minor => "18", patch => "0", },
-            +{ major => "2", minor => "16", patch => "0", },
-            +{ major => "2", minor => "14", patch => "0", },
-            +{ major => "2", minor => "12", patch => "0", },
-            +{ major => "2", minor => "8",  patch => "14", },
-            +{ major => "2", minor => "6",  patch => "3", },
-            +{ major => "2", minor => "4",  patch => "3", },
-            +{ major => "2", minor => "2",  patch => "6", },
-            +{ major => "2", minor => "0",  patch => "2", },
-            +{ major => "1", minor => "10", patch => "4", },
-            +{ major => "1", minor => "8",  patch => "3", },
-            +{ major => "1", minor => "6",  patch => "4", },
-            +{ major => "1", minor => "4",  patch => "6", },
-            +{ major => "1", minor => "2",  patch => "0", },
-            +{ major => "1", minor => "0",  patch => "2", },
-            +{ major => "0", minor => "10", patch => "0", },
-            +{ major => "0", minor => "8",  patch => "1", },
-            +{ major => "0", minor => "6",  patch => "2", },
-            +{ major => "0", minor => "4",  patch => "2", },
-            +{ major => "0", minor => "2",  patch => "1", },
-
-        ],
-    },
-    'bz2' => +{
-        vers => [
-            +{ major => "3", minor => "26", patch => "0", },
-            +{ major => "3", minor => "24", patch => "0", },
-            +{ major => "3", minor => "22", patch => "0", },
-            +{ major => "3", minor => "20", patch => "1", },
-            +{ major => "3", minor => "18", patch => "1", },
-            +{ major => "3", minor => "16", patch => "0", },
-            +{ major => "3", minor => "14", patch => "1", },
-            +{ major => "3", minor => "12", patch => "0", },
-            +{ major => "3", minor => "10", patch => "0", },
-            +{ major => "3", minor => "8",  patch => "0", },
-            +{ major => "3", minor => "6",  patch => "0", },
-            +{ major => "3", minor => "4",  patch => "0", },
-            +{ major => "3", minor => "2",  patch => "0", },
-            +{ major => "3", minor => "0",  patch => "0", },
-            +{ major => "2", minor => "42", patch => "0", },
-            +{ major => "2", minor => "40", patch => "0", },
-            +{ major => "2", minor => "38", patch => "0", },
-            +{ major => "2", minor => "36", patch => "0", },
-            +{ major => "2", minor => "34", patch => "0", },
-            +{ major => "2", minor => "32", patch => "1", },
-            +{ major => "2", minor => "30", patch => "0", },
-            +{ major => "2", minor => "28", patch => "1", },
-        ],
-    },
-    'xz' => +{
-        vers => [
-            +{ major => "6", minor => "10", patch => "0", },
-            +{ major => "6", minor => "8",  patch => "0", },
-            +{ major => "6", minor => "6",  patch => "0", },
-            +{ major => "6", minor => "4",  patch => "0", },
-            +{ major => "6", minor => "2",  patch => "0", },
-            +{ major => "6", minor => "0",  patch => "1", },
-            +{ major => "5", minor => "24", patch => "0", },
-            +{ major => "5", minor => "22", patch => "1", },
-            +{ major => "5", minor => "20", patch => "1", },
-            +{ major => "5", minor => "18", patch => "0", },
-            +{ major => "5", minor => "16", patch => "0", },
-            +{ major => "5", minor => "14", patch => "0", },
-            +{ major => "5", minor => "12", patch => "0", },
-            +{ major => "5", minor => "10", patch => "0", },
-            +{ major => "5", minor => "8",  patch => "0", },
-            +{ major => "5", minor => "6",  patch => "0", },
-            +{ major => "5", minor => "4",  patch => "0", },
-            +{ major => "5", minor => "2",  patch => "0", },
-            +{ major => "5", minor => "0",  patch => "0", },
-            +{ major => "4", minor => "20", patch => "0", },
-            +{ major => "4", minor => "18", patch => "0", },
-            +{ major => "4", minor => "16", patch => "0", },
-            +{ major => "4", minor => "14", patch => "1", },
-            +{ major => "4", minor => "12", patch => "1", },
-            +{ major => "4", minor => "10", patch => "0", },
-            +{ major => "4", minor => "8",  patch => "0", },
-            +{ major => "4", minor => "6",  patch => "1", },
-            +{ major => "4", minor => "4",  patch => "0", },
-            +{ major => "4", minor => "2",  patch => "0", },
-            +{ major => "4", minor => "0",  patch => "2", },
-        ],
-    },
-};
-
 has vars => (
     is      => 'ro',
     default => sub {
         my $self = shift;
         return +{
-            archives_versions => $archives_versions,
-            charts1           => _htmlish('4fc-deals-charts'),
-            charts2           => _htmlish('4fc-deals-charts2'),
-            cols_listbox      => _htmlish('cols_listbox'),
-            common_keywords   => (
+            charts1         => _htmlish('4fc-deals-charts'),
+            charts2         => _htmlish('4fc-deals-charts2'),
+            cols_listbox    => _htmlish('cols_listbox'),
+            common_keywords => (
                       "Freecell, Freecell Solver, solvers, "
                     . "AI, artificial intelligence, solitaire, Simple Simon, "
                     . "Baker's Game, Seahaven Towers, Shlomi Fish, games"
