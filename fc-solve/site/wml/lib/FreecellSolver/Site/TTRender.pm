@@ -17,16 +17,9 @@ my $LATEMP_SERVER = "fc-solve";
 
 my $base_path;
 
-my $LONGBLANK = ( "<br/>" x 72 );
-
 sub slurp
 {
     return path(shift)->slurp_utf8;
-}
-
-sub retrieved_slurp
-{
-    return slurp( "lib/retrieved-html-parts/" . shift );
 }
 
 sub path_slurp
@@ -57,12 +50,9 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
                 my $args = shift;
                 return _render_nav_block( $args->{name} );
             },
-            longblank       => $LONGBLANK,
-            main_email      => 'shlomif@shlomifish.org',
-            toc_div         => \&Shlomif::Homepage::TocDiv::toc_div,
-            retrieved_slurp => \&retrieved_slurp,
-            path_slurp      => \&path_slurp,
-            solver_bar_css  => sub {
+            toc_div        => \&Shlomif::Homepage::TocDiv::toc_div,
+            path_slurp     => \&path_slurp,
+            solver_bar_css => sub {
                 my $args = shift;
 
                 my $arr = $args;
