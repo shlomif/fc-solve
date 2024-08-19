@@ -321,9 +321,4 @@ unsolvable deals.
 
 [% END %]
 
-[% TRY %]
-[% INCLUDE extended_body %]
-[% CATCH file %]
-[% END %]
-
 [% END %]

@@ -32,13 +32,4 @@ require(['./solver-freecell'], function (solver) {
 [% THROW "WHY DOES THIS block gets invoked instead of the overriden one?" %]
 [% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) => { " , subject = "Solver" , %]
 [% END %]
-[%- BLOCK extended_body -%]
-
-<h1 id="qunit-header">QUnit test</h1>
-<div id="qunit-testrunner-toolbar"></div>
-<h2 id="qunit-userAgent">User Agent</h2>
-<ol id="qunit-tests"></ol>
-<div id="qunit-fixture">test markup, will be hidden</div>
-
-[% END %]
 [% INCLUDE "src/js-fc-solve/text/index.html.tt2" %]
