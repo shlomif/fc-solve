@@ -49,18 +49,6 @@ has vars => (
     default => sub {
         my $self = shift;
         return +{
-            charts1         => _htmlish('4fc-deals-charts'),
-            charts2         => _htmlish('4fc-deals-charts2'),
-            cols_listbox    => _htmlish('cols_listbox'),
-            common_keywords => (
-                      "Freecell, Freecell Solver, solvers, "
-                    . "AI, artificial intelligence, solitaire, Simple Simon, "
-                    . "Baker's Game, Seahaven Towers, Shlomi Fish, games"
-            ),
-
-            fc_listbox      => _htmlish('fc_listbox'),
-            front_page_news => _htmlish('front-page-news'),
-            games1          => _htmlish('games'),
             host            => $LATEMP_SERVER,
             msfreecell_note => _htmlish('msfreecell-note'),
             mytan           =>
@@ -104,18 +92,6 @@ my @DESTs = (
     { production => 0, path => [ '.', "dest", ], },
     { production => 1, path => [ '.', "dest-prod", ], },
 );
-
-sub _render_leading_path_component
-{
-    my $component  = shift;
-    my $title      = $component->title;
-    my $title_attr = defined($title) ? qq# title="$title"# : "";
-    return
-          "<a href=\""
-        . escape_html( $component->direct_url )
-        . "\"$title_attr>"
-        . $component->label() . "</a>";
-}
 
 sub proc
 {
