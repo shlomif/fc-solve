@@ -27,25 +27,15 @@ sub path_slurp
     return slurp( "lib/" . shift );
 }
 
-sub _htmlish
-{
-    my ($base) = @_;
-    return sub {
-        return path( 'lib/' . $base . '.htmlish' )->slurp_utf8();
-    };
-}
-
 has vars => (
     is      => 'ro',
     default => sub {
         my $self = shift;
         return +{
-            host            => $LATEMP_SERVER,
-            msfreecell_note => _htmlish('msfreecell-note'),
-            mytan           =>
+            host  => $LATEMP_SERVER,
+            mytan =>
 qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
             d2url           => "http://divisiontwo.shlomifish.org/",
-            old_news        => _htmlish('old-news'),
             print_nav_block => sub {
                 my $args = shift;
                 return _render_nav_block( $args->{name} );
