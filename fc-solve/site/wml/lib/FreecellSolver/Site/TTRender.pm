@@ -12,14 +12,11 @@ use HTML::Widgets::NavMenu             ();
 use HTML::Widgets::NavMenu::EscapeHtml qw( escape_html );
 use Module::Format::AsHTML             ();
 use MyNavData                          ();
-use MyNavLinks                         ();
 use Template                           ();
 
 has stdout => ( is => 'ro', required => 1 );
 
 my $LATEMP_SERVER = "fc-solve";
-
-my $cpan = Module::Format::AsHTML->new;
 
 my $base_path;
 
@@ -73,7 +70,6 @@ has vars => (
                     . "Baker's Game, Seahaven Towers, Shlomi Fish, games"
             ),
 
-            cpan            => $cpan,
             fc_listbox      => _htmlish('fc_listbox'),
             front_page_news => _htmlish('front-page-news'),
             games1          => _htmlish('games'),
@@ -159,15 +155,10 @@ sub proc
         'ul_classes'     => [],
         'no_leading_dot' => 1,
     );
-    my $rendered_results   = $nav_bar->render();
-    my $nav_links_obj      = $rendered_results->{nav_links_obj};
-    my $nav_links          = $rendered_results->{nav_links};
-    my $leading_path       = $rendered_results->{leading_path};
-    my $nav_links_renderer = MyNavLinks->new(
-        'nav_links'     => $nav_links,
-        'nav_links_obj' => $nav_links_obj,
-        'root'          => $base_path,
-    );
+    my $rendered_results = $nav_bar->render();
+    my $nav_links_obj    = $rendered_results->{nav_links_obj};
+    my $nav_links        = $rendered_results->{nav_links};
+    my $leading_path     = $rendered_results->{leading_path};
 
     $vars->{nav_bar} = $nav_bar;
     my $nav_html = $rendered_results->{html};
