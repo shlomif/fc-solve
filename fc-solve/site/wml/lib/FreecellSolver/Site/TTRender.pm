@@ -262,21 +262,6 @@ sub proc
         'root'          => $base_path,
     );
 
-    my $get_nav_links = sub {
-        my $with_accesskey = shift;
-        my $ret            = '';
-        my @params;
-        if ( $with_accesskey ne "" )
-        {
-            push @params, ( 'with_accesskey' => $with_accesskey );
-        }
-        $ret .= $nav_links_renderer->get_total_html(@params);
-        $ret =~ s#"((?:\.\./)*)/#"$1#g;
-        return $ret;
-    };
-    $vars->{latemp_get_html_body_nav_links} = $get_nav_links->(1);
-    $vars->{latemp_get_html_body_nav_links__no_accesskey} =
-        $get_nav_links->('');
     $vars->{nav_bar} = $nav_bar;
     my $nav_html = $rendered_results->{html};
     $vars->{nav_menu_html} = join( '', @$nav_html );
