@@ -51,26 +51,6 @@ require(['./solver-freecell'], function (solver) {
 <input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [%IF sel %] checked="checked"[%END%]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
 [% END %]
 
-<label id="output_label" for="output">Output:</label>
-
-<div id="output_tabs" class="enable_animated_output output_tabs">
-<ul>
-<li id="output_tabs__animated__selector"><a href="#output_tabs__animated">Animated</a></li>
-<li id="output_tabs__text__selector"><a href="#output_tabs__text">Text</a></li>
-</ul>
-<div id="output_tabs__animated" class="tab">
-
-<div id="output_tabs__text" class="tab">
-<div class="output_form">
-
-<div id="dynamic_output"></div>
-<textarea class="emscripten" id="output" cols="50" rows="30" readonly="readonly"></textarea>
-
-</div>
-</div>
-</div>
-<br />
-
 [% INCLUDE fc_solve_bookmark__form %]
 
 [% END %]
