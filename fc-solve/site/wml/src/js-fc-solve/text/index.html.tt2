@@ -47,10 +47,4 @@ require(['./solver-freecell'], function (solver) {
 
 [% INCLUDE run_emscripten_common %]
 
-[% BLOCK output_opt %]
-<input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [%IF sel %] checked="checked"[%END%]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
-[% END %]
-
-[% INCLUDE fc_solve_bookmark__form %]
-
 [% END %]
