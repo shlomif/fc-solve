@@ -12,8 +12,7 @@ my $printable;
 my $stdout;
 my @filenames;
 
-my $obj = FreecellSolver::Site::TTRender->new(
-    { printable => $printable, stdout => $stdout, } );
+my $obj = FreecellSolver::Site::TTRender->new( { stdout => $stdout, } );
 
 if ( !@filenames )
 {

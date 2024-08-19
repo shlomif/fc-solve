@@ -14,9 +14,7 @@ use Module::Format::AsHTML             ();
 use MyNavData                          ();
 use MyNavLinks                         ();
 use Template                           ();
-use YAML::XS                           ();
 
-has printable => ( is => 'ro', required => 1 );
 has stdout    => ( is => 'ro', required => 1 );
 
 my $LATEMP_SERVER = "fc-solve";
@@ -160,12 +158,7 @@ has vars => (
     default => sub {
         my $self = shift;
         return +{
-            %{
-                YAML::XS::LoadFile("lib/static_constant_params.yaml")
-                    ->{static_constant_params}
-            },
             archives_versions => $archives_versions,
-            ( $self->printable ? ( PRINTABLE => 1 ) : () ),
             charts1         => _htmlish('4fc-deals-charts'),
             charts2         => _htmlish('4fc-deals-charts2'),
             cols_listbox    => _htmlish('cols_listbox'),
@@ -315,21 +308,7 @@ LINKS:
                 . $nav_bar->path_info()
         )
     );
-    $vars->{index_filename}     = $fn2;
-    $vars->{doxygen_url}        = $base_path . "michael_mann/";
-    $vars->{arch_doc_url}       = $base_path . "arch_doc/";
-    $vars->{use_online_wrapper} = (
-        ( $input_tt2_page_path !~ m#\A js-fc-solve/#msx )
-        ? <<"EOF"
-<div class="use_online_wrapper"><a class="solve_online_button"
-id="try_online_link" href="${base_path}js-fc-solve/text/"><span
-class="try_main">Use</span><br/>
-<span class="try_main">Online</span><br/>
-<br/>
-<span class="try_note">Firefox, Chrome, Opera, or IE10+</span></a></div>
-EOF
-        : ''
-    );
+    $vars->{index_filename} = $fn2;
 
     my $load_javascript_srcs;
 
