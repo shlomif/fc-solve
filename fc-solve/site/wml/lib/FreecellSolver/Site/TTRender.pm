@@ -18,8 +18,6 @@ has vars => (
     }
 );
 
-my %INDEX = ( map { $_ => 1 } 'index.html', 'index.xhtml' );
-
 my $template = Template->new(
     {
         COMPILE_DIR  => ( $ENV{TMPDIR} // "/tmp" ) . "/shlomif-hp-tt2-cache",
@@ -36,11 +34,7 @@ sub proc
 {
     my ( $self, $input_tt2_page_path ) = @_;
     $::latemp_filename = $input_tt2_page_path;
-    my @fn     = split m#/#, $input_tt2_page_path;
-    my @fn_nav = @fn;
-    my $tail   = \$fn_nav[-1];
-    $$tail = '' if ( exists $INDEX{$$tail} );
-    my $fn2 = ( join( '/', @fn_nav ) || '' );
+    my @fn = split m#/#, $input_tt2_page_path;
 
     my $vars = $self->vars;
     $vars->{load_javascript_srcs} = sub { return ''; };
