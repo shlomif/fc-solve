@@ -42,11 +42,6 @@ my $template = Template->new(
     }
 );
 
-my @DESTs = (
-    { production => 0, path => [ '.', "dest", ], },
-    { production => 1, path => [ '.', "dest-prod", ], },
-);
-
 sub proc
 {
     my ( $self, $input_tt2_page_path ) = @_;
@@ -93,17 +88,13 @@ sub proc
     $vars->{enable_jquery_ui} =
         ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
 
-    foreach my $rec (@DESTs)
-    {
-        my $d = $rec->{path};
-        $vars->{production} = $rec->{production};
-        my $html = '';
-        $template->process( "src/$input_tt2_page_path.tt2",
-            $vars, \$html, binmode => ':utf8', )
-            or die $template->error();
+    $vars->{production} = 1;
+    my $html = '';
+    $template->process( "src/$input_tt2_page_path.tt2",
+        $vars, \$html, binmode => ':utf8', )
+        or die $template->error();
 
-        path( @$d, @fn, )->touchpath()->spew_utf8($html);
-    }
+    path( ".", "dest-prod/", @fn, )->touchpath()->spew_utf8($html);
 }
 
 1;
