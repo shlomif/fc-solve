@@ -18,11 +18,6 @@ sub slurp
     return path(shift)->slurp_utf8;
 }
 
-sub path_slurp
-{
-    return slurp( "lib/" . shift );
-}
-
 has vars => (
     is      => 'ro',
     default => sub {
@@ -37,7 +32,6 @@ qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
                 return _render_nav_block( $args->{name} );
             },
             toc_div        => \&Shlomif::Homepage::TocDiv::toc_div,
-            path_slurp     => \&path_slurp,
             solver_bar_css => sub {
                 my $args = shift;
 
