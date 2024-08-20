@@ -47,11 +47,6 @@ sub proc
     my $fn2 = ( join( '/', @fn_nav ) || '' );
 
     my $vars = $self->vars;
-    $vars->{base_path} = $base_path;
-    $vars->{fn_path}   = $input_tt2_page_path;
-    $vars->{filename}  = $input_tt2_page_path;
-    $vars->{raw_fn_path} =
-        $input_tt2_page_path =~ s#(?:\A|/)\Kindex\.x?html\z##r;
     my $load_javascript_srcs;
 
     $load_javascript_srcs = sub {
