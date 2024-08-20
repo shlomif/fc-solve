@@ -72,15 +72,6 @@ sub proc
             } ( ( ref($srcs) eq 'ARRAY' ) ? @$srcs : ($srcs) )
         );
     };
-
-    my $pre_requirejs_javascript_tags = sub {
-        return $load_javascript_srcs->(
-            [
-                "jquery.querystring.js", "jquery.phoenix.js",
-                "lodash.custom.min.js"
-            ]
-        );
-    };
     $vars->{load_javascript_srcs} = $load_javascript_srcs;
     $vars->{requirejs_conf}       = sub {
         return "requirejs.config({ baseUrl: '${base_path}js', });";
