@@ -9,8 +9,6 @@ use Path::Tiny qw/ path /;
 use MyNavData  ();
 use Template   ();
 
-has stdout => ( is => 'ro', required => 1 );
-
 my $LATEMP_SERVER = "fc-solve";
 
 my $base_path;
@@ -108,36 +106,23 @@ sub proc
             ]
         );
     };
-    $vars->{load_javascript_srcs}          = $load_javascript_srcs;
-    $vars->{requirejs_conf}                = sub {
+    $vars->{load_javascript_srcs} = $load_javascript_srcs;
+    $vars->{requirejs_conf}       = sub {
         return "requirejs.config({ baseUrl: '${base_path}js', });";
     };
     $vars->{enable_jquery_ui} =
         ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
 
-    if ( $self->stdout )
+    foreach my $rec (@DESTs)
     {
-        binmode STDOUT, ':encoding(utf-8)';
+        my $d = $rec->{path};
+        $vars->{production} = $rec->{production};
         my $html = '';
         $template->process( "src/$input_tt2_page_path.tt2",
             $vars, \$html, binmode => ':utf8', )
             or die $template->error();
 
-        print $html;
-    }
-    else
-    {
-        foreach my $rec (@DESTs)
-        {
-            my $d = $rec->{path};
-            $vars->{production} = $rec->{production};
-            my $html = '';
-            $template->process( "src/$input_tt2_page_path.tt2",
-                $vars, \$html, binmode => ':utf8', )
-                or die $template->error();
-
-            path( @$d, @fn, )->touchpath()->spew_utf8($html);
-        }
+        path( @$d, @fn, )->touchpath()->spew_utf8($html);
     }
 }
 

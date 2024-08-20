@@ -9,10 +9,9 @@ use lib './lib';
 use FreecellSolver::Site::TTRender ();
 
 my $printable;
-my $stdout;
 my @filenames;
 
-my $obj = FreecellSolver::Site::TTRender->new( { stdout => $stdout, } );
+my $obj = FreecellSolver::Site::TTRender->new( {} );
 
 if ( !@filenames )
 {
