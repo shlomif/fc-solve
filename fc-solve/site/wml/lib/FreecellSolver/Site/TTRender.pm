@@ -10,8 +10,6 @@ use Template   ();
 
 my $LATEMP_SERVER = "fc-solve";
 
-my $base_path;
-
 has vars => (
     is      => 'ro',
     default => sub {
@@ -42,8 +40,6 @@ sub proc
     my @fn_nav = @fn;
     my $tail   = \$fn_nav[-1];
     $$tail = '' if ( exists $INDEX{$$tail} );
-    $base_path =
-        ( '../' x ( scalar(@fn) - 1 ) );
     my $fn2 = ( join( '/', @fn_nav ) || '' );
 
     my $vars = $self->vars;
