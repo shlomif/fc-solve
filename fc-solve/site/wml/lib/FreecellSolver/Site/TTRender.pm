@@ -18,7 +18,6 @@ has vars => (
         my $self = shift;
         return +{
             host    => $LATEMP_SERVER,
-            d2url   => "http://divisiontwo.shlomifish.org/",
             toc_div => \&Shlomif::Homepage::TocDiv::toc_div,
         };
     }
