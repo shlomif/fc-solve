@@ -23,21 +23,13 @@ has vars => (
     default => sub {
         my $self = shift;
         return +{
-            host  => $LATEMP_SERVER,
-            mytan =>
-qq#\\tan{\\left[\\arcsin{\\left(\\frac{1}{2 \\sin{36°}}\\right)}\\right]}#,
+            host            => $LATEMP_SERVER,
             d2url           => "http://divisiontwo.shlomifish.org/",
             print_nav_block => sub {
                 my $args = shift;
                 return _render_nav_block( $args->{name} );
             },
-            toc_div        => \&Shlomif::Homepage::TocDiv::toc_div,
-            solver_bar_css => sub {
-                my $args = shift;
-
-                my $arr = $args;
-                return join( " , ", map { "#solver_bar button.$_" } @$arr );
-            },
+            toc_div => \&Shlomif::Homepage::TocDiv::toc_div,
         };
     }
 );
