@@ -13,7 +13,6 @@ requirejs.config({
 })();
 </script>
 [% INCLUDE jquery_ui_head_elements %]
-[% pre_requirejs_javascript_tags() %]
 [% INCLUDE js_requirejs %]
 [% IF NOT skip_yui %]
 [% load_javascript_srcs("yui-debug.js") %]

@@ -109,7 +109,6 @@ sub proc
         );
     };
     $vars->{load_javascript_srcs}          = $load_javascript_srcs;
-    $vars->{pre_requirejs_javascript_tags} = $pre_requirejs_javascript_tags;
     $vars->{requirejs_conf}                = sub {
         return "requirejs.config({ baseUrl: '${base_path}js', });";
     };
