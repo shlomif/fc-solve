@@ -47,19 +47,7 @@ sub proc
     my $fn2 = ( join( '/', @fn_nav ) || '' );
 
     my $vars = $self->vars;
-    my $load_javascript_srcs;
-
-    $load_javascript_srcs = sub {
-        my ($srcs) = @_;
-        return join(
-            "",
-            map {
-                my $js = $_;
-                qq#<script src="${base_path}js/${js}"></script>#
-            } ( ( ref($srcs) eq 'ARRAY' ) ? @$srcs : ($srcs) )
-        );
-    };
-    $vars->{load_javascript_srcs} = $load_javascript_srcs;
+    $vars->{load_javascript_srcs} = sub { return ''; };
     $vars->{enable_jquery_ui} =
         ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
 
