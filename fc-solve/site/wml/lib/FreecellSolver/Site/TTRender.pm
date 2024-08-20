@@ -6,17 +6,11 @@ use utf8;
 
 use Moo;
 use Path::Tiny qw/ path /;
-use MyNavData  ();
 use Template   ();
 
 my $LATEMP_SERVER = "fc-solve";
 
 my $base_path;
-
-sub slurp
-{
-    return path(shift)->slurp_utf8;
-}
 
 has vars => (
     is      => 'ro',
