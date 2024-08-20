@@ -10,14 +10,6 @@ use Template   ();
 
 my $LATEMP_SERVER = "fc-solve";
 
-has vars => (
-    is      => 'ro',
-    default => sub {
-        my $self = shift;
-        return +{ host => $LATEMP_SERVER, };
-    }
-);
-
 my $template = Template->new(
     {
         COMPILE_DIR  => ( $ENV{TMPDIR} // "/tmp" ) . "/shlomif-hp-tt2-cache",
@@ -36,7 +28,7 @@ sub proc
     $::latemp_filename = $input_tt2_page_path;
     my @fn = split m#/#, $input_tt2_page_path;
 
-    my $vars = $self->vars;
+    my $vars = { host => $LATEMP_SERVER, };
     $vars->{load_javascript_srcs} = sub { return ''; };
     $vars->{enable_jquery_ui} =
         ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
