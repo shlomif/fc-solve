@@ -25,8 +25,8 @@ require(['./solver-freecell'], function (solver) {
 [% END %]
 
 [% BLOCK run_emscripten_common %]
-<INVALIDHTML>WHY DOES THIS block gets invoked instead of the overriden one?</INVALIDHTML>
-[% THROW "WHY DOES THIS block gets invoked instead of the overriden one?" %]
+<INVALIDHTML>WHY DOES THIS block get invoked instead of the overriden one?</INVALIDHTML>
+[% THROW "WHY DOES THIS block get invoked instead of the overriden one?" %]
 [% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) => { " , subject = "Solver" , %]
 [% END %]
 [% INCLUDE "src/js-fc-solve/text/index.html.tt2" %]
