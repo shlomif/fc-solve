@@ -17,12 +17,8 @@ has vars => (
     default => sub {
         my $self = shift;
         return +{
-            host            => $LATEMP_SERVER,
-            d2url           => "http://divisiontwo.shlomifish.org/",
-            print_nav_block => sub {
-                my $args = shift;
-                return _render_nav_block( $args->{name} );
-            },
+            host    => $LATEMP_SERVER,
+            d2url   => "http://divisiontwo.shlomifish.org/",
             toc_div => \&Shlomif::Homepage::TocDiv::toc_div,
         };
     }
