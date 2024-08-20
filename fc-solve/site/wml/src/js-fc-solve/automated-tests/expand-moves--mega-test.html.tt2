@@ -13,18 +13,6 @@
 
 <h2 id="deal_idx_update" style="color: red">Not started</h2>
 
-<script>
-[% requirejs_conf() %]
-require(["web-fc-solve--expand-moves--mega-test"], function (t) {
-      try {
-          t.test_js_fc_solve_class(jQuery.ajaxQueue);
-      }
-      catch (err) {
-          alert(err);
-      }
-  });
-</script>
-
 <h2>AJAX Output</h2>
 
 <textarea id="ajax_out"></textarea>

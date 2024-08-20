@@ -16,10 +16,7 @@ has vars => (
     is      => 'ro',
     default => sub {
         my $self = shift;
-        return +{
-            host    => $LATEMP_SERVER,
-            toc_div => \&Shlomif::Homepage::TocDiv::toc_div,
-        };
+        return +{ host => $LATEMP_SERVER, };
     }
 );
 
@@ -68,9 +65,6 @@ sub proc
         );
     };
     $vars->{load_javascript_srcs} = $load_javascript_srcs;
-    $vars->{requirejs_conf}       = sub {
-        return "requirejs.config({ baseUrl: '${base_path}js', });";
-    };
     $vars->{enable_jquery_ui} =
         ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
 
