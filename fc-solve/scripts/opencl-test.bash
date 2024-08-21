@@ -6,10 +6,10 @@ then
     deal="$(( ( 1 << 33 ) - 1 ))"
     deal="$(( 6 * 10 ** 9 ))"
 fi
-deal="$(( ( 1 << 33 ) - 1 ))"
+# deal="$(( ( 1 << 33 ) - 1 ))"
 # deal="200"
-run_deal="$(( 20004000 ))"
-# run_deal="$deal"
+# run_deal="$(( 20004000 ))"
+run_deal="$deal"
 (
     set -e
 
