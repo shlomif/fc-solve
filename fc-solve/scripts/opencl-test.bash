@@ -43,7 +43,11 @@ run_deal="$deal"
     fi
     if ! test "$SKIP_CISH" = 1
     then
+        date "+start=%s.%N"
         time python3 "$board_gen_dir"/find-freecell-deal-index-cish.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")
+        date "+finish=%s.%N"
     fi
+    date "+start=%s.%N"
     time python3 "$board_gen_dir"/find-freecell-deal-index-using-opencl.py --ms <(pi-make-microsoft-freecell-board -t "$run_deal")
+    date "+finish=%s.%N"
 )
