@@ -1,13 +1,13 @@
 #!/usr/bin/env perl
 
 # The aim of this program is to run Freecell Solver’s test suite with
-# several different  build-time configurations of the solver, to make sure
+# several different build-time configurations of the solver, to make sure
 # they are all working fine.
 
 use strict;
 use warnings;
 use autodie;
-use 5.014;
+use 5.020;
 
 package Games::Solitaire::FC_Solve::Test::Trap::Obj;
 
