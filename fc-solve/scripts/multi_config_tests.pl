@@ -184,9 +184,9 @@ my $WEBSITE_DIR = "$CWD/../site/wml";
 
 sub _chdir_run
 {
-    my ( $DIR, $cb ) = @_;
+    my ( $DIR_PATH_NAME, $cb ) = @_;
 
-    chdir($DIR);
+    chdir($DIR_PATH_NAME);
     $cb->();
     chdir($CWD);
 
@@ -769,15 +769,17 @@ _chdir_run(
     }
 );
 
-foreach my $dir (
+foreach my $dir_path_name (
     '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
     '../../cpan/Freecell-Deal-MS/',
     )
 {
     _chdir_run(
-        $dir,
+        $dir_path_name,
         sub {
-            my ($mod) = ( $dir =~ m#/([^/]+)/\z#ms ) or Carp::confess("$dir");
+            my ($mod) = ( $dir_path_name =~ m#/([^/]+)/\z#ms )
+                or
+                Carp::confess("Cannot extract basename from '$dir_path_name'");
             return run_cmd( "$mod dzil", { cmd => [qw(dzil test --all)] } );
         }
     );
