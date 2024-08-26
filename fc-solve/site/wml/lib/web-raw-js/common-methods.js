@@ -1,3 +1,8 @@
+// NOTE!!! These polyfills / shims are NOT currently used, given
+// wide-browser-support:
+//
+// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/repeat#browser_compatibility
+//
 // Common methods for various stuff that may not be supported (MSIE 8 and
 // below - I'm looking at you.)
 // Taken from http://stackoverflow.com/questions/202605/repeat-string-javascript
@@ -12,4 +17,3 @@ String.prototype.repeat = function(count) {
     return result;
 };
 }
-

@@ -197,7 +197,7 @@ $(LIBFREECELL_SOLVER_JS_DIR__DESTDIR_DATA): $(LIBFREECELL_SOLVER_JS_DIR__CMAKE_C
 $(DEST_QSTRING_JS): lib/jquery/jquery.querystring.js
 	$(MULTI_YUI) -o $@ $<
 
-WEB_RAW_JS = common-methods.js global-funcs.js
+WEB_RAW_JS = global-funcs.js
 
 DEST_WEB_RAW_JS = $(call dest_jsify,$(WEB_RAW_JS))
 
