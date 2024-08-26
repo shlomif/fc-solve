@@ -11,7 +11,6 @@ UI (User-Interface) Tests for the online Freecell Solvers (intended for develope
 <script>
 [% INCLUDE set_up_requirejs %]
 require(["ui-tests-driver"], function (tests_runner) {
-require(['./solver-freecell'], function (solver) {
 [% incs %] {
     web_ui.set_up(module_wrapper, solver);
     tests_runner.run_after_delay(tests_runner.run_tests);
@@ -22,13 +21,12 @@ require(['./solver-freecell'], function (solver) {
 });
 });
 });
-});
 </script>
 
 [% END %]
 
 [%- BLOCK run_emscripten_common -%]
-[% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver2, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) => { " , subject = "Solver" , %]
+[% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) => { " , subject = "Solver" , %]
 [% END %]
 [%- BLOCK page_extra_head_elements -%]
 <link rel="stylesheet" href="[% base_path %]css/qunit.css" />
