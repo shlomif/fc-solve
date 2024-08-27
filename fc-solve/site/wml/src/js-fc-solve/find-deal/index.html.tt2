@@ -100,64 +100,6 @@ Enjoy!
 
 [% END %]
 
-[% WRAPPER h2_section id = "technology", title = "Technology" %]
-
-[% INCLUDE fc_solve_jsfcs__credits__common %]
-
-<li>
-<p>
-<a href="https://github.com/kylefox/jquery-querystring">jquery-querystring</a> -a plugin for jQuery for manipulating query strings.
-</p>
-</li>
-
-<li>
-<p>
-<a href="http://www.google.com/webfonts">Google Web Fonts</a> - provides an
-attractive font for the button leading to this page.
-</p>
-</li>
-
-<li>
-<p>
-<a href="http://transcrypt.org/">Transcrypt</a> - a Python-to-JavaScript
-compiler.
-</p>
-</li>
-</ul>
-
-[% END %]
-
-[% WRAPPER h2_section id = "credits", title = "Credits" %]
-
-<ul>
-
-<li>
-<p>
-<a href="https://github.com/kripken">Alon Zakai</a> - writing
-<a href="https://emscripten.org/">emscripten</a>, the
-LLVM-to-JavaScript compiler that was used to prepare this page, based
-on the original C (gnu99) source, and answering some bug reports and questions
-I filed about it.
-</p>
-</li>
-
-<li>
-<p>
-<a href="https://github.com/doconix/transcrypt_module/">@doconix</a> - helped
-using transcrypt.
-</p>
-</li>
-
-<li>
-<p>
-<a href="https://github.com/JdeH">@JdeH</a> - helped with the
-<a href="https://github.com/QQuick/Transcrypt/issues/495">Transcrypt issue</a>
-and he is maintaining it.
-</p>
-</li>
-
-</ul>
-
-[% END %]
+[% INCLUDE fc_solve_jsfcs__credits__of_the_solver_page %]
 
 [% END %]
