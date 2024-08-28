@@ -4,7 +4,6 @@ import re
 import sys
 from os.path import expanduser, isfile
 import json
-from six.moves import range
 
 MAX_SEED = 17602
 

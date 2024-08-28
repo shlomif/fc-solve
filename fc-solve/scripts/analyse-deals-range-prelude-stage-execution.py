@@ -4,7 +4,6 @@
 
 import re
 import statistics
-from six import print_
 
 
 def iters_count_iterator(fn):
@@ -53,11 +52,11 @@ class PreludeAnalyzer(object):
                 raise BaseException('Cannot find prelude.')
 
     def insert(self, idx, i):
-        print_("Got idx=%d iters=%d" % (idx, i))
+        print("Got idx=%d iters=%d" % (idx, i))
         for s in self._stages:
             quota = s['quota']
             if i <= quota:
-                print_("Put %d in %s" % (idx, s['id']))
+                print("Put %d in %s" % (idx, s['id']))
                 s['data'].append(i)
                 break
             else:
@@ -71,17 +70,17 @@ class PreludeAnalyzer(object):
             prefix = '%d @ %s : ' % (s['quota'], s['id'])
             length = len(d)
             if length == 0:
-                print_("%s%s" % (prefix, '[EMPTY]'))
+                print("%s%s" % (prefix, '[EMPTY]'))
             else:
-                print_("%snum=%d min=%d max=%d avg=%f median=%f" %
-                       (prefix, length, min(d), max(d), statistics.mean(d),
-                        statistics.median(d)))
+                print("%snum=%d min=%d max=%d avg=%f median=%f" %
+                      (prefix, length, min(d), max(d), statistics.mean(d),
+                       statistics.median(d)))
 
 
 def main():
     p = PreludeAnalyzer('../scripts/TEST_OPTIMIZATIONS/obf-mod4.sh')
     for idx, i in enumerate(iters_count_iterator('serial.dump')):
-        # print_(i)
+        # print(i)
         if i != 'skip':
             p.insert(idx+1, i)
     p.report()

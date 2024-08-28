@@ -13,8 +13,6 @@ from make_pysol_freecell_board import find_index_main
 
 from pysol_cards.random import LCRandom31
 
-from six.moves import range
-
 
 def find_ret(ints):
     r = LCRandom31()
