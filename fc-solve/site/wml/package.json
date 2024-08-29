@@ -31,7 +31,7 @@
     "jquery-ui": "^1.14.0",
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
-    "node-qunit": "^2.0.0",
+    "node-qunit": "^2.0.1",
     "npm": "^10.8.2",
     "param-case": "^4.0.0",
     "prettier": "^3.3.3",
