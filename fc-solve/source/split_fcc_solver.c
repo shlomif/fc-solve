@@ -741,10 +741,14 @@ int main(int argc, char *argv[])
 #else
         fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
 #endif
-        char state_base64[100];
-        int state_depth;
+        char state_base64[100] = {0};
+        int state_depth = -1;
         assert(2 == sscanf(instance.fingerprint_line, "%99s %d", state_base64,
                         &state_depth));
+        if (state_depth < 0)
+        {
+            exit_error("Wrongly input state_depth!\n");
+        }
         size_t unused_size;
         base64_decode(state_base64, strlen(state_base64),
             ((unsigned char *)&(entry_point->kv.key.key)), &(unused_size));
