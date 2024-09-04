@@ -14,10 +14,11 @@ from subprocess import check_call, check_output
 
 
 @click.command()
+@click.option('--clean/--no-clean')
 @click.option('-g/--no-g')
 @click.option('-t/--no-t')
 @click.option('--rb/--no-rb')
-def main(g, t, rb):
+def main(clean, g, t, rb):
     if g:
         os.environ["FCS_GCC"] = "1"
         seed = 1 if rb else 1
@@ -52,6 +53,8 @@ def main(g, t, rb):
                 print(e)
                 print("seed = {} numargs = {} failed".format(seed, num_args))
                 sys.exit(1)
+            if clean:
+                os.unlink("run-t-{}-{}.bash".format(seed, num_args))
         seed += 1
 
 
