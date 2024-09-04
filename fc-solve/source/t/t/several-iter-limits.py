@@ -3,9 +3,20 @@
 # TEST:source "$^CURRENT_DIRNAME/../lib/FC_Solve/__init__.py"
 import os
 import re
+import sys
 import unittest
 
 from FC_Solve import FreecellSolverTestSuite
+
+
+tags_str = os.getenv('FCS_TEST_TAGS')
+if not tags_str:
+    tags_str = ''
+
+if re.search(r'\bFCS_WITHOUT_EXPORTED_RESUME_SOLUTION\b', tags_str):
+    print("1..0 # FCS_WITHOUT_EXPORTED_RESUME_SOLUTION"
+          " is incompatible with these tests")
+    sys.exit(0)
 
 
 class MyTests(unittest.TestCase):
@@ -175,10 +186,6 @@ AH 5S 6S AD 8H JD
 
     def test_num_states_in_collection_after_unsolved(self):
         testname = "NumStatesInCol-After-unsolved - "
-
-        tags_str = os.getenv('FCS_TEST_TAGS')
-        if not tags_str:
-            tags_str = ''
 
         if re.search(r'\bfc_only\b', tags_str):
             return
