@@ -226,6 +226,10 @@ my %themes = (
 
 my $SEED_KEY = 'FCS_THEME_RAND';
 my $SEED     = $ENV{$SEED_KEY};
+if ( $ENV{FCS_THEME_RAND_TELL_FLAGS_COUNT} )
+{
+    $SEED = 1;
+}
 if ( defined $SEED )
 {
     if ( $SEED =~ /[^0-9]/ )
@@ -262,6 +266,12 @@ if ( defined $SEED )
     my @k = sort { $a cmp $b } map { _map_flag($_) }
         keys %k;
 
+    if ( $ENV{FCS_THEME_RAND_TELL_FLAGS_COUNT} )
+    {
+        my $output = scalar(@k);
+        print "$output\n";
+        exit(0);
+    }
     require Math::Random::MT;
     my $gen     = Math::Random::MT->new($SEED);
     my $shuffle = sub {
@@ -291,6 +301,48 @@ if ( defined $SEED )
             }
         }
     }
+    elsif ( $ENV{FCS_THEME_RAND_BY_ORDER} )
+    {
+        my $_count = 0;
+
+        my $iter;
+
+        $iter = sub {
+            my ( $stack, $bitmask ) = @_;
+            if ( @$stack == $COUNT )
+            {
+                if ( $_count == $SEED )
+                {
+                    @subset = @k[@$stack];
+                    return 1;
+                }
+                else
+                {
+                    die if $_count > $SEED;
+                    ++$_count;
+                    return 0;
+                }
+            }
+            else
+            {
+                foreach my $next ( keys(@k) )
+                {
+                    if ( not vec( $bitmask, $next, 1 ) )
+                    {
+                        my $new_bitmask = $bitmask;
+                        vec( $new_bitmask, $next, 1 ) = 1;
+                        if ( $iter->( [ @$stack, $next ], $new_bitmask ) )
+                        {
+                            return 1;
+                        }
+                    }
+                }
+                return 0;
+            }
+        };
+
+        $iter->( [], "" );
+    }
     else
     {
         $shuffle->( \@k );
@@ -298,7 +350,7 @@ if ( defined $SEED )
     }
     my $FN = "run-t-$SEED-$COUNT.bash";
     @subset = grep { not /libavl/i } @subset;
-    path($FN)->spew_utf8("$^X $0 @subset\n");
+    path($FN)->spew_utf8( "$^X $0", ( @subset ? " @subset" : "" ) . "\n" );
     delete $ENV{$SEED_KEY};
     exec( "bash", $FN );
 }
