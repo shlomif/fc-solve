@@ -26,7 +26,7 @@ def main(clean, g, t, rb):
         os.environ["CC"] = check_output(['which', 'clang']).decode().strip()
         os.environ["CXX"] = check_output(['which', 'clang++']).decode().strip()
         os.environ["FCS_CLANG"] = "1"
-        seed = 1 if rb else 3
+        seed = 1 if rb else 1
     os.environ["HARNESS_BREAK"] = "1"
     SLIGHTLY_WRONG_GCC_FLAG_SEE_man_gcc =\
         "-frandom-seed = 24"
