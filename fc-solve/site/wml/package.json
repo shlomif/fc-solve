@@ -35,7 +35,7 @@
     "npm": "^10.8.3",
     "param-case": "^4.0.0",
     "prettier": "^3.3.3",
-    "puppeteer": "^23.2.1",
+    "puppeteer": "^23.3.0",
     "qunit": "^2.22.0",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
@@ -47,7 +47,7 @@
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
-    "eslint": "^9.9.1",
+    "eslint": "^9.10.0",
     "typescript": "^5.5.4"
   },
   "scripts": {
