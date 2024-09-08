@@ -27,7 +27,7 @@ def main(byorder, clean, g, t, rb):
         os.environ["CC"] = check_output(['which', 'clang']).decode().strip()
         os.environ["CXX"] = check_output(['which', 'clang++']).decode().strip()
         os.environ["FCS_CLANG"] = "1"
-        seed = 1 if rb else 1
+        seed = 1 if rb else 50
     num_flags = -1
     if byorder:
         query_flag = "FCS_THEME_RAND_TELL_FLAGS_COUNT"
