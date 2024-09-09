@@ -44,7 +44,7 @@ export class Freecell_Deal_Finder {
 
     public run(abs_start, abs_end_param, update_cb) {
         const that = this;
-        const CHUNK = bigInt(1000000);
+        const CHUNK = bigInt(10000000);
         that.CHUNKM = CHUNK.add(bigInt.minusOne);
         const start = bigInt(abs_start);
         const abs_end = bigInt(abs_end_param);
