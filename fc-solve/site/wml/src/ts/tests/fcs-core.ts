@@ -329,9 +329,14 @@ function my_func(qunit: QUnit, _my_mod, my_callback: () => void) {
                     module_wrapper,
                 });
                 df.fill(ints_s);
-                df.run(1, 1000, (args) => {
-                    return;
-                });
+                df.run(
+                    1,
+                    1000,
+                    (args) => {
+                        return;
+                    },
+                    null,
+                );
                 const ret_Deal = df.cont();
                 // TEST
                 assert.equal(ret_Deal.result, "24", "Freecell_Deal_Finder");

@@ -42,9 +42,12 @@ export class Freecell_Deal_Finder {
         return;
     }
 
-    public run(abs_start, abs_end_param, update_cb) {
+    public run(abs_start, abs_end_param, update_cb, chunk_s) {
         const that = this;
-        const CHUNK = bigInt(10000000);
+        function _is_null(x: any): boolean {
+            return typeof x === "undefined" || x === undefined || x === null;
+        }
+        const CHUNK = bigInt(_is_null(chunk_s) ? 10000000 : chunk_s);
         that.CHUNKM = CHUNK.add(bigInt.minusOne);
         const start = bigInt(abs_start);
         const abs_end = bigInt(abs_end_param);

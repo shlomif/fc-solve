@@ -59,15 +59,35 @@ export function find_deal_ui(): void {
     const df = new w.Freecell_Deal_Finder({ module_wrapper: _module_wrapper });
     df.fill(ints_s);
     const ctl = $("#fc_solve_status");
-    df.run(1, "8589934591", (args) => {
-        ctl.html(
-            base_ui.escapeHtml(
-                "Reached No. " +
-                    numberWithCommas(getRounderNumber(args.start.toString())),
-            ),
-        );
-        return;
-    });
+    function _is_null(x: any): boolean {
+        return typeof x === "undefined" || x === undefined || x === null;
+    }
+    const has_ls: boolean = !_is_null(localStorage);
+    let chunk_s = null;
+    if (has_ls) {
+        const _key_name: string = "fc-solve-find-deal-chunk-size";
+        const in_storage_s: string = localStorage.getItem(_key_name);
+
+        if (!_is_null(in_storage_s)) {
+            chunk_s = in_storage_s;
+        }
+    }
+    df.run(
+        1,
+        "8589934591",
+        (args) => {
+            ctl.html(
+                base_ui.escapeHtml(
+                    "Reached No. " +
+                        numberWithCommas(
+                            getRounderNumber(args.start.toString()),
+                        ),
+                ),
+            );
+            return;
+        },
+        chunk_s,
+    );
 
     function resume() {
         const ret_Deal = df.cont();
