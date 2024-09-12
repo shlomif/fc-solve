@@ -16,10 +16,11 @@ from subprocess import check_call, check_output
 @click.command()
 @click.option('--byorder/--no-byorder')
 @click.option('--clean/--no-clean')
+@click.option('--maxnum', default=10)
 @click.option('-g/--no-g')
 @click.option('-t/--no-t')
 @click.option('--rb/--no-rb')
-def main(byorder, clean, g, t, rb):
+def main(byorder, clean, maxnum, g, t, rb):
     if g:
         os.environ["FCS_GCC"] = "1"
         seed = 1 if rb else 1
@@ -73,7 +74,7 @@ def main(byorder, clean, g, t, rb):
             return
 
     while True:
-        for num_args in range(1, 10+1):
+        for num_args in range(1, maxnum+1):
             print("Checking seed = {} numargs = {}".format(seed, num_args))
             os.environ["FCS_THEME_RAND"] = "{}".format(seed)
             os.environ["FCS_THEME_RAND_COUNT"] = "{}".format(num_args)
