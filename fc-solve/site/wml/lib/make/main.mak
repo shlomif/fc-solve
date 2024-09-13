@@ -173,9 +173,9 @@ PROCESS_ALL_INCLUDES = ALWAYS_MIN=1 $(PERL) bin/post-incs-v2.pl --mode=minify \
 tt2_rend := bin/tt-render.pl
 tt2_bases := $(shell cat lib/make/tt2.txt)
 dest_tt2s := $(patsubst %,dest/%,$(tt2_bases))
-# prod_dest_tt2s := $(patsubst %,dest-prod/%,$(tt2_bases))
+prod_dest_tt2s := $(patsubst %,dest-prod/%,$(tt2_bases))
 
-$(dest_tt2s): $(tt2_rend) lib/blocks.tt2
+$(dest_tt2s) $(prod_dest_tt2s): $(tt2_rend) lib/blocks.tt2
 	$(PERL) $(tt2_rend)
 	$(call PROCESS_ALL_INCLUDES,dest) $(tt2_bases)
 	$(call PROCESS_ALL_INCLUDES,dest-prod) $(tt2_bases)
