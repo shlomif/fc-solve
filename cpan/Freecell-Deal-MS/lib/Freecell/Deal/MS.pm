@@ -17,6 +17,23 @@ my @INITIAL_CARDS = (
     } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
 );
 
+sub as_columns_array
+{
+    my ($self) = @_;
+
+    my @cards = @INITIAL_CARDS;
+    Math::RNG::Microsoft::FCPro->new( seed => scalar( $self->deal ) )
+        ->shuffle( \@cards );
+    my @lines = ( map { [] } 0 .. 7 );
+    my $i     = -1;
+    while (@cards)
+    {
+        push @{ $lines[ ( ( ++$i ) & 7 ) ] }, pop(@cards);
+    }
+    my $rec = { array_of_arrays_of_strings => \@lines, };
+    return $rec;
+}
+
 sub as_str
 {
     my ($self) = @_;
@@ -85,6 +102,13 @@ Constructor.
 =head2 $obj->as_str()
 
 Returns the deal layout as a string.
+
+=head2 $obj->as_columns_array()
+
+Returns the deal layout as hash reference with a key 'array_of_arrays_of_strings'
+which points to an array of 8 columns.
+
+( Available since version 0.6.0 .  )
 
 =head2 $obj->deal()
 
