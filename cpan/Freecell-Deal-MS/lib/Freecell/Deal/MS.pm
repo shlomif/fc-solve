@@ -17,7 +17,7 @@ my @INITIAL_CARDS = (
     } ( 'A', ( 2 .. 9 ), 'T', 'J', 'Q', 'K' )
 );
 
-sub as_columns_array
+sub _string_arrays
 {
     my ($self) = @_;
 
@@ -30,7 +30,16 @@ sub as_columns_array
     {
         push @{ $lines[ ( ( ++$i ) & 7 ) ] }, pop(@cards);
     }
-    my $rec = { array_of_arrays_of_strings => \@lines, };
+    return \@lines;
+}
+
+sub as_columns_array
+{
+    my ($self) = @_;
+
+    my $rec =
+        { array_of_arrays_of_strings => scalar( $self->_string_arrays() ), };
+
     return $rec;
 }
 
@@ -38,16 +47,8 @@ sub as_str
 {
     my ($self) = @_;
 
-    my @cards = @INITIAL_CARDS;
-    Math::RNG::Microsoft::FCPro->new( seed => scalar( $self->deal ) )
-        ->shuffle( \@cards );
-    my @lines = ( map { [ ':', ] } 0 .. 7 );
-    my $i     = -1;
-    while (@cards)
-    {
-        push @{ $lines[ ( ( ++$i ) & 7 ) ] }, pop(@cards);
-    }
-    my $str = join "", map { "@$_\n" } @lines;
+    my $lines = scalar( $self->_string_arrays() );
+    my $str   = join "", map { ": @$_\n" } @$lines;
     return $str;
 }
 
