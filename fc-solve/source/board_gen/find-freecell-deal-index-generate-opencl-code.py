@@ -84,7 +84,7 @@ def find_ret(ints, num_ints_in_first=4):
     def _calc_fields(extra_fields):
         fields = {
                 'apply_limit': '0',
-                'bufsize': 300000,
+                'bufsize': (1 << 20),
                 'kernel_sum_cl_code': kernel_sum_cl_code,
                 'kernel_sum_to_4G_cl_code': kernel_sum_to_4G_cl_code,
                 'kernel_sum_to_8G_cl_code': kernel_sum_to_8G_cl_code,
