@@ -17,6 +17,10 @@ run_deal="$deal"
     {
         test \( \! -e "$lib" \) -o \( "$REBUILD" = "1" \)
     }
+    _compile_c()
+    {
+        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" ${include_dir_flags[*]} ${WCFLAGS:--Weverything -Wno-unsafe-buffer-usage -Wno-declaration-after-statement} "$@"
+    }
 
     board_gen_dir="../../source/board_gen"
     test -d "$board_gen_dir"
@@ -32,14 +36,14 @@ run_deal="$deal"
     fi
     if should_rebuild
     then
-        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" ${include_dir_flags[*]} ${WCFLAGS:--Weverything} "$board_gen_dir/find_deal.c"
+        _compile_c "$board_gen_dir/find_deal.c"
     fi
     test -f "$gen_ocl_py_prog"
     lib=libopencl_find_deal_idx.so
     if should_rebuild
     then
         python3 "$gen_ocl_py_prog" --ms <(pi-make-microsoft-freecell-board -t "$deal")
-        ${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" ${include_dir_flags[*]} ${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL
+        _compile_c "opencl_find_deal_idx.c" -lOpenCL
     fi
     if ! test "$SKIP_CISH" = 1
     then

@@ -64,7 +64,7 @@ static __attribute__((format(printf, 2, 3))) void ocl_check(
 
 // Return the ID of the platform specified in the OCL_PLATFORM
 // environment variable (or the first one if none specified)
-static cl_platform_id select_platform()
+static cl_platform_id select_platform(void)
 {
     cl_uint nplats;
     cl_int err;
