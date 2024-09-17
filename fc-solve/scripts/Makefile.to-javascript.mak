@@ -207,8 +207,12 @@ endif
 $(LLVM_BITCODE_CMAKE_FILES): %.$(BITCODE_EXT): $(CMAKE_DIR)/%.c $(INCLUDE_CFLAGS_FN)
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
-$(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
-	mkdir -p "$$(dirname "$@")"
+LLVM_BITCODE_FILES__target_dirs := board_gen patsolve patsolve/patsolve
+
+$(LLVM_BITCODE_FILES__target_dirs):
+	mkdir -p $@
+
+$(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN) $(LLVM_BITCODE_FILES__target_dirs)
 	$(EMCC) $(EMCC_CFLAGS) $< -c -o $@
 
 # SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
