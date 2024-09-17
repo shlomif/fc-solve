@@ -214,19 +214,21 @@ jobs:
 
                 '
             shell: cmd
-        -   name: upload build artifacts - Freecell Solver Zip Distribution for PySol
-                FC
-            uses: actions/upload-artifact@v2
+        -   name: upload-build-artifacts-Freecell Solver Zip Distribution for PySol
+                FC-${{ matrix.runs-on }}
+            uses: actions/upload-artifact@v4
             with:
                 name: Freecell Solver Zip Distribution for PySol FC
                 path: fc-solve\pkg-build\fc-solve-for-pysol.zip
-        -   name: upload build artifacts - Freecell Solver Win32 Package
-            uses: actions/upload-artifact@v2
+        -   name: upload-build-artifacts-Freecell Solver Win32 Package-${{ matrix.runs-on
+                }}
+            uses: actions/upload-artifact@v4
             with:
                 name: Freecell Solver Win32 Package
                 path: fc-solve\pkg-build\freecell-solver-*-win32.exe
-        -   name: upload build artifacts - Freecell Solver Win32 MSI Package
-            uses: actions/upload-artifact@v2
+        -   name: upload-build-artifacts-Freecell Solver Win32 MSI Package-${{ matrix.runs-on
+                }}
+            uses: actions/upload-artifact@v4
             with:
                 name: Freecell Solver Win32 MSI Package
                 path: fc-solve\pkg-build\freecell-solver-*-win32.msi

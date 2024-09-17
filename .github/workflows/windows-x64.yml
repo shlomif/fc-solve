@@ -208,13 +208,15 @@ jobs:
 
                 '
             shell: cmd
-        -   name: upload build artifacts - Freecell Solver Win64 Package
-            uses: actions/upload-artifact@v2
+        -   name: upload-build-artifacts-Freecell Solver Win64 Package-${{ matrix.runs-on
+                }}
+            uses: actions/upload-artifact@v4
             with:
                 name: Freecell Solver Win64 Package
                 path: fc-solve\pkg-build-win64\freecell-solver-*-win64.exe
-        -   name: upload build artifacts - Freecell Solver Win64 MSI Package
-            uses: actions/upload-artifact@v2
+        -   name: upload-build-artifacts-Freecell Solver Win64 MSI Package-${{ matrix.runs-on
+                }}
+            uses: actions/upload-artifact@v4
             with:
                 name: Freecell Solver Win64 MSI Package
                 path: fc-solve\pkg-build-win64\freecell-solver-*-win64.msi
