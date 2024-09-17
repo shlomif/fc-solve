@@ -19,6 +19,7 @@ endif
 BHS_SRC_DIR := ../../lib/repos/black-hole-solitaire/black-hole-solitaire/c-solver
 BHS_CMAKE_DIR := ../../lib/repos/black-hole-solitaire--build
 BHS_DEST_DIR := ./bhsolver-dest
+BHS_DEST_target_dirs := $(BHS_DEST_DIR) $(BHS_DEST_DIR)/generated
 
 BITCODE_EXT = o
 DATA_DESTDIR ?= __DESTDIR
@@ -218,12 +219,13 @@ $(LLVM_BITCODE_FILES): %.$(BITCODE_EXT): $(SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN) $(L
 # SRC_BHS_LIB_C_FILES = $(patsubst %.c,$(BHS_SRC_DIR)/%.c,$(BHS_LIB_C_FILES))
 # DEST_BHS_LLVM_BITCODE_FILES = $(patsubst %.c,$(BHS_DEST_DIR)/%.$(BITCODE_EXT),$(BHS_LIB_C_FILES))
 
-$(DEST_BHS_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN)
-	mkdir -p "$$(dirname "$@")"
+$(BHS_DEST_target_dirs):
+	mkdir -p $@
+
+$(DEST_BHS_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_SRC_DIR)/%.c $(INCLUDE_CFLAGS_FN) $(BHS_DEST_target_dirs)
 	$(EMCC) -I $(BHS_CMAKE_DIR) -I $(BHS_SRC_DIR)/include -I $(BHS_SRC_DIR) $(EMCC_CFLAGS) $< -c -o $@
 
-$(DEST_BHS_cmakedir_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_CMAKE_DIR)/%.c $(INCLUDE_CFLAGS_FN)
-	mkdir -p "$$(dirname "$@")"
+$(DEST_BHS_cmakedir_LLVM_BITCODE_FILES): $(BHS_DEST_DIR)/%.$(BITCODE_EXT): $(BHS_CMAKE_DIR)/%.c $(INCLUDE_CFLAGS_FN) $(BHS_DEST_target_dirs)
 	$(EMCC) -I $(BHS_CMAKE_DIR) -I $(BHS_SRC_DIR)/include -I $(BHS_SRC_DIR) $(EMCC_CFLAGS) $< -c -o $@
 
 LLVM_AND_FILES_TARGETS = $(DEST_BHS_LLVM_BITCODE_FILES) $(LLVM_BITCODE_FILES) $(LLVM_BITCODE_CMAKE_FILES) $(DEST_BHS_cmakedir_LLVM_BITCODE_FILES)
