@@ -26,6 +26,7 @@ export function FC_Solve_init_wrappers_with_module(Module): ModuleWrapper {
 export class Freecell_Deal_Finder {
     private obj: number;
     private abs_end: bigInt.BigInteger;
+    private CHUNK: bigInt.BigInteger;
     private CHUNKM: bigInt.BigInteger;
     private start: bigInt.BigInteger;
     private update_cb: any;
@@ -48,6 +49,7 @@ export class Freecell_Deal_Finder {
             return typeof x === "undefined" || x === undefined || x === null;
         }
         const CHUNK = bigInt(_is_null(chunk_s) ? 10000000 : chunk_s);
+        that.CHUNK = CHUNK;
         that.CHUNKM = CHUNK.add(bigInt.minusOne);
         const start = bigInt(abs_start);
         const abs_end = bigInt(abs_end_param);
@@ -80,5 +82,9 @@ export class Freecell_Deal_Finder {
         } else {
             return { found: false, cont: false };
         }
+    }
+    public getChunk(): bigInt.BigInteger {
+        const that = this;
+        return that.CHUNK.add(bigInt.zero);
     }
 }

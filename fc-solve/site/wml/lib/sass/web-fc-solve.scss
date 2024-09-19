@@ -173,6 +173,22 @@ textarea.emscripten {
     &.error {
         color: red;
     }
+
+    table.found_result {
+        border-collapse: collapse;
+        &,
+        & td {
+            border: 2px solid black;
+        }
+
+        td {
+            padding: 0.3em;
+        }
+
+        td.val {
+            font-weight: normal;
+        }
+    }
 }
 
 #status_wrap,

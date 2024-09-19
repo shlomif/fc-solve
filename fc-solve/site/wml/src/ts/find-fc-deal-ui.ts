@@ -72,6 +72,7 @@ export function find_deal_ui(): void {
             chunk_s = in_storage_s;
         }
     }
+    const start = new Date().getTime();
     df.run(
         1,
         "8589934591",
@@ -92,11 +93,40 @@ export function find_deal_ui(): void {
     function resume() {
         const ret_Deal = df.cont();
         if (ret_Deal.found) {
+            const elapsed = new Date().getTime() - start;
+            const val_td = '<td class="val">';
+
             ctl.html(
-                'Found: <input id="found_result" ' +
+                '<table class="found_result">' +
+                    "<tr>" +
+                    "<td>" +
+                    "Found:" +
+                    "</td>" +
+                    val_td +
+                    ' <input id="found_result" ' +
                     'name="found_result" value="' +
                     ret_Deal.result.toString() +
-                    '" readonly="readonly" />',
+                    '" readonly="readonly" />' +
+                    "<br/>" +
+                    "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>" +
+                    "<b>Elapsed:</b>" +
+                    "</td>" +
+                    val_td +
+                    (elapsed / 1000).toString() +
+                    "</td>" +
+                    "</tr>" +
+                    "<tr>" +
+                    "<td>" +
+                    "<b>Iteration step size:</b>" +
+                    "</td>" +
+                    val_td +
+                    df.getChunk().toString() +
+                    "</td>" +
+                    "</tr>" +
+                    "</table>",
             );
         } else if (ret_Deal.cont) {
             setTimeout(() => {
