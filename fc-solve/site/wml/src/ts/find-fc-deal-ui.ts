@@ -116,6 +116,7 @@ export function find_deal_ui(): void {
                     "</td>" +
                     val_td +
                     (elapsed / 1000).toString() +
+                    " seconds" +
                     "</td>" +
                     "</tr>" +
                     "<tr>" +
