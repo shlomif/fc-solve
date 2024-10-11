@@ -67,7 +67,7 @@ FAQ_SECTION_FORMAT = '''<?xml version="1.0" encoding="utf-8"?>
 <meta charset="utf-8"/>
 <meta name="description" content=
 "Freecell Solver’s Frequently Asked Questions (FAQ) List - {title}"/>
-<link rel="stylesheet" href="{base_path}style.css" media="screen" title=
+<link rel="stylesheet" href="{base_path}faq-indiv-pages.css" media="screen" title=
 "Normal"/>
 <link rel="stylesheet" href="{base_path}print.css" media="print"/>
 <link rel="shortcut icon" href="{base_path}favicon.ico" type=

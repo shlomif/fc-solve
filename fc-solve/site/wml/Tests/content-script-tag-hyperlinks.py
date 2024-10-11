@@ -37,7 +37,10 @@ class MyTests(unittest.TestCase):
             )
             filtered = []
             for x in matches:
-                m = re.match('^((?:\\.\\./)*style.css)\\Z', x.get('href'))
+                m = re.match(
+                    '^((?:\\.\\./)*faq-indiv-pages\\.css)\\Z',
+                    x.get('href'),
+                )
                 if m:
                     filtered.append(m.group(1))
 

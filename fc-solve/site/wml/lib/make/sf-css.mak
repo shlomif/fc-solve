@@ -1,5 +1,5 @@
 GEN_STYLE_CSS_FILES := \
-jqui-override.css print.css solitairey-cards.css style.css web-fc-solve.css
+faq-indiv-pages.css jqui-override.css print.css solitairey-cards.css style.css web-fc-solve.css
 
 SRC_CSS_TARGETS := $(addprefix $(POST_DEST)/,$(GEN_STYLE_CSS_FILES))
 
