@@ -129,6 +129,7 @@ def _faq_gen(dest_dir):
     splitter = XhtmlSplitter(
         **COMMON_TITLE_CALLBACKS,
         back_to_source_page_css_class=BACK_TO_SOURCE_PAGE_CSS_CLASS,
+        base_path="../",
         individual_node_css_class=INDIVIDUAL_NODE_CSS_CLASS,
         input_fn=input_fn,
         output_dirname=OUT_DN,
