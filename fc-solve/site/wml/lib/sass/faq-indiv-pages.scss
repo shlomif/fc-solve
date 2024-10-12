@@ -45,3 +45,13 @@ a.previous {
 a:visited {
     // color: purple;
 }
+
+ul.bt_nav {
+    &,
+    & li {
+        display: inline;
+    }
+    li {
+        margin: 1em;
+    }
+}

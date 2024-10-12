@@ -85,6 +85,7 @@ Homepage</a> → <a href="{base_path}faq.html" title=
 </div>
 <main class="faq faux">{body}</main>
 <footer>
+<hr/>
 <div class="foot_left">
 <ul class="bt_nav">
 <li><a href="{base_path}">Home</a></li>
