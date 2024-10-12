@@ -3,6 +3,11 @@
 @import "common-style";
 
 /* Copy pasta for the time being */
+
+a.back_to_faq {
+    @include faq_link;
+}
+
 span.indiv_node {
     float: right;
     padding: 0.3em;
