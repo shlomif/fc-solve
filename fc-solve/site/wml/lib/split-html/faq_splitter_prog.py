@@ -82,6 +82,7 @@ Homepage</a> → <a href="{base_path}faq.html" title=
 {breadcrumbs_trail}
 → <b>{title}</b>
 </div>
+<hr/>
 </div>
 <main class="faq faux">{body}</main>
 <footer>
@@ -92,6 +93,7 @@ Homepage</a> → <a href="{base_path}faq.html" title=
 <li><a href="https://www.shlomifish.org/me/contact-me/">Contact Us</a></li>
 </ul>
 </div>
+<hr/>
 <div class="foot_left">
 <p><b>Webmaster:</b> <a href="https://www.shlomifish.org/">Shlomi
 Fish</a>. He can be
