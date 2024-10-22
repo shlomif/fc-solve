@@ -68,7 +68,19 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 <select id="preset" class="phoenix">
 <option value="lg" selected="selected">“Looking Glass” (fastest on average)</option>
 <option value="ve">“Video Editing” (short solutions)</option>
+[% IF 0 %]
+<!--
+Was kept as an homage to Christina Grimmie:
+
+https://www.shlomifish.org/art/recommendations/music/online-artists/fan-pages/chris-grimmie/
+
+However, I am ~90% sure she was not murdered, and her soul, mind and body
+are alive and well.
+
+Removed because it was too confusing.
+-->
 <option value="obf">“One Big Family” (fast on average)</option>
+[% END %]
 <option value="default">Default</option>
 </select>
 
