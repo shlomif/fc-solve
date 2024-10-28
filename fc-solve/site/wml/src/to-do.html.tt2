@@ -160,20 +160,34 @@ we would like to see such a solver written.
 <a href="https://fc-solve.blogspot.com/2012/09/two-freecell-solvability-report-for.html#comment-form">from here:</a>
 </p>
 
-<pre>
+<blockquote cite="">
 
+<p>
 Sorry for the late reply, but I have proof that 384,243 is impossible with 2 freecells. The critical position the computer couldn't solve is after the following moves (384243, two freecells):
+</p>
+
+<pre>
 13 78 63 52 6a 62 16 46 7b 76
 74 16 76 14 16 a1 b1 7a 87 43
 47 37 8b 87 57 57 b8 4b 47 46
 17 27 21 24 14 28 21 23 23 b3
 2b a2 5a 52 8h 68 61 a5 65 81
 85 15 4a 4h b4 64 62 42 68 48
-Note that in the fourth line, 21 24 14 is the supermove 24.
-
-The only way out in the resulting position that computers couldn't solve is to put up the hearts and/or diamonds to the homecell, but Patsolve proved the resulting positions impossible. I checked alernatives earlier, but again Patsolve proved them impossible.
-That proves 384,243 impossible with two freecells.
 </pre>
+
+<p>
+Note that in the fourth line, 21 24 14 is the supermove 24.
+</p>
+
+<p>
+The only way out in the resulting position that computers couldn't solve is to put up the hearts and/or diamonds to the homecell, but Patsolve proved the resulting positions impossible. I checked alernatives earlier, but again Patsolve proved them impossible.
+</p>
+
+<p>
+That proves 384,243 impossible with two freecells.
+</p>
+
+</blockquote>
 
 [% END %]
 
