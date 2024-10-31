@@ -76,7 +76,9 @@ FAQ_SECTION_FORMAT = '''<?xml version="1.0" encoding="utf-8"?>
 </head>
 <body class="fancy_sects faq_indiv_entry">
 <div class="header" id="header">
-<div class="leading_path"><a href="{base_path}">Freecell Solver’s
+<div class="leading_path"><a href="{base_path}"><img
+src="{base_path}images/fc-solve-logo.min.svg" alt="fc-solve icon: H C D S"
+class="icon" />Freecell Solver’s
 Homepage</a> → <a href="{base_path}faq.html" title=
 "Frequently Asked Questions and Answers List (FAQ)">FAQ</a>
 {breadcrumbs_trail}
