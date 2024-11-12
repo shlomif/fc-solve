@@ -71,9 +71,6 @@ static inline void get_board_l__without_setup(
 #ifdef FCS_DEAL_ONLY_UP_TO_2G
         const microsoft_rand_uint j =
             microsoft_rand_rand(&seedx) % num_cards_left;
-#if 0
-        exit(-1);
-#endif
 #else
         const microsoft_rand_uint j =
             microsoft_rand__game_num_rand(&seedx, deal_idx) % num_cards_left;

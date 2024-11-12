@@ -2,7 +2,8 @@
    of OpenCL program. You can now reduce the boilerplate to:
   */
 
-#if 0 // example usage:
+#if 0
+// example usage:
 #include "ocl_boiler.h"
 
 int main(int argc, char *argv[])

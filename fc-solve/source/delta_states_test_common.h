@@ -40,7 +40,7 @@ static bool test_encode_and_decode(const fcs_dbm_variant_type local_variant,
     char as_str[1000];
     FCS__RENDER_STATE(as_str, &(new_derived_state.s), &locs);
 
-    assert_string_equal(as_str, expected_str); //, "%s", blurb);
+    assert_string_equal(as_str, expected_str);
 #if 0
     if (!verdict)
     {
