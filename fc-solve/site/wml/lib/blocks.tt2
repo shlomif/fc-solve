@@ -3,6 +3,26 @@
 [% SET desc = "Freecell Solver - a Program and a Library written in C for Solving Games of Freecell and similar Solitaire Variants" %]
 [% SET fcs_discuss_url = base_path _ "forums.html" %]
 
+[% BLOCK contact_shlomif_notice %]
+
+<section class="h2 note" id="contact_note_on_top_of_page">
+<header><h2>Note to Freecell Solver’s Users</h2></header>
+<p> <a href="https://www.shlomifish.org/">Shlomi
+Fish</a> - the core developer of Freecell Solver, and the webmaster of
+this website - has been experiencing incoming and outgoing E-mail
+problems. He can be <a href="https://www.shlomifish.org/me/contact-me/">contacted using
+many electronic means</a>, and while he can be reached using email (<a href=
+"mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a> and
+<a href="mailto:shlomif@gmail.com">shlomif@gmail.com</a>),
+more reliable messaging means such as XMPP or IRC are preferable.
+.</p>
+[% IF 0 %]
+<button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
+[% END %]
+</section>
+
+[% END %]
+
 [%- BLOCK start_html -%]
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE html>
@@ -52,6 +72,9 @@ NavBar ⬈</button>
 <h1>[% title %]</h1>
 [% use_online_wrapper %]
 </header>
+
+[% INCLUDE contact_shlomif_notice %]
+
 [%- END -%]
 
 [%- BLOCK end_html -%]
