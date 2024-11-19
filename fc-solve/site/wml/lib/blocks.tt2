@@ -10,12 +10,19 @@
 <p> <a href="https://www.shlomifish.org/">Shlomi
 Fish</a> - the core developer of Freecell Solver, and the webmaster of
 this website - has been experiencing incoming and outgoing E-mail
-problems. He can be <a href="https://www.shlomifish.org/me/contact-me/">contacted using
-many electronic means</a>, and while he can be reached using email (<a href=
+reliability problems (such as legitimate messages being dropped or
+classified as spam). Therefore, one should contact him
+<a href="https://www.shlomifish.org/me/contact-me/">using
+other electronic means</a>.
+</p>
+
+[% IF 0 %]
+and while he can be reached using email (<a href=
 "mailto:shlomif@shlomifish.org">shlomif@shlomifish.org</a> and
 <a href="mailto:shlomif@gmail.com">shlomif@gmail.com</a>),
 more reliable messaging means such as XMPP or IRC are preferable.
-.</p>
+[% END %]
+
 [% IF 0 %]
 <button class="off" id="ms_fc_w10_note__dismiss">Dismiss</button>
 [% END %]
