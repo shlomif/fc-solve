@@ -7,11 +7,15 @@
 
 <section class="h2 note" id="contact_note_on_top_of_page">
 <header><h2>Note to Freecell Solver’s Users</h2></header>
-<p> <a href="https://www.shlomifish.org/">Shlomi
+<p>
+<a href="https://www.shlomifish.org/">Shlomi
 Fish</a> - the core developer of Freecell Solver, and the webmaster of
-this website - has been experiencing incoming and outgoing E-mail
-reliability problems (such as legitimate messages being dropped or
-classified as spam). Therefore, one should contact him
+this website - has been experiencing reliability problems with incoming and outgoing E-mail
+ (such as legitimate messages being dropped or
+classified as spam). They also affect his GMail-dot-com account.
+</p>
+<p>
+Therefore, one should preferably contact him
 <a href="https://www.shlomifish.org/me/contact-me/">using
 other electronic means</a>.
 </p>
