@@ -5,8 +5,11 @@
 
 [% BLOCK contact_shlomif_notice %]
 
-<section class="h2 note" id="contact_note_on_top_of_page">
-<header><h2>Note to Freecell Solver’s Users</h2></header>
+<section class="email h2 note" id="contact_note_on_top_of_page">
+<header>
+<img alt="E-mail" class="sign" src="[% base_path %]images/openclipart-1426640939-mail-gfx.svg" />
+<h2>Note to Freecell Solver’s Users</h2>
+</header>
 <p>
 <a href="https://www.shlomifish.org/">Shlomi
 Fish</a> - the core developer of Freecell Solver, and the webmaster of

@@ -461,6 +461,26 @@ body.faq_indiv_entry {
     padding: 2em;
 }
 
+.email.note {
+    @if false {
+        border: solid medium #880000;
+        padding: 0.5em;
+        background-color: #ffd2d2;
+        clear: right;
+
+        h2 {
+            overflow: hidden;
+            background-color: transparent;
+        }
+    }
+
+    img.sign {
+        float: left;
+        margin: 1em;
+        width: 5em;
+    }
+}
+
 * {
     // outline: hotpink solid 2px;
 }
