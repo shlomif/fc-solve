@@ -1128,6 +1128,7 @@ burtleburtle
 coz
 debondt
 der
+deusinvictus
 dirs
 don_woods
 freecellgamesolutions
@@ -1143,6 +1144,7 @@ lookup2
 math
 nl
 numin8r
+openclipart
 pysolfc
 pythack
 ru

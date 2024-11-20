@@ -158,3 +158,6 @@ kpat which inspired some bug fixes in Freecell Solver.
 the build system to GNU install dirs.
 
 * *Giuseppe Bilotta* - Providing OpenCL C boilerplate and help.
+
+* https://openclipart.org/detail/216137/mail-message graphics by
+https://openclipart.org/artist/deusinvictus .
