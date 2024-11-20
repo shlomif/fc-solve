@@ -12,7 +12,7 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^22.9.0",
+    "@types/node": "^22.9.1",
     "@types/qunit": "^2.19.12",
     "acorn": "^8.14.0",
     "amdefine": "^1.0.1",
