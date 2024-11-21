@@ -36,7 +36,7 @@
     "npm": "^10.9.0",
     "param-case": "^4.0.0",
     "prettier": "^3.3.3",
-    "puppeteer": "^23.8.0",
+    "puppeteer": "^23.9.0",
     "qunit": "^2.22.0",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
