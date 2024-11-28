@@ -14,7 +14,7 @@ if ($@)
 }
 else
 {
-    plan tests => 4;
+    plan tests => 5;
 }
 
 {
@@ -61,5 +61,14 @@ else
         # qr#\AWrong.*\n\z#,
         qr#\S#ms,
 "[Freecell mode trying to verify Seahaven Towers] Trailing newline in error line.",
+    );
+
+    # TEST
+    like(
+        $trap->stdout(),
+
+        # qr#\AWrong.*\n\z#,
+        qr#Wrong#ms,
+"[Freecell mode trying to verify Seahaven Towers] stdout says it is wrong.",
     );
 }
