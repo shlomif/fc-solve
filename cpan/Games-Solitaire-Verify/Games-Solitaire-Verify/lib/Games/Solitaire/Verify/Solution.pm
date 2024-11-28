@@ -218,7 +218,14 @@ sub verify
     {
         return { error => $err, line_num => $self->_ln(), };
     }
-    else
+    elsif (
+        $err = Exception::Class->caught(
+            'Games::Solitaire::Verify::Exception::State::MissingCards')
+        )
+    {
+        return { error => $err, line_num => $self->_ln(), };
+    }
+    elsif (1)
     {
         $err = Exception::Class->caught();
         ref $err ? $err->rethrow : die $err;
