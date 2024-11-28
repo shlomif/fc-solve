@@ -1,5 +1,9 @@
 Revision history for Games-Solitaire-Verify
 
+0.2601  2024-11-28
+        - Extract a ::LinesIter class/module
+        - Better error in "Freecell mode trying to verify Seahaven Towers"
+
 0.2600  2024-01-31
         - Convert to support the ASCIIfied output of
         Games::Solitaire::BlackHole::Solver version 0.10.0
