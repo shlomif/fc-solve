@@ -374,16 +374,13 @@ EOF
     };
     $vars->{enable_jquery_ui} =
         ( $input_tt2_page_path ne 'js-fc-solve/text/gui-tests.xhtml' );
-
+    my $src_path = "src/$input_tt2_page_path.tt2";
     if ( $self->stdout )
     {
         binmode STDOUT, ':encoding(utf-8)';
         my $html = '';
-        $template->process( "src/$input_tt2_page_path.tt2",
-            $vars, \$html, binmode => ':utf8', )
-            or die "[["
-            . $template->error()
-            . " ; src/$input_tt2_page_path.tt2 ]]";
+        $template->process( $src_path, $vars, \$html, binmode => ':utf8', )
+            or die "[[" . $template->error() . " ; $src_path ]]";
 
         $toc->add_toc( \$html );
         print $html;
@@ -395,11 +392,8 @@ EOF
             my $d = $rec->{path};
             $vars->{production} = $rec->{production};
             my $html = '';
-            $template->process( "src/$input_tt2_page_path.tt2",
-                $vars, \$html, binmode => ':utf8', )
-                or die "[["
-                . $template->error()
-                . " ; src/$input_tt2_page_path.tt2 ]]";
+            $template->process( $src_path, $vars, \$html, binmode => ':utf8', )
+                or die "[[" . $template->error() . " ; $src_path ]]";
 
             $toc->add_toc( \$html );
             path( @$d, @fn, )->touchpath()->spew_utf8($html);

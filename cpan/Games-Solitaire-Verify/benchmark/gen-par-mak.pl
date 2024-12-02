@@ -2,6 +2,7 @@
 
 use strict;
 use warnings;
+use autodie;
 
 use Template ();
 
@@ -19,7 +20,11 @@ my $ARGS = +{
     step => $STEP,
 };
 
-my $template = Template->new( {} );
+my $template = Template->new(
+    {
+        STRICT => 1,
+    }
+);
 
 my $TEXT = <<'EOF';
 all:[% FOREACH i = [min .. max] %] [% res(i) %][% END %]

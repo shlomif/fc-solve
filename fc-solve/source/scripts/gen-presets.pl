@@ -118,7 +118,11 @@ sub compile_preset
     return;
 }
 
-my $c_template = Template->new();
+my $c_template = Template->new(
+    {
+        STRICT => 1,
+    },
+);
 
 my $C_TEMPLATE_INPUT = <<"EOF";
     {
