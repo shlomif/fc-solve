@@ -1,3 +1,4 @@
+[%- SET sel = '' -%]
 [% PROCESS "Inc/js_fc_solve.tt2" %]
 [% UNLESS title %]
 [%- SET title = "Online Freecell solver" -%]

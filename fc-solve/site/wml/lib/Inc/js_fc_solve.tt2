@@ -1,3 +1,6 @@
+[%- SET skip_solitairey = '' -%]
+[%- SET skip_yui = '' -%]
+
 [%- BLOCK set_up_requirejs -%]
 requirejs.config({
     baseUrl: '[% base_path %]js',

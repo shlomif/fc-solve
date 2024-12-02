@@ -2,6 +2,8 @@
 
 [%- WRAPPER wrap_html -%]
 
+[%- SET country = 'Israel' -%]
+
 [% BLOCK diversity_statement %]
 <div class="diversity" id="diversity_statement">
 

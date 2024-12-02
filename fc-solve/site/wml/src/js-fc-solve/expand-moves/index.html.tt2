@@ -76,6 +76,8 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% END %]
 </div>
 
+[%- SET sel = '' -%]
+
 [% BLOCK output_opt %]
 <input name="unicode_suits" id="unicode_suits__[% id_base %]" type="radio" title="[% title %]" class="phoenix" value="[% value %]" [% IF sel %] checked="checked"[% END %]/><label for="unicode_suits__[% id_base %]">[% title %]</label><br />
 [% END %]

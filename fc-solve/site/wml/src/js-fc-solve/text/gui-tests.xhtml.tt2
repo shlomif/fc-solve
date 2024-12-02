@@ -47,4 +47,5 @@ require(["ui-tests-driver"], function (tests_runner) {
 <div id="qunit-fixture">test markup, will be hidden</div>
 
 [% END %]
+[%- SET sel = '' -%]
 [% INCLUDE "src/js-fc-solve/text/index.html.tt2" %]
