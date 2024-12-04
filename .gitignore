@@ -2,6 +2,7 @@
 /cpan/Freecell-Deal-MS/.tidyall.d
 /cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/.build
 /cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/.tidyall.d
+/cpan/Games-Solitaire-Verify/benchmark/Results/*.res
 /fc-solve/B
 /fc-solve/presets/flares-based-scans-data/qsi-flares-choice-fc_solve.fc-pro.summary
 /fc-solve/presets/flares-based-scans-data/qualified-foo-flares-choice-fc_solve.summary

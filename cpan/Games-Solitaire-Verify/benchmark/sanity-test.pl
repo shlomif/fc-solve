@@ -3,6 +3,7 @@
 use strict;
 use warnings;
 use autodie;
+use Carp       ();
 use FindBin    qw/ $Bin /;
 use File::Path qw/ rmtree /;
 use Env::Path;
@@ -19,7 +20,7 @@ sub do_system
     print "Running [@$cmd]\n";
     if ( system(@$cmd) )
     {
-        die "Running [@$cmd] failed!";
+        Carp::confess("Running [@$cmd] failed!");
     }
 }
 do_system( { cmd => [ $^X, "gen-par-mak.pl" ] } );
@@ -46,15 +47,15 @@ while (@l)
     my $l = shift(@l);
     if ( $l ne "== $i ==" )
     {
-        die $l;
+        Carp::confess($l);
     }
     $l = shift(@l);
     if ( $l !~ /\AVerdict: Solved ; Iters: [0-9]+ ; Length: [0-9]+\z/ )
     {
-        die $l;
+        Carp::confess($l);
     }
 }
 continue { ++$i; }
-die if $i ne 101;
+Carp::confess() if $i ne 101;
 _cleanup();
 unlink( "build.ninja", "par2.mak" );
