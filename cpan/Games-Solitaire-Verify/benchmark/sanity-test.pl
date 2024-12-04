@@ -56,6 +56,6 @@ while (@l)
     }
 }
 continue { ++$i; }
-Carp::confess() if $i ne 101;
+Carp::confess() if $i ne 401;
 _cleanup();
 unlink( "build.ninja", "par2.mak" );

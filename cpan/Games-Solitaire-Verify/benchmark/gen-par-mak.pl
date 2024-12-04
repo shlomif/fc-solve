@@ -8,14 +8,15 @@ use Template ();
 
 my $MIN  = 1;
 my $MAX  = 32_000;
-my $STEP = 100;
+my $STEP = 400;
 
 my $ARGS = +{
     cmd => qq#perl benchmark-no-backticks.pl -- -l lg -ni -l fg#,
     min => $MIN,
     max => ( $MAX / $STEP ),
     res => sub {
-        return "Results/" . shift . ".res";
+        my ($start) = @_;
+        return "Results/${start}.res";
     },
     step => $STEP,
 };
