@@ -27,12 +27,17 @@ do_system( { cmd => [ $^X, "gen-par-mak.pl" ] } );
 
 sub _cleanup
 {
-    rmtree( ["_Inline"] );
+    my ($start) = @_;
+
+    if ($start)
+    {
+        rmtree( ["_Inline"] );
+    }
     unlink( grep { -f $_ } glob("Results/*.res") );
     return;
 }
 
-_cleanup();
+_cleanup(1);
 
 do_system( { cmd => [ "gmake", "-f", "par2.mak", "-j1", "Results/1.res", ] } );
 do_system( { cmd => [ "gmake", "-f", "par2.mak", "-j1", "Results/2.res", ] } );
@@ -57,5 +62,5 @@ while (@l)
 }
 continue { ++$i; }
 Carp::confess() if $i ne 401;
-_cleanup();
+_cleanup('');
 unlink( "build.ninja", "par2.mak" );
