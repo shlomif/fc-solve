@@ -11,6 +11,12 @@
     -t fcs
     shlomif_ux
     set -e -x
+    cd "$trunk/fc-solve"
+    rm -fr "B"
+    mkdir "B"
+    cd "B"
+    ../scripts/Tatzer -l n2b
+    gmake -j 12 install
     cd "$trunk/cpan/Games-Solitaire-Verify/benchmark"
     git clean -dfqx . || true
     export LD_LIBRARY_PATH="$FCS_PATH"
