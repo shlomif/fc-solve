@@ -8,9 +8,9 @@
 
 
 (
+    set -e -x
     -t fcs
     shlomif_ux
-    set -e -x
     test -n "$trunk"
     fcsdir="$trunk/fc-solve"
     test -d "$fcsdir"
