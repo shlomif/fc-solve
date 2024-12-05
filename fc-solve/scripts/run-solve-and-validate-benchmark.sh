@@ -11,7 +11,10 @@
     -t fcs
     shlomif_ux
     set -e -x
-    cd "$trunk/fc-solve"
+    test -n "$trunk"
+    fcsdir="$trunk/fc-solve"
+    test -d "$fcsdir"
+    cd "$fcsdir"
     rm -fr "B"
     mkdir "B"
     cd "B"
