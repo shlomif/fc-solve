@@ -8,7 +8,7 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.25.9",
+    "@babel/cli": "^7.26.4",
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@types/jquery": "^3.5.32",
@@ -43,8 +43,8 @@
     "rollup": "^4.28.0",
     "tap": "^21.0.1",
     "tar": "^7.4.3",
-    "terser": "^5.36.0",
-    "webpack": "^5.97.0",
+    "terser": "^5.37.0",
+    "webpack": "^5.97.1",
     "webpack-cli": "^5.1.4"
   },
   "devDependencies": {
