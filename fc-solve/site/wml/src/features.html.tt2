@@ -102,6 +102,13 @@ A test suite is included as part of the distribution.
 </p>
 </li>
 
+<li>
+<p>
+The git repository contains Continuous Integration (CI) configurations and
+scripts, including Docker-using ones.
+</p>
+</li>
+
 </ul>
 
 [% END %]
