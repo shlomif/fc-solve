@@ -126,9 +126,9 @@ scans. Which one can be specified at run-time.
 
 <li>
 <p>
-The order of the tests to be conducted on a given state can be specified at
-the beginning of the scan. It is also possible to include only a subset of
-the available tests.
+The order of the move functions to be conducted on a given state can be
+specified at the beginning of the scan. It is also possible to include
+only a subset of the available move functions.
 </p>
 </li>
 
@@ -230,7 +230,7 @@ Run-time choice of the number of freecells and columns.
 
 <li>
 <p>
-Supports games of one and two decks.
+<s>Supports games of one and two decks.</s> Support for 2 decks game variants was removed in recent versions given it added complexity to the code.
 </p>
 </li>
 
