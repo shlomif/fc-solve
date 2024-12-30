@@ -17,8 +17,16 @@ my @deps = map { /^BuildRequires:\s*(\S+)/ ? ("'$1'") : () }
     path("freecell-solver.spec.in")->lines_utf8;
 $obj->clean_up();
 $obj->run_docker();
-$obj->docker( { cmd => [ 'cp', "../source",  "fcsfed:root/source", ] } );
-$obj->docker( { cmd => [ 'cp', "../scripts", "fcsfed:root/scripts", ] } );
+$obj->exe_bash_code(
+    { code => "set -e -x ; mkdir -p /root/fc-solve/fc-solve/", } );
+foreach my $suf (
+    ".perltidyrc",   ".tidyallrc", "root-tests", "fc-solve/scripts",
+    "fc-solve/site", "fc-solve/source",
+    )
+{
+    $obj->docker(
+        { cmd => [ 'cp', "../../$suf", "fcsfed:root/fc-solve/$suf", ] } );
+}
 
 my $REMOVED_SANITY_CHECK = <<'EOF';
 curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
@@ -26,7 +34,7 @@ EOF
 
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
-cd ~
+cd ~/fc-solve/fc-solve
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
 sudo pip3 install --prefix=/usr freecell_solver
 pip3 install --user freecell_solver
@@ -37,6 +45,11 @@ make
 # export HARNESS_VERBOSE=1
 # FCS_TEST_BUILD=1 perl ../source/run-tests.pl --execute="perl `pwd`/../source/t/t/build*.t"
 FCS_TEST_BUILD=1 perl ../source/run-tests.pl --glob='build*.t'
+sudo dnf -y install clang clang-devel cpanminus perl-Code-TidyAll perl-LWP-Protocol-https nodejs nodejs-npm ocl-icd-devel opencl-headers pocl pocl-devel wget
+sudo cpanm Docker::CLI::Wrapper::Container Text::Sprintf::Named
+( cd ../site/wml && bash bin/install-npm-deps.sh )
+perl ../scripts/multi_config_tests.pl --only-check-ready --skip-dzil-tests
+perl ../scripts/multi_config_tests.pl --include 'OpenCL' --skip-dzil-tests
 EOSCRIPTTTTTTT
 
 $obj->exe_bash_code( { code => $script, } );

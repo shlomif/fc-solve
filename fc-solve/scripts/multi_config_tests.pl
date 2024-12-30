@@ -769,31 +769,86 @@ _chdir_run(
     }
 );
 
-foreach my $dir_path_name (
-    '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
-    '../../cpan/Freecell-Deal-MS/',
-    )
-{
-    _chdir_run(
-        $dir_path_name,
-        sub {
-            my ($mod) = ( $dir_path_name =~ m#/([^/]+)/\z#ms )
-                or
-                Carp::confess("Cannot extract basename from '$dir_path_name'");
-            return run_cmd( "$mod dzil", { cmd => [qw(dzil test --all)] } );
-        }
-    );
-}
-
 use Getopt::Long qw/ GetOptions /;
 
 my $include_filter;
 my $only_check_ready;
+my $skip_dzil_tests;
+my $skip_opencl_tests;
 
 GetOptions(
-    "include=s"         => \$include_filter,
-    "only-check-ready!" => \$only_check_ready,
+    "include=s"          => \$include_filter,
+    "only-check-ready!"  => \$only_check_ready,
+    "skip-dzil-tests!"   => \$skip_dzil_tests,
+    "skip-opencl-tests!" => \$skip_opencl_tests,
 ) or die $!;
+
+if ( not $skip_opencl_tests )
+{
+    _chdir_run(
+        '../',
+        sub {
+            my $base_path      = path("B-opencl")->absolute();
+            my $board_gen_path = $base_path->child("board_gen")->absolute();
+            my $inst_path      = path("INST-opencl")->absolute();
+            $board_gen_path->mkdir();
+
+            local $ENV{'CC'}      = 'clang';
+            local $ENV{'REBUILD'} = '1';
+            local $ENV{PATH}      = $ENV{PATH} . ":${inst_path}/bin";
+
+            _chdir_run(
+                $base_path,
+                sub {
+                    warn qx#pwd#;
+                    run_cmd(
+                        "OpenCL tests setup",
+                        {
+                            cmd => [
+                                "bash",
+                                "-c",
+"../scripts/Tatzer --prefix $inst_path && make install",
+                            ]
+                        }
+                    );
+                }
+            );
+
+            _chdir_run(
+                $board_gen_path,
+                sub {
+                    warn qx#pwd#;
+                    run_cmd(
+                        "OpenCL tests",
+                        {
+                            cmd => [
+                                qw(prove), glob('../../scripts/opencl-test.t')
+                            ]
+                        }
+                    );
+                }
+            );
+        }
+    );
+}
+if ( not $skip_dzil_tests )
+{
+    foreach my $dir_path_name (
+        '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
+        '../../cpan/Freecell-Deal-MS/',
+        )
+    {
+        _chdir_run(
+            $dir_path_name,
+            sub {
+                my ($mod) = ( $dir_path_name =~ m#/([^/]+)/\z#ms )
+                    or Carp::confess(
+                    "Cannot extract basename from '$dir_path_name'");
+                return run_cmd( "$mod dzil", { cmd => [qw(dzil test --all)] } );
+            }
+        );
+    }
+}
 
 if ($only_check_ready)
 {
