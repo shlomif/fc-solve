@@ -769,6 +769,30 @@ _chdir_run(
     }
 );
 
+_chdir_run(
+    '../',
+    sub {
+        local $ENV{'CC'}      = 'clang';
+        local $ENV{'REBUILD'} = '1';
+        my $path = path("B-opencl/board_gen");
+        $path->mkdir();
+
+        _chdir_run(
+            $path,
+            sub {
+                warn qx#pwd#;
+                run_cmd(
+                    "OpenCL tests",
+                    {
+                        cmd =>
+                            [ qw(prove), glob('../../scripts/opencl-test.t') ]
+                    }
+                );
+            }
+        );
+    }
+);
+
 foreach my $dir_path_name (
     '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
     '../../cpan/Freecell-Deal-MS/',
