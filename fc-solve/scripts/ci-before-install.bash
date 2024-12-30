@@ -31,7 +31,7 @@ eval "$(perl -Mlocal::lib=$HOME/perl_modules)"
     # For the fc-solve docs
 gem install --bindir "$userbin" --user asciidoctor
     # For wml
-cpanm --notest Bit::Vector Carp::Always Class::XSAccessor File::Which GD Getopt::Long HTML::Toc HTML::TocGenerator IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
+cpanm --notest Bit::Vector Carp::Always Class::XSAccessor Docker::CLI::Wrapper File::Which GD Getopt::Long HTML::Toc HTML::TocGenerator IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
 cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
     # - bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'libtap' 'https://github.com/shlomif/libtap-prev.git'
 LIBS="-lm" bash fc-solve/scripts/install-git-autoconfy-program-system-wide.bash 'git' '.' 'https://github.com/hypermail-project/hypermail.git' ""
