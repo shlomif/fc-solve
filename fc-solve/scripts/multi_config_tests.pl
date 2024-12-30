@@ -774,8 +774,28 @@ _chdir_run(
     sub {
         local $ENV{'CC'}      = 'clang';
         local $ENV{'REBUILD'} = '1';
-        my $path = path("B-opencl/board_gen");
+        my $base_path = path("B-opencl")->absolute();
+        my $path      = path("B-opencl/board_gen")->absolute();
+        my $inst_path = path("INST-opencl/board_gen")->absolute();
         $path->mkdir();
+        local $ENV{PATH} = $ENV{PATH} . ":${inst_path}/bin";
+
+        _chdir_run(
+            $base_path,
+            sub {
+                warn qx#pwd#;
+                run_cmd(
+                    "OpenCL tests setup",
+                    {
+                        cmd => [
+                            "bash",
+                            "-c",
+"../scripts/Tatzer --prefix $inst_path && make install",
+                        ]
+                    }
+                );
+            }
+        );
 
         _chdir_run(
             $path,
