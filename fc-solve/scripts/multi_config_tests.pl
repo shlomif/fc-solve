@@ -772,13 +772,14 @@ _chdir_run(
 _chdir_run(
     '../',
     sub {
+        my $base_path      = path("B-opencl")->absolute();
+        my $board_gen_path = $base_path->child("board_gen")->absolute();
+        my $inst_path      = path("INST-opencl")->absolute();
+        $board_gen_path->mkdir();
+
         local $ENV{'CC'}      = 'clang';
         local $ENV{'REBUILD'} = '1';
-        my $base_path = path("B-opencl")->absolute();
-        my $path      = path("B-opencl/board_gen")->absolute();
-        my $inst_path = path("INST-opencl/board_gen")->absolute();
-        $path->mkdir();
-        local $ENV{PATH} = $ENV{PATH} . ":${inst_path}/bin";
+        local $ENV{PATH}      = $ENV{PATH} . ":${inst_path}/bin";
 
         _chdir_run(
             $base_path,
@@ -798,7 +799,7 @@ _chdir_run(
         );
 
         _chdir_run(
-            $path,
+            $board_gen_path,
             sub {
                 warn qx#pwd#;
                 run_cmd(
