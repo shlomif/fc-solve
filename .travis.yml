@@ -29,6 +29,8 @@ addons:
             - lynx
             - mercurial
             - ninja-build
+            - ocl-icd-opencl-dev
+            - opencl-headers
             - optipng
             - perl
             - pysassc
