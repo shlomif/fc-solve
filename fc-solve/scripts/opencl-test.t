@@ -6,7 +6,9 @@ use Test::More tests => 7;
 
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 my $lib           = "libopencl_find_deal_idx.so";
-my $board_gen_dir = "../../source/board_gen";
+my $source_dir    = "../../source";
+my $board_gen_dir = "$source_dir/board_gen";
+my $include_dir   = "$source_dir/include";
 
 my $gen_ocl_py_prog =
     "$board_gen_dir/find-freecell-deal-index-generate-opencl-code.py";
@@ -39,7 +41,7 @@ qq#python3 "$gen_ocl_py_prog" --ms <(pi-make-microsoft-freecell-board -t "24")#,
             cmd => [
                 "bash",
                 "-c",
-qq#\${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" \${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL#
+qq#\${CC:-clang} -shared -fPIC -O3 -march=native -flto -o "$lib" -I ~/Download/unpack/to-del/www.dmi.unict.it/bilotta/gpgpu/svolti/aa201920/opencl/ -I "$board_gen_dir" -I "$include_dir" \${WCFLAGS:--Weverything} "opencl_find_deal_idx.c" -lOpenCL#
             ]
         }
     );
