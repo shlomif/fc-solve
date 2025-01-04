@@ -814,31 +814,36 @@ _chdir_run(
     }
 );
 
-foreach my $dir_path_name (
-    '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
-    '../../cpan/Freecell-Deal-MS/',
-    )
-{
-    _chdir_run(
-        $dir_path_name,
-        sub {
-            my ($mod) = ( $dir_path_name =~ m#/([^/]+)/\z#ms )
-                or
-                Carp::confess("Cannot extract basename from '$dir_path_name'");
-            return run_cmd( "$mod dzil", { cmd => [qw(dzil test --all)] } );
-        }
-    );
-}
-
 use Getopt::Long qw/ GetOptions /;
 
 my $include_filter;
 my $only_check_ready;
+my $skip_dzil_tests;
 
 GetOptions(
     "include=s"         => \$include_filter,
     "only-check-ready!" => \$only_check_ready,
+    "skip-dzil-tests!"  => \$$skip_dzil_tests,
 ) or die $!;
+
+if ( not $skip_dzil_tests )
+{
+    foreach my $dir_path_name (
+        '../../cpan/Games-Solitaire-Verify/Games-Solitaire-Verify/',
+        '../../cpan/Freecell-Deal-MS/',
+        )
+    {
+        _chdir_run(
+            $dir_path_name,
+            sub {
+                my ($mod) = ( $dir_path_name =~ m#/([^/]+)/\z#ms )
+                    or Carp::confess(
+                    "Cannot extract basename from '$dir_path_name'");
+                return run_cmd( "$mod dzil", { cmd => [qw(dzil test --all)] } );
+            }
+        );
+    }
+}
 
 if ($only_check_ready)
 {
