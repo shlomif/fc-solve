@@ -23,6 +23,7 @@ addons:
             - libgoogle-perftools-dev
             - libhunspell-dev
             - libperl-dev
+            - libpocl-dev
             - libxml-libxslt-perl
             - libxml2-dev
             - libxslt1-dev
