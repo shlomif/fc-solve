@@ -46,7 +46,7 @@ make
 # FCS_TEST_BUILD=1 perl ../source/run-tests.pl --execute="perl `pwd`/../source/t/t/build*.t"
 FCS_TEST_BUILD=1 perl ../source/run-tests.pl --glob='build*.t'
 sudo dnf -y install clang clang-devel cpanminus perl-Code-TidyAll perl-LWP-Protocol-https nodejs nodejs-npm ocl-icd-devel opencl-headers pocl pocl-devel wget
-sudo cpanm Docker::CLI::Wrapper::Container Text::Sprintf::Named
+sudo cpanm Docker::CLI::Wrapper::Container Text::Sprintf::Named Perl::Tidy
 ( cd ../site/wml && bash bin/install-npm-deps.sh )
 perl ../scripts/multi_config_tests.pl --only-check-ready --skip-dzil-tests
 perl ../scripts/multi_config_tests.pl --include 'OpenCL' --skip-dzil-tests
