@@ -45,7 +45,7 @@ sub gen_progress_charts
         push @funcs, $func_id;
         $fh->print(
             qq#<h4 id="queue-items-$deal">Deal @{[format_num($deal)]}</h4>\n#);
-        $fh->print( <<"EOF");
+        $fh->print(<<"EOF");
     <div class="demo-container">
         <div id="$chart_id" class="demo-placeholder"></div>
     </div>
@@ -68,7 +68,7 @@ qq#<textarea id="$data_id" cols="40" rows="20" readonly="readonly" class="fcs_da
         );
         $fh->print(qq#</textarea>\n<br />\n#);
     }
-    $fh->print( <<"EOF");
+    $fh->print(<<"EOF");
 <script>
 function _fcs_chart_all(chart_data) {
     var funcs = [@{[join",",@funcs]}];
@@ -99,7 +99,7 @@ sub gen_summary_table
     my $try2 = $args->{try2} // 0;
     my $fh   = $args->{fh};
 
-    $fh->print( <<'EOF');
+    $fh->print(<<'EOF');
 <table class="fcs_depth_dbm_deals">
 <tr>
 <th>Deal No.</th>

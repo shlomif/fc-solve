@@ -892,7 +892,7 @@ sub decode
                                 _assert_def(
                                     $variant_states
                                         ->REVERSE_CARD_PAIR_STATES_MAP(
-                                    )->[$_]->[$card_idx]
+                                        )->[$_]->[$card_idx]
                                 )
                             } @options
                         );

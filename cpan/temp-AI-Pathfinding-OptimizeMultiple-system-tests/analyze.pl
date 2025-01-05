@@ -19,8 +19,9 @@ my @selected_scans = @$sel_scans;
 my $scans_data =
     MyInput::get_scans_data( $start_board, $num_boards, \@selected_scans );
 
-my $which_boards = which(
-    ( ( $scans_data > $above_how_much ) | ( $scans_data < 0 ) )->xchg( 0, 1 )
+my $which_boards =
+    which( ( ( $scans_data > $above_how_much ) | ( $scans_data < 0 ) )
+    ->xchg( 0, 1 )
         ->sumover() == scalar(@selected_scans) ) + 1;
 
 print "The indexes of the tests above $above_how_much are:\n";

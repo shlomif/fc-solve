@@ -56,7 +56,9 @@ while ( my ( $scan_index, $scan ) = each(@$selected_scans) )
     $x = ( $x >= 0 ) * $x + ( $x < 0 ) * PDL->ones( $x->dims() ) * 100_000;
 
     my $histograms =
-        $x->xchg( 0, 1 )->qsorti()->xchg( 0, 1 )
+        $x->xchg( 0, 1 )
+        ->qsorti()
+        ->xchg( 0, 1 )
         ->histogram( 1, 0, scalar(@results) );
 
     # print $histograms;

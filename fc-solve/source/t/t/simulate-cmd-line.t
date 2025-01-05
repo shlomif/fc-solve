@@ -33,7 +33,7 @@ check( [ '-s', '-i' ], [ '-s', '-i' ], "Basic test", );
 check(
     [ '-l', 'cpb' ],
     [
-        split( /\s+/, <<'EOF'),
+        split( /\s+/, <<'EOF' ),
 --flare-name 1 --method soft-dfs -to 0123456789 -opt
 -nf --flare-name 2 --method soft-dfs -to 0123467 -opt
 -nf --flare-name 3 --method random-dfs -seed 2 -to 0[01][23456789] -opt

@@ -20,7 +20,7 @@ closedir($dh);
 @files = map  { $_ . ( ( -d "$dir_name/$_" ) ? "/" : "" ) } @files;
 
 open my $out, '>', $filename;
-print {$out} <<"EOF" ;
+print {$out} <<"EOF";
 <!DOCTYPE html
     PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
     "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -42,7 +42,7 @@ print {$out} join(
     } @files
 );
 
-print {$out} <<"EOF" ;
+print {$out} <<"EOF";
 </ul>
 <h3><a href="../">Up one level</a></h3>
 </body>

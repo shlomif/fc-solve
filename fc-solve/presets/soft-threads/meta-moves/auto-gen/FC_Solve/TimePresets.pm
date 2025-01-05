@@ -64,7 +64,8 @@ sub calc_scans_lens_data
 
     my $scans_lens_data =
         PDL::cat( @{$data_hash_ref}{ @{ $self->get_scan_ids_aref } } )
-        ->xchg( 1, 3 )->clump( 2 .. 3 );
+        ->xchg( 1, 3 )
+        ->clump( 2 .. 3 );
 
     return $scans_lens_data;
 }

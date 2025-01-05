@@ -106,7 +106,7 @@ vtest(
         theme => [
 
             # This is to avoid warnings on commas in qw(...)
-            grep { /\S/ } split( /\s+/, <<'EOF')
+            grep { /\S/ } split( /\s+/, <<'EOF' )
 
 --method a-star -asw 0.2,0.8,0,0,0 -step 500 --st-name 11 --flare-name 11 -nf
 --method a-star -to 0123467 -asw 0.5,0,0.3,0,0 -step 500 --st-name 18 --flare-name 18 -nf

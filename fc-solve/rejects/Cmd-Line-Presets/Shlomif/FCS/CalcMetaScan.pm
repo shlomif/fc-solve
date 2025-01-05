@@ -375,7 +375,9 @@ sub calc_flares_meta_scan
     my $num_moves = $self->_scans_data->slice(":,:,1");
 
     # The number of moves for dimension 0,1,2 above.
-    my $num_moves_repeat = $num_moves->clump( 1 .. 2 )->xchg( 0, 1 )
+    my $num_moves_repeat =
+        $num_moves->clump( 1 .. 2 )
+        ->xchg( 0, 1 )
         ->dummy( 0, $self->_get_num_scans() );
 
     my $selected_scan_idx;
@@ -404,7 +406,8 @@ FLARES_LOOP:
         my $iters = $self->_scans_data()->slice(":,:,0");
 
         my $iters_repeat =
-            $iters->dummy( 0, $self->_get_num_scans() )->xchg( 1, 2 )
+            $iters->dummy( 0, $self->_get_num_scans() )
+            ->xchg( 1, 2 )
             ->clump( 2 .. 3 );
 
         # print "\$iters_repeat =", join(",",$iters_repeat->dims()), "\n";

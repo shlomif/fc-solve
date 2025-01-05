@@ -11,7 +11,9 @@ has 'games' => (
     is      => 'ro',
     default => sub {
         my @lines =
-            path(__FILE__)->parent(5)->child(qw(source USAGE.asciidoc))
+            path(__FILE__)
+            ->parent(5)
+            ->child(qw(source USAGE.asciidoc))
             ->lines_utf8( { chomp => 1 } );
         my @ret;
         foreach my $l (@lines)
