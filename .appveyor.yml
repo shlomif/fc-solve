@@ -1,7 +1,7 @@
 ---
 environment:
     MSYS_PACKAGES: mingw-w64-x86_64-cmocka mingw-w64-i686-cmocka mingw-w64-x86_64-pkg-config mingw-w64-i686-pkg-config
-    PY3MODS: cffi freecell_solver pycotap pysol_cards random2 six
+    PY3MODS: cffi freecell_solver pycotap pysol_cards six
 # Shamelessly taken from https://github.com/plicease/Dist-Zilla-PluginBundle-Author-Plicease/blob/master/.appveyor.yml
 # Thanks!
 install:

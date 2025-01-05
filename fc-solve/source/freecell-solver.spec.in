@@ -59,7 +59,6 @@ BuildRequires: python3-cffi
 BuildRequires: python3-freecell_solver
 BuildRequires: python3-pycotap
 BuildRequires: python3-pysol-cards
-BuildRequires: python3-random2
 BuildRequires: rpm-build
 BuildRequires: tar
 BuildRequires: the_silver_searcher
