@@ -146,7 +146,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
     FILE *const output_fh = fopen(output_filename, "wt");
     for (int min_depth_for_scan2 = 0;
-         min_depth_for_scan2 < max_var_depth_to_check; min_depth_for_scan2++)
+        min_depth_for_scan2 < max_var_depth_to_check; min_depth_for_scan2++)
     {
         void *const instance = freecell_solver_user_alloc();
         if (start_from_arg >= 0)
@@ -164,7 +164,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         fcs_state_string state_string;
         get_board__setup_string(state_string);
         for (board_num = start_board, curr_result = results;
-             board_num <= end_board; board_num++, curr_result++)
+            board_num <= end_board; board_num++, curr_result++)
         {
             get_board_l__without_setup(board_num, state_string);
 
@@ -187,7 +187,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
 
         fprintf(output_fh, "Depth == %d\n\n", min_depth_for_scan2);
         for (board_num = start_board, curr_result = results;
-             board_num <= end_board; board_num++, curr_result++)
+            board_num <= end_board; board_num++, curr_result++)
         {
             fprintf(output_fh, "board[%ld].ret == %d\n", (long)board_num,
                 curr_result->verdict);

@@ -81,7 +81,7 @@ static inline void cache_populate_from_pre_cache(
     rb_t_init(&trav, kaz_tree);
 
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
-         item = rb_t_next(&trav))
+        item = rb_t_next(&trav))
     {
         cache_insert(
             cache, &(((pre_cache_key_val_pair *)(item))->key), NULL, '\0');
@@ -89,7 +89,7 @@ static inline void cache_populate_from_pre_cache(
 #else
     var_AUTO(kaz_tree, pre_cache->kaz_tree);
     for (dnode_t *node = fc_solve_kaz_tree_first(kaz_tree); node;
-         node = fc_solve_kaz_tree_next(kaz_tree, node))
+        node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
         cache_insert(
             cache, &(((pre_cache_key_val_pair *)(node->dict_key))->key));
@@ -299,7 +299,7 @@ static inline void mark_and_sweep_old_states(
     const size_t items_count = kaz_tree->rb_count;
     size_t idx = 0;
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
-         item = rb_t_next(&trav))
+        item = rb_t_next(&trav))
     {
         if (!rb_get_decommissioned_flag(item))
         {

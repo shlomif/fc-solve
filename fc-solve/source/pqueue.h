@@ -157,7 +157,7 @@ static inline void fc_solve_pq_pop(
     size_t i;
     size_t child;
     for (i = PQ_FIRST_ENTRY;
-         (child = PQ_LEFT_CHILD_INDEX(i)) <= new_current_size; i = child)
+        (child = PQ_LEFT_CHILD_INDEX(i)) <= new_current_size; i = child)
     {
         // set child to the smaller of the two children.
         if ((child != new_current_size) &&

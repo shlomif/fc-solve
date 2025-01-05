@@ -80,7 +80,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     fcs_state_string state_string;
     get_board__setup_string(state_string);
     for (fc_solve_ms_deal_idx_type board_num = start_board;
-         board_num <= end_board; ++board_num)
+        board_num <= end_board; ++board_num)
     {
         get_board_l__without_setup(board_num, state_string);
 

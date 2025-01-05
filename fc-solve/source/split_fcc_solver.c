@@ -122,8 +122,7 @@ static inline void instance_init(dbm_solver_instance *const instance,
         size_t curr_depth = 0;
         {
             for (size_t i = 0;
-                 i < COUNT(fingerprint_which_irreversible_moves_bitmask->s);
-                 ++i)
+                i < COUNT(fingerprint_which_irreversible_moves_bitmask->s); ++i)
             {
                 unsigned char c =
                     fingerprint_which_irreversible_moves_bitmask->s[i];
@@ -364,7 +363,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
             // Encode all the states.
             for (var_AUTO(derived_iter, derived_list); derived_iter;
-                 derived_iter = derived_iter->next)
+                derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,
                     &(derived_iter->state), &(derived_iter->key));

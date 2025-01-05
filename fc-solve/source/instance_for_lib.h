@@ -36,7 +36,7 @@ static inline void fcs_free_moves_list(fcs_soft_thread *const soft_thread)
             const_AUTO(num, arr->by_depth_units[unit_idx].move_funcs.num);
 
             for (typeof(arr->by_depth_units[unit_idx].move_funcs.num) i = 0;
-                 i < num; i++)
+                i < num; i++)
             {
                 free(groups[i].move_funcs);
             }

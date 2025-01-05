@@ -56,7 +56,7 @@ static inline void sort_derived_states(
     for (var_AUTO(b, start + 1); b < limit; b++)
     {
         for (var_AUTO(c, b); (c > start) && (c[0].context.i < c[-1].context.i);
-             c--)
+            c--)
         {
             const_AUTO(swap_temp, c[-1]);
             c[-1] = c[0];
@@ -551,7 +551,7 @@ static inline void col_seqs_iter__calc_end(col_seqs_iter *const iter)
     FCS_ON_NOT_FC_ONLY(const_SLOT(sequences_are_built_by, iter));
     const_SLOT(col, iter);
     for ((*iter).seq_end = (*iter).c; (*iter).seq_end < (*iter).col_len_minus_1;
-         ++((*iter).seq_end))
+        ++((*iter).seq_end))
     {
         if (!fcs_is_parent_card(fcs_col_get_card(col, (*iter).seq_end + 1),
                 fcs_col_get_card(col, (*iter).seq_end)))
@@ -995,7 +995,7 @@ DECLARE_MOVE_FUNCTION(fc_solve_sfs_move_cards_to_a_different_parent)
         int min_card_height;
         fcs_card lower_card;
         for (min_card_height = cards_num - 2; min_card_height >= 0;
-             upper_card = lower_card, --min_card_height)
+            upper_card = lower_card, --min_card_height)
         {
             lower_card = fcs_col_get_card(col, min_card_height);
             if (!fcs_is_parent_card(upper_card, lower_card))

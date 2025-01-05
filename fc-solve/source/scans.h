@@ -103,7 +103,7 @@ static inline void fc_solve__calc_positions_by_rank_data(
                 fcs_card dest_below_card;
                 dest_card = fcs_col_get_card(dest_col, 0);
                 for (int dc = 0; dc < top_card_idx;
-                     dc++, dest_card = dest_below_card)
+                    dc++, dest_card = dest_below_card)
                 {
                     dest_below_card = fcs_col_get_card(dest_col, dc + 1);
                     if (!fcs_is_parent_card(dest_below_card, dest_card))
@@ -128,7 +128,7 @@ static inline const int8_t *fc_solve_calc_positions_by_rank_location(
     if (soft_thread->super_method_type == FCS_SUPER_METHOD_DFS)
     {
         return (DFS_VAR(soft_thread, soft_dfs_info)[DFS_VAR(soft_thread, depth)]
-                    .positions_by_rank);
+                .positions_by_rank);
     }
     else
     {

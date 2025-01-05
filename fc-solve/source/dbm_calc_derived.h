@@ -64,7 +64,7 @@ static inline void fcs_derived_state_list__recycle(
 
 #define COPY_INDIRECT_COLS()                                                   \
     for (int copy_col_idx = 0; copy_col_idx < LOCAL_STACKS_NUM;                \
-         copy_col_idx++)                                                       \
+        copy_col_idx++)                                                        \
     {                                                                          \
         const_AUTO(copy_stack_col,                                             \
             fcs_state_get_col((ptr_new_state->state.s), copy_col_idx));        \
@@ -264,7 +264,7 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
         // to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
         const size_t count = moves_seq->count;
         for (size_t pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
-             pos += FCS_FCC_NUM_MOVES_IN_ITEM)
+            pos += FCS_FCC_NUM_MOVES_IN_ITEM)
         {
             iter = &((*iter)->next);
         }
@@ -272,7 +272,7 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
         size_t pos = count;
 
         for (size_t pos_moves_so_far = 0; pos_moves_so_far < count_moves_so_far;
-             pos_moves_so_far++)
+            pos_moves_so_far++)
         {
             if (pos % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
             {
@@ -533,7 +533,7 @@ static inline bool instance_solver_thread_calc_derived_states(
     // Perform Horne's Prune on all the states,
     // or just set their num irreversible moves counts.
     for (var_AUTO(derived_iter, *derived_list); derived_iter;
-         derived_iter = derived_iter->next)
+        derived_iter = derived_iter->next)
     {
         derived_iter->num_non_reversible_moves_including_prune =
             (derived_iter->core_irreversible_moves_count +

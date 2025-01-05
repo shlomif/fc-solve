@@ -203,8 +203,8 @@ fc_solve_preset_ret_code_t fc_solve_apply_preset_by_ptr(
                     soft_thread->by_depth_moves_order.by_depth_moves;
 
                 for (size_t depth_idx = 0;
-                     depth_idx < soft_thread->by_depth_moves_order.num;
-                     ++depth_idx)
+                    depth_idx < soft_thread->by_depth_moves_order.num;
+                    ++depth_idx)
                 {
                     apply_moves(&by_depth_moves_order[depth_idx].moves_order,
                         preset.allowed_moves, preset.moves_order);
@@ -224,7 +224,7 @@ static inline fc_solve_preset_ret_code_t fcs_get_preset_by_id(
     const int preset_id, const fcs_preset **const preset_ptr)
 {
     for (size_t preset_index = 0; preset_index < COUNT(fcs_presets);
-         preset_index++)
+        preset_index++)
     {
         if (fcs_presets[preset_index].preset_id == preset_id)
         {

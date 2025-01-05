@@ -176,7 +176,7 @@ static inline void fc_solve_move_sequence_function(
     const int8_t *const last_pos_idx = &positions_by_rank[pos_pos.end];        \
                                                                                \
     for (; pos_idx_to_check < last_pos_idx;                                    \
-         pos_idx_to_check += suit_positions_by_rank_step)
+        pos_idx_to_check += suit_positions_by_rank_step)
 
 #else
 
@@ -204,15 +204,15 @@ static inline void fc_solve_move_sequence_function(
                                                                                \
     for (pos_idx_to_check += POS_BY_RANK_MAP(                                  \
              FCS_PROTO_CARD_SUIT_POSITIONS_BY_RANK_INITIAL_OFFSET(src_card));  \
-         pos_idx_to_check < last_pos_idx;                                      \
-         pos_idx_to_check += suit_positions_by_rank_step)
+        pos_idx_to_check < last_pos_idx;                                       \
+        pos_idx_to_check += suit_positions_by_rank_step)
 
 #endif
 
 #define SET_empty_stack_idx(empty_stack_idx)                                   \
     stack_i empty_stack_idx;                                                   \
     for (empty_stack_idx = 0; empty_stack_idx < LOCAL_STACKS_NUM;              \
-         empty_stack_idx++)                                                    \
+        empty_stack_idx++)                                                     \
     {                                                                          \
         if (fcs_state_col_is_empty(state_key, empty_stack_idx))                \
         {                                                                      \

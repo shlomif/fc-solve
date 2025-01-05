@@ -105,7 +105,7 @@ static inline void deals_ranges__free(void) { free(deals_ranges_array); }
     {                                                                          \
         const_AUTO(board_range, deals_ranges_array[deal_idx]);                 \
         for (fcs_deals_range_int var = board_range.start;                      \
-             var <= board_range.end; ++var)                                    \
+            var <= board_range.end; ++var)                                     \
         {
 
 #define DEALS_ITERATE__END()                                                   \

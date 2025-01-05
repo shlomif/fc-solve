@@ -77,7 +77,7 @@ extern "C" void fc_solve_dbm_store_offload_pre_cache(
     for (item = avl_t_first(&trav, kaz_tree); item; item = avl_t_next(&trav))
 #else
     for (node = fc_solve_kaz_tree_first(kaz_tree); node;
-         node = fc_solve_kaz_tree_next(kaz_tree, node))
+        node = fc_solve_kaz_tree_next(kaz_tree, node))
 #define item (node->dict_key)
 #endif
     {

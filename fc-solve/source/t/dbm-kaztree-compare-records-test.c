@@ -20,7 +20,7 @@ static void main_tests(void **state GCC_UNUSED)
         bool all_good = true;
 
         for (size_t pos_idx = 1; pos_idx < sizeof(fcs_encoded_state_buffer);
-             pos_idx++)
+            pos_idx++)
         {
             fcs_dbm_record rec_a, rec_b;
 

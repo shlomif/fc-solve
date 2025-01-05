@@ -13,7 +13,7 @@ long long DLLEXPORT __attribute__((pure)) fc_solve_find_deal_in_range(
     const uint_fast32_t *const ints)
 {
     for (fc_solve_ms_deal_idx_type deal_idx = (microsoft_rand)start;
-         deal_idx <= end; ++deal_idx)
+        deal_idx <= end; ++deal_idx)
     {
         microsoft_rand seedx = microsoft_rand__calc_init_seedx(deal_idx);
         const uint_fast32_t *ptr = ints;

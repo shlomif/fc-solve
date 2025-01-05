@@ -219,7 +219,7 @@ void fc_solve_state_as_string(char *output_s, const fcs_state *const state,
 #if MAX_NUM_FREECELLS > 0
         for (; i < ((FREECELLS_NUM__VAL / 4) +
                        ((FREECELLS_NUM__VAL % 4 == (0)) ? 0 : 1));
-             ++i)
+            ++i)
         {
             char dashes_s[128];
             char freecells_s[128];

@@ -201,7 +201,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
             for (var_AUTO(derived_iter, derived_lists[batch_i]); derived_iter;
-                 derived_iter = derived_iter->next)
+                derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,
                     &(derived_iter->state), &(derived_iter->key));

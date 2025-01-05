@@ -82,7 +82,7 @@ static uint8_t get_move_from_parent_to_child(
         true);
 
     for (var_AUTO(derived_iter, derived_list); derived_iter;
-         derived_iter = derived_iter->next)
+        derived_iter = derived_iter->next)
     {
         fcs_encoded_state_buffer got_child;
         fcs_init_and_encode_state(

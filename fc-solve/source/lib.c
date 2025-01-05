@@ -291,7 +291,7 @@ static inline void init_instance(fcs_instance *const instance)
             SMALLOC(move_funcs, sizeof(total_move_funcs_bitmask) * 8);
 
         for (size_t bit_idx = 0; total_move_funcs_bitmask != 0;
-             ++bit_idx, total_move_funcs_bitmask >>= 1)
+            ++bit_idx, total_move_funcs_bitmask >>= 1)
         {
             if ((total_move_funcs_bitmask & 0x1) != 0)
             {
@@ -950,7 +950,7 @@ static inline void free_states(fcs_instance *const instance)
                 const_AUTO(end_element,
                     elems + BEFS_VAR(soft_thread, pqueue).current_size);
                 for (pq_element *next_element = elems + PQ_FIRST_ENTRY;
-                     next_element <= end_element; next_element++)
+                    next_element <= end_element; next_element++)
                 {
                     if (!fcs__is_state_a_dead_end((*next_element).val))
                     {
@@ -1305,11 +1305,11 @@ static inline fc_solve_solve_process_ret_t dfs_solve(
 #ifdef FCS_WITHOUT_VISITED_ITER
                         0
 #else
-                        ((DEPTH() == 0) ? 0
-                                        : (fcs_int_limit_t)FCS_S_VISITED_ITER(
-                                              DFS_VAR(soft_thread,
-                                                  soft_dfs_info)[DEPTH() - 1]
-                                                  .state))
+                        ((DEPTH() == 0)
+                                ? 0
+                                : (fcs_int_limit_t)FCS_S_VISITED_ITER(DFS_VAR(
+                                      soft_thread, soft_dfs_info)[DEPTH() - 1]
+                                          .state))
 #endif
                     );
                 }
@@ -2002,7 +2002,7 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
     {                                                                          \
         const_SLOT(end_of_instances_list, user);                               \
         for (fcs_instance_item *instance_item = user->instances_list;          \
-             instance_item < end_of_instances_list; ++instance_item)           \
+            instance_item < end_of_instances_list; ++instance_item)            \
         {
 
 #ifdef FCS_WITH_FLARES
@@ -2010,7 +2010,7 @@ static inline fcs_instance_item *curr_inst(fcs_user *const user)
 #define INSTANCE_ITEM_FLARES_LOOP_START()                                      \
     const flare_item *const end_of_flares = instance_item->end_of_flares;      \
     for (flare_item *flare = instance_item->flares; flare < end_of_flares;     \
-         ++flare)                                                              \
+        ++flare)                                                               \
     {
 #else
 
@@ -2449,7 +2449,7 @@ int DLLEXPORT freecell_solver_user_set_depth_tests_order(
     SET_ERROR_VAR(error_string, static_error_string);
 
     for (size_t d = depth_idx + 1; d < soft_thread->by_depth_moves_order.num;
-         ++d)
+        ++d)
     {
         moves_order__free(
             &(soft_thread->by_depth_moves_order.by_depth_moves[d].moves_order));
@@ -3023,7 +3023,7 @@ static inline bool set_upper_limit(
 
     fcs_int_limit_t mymin = local_limit();
     for (size_t limit_idx = 0; limit_idx < NUM_ITERS_LIMITS_MINUS_1;
-         limit_idx++)
+        limit_idx++)
     {
         const_AUTO(new_lim, limits[limit_idx]);
         if (new_lim >= 0)
@@ -3394,8 +3394,8 @@ int DLLEXPORT freecell_solver_user_get_next_move(
 #endif
 
     fc_solve_apply_move(&(user->running_state.s), NULL,
-        user_move_to_internal_move(
-                *user_move = flare->moves_seq.moves[flare->next_move_idx++])
+        user_move_to_internal_move(*user_move = flare->moves_seq
+                                       .moves[flare->next_move_idx++])
             PASS_FREECELLS(INSTANCE_FREECELLS_NUM)
                 PASS_STACKS(INSTANCE_STACKS_NUM));
 
@@ -3680,7 +3680,7 @@ int DLLEXPORT freecell_solver_user_set_num_freecells(
 int DLLEXPORT freecell_solver_user_get_num_freecells(void *const api_instance)
 {
     return (((fcs_user *const)api_instance)
-                ->common_preset.game_params.freecells_num);
+            ->common_preset.game_params.freecells_num);
 }
 #endif
 

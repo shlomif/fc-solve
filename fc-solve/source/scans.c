@@ -290,9 +290,9 @@ void fc_solve_soft_thread_init_befs_or_bfs(fcs_soft_thread *const soft_thread)
         fcs_move_func *moves_list = NULL;
 
         for (size_t group_idx = 0;
-             group_idx < soft_thread->by_depth_moves_order.by_depth_moves[0]
-                             .moves_order.num;
-             ++group_idx)
+            group_idx <
+            soft_thread->by_depth_moves_order.by_depth_moves[0].moves_order.num;
+            ++group_idx)
         {
             add_to_move_funcs_list(&moves_list, &num,
                 soft_thread->by_depth_moves_order.by_depth_moves[0]
@@ -320,7 +320,7 @@ static inline void befs__insert_derived_states(
 {
     fcs_derived_states_list_item *derived_iter, *derived_end;
     for (derived_end = (derived_iter = derived.states) + derived.num_states;
-         derived_iter < derived_end; derived_iter++)
+        derived_iter < derived_end; derived_iter++)
     {
         const_AUTO(scans_ptr_new_state, derived_iter->state_ptr);
         if (is_befs)
@@ -513,7 +513,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
         // done for BFS and BeFS.
         derived.num_states = 0;
         for (const fcs_move_func *move_func_ptr = moves_list;
-             move_func_ptr < moves_list_end; move_func_ptr++)
+            move_func_ptr < moves_list_end; move_func_ptr++)
         {
             move_func_ptr->f(soft_thread, pass, &derived);
         }

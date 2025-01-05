@@ -156,7 +156,7 @@ avl_key_type *rb_probe(struct rb_table *tree, void *item)
     da[0] = 0;
     k = 1;
     for (p = TREE_AVL_ROOT(tree); p != NULL;
-         p = rb_process_link(p->rb_mylink[da[k - 1]]))
+        p = rb_process_link(p->rb_mylink[da[k - 1]]))
     {
         int cmp = tree->rb_compare(item, NODE_DATA_PTR(p)
 #ifdef AVL_with_rb_param

@@ -706,7 +706,7 @@ static inline int update_col_cards_under_sequences(
              prev_card = fcs_col_get_card(col, d - 1);
              fcs_is_parent_card(this_card, prev_card);
          });
-         d--, this_card = prev_card)
+        d--, this_card = prev_card)
     {
     }
     return d;

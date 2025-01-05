@@ -148,7 +148,7 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 {
     const_AUTO(num_soft_threads, instance->hard_thread.num_soft_threads);
     for (fastest_type_for_num_soft_threads__unsigned st_idx = 0;
-         st_idx <= num_soft_threads; ++st_idx)
+        st_idx <= num_soft_threads; ++st_idx)
     {
         fcs_soft_thread *soft_thread;
         if (st_idx < num_soft_threads)
@@ -391,7 +391,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             case FCS_PATS__TYPE_FREECELL: {
                 stack_i src_col_idx;
                 for (src_col_idx = 0; src_col_idx < STACKS_NUM__VAL;
-                     ++src_col_idx)
+                    ++src_col_idx)
                 {
                     var_AUTO(
                         src_col, fcs_state_get_col(s_and_info.s, src_col_idx));
@@ -488,7 +488,7 @@ extern void fc_solve_trace_solution(fcs_instance *const instance)
             const fcs_move_stack *const stack = FCS_S_MOVES_TO_PARENT(s1);
             const fcs_internal_move *const moves = stack->moves;
             for (long move_idx = (long)stack->num_moves - 1; move_idx >= 0;
-                 --move_idx)
+                --move_idx)
             {
                 fcs_move_stack_push(solution_moves_ptr, moves[move_idx]);
             }

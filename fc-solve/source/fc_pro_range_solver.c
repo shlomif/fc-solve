@@ -102,7 +102,7 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
         get_board__setup_string(buffer);
     }
     for (fc_solve_ms_deal_idx_type board_num = start_board;
-         board_num <= end_board; board_num++)
+        board_num <= end_board; board_num++)
     {
         fcs_state_keyval_pair pos;
         DECLARE_IND_BUF_T(indirect_stacks_buffer)

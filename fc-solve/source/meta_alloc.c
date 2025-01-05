@@ -44,7 +44,7 @@ void fc_solve_compact_allocator_finish(compact_allocator *const allocator)
     var_AUTO(bin, meta->recycle_bin);
     // Enqueue all the allocated buffers in the meta allocator for re-use.
     for (iter = allocator->old_list, iter_next = OLD_LIST_NEXT(iter); iter_next;
-         iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
+        iter = iter_next, iter_next = OLD_LIST_NEXT(iter))
     {
         OLD_LIST_NEXT(iter) = bin;
         bin = iter;

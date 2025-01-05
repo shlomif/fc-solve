@@ -307,7 +307,7 @@ static inline void delta_stater__fill_column_with_descendent_cards(
         for (int suit = (IS_BAKERS_DOZEN()
                              ? 0
                              : ((fcs_card_suit(parent_card) & (0x1)) ^ 0x1));
-             suit < FCS_NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
+            suit < FCS_NUM_SUITS; suit += (IS_BAKERS_DOZEN() ? 1 : 2))
         {
             const fcs_card candidate_card =
                 fcs_make_card((fcs_card)candidate_rank, (fcs_card)suit);

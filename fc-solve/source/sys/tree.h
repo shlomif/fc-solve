@@ -63,10 +63,7 @@
         struct type *sph_root; /* root of the tree */                          \
     }
 
-#define SPLAY_INITIALIZER(root)                                                \
-    {                                                                          \
-        NULL                                                                   \
-    }
+#define SPLAY_INITIALIZER(root) {NULL}
 
 #define SPLAY_INIT(root)                                                       \
     do                                                                         \
@@ -327,7 +324,7 @@
 
 #define SPLAY_FOREACH(x, name, head)                                           \
     for ((x) = SPLAY_MIN(name, head); (x) != NULL;                             \
-         (x) = SPLAY_NEXT(name, head, x))
+        (x) = SPLAY_NEXT(name, head, x))
 
 /* Macros that define a red-black tree */
 #define RB_HEAD(name, type)                                                    \
@@ -336,10 +333,7 @@
         struct type *rbh_root; /* root of the tree */                          \
     }
 
-#define RB_INITIALIZER(root)                                                   \
-    {                                                                          \
-        NULL                                                                   \
-    }
+#define RB_INITIALIZER(root) {NULL}
 
 #define RB_INIT(root)                                                          \
     do                                                                         \
@@ -712,8 +706,8 @@
     }                                                                          \
                                                                                \
     /* Finds the node with the same key as elm */                              \
-    attr struct type *__attribute__((pure))                                    \
-    name##_RB_FIND(struct name *head, struct type *elm)                        \
+    attr struct type *__attribute__((pure)) name##_RB_FIND(                    \
+        struct name *head, struct type *elm)                                   \
     {                                                                          \
         struct type *tmp = RB_ROOT(head);                                      \
         int comp;                                                              \
@@ -834,19 +828,19 @@
 
 #define RB_FOREACH_FROM(x, name, y)                                            \
     for ((x) = (y); ((x) != NULL) && ((y) = name##_RB_NEXT(x), (x) != NULL);   \
-         (x) = (y))
+        (x) = (y))
 
 #define RB_FOREACH_SAFE(x, name, head, y)                                      \
     for ((x) = RB_MIN(name, head);                                             \
-         ((x) != NULL) && ((y) = name##_RB_NEXT(x), (x) != NULL); (x) = (y))
+        ((x) != NULL) && ((y) = name##_RB_NEXT(x), (x) != NULL); (x) = (y))
 
 #define RB_FOREACH_REVERSE(x, name, head)                                      \
     for ((x) = RB_MAX(name, head); (x) != NULL; (x) = name##_RB_PREV(x))
 
 #define RB_FOREACH_REVERSE_FROM(x, name, y)                                    \
     for ((x) = (y); ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL);   \
-         (x) = (y))
+        (x) = (y))
 
 #define RB_FOREACH_REVERSE_SAFE(x, name, head, y)                              \
     for ((x) = RB_MAX(name, head);                                             \
-         ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL); (x) = (y))
+        ((x) != NULL) && ((y) = name##_RB_PREV(x), (x) != NULL); (x) = (y))
