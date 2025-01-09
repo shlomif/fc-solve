@@ -40,7 +40,7 @@
     "qunit": "^2.23.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
-    "rollup": "^4.29.1",
+    "rollup": "^4.30.1",
     "tap": "^21.0.1",
     "tar": "^7.4.3",
     "terser": "^5.37.0",
@@ -49,7 +49,7 @@
   },
   "devDependencies": {
     "eslint": "^9.17.0",
-    "typescript": "^5.7.2"
+    "typescript": "^5.7.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
