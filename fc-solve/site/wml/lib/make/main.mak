@@ -257,9 +257,6 @@ TYPESCRIPT_COMMON_DEPS = src/ts/web-fc-solve.ts src/ts/web-fcs-tests-strings.ts
 src/ts/web-fcs-tests-strings.ts: bin/gen-web-fc-solve-tests--texts-dictionary.pl lib/web-fcs-tests-strings/list.txt
 	$(PERL) $<
 
-# run_tsc = tsc --target es6 --moduleResolution node --module $1 --outDir $$(dirname $@) $<
-run_tsc = tsc --project lib/typescript/$1/tsconfig.json
-
 $(TYPESCRIPT_DEST_FILES): $(OUT_PREF)/%.js: src/ts/%.ts $(TYPESCRIPT_COMMON_DEPS)
 	$(call run_tsc,www)
 
