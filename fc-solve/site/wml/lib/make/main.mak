@@ -235,9 +235,7 @@ FCS_VALID_DEST = $(DEST_JS_DIR)/fcs-validate.js
 
 TYPESCRIPT_basenames = capitalize-cards.js chart-using-flot--4fc-intractable.js chart-using-flot--int128-opt.js expand-moves-ui.js fcs-base-ui.js fcs-chart--base.js fcs-validate.js find-fc-deal-ui.js find-fc-deal.js french-cards.js generic-tests-driver.js prange.js s2ints_js.js tests/fcs-common-constants.js tests/fcs-core.js tests/fcs-purejs-rand.js tests/fcs-ui.js tests/fcs-validate.js toggle_sect.js toggler.js web-fc-solve--expand-moves--mega-test.js web-fc-solve--expand-moves.js web-fc-solve-ui.js web-fc-solve.js web-fcs-api-base.js web-fcs-purejs-rand.js web-fcs-tests-strings.js
 
-TYPESCRIPT_DEST_FILES = $(patsubst %.js,$(OUT_PREF)/%.js,$(TYPESCRIPT_basenames))
-TYPESCRIPT_DEST_FILES__NODE = $(patsubst %.js,lib/for-node/js/%.js,$(TYPESCRIPT_basenames))
-TYPESCRIPT_COMMON_DEFS_FILES = src/ts/jq_qs.d.ts
+include lib/make/sf-javascripts.mak
 
 JSES_js_basenames = jq_qs.js libfcs-wrap.js libfind-deal-wrap.js $(Phoenix_JS_nonmin_BASE) s2i-test.js
 DEST_BABEL_JSES = $(call dest_jsify,$(JSES_js_basenames) $(TYPESCRIPT_basenames))
