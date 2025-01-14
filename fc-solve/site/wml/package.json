@@ -12,7 +12,7 @@
     "@babel/core": "^7.26.0",
     "@babel/preset-env": "^7.26.0",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^22.10.5",
+    "@types/node": "^22.10.6",
     "@types/qunit": "^2.19.12",
     "acorn": "^8.14.0",
     "amdefine": "^1.0.1",
@@ -24,7 +24,7 @@
     "coffeescript": "^2.7.0",
     "elliptic": "^6.6.1",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-prettier": "^9.1.0",
+    "eslint-config-prettier": "^10.0.1",
     "eslint-plugin-prettier": "^5.2.1",
     "flatted": "^3.3.2",
     "html-minifier": "^4.0.0",
@@ -36,7 +36,7 @@
     "npm": "^11.0.0",
     "param-case": "^4.0.0",
     "prettier": "^3.4.2",
-    "puppeteer": "^23.11.1",
+    "puppeteer": "^24.0.0",
     "qunit": "^2.23.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
@@ -48,7 +48,7 @@
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
-    "eslint": "^9.17.0",
+    "eslint": "^9.18.0",
     "typescript": "^5.7.3"
   },
   "scripts": {
