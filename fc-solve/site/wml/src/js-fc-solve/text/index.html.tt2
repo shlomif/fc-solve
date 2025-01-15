@@ -30,7 +30,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% INCLUDE set_up_requirejs %]
     [% incs %] {
     $(window._set_up_tabs);
-    web_ui.set_up(module_wrapper, solver);
+    web_ui.set_up(module_wrapper, solver_freecell_module);
 [% IF enable_jquery_ui %]
     $( "#output_tabs" ).tabs();
 [% END %]
@@ -41,7 +41,7 @@ card solitaire game, and <a href="#other_games">several related solitaire games<
 [% END %]
 
 [% BLOCK run_emscripten_common %]
-[% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) =>" , subject = "Solver" , %]
+[% INCLUDE emscripten_common incs = "require(['web-fc-solve-ui', 'solver-freecell', 'solitaire', 'auto-stack-clear', 'auto-turnover', 'statistics', 'autoplay', 'application', 'freecell',], function (web_ui, solver_freecell_module, solitaire, auto_stack, auto_turn, statistics, autoplay, application, freecell) { window.my_web_fc_solve_ui = web_ui; web_ui.init_module((module_wrapper) =>" , subject = "Solver" , %]
 [% END %]
 
 [%- INCLUDE run_emscripten_common -%]
