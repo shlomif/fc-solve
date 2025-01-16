@@ -26,7 +26,7 @@ credit</a>.
 [% WRAPPER h3_section id = "patsolve_logic", title = "Derived State Ordering and Incorporating Patsolve's Logic" %]
 
 <p>
-From any given position Freecell Solver reaches it uses some move
+From any given position Freecell Solver reaches, it uses some move
 functions to generate a list of subsequent positions that can be reached from
 it. Each one of those functions corresponds to one move type, and they output
 the derived states in the order they found them. FCS (= Freecell Solver)
@@ -58,19 +58,27 @@ by a sequence of cards that decrease in rank. Thus, we can simply store:
 
 <ol>
 <li>
+<p>
 The number of original cards. 0-104 for two deck games - we need 7 bits for
 that. (8-bits for parity)
+</p>
 </li>
 <li>
+<p>
 The number of cards in the sequence. 0-13 - we need 4 bits for that.
+</p>
 </li>
 <li>
+<p>
 Possibly the first top card - if no original cards are left in the
 column. (6-bits)
+</p>
 </li>
 <li>
+<p>
 For each of the cards in the sequence we need to store their suit. That is
 0-3 which is 2-bits.
+</p>
 </li>
 </ol>
 
@@ -152,6 +160,10 @@ we would like to see such a solver written.
 
 [% WRAPPER h3_section id = "eliminating-use-of-yui" title = "avoid use of YUI by Solitairey" %]
 
+<p>
+Our open source fork of Solitairey currently uses and depends on YUI (short for "Yahoo User-Interface"), which is a big, old, and no longer recommended, browser-side JavaScript library/framework.
+</p>
+
 [% END %]
 
 [% WRAPPER h3_section id = "deal2fc_prune" title = "2freecell Deals" %]
@@ -166,17 +178,48 @@ we would like to see such a solver written.
 Sorry for the late reply, but I have proof that 384,243 is impossible with 2 freecells. The critical position the computer couldn't solve is after the following moves (384243, two freecells):
 </p>
 
-<pre>
+<ul>
+
+<li>
+<p>
 13 78 63 52 6a 62 16 46 7b 76
+</p>
+</li>
+
+<li>
+<p>
 74 16 76 14 16 a1 b1 7a 87 43
+</p>
+</li>
+
+<li>
+<p>
 47 37 8b 87 57 57 b8 4b 47 46
+</p>
+</li>
+
+<li>
+<p>
 17 27 21 24 14 28 21 23 23 b3
+</p>
+</li>
+
+<li>
+<p>
 2b a2 5a 52 8h 68 61 a5 65 81
+</p>
+</li>
+
+<li>
+<p>
 85 15 4a 4h b4 64 62 42 68 48
-</pre>
+</p>
+</li>
+
+</ul>
 
 <p>
-Note that in the fourth line, 21 24 14 is the supermove 24.
+Note that in the fourth line, <q>21 24 14</q> is the supermove 24.
 </p>
 
 <p>
@@ -194,7 +237,7 @@ That proves 384,243 impossible with two freecells.
 [% WRAPPER h3_section id = "generalising", title = "Generalising Freecell Solver to non-card Games" %]
 
 <p>
-This is a <b>very</b> pipe-dream goal. As some of you may be aware I already
+This is a <b>very</b> pipe-dream goal. As some of you may be aware, I already
 wrote <a href="http://www.shlomifish.org/lm-solve/">LM-Solve</a> as
 a solver for several types of Logic Mazes, which are another type of
 single-player games (which are much easier to solve using a computer). It is
@@ -253,11 +296,10 @@ the students are assigned to write a Freecell solver as one of their work
 assignments). I recommend reading Eric Raymond's
 <a href="http://www.tuxedo.org/~esr/writings/cathedral-bazaar/cathedral-bazaar/">The
 Cathedral and the Bazaar</a> to understand why adding more features can
-still be a good idea. IT discusses fetchmail which is still actively
-developed, despite the fact it will give anything most users will need and
-more. I don't see a reason to stop developing Freecell Solver just because it
-has reached a similar state. So people, hack on! (On Freecell Solver or
-something else.)
+still be a good idea. It discusses fetchmail which is still actively developed,
+despite the fact it provides all the features most users will need e. I don't
+see a reason to stop developing Freecell Solver just because it has reached a
+similar state. So people, hack on! (On Freecell Solver or something else.)
 </p>
 
 [% END %]
