@@ -325,6 +325,11 @@ export class FC_Solve {
         that._post_expand_states_and_moves_seq = null;
         return;
     }
+    public get_pre_expand_states_and_moves_seq() {
+        const that = this;
+
+        return that._pre_expand_states_and_moves_seq;
+    }
     public set_status(myclass, mylabel) {
         const that = this;
 
