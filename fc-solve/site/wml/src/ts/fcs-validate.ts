@@ -669,30 +669,10 @@ export class BoardParseResult {
 
         const p = new StringParser(orig_s);
         p.skipComments();
-        if (p.match(foundations_prefix_re)) {
-            const start_char_idx = p.getConsumed();
-            const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
-            const fo = fcs_js__foundations_from_string(1, start_char_idx, l);
-            that.foundations = fo;
-            if (!fo.is_correct) {
-                that.errors.push(
-                    new ParseError(
-                        ParseErrorType.LINE_PARSE_ERROR,
-                        [
-                            new ErrorLocation(
-                                ErrorLocationType.Foundations,
-                                0,
-                                start_char_idx,
-                                p.getConsumed(),
-                            ),
-                        ],
-                        fcs_js__card_from_string("AH"),
-                    ),
-                );
-                that.is_valid = false;
-                return;
-            }
-        }
+        that._try_to_parse_foundations(p);
+        if (! that.is_valid) {
+            return;
+        };
         p.skipComments();
         if (p.match(new RegExp("^" + freecells_prefix_re + ":"))) {
             const start_char_idx = p.getConsumed();
@@ -837,6 +817,33 @@ export class BoardParseResult {
         return that.columns.filter((c) => {
             return c.getLen() > 0;
         });
+    }
+    private _try_to_parse_foundations(p: StringParser): void {
+        const that = this;
+        if (p.match(foundations_prefix_re)) {
+            const start_char_idx = p.getConsumed();
+            const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
+            const fo = fcs_js__foundations_from_string(1, start_char_idx, l);
+            that.foundations = fo;
+            if (!fo.is_correct) {
+                that.errors.push(
+                    new ParseError(
+                        ParseErrorType.LINE_PARSE_ERROR,
+                        [
+                            new ErrorLocation(
+                                ErrorLocationType.Foundations,
+                                0,
+                                start_char_idx,
+                                p.getConsumed(),
+                            ),
+                        ],
+                        fcs_js__card_from_string("AH"),
+                    ),
+                );
+                that.is_valid = false;
+                return;
+            }
+        }
     }
     public checkIfFlipped(): boolean {
         const that = this;
