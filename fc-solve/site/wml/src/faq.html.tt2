@@ -1155,9 +1155,27 @@ during the time in which it was written.
 </p>
 
 <p>
-Despite common misconception, there are other approaches to <a href="https://en.wikipedia.org/wiki/Artificial_intelligence">AI</a>
-than machine learning, and AI is: 1. Not "magic". 2. Tends to involve <a href="https://en.wikipedia.org/wiki/Heuristic">heuristics</a>
-that while performing well on most inputs, can sometimes take a lot of time in a minority of them.
+Despite common misconception, there are other approaches to <a href="https://en.wikipedia.org/wiki/Artificial_intelligence">Artificial intelligence ( “AI” )</a>
+than machine learning, and AI is:
+</p>
+
+<ol>
+<li>
+<p>
+Not "magic".
+</p>
+</li>
+<li>
+<p>
+Tends to involve <a
+href="https://en.wikipedia.org/wiki/Heuristic">heuristics</a> that while
+performing well on most inputs, can sometimes take a lot of time in a minority
+of them.
+</p>
+</li>
+</ol>
+
+<p>
 Freecell Solver is not an exception to either item, as even its best performing meta-scans can
 be time consuming for a small percentage of the input layouts.
 </p>
