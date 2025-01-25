@@ -670,37 +670,13 @@ export class BoardParseResult {
         const p = new StringParser(orig_s);
         p.skipComments();
         that._try_to_parse_foundations(p);
-        if (! that.is_valid) {
+        if (!that.is_valid) {
             return;
-        };
+        }
         p.skipComments();
-        if (p.match(new RegExp("^" + freecells_prefix_re + ":"))) {
-            const start_char_idx = p.getConsumed();
-            const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
-            const fc = fcs_js__freecells_from_string(
-                num_freecells,
-                start_char_idx,
-                l,
-            );
-            that.freecells = fc;
-            if (!fc.is_correct) {
-                that.errors.push(
-                    new ParseError(
-                        ParseErrorType.LINE_PARSE_ERROR,
-                        [
-                            new ErrorLocation(
-                                ErrorLocationType.Freecells,
-                                0,
-                                start_char_idx,
-                                p.getConsumed(),
-                            ),
-                        ],
-                        fcs_js__card_from_string("AH"),
-                    ),
-                );
-                that.is_valid = false;
-                return;
-            }
+        that._try_to_parse_freecells(p);
+        if (!that.is_valid) {
+            return;
         }
         for (let i = 0; i < num_stacks; ++i) {
             p.skipComments();
@@ -832,6 +808,38 @@ export class BoardParseResult {
                         [
                             new ErrorLocation(
                                 ErrorLocationType.Foundations,
+                                0,
+                                start_char_idx,
+                                p.getConsumed(),
+                            ),
+                        ],
+                        fcs_js__card_from_string("AH"),
+                    ),
+                );
+                that.is_valid = false;
+                return;
+            }
+        }
+    }
+    private _try_to_parse_freecells(p: StringParser): void {
+        const that = this;
+        const num_freecells = that.num_freecells;
+        if (p.match(new RegExp("^" + freecells_prefix_re + ":"))) {
+            const start_char_idx = p.getConsumed();
+            const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
+            const fc = fcs_js__freecells_from_string(
+                num_freecells,
+                start_char_idx,
+                l,
+            );
+            that.freecells = fc;
+            if (!fc.is_correct) {
+                that.errors.push(
+                    new ParseError(
+                        ParseErrorType.LINE_PARSE_ERROR,
+                        [
+                            new ErrorLocation(
+                                ErrorLocationType.Freecells,
                                 0,
                                 start_char_idx,
                                 p.getConsumed(),
