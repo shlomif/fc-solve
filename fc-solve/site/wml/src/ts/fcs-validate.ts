@@ -668,15 +668,17 @@ export class BoardParseResult {
         });
 
         const p = new StringParser(orig_s);
-        p.skipComments();
-        that._try_to_parse_foundations(p);
-        if (!that.is_valid) {
-            return;
-        }
-        p.skipComments();
-        that._try_to_parse_freecells(p);
-        if (!that.is_valid) {
-            return;
+        for (let i = 0; i < 2; ++i) {
+            p.skipComments();
+            that._try_to_parse_foundations(p);
+            if (!that.is_valid) {
+                return;
+            }
+            p.skipComments();
+            that._try_to_parse_freecells(p);
+            if (!that.is_valid) {
+                return;
+            }
         }
         for (let i = 0; i < num_stacks; ++i) {
             p.skipComments();
