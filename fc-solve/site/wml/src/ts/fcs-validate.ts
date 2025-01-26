@@ -668,23 +668,37 @@ export class BoardParseResult {
         });
 
         const p = new StringParser(orig_s);
-        for (let i = 0; i < 2; ++i) {
+        const HANDLE_FOUNDATIONS_LINE_MARGIN: number = 1;
+        const HANDLE_FREECELLS_LINE_MARGIN: number = 1;
+        for (
+            let i = 0;
+            i <
+            num_stacks +
+                HANDLE_FOUNDATIONS_LINE_MARGIN +
+                HANDLE_FREECELLS_LINE_MARGIN;
+            ++i
+        ) {
             p.skipComments();
-            that._try_to_parse_foundations(p);
+            const success = that._try_to_parse_foundations(p);
+            if (success) {
+                continue;
+            }
             if (!that.is_valid) {
                 return;
             }
-            p.skipComments();
-            that._try_to_parse_freecells(p);
+            const success2 = that._try_to_parse_freecells(p);
+            if (success2) {
+                continue;
+            }
             if (!that.is_valid) {
                 return;
             }
-        }
-        for (let i = 0; i < num_stacks; ++i) {
-            p.skipComments();
             const start_char_idx = p.getConsumed();
             const l = p.consume_match(/^([^\n]*(?:\n|$))/)[1];
             const col = fcs_js__column_from_string(start_char_idx, l, false);
+            if (col && that.columns.length == num_stacks) {
+                continue;
+            }
             that.columns.push(col);
             if (!col.is_correct) {
                 that.errors.push(
@@ -796,7 +810,7 @@ export class BoardParseResult {
             return c.getLen() > 0;
         });
     }
-    private _try_to_parse_foundations(p: StringParser): void {
+    private _try_to_parse_foundations(p: StringParser): boolean {
         const that = this;
         if (p.match(foundations_prefix_re)) {
             const start_char_idx = p.getConsumed();
@@ -819,11 +833,13 @@ export class BoardParseResult {
                     ),
                 );
                 that.is_valid = false;
-                return;
+                return false;
             }
+            return true;
         }
+        return false;
     }
-    private _try_to_parse_freecells(p: StringParser): void {
+    private _try_to_parse_freecells(p: StringParser): boolean {
         const that = this;
         const num_freecells = that.num_freecells;
         if (p.match(new RegExp("^" + freecells_prefix_re + ":"))) {
@@ -851,9 +867,11 @@ export class BoardParseResult {
                     ),
                 );
                 that.is_valid = false;
-                return;
+                return false;
             }
+            return true;
         }
+        return false;
     }
     public checkIfFlipped(): boolean {
         const that = this;
