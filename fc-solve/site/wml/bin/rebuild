@@ -21,6 +21,7 @@ rebuild()
         time gmake -j4 PROD=1 all
         time gmake -j4 all
         time gmake -j1 test
+        time gmake PROD=1 LOCAL_BROWSER_TESTS=1 -j4 smoke-tests
     )
 }
 rebuild
