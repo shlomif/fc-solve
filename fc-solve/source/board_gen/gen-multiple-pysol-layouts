@@ -13,7 +13,7 @@ from pysol_cards.deal_game import Game
 from pysol_cards.random import RandomBase
 
 
-class GenMulti:
+class GenMultiParseCmdLine:
     def __init__(self, argv):
         parser = argparse.ArgumentParser(
             prog='PROG',
@@ -31,21 +31,38 @@ class GenMulti:
         parser.add_argument('idxs', nargs='+', default=[],
                             help='indexes')
         args = parser.parse_args(argv[1:])
-        self.dir_ = args.dir
+        self._backend = GenMulti(
+            dir_=args.dir,
+            game_variant=args.game,
+            idxs=args.idxs,
+            ms=args.ms,
+            prefix=args.prefix,
+            suffix=args.suffix,
+        )
+
+    def run(self):
+        return self._backend.run()
+
+
+class GenMulti:
+    def __init__(self, dir_, game_variant, idxs, ms, prefix, suffix):
+        self.dir_ = dir_
+        self.game_variant = game_variant
+        self.idxs = idxs
         # Sanitize, see:
         # https://stackoverflow.com/questions/6803505
-        self.pre = basename(args.prefix)
-        self.suf = basename(args.suffix)
-        self.game_variant = args.game
-        self.which_deals = (RandomBase.DEALS_MS if args.ms
+        self.prefix = basename(prefix)
+        self.suffix = basename(suffix)
+        self.which_deals = (RandomBase.DEALS_MS if ms
                             else RandomBase.DEALS_PYSOLFC)
 
         self.rend = CardRenderer(True)
-        self.idxs = args.idxs
         self.game = Game(self.game_variant, 1, self.which_deals, 13)
 
     def _out_deal(self, deal):
-        with open(join(self.dir_, self.pre + str(deal) + self.suf), 'wt') as f:
+        with open(join(
+            self.dir_, self.prefix + str(deal) + self.suffix
+        ), 'wt') as f:
             f.write(self.game.calc_deal_string(deal, self.rend))
 
     def run(self):
@@ -68,4 +85,4 @@ class GenMulti:
 
 
 if __name__ == "__main__":
-    sys.exit(GenMulti(sys.argv).run())
+    sys.exit(GenMultiParseCmdLine(sys.argv).run())
