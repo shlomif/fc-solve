@@ -13,7 +13,8 @@ def main(argv):
     libc = CDLL("libc.so.6")
 
     user = fcs.freecell_solver_user_alloc()
-    board = open(argv.pop(0)).read()
+    with open(argv.pop(0)) as f:
+        board = f.read()
     fcs.freecell_solver_user_solve_board(
         user,
         c_char_p(

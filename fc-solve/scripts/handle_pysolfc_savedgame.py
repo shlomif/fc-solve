@@ -1,60 +1,51 @@
-## vim:ts=4:et:nowrap
-##
-##---------------------------------------------------------------------------##
-##
-## PySol -- a Python Solitaire game
-##
-## Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 2002 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 2001 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
-## Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
-## All Rights Reserved.
-##
-## This program is free software; you can redistribute it and/or modify
-## it under the terms of the GNU General Public License as published by
-## the Free Software Foundation; either version 2 of the License, or
-## (at your option) any later version.
-##
-## This program is distributed in the hope that it will be useful,
-## but WITHOUT ANY WARRANTY; without even the implied warranty of
-## MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-## GNU General Public License for more details.
-##
-## You should have received a copy of the GNU General Public License
-## along with this program; see the file COPYING.
-## If not, write to the Free Software Foundation, Inc.,
-## 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
-##
-## Markus F.X.J. Oberhumer
-## <markus@oberhumer.com>
-## http://www.oberhumer.com/pysol
-##
-##---------------------------------------------------------------------------##
+# vim:ts=4:et:nowrap
+#
+# ---------------------------------------------------------------------------##
+#
+# PySol -- a Python Solitaire game
+#
+# Copyright (C) 2003 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 2002 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 2001 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 2000 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 1999 Markus Franz Xaver Johannes Oberhumer
+# Copyright (C) 1998 Markus Franz Xaver Johannes Oberhumer
+# All Rights Reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; see the file COPYING.
+# If not, write to the Free Software Foundation, Inc.,
+# 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# Markus F.X.J. Oberhumer
+# <markus@oberhumer.com>
+# http://www.oberhumer.com/pysol
+#
+# ---------------------------------------------------------------------------##
 
-## This file originated from the file game.py in the PySolFC-1.1
-## distribution. Shlomi Fish disclaims all rights to his modifications and
-## places them under the public domain or MIT/Expat licence.
+# This file originated from the file game.py in the PySolFC-1.1
+# distribution. Shlomi Fish disclaims all rights to his modifications and
+# places them under the public domain or MIT/Expat licence.
 
 # imports
-import time
-import math
-import traceback
 # from gettext import ungettext
-import gettext
-from cStringIO import StringIO
 import argparse
-from pysollib.mygettext import _, n_
 import yaml
 
 from pysollib.init import init
 # PySol imports
-from pysollib.mfxutil import Pickler, Unpickler, UnpicklingError
-from pysollib.mfxutil import Image, ImageTk
-from pysollib.mfxutil import destruct, Struct, SubclassResponsibility
-from pysollib.mfxutil import uclock, usleep
-from pysollib.mfxutil import format_time, print_err
+from pysollib.mfxutil import Unpickler, UnpicklingError
+from pysollib.mfxutil import destruct, Struct
 from pysollib.settings import PACKAGE, TITLE, TOOLKIT, TOP_TITLE
 from pysollib.settings import VERSION, VERSION_TUPLE
 from pysollib.settings import DEBUG
@@ -113,14 +104,10 @@ class Game:
 
     def _loadGame(self, filename):
         game = None
-        f = None
-        try:
-            f = open(filename, "rb")
+        with open(filename, "rb") as f:
             p = Unpickler(f)
             game = self._undumpGame(p)
             game.gstats.loaded = game.gstats.loaded + 1
-        finally:
-            if f: f.close()
         return game
 
     def constructGame(self, id):
@@ -236,7 +223,7 @@ def main():
 
     g = Game()
     loaded_game = g._loadGame(results.input_filename)
-    print yaml.dump(loaded_game)
+    print(yaml.dump(loaded_game))
 
 if __name__ == "__main__":
     main()

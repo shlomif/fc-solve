@@ -145,7 +145,7 @@ def cmd_line_main(args):
                     % (idx+1, x+1)
                 )
 
-    with (sys.stdout if output_to_stdout else open(output_fn, "wt")) as f:
+    def _output_to_filehandle(f):
         def _out_line(line):
             if line:
                 f.write(line + "\n")
@@ -154,6 +154,11 @@ def cmd_line_main(args):
         _out_line(freecells_line)
         for line in layout[0:max_col+1]:
             _out_line(" ".join([":"] + line))
+    if output_to_stdout:
+        _output_to_filehandle(f=sys.stdout)
+    else:
+        with open(output_fn, "wt") as f:
+            _output_to_filehandle(f=f)
 
     return 0
 
