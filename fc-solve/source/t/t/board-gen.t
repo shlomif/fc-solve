@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 45;
+use Test::More tests => 47;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny        qw/ path /;
 use Test::Trap
@@ -849,6 +849,63 @@ EOF
 );
 
 $dir->remove_tree;
+
+{
+    my $leveled_dir = path("mkpathed/haha24");
+
+    # TEST
+    _test_gen_multi(
+        {
+            blurb => "gen-multi for black_hole",
+            cmd   => [
+                '--mkdir',         '--game',
+                'black_hole',      '--dir',
+                $leveled_dir . '', '--prefix',
+                'pys',             '--suffix',
+                '.board',          '--',
+                '45508856405861261758'
+            ],
+            exe      => $GEN_MULTI,
+            expected => '',
+        }
+    );
+
+    sub _leveled_child_slurp
+    {
+        my ($basename) = @_;
+
+        return [
+            normalize_lf( scalar $leveled_dir->child($basename)->slurp_utf8 ) ];
+    }
+
+    # TEST
+    eq_or_diff(
+        _leveled_child_slurp('pys45508856405861261758.board'),
+        [<<'EOF'], "gen-multi",
+Foundations: AS
+2S 3D 6S
+2C 5D 7H
+3C 7C 3S
+4C AC JS
+9D QC 4S
+QD 6C 8H
+TC JC TS
+8D 7S 8S
+7D 3H 5H
+JD 9C 2H
+TD 6D QH
+2D KH KC
+4D KD AH
+4H JH 5C
+AD 9S QS
+6H KS TH
+5S 9H 8C
+EOF
+    );
+
+    $leveled_dir->parent()->remove_tree;
+
+}
 
 $dir = path("gen-multi-yoo--c");
 

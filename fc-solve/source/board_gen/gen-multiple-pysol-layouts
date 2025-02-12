@@ -5,6 +5,7 @@
 # Distributed under terms of the MIT license.
 
 import argparse
+import os
 import sys
 from os.path import basename, join
 
@@ -22,6 +23,9 @@ class GenMultiParseCmdLine:
                             help='output dir')
         parser.add_argument('--game', type=str, default='freecell',
                             help='The Solitaire variant')
+        parser.add_argument(
+            '--mkdir', action='store_true',
+            help='Make the target directory if it does not exist')
         parser.add_argument('--ms', action='store_true',
                             help='MS/FC-Pro Deals')
         parser.add_argument('--prefix', type=str, required=True,
@@ -35,6 +39,7 @@ class GenMultiParseCmdLine:
             dir_=args.dir,
             game_variant=args.game,
             idxs=args.idxs,
+            mkdir_=args.mkdir,
             ms=args.ms,
             prefix=args.prefix,
             suffix=args.suffix,
@@ -45,10 +50,11 @@ class GenMultiParseCmdLine:
 
 
 class GenMulti:
-    def __init__(self, dir_, game_variant, idxs, ms, prefix, suffix):
+    def __init__(self, dir_, game_variant, idxs, mkdir_, ms, prefix, suffix):
         self.dir_ = dir_
         self.game_variant = game_variant
         self.idxs = idxs
+        self.mkdir_ = mkdir_
         # Sanitize, see:
         # https://stackoverflow.com/questions/6803505
         self.prefix = basename(prefix)
@@ -66,6 +72,8 @@ class GenMulti:
             f.write(self.game.calc_deal_string(deal, self.rend))
 
     def run(self):
+        if self.mkdir_:
+            os.makedirs(self.dir_, exist_ok=True)
         idxs = self.idxs
         while len(idxs):
             i = idxs.pop(0)
