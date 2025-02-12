@@ -8,6 +8,7 @@ import argparse
 import os
 import sys
 from os.path import basename, join
+from pathlib import Path
 
 from pysol_cards.cards import CardRenderer
 from pysol_cards.deal_game import Game
@@ -21,6 +22,8 @@ class GenMultiParseCmdLine:
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
         parser.add_argument('--dir', type=str, required=True,
                             help='output dir')
+        parser.add_argument('--force', action='store_true',
+                            help='override deal files in existing directory')
         parser.add_argument('--game', type=str, default='freecell',
                             help='The Solitaire variant')
         parser.add_argument(
@@ -37,6 +40,7 @@ class GenMultiParseCmdLine:
         args = parser.parse_args(argv[1:])
         self._backend = GenMulti(
             dir_=args.dir,
+            force=args.force,
             game_variant=args.game,
             idxs=args.idxs,
             mkdir_=args.mkdir,
@@ -50,8 +54,10 @@ class GenMultiParseCmdLine:
 
 
 class GenMulti:
-    def __init__(self, dir_, game_variant, idxs, mkdir_, ms, prefix, suffix):
+    def __init__(self, dir_, force, game_variant, idxs,
+                 mkdir_, ms, prefix, suffix):
         self.dir_ = dir_
+        self.force = force
         self.game_variant = game_variant
         self.idxs = idxs
         self.mkdir_ = mkdir_
@@ -73,6 +79,10 @@ class GenMulti:
 
     def run(self):
         if self.mkdir_:
+            dir_ = Path(self.dir_)
+            if dir_.is_dir():
+                if not self.force:
+                    return
             os.makedirs(self.dir_, exist_ok=True)
         idxs = self.idxs
         while len(idxs):
