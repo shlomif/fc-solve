@@ -130,7 +130,7 @@ def _apply_cpack_fix(steps):
 
 def generate_windows_yaml(plat, output_path, is_act):
     x86 = (plat == 'x86')
-    with open("./.appveyor.yml", "rt") as infh:
+    with open("./.disabled-appveyor.yml", "rt") as infh:
         data = yaml.safe_load(infh)
     with open("./fc-solve/CI-testing/gh-actions--" +
               "windows-yml--from-p5-UV.yml", "rt") as infh:
