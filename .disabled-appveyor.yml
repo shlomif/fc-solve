@@ -12,26 +12,27 @@ install:
     - choco install strawberryperl || type C:\ProgramData\chocolatey\logs\chocolatey.log
     - set PATH=C:\strawberry\perl\bin;C:\strawberry\perl\site\bin;C:\strawberry\c\bin;%PATH%
     - cpanm --notest --quiet Code::TidyAll::Plugin::ClangFormat Code::TidyAll::Plugin::TestCount CHI Devel::Trace Docker::CLI::Wrapper::Container Games::Solitaire::Verify::HorneAutomovePrune LWP Perl::Tidy Task::FreecellSolver::Testing Test::Code::TidyAll
-    - if not exist C:\fcs_build_deps mkdir C:\fcs_build_deps
+    - if not exist C:\fcsdep mkdir C:\fcsdep
     - copy c:\Python311-x64\python.exe c:\Python311-x64\python3.exe
     - SET PATH=C:\Python311-x64;C:\strawberry\c\bin;C:\strawberry\perl\site\bin;C:\strawberry\perl\bin;%PATH%
     - python3 -mpip install %PY3MODS%
+    - perl -v
     - copy C:\msys64\mingw64\bin\mingw32-make.exe C:\msys64\mingw64\bin\make.exe
     - SET PERL5LIB=C:/_P5/lib/perl5
     - SET PERL_LOCAL_LIB_ROOT=C:/_P5
     - SET PERL_MB_OPT=--install_base C:/_P5
     - SET PERL_MM_OPT=INSTALL_BASE=C:/_P5
     - perl -v
-    - if not exist C:\fcs_build_deps\gperf-3.1.tar.gz curl -o C:\fcs_build_deps\gperf-3.1.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.1.tar.gz
-    - copy C:\fcs_build_deps\gperf-3.1.tar.gz .
+    - if not exist C:\fcsdep\gperf-3.1.tar.gz curl -o C:\fcsdep\gperf-3.1.tar.gz http://ftp.gnu.org/pub/gnu/gperf/gperf-3.1.tar.gz
+    - copy C:\fcsdep\gperf-3.1.tar.gz .
     - tar -xvf gperf-3.1.tar.gz
     - set MAKE=C:/strawberry/c/bin/gmake.exe
     - cd gperf-3.1 && perl ../fc-solve/scripts/ci-build-gperf-mswin.pl && cd ..
-    - git clone https://github.com/clibs/cmocka fcs_build_deps
-    - mkdir fcs_build_deps\b
-    - cd fcs_build_deps\b
+    - git clone https://github.com/clibs/cmocka fcsdep
+    - mkdir fcsdep\b
+    - cd fcsdep\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
-    - cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\fcs_build_deps ..
+    - cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\fcsdep ..
     - echo %PATH%
     - gmake
     - gmake install
@@ -40,14 +41,14 @@ install:
     - mkdir rinutils\b
     - cd rinutils\b
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
-    - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\fcs_build_deps ..
+    - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\fcsdep ..
     - echo %PATH%
     - gmake
     - gmake install
     - SET MYOLDPATH_=%PATH%
     - mkdir ..\b32
     - cd ..\b32
-    - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\fcs_build_deps32 ..
+    - cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM% -DCMAKE_INSTALL_PREFIX=C:\fcsdep32 ..
     - echo %PATH%
     - gmake
     - gmake install
@@ -57,14 +58,14 @@ build: off
 image: Visual Studio 2019
 test_script:
     - set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
-    - set LIBRARY_PATH=C:\fcs_build_deps\lib
-    - set CMAKE_LIBRARY_PATH=C:\fcs_build_deps\lib
-    - set CMAKE_PREFIX_PATH=C:/fcs_build_deps;c:/fcs_build_deps32
-    - set LD_LIBRARY_PATH=C:\fcs_build_deps\lib
-    - set PKG_CONFIG_PATH=C:\fcs_build_deps\lib\pkgconfig;
-    - dir c:\fcs_build_deps /s
-    - set CPATH=C:\fcs_build_deps\include
-    - set PATH=C:\fcs_build_deps\bin;%PATH%
+    - set LIBRARY_PATH=C:\fcsdep\lib
+    - set CMAKE_LIBRARY_PATH=C:\fcsdep\lib
+    - set CMAKE_PREFIX_PATH=C:/fcsdep;c:/fcsdep32
+    - set LD_LIBRARY_PATH=C:\fcsdep\lib
+    - set PKG_CONFIG_PATH=C:\fcsdep\lib\pkgconfig;
+    - dir c:\fcsdep /s
+    - set CPATH=C:\fcsdep\include
+    - set PATH=C:\fcsdep\bin;%PATH%
     - del c:\msys64\mingw64\bin\python*.exe
     - set HARNESS_BREAK=1
     - set FCS_USE_TEST_RUN=1
@@ -98,7 +99,7 @@ test_script:
     - 7z a fc-solve-for-pysol.zip c:/fcs-pysol
 # Disabling due to cache invalidation problems
 # cache:
-#     - C:\fcs_build_deps -> .appveyor.yml
+#     - C:\fcsdep -> .appveyor.yml
 #     - C:\_P5 -> .appveyor.yml
 #     - C:\strawberry -> .appveyor.yml
 shallow_clone: true

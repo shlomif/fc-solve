@@ -61,10 +61,12 @@ jobs:
 
                 choco install ag || ( echo Failed & exit /B 1 )
 
-                if not exist C:\fcs_build_deps mkdir C:\fcs_build_deps || ( echo Failed
-                & exit /B 1 )
+                if not exist C:\fcsdep mkdir C:\fcsdep || ( echo Failed & exit /B
+                1 )
 
                 python3 -mpip install %PY3MODS% || ( echo Failed & exit /B 1 )
+
+                perl -v || ( echo Failed & exit /B 1 )
 
                 SET PERL5LIB=C:/_P5/lib/perl5
 
@@ -76,12 +78,11 @@ jobs:
 
                 perl -v || ( echo Failed & exit /B 1 )
 
-                if not exist C:\fcs_build_deps\gperf-3.1.tar.gz curl -o C:\fcs_build_deps\gperf-3.1.tar.gz
+                if not exist C:\fcsdep\gperf-3.1.tar.gz curl -o C:\fcsdep\gperf-3.1.tar.gz
                 http://ftp.gnu.org/pub/gnu/gperf/gperf-3.1.tar.gz || ( echo Failed
                 & exit /B 1 )
 
-                copy C:\fcs_build_deps\gperf-3.1.tar.gz . || ( echo Failed & exit
-                /B 1 )
+                copy C:\fcsdep\gperf-3.1.tar.gz . || ( echo Failed & exit /B 1 )
 
                 tar -xvf gperf-3.1.tar.gz || ( echo Failed & exit /B 1 )
 
@@ -90,18 +91,17 @@ jobs:
                 cd gperf-3.1 && perl ../fc-solve/scripts/ci-build-gperf-mswin.pl &&
                 cd .. || ( echo Failed & exit /B 1 )
 
-                git clone https://github.com/clibs/cmocka fcs_build_deps || ( echo
-                Failed & exit /B 1 )
+                git clone https://github.com/clibs/cmocka fcsdep || ( echo Failed
+                & exit /B 1 )
 
-                mkdir fcs_build_deps\b || ( echo Failed & exit /B 1 )
+                mkdir fcsdep\b || ( echo Failed & exit /B 1 )
 
-                cd fcs_build_deps\b || ( echo Failed & exit /B 1 )
+                cd fcsdep\b || ( echo Failed & exit /B 1 )
 
                 set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
 
                 cmake -G "MinGW Makefiles" -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
-                -DCMAKE_INSTALL_PREFIX=C:\fcs_build_deps .. || ( echo Failed & exit
-                /B 1 )
+                -DCMAKE_INSTALL_PREFIX=C:\fcsdep .. || ( echo Failed & exit /B 1 )
 
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
@@ -121,8 +121,7 @@ jobs:
                 set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
 
                 cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
-                -DCMAKE_INSTALL_PREFIX=C:\fcs_build_deps .. || ( echo Failed & exit
-                /B 1 )
+                -DCMAKE_INSTALL_PREFIX=C:\fcsdep .. || ( echo Failed & exit /B 1 )
 
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
@@ -137,8 +136,8 @@ jobs:
                 cd ..\b32 || ( echo Failed & exit /B 1 )
 
                 cmake -G "MinGW Makefiles" -DWITH_TEST_SUITE=OFF -DCMAKE_MAKE_PROGRAM=%CMAKE_MAKE_PROGRAM%
-                -DCMAKE_INSTALL_PREFIX=C:\fcs_build_deps32 .. || ( echo Failed & exit
-                /B 1 )
+                -DCMAKE_INSTALL_PREFIX=C:\fcsdep32 .. || ( echo Failed & exit /B 1
+                )
 
                 echo %PATH% || ( echo Failed & exit /B 1 )
 
@@ -152,21 +151,21 @@ jobs:
 
                 set CMAKE_MAKE_PROGRAM=C:\strawberry\c\bin\gmake.exe
 
-                set LIBRARY_PATH=C:\fcs_build_deps\lib
+                set LIBRARY_PATH=C:\fcsdep\lib
 
-                set CMAKE_LIBRARY_PATH=C:\fcs_build_deps\lib
+                set CMAKE_LIBRARY_PATH=C:\fcsdep\lib
 
-                set CMAKE_PREFIX_PATH=C:/fcs_build_deps;c:/fcs_build_deps32
+                set CMAKE_PREFIX_PATH=C:/fcsdep;c:/fcsdep32
 
-                set LD_LIBRARY_PATH=C:\fcs_build_deps\lib
+                set LD_LIBRARY_PATH=C:\fcsdep\lib
 
-                set PKG_CONFIG_PATH=C:\fcs_build_deps\lib\pkgconfig;
+                set PKG_CONFIG_PATH=C:\fcsdep\lib\pkgconfig;
 
-                dir c:\fcs_build_deps /s || ( echo Failed & exit /B 1 )
+                dir c:\fcsdep /s || ( echo Failed & exit /B 1 )
 
-                set CPATH=C:\fcs_build_deps\include
+                set CPATH=C:\fcsdep\include
 
-                set PATH=C:\fcs_build_deps\bin;%PATH%
+                set PATH=C:\fcsdep\bin;%PATH%
 
                 del c:\msys64\mingw64\bin\python*.exe || ( echo Failed & exit /B 1
                 )
