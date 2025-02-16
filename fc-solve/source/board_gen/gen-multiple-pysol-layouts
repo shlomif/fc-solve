@@ -17,6 +17,10 @@ from pysol_cards.random import RandomBase
 
 class GenMultiParseCmdLine:
     def __init__(self, argv):
+        cliargs = argv[1:]
+        if cliargs == ["--mode", "shlomif"] or cliargs == ["--mode=shlomif"]:
+            self._backend = ShlomifDwimGenDeals()
+            return
         parser = argparse.ArgumentParser(
             prog='PROG',
             formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -100,6 +104,29 @@ class GenMulti:
             else:
                 self._out_deal(int(i))
         return 0
+
+
+class ShlomifDwimGenDeals:
+    def __init__(self):
+        return
+
+    def run(self):
+        from pathlib import Path
+        parent_dir = Path.home() / "Arcs" / "temp" / "solitaire" / "deals"
+        for game_variant in ["all_in_a_row", "black_hole", "freecell", "golf"]:
+            dir_obj = parent_dir / game_variant / "ms"
+            dir_ = str(dir_obj)
+            generator = GenMulti(
+                dir_=dir_,
+                force=False,
+                game_variant=game_variant,
+                idxs=["seq", "1", "32000",],
+                mkdir_=True,
+                ms=True,
+                prefix="ms",
+                suffix=".board",
+            )
+            generator.run()
 
 
 if __name__ == "__main__":
