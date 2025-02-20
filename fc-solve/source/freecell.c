@@ -1435,6 +1435,44 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
         }
     } while (num_cards_moved);
 
+    int next_fc = 0;
+
+    for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
+    {
+        const_AUTO(col, fcs_state_get_col(new_state_key, stack_idx));
+        const int cards_num = fcs_col_len(col);
+
+        if (1 != cards_num)
+        {
+            continue;
+        }
+        const fcs_card card = fcs_col_get_card(col, 0);
+        while (next_fc < LOCAL_FREECELLS_NUM)
+        {
+            if (!fcs_freecell_is_empty(new_state_key, next_fc))
+            {
+                ++next_fc;
+            }
+            else
+            {
+                break;
+            }
+        }
+        if (next_fc >= LOCAL_FREECELLS_NUM)
+        {
+            break;
+        }
+
+        num_cards_moved = true;
+        cards_were_moved = true;
+
+        my_copy_stack(stack_idx);
+        fcs_state_pop_col_top(&new_state_key, stack_idx);
+        fcs_put_card_in_freecell(new_state_key, next_fc, card);
+        fcs_move_stack_non_seq_push(moves, FCS_MOVE_TYPE_STACK_TO_FREECELL,
+            stack_idx, (stack_i)next_fc);
+        ++next_fc;
+    }
     if (!cards_were_moved)
     {
         return NULL;
