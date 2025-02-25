@@ -461,12 +461,13 @@ static bool handle_and_destroy_instance_solution(
 #ifdef FCS_DEBONDT_DELTA_STATES
                 for (size_t i = 0; i < COUNT(item->key.s); i++)
                 {
-                    fprintf(out_fh, "%.2X", (int)item->key.s[i]);
+                    fprintf(out_fh, "%.2X", (unsigned)(uint8_t)item->key.s[i]);
                 }
 #else
                 for (size_t i = 0; i < item->key.s[0]; i++)
                 {
-                    fprintf(out_fh, "%.2X", (int)item->key.s[1 + i]);
+                    fprintf(
+                        out_fh, "%.2X", (unsigned)(uint8_t)item->key.s[1 + i]);
                 }
 #endif
                 fprintf(out_fh, "%s", "|");

@@ -195,7 +195,7 @@ static inline bool handle_existing_void(fcs_instance *const instance,
             printf("%s", "\n\nAdded state: ");
             for (size_t i = 0; i < sizeof(new_state->key[0]); ++i)
             {
-                printf("\\x%02x", (int)((uint8_t *)(new_state->key))[i]);
+                printf("\\x%02x", (unsigned)((uint8_t *)(new_state->key))[i]);
             }
             printf("\n\n");
         }
