@@ -37,6 +37,8 @@ jobs:
 
                     LWP
 
+                    Path::Tiny
+
                     Perl::Tidy
 
                     Task::FreecellSolver::Testing

@@ -5,7 +5,7 @@ use warnings;
 
 use Test::More tests => 49;
 use Test::Differences qw/ eq_or_diff /;
-use Path::Tiny        qw/ path /;
+use Path::Tiny 0.125  qw/ path /;
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 
