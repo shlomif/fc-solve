@@ -10,7 +10,7 @@ use File::Temp         qw( tempdir );
 use parent 'Exporter';
 
 our @EXPORT_OK =
-    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL FCS_STATE_STORAGE_INTERNAL_HASH bin_board bin_exe_raw bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_rcs_states is_tag is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
+    qw($FC_SOLVE_EXE $FC_SOLVE__RAW $FIND_DEAL_INDEX $GEN_MULTI $IS_WIN $MAKE_PYSOL FCS_STATE_STORAGE_INTERNAL_HASH bin_board bin_exe_raw bin_exe_raw_canony bin_file data_file dll_file exe_fn is_break is_dbm_apr is_freecell_only is_rcs_states is_tag is_without_dbm is_without_flares is_without_patsolve is_without_valgrind normalize_lf offload_arg samp_board samp_preset samp_sol src_file src_script);
 
 use Path::Tiny qw/ path /;
 
@@ -30,6 +30,12 @@ my $BOARDS_DIR  = $DATA_DIR->child('sample-boards');
 my $SOLS_DIR    = $DATA_DIR->child('sample-solutions');
 my $PRESETS_DIR = $DATA_DIR->child('presets');
 our $IS_WIN = ( $^O eq "MSWin32" );
+
+sub _correct_path_canony
+{
+    my $p = shift;
+    return $p->canonpath();
+}
 
 sub _correct_path
 {
@@ -86,13 +92,18 @@ my $DBM_APR     = _is_tag('dbm_apr');
 # A file in the output/binaries directory where fc-solve was compiled.
 sub bin_file
 {
-    return $FCS_BIN_PATH->child( @{ shift @_ } );
+    return $FCS_BIN_PATH->child( @{ shift @_ } )->absolute();
 }
 
 sub dll_file
 {
     my $fn = shift;
     return bin_file( [ "lib$fn." . ( $IS_WIN ? "dll" : "so" ) ] );
+}
+
+sub bin_exe_raw_canony
+{
+    return _correct_path_canony( bin_file(@_) ) . $EXE_SUF;
 }
 
 sub bin_exe_raw

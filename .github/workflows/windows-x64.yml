@@ -226,7 +226,7 @@ jobs:
             fail-fast: true
             matrix:
                 perl-version:
-                - '5.38'
+                - '5.40'
 name: windows-x64
 'on':
 - push
