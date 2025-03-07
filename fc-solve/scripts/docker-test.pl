@@ -35,6 +35,7 @@ EOF
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
 cd ~/fc-solve/fc-solve
+sudo dnf -y upgrade --refresh
 sudo dnf -y install cmake gcc gcc-c++ git glibc-devel libcmocka-devel make perl-autodie perl-Path-Tiny python3-pip @deps
 sudo pip3 install --prefix=/usr freecell_solver
 pip3 install --user freecell_solver
