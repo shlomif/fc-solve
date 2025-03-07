@@ -9,7 +9,7 @@ use Path::Tiny qw/ path /;
 use Docker::CLI::Wrapper::Container v0.0.4 ();
 
 my $SYS       = "fedora:41";
-my $CONTAINER = "fcsfed";
+my $CONTAINER = "fcsolve_buildproc_fedora";
 my $obj       = Docker::CLI::Wrapper::Container->new(
     { container => $CONTAINER, sys => $SYS, }, );
 
@@ -25,12 +25,8 @@ foreach my $suf (
     )
 {
     $obj->docker(
-        { cmd => [ 'cp', "../../$suf", "fcsfed:root/fc-solve/$suf", ] } );
+        { cmd => [ 'cp', "../../$suf", "${CONTAINER}:root/fc-solve/$suf", ] } );
 }
-
-my $REMOVED_SANITY_CHECK = <<'EOF';
-curl 'https://mirrors.fedoraproject.org/mirrorlist?repo=fedora-31&arch=x86_64'
-EOF
 
 my $script = <<"EOSCRIPTTTTTTT";
 set -e -x
