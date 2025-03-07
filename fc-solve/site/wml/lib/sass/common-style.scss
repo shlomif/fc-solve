@@ -3,5 +3,7 @@
         Bitstream vera serif,
         Times New Roman,
         serif;
-    font-size: 16px;
+    @if false {
+        font-size: 16px;
+    }
 }
