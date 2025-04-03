@@ -13,6 +13,12 @@ For now, you can try using these as drivers:
 
     CC=clang REBUILD=1 prove ../../scripts/opencl-test.t
 
+Setup demo code is also part of
+https://github.com/shlomif/fc-solve/blob/master/fc-solve/scripts/multi_config_tests.pl
+which is the fc-solve test suite driver. for CI, consult
+
+https://github.com/shlomif/fc-solve/tree/master/.github/workflows
+
 """
 
 import sys
