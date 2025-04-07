@@ -36,7 +36,7 @@
     "npm": "^11.2.0",
     "param-case": "^4.0.0",
     "prettier": "^3.5.3",
-    "puppeteer": "^24.5.0",
+    "puppeteer": "^24.6.0",
     "qunit": "^2.24.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
@@ -48,8 +48,8 @@
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
-    "eslint": "^9.23.0",
-    "typescript": "^5.8.2"
+    "eslint": "^9.24.0",
+    "typescript": "^5.8.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
