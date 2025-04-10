@@ -33,10 +33,10 @@
     "lodash": "^4.17.21",
     "minimist": "^1.2.8",
     "node-qunit": "^2.0.1",
-    "npm": "^11.2.0",
+    "npm": "^11.3.0",
     "param-case": "^4.0.0",
     "prettier": "^3.5.3",
-    "puppeteer": "^24.6.0",
+    "puppeteer": "^24.6.1",
     "qunit": "^2.24.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
@@ -44,7 +44,7 @@
     "tap": "^21.1.0",
     "tar": "^7.4.3",
     "terser": "^5.39.0",
-    "webpack": "^5.98.0",
+    "webpack": "^5.99.5",
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
