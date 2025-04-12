@@ -155,7 +155,7 @@
                 <link xlink:href="https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/842">this
                     post to the fc-solve-discuss mailing list</link> about why
                 we converted away from <symbol>freecell_solver_</symbol>.
-                Some macros supplied to the user are prefixed with the
+                Some macros which are provided to the user are prefixed with the
                 <symbol>fcs_</symbol> prefix for convenience. The API
                 functions in turn are prefixed with
                 <symbol>freecell_solver_user_</symbol>, in order to not
@@ -243,12 +243,13 @@
 
                 FCS makes a clear distinction between the internals of the
                 program, that are subject to change from version to version,
-                and between the interface supplied to the user or the
+                and between the interface that is provided to the user or the
                 application programmer. All the modules starting from
                 <filename>instance.c</filename> and below are the internals of
                 the program.
 
             </para>
+
             <para>
 
                 <filename>lib.c</filename> contains the API functions used by
@@ -620,7 +621,7 @@
                     of instances that can be used to solve a board, and then
                     recycled to solve another. It uses instance.c to perform
                     its operations, and do the actual configuring and solving.
-                    It supplies the API header file
+                    It provides the API header file
                     <filename>freecell-solver/fcs_user.h</filename> which
                     contains one function for doing any given operation, and
                     these functions are implemented in lib.c.

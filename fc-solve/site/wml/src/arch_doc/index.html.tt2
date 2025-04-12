@@ -2,7 +2,6 @@
 
 [%- WRAPPER wrap_html -%]
 
-
 [% WRAPPER h2_section id = "intro", title = "Introduction" %]
 
 <p>
@@ -11,7 +10,7 @@ This is the
 Solver</a>
 architecture document. Its source is written in <a
 href="http://www.docbook.org/">DocBook/XML</a> and from there converted
-to different formats. All the common formats you'd like to use are supplied
+to different formats. Most of the common formats you'd like to use are provided
 here.
 </p>
 
