@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 49;
+use Test::More tests => 51;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny 0.125  qw/ path /;
 use Test::Trap
@@ -969,6 +969,41 @@ eq_or_diff( _child_slurp('24.board'), [$BOARD_24_T], "gen-multi-c 24", );
 
 # TEST
 eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
+
+{
+    my $leveled_dir = path("mkpathed/concated0");
+    $leveled_dir->parent()->mkdir();
+
+    # TEST
+    _test_gen_multi(
+        {
+            blurb => "gen-multi for black_hole",
+            cmd   => [
+                '--concat',        '--game',   'freecell', '--dir',
+                $leveled_dir . '', '--prefix', "prefixo",  '--suffix',
+                "suffixo",         'seq',      '24',       '25',
+            ],
+            exe      => $GEN_MULTI,
+            expected => '',
+        }
+    );
+
+    sub _concat_child_slurp
+    {
+        my ($basename) = @_;
+
+        return [ normalize_lf( scalar $leveled_dir->slurp_utf8 ) ];
+    }
+
+    # TEST
+    eq_or_diff( _concat_child_slurp(),
+        [ $BOARD_24_T . $BOARD_25_T ], "gen-multi", );
+
+    $leveled_dir->parent()->remove_tree;
+    $leveled_dir->mkdir();
+    $leveled_dir->parent()->remove_tree;
+
+}
 
 $dir->remove_tree;
 __END__
