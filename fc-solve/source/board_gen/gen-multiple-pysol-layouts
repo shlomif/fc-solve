@@ -15,6 +15,18 @@ from pysol_cards.deal_game import Game
 from pysol_cards.random import RandomBase
 
 
+class DealsRange:
+    def __init__(self, idxs):
+        assert idxs.pop(0) == 'seq'
+        self.start = int(idxs.pop(0))
+        self.end = int(idxs.pop(0))
+        assert self.start >= 1
+        assert self.end >= self.start
+
+    def run(self):
+        return range(self.start, self.end+1)
+
+
 class GenMultiParseCmdLine:
     def __init__(self, argv):
         cliargs = argv[1:]
@@ -88,13 +100,11 @@ class GenMulti:
     def run(self):
         if self.concat:
             idxs = self.idxs
-            assert idxs.pop(0) == 'seq'
-            start = int(idxs.pop(0))
-            end = int(idxs.pop(0))
+            r = DealsRange(idxs=idxs)
             assert len(idxs) == 0
             with open(self.dir_, 'wt') as f:
                 width = None
-                for deal in range(start, end+1):
+                for deal in r.run():
                     s = self.game.calc_deal_string(deal, self.rend)
                     w = len(s)
                     if width is None:
@@ -110,18 +120,19 @@ class GenMulti:
             os.makedirs(self.dir_, exist_ok=True)
         idxs = self.idxs
         while len(idxs):
-            i = idxs.pop(0)
+            i = idxs[0]
             if i == 'seq':
-                start = int(idxs.pop(0))
-                end = int(idxs.pop(0))
-                for deal in range(start, end+1):
+                r = DealsRange(idxs=idxs)
+                for deal in r.run():
                     self._out_deal(deal)
             elif i == 'slurp':
+                idxs.pop(0)
                 slurpfn = idxs.pop(0)
                 with open(slurpfn, 'rt') as fh:
                     for line in fh:
                         self._out_deal(int(line))
             else:
+                idxs.pop(0)
                 self._out_deal(int(i))
         return 0
 
