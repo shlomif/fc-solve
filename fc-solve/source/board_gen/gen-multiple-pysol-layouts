@@ -93,8 +93,14 @@ class GenMulti:
             end = int(idxs.pop(0))
             assert len(idxs) == 0
             with open(self.dir_, 'wt') as f:
+                width = None
                 for deal in range(start, end+1):
-                    f.write(self.game.calc_deal_string(deal, self.rend))
+                    s = self.game.calc_deal_string(deal, self.rend)
+                    w = len(s)
+                    if width is None:
+                        width = w
+                    assert w == width
+                    f.write(s)
             return
         if self.mkdir_:
             dir_ = Path(self.dir_)
