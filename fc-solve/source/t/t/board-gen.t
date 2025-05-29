@@ -191,6 +191,17 @@ KH 4H 8H 9S 7D 8C
 7C QH KC QC 3D 5S
 EOF
 
+my $BOARD_26_T = <<'EOF';
+5S TS 4C JD 7S AH 9C
+QC 8C QH TC 7H TD 8D
+2C 9H 3S KC 7D KH TH
+AS 4D AC 7C JS 8H AD
+3H QD KS 2H 2D 9S
+8S 5C QS JC JH 3D
+5D 9D 4S 5H 6D 3C
+6H KD 6C 6S 4H 2S
+EOF
+
 # TEST
 _test_out(
     {
@@ -981,7 +992,7 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
             cmd   => [
                 '--concat',        '--game',   'freecell', '--dir',
                 $leveled_dir . '', '--prefix', "prefixo",  '--suffix',
-                "suffixo",         'seq',      '24',       '25',
+                "suffixo",         'seq',      '24',       '26',
             ],
             exe      => $GEN_MULTI,
             expected => '',
@@ -997,7 +1008,7 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
 
     # TEST
     eq_or_diff( _concat_child_slurp(),
-        [ $BOARD_24_T . $BOARD_25_T ], "gen-multi", );
+        [ $BOARD_24_T . $BOARD_25_T . $BOARD_26_T ], "gen-multi", );
 
     $leveled_dir->parent()->remove_tree;
     $leveled_dir->mkdir();
