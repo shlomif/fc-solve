@@ -983,9 +983,15 @@ eq_or_diff( _child_slurp('24.board'), [$BOARD_24_T], "gen-multi-c 24", );
 eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
 
 {
-    my $leveled_dir = path("mkpathed/concated0");
+    my $parent_dir = path("mkpathed");
+
+    sub _child
+    {
+        return $parent_dir->child( "concated0" . shift );
+    }
+    my $leveled_dir = _child("");
     $leveled_dir->parent()->mkdir();
-    my $json_fn = path("mkpathed/concated0.metadata.json");
+    my $json_fn = _child(".metadata.json");
 
     # TEST
     _test_gen_multi(
