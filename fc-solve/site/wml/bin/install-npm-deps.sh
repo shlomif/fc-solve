@@ -6,6 +6,7 @@
 #
 set -e
 npm install
+npx puppeteer browsers install firefox
 exit
 
 #     amdefine big-integer browserify camel-case coffeescript eslint eslint-config-google flatted html-minifier jquery prettier qunit requirejs rollup sass typescript uglify-es yarn \
