@@ -166,11 +166,15 @@ class ShlomifDwimGenDeals:
 
     def run(self):
         from pathlib import Path
-        parent_dir = Path.home() / "Arcs" / "temp" / "solitaire" / "deals"
+        parent_dir = Path.home() / "Arcs" / "temp" / "solitaire" / \
+            "deals" / "ms"
+        os.makedirs(parent_dir, exist_ok=True)
+        concat = True
         for game_variant in ["all_in_a_row", "black_hole", "freecell", "golf"]:
-            dir_obj = parent_dir / game_variant / "ms"
+            dir_obj = parent_dir / game_variant
             dir_ = str(dir_obj)
             generator = GenMulti(
+                concat=concat,
                 dir_=dir_,
                 force=False,
                 game_variant=game_variant,
