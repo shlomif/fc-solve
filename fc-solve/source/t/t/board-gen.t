@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 51;
+use Test::More tests => 52;
 use Test::Differences qw/ eq_or_diff /;
 use Path::Tiny 0.125  qw/ path /;
 use Test::Trap
@@ -12,6 +12,7 @@ use Test::Trap
 use FC_Solve::Paths
     qw/ $FIND_DEAL_INDEX $GEN_MULTI $MAKE_PYSOL bin_board bin_exe_raw normalize_lf src_script /;
 use Math::BigInt lib => 'GMP';
+use JSON::MaybeXS qw/ decode_json /;
 
 sub _test_out
 {
@@ -984,6 +985,7 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
 {
     my $leveled_dir = path("mkpathed/concated0");
     $leveled_dir->parent()->mkdir();
+    my $json_fn = path("mkpathed/concated0.metadata.json");
 
     # TEST
     _test_gen_multi(
@@ -1009,6 +1011,11 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
     # TEST
     eq_or_diff( _concat_child_slurp(),
         [ $BOARD_24_T . $BOARD_25_T . $BOARD_26_T ], "gen-multi", );
+
+    my $json = decode_json( scalar $json_fn->slurp_utf8() );
+
+    # TEST
+    is( $json->{"width"}, length($BOARD_24_T), "metadata width" );
 
     $leveled_dir->parent()->remove_tree;
     $leveled_dir->mkdir();

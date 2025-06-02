@@ -111,6 +111,29 @@ class GenMulti:
                         width = w
                     assert w == width
                     f.write(s)
+            metadata_fn = self.dir_ + ".metadata.json"
+
+            def i2s(i):
+                assert isinstance(i, int)
+                return "{}".format(i)
+            which_deals = (
+                "ms" if (self.which_deals == RandomBase.DEALS_MS)
+                else "pysolfc"
+            )
+            metadata = {
+                "game": self.game_variant,
+                "seeds": [{
+                    "end": i2s(r.end),
+                    "start": i2s(r.start),
+                    "type": "seq",
+                }],
+                "width": i2s(width),
+                "which_deals": which_deals,
+            }
+            import json
+            with open(metadata_fn, 'wt') as f:
+                json.dump(metadata, f, sort_keys=True)
+
             return
         if self.mkdir_:
             dir_ = Path(self.dir_)
