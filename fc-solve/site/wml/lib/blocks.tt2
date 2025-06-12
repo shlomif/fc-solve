@@ -14,7 +14,7 @@
 
 <section class="email h2 note" id="contact_note_on_top_of_page">
 <header>
-<img alt="E-mail" class="sign" src="[% base_path %]images/openclipart-1426640939-mail-gfx.min.svg" />
+<img alt="General E-mail inavailability" class="sign" src="[% base_path %]images/no-email--openclipart-1426640939-mail-gfx.min.svg" />
 <h2>Note to Freecell Solver’s Users</h2>
 </header>
 <p>
