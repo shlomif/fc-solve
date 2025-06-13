@@ -188,4 +188,4 @@ class ShlomifDwimGenDeals:
 
 
 if __name__ == "__main__":
-    sys.exit(GenMultiParseCmdLine(sys.argv).run())
+    sys.exit(GenMultiParseCmdLine(argv=sys.argv).run())
