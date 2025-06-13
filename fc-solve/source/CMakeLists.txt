@@ -1020,6 +1020,7 @@ IF (NOT "${_PYTHON3}" STREQUAL "_PYTHON3-NOTFOUND")
     SET (found_python3 "1")
     ASSERT_PYTHON3_MODULE_PRESENCE("six" "")
     ASSERT_PYTHON3_MODULE_PRESENCE("pysol_cards" "")
+    ASSERT_PYTHON3_MODULE_PRESENCE("pysol_cards.gen_multi_cli" "")
 ENDIF ()
 
 IF ("TRUE")
