@@ -58,7 +58,7 @@ BuildRequires: pkgconfig(librinutils)
 BuildRequires: python3-cffi
 BuildRequires: python3-freecell_solver
 BuildRequires: python3-pycotap
-BuildRequires: python3-pysol-cards
+BuildRequires: python3-pysol-cards >= 0.24
 BuildRequires: rpm-build
 BuildRequires: tar
 BuildRequires: the_silver_searcher
