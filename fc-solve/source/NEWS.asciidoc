@@ -4,6 +4,20 @@ Shlomi Fish <shlomif@cpan.org>
 :Date: 2024-06-30
 :Revision: $Id$
 
+Version 6.14.0: (17-Jun-2025)
+----------------------------
+
+1. Require pysol_cards.gen_multi_cli and avoid requiring random2.
+
+2. Add comments and documentation.
+
+3. Apply add_tag("tests_may_fail") to more failing compile-time
+configurations.
+
+4. Add “STRICT => 1” to Template Toolkit invocations.
+
+5. clang-format and perltidy syntax fixes.
+
 Version 6.12.0: (30-Jun-2024)
 ----------------------------
 

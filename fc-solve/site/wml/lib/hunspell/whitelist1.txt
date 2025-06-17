@@ -1258,6 +1258,8 @@ MAX_NUM_DECKS
 OpenCL-optimised
 PACKAGE_VERSION
 Refactorings
+Toolkit
+add_tag
 antonio-rojas
 appveyor
 asciidoc
@@ -1281,6 +1283,7 @@ find-freecell-deal-index-julia-opencl
 freecell_solver_user_limit_iterations_long
 freecell_solver_user_soft_limit_iterations_long
 gen-multiple-pysol-layouts
+gen_multi_cli
 get_board__setup_string
 get_board_l__without_setup
 global_instance
@@ -1298,8 +1301,10 @@ macOS
 make_multi_boards
 msi
 obf
+perltidy
 pyperl
 pysol-cards
+pysol_cards
 rinutils
 runtimes
 show_bug
@@ -1307,6 +1312,7 @@ solution_moves
 sp
 stackoverflow
 summarizing_solver
+tests_may_fail
 tidyall
 transpose-freecell-board
 uint16_t

@@ -58,6 +58,8 @@ BuildRequires: pkgconfig(librinutils)
 BuildRequires: python3-cffi
 BuildRequires: python3-freecell_solver
 BuildRequires: python3-pycotap
+# We need “BuildRequires: python3-pysol-cards >= 0.24”
+# for pysol_cards.gen_multi_cli
 BuildRequires: python3-pysol-cards >= 0.24
 BuildRequires: rpm-build
 BuildRequires: tar
