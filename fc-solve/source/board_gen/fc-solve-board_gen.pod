@@ -15,7 +15,7 @@ B<make_pysol_freecell_board.py> I<[-t]> I<[-F]> I<[--ms]> I<board-number> [I<gam
 
 These programs are command-line programs that can generate the I<initial> board
 of the games of several popular Solitaire implementations. Those boards
-can be in turn be input to B<fc-solve> by means of a pipeline, or placed
+can in turn be input to B<fc-solve> by means of a pipeline, or placed
 inside a file for safe-keeping.
 
 B<make_pysol_freecell_board.py> also accepts an optional third argument which
