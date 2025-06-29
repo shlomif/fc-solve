@@ -1441,8 +1441,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
      *
      * Currently requires patching the source.
      * */
-#define ENABLE_ONE_CARD_COLUMNS_PRUNE 0
-#if ENABLE_ONE_CARD_COLUMNS_PRUNE
+#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
     int next_fc = 0;
 
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
