@@ -9,10 +9,10 @@
   },
   "dependencies": {
     "@babel/cli": "^7.27.2",
-    "@babel/core": "^7.27.4",
+    "@babel/core": "^7.27.7",
     "@babel/preset-env": "^7.27.2",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^24.0.3",
+    "@types/node": "^24.0.7",
     "@types/qunit": "^2.19.12",
     "acorn": "^8.15.0",
     "amdefine": "^1.0.1",
@@ -25,7 +25,7 @@
     "elliptic": "^6.6.1",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^10.1.5",
-    "eslint-plugin-prettier": "^5.5.0",
+    "eslint-plugin-prettier": "^5.5.1",
     "flatted": "^3.3.3",
     "html-minifier": "^4.0.0",
     "jquery": "^3.7.1",
@@ -35,12 +35,12 @@
     "node-qunit": "^2.0.1",
     "npm": "^11.4.2",
     "param-case": "^4.0.0",
-    "prettier": "^3.5.3",
-    "puppeteer": "^24.10.2",
+    "prettier": "^3.6.2",
+    "puppeteer": "^24.11.1",
     "qunit": "^2.24.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
-    "rollup": "^4.44.0",
+    "rollup": "^4.44.1",
     "tap": "^21.1.0",
     "tar": "^7.4.3",
     "tar-fs": "^3.0.10",
@@ -49,7 +49,7 @@
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
-    "eslint": "^9.29.0",
+    "eslint": "^9.30.0",
     "typescript": "^5.8.3"
   },
   "scripts": {
