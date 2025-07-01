@@ -1377,7 +1377,11 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
 
     sfs_check_state_begin();
     bool cards_were_moved = false;
-    bool num_cards_moved;
+    bool num_cards_moved = false;
+    if (!soft_thread->enable_pruning.run_tofounds)
+    {
+        goto skip_enable_raymonds_prune;
+    }
     do
     {
         num_cards_moved = false;
@@ -1435,13 +1439,20 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
         }
     } while (num_cards_moved);
 
+skip_enable_raymonds_prune:
+
     /*
      * Enable a prune that makes bulk / range benchnmarks run faster
      * but breaks the test suite and makes some deals unsolved.
      *
      * Currently requires patching the source.
      * */
-#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
+#if !defined(FCS_ZERO_FREECELLS_MODE)
+
+    if (!soft_thread->enable_pruning.run_onecard)
+    {
+        goto skip_enable_one_card_columns_prune;
+    }
     int next_fc = 0;
 
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
@@ -1480,6 +1491,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             stack_idx, (stack_i)next_fc);
         ++next_fc;
     }
+skip_enable_one_card_columns_prune:
 #endif
 
     if (!cards_were_moved)

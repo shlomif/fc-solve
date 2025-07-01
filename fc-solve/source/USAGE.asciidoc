@@ -733,10 +733,14 @@ scan.
 *Soft-thread-specific*
 
 This option sets the pruning algorithm for the soft thread. Current valid
-values are only the empty string (+""+) for no pruning and +r:tf+ (short
+values are the empty string (+""+) for no pruning and +r:tf+ (short
 for "Run: to foundations") for Horne's rule. See:
 
 https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/214
+
+To move one-card columns to the freecells when possible, use +r:oc+ .
+
+If the string contains both +r:tf+ and +r:oc+, then both will be attempted.
 
 [id="optimize-solution_flag"]
 -opt , --optimize-solution

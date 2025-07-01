@@ -428,9 +428,11 @@ static inline bool fcs__should_state_be_pruned__state(
     fcs__should_state_be_pruned__state(ptr_state)
 #else
 static inline bool fcs__should_state_be_pruned(
-    const bool enable_pruning, const fcs_collectible_state *const ptr_state)
+    const fcs_pruning_policy_type enable_pruning,
+    const fcs_collectible_state *const ptr_state)
 {
-    return (enable_pruning && fcs__should_state_be_pruned__state(ptr_state));
+    return (
+        enable_pruning.global && fcs__should_state_be_pruned__state(ptr_state));
 }
 #endif
 

@@ -342,6 +342,11 @@ typedef enum
 #endif
 } fcs_super_method_type;
 
+typedef struct
+{
+    bool global, run_tofounds, run_onecard;
+} fcs_pruning_policy_type;
+
 struct fc_solve__patsolve_thread_struct;
 struct fc_solve_soft_thread_struct
 {
@@ -453,7 +458,7 @@ struct fc_solve_soft_thread_struct
     // Whether pruning should be done.
     // This variable is temporary - there should be a better pruning
     // abstraction with several optional prunes.
-    bool enable_pruning;
+    fcs_pruning_policy_type enable_pruning;
 #endif
 
 #ifndef FCS_DISABLE_PATSOLVE

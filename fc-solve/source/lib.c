@@ -999,7 +999,7 @@ static inline ssize_t get_depth(const moves_by_depth_unit *curr_by_depth_unit)
 }
 #endif
 
-static inline bool was_pruned(const bool enable_pruning,
+static inline bool was_pruned(const fcs_pruning_policy_type enable_pruning,
     fcs_collectible_state *ptr_state, fcs_soft_thread *const soft_thread,
     fcs_soft_dfs_stack_item *the_soft_dfs_info, fcs_kv_state *pass,
     fcs_derived_states_list *derived_list, fcs_moves_order *the_moves_list)
@@ -4389,25 +4389,25 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 #endif
 
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
+static bool is_in(const char *const haystack, const char *const needle)
+{
+    return strstr(haystack, needle) ? true : false;
+}
+
 extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     const char *pruning FCS__PASS_ERR_STR(char **error_string))
 {
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
-    if (!strcmp(pruning, "r:tf"))
-    {
-        soft_thread->enable_pruning = true;
-    }
-    else if (pruning[0] == '\0')
-    {
-        soft_thread->enable_pruning = false;
-    }
-    else
-    {
-        ALLOC_ERROR_STRING(
-            error_string, "Unknown pruning value - must be \"r:tf\" or empty.");
-        return 1;
-    }
+    const_AUTO(run_tofounds, is_in(pruning, "r:tf"));
+    const_AUTO(run_onecard, is_in(pruning, "r:oc"));
+
+    soft_thread->enable_pruning = (typeof(soft_thread->enable_pruning)){
+        .run_tofounds = run_tofounds,
+        .run_onecard = run_onecard,
+        .global = (run_tofounds || run_onecard),
+    };
+
     return 0;
 }
 #endif

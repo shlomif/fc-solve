@@ -88,8 +88,16 @@ EOF
         '-sp' => {
             f => 'freecell_solver_user_set_pruning',
             p => sub {
-                return qq#"# . shift
-                    . qq#" FCS__PASS_ERR_STR(&fcs_user_errstr)#;
+                my $arg = shift;
+                if ( $arg eq "r:tf" )
+                {
+                    $arg = "r:tf,r:oc";
+                }
+                else
+                {
+                    die "wrong arg=$arg;";
+                }
+                return qq#"# . $arg . qq#" FCS__PASS_ERR_STR(&fcs_user_errstr)#;
             },
         },
         '-step' => {
