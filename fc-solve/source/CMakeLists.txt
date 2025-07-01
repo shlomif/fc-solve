@@ -159,6 +159,8 @@ option (SKIP_PERL_TESTING_TASK_CHECK "skip check on testing")
 option (USE_SIGNED_CHARS "-fsigned-char")
 option (USE_UNSIGNED_CHARS "-funsigned-char")
 option (FC_SOLVE_INSTANCE_PARAMS_QUERYING "run-time API functions for querying game parameters (EXPERIMENTAL)")
+option (FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE "Enable a prune that makes bulk / range benchnmarks run faster (EXPERIMENTAL)" TRUE)
+
 
 IF (FCS_ZERO_FREECELLS_MODE)
     SET (FCS_DBM_FREECELLS_NUM 0)

@@ -1441,7 +1441,17 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
      *
      * Currently requires patching the source.
      * */
-#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
+#if defined(FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE) &&                              \
+    !defined(FCS_ZERO_FREECELLS_MODE)
+
+#ifdef FCS_FREECELL_ONLY
+    fcs_instance *const instance = hard_thread;
+#endif
+
+    if (!instance->enable_one_card_columns_prune)
+    {
+        goto skip_enable_one_card_columns_prune;
+    }
     int next_fc = 0;
 
     for (stack_i stack_idx = 0; stack_idx < LOCAL_STACKS_NUM; stack_idx++)
@@ -1480,6 +1490,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             stack_idx, (stack_i)next_fc);
         ++next_fc;
     }
+skip_enable_one_card_columns_prune:
 #endif
 
     if (!cards_were_moved)

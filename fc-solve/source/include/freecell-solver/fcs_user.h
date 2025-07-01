@@ -343,6 +343,9 @@ DLLEXPORT extern int freecell_solver_user_set_flares_choice(
 DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     void *const user_instance, const double new_factor);
 
+DLLEXPORT extern void freecell_solver_user_set_one_card_columns_prune(
+    void *const api_instance, const int inew_value);
+
 DLLEXPORT extern int freecell_solver_user_set_patsolve_x_param(
     void *const api_instance, const int position,
     const int x_param_val FCS__PASS_ERR_STR(char **const error_string));
