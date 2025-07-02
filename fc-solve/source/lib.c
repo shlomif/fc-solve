@@ -4403,22 +4403,13 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
 {
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
-    if (!strcmp(pruning, "r:tf"))
-    {
-        soft_thread->enable_pruning.run_tofounds = true;
-    }
-    else if (pruning[0] == '\0')
-    {
-        soft_thread->enable_pruning.run_tofounds = false;
-    }
-    else
-    {
-        ALLOC_ERROR_STRING(
-            error_string, "Unknown pruning value - must be \"r:tf\" or empty.");
-        return 1;
-    }
+    soft_thread->enable_pruning.run_tofounds =
+        strstr(pruning, "r:tf") ? true : false;
+    soft_thread->enable_pruning.run_onecard =
+        strstr(pruning, "r:oc") ? true : false;
     soft_thread->enable_pruning.global =
-        soft_thread->enable_pruning.run_tofounds;
+        (soft_thread->enable_pruning.run_tofounds ||
+            soft_thread->enable_pruning.run_onecard);
     return 0;
 }
 #endif

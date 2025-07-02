@@ -1444,11 +1444,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
 #if defined(FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE) &&                              \
     !defined(FCS_ZERO_FREECELLS_MODE)
 
-#ifdef FCS_FREECELL_ONLY
-    fcs_instance *const instance = hard_thread;
-#endif
-
-    if (!instance->enable_one_card_columns_prune)
+    if (!soft_thread->enable_pruning.run_onecard)
     {
         goto skip_enable_one_card_columns_prune;
     }

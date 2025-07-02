@@ -344,7 +344,7 @@ typedef enum
 
 typedef struct
 {
-    bool global, run_tofounds;
+    bool global, run_tofounds, run_onecard;
 } fcs_pruning_policy_type;
 
 struct fc_solve__patsolve_thread_struct;
