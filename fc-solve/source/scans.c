@@ -400,7 +400,7 @@ fc_solve_solve_process_ret_t fc_solve_befs_or_bfs_do_solve(
     PTR_STATE = BEFS_M_VAR(soft_thread, first_state_to_check);
     FCS_ASSIGN_STATE_KEY();
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-    const bool enable_pruning = soft_thread->enable_pruning;
+    const_SLOT(enable_pruning, soft_thread);
 #endif
 
     fcs_iters_int *const instance_num_checked_states_ptr =

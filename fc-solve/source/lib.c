@@ -1002,7 +1002,7 @@ static inline ssize_t get_depth(const moves_by_depth_unit *curr_by_depth_unit)
 }
 #endif
 
-static inline bool was_pruned(const bool enable_pruning,
+static inline bool was_pruned(const fcs_pruning_policy_type enable_pruning,
     fcs_collectible_state *ptr_state, fcs_soft_thread *const soft_thread,
     fcs_soft_dfs_stack_item *the_soft_dfs_info, fcs_kv_state *pass,
     fcs_derived_states_list *derived_list, fcs_moves_order *the_moves_list)
@@ -4405,11 +4405,11 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
 
     if (!strcmp(pruning, "r:tf"))
     {
-        soft_thread->enable_pruning = true;
+        soft_thread->enable_pruning.run_tofounds = true;
     }
     else if (pruning[0] == '\0')
     {
-        soft_thread->enable_pruning = false;
+        soft_thread->enable_pruning.run_tofounds = false;
     }
     else
     {
@@ -4417,6 +4417,8 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
             error_string, "Unknown pruning value - must be \"r:tf\" or empty.");
         return 1;
     }
+    soft_thread->enable_pruning.global =
+        soft_thread->enable_pruning.run_tofounds;
     return 0;
 }
 #endif
