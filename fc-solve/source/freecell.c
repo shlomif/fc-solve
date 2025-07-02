@@ -1441,8 +1441,7 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
      *
      * Currently requires patching the source.
      * */
-#if defined(FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE) &&                              \
-    !defined(FCS_ZERO_FREECELLS_MODE)
+#if !defined(FCS_ZERO_FREECELLS_MODE)
 
     if (!soft_thread->enable_pruning.run_onecard)
     {

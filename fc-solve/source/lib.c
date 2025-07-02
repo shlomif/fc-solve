@@ -135,9 +135,6 @@ static inline void alloc_instance(
 #ifdef FCS_RCS_STATES
         .rcs_states_cache.max_num_elements_in_cache = 10000,
 #endif
-#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
-        .enable_one_card_columns_prune = false,
-#endif
 #ifndef FCS_DISABLE_SIMPLE_SIMON
         .is_simple_simon = false,
 #endif
@@ -3082,12 +3079,6 @@ static inline fc_solve_solve_process_ret_t resume_solution(fcs_user *const user)
 {
     fc_solve_solve_process_ret_t ret = FCS_STATE_IS_NOT_SOLVEABLE;
 
-#if 0
-#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
-    set_enable_one_card_columns_prune(user, false);
-#endif
-#endif
-
 #ifndef FCS_WITHOUT_MAX_NUM_STATES
     bool process_ret = false;
 #else
@@ -4553,19 +4544,6 @@ DLLEXPORT extern void freecell_solver_user_set_flares_iters_factor(
     fcs_user *const user = (fcs_user *)api_instance;
 
     user->flares_iters_factor = new_factor;
-}
-#endif
-
-#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
-DLLEXPORT extern void freecell_solver_user_set_one_card_columns_prune(
-    void *const api_instance GCC_UNUSED, const int inew_value GCC_UNUSED)
-{
-    const_AUTO(new_value, (bool)inew_value);
-    fcs_user *const user = (fcs_user *)api_instance;
-    FLARES_LOOP_START()
-    flare->obj.enable_one_card_columns_prune = new_value;
-    INSTANCE_ITEM_FLARES_LOOP_END()
-    INSTANCES_LOOP_END()
 }
 #endif
 

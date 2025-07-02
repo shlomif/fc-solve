@@ -658,11 +658,6 @@ struct fc_solve_instance_struct
     // Whether or not this is a Simple Simon-like game.
     bool is_simple_simon;
 #endif
-
-#ifdef FCS_ENABLE_ONE_CARD_COLUMNS_PRUNE
-    // Whether or not this is a Simple Simon-like game.
-    bool enable_one_card_columns_prune;
-#endif
 };
 
 #define fcs_st_instance(soft_thread) HT_INSTANCE((soft_thread)->hard_thread)
