@@ -4389,15 +4389,19 @@ int DLLEXPORT freecell_solver_user_set_optimization_scan_tests_order(
 #endif
 
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
+static bool is_in(const char *const haystack, const char *const needle)
+{
+    return strstr(haystack, needle) ? true : false;
+}
+
 extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
     const char *pruning FCS__PASS_ERR_STR(char **error_string))
 {
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
-    soft_thread->enable_pruning.run_tofounds =
-        strstr(pruning, "r:tf") ? true : false;
-    soft_thread->enable_pruning.run_onecard =
-        strstr(pruning, "r:oc") ? true : false;
+    soft_thread->enable_pruning.run_tofounds = is_in(pruning, "r:tf");
+    soft_thread->enable_pruning.run_onecard = is_in(pruning, "r:oc");
+
     soft_thread->enable_pruning.global =
         (soft_thread->enable_pruning.run_tofounds ||
             soft_thread->enable_pruning.run_onecard);
