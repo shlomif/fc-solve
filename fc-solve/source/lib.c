@@ -4399,12 +4399,15 @@ extern int DLLEXPORT freecell_solver_user_set_pruning(void *api_instance,
 {
     fcs_soft_thread *const soft_thread = api_soft_thread(api_instance);
 
-    soft_thread->enable_pruning.run_tofounds = is_in(pruning, "r:tf");
-    soft_thread->enable_pruning.run_onecard = is_in(pruning, "r:oc");
+    const_AUTO(run_tofounds, is_in(pruning, "r:tf"));
+    const_AUTO(run_onecard, is_in(pruning, "r:oc"));
 
-    soft_thread->enable_pruning.global =
-        (soft_thread->enable_pruning.run_tofounds ||
-            soft_thread->enable_pruning.run_onecard);
+    soft_thread->enable_pruning = (typeof(soft_thread->enable_pruning)){
+        .run_tofounds = run_tofounds,
+        .run_onecard = run_onecard,
+        .global = (run_tofounds || run_onecard),
+    };
+
     return 0;
 }
 #endif
