@@ -1377,7 +1377,11 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
 
     sfs_check_state_begin();
     bool cards_were_moved = false;
-    bool num_cards_moved;
+    bool num_cards_moved = false;
+    if (!soft_thread->enable_pruning.run_tofounds)
+    {
+        goto skip_enable_raymonds_prune;
+    }
     do
     {
         num_cards_moved = false;
@@ -1434,6 +1438,8 @@ extern fcs_collectible_state *fc_solve_sfs_raymond_prune(
             cards_were_moved = true;
         }
     } while (num_cards_moved);
+
+skip_enable_raymonds_prune:
 
     /*
      * Enable a prune that makes bulk / range benchnmarks run faster
