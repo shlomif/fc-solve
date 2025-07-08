@@ -3,6 +3,8 @@
 use strict;
 use warnings;
 
+my $SUBST_PRUNE = 1;
+
 BEGIN
 {
     if ( !@ARGV or $ARGV[0] ne 'compile' )
@@ -91,7 +93,10 @@ EOF
                 my $arg = shift;
                 if ( $arg eq "r:tf" )
                 {
-                    $arg = "r:tf,r:oc";
+                    if ($SUBST_PRUNE)
+                    {
+                        $arg = "r:tf,r:oc";
+                    }
                 }
                 else
                 {
@@ -178,6 +183,12 @@ qq#freecell_solver_user_set_a_star_weight(instance, $pos, $v);\n#;
     path( $args->{out_fn} )->spew_utf8($out);
 
     return;
+}
+
+if ( ( @ARGV >= 2 ) and ( $ARGV[1] eq '--no-subst-prune' ) )
+{
+    $SUBST_PRUNE = 0;
+    splice @ARGV, 1, 1;
 }
 
 # TEST
