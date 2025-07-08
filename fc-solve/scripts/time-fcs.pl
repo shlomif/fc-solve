@@ -12,14 +12,15 @@ use Path::Tiny qw/ path /;
 
 sub get_time
 {
-    my $l = shift;
+    my $fn = shift;
+    my $l  = shift;
     if ( $l =~ m{ at ([0-9]+\.[0-9]+)} )
     {
         return $1;
     }
     else
     {
-        die "Cannot find a number at line '$l'";
+        die "Cannot find a number at line '$l' in file '$fn'";
     }
 }
 
@@ -36,7 +37,7 @@ foreach my $fn (@ARGV)
         $output .= $fn . ':';
     }
     $output .=
-        +( get_time( $lines[-1] ) - get_time( $lines[0] ) ) . '::'
+        +( get_time( $fn, $lines[-1] ) - get_time( $fn, $lines[0] ) ) . '::'
         . (
           $lines[-1] =~ /total_num_iters=([0-9]+)/
         ? $1
