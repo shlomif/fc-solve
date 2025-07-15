@@ -17,6 +17,10 @@
 #include "try_param.h"
 #include "print_time.h"
 
+#ifdef FCS_WITHOUT_MAX_NUM_STATES
+#error "--max-iters" and friends must be enabled to prevent RAM overuse
+#endif
+
 #ifndef FCS_WITHOUT_CMD_LINE_HELP
 static void print_help(void)
 {
