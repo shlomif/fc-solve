@@ -19,9 +19,16 @@ extern "C" {
 #endif
 
 #ifndef FCS_DBM_WITHOUT_CACHES
+#include "kaz_tree.h"
+
+#ifdef AVL_with_rb_param
+#define CTXARG , void *context
+#else
+#define CTXARG
+#endif
 
 static int fc_solve_compare_pre_cache_keys(
-    const void *const void_a, const void *const void_b, void *const context)
+    const void *const void_a, const void *const void_b CTXARG)
 {
 #define GET_PARAM(p) ((((const pre_cache_key_val_pair *)(p))->key))
     return memcmp(
@@ -91,8 +98,8 @@ static inline void cache_populate_from_pre_cache(
     for (dnode_t *node = fc_solve_kaz_tree_first(kaz_tree); node;
         node = fc_solve_kaz_tree_next(kaz_tree, node))
     {
-        cache_insert(
-            cache, &(((pre_cache_key_val_pair *)(node->dict_key))->key));
+        cache_insert(cache,
+            &(((pre_cache_key_val_pair *)(node->dict_key))->key), NULL, '\0');
     }
 #endif
 }
@@ -282,7 +289,8 @@ static void calc_trace(fcs_dbm_record *const ptr_initial_record,
 
 static inline void mark_and_sweep_old_states(
     dbm_solver_instance *const instance GCC_UNUSED,
-    dict_t *const kaz_tree GCC_UNUSED, const size_t curr_depth GCC_UNUSED)
+    fcs_dbm__abstract__states_lookup_t *const kaz_tree GCC_UNUSED,
+    const size_t curr_depth GCC_UNUSED)
 {
 #ifndef FCS_NO_DBM_AVL
     // Now that we are about to descend to a new depth, let's
@@ -487,30 +495,30 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
     return false;
 }
 
-static inline fcs_dbm_record *cache_store__has_key(
+static inline bool cache_store__has_key(fcs_dbm_token_type *const ret,
     fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent)
 {
 #ifndef FCS_DBM_WITHOUT_CACHES
     if (cache_does_key_exist(&(cache_store->cache), key))
     {
-        return NULL;
+        return false;
     }
 #ifndef FCS_DBM_CACHE_ONLY
     else if (pre_cache_does_key_exist(&(cache_store->pre_cache), key))
     {
-        return NULL;
+        return false;
     }
     else if (fc_solve_dbm_store_does_key_exist(cache_store->store, key->s))
     {
         cache_insert(&(cache_store->cache), key, NULL, '\0');
-        return NULL;
+        return false;
     }
 #endif
     return ((fcs_dbm_record *)key);
 #else
     return fc_solve_dbm_store_insert_key_value(
-        cache_store->store, key, parent, true);
+        ret, cache_store->store, key, parent, true);
 #endif
 }
 

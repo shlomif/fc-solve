@@ -33,7 +33,7 @@ typedef union fcs_pre_cache_key_val_pair_struct {
 
 typedef struct
 {
-    dict_t *kaz_tree;
+    fcs_dbm__abstract__states_lookup_t *kaz_tree;
     compact_allocator kv_allocator;
     pre_cache_key_val_pair *kv_recycle_bin;
     unsigned long count_elements;
@@ -43,14 +43,14 @@ typedef struct
 
 typedef void *fcs_dbm_store;
 void fc_solve_dbm_store_init(fcs_dbm_store *, const char *, void **);
-dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store);
+fcs_dbm__abstract__states_lookup_t *fc_solve_dbm_store_get_dict(fcs_dbm_store);
 bool fc_solve_dbm_store_does_key_exist(fcs_dbm_store, const unsigned char *);
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store, const unsigned char *const, unsigned char *const);
 
-fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent,
-    const bool should_modify_parent);
+bool fc_solve_dbm_store_insert_key_value(fcs_dbm_token_type *ret,
+    fcs_dbm_store store, const fcs_encoded_state_buffer *key,
+    fcs_dbm_store_val parent, const bool should_modify_parent);
 
 #ifndef FCS_DBM_WITHOUT_CACHES
 void fc_solve_dbm_store_offload_pre_cache(

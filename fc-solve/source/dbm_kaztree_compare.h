@@ -57,6 +57,11 @@ static int compare_records(const void *const void_a, const void *const void_b,
 {
     return compare_records__noctx(void_a, void_b);
 }
+#else
+static int compare_records(const void *const void_a, const void *const void_b)
+{
+    return compare_records__noctx(void_a, void_b);
+}
 #endif
 
 #ifdef __cplusplus

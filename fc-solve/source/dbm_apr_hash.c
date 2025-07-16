@@ -22,9 +22,9 @@ typedef struct
     void **common_recycle_bin;
 } dbm;
 
-dict_t fc_solve_kaz_tree_create(dict_comp_t cmp GCC_UNUSED,
-    void *baton GCC_UNUSED, meta_allocator *const meta_alloc,
-    void **common_recycle_bin)
+fcs_dbm__abstract__states_lookup_t fcs_dbm__abstract__states_lookup__create(
+    dict_comp_t cmp GCC_UNUSED, void *baton GCC_UNUSED,
+    meta_allocator *const meta_alloc, void **common_recycle_bin)
 {
     if (!meta_alloc->apr_pool)
     {
@@ -34,11 +34,12 @@ dict_t fc_solve_kaz_tree_create(dict_comp_t cmp GCC_UNUSED,
     dbm *r = SMALLOC1(r);
     r->h = ret;
     r->common_recycle_bin = common_recycle_bin;
-    return (dict_t)(r);
+    return (fcs_dbm__abstract__states_lookup_t)(r);
 }
 static const size_t RECORD_SIZE = sizeof(fcs_dbm_record);
 static const size_t KEY_SIZE = sizeof(fcs_encoded_state_buffer);
-dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t v, dict_key_t key_proto)
+dict_ret_key_t fcs_dbm__abstract__states_lookup__alloc_insert(
+    fcs_dbm__abstract__states_lookup_t v, dict_key_t key_proto)
 {
     dbm *d = (dbm *)v;
     apr_hash_t *h = d->h;
@@ -60,9 +61,14 @@ dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t v, dict_key_t key_proto)
     apr_hash_set(h, key, KEY_SIZE, key);
     return NULL;
 }
-dict_key_t fc_solve_kaz_tree_lookup_value(dict_t dict, cdict_key_t key)
+dict_key_t fcs_dbm__abstract__states_lookup__lookup_value(
+    fcs_dbm__abstract__states_lookup_t dict, cdict_key_t key)
 {
     apr_hash_t *h = ((dbm *)dict)->h;
     return apr_hash_get(h, key, KEY_SIZE);
 }
-void fc_solve_kaz_tree_destroy(dict_t dict) { free((dbm *)dict); }
+void fcs_dbm__abstract__states_lookup__destroy(
+    fcs_dbm__abstract__states_lookup_t dict)
+{
+    free((dbm *)dict);
+}

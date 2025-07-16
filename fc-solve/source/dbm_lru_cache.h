@@ -35,7 +35,7 @@ typedef struct
 #if (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_JUDY)
     Pvoid_t states_values_to_keys_map;
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
-    dict_t *kaz_tree;
+    fcs_dbm__abstract__states_lookup_t *kaz_tree;
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif

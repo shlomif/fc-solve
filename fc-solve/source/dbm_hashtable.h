@@ -22,7 +22,7 @@ extern "C" {
 #include "delta_states.h"
 #endif
 
-typedef void *dict_t;
+typedef void *fcs_dbm__abstract__states_lookup_t;
 #ifdef AVL_with_rb_param
 typedef int (*dict_comp_t)(const void *, const void *, void *);
 #else
@@ -37,13 +37,17 @@ typedef void *dict_key_t;
 typedef dict_key_t dict_ret_key_t;
 #endif
 
-extern void fc_solve_kaz_tree_destroy(dict_t);
-extern dict_t fc_solve_kaz_tree_create(
+extern void fcs_dbm__abstract__states_lookup__destroy(
+    fcs_dbm__abstract__states_lookup_t);
+extern fcs_dbm__abstract__states_lookup_t
+fcs_dbm__abstract__states_lookup__create(
     dict_comp_t, void *, meta_allocator *, void **);
-extern dict_key_t fc_solve_kaz_tree_lookup_value(dict_t dict, cdict_key_t key);
-extern void fc_solve_kaz_tree_delete_by_value(
-    dict_t *const kaz_tree, dict_key_t value);
-extern dict_ret_key_t fc_solve_kaz_tree_alloc_insert(dict_t, dict_key_t);
+extern dict_key_t fcs_dbm__abstract__states_lookup__lookup_value(
+    fcs_dbm__abstract__states_lookup_t dict, cdict_key_t key);
+extern void fcs_dbm__abstract__states_lookup__delete_by_value(
+    fcs_dbm__abstract__states_lookup_t *const kaz_tree, dict_key_t value);
+extern dict_ret_key_t fcs_dbm__abstract__states_lookup__alloc_insert(
+    fcs_dbm__abstract__states_lookup_t, dict_key_t);
 
 #ifdef __cplusplus
 }

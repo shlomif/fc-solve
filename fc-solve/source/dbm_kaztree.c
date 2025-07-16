@@ -11,7 +11,7 @@
 
 typedef struct
 {
-    dict_t *kaz_tree;
+    fcs_dbm__abstract__states_lookup_t *kaz_tree;
     meta_allocator meta_alloc;
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     compact_allocator allocator;
@@ -25,8 +25,8 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
 
     fc_solve_meta_compact_allocator_init(&(db->meta_alloc));
 
-    db->kaz_tree = fc_solve_kaz_tree_create(
-        compare_records__noctx, NULL, &(db->meta_alloc), recycle_bin_ptr);
+    db->kaz_tree = fcs_dbm__abstract__states_lookup__create(
+        compare_records, NULL, &(db->meta_alloc), recycle_bin_ptr);
 
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     fc_solve_compact_allocator_init(&(db->allocator), &(db->meta_alloc));
@@ -35,13 +35,16 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
     *store = (fcs_dbm_store)db;
 }
 
-dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
+fcs_dbm__abstract__states_lookup_t *__attribute__((pure))
+fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 {
     return (((fcs_dbm *)store)->kaz_tree);
 }
 
+#ifndef FCS_DBM_USE_DISK_CACHES
 // Returns true if the key was added (it didn't already exist.)
-fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
+bool fc_solve_dbm_store_insert_key_value(
+    fcs_dbm_token_type *const ret_token_body, fcs_dbm_store store,
     const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent,
     const bool should_modify_parent GCC_UNUSED)
 {
@@ -78,14 +81,15 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     to_check->parent = parent->parent;
 #endif
     const bool was_item_inserted_now =
-        (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+        (fcs_dbm__abstract__states_lookup__alloc_insert(
+             db->kaz_tree, to_check) == NULL);
 
     if (!was_item_inserted_now)
     {
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
         fcs_compact_alloc_release(&(db->allocator));
 #endif
-        return NULL;
+        return false;
     }
 #ifndef FCS_DBM__VAL_IS_ANCESTOR
     if (should_modify_parent && parent)
@@ -94,12 +98,14 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     }
 #endif
 
-    var_AUTO(ret_ptr, ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
-                          db->kaz_tree, to_check))));
+    var_AUTO(ret_ptr,
+        ((fcs_dbm_record *)(fcs_dbm__abstract__states_lookup__lookup_value(
+            db->kaz_tree, to_check))));
 #if 0
     printf("fc_solve_dbm_store_insert_key_value ret_ptr=%p\n", ret_ptr);
 #endif
-    return ret_ptr;
+    *ret_token_body = (ret_ptr);
+    return true;
 }
 
 bool fc_solve_dbm_store_lookup_parent(
@@ -107,8 +113,8 @@ bool fc_solve_dbm_store_lookup_parent(
 {
     fcs_dbm_record to_check = {.key = *(const fcs_encoded_state_buffer *)key};
 
-    dict_key_t existing =
-        fc_solve_kaz_tree_lookup_value(((fcs_dbm *)store)->kaz_tree, &to_check);
+    dict_key_t existing = fcs_dbm__abstract__states_lookup__lookup_value(
+        ((fcs_dbm *)store)->kaz_tree, &to_check);
     if (!existing)
     {
         return false;
@@ -136,12 +142,13 @@ bool fc_solve_dbm_store_lookup_parent(
 
     return true;
 }
+#endif
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {
     fcs_dbm *const db = (fcs_dbm *)store;
 
-    fc_solve_kaz_tree_destroy(db->kaz_tree);
+    fcs_dbm__abstract__states_lookup__destroy(db->kaz_tree);
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     fc_solve_compact_allocator_finish(&(db->allocator));
 #endif

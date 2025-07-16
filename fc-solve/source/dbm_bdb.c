@@ -105,6 +105,7 @@ bool fc_solve_dbm_store_lookup_parent(fcs_dbm_store store,
     }
 }
 
+#ifndef FCS_DBM_WITHOUT_CACHES
 extern void fc_solve_dbm_store_offload_pre_cache(
     fcs_dbm_store store, fcs_pre_cache *const pre_cache)
 {
@@ -129,6 +130,7 @@ extern void fc_solve_dbm_store_offload_pre_cache(
         }
     }
 }
+#endif
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {

@@ -66,6 +66,10 @@ extern "C" {
 #error FCS_RCS_STATES requires COMPACT_STATES
 #endif
 
+#if defined(FCS_RCS_STATES)
+#define AVL_with_rb_param 1
+#endif
+
 #ifndef WIN32
 #define HAVE_GETLINE 1
 #endif

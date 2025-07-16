@@ -172,6 +172,16 @@ typedef struct
 typedef fcs_dbm_record *fcs_dbm_store_val;
 #endif
 
+#ifdef FCS_DBM_USE_DISK_CACHES
+typedef fcs_dbm_record fcs_dbm_token_type;
+#define TOKEN_get_ptr(token) (&(token))
+#define TOKEN_get_key(token) ((token.key))
+#else
+typedef fcs_dbm_record *fcs_dbm_token_type;
+#define TOKEN_get_ptr(token) ((token))
+#define TOKEN_get_key(token) ((token)->key)
+#endif
+
 static inline void fcs_init_encoded_state(fcs_encoded_state_buffer *enc_state)
 {
     memset(enc_state, '\0', sizeof(*enc_state));

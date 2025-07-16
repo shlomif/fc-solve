@@ -599,7 +599,13 @@ dnode_t *fc_solve_kaz_tree_lookup(dict_t *dict, dict_key_t key)
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
         result = memcmp(&(key.key), &(root->dict_key.key), sizeof(key.key));
 #else
-        result = dict->compare(key, root->dict_key, dict->context);
+
+#ifdef AVL_with_rb_param
+#define CTXARG(a) , a
+#else
+#define CTXARG(a)
+#endif
+        result = dict->compare(key, root->dict_key CTXARG(dict->context));
 #endif
 
         if (result < 0)
@@ -816,7 +822,7 @@ dict_ret_key_t fc_solve_kaz_tree_insert(
 #ifdef FCS_KAZ_TREE_USE_RECORD_DICT_KEY
         result = memcmp(&(key.key), &(where->dict_key.key), sizeof(key.key));
 #else
-        result = dict->compare(key, where->dict_key, dict->context);
+        result = dict->compare(key, where->dict_key CTXARG(dict->context));
 #endif
 
 /* We are remming it out because instead of duplicating the key

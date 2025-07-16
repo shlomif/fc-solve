@@ -19,6 +19,8 @@ extern "C" {
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 #include "dbm_lru_cache.h"
+#include "generic_tree.h"
+#include "dbm_kaztree_compare.h"
 
 static inline int fc_solve_compare_lru_cache_keys__noctx(
     const void *const void_a, const void *const void_b)
@@ -50,7 +52,7 @@ static inline void cache_destroy(fcs_lru_cache *cache)
 {
     cache_destroy_key(cache->recycle_bin);
     cache_destroy_key(cache->lowest_pri);
-    fc_solve_kaz_tree_destroy(cache->kaz_tree);
+    fcs_dbm__abstract__states_lookup__destroy(cache->kaz_tree);
     fc_solve_compact_allocator_finish(
         &(cache->states_values_to_keys_allocator));
 }
@@ -63,9 +65,8 @@ static inline void cache_init(fcs_lru_cache *const cache,
     cache->states_values_to_keys_map = ((Pvoid_t)NULL);
 #elif (FCS_RCS_CACHE_STORAGE == FCS_RCS_CACHE_STORAGE_KAZ_TREE)
     cache->tree_recycle_bin = NULL;
-    cache->kaz_tree =
-        fc_solve_kaz_tree_create(fc_solve_compare_lru_cache_keys__noctx, NULL,
-            meta_alloc, &(cache->tree_recycle_bin));
+    cache->kaz_tree = fcs_dbm__abstract__states_lookup__create(
+        compare_records, NULL, meta_alloc, &(cache->tree_recycle_bin));
 #else
 #error Unknown FCS_RCS_CACHE_STORAGE
 #endif
@@ -82,9 +83,10 @@ static inline void cache_init(fcs_lru_cache *const cache,
 static inline bool cache_does_key_exist(
     fcs_lru_cache *const cache, fcs_cache_key *const key)
 {
-    const fcs_cache_key_info to_check = {.key = *key};
+    fcs_cache_key_info to_check = {.key = *key};
     const dict_key_t existing_key =
-        fc_solve_kaz_tree_lookup_value(cache->kaz_tree, &to_check);
+        fcs_dbm__abstract__states_lookup__lookup_value(
+            cache->kaz_tree, &to_check);
     if (!existing_key)
     {
         return false;
@@ -126,7 +128,7 @@ static inline fcs_cache_key_info *cache_insert(fcs_lru_cache *cache,
 
     if (cache->count_elements_in_cache >= cache->max_num_elements_in_cache)
     {
-        fc_solve_kaz_tree_delete_by_value(
+        fcs_dbm__abstract__states_lookup__delete_by_value(
             kaz_tree, (cache_key = cache->lowest_pri));
 
         cache->lowest_pri = cache->lowest_pri->higher_pri;
@@ -176,7 +178,7 @@ static inline fcs_cache_key_info *cache_insert(fcs_lru_cache *cache,
         cache_key->higher_pri = cache_key->lower_pri = NULL;
     }
 
-    fc_solve_kaz_tree_alloc_insert(kaz_tree, cache_key);
+    fcs_dbm__abstract__states_lookup__alloc_insert(kaz_tree, cache_key);
 
     return cache_key;
 }

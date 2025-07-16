@@ -348,7 +348,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state,
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
-                    token->ancestor,
+                    (token->ancestor),
 #else
                     token,
 #endif
@@ -424,8 +424,10 @@ static inline void instance_check_key(
     const_AUTO(local_variant, instance->common.variant);
 #endif
     const_AUTO(coll, &(instance->coll));
-    fcs_dbm_record *token;
-    if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
+    fcs_dbm_token_type token_body;
+    bool token_status;
+    if ((token_status = (cache_store__has_key(
+             &(token_body), &coll->cache_store, key, parent))))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(
@@ -441,7 +443,7 @@ static inline void instance_check_key(
 
             fcs_depth_multi_queue__insert(&(coll->depth_queue),
                 thread->state_depth + 1,
-                (const offloading_queue_item *)(&token));
+                (const offloading_queue_item *)(&token_body));
 
             ++instance->common.count_of_items_in_queue;
             ++instance->common.num_states_in_collection;
@@ -476,7 +478,7 @@ static inline void instance_check_key(
                 fcc_entry_key.kv.key.key = trace[trace_num - 1];
                 FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
 #else
-                FccEntryPointNode *val_proto = token->ancestor;
+                FccEntryPointNode *val_proto = NULL;
 #endif
                 if (!val_proto)
                 {
@@ -517,7 +519,7 @@ static inline void instance_check_key(
             }
 
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
-            const fcs_encoded_state_buffer outkey = token->key;
+            const fcs_encoded_state_buffer outkey = TOKEN_get_key(token_body);
             const size_t keysize = sizeof(outkey);
             const_SLOT(moves_to_state_len, instance);
             const size_t added_moves_to_output = moves_to_state_len + keysize;
@@ -735,8 +737,12 @@ int main(int argc, char *argv[])
     {
         FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
             &(instance.fcc_entry_points_allocator), sizeof(*entry_point));
+#ifdef FCS_DBM_RECORD_POINTER_REPR
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
-        entry_point->kv.key.ancestor = entry_point;
+        entry_point->kv.key.ancestor = NULL;
+#else
+        fcs_init_encoded_state(&entry_point->kv.key.parent);
+#endif
 #else
         fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
 #endif

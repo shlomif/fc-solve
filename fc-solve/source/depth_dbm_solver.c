@@ -91,6 +91,8 @@ struct fcs_dbm_solver_thread_struct
 
 static void *instance_run_solver_thread(void *const void_arg)
 {
+    fcs_dbm_queue_item physical_item;
+    fcs_dbm_queue_item *item = NULL, *prev_item = NULL;
     fcs_derived_state *derived_list_recycle_bin = NULL;
     fcs_state_keyval_pair state;
 #ifdef DEBUG_OUT
@@ -114,7 +116,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     TRACE("%s\n", "instance_run_solver_thread start");
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
-    fcs_dbm_record *tokens[max_batch_size];
+    fcs_dbm_token_type tokens[max_batch_size];
     fcs_derived_state *derived_lists[max_batch_size];
     while (true)
     {
@@ -176,21 +178,21 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
-            const_AUTO(token, tokens[batch_i]);
+            var_AUTO(token, tokens[batch_i]);
             // Handle the item in "token".
-            fc_solve_delta_stater_decode_into_state(
-                delta_stater, token->key.s, &state, indirect_stacks_buffer);
+            fc_solve_delta_stater_decode_into_state(delta_stater,
+                TOKEN_get_key(token).s, &state, indirect_stacks_buffer);
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token, &derived_lists[batch_i],
+                    &state, TOKEN_get_ptr(token), &derived_lists[batch_i],
                     &derived_list_recycle_bin, &derived_list_allocator, true))
             {
-                fcs_dbm_queue_item physical_item;
-                physical_item.key = token->key;
+                physical_item.key = TOKEN_get_key(token);
+                item = &physical_item;
                 fcs_lock_lock(&instance->common.storage_lock);
                 fcs_dbm__found_solution(
-                    &(instance->common), token, &physical_item);
+                    &(instance->common), TOKEN_get_ptr(token), &physical_item);
                 fcs_condvar_broadcast(&(instance->monitor));
                 fcs_lock_unlock(&instance->common.storage_lock);
                 goto thread_end;
@@ -210,7 +212,7 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         instance_check_multiple_keys(thread, instance, &(coll->cache_store),
             &(thread->thread_meta_alloc), derived_lists, batch_size
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
             ,
             item->moves_to_key
 #endif
@@ -239,27 +241,27 @@ static inline void instance_check_key(
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
-    fcs_dbm_record *token;
+    fcs_dbm_token_type token;
 
-    if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
+    if ((cache_store__has_key(&(token), &coll->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
         fcs_cache_key_info *cache_key = cache_store__insert_key(
-            &(instance->cache_store), key, parent, moves_to_parent, move);
+            &(coll->cache_store), key, parent, moves_to_parent, move);
 #endif
         fcs_offloading_queue__insert(
             &(coll->queue), (const offloading_queue_item *)(&token));
 
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
-        instance_debug_out_state(instance, &(token->key));
+        instance_debug_out_state(instance, &(TOKEN_get_key(token)));
     }
 }
 
@@ -275,11 +277,13 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
         {
             break;
         }
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
         mark_and_sweep_old_states(instance,
             fc_solve_dbm_store_get_dict(
                 instance->colls_by_depth[instance->curr_depth]
                     .cache_store.store),
             instance->curr_depth);
+#endif
         ++instance->curr_depth;
     }
 
@@ -352,20 +356,21 @@ int main(int argc, char *argv[])
     fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
 
     // The NULL parent for indicating this is the initial state.
-    fcs_encoded_state_buffer parent_state_enc;
-    fcs_init_encoded_state(&(parent_state_enc));
+    fcs_dbm_record parent_state_enc;
+    memset(&parent_state_enc, '\0', sizeof(parent_state_enc));
 
-    fcs_dbm_record *token;
+    fcs_dbm_token_type token_body;
+    bool token_status;
 #ifndef FCS_DBM_WITHOUT_CACHES
-    cache_store__insert_key(
-        &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
+    cache_store__insert_key(&(instance.colls_by_depth[0].cache_store),
+        KEY_PTR(), &parent_state_enc, NULL, '\0');
 #else
-    token = fc_solve_dbm_store_insert_key_value(
+    token_status = fc_solve_dbm_store_insert_key_value(&token_body,
         instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, true);
 #endif
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
-        (const offloading_queue_item *)(&token));
+        (const offloading_queue_item *)(&token_body));
     ++instance.common.num_states_in_collection;
     ++instance.common.count_of_items_in_queue;
 

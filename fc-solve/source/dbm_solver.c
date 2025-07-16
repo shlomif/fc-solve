@@ -73,18 +73,18 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const size_t key_depth GCC_UNUSED,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent,
     const uint8_t move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     ,
     const fcs_fcc_move *moves_to_parent
 #endif
 )
 {
-    fcs_dbm_record *token;
-    if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
+    fcs_dbm_token_type token;
+    if ((cache_store__has_key(&token, &instance->cache_store, key, parent)))
     {
 #ifndef FCS_DBM_WITHOUT_CACHES
         fcs_cache_key_info *cache_key = cache_store__insert_key(
@@ -203,7 +203,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             instance_check_multiple_keys(
                 thread, instance, &(instance->cache_store),
                 &(instance->meta_alloc), &derived_list, 1
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
                 ,
                 item->moves_to_key
 #endif
@@ -230,7 +230,8 @@ static bool populate_instance_with_intermediate_input_line(
     fcs_encoded_state_buffer final_stack_encoded_state;
     fcs_encoded_state_buffer running_key;
     fcs_state_keyval_pair running_state;
-    fcs_dbm_record *token = NULL;
+    fcs_dbm_token_type token_body;
+    bool token_status;
 #ifdef DEBUG_OUT
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
@@ -271,15 +272,17 @@ static bool populate_instance_with_intermediate_input_line(
     // The NULL parent and move for indicating this is the initial state.
     fcs_init_and_encode_state(
         delta, local_variant, &(running_state), &running_key);
-    fcs_dbm_record *running_parent = NULL;
+    bool running_parent_status = false;
+    fcs_dbm_token_type running_parent_token;
 
-#ifdef FCS_DBM_CACHE_ONLY
+#ifndef FCS_DBM_WITHOUT_CACHES
     fcs_fcc_move *running_moves = NULL;
-    cache_store__insert_key(&(instance->cache_store), &(running_key),
-        &running_parent, running_moves, '\0');
+    running_parent_status = cache_store__insert_key(&(instance->cache_store),
+        &(running_key), &running_parent_token, running_moves, '\0');
 #else
-    running_parent = fc_solve_dbm_store_insert_key_value(
-        instance->cache_store.store, &(running_key), running_parent, true);
+    running_parent_status = fc_solve_dbm_store_insert_key_value(
+        &running_parent_token, instance->cache_store.store, &(running_key),
+        TOKEN_get_ptr(running_parent_token), true);
 #endif
     ++instance->common.num_states_in_collection;
 
@@ -350,15 +353,16 @@ static bool populate_instance_with_intermediate_input_line(
 #ifndef FCS_DBM_WITHOUT_CACHES
         var_AUTO(cache_ret,
             cache_store__insert_key(&(instance->cache_store), &(running_key),
-                &running_parent, running_moves, move));
+                &running_parent_token, running_moves, move));
         if (cache_ret)
         {
             running_moves = cache_ret->moves_to_key;
         }
 #else
-        token = fc_solve_dbm_store_insert_key_value(
-            instance->cache_store.store, &(running_key), running_parent, true);
-        if (!token)
+        token_status = fc_solve_dbm_store_insert_key_value(&(token_body),
+            instance->cache_store.store, &(running_key),
+            TOKEN_get_ptr(running_parent_token), true);
+        if (!token_status)
         {
             return false;
         }
@@ -382,7 +386,7 @@ static bool populate_instance_with_intermediate_input_line(
             line_num);
     }
     fcs_offloading_queue__insert(
-        &(instance->queue), (const offloading_queue_item *)(&token));
+        &(instance->queue), (const offloading_queue_item *)(&token_body));
     ++instance->common.count_of_items_in_queue;
 
     return true;
@@ -441,7 +445,12 @@ static bool handle_and_destroy_instance_solution(
 
     if (instance->common.queue_solution_was_found)
     {
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
         trace_solution(instance, out_fh, delta);
+#else
+        fprintf(out_fh, "%s\n", "Success!");
+        fflush(out_fh);
+#endif
         ret = true;
     }
     else if (instance->common.should_terminate != DONT_TERMINATE)
@@ -473,6 +482,7 @@ static bool handle_and_destroy_instance_solution(
                 fprintf(out_fh, "%s", "|");
                 fflush(out_fh);
 
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
 #ifdef FCS_DBM_CACHE_ONLY
                 fcs_fcc_move *move_ptr = item->moves_to_key;
                 if (move_ptr)
@@ -499,6 +509,7 @@ static bool handle_and_destroy_instance_solution(
                 }
 #undef PENULTIMATE_DEPTH
                 free(trace);
+#endif
 #endif
                 fprintf(out_fh, "\n");
                 fflush(out_fh);
@@ -658,7 +669,9 @@ int main(int argc, char *argv[])
 
                     if (limit_instance.common.queue_solution_was_found)
                     {
+#ifndef FCS_DBM__VAL_IS_ANCESTOR
                         trace_solution(&limit_instance, out_fh, &delta);
+#endif
                         skip_queue_output = true;
                         queue_solution_was_found = true;
                     }
@@ -729,26 +742,27 @@ int main(int argc, char *argv[])
             &instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh);
         fcs_encoded_state_buffer *key_ptr;
 #define KEY_PTR() (key_ptr)
-        fcs_encoded_state_buffer parent_state_enc;
+        fcs_dbm_record parent_state_enc;
 
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(
             &delta, local_variant, &(init_state), KEY_PTR());
         // The NULL parent_state_enc and move for indicating this is the
         // initial state.
-        fcs_init_encoded_state(&(parent_state_enc));
+        memset(&parent_state_enc, '\0', sizeof(parent_state_enc));
 
-        fcs_dbm_record *token;
+        fcs_dbm_token_type token_body;
+        bool token_status;
 #ifndef FCS_DBM_WITHOUT_CACHES
         cache_store__insert_key(
             &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
 #else
-        token = fc_solve_dbm_store_insert_key_value(
-            instance.cache_store.store, KEY_PTR(), NULL, true);
+        token_status = fc_solve_dbm_store_insert_key_value(
+            &token_body, instance.cache_store.store, KEY_PTR(), NULL, true);
 #endif
 
         fcs_offloading_queue__insert(
-            &(instance.queue), (const offloading_queue_item *)&token);
+            &(instance.queue), (const offloading_queue_item *)&token_body);
         ++instance.common.num_states_in_collection;
         ++instance.common.count_of_items_in_queue;
 

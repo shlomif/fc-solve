@@ -85,7 +85,11 @@ typedef struct dnode_t
 #endif
 } dnode_t;
 
+#ifdef AVL_with_rb_param
 typedef int (*dict_comp_t)(const void *, const void *, void *);
+#else
+typedef int (*dict_comp_t)(const void *, const void *);
+#endif
 /* Removed from fc-solve */
 #if 0
 typedef dnode_t *(*dnode_alloc_t)(void *);
