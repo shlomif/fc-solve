@@ -53,13 +53,13 @@ static inline void fc_solve_kaz_tree_delete_by_value(
     fc_solve_kaz_tree_destroy(tree)
 #define fcs_dbm__abstract__states_lookup__create(                              \
     comparator, context, meta, recycle_bin_ptr)                                \
-    rb_create(comparator, context, meta, recycle_bin_ptr)
+    fc_solve_kaz_tree_create(comparator, context, meta, recycle_bin_ptr)
 #define fcs_dbm__abstract__states_lookup__lookup_value(tree, value)            \
-    rb_find(tree, value)
-#define fcs_dbm__abstract__states_lookup__delete_by_value(tree, value)         \
-    rb_delete(tree, value)
+    fc_solve_kaz_tree_lookup_value(tree, value)
+#define fcs_dbm__abstract__states_lookup__delete(tree, value)         \
+    fc_solve_kaz_tree_delete(tree, value)
 #define fcs_dbm__abstract__states_lookup__alloc_insert(tree, value)            \
-    rb_insert(tree, value)
+    fc_solve_kaz_tree_alloc_insert(tree, value)
 static inline void fcs_dbm__abstract__states_lookup__delete_by_value(
     fcs_dbm__abstract__states_lookup_t *const kaz_tree, dict_key_t value)
 {
