@@ -9,13 +9,14 @@
 #include "generic_tree.h"
 #include "dbm_kaztree_compare.h"
 
+#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
+#error This code assumes FCS_LIBAVL_STORE_WHOLE_KEYS = 1
+#endif
+
 typedef struct
 {
     dict_t *kaz_tree;
     meta_allocator meta_alloc;
-#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-    compact_allocator allocator;
-#endif
 } fcs_dbm;
 
 void fc_solve_dbm_store_init(fcs_dbm_store *const store,
@@ -27,10 +28,6 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
 
     db->kaz_tree = fc_solve_kaz_tree_create(
         compare_records, NULL, &(db->meta_alloc), recycle_bin_ptr);
-
-#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-    fc_solve_compact_allocator_init(&(db->allocator), &(db->meta_alloc));
-#endif
 
     *store = (fcs_dbm_store)db;
 }
@@ -45,7 +42,6 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent,
     const bool should_modify_parent GCC_UNUSED)
 {
-#ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
     fcs_dbm_record record_on_stack;
 
     // This memset() call is done to please valgrind and for general
@@ -53,17 +49,10 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     // hurt much). It is needed due to struct padding and alignment
     // issues.
     memset(&record_on_stack, '\0', sizeof(record_on_stack));
-#endif
 
     fcs_dbm *const db = (fcs_dbm *)store;
 
-    fcs_dbm_record *to_check;
-#ifdef FCS_LIBAVL_STORE_WHOLE_KEYS
-    to_check = &record_on_stack;
-#else
-    to_check = (fcs_dbm_record *)fcs_compact_alloc_ptr(
-        &(db->allocator), sizeof(*to_check));
-#endif
+    fcs_dbm_record *to_check = &record_on_stack;
 
     to_check->key = *key;
     if (parent)
@@ -79,9 +68,6 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 
     if (!was_item_inserted_now)
     {
-#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-        fcs_compact_alloc_release(&(db->allocator));
-#endif
         return NULL;
     }
 #ifndef FCS_DBM__VAL_IS_ANCESTOR
@@ -126,9 +112,6 @@ extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
     fcs_dbm *const db = (fcs_dbm *)store;
 
     fc_solve_kaz_tree_destroy(db->kaz_tree);
-#ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-    fc_solve_compact_allocator_finish(&(db->allocator));
-#endif
     fc_solve_meta_compact_allocator_finish(&(db->meta_alloc));
     free(db);
 }
