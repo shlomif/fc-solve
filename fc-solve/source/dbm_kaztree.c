@@ -26,7 +26,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
     fc_solve_meta_compact_allocator_init(&(db->meta_alloc));
 
     db->kaz_tree = fc_solve_kaz_tree_create(
-        compare_records__noctx, NULL, &(db->meta_alloc), recycle_bin_ptr);
+        compare_records, NULL, &(db->meta_alloc), recycle_bin_ptr);
 
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
     fc_solve_compact_allocator_init(&(db->allocator), &(db->meta_alloc));
@@ -65,18 +65,15 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
         &(db->allocator), sizeof(*to_check));
 #endif
 
-#ifdef FCS_DBM_RECORD_POINTER_REPR
     to_check->key = *key;
-#ifdef FCS_DBM__VAL_IS_ANCESTOR
-    to_check->ancestor = parent;
-#else
-    fcs_dbm_record_set_parent_ptr(to_check, parent);
-#endif
-
-#else
-    to_check->key = *key;
-    to_check->parent = parent->parent;
-#endif
+    if (parent)
+    {
+        to_check->parent = parent->parent;
+    }
+    else
+    {
+        fcs_init_encoded_state((fcs_encoded_state_buffer *)&to_check->parent);
+    }
     const bool was_item_inserted_now =
         (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 
@@ -88,10 +85,12 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
         return NULL;
     }
 #ifndef FCS_DBM__VAL_IS_ANCESTOR
+#if 0
     if (should_modify_parent && parent)
     {
         fcs_dbm_record_increment_refcount(parent);
     }
+#endif
 #endif
 
     var_AUTO(ret_ptr, ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(

@@ -64,7 +64,13 @@ static bool handle_and_destroy_instance_solution(
     if (instance->common.queue_solution_was_found)
     {
 #ifndef FCS_DBM__VAL_IS_ANCESTOR
-        trace_solution(instance, out_fh, delta);
+        fcs_dbm_store stores_by_depth[MAX_FCC_DEPTH];
+        for (size_t i = 0; i < MAX_FCC_DEPTH; ++i)
+        {
+            /* code */
+            stores_by_depth[i] = instance->colls_by_depth[i].cache_store.store;
+        }
+        trace_solution(MAX_FCC_DEPTH, stores_by_depth, instance, out_fh, delta);
 #endif
         ret = true;
     }

@@ -11,6 +11,7 @@
 #include "freecell-solver/fcs_conf.h"
 
 #ifdef FCS_DBM_USE_HASH
+#error FCS_DBM_USE_HASH
 #include "dbm_hashtable.h"
 #else
 

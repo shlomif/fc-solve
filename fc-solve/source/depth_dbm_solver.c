@@ -204,7 +204,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,
-                    &(derived_iter->state), &(derived_iter->key));
+                    &(derived_iter->state),
+                    &(derived_iter->key_and_parent.key));
             }
         }
 

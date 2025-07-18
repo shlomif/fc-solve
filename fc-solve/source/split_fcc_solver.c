@@ -348,7 +348,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state,
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
-                    token->ancestor,
+                    token,
 #else
                     token,
 #endif
@@ -366,7 +366,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,
-                    &(derived_iter->state), &(derived_iter->key));
+                    &(derived_iter->state),
+                    &(derived_iter->key_and_parent.key));
             }
 
             instance_check_multiple_keys(thread, instance, &(coll->cache_store),
@@ -465,19 +466,17 @@ static inline void instance_check_key(
             fcs_lock_lock(&instance->fcc_exit_points_output_lock);
             // instance->storage_lock is already locked in
             // instance_check_multiple_keys and we should not lock it here.
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
+#if 0
             size_t trace_num;
             fcs_encoded_state_buffer *trace;
             calc_trace(token, &trace, &trace_num);
 #endif
             {
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
+#if 0
+            size_t trace_num;
                 FccEntryPointNode fcc_entry_key;
                 fcc_entry_key.kv.key.key = trace[trace_num - 1];
                 FccEntryPointNode *val_proto = RB_FIND(FccEntryPointList,
-#else
-                FccEntryPointNode *val_proto = token->ancestor;
-#endif
                 if (!val_proto)
                 {
                     goto cleanup;
@@ -514,6 +513,7 @@ static inline void instance_check_key(
                 base64_decode(moves_to_state_enc, string_len,
                     ((unsigned char *)instance->moves_to_state),
                     &(instance->moves_to_state_len));
+#endif
             }
 
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
@@ -736,7 +736,7 @@ int main(int argc, char *argv[])
         FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
             &(instance.fcc_entry_points_allocator), sizeof(*entry_point));
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
-        entry_point->kv.key.ancestor = entry_point;
+        entry_point->kv.key.parent = entry_point->kv.key.parent;
 #else
         fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
 #endif

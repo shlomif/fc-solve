@@ -81,6 +81,8 @@ extern "C" {
 #define freecell_solver_user_set_pruning(...)
 #endif
 
+#define AVL_with_rb_param 1
+
 #ifdef __cplusplus
 };
 #endif

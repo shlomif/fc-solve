@@ -197,7 +197,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 derived_iter = derived_iter->next)
             {
                 fcs_init_and_encode_state(delta_stater, local_variant,
-                    &(derived_iter->state), &(derived_iter->key));
+                    &(derived_iter->state),
+                    &(derived_iter->key_and_parent.key));
             }
 
             instance_check_multiple_keys(
@@ -441,7 +442,8 @@ static bool handle_and_destroy_instance_solution(
 
     if (instance->common.queue_solution_was_found)
     {
-        trace_solution(instance, out_fh, delta);
+        trace_solution(
+            1, &instance->cache_store.store, instance, out_fh, delta);
         ret = true;
     }
     else if (instance->common.should_terminate != DONT_TERMINATE)
@@ -486,7 +488,8 @@ static bool handle_and_destroy_instance_solution(
 #else
                 size_t trace_num;
                 fcs_encoded_state_buffer *trace;
-                calc_trace(token, &trace, &trace_num);
+                calc_trace(
+                    1, &instance->cache_store.store, token, &trace, &trace_num);
 
 // We stop at 1 because the deepest state does not contain a move (as it is the
 // ultimate state).
@@ -658,7 +661,8 @@ int main(int argc, char *argv[])
 
                     if (limit_instance.common.queue_solution_was_found)
                     {
-                        trace_solution(&limit_instance, out_fh, &delta);
+                        trace_solution(1, &limit_instance.cache_store.store,
+                            &limit_instance, out_fh, &delta);
                         skip_queue_output = true;
                         queue_solution_was_found = true;
                     }

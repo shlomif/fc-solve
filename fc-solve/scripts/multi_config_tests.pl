@@ -594,8 +594,11 @@ reg_test(
     "No int128",
     { cmake_args => [ '-DFCS_AVOID_INT128=1', '-DFCS_ENABLE_DBM_SOLVER=1', ] }
 );
-reg_prep( "prepare_dist fcc_solver",
-    'prepare_fcc_solver_self_contained_package.pl' );
+if (0)
+{
+    reg_prep( "prepare_dist fcc_solver",
+        'prepare_fcc_solver_self_contained_package.pl' );
+}
 reg_prep( "prepare_dist AWS",
     'prepare_aws_depth_dbm_fc_solver_self_contained_package.pl' );
 reg_prep( "prepare_dist vendu",

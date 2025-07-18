@@ -294,7 +294,7 @@ CPUS = $num_cpus
 HOURS = $num_hours
 
 CC = $compiler
-CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags $no_threads_flag -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DBM_RECORD_POINTER_REPR=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
+CFLAGS = -std=gnu99 -O3 $march_flag -fomit-frame-pointer $more_cflags $no_threads_flag -DFCS_DBM_WITHOUT_CACHES=1 -DFCS_DBM_USE_LIBAVL=1 -DFCS_LIBAVL_STORE_WHOLE_KEYS=1 -DFCS_DEBONDT_DELTA_STATES=1 -I./include -I ./rinutils/rinutils/include -I. -I./fcs-libavl
 MODULES = @modules
 
 JOBS = \$(patsubst %,jobs/%.job.sh,\$(DEALS))

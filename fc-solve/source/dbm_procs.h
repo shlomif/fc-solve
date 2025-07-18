@@ -72,6 +72,7 @@ static inline bool pre_cache_does_key_exist(
         fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
 }
 
+#ifndef FCS_DBM_WITHOUT_CACHES
 static inline void cache_populate_from_pre_cache(
     fcs_lru_cache *const cache, fcs_pre_cache *const pre_cache)
 {
@@ -107,6 +108,7 @@ static inline void pre_cache_offload_and_destroy(fcs_pre_cache *const pre_cache,
     fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
     fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
 }
+#endif
 
 #ifndef FCS_DBM_CACHE_ONLY
 #define PRE_CACHE_OFFLOAD(instance)                                            \
@@ -172,7 +174,7 @@ static inline bool instance_check_multiple_keys(
         for (var_AUTO(list, lists[batch_i]); list; list = list->next)
         {
             instance_check_key(thread, instance, CHECK_KEY_CALC_DEPTH(),
-                &(list->key), list->parent, list->move,
+                &(list->key_and_parent.key), &list->key_and_parent, list->move,
                 &(list->which_irreversible_moves_bitmask)
 #ifndef FCS_DBM_WITHOUT_CACHES
                     ,
@@ -251,8 +253,8 @@ static inline void instance_debug_out_state(
     }
 #endif
 
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
-static void calc_trace(fcs_dbm_record *const ptr_initial_record,
+static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
+    fcs_dbm_record *const ptr_initial_record,
     fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
 {
 #define GROW_BY 100
@@ -260,7 +262,8 @@ static void calc_trace(fcs_dbm_record *const ptr_initial_record,
     size_t trace_max_num = GROW_BY;
     fcs_encoded_state_buffer *trace = SMALLOC(trace, trace_max_num);
     fcs_encoded_state_buffer *key_ptr = trace;
-    fcs_dbm_record *record = ptr_initial_record;
+    fcs_dbm_record init_record = *ptr_initial_record;
+    fcs_dbm_record *record = &init_record;
 
     while (record)
     {
@@ -271,12 +274,36 @@ static void calc_trace(fcs_dbm_record *const ptr_initial_record,
             trace = SREALLOC(trace, trace_max_num += GROW_BY);
             key_ptr = &(trace[trace_num - 1]);
         }
-        record = fcs_dbm_record_get_parent_ptr(record);
+        bool found = false;
+        fcs_dbm_record parent;
+        for (size_t i = 0; i < count_stores; ++i)
+        {
+            var_AUTO(store, stores[i]);
+            if (fc_solve_dbm_store_lookup_parent(
+                    store, record->key.s, parent.key.s))
+
+            {
+                found = true;
+                break;
+            }
+            else
+            {
+            }
+        }
+        // assert(found);
+        if (found)
+        {
+            *record = parent;
+        }
+        else
+        {
+            record = NULL;
+        }
         key_ptr++;
 #endif
     }
 #undef GROW_BY
-    *ptr_trace_num = trace_num;
+    *ptr_trace_num = trace_num - 1;
     *ptr_trace = trace;
 }
 
@@ -284,7 +311,11 @@ static inline void mark_and_sweep_old_states(
     dbm_solver_instance *const instance GCC_UNUSED,
     dict_t *const kaz_tree GCC_UNUSED, const size_t curr_depth GCC_UNUSED)
 {
-#ifndef FCS_NO_DBM_AVL
+#ifdef FCS_NO_DBM_AVL
+#error FCS_NO_DBM_AVL
+#else
+#if 0
+
     // Now that we are about to descend to a new depth, let's
     // mark-and-sweep the old states, some of which are no longer of interest.
     FILE *const out_fh = instance->common.out_fh;
@@ -298,13 +329,19 @@ static inline void mark_and_sweep_old_states(
 
     const size_t items_count = kaz_tree->rb_count;
     size_t idx = 0;
+    return;
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
         item = rb_t_next(&trav))
     {
+#if 0
         if (!rb_get_decommissioned_flag(item))
         {
             var_AUTO(ancestor, (struct rb_node *)item);
+#if 0
             while (fcs_dbm_record_get_refcount(&(ancestor->rb_data)) == 0)
+#else
+            while (true)
+#endif
             {
                 rb_set_decommissioned_flag(ancestor, 1);
 
@@ -320,6 +357,10 @@ static inline void mark_and_sweep_old_states(
                 fcs_dbm_record_decrement_refcount(&(ancestor->rb_data));
             }
         }
+#endif
+        var_AUTO(ancestor, (struct rb_node *)item);
+        AVL_SET_NEXT(ancestor, *tree_recycle_bin);
+        *tree_recycle_bin = ancestor;
         if (((++idx) % 100000) == 0)
         {
 #ifdef WIN32
@@ -335,9 +376,8 @@ static inline void mark_and_sweep_old_states(
     TRACE("Finish mark-and-sweep cleanup for curr_depth=%lu\n",
         (unsigned long)curr_depth);
 #endif
-}
-
 #endif
+}
 
 #ifdef FCS_DBM_SINGLE_THREAD
 #define NUM_THREADS() 1

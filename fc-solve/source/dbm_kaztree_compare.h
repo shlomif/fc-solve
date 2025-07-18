@@ -51,13 +51,11 @@ static inline int compare_records__noctx(
 }
 #endif
 
-#ifdef AVL_with_rb_param
 static int compare_records(const void *const void_a, const void *const void_b,
     void *const context GCC_UNUSED)
 {
     return compare_records__noctx(void_a, void_b);
 }
-#endif
 
 #ifdef __cplusplus
 }

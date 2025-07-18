@@ -24,8 +24,7 @@ extern "C" {
 typedef struct fcs_derived_state_struct
 {
     fcs_state_keyval_pair state;
-    fcs_encoded_state_buffer key;
-    fcs_dbm_store_val parent;
+    fcs_dbm_record key_and_parent;
     struct fcs_derived_state_struct *next;
     size_t core_irreversible_moves_count;
     fcs_which_moves_bitmask which_irreversible_moves_bitmask;
@@ -119,7 +118,14 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
                 &(ptr_new_state->which_irreversible_moves_bitmask),            \
                 moved_card, count_constant);                                   \
         }                                                                      \
-        ptr_new_state->parent = parent_ptr;                                    \
+        if (parent_ptr)                                                        \
+        {                                                                      \
+            ptr_new_state->key_and_parent.parent = parent_ptr->key;            \
+        }                                                                      \
+        else                                                                   \
+        {                                                                      \
+            fcs_init_encoded_state(&ptr_new_state->key_and_parent.parent);     \
+        }                                                                      \
         ptr_new_state->move = MAKE_MOVE((src), (dest));                        \
                                                                                \
         ptr_new_state->core_irreversible_moves_count = (count_constant);       \
