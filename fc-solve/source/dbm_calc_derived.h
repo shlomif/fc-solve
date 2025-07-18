@@ -144,29 +144,6 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
         const int sequences_are_built_by = CALC_SEQUENCES_ARE_BUILT_BY())
 #include "calc_foundation.h"
 
-typedef struct
-{
-    fcs_fcc_moves_list_item *recycle_bin;
-    compact_allocator *allocator;
-} fcs_fcc_moves_seq_allocator;
-
-static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
-    fcs_fcc_moves_seq_allocator *const allocator)
-{
-    fcs_fcc_moves_list_item *new_item;
-    if (allocator->recycle_bin)
-    {
-        allocator->recycle_bin = (new_item = allocator->recycle_bin)->next;
-    }
-    else
-    {
-        new_item = (fcs_fcc_moves_list_item *)fcs_compact_alloc_ptr(
-            allocator->allocator, sizeof(*new_item));
-    }
-    new_item->next = NULL;
-    return new_item;
-}
-
 #define FROM_COL_IS_REVERSIBLE_MOVE()                                          \
     ((cards_num <= 1)                                                          \
             ? true                                                             \
@@ -176,9 +153,7 @@ static inline fcs_fcc_moves_list_item *fc_solve_fcc_alloc_moves_list_item(
 // Returns the number of amortized irreversible moves performed.
 static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr,
-    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask,
-    fcs_fcc_moves_seq *const moves_seq,
-    fcs_fcc_moves_seq_allocator *const allocator)
+    fcs_which_moves_bitmask *const which_irreversible_moves_bitmask)
 {
     fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
     size_t count_moves_so_far = 0;
@@ -250,50 +225,6 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
 #endif
     } while (num_cards_moved);
 
-    // Modify moves_seq in-place.
-    if (count_moves_so_far && moves_seq)
-    {
-        fcs_fcc_moves_list_item **iter = &(moves_seq->moves_list);
-
-        // Assuming FCS_FCC_NUM_MOVES_IN_ITEM is 8 and we want (*iter)
-        // to point at the place to either write the new moves or
-        // alternatively (on parity) on the pointer to allocate a new
-        // list_item for the moves.
-        //
-        // If count is 0, then we should move 0.
-        // If count is 1, then we should move 0.
-        // .
-        // .
-        // If count is 7, then we should move 0.
-        // If count is 8, then we should move 1 time.
-        //
-        // to sum up we need to move count / FCS_FCC_NUM_MOVES_IN_ITEM .
-        const size_t count = moves_seq->count;
-        for (size_t pos = 0; pos <= count - FCS_FCC_NUM_MOVES_IN_ITEM;
-            pos += FCS_FCC_NUM_MOVES_IN_ITEM)
-        {
-            iter = &((*iter)->next);
-        }
-
-        size_t pos = count;
-
-        for (size_t pos_moves_so_far = 0; pos_moves_so_far < count_moves_so_far;
-            pos_moves_so_far++)
-        {
-            if (pos % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-            {
-                (*iter) = fc_solve_fcc_alloc_moves_list_item(allocator);
-            }
-            (*iter)->data.s[pos % FCS_FCC_NUM_MOVES_IN_ITEM] =
-                additional_moves[pos_moves_so_far];
-            if ((++pos) % FCS_FCC_NUM_MOVES_IN_ITEM == 0)
-            {
-                iter = &((*iter)->next);
-            }
-        }
-        moves_seq->count += count_moves_so_far;
-    }
-
     return count_moves_so_far + count_additional_irrev_moves;
 }
 
@@ -302,7 +233,7 @@ static inline size_t horne_prune__simple(
     fcs_state_keyval_pair *const init_state_kv_ptr)
 {
     fcs_which_moves_bitmask no_use = {{'\0'}};
-    return horne_prune(local_variant, init_state_kv_ptr, &no_use, NULL, NULL);
+    return horne_prune(local_variant, init_state_kv_ptr, &no_use);
 }
 
 static inline bool card_cannot_be_placed(const fcs_state *const s,
@@ -545,8 +476,7 @@ static inline bool instance_solver_thread_calc_derived_states(
             (derived_iter->core_irreversible_moves_count +
                 (perform_horne_prune
                         ? horne_prune(local_variant, &(derived_iter->state),
-                              &(derived_iter->which_irreversible_moves_bitmask),
-                              NULL, NULL)
+                              &(derived_iter->which_irreversible_moves_bitmask))
                         : 0));
     }
 
