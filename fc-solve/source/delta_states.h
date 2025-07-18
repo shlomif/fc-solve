@@ -59,10 +59,6 @@ typedef struct
     uint8_t s[FCS_ENCODED_STATE_COUNT_CHARS];
 } fcs_encoded_state_buffer;
 
-#if SIZEOF_VOID_P == 4
-#define FCS_EXPLICIT_REFCOUNT 1
-#endif
-
 #ifdef FCS_DBM_RECORD_POINTER_REPR
 #error FCS_DBM_RECORD_POINTER_REPR is not supported
 #else

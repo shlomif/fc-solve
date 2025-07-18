@@ -115,22 +115,7 @@ bool fc_solve_dbm_store_lookup_parent(
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
     *((fcs_dbm_store_val *)parent) = ((fcs_dbm_store_val)existing);
 #else
-
-#ifdef FCS_DBM_RECORD_POINTER_REPR
-    fcs_dbm_record *const p =
-        fcs_dbm_record_get_parent_ptr((fcs_dbm_record *)existing);
-
-    if (p)
-    {
-        *(fcs_encoded_state_buffer *)parent = p->key;
-    }
-    else
-    {
-        fcs_init_encoded_state((fcs_encoded_state_buffer *)parent);
-    }
-#else
     *(fcs_encoded_state_buffer *)parent = ((fcs_dbm_record *)existing)->parent;
-#endif
 #endif
 
     return true;
