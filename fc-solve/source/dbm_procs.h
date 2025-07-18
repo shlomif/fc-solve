@@ -18,122 +18,6 @@
 extern "C" {
 #endif
 
-#ifndef FCS_DBM_WITHOUT_CACHES
-
-static int fc_solve_compare_pre_cache_keys(
-    const void *const void_a, const void *const void_b, void *const context)
-{
-#define GET_PARAM(p) ((((const pre_cache_key_val_pair *)(p))->key))
-    return memcmp(
-        &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
-#undef GET_PARAM
-}
-
-static inline void pre_cache_init(
-    fcs_pre_cache *const pre_cache_ptr, meta_allocator *const meta_alloc)
-{
-    pre_cache_ptr->tree_recycle_bin = NULL;
-    pre_cache_ptr->kaz_tree =
-        fc_solve_kaz_tree_create(fc_solve_compare_pre_cache_keys, NULL,
-            meta_alloc, &(pre_cache_ptr->tree_recycle_bin));
-
-    fc_solve_compact_allocator_init(&(pre_cache_ptr->kv_allocator), meta_alloc);
-    pre_cache_ptr->kv_recycle_bin = NULL;
-    pre_cache_ptr->count_elements = 0;
-}
-
-static inline void pre_cache_insert(fcs_pre_cache *pre_cache,
-    fcs_encoded_state_buffer *key, fcs_encoded_state_buffer *parent)
-{
-    pre_cache_key_val_pair *to_insert;
-
-    if (pre_cache->kv_recycle_bin)
-    {
-        pre_cache->kv_recycle_bin =
-            (to_insert = pre_cache->kv_recycle_bin)->next;
-    }
-    else
-    {
-        to_insert = fcs_compact_alloc_ptr(
-            &(pre_cache->kv_allocator), sizeof(*to_insert));
-    }
-    to_insert->key = *key;
-    to_insert->parent = *parent;
-
-    fc_solve_kaz_tree_alloc_insert(pre_cache->kaz_tree, to_insert);
-    ++pre_cache->count_elements;
-}
-
-static inline bool pre_cache_does_key_exist(
-    fcs_pre_cache *pre_cache, fcs_encoded_state_buffer *key)
-{
-    pre_cache_key_val_pair to_check = {.key = *key};
-    return (
-        fc_solve_kaz_tree_lookup_value(pre_cache->kaz_tree, &to_check) != NULL);
-}
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-static inline void cache_populate_from_pre_cache(
-    fcs_lru_cache *const cache, fcs_pre_cache *const pre_cache)
-{
-#ifdef FCS_DBM_USE_LIBAVL
-    struct rb_traverser trav;
-    var_AUTO(kaz_tree, pre_cache->kaz_tree);
-    rb_t_init(&trav, kaz_tree);
-
-    for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
-        item = rb_t_next(&trav))
-    {
-        cache_insert(
-            cache, &(((pre_cache_key_val_pair *)(item))->key), NULL, '\0');
-    }
-#else
-    var_AUTO(kaz_tree, pre_cache->kaz_tree);
-    for (dnode_t *node = fc_solve_kaz_tree_first(kaz_tree); node;
-        node = fc_solve_kaz_tree_next(kaz_tree, node))
-    {
-        cache_insert(
-            cache, &(((pre_cache_key_val_pair *)(node->dict_key))->key));
-    }
-#endif
-}
-
-static inline void pre_cache_offload_and_destroy(fcs_pre_cache *const pre_cache,
-    fcs_dbm_store store, fcs_lru_cache *const cache)
-{
-    fc_solve_dbm_store_offload_pre_cache(store, pre_cache);
-    cache_populate_from_pre_cache(cache, pre_cache);
-
-    // Now reset the pre_cache.
-    fc_solve_kaz_tree_destroy(pre_cache->kaz_tree);
-    fc_solve_compact_allocator_finish(&(pre_cache->kv_allocator));
-}
-#endif
-
-#ifndef FCS_DBM_CACHE_ONLY
-#define PRE_CACHE_OFFLOAD(instance)                                            \
-    pre_cache_offload_and_destroy(&((instance)->cache_store.pre_cache),        \
-        (instance)->cache_store.store, &((instance)->cache_store.cache))
-#else
-#define PRE_CACHE_OFFLOAD(instance)                                            \
-    {                                                                          \
-    }
-#endif
-
-#ifndef FCS_DBM_CACHE_ONLY
-
-static inline void pre_cache_offload_and_reset(fcs_pre_cache *const pre_cache,
-    const fcs_dbm_store store, fcs_lru_cache *const cache,
-    meta_allocator *const meta_alloc)
-{
-    pre_cache_offload_and_destroy(pre_cache, store, cache);
-    pre_cache_init(pre_cache, meta_alloc);
-}
-
-#endif
-
-#endif // FCS_DBM_WITHOUT_CACHES
-
 typedef struct fcs_dbm_solver_thread_struct dbm_solver_thread;
 
 typedef struct
@@ -141,27 +25,17 @@ typedef struct
     dbm_solver_thread *thread;
 } thread_arg;
 
-static inline void instance_check_key(
-    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
-    const size_t key_depth, fcs_encoded_state_buffer *const key,
-    fcs_dbm_store_val parent, const uint8_t move,
-    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
-#ifndef FCS_DBM_WITHOUT_CACHES
-    ,
-    const fcs_fcc_move *moves_to_parent
-#endif
-);
+static inline void instance_check_key(dbm_solver_thread *const thread,
+    dbm_solver_instance *const instance, const size_t key_depth,
+    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent,
+    const uint8_t move,
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask);
 
-static inline bool instance_check_multiple_keys(
-    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
+static inline bool instance_check_multiple_keys(dbm_solver_thread *const thread,
+    dbm_solver_instance *const instance,
     fcs_dbm__cache_store__common *const cache_store GCC_UNUSED,
     meta_allocator *const meta_alloc GCC_UNUSED, fcs_derived_state **lists,
-    size_t batch_size
-#ifndef FCS_DBM_WITHOUT_CACHES
-    ,
-    const fcs_fcc_move *moves_to_parent
-#endif
-)
+    size_t batch_size)
 {
     // Small optimization in case the list is empty.
     if (batch_size == 1 && !lists[0])
@@ -175,22 +49,7 @@ static inline bool instance_check_multiple_keys(
         {
             instance_check_key(thread, instance, CHECK_KEY_CALC_DEPTH(),
                 &(list->key_and_parent.key), &list->key_and_parent, list->move,
-                &(list->which_irreversible_moves_bitmask)
-#ifndef FCS_DBM_WITHOUT_CACHES
-                    ,
-                moves_to_parent
-#endif
-            );
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-            if (cache_store->pre_cache.count_elements >=
-                cache_store->pre_cache_max_count)
-            {
-                pre_cache_offload_and_reset(&(cache_store->pre_cache),
-                    cache_store->store, &(cache_store->cache), meta_alloc);
-            }
-#endif
-#endif
+                &(list->which_irreversible_moves_bitmask));
         }
     }
 #ifdef MAX_FCC_DEPTH
@@ -392,16 +251,7 @@ static inline void mark_and_sweep_old_states(
 #define DESTROY_STORE(instance)
 #endif
 
-#ifndef FCS_DBM_WITHOUT_CACHES
-#define DESTROY_CACHE(instance)                                                \
-    {                                                                          \
-        PRE_CACHE_OFFLOAD(instance);                                           \
-        cache_destroy(&(instance->cache_store.cache));                         \
-        DESTROY_STORE(instance);                                               \
-    }
-#else
 #define DESTROY_CACHE(instance) DESTROY_STORE(instance)
-#endif
 
 static inline void instance_increment(dbm_solver_instance *const instance)
 {
@@ -428,13 +278,6 @@ static inline void fcs_dbm__cache_store__init(
     const unsigned long pre_cache_max_count GCC_UNUSED,
     const unsigned long caches_delta GCC_UNUSED)
 {
-#ifndef FCS_DBM_WITHOUT_CACHES
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_init(&(cache_store->pre_cache), meta_alloc);
-#endif
-    cache_init(
-        &(cache_store->cache), pre_cache_max_count + caches_delta, meta_alloc);
-#endif
 #ifndef FCS_DBM_CACHE_ONLY
     fc_solve_dbm_store_init(
         &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin));
@@ -531,43 +374,9 @@ static inline fcs_dbm_record *cache_store__has_key(
     fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent)
 {
-#ifndef FCS_DBM_WITHOUT_CACHES
-    if (cache_does_key_exist(&(cache_store->cache), key))
-    {
-        return NULL;
-    }
-#ifndef FCS_DBM_CACHE_ONLY
-    else if (pre_cache_does_key_exist(&(cache_store->pre_cache), key))
-    {
-        return NULL;
-    }
-    else if (fc_solve_dbm_store_does_key_exist(cache_store->store, key->s))
-    {
-        cache_insert(&(cache_store->cache), key, NULL, '\0');
-        return NULL;
-    }
-#endif
-    return ((fcs_dbm_record *)key);
-#else
     return fc_solve_dbm_store_insert_key_value(
         cache_store->store, key, parent, true);
-#endif
 }
-
-#ifndef FCS_DBM_WITHOUT_CACHES
-static inline fcs_cache_key_info *cache_store__insert_key(
-    fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
-    const fcs_fcc_move *const moves_to_parent, const uint8_t move GCC_UNUSED)
-{
-#ifndef FCS_DBM_CACHE_ONLY
-    pre_cache_insert(&(cache_store->pre_cache), key, &(parent->key));
-    return NULL;
-#else
-    return cache_insert(&(cache_store->cache), key, moves_to_parent, move);
-#endif
-}
-#endif
 
 #ifdef __cplusplus
 }

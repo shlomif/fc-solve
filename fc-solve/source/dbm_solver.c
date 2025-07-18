@@ -86,10 +86,6 @@ static inline void instance_check_key(
     fcs_dbm_record *token;
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
     {
-#ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_cache_key_info *cache_key = cache_store__insert_key(
-            &(instance->cache_store), key, parent, moves_to_parent, move);
-#endif
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
 
@@ -348,22 +344,12 @@ static bool populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(
             delta, local_variant, &(running_state), &(running_key));
 
-#ifndef FCS_DBM_WITHOUT_CACHES
-        var_AUTO(cache_ret,
-            cache_store__insert_key(&(instance->cache_store), &(running_key),
-                &running_parent, running_moves, move));
-        if (cache_ret)
-        {
-            running_moves = cache_ret->moves_to_key;
-        }
-#else
         token = fc_solve_dbm_store_insert_key_value(
             instance->cache_store.store, &(running_key), running_parent, true);
         if (!token)
         {
             return false;
         }
-#endif
         ++instance->common.num_states_in_collection;
 
         // We need to do the round-trip from encoding back to decoding, because
@@ -743,13 +729,8 @@ int main(int argc, char *argv[])
         fcs_init_encoded_state(&(parent_state_enc));
 
         fcs_dbm_record *token;
-#ifndef FCS_DBM_WITHOUT_CACHES
-        cache_store__insert_key(
-            &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
-#else
         token = fc_solve_dbm_store_insert_key_value(
             instance.cache_store.store, KEY_PTR(), NULL, true);
-#endif
 
         fcs_offloading_queue__insert(
             &(instance.queue), (const offloading_queue_item *)&token);

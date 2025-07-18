@@ -371,12 +371,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             }
 
             instance_check_multiple_keys(thread, instance, &(coll->cache_store),
-                &(coll->queue_meta_alloc), &derived_list, 1
-#ifndef FCS_DBM_WITHOUT_CACHES
-                ,
-                item->moves_to_key
-#endif
-            );
+                &(coll->queue_meta_alloc), &derived_list, 1);
 
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_list);
@@ -408,16 +403,11 @@ static inline void instance_alloc_num_moves(
     }
 }
 
-static inline void instance_check_key(
-    dbm_solver_thread *const thread, dbm_solver_instance *const instance,
-    const size_t key_depth, fcs_encoded_state_buffer *const key,
-    fcs_dbm_store_val parent, const unsigned char move GCC_UNUSED,
-    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
-#ifndef FCS_DBM_WITHOUT_CACHES
-    ,
-    const fcs_fcc_move *moves_to_parent
-#endif
-)
+static inline void instance_check_key(dbm_solver_thread *const thread,
+    dbm_solver_instance *const instance, const size_t key_depth,
+    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent,
+    const unsigned char move GCC_UNUSED,
+    const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask)
 {
 #ifdef DEBUG_OUT
     fcs_state_locs_struct locs;
@@ -428,10 +418,6 @@ static inline void instance_check_key(
     fcs_dbm_record *token;
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
-#ifndef FCS_DBM_WITHOUT_CACHES
-        cache_store__insert_key(
-            &(coll->cache_store), key, parent, moves_to_parent, move);
-#endif
 #if 0
         printf("key_depth = %zu ; curr_depth = %zu\n", key_depth, instance->curr_depth);
 #endif
@@ -763,11 +749,7 @@ int main(int argc, char *argv[])
 // These states should be traversed - not blocked, so don't put them inside the
 // store.
 #if 0
-#ifndef FCS_DBM_WITHOUT_CACHES
-        cache_store__insert_key(&(instance.cache_store), &(key_ptr->kv.key.key), &parent_state_enc, NULL, '\0');
-#else
         token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, true);
-#endif
 
 #if 0
         entry_point->kv.val.was_consumed =

@@ -251,10 +251,6 @@ static inline void instance_check_key(
 
     if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
     {
-#ifndef FCS_DBM_WITHOUT_CACHES
-        fcs_cache_key_info *cache_key = cache_store__insert_key(
-            &(instance->cache_store), key, parent, moves_to_parent, move);
-#endif
         fcs_offloading_queue__insert(
             &(coll->queue), (const offloading_queue_item *)(&token));
 
@@ -357,13 +353,8 @@ int main(int argc, char *argv[])
     fcs_init_encoded_state(&(parent_state_enc));
 
     fcs_dbm_record *token;
-#ifndef FCS_DBM_WITHOUT_CACHES
-    cache_store__insert_key(
-        &(instance.cache_store), KEY_PTR(), &parent_state_enc, NULL, '\0');
-#else
     token = fc_solve_dbm_store_insert_key_value(
         instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, true);
-#endif
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
         (const offloading_queue_item *)(&token));
