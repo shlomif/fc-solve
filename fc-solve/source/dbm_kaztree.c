@@ -70,20 +70,9 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     {
         return NULL;
     }
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
-#if 0
-    if (should_modify_parent && parent)
-    {
-        fcs_dbm_record_increment_refcount(parent);
-    }
-#endif
-#endif
 
     var_AUTO(ret_ptr, ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
                           db->kaz_tree, to_check))));
-#if 0
-    printf("fc_solve_dbm_store_insert_key_value ret_ptr=%p\n", ret_ptr);
-#endif
     return ret_ptr;
 }
 
