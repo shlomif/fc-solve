@@ -231,7 +231,8 @@ thread_end:
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const size_t key_depth,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
+    fcs_encoded_state_buffer *const key,
+    const fcs_encoded_state_buffer raw_parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED)
@@ -239,7 +240,7 @@ static inline void instance_check_key(
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
     fcs_dbm_record *token;
 
-    if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
+    if ((token = cache_store__has_key(&coll->cache_store, key, raw_parent)))
     {
         fcs_offloading_queue__insert(
             &(coll->queue), (const offloading_queue_item *)(&token));
@@ -343,8 +344,10 @@ int main(int argc, char *argv[])
     fcs_init_encoded_state(&(parent_state_enc));
 
     fcs_dbm_record *token;
+    fcs_encoded_state_buffer null_parent;
+    fcs_init_encoded_state(&null_parent);
     token = fc_solve_dbm_store_insert_key_value(
-        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL);
+        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), null_parent);
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
         (const offloading_queue_item *)(&token));

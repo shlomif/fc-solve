@@ -39,7 +39,8 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 
 // Returns true if the key was added (it didn't already exist.)
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent)
+    const fcs_encoded_state_buffer *key,
+    const fcs_encoded_state_buffer raw_parent)
 {
     fcs_dbm_record record_on_stack;
 
@@ -54,14 +55,8 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     fcs_dbm_record *to_check = &record_on_stack;
 
     to_check->key = *key;
-    if (parent)
-    {
-        to_check->parent = parent->parent;
-    }
-    else
-    {
-        fcs_init_encoded_state((fcs_encoded_state_buffer *)&to_check->parent);
-    }
+    to_check->parent = raw_parent;
+
     const bool was_item_inserted_now =
         (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
 

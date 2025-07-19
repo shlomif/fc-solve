@@ -405,7 +405,9 @@ static inline void instance_alloc_num_moves(
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const size_t key_depth,
-    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent,
+    fcs_encoded_state_buffer *const key,
+    const fcs_encoded_state_buffer raw_parent,
+
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask)
 {
@@ -416,7 +418,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 #endif
     const_AUTO(coll, &(instance->coll));
     fcs_dbm_record *token;
-    if ((token = cache_store__has_key(&coll->cache_store, key, parent)))
+    if ((token = cache_store__has_key(&coll->cache_store, key, raw_parent)))
     {
 #if 0
         printf("key_depth = %zu ; curr_depth = %zu\n", key_depth, instance->curr_depth);
@@ -749,7 +751,9 @@ int main(int argc, char *argv[])
 // These states should be traversed - not blocked, so don't put them inside the
 // store.
 #if 0
-        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL);
+        fcs_encoded_state_buffer null_parent;
+        fcs_init_encoded_state(&null_parent);
+        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), &null_parent);
 
 #if 0
         entry_point->kv.val.was_consumed =

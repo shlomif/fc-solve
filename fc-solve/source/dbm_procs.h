@@ -27,8 +27,8 @@ typedef struct
 
 static inline void instance_check_key(dbm_solver_thread *const thread,
     dbm_solver_instance *const instance, const size_t key_depth,
-    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent,
-    const uint8_t move,
+    fcs_encoded_state_buffer *const key,
+    const fcs_encoded_state_buffer raw_parent, const uint8_t move,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask);
 
 static inline bool instance_check_multiple_keys(dbm_solver_thread *const thread,
@@ -48,8 +48,8 @@ static inline bool instance_check_multiple_keys(dbm_solver_thread *const thread,
         for (var_AUTO(list, lists[batch_i]); list; list = list->next)
         {
             instance_check_key(thread, instance, CHECK_KEY_CALC_DEPTH(),
-                &(list->key_and_parent.key), &list->key_and_parent, list->move,
-                &(list->which_irreversible_moves_bitmask));
+                &(list->key_and_parent.key), list->key_and_parent.parent,
+                list->move, &(list->which_irreversible_moves_bitmask));
         }
     }
 #ifdef MAX_FCC_DEPTH
@@ -366,7 +366,7 @@ static inline bool fcs_dbm__extract_common_from_argv(const int argc,
 
 static inline fcs_dbm_record *cache_store__has_key(
     fcs_dbm__cache_store__common *const cache_store,
-    fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent)
+    fcs_encoded_state_buffer *const key, const fcs_encoded_state_buffer parent)
 {
     return fc_solve_dbm_store_insert_key_value(cache_store->store, key, parent);
 }

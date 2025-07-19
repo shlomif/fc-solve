@@ -73,13 +73,13 @@ static inline void instance_destroy(dbm_solver_instance *const instance)
 static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const size_t key_depth GCC_UNUSED,
-    fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
-    const uint8_t move GCC_UNUSED,
+    fcs_encoded_state_buffer *const key,
+    const fcs_encoded_state_buffer raw_parent, const uint8_t move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED)
 {
     fcs_dbm_record *token;
-    if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
+    if ((token = cache_store__has_key(&instance->cache_store, key, raw_parent)))
     {
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
@@ -260,8 +260,10 @@ static bool populate_instance_with_intermediate_input_line(
         delta, local_variant, &(running_state), &running_key);
     fcs_dbm_record *running_parent = NULL;
 
+    fcs_encoded_state_buffer null_parent;
+    fcs_init_encoded_state(&null_parent);
     running_parent = fc_solve_dbm_store_insert_key_value(
-        instance->cache_store.store, &(running_key), running_parent);
+        instance->cache_store.store, &(running_key), null_parent);
     ++instance->common.num_states_in_collection;
 
     unsigned int hex_digits;
@@ -328,8 +330,8 @@ static bool populate_instance_with_intermediate_input_line(
         fcs_init_and_encode_state(
             delta, local_variant, &(running_state), &(running_key));
 
-        token = fc_solve_dbm_store_insert_key_value(
-            instance->cache_store.store, &(running_key), running_parent);
+        token = fc_solve_dbm_store_insert_key_value(instance->cache_store.store,
+            &(running_key), running_parent->parent);
         if (!token)
         {
             return false;
@@ -701,8 +703,10 @@ int main(int argc, char *argv[])
         fcs_init_encoded_state(&(parent_state_enc));
 
         fcs_dbm_record *token;
+        fcs_encoded_state_buffer null_parent;
+        fcs_init_encoded_state(&null_parent);
         token = fc_solve_dbm_store_insert_key_value(
-            instance.cache_store.store, KEY_PTR(), NULL);
+            instance.cache_store.store, KEY_PTR(), null_parent);
 
         fcs_offloading_queue__insert(
             &(instance.queue), (const offloading_queue_item *)&token);
