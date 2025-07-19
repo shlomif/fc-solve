@@ -39,8 +39,7 @@ dict_t *__attribute__((pure)) fc_solve_dbm_store_get_dict(fcs_dbm_store store)
 
 // Returns true if the key was added (it didn't already exist.)
 fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
-    const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent,
-    const bool should_modify_parent GCC_UNUSED)
+    const fcs_encoded_state_buffer *key, fcs_dbm_store_val parent)
 {
     fcs_dbm_record record_on_stack;
 

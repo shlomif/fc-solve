@@ -261,7 +261,7 @@ static bool populate_instance_with_intermediate_input_line(
     fcs_dbm_record *running_parent = NULL;
 
     running_parent = fc_solve_dbm_store_insert_key_value(
-        instance->cache_store.store, &(running_key), running_parent, true);
+        instance->cache_store.store, &(running_key), running_parent);
     ++instance->common.num_states_in_collection;
 
     unsigned int hex_digits;
@@ -329,7 +329,7 @@ static bool populate_instance_with_intermediate_input_line(
             delta, local_variant, &(running_state), &(running_key));
 
         token = fc_solve_dbm_store_insert_key_value(
-            instance->cache_store.store, &(running_key), running_parent, true);
+            instance->cache_store.store, &(running_key), running_parent);
         if (!token)
         {
             return false;
@@ -702,7 +702,7 @@ int main(int argc, char *argv[])
 
         fcs_dbm_record *token;
         token = fc_solve_dbm_store_insert_key_value(
-            instance.cache_store.store, KEY_PTR(), NULL, true);
+            instance.cache_store.store, KEY_PTR(), NULL);
 
         fcs_offloading_queue__insert(
             &(instance.queue), (const offloading_queue_item *)&token);

@@ -749,7 +749,7 @@ int main(int argc, char *argv[])
 // These states should be traversed - not blocked, so don't put them inside the
 // store.
 #if 0
-        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL, true);
+        token = fc_solve_dbm_store_insert_key_value(instance.coll.store, &(key_ptr->kv.key.key), NULL);
 
 #if 0
         entry_point->kv.val.was_consumed =

@@ -344,7 +344,7 @@ int main(int argc, char *argv[])
 
     fcs_dbm_record *token;
     token = fc_solve_dbm_store_insert_key_value(
-        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL, true);
+        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), NULL);
 
     fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
         (const offloading_queue_item *)(&token));

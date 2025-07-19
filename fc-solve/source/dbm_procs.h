@@ -368,8 +368,7 @@ static inline fcs_dbm_record *cache_store__has_key(
     fcs_dbm__cache_store__common *const cache_store,
     fcs_encoded_state_buffer *const key, fcs_dbm_store_val parent)
 {
-    return fc_solve_dbm_store_insert_key_value(
-        cache_store->store, key, parent, true);
+    return fc_solve_dbm_store_insert_key_value(cache_store->store, key, parent);
 }
 
 #ifdef __cplusplus
