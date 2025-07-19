@@ -1,0 +1,15 @@
+#! /usr/bin/env perl
+#
+# Provide an html-minifier alias for "html-minifier-next"
+#
+# Version 0.0.1
+# Copyright (C) 2025 Shlomi Fish < https://www.shlomifish.org/ >
+#
+# Licensed under the terms of the MIT license.
+
+use strict;
+use warnings;
+use 5.014;
+use autodie;
+
+exec("html-minifier-next", @ARGV);

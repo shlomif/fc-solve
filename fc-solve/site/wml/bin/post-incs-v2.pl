@@ -3,6 +3,13 @@
 use strict;
 use warnings;
 
+use Cwd       qw( cwd );
+use Env::Path ();
+
+BEGIN
+{
+    Env::Path->PATH->Prepend( cwd() . "/bin/build-time-helpers/" );
+}
 use App::Gezer ();
 App::Gezer->new->run( { ARGV => \@ARGV } );
 __END__

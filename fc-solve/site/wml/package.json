@@ -27,7 +27,6 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-plugin-prettier": "^5.5.1",
     "flatted": "^3.3.3",
-    "html-minifier": "^4.0.0",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.14.1",
     "lodash": "^4.17.21",
