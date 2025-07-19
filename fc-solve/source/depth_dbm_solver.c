@@ -210,12 +210,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         }
 
         instance_check_multiple_keys(thread, instance, &(coll->cache_store),
-            &(thread->thread_meta_alloc), derived_lists, batch_size
-#ifdef FCS_DBM_CACHE_ONLY
-            ,
-            item->moves_to_key
-#endif
-        );
+            &(thread->thread_meta_alloc), derived_lists, batch_size);
 
         for (fcs_batch_size batch_i = 0; batch_i < batch_size; ++batch_i)
         {
@@ -239,12 +234,7 @@ static inline void instance_check_key(
     fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const unsigned char move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
-        GCC_UNUSED
-#ifdef FCS_DBM_CACHE_ONLY
-    ,
-    const fcs_fcc_move *moves_to_parent
-#endif
-)
+        GCC_UNUSED)
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
     fcs_dbm_record *token;

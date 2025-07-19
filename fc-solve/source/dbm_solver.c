@@ -76,12 +76,7 @@ static inline void instance_check_key(
     fcs_encoded_state_buffer *const key, fcs_dbm_record *const parent,
     const uint8_t move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
-        GCC_UNUSED
-#ifdef FCS_DBM_CACHE_ONLY
-    ,
-    const fcs_fcc_move *moves_to_parent
-#endif
-)
+        GCC_UNUSED)
 {
     fcs_dbm_record *token;
     if ((token = cache_store__has_key(&instance->cache_store, key, parent)))
@@ -197,14 +192,9 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &(derived_iter->key_and_parent.key));
             }
 
-            instance_check_multiple_keys(
-                thread, instance, &(instance->cache_store),
-                &(instance->meta_alloc), &derived_list, 1
-#ifdef FCS_DBM_CACHE_ONLY
-                ,
-                item->moves_to_key
-#endif
-            );
+            instance_check_multiple_keys(thread, instance,
+                &(instance->cache_store), &(instance->meta_alloc),
+                &derived_list, 1);
 
             fcs_derived_state_list__recycle(
                 &derived_list_recycle_bin, &derived_list);
@@ -270,14 +260,8 @@ static bool populate_instance_with_intermediate_input_line(
         delta, local_variant, &(running_state), &running_key);
     fcs_dbm_record *running_parent = NULL;
 
-#ifdef FCS_DBM_CACHE_ONLY
-    fcs_fcc_move *running_moves = NULL;
-    cache_store__insert_key(&(instance->cache_store), &(running_key),
-        &running_parent, running_moves, '\0');
-#else
     running_parent = fc_solve_dbm_store_insert_key_value(
         instance->cache_store.store, &(running_key), running_parent, true);
-#endif
     ++instance->common.num_states_in_collection;
 
     unsigned int hex_digits;
@@ -461,17 +445,6 @@ static bool handle_and_destroy_instance_solution(
                 fprintf(out_fh, "%s", "|");
                 fflush(out_fh);
 
-#ifdef FCS_DBM_CACHE_ONLY
-                fcs_fcc_move *move_ptr = item->moves_to_key;
-                if (move_ptr)
-                {
-                    while (*(move_ptr))
-                    {
-                        fprintf(out_fh, "%.2X,", *(move_ptr));
-                        move_ptr++;
-                    }
-                }
-#else
                 size_t trace_num;
                 fcs_encoded_state_buffer *trace;
                 calc_trace(
@@ -488,7 +461,6 @@ static bool handle_and_destroy_instance_solution(
                 }
 #undef PENULTIMATE_DEPTH
                 free(trace);
-#endif
                 fprintf(out_fh, "\n");
                 fflush(out_fh);
 #ifdef DEBUG_OUT

@@ -244,12 +244,8 @@ static inline void mark_and_sweep_old_states(
 #define NUM_THREADS() num_threads
 #endif
 
-#ifndef FCS_DBM_CACHE_ONLY
 #define DESTROY_STORE(instance)                                                \
     fc_solve_dbm_store_destroy((instance)->cache_store.store)
-#else
-#define DESTROY_STORE(instance)
-#endif
 
 #define DESTROY_CACHE(instance) DESTROY_STORE(instance)
 
@@ -278,10 +274,8 @@ static inline void fcs_dbm__cache_store__init(
     const unsigned long pre_cache_max_count GCC_UNUSED,
     const unsigned long caches_delta GCC_UNUSED)
 {
-#ifndef FCS_DBM_CACHE_ONLY
     fc_solve_dbm_store_init(
         &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin));
-#endif
 }
 
 typedef struct

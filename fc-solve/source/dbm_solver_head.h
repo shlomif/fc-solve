@@ -26,6 +26,10 @@ extern "C" {
 #include "dbm_solver.h"
 #include "dbm_cache.h"
 
+#if (defined(FCS_DBM_CACHE_ONLY))
+#error not compatible with FCS_DBM_CACHE_ONLY
+#endif
+
 #ifdef FCS_DBM_WITHOUT_CACHES
 #define FCS_DBM_USE_OFFLOADING_QUEUE
 #endif
@@ -36,10 +40,6 @@ extern "C" {
 
 #if (!defined(FCS_DBM_WITHOUT_CACHES))
 #error FCS_DBM_USE_OFFLOADING_QUEUE requires FCS_DBM_WITHOUT_CACHES
-#endif
-
-#if (defined(FCS_DBM_CACHE_ONLY))
-#error FCS_DBM_USE_OFFLOADING_QUEUE is not compatible with FCS_DBM_CACHE_ONLY
 #endif
 
 #endif

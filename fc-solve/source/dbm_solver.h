@@ -92,9 +92,7 @@ static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
 
 typedef struct
 {
-#ifndef FCS_DBM_CACHE_ONLY
     fcs_dbm_store store;
-#endif
     unsigned long pre_cache_max_count;
 } fcs_dbm__cache_store__common;
 
