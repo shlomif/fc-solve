@@ -117,8 +117,10 @@ static inline void instance__inspect_new_state(
     const_AUTO(delta_stater, &(instance->delta_stater));
     fc_solve_delta_stater_decode_into_state(
         delta_stater, state->s, &s, indirect_stacks_buffer);
+    fcs_encoded_state_buffer null_parent;
+    fcs_init_encoded_state(&null_parent);
     if (instance_solver_thread_calc_derived_states(instance->local_variant, &s,
-            NULL, &derived_list, &(instance->derived_list_recycle_bin),
+            null_parent, &derived_list, &(instance->derived_list_recycle_bin),
             &(instance->derived_list_allocator), true))
     {
         instance->should_terminate = SOLUTION_FOUND_TERMINATE;

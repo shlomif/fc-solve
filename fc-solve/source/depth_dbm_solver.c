@@ -183,7 +183,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token, &derived_lists[batch_i],
+                    &state, token->key, &derived_lists[batch_i],
                     &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_dbm_queue_item physical_item;

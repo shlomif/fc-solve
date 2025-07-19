@@ -118,14 +118,7 @@ static inline void fc_solve_add_to_irrev_moves_bitmask(
                 &(ptr_new_state->which_irreversible_moves_bitmask),            \
                 moved_card, count_constant);                                   \
         }                                                                      \
-        if (parent_ptr)                                                        \
-        {                                                                      \
-            ptr_new_state->key_and_parent.parent = parent_ptr->key;            \
-        }                                                                      \
-        else                                                                   \
-        {                                                                      \
-            fcs_init_encoded_state(&ptr_new_state->key_and_parent.parent);     \
-        }                                                                      \
+        ptr_new_state->key_and_parent.parent = parent;                         \
         ptr_new_state->move = MAKE_MOVE((src), (dest));                        \
                                                                                \
         ptr_new_state->core_irreversible_moves_count = (count_constant);       \
@@ -263,7 +256,7 @@ static inline bool is_state_solved(
 static inline bool instance_solver_thread_calc_derived_states(
     const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr,
-    fcs_dbm_store_val parent_ptr, fcs_derived_state **const derived_list,
+    fcs_encoded_state_buffer parent, fcs_derived_state **const derived_list,
     fcs_derived_state **const derived_list_recycle_bin,
     compact_allocator *const derived_list_allocator,
     const bool perform_horne_prune)

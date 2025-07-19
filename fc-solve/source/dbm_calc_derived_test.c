@@ -44,8 +44,10 @@ DLLEXPORT int fc_solve_user_INTERNAL_calc_derived_states_wrapper(
     compact_allocator allocator;
     fc_solve_compact_allocator_init(&allocator, &meta_alloc);
 
-    instance_solver_thread_calc_derived_states(local_variant, &init_state, NULL,
-        &derived_list, &derived_list_recycle_bin, &allocator,
+    fcs_encoded_state_buffer null_parent;
+    fcs_init_encoded_state(&null_parent);
+    instance_solver_thread_calc_derived_states(local_variant, &init_state,
+        null_parent, &derived_list, &derived_list_recycle_bin, &allocator,
         perform_horne_prune);
 
     iter = derived_list;

@@ -348,7 +348,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             if (instance_solver_thread_calc_derived_states(local_variant,
                     &state,
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
-                    token,
+                    token->key,
 #else
                     token,
 #endif

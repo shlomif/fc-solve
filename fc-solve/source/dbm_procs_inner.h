@@ -77,9 +77,11 @@ static uint8_t get_move_from_parent_to_child(
     fc_solve_delta_stater_decode_into_state(
         delta, parent.s, &parent_state, indirect_stacks_buffer);
 
+    fcs_encoded_state_buffer null_parent;
+    fcs_init_encoded_state(&null_parent);
     instance_solver_thread_calc_derived_states(local_variant, &parent_state,
-        NULL, &derived_list, &derived_list_recycle_bin, &derived_list_allocator,
-        true);
+        null_parent, &derived_list, &derived_list_recycle_bin,
+        &derived_list_allocator, true);
 
     for (var_AUTO(derived_iter, derived_list); derived_iter;
         derived_iter = derived_iter->next)
