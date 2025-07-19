@@ -50,7 +50,6 @@ sub src_filenames
         $self->main_base . '.c',
         'calc_foundation.h',
         'card.c',
-        'dbm_cache.h',
         'dbm_calc_derived.h',
         'dbm_calc_derived_iface.h',
         'dbm_kaztree_compare.h',

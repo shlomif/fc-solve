@@ -24,7 +24,6 @@ extern "C" {
 #include "dbm_calc_derived.h"
 #include "delta_states_any.h"
 #include "dbm_solver.h"
-#include "dbm_cache.h"
 
 #if (defined(FCS_DBM_CACHE_ONLY))
 #error not compatible with FCS_DBM_CACHE_ONLY
