@@ -21,6 +21,7 @@ typedef struct
     const char *offload_dir_path;
 #endif
     dbm_instance_common_elems common;
+    fcs_dbm_record raw_found_sol;
 } dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH() 0
@@ -86,8 +87,7 @@ static inline void instance_check_key(
 
         instance_debug_out_state(instance, &(token->key));
 
-        fcs_offloading_queue__insert(
-            &(instance->queue), ((offloading_queue_item *)(&token)));
+        fcs_offloading_queue__insert(&(instance->queue), (token->key));
     }
 }
 
@@ -101,7 +101,9 @@ static void *instance_run_solver_thread(void *const void_arg)
 {
     fcs_dbm_queue_item physical_item;
     fcs_state_keyval_pair state;
-    fcs_dbm_record *token = NULL;
+    fcs_encoded_state_buffer null_parent;
+    fcs_init_encoded_state(&null_parent);
+    fcs_encoded_state_buffer token = null_parent;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     const_AUTO(thread, ((thread_arg *)void_arg)->thread);
@@ -136,10 +138,9 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (fcs_offloading_queue__extract(
-                    &(instance->queue), (offloading_queue_item *)(&token)))
+            if (fcs_offloading_queue__extract(&(instance->queue), (&token)))
             {
-                physical_item.key = token->key;
+                physical_item.key = token;
                 item = &physical_item;
                 instance_increment(instance);
             }
@@ -174,11 +175,16 @@ static void *instance_run_solver_thread(void *const void_arg)
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token->key, &derived_list,
-                    &derived_list_recycle_bin, &derived_list_allocator, true))
+                    &state, token, &derived_list, &derived_list_recycle_bin,
+                    &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->common.storage_lock);
-                fcs_dbm__found_solution(&(instance->common), token, item);
+                instance->raw_found_sol.key = token;
+                assert(dbm_lookup_parent(1, &instance->cache_store.store,
+                    instance->raw_found_sol.key,
+                    &instance->raw_found_sol.parent));
+                fcs_dbm__found_solution(
+                    &(instance->common), &instance->raw_found_sol, item);
                 fcs_lock_unlock(&instance->common.storage_lock);
                 break;
             }
@@ -354,8 +360,7 @@ static bool populate_instance_with_intermediate_input_line(
                    "that with all states applied.\n",
             line_num);
     }
-    fcs_offloading_queue__insert(
-        &(instance->queue), (const offloading_queue_item *)(&token));
+    fcs_offloading_queue__insert(&(instance->queue), (token->key));
     ++instance->common.count_of_items_in_queue;
 
     return true;
@@ -404,7 +409,7 @@ static bool handle_and_destroy_instance_solution(
 {
     FILE *const out_fh = instance->common.out_fh;
     bool ret = false;
-    fcs_dbm_record *token;
+    fcs_encoded_state_buffer token;
 #ifdef DEBUG_OUT
     fcs_dbm_variant_type local_variant = instance->common.variant;
 #endif
@@ -427,10 +432,9 @@ static bool handle_and_destroy_instance_solution(
             fcs_dbm_queue_item physical_item;
             fcs_dbm_queue_item *const item = &physical_item;
 
-            while (fcs_offloading_queue__extract(
-                &(instance->queue), (offloading_queue_item *)(&token)))
+            while (fcs_offloading_queue__extract(&(instance->queue), (&token)))
             {
-                physical_item.key = token->key;
+                physical_item.key = token;
 
 #ifdef FCS_DEBONDT_DELTA_STATES
                 for (size_t i = 0; i < COUNT(item->key.s); i++)
@@ -449,8 +453,12 @@ static bool handle_and_destroy_instance_solution(
 
                 size_t trace_num;
                 fcs_encoded_state_buffer *trace;
-                calc_trace(
-                    1, &instance->cache_store.store, token, &trace, &trace_num);
+                fcs_dbm_record raw_found;
+                raw_found.key = token;
+                assert(dbm_lookup_parent(1, &instance->cache_store.store,
+                    raw_found.key, &raw_found.parent));
+                calc_trace(1, &instance->cache_store.store, &raw_found, &trace,
+                    &trace_num);
 
 // We stop at 1 because the deepest state does not contain a move (as it is the
 // ultimate state).
@@ -708,8 +716,7 @@ int main(int argc, char *argv[])
         token = fc_solve_dbm_store_insert_key_value(
             instance.cache_store.store, KEY_PTR(), null_parent);
 
-        fcs_offloading_queue__insert(
-            &(instance.queue), (const offloading_queue_item *)&token);
+        fcs_offloading_queue__insert(&(instance.queue), token->key);
         ++instance.common.num_states_in_collection;
         ++instance.common.count_of_items_in_queue;
 

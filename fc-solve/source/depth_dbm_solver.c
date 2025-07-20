@@ -33,6 +33,7 @@ typedef struct
     size_t curr_depth;
     dbm_instance_common_elems common;
     fcs_batch_size max_batch_size;
+    fcs_dbm_record raw_found_sol;
 } dbm_solver_instance;
 
 #define CHECK_KEY_CALC_DEPTH()                                                 \
@@ -114,7 +115,7 @@ static void *instance_run_solver_thread(void *const void_arg)
     TRACE("%s\n", "instance_run_solver_thread start");
 
     const_AUTO(coll, &(instance->colls_by_depth[instance->curr_depth]));
-    fcs_dbm_record *tokens[max_batch_size];
+    fcs_encoded_state_buffer tokens[max_batch_size];
     fcs_derived_state *derived_lists[max_batch_size];
     while (true)
     {
@@ -139,8 +140,8 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 for (; batch_size < max_batch_size; ++batch_size)
                 {
-                    if (fcs_offloading_queue__extract(&(coll->queue),
-                            (offloading_queue_item *)(&tokens[batch_size])))
+                    if (fcs_offloading_queue__extract(
+                            &(coll->queue), (&tokens[batch_size])))
                     {
                         derived_lists[batch_size] = NULL;
                         instance_increment(instance);
@@ -179,18 +180,28 @@ static void *instance_run_solver_thread(void *const void_arg)
             const_AUTO(token, tokens[batch_i]);
             // Handle the item in "token".
             fc_solve_delta_stater_decode_into_state(
-                delta_stater, token->key.s, &state, indirect_stacks_buffer);
+                delta_stater, token.s, &state, indirect_stacks_buffer);
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token->key, &derived_lists[batch_i],
+                    &state, token, &derived_lists[batch_i],
                     &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_dbm_queue_item physical_item;
-                physical_item.key = token->key;
+                physical_item.key = token;
                 fcs_lock_lock(&instance->common.storage_lock);
-                fcs_dbm__found_solution(
-                    &(instance->common), token, &physical_item);
+                instance->raw_found_sol.key = token;
+                fcs_dbm_store stores_by_depth[MAX_FCC_DEPTH];
+                for (size_t i = 0; i < MAX_FCC_DEPTH; ++i)
+                {
+                    stores_by_depth[i] =
+                        instance->colls_by_depth[i].cache_store.store;
+                }
+                assert(dbm_lookup_parent(MAX_FCC_DEPTH, stores_by_depth,
+                    instance->raw_found_sol.key,
+                    &instance->raw_found_sol.parent));
+                fcs_dbm__found_solution(&(instance->common),
+                    &instance->raw_found_sol, &physical_item);
                 fcs_condvar_broadcast(&(instance->monitor));
                 fcs_lock_unlock(&instance->common.storage_lock);
                 goto thread_end;
@@ -242,8 +253,7 @@ static inline void instance_check_key(
 
     if ((token = cache_store__has_key(&coll->cache_store, key, raw_parent)))
     {
-        fcs_offloading_queue__insert(
-            &(coll->queue), (const offloading_queue_item *)(&token));
+        fcs_offloading_queue__insert(&(coll->queue), (token->key));
 
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
@@ -349,8 +359,8 @@ int main(int argc, char *argv[])
     token = fc_solve_dbm_store_insert_key_value(
         instance.colls_by_depth[0].cache_store.store, KEY_PTR(), null_parent);
 
-    fcs_offloading_queue__insert(&(instance.colls_by_depth[0].queue),
-        (const offloading_queue_item *)(&token));
+    fcs_offloading_queue__insert(
+        &(instance.colls_by_depth[0].queue), (token->key));
     ++instance.common.num_states_in_collection;
     ++instance.common.count_of_items_in_queue;
 

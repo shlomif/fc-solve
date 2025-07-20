@@ -223,7 +223,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
             if (fcs_depth_multi_queue__extract(&(coll->depth_queue),
-                    &(thread->state_depth), (offloading_queue_item *)(&token)))
+                    &(thread->state_depth), &(token->key)))
             {
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wnull-dereference"
@@ -422,9 +422,8 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
             // Now insert it into the queue.
             fcs_lock_lock(&instance->global_lock);
 
-            fcs_depth_multi_queue__insert(&(coll->depth_queue),
-                thread->state_depth + 1,
-                (const offloading_queue_item *)(&token));
+            fcs_depth_multi_queue__insert(
+                &(coll->depth_queue), thread->state_depth + 1, (&token->key));
 
             ++instance->common.count_of_items_in_queue;
             ++instance->common.num_states_in_collection;
@@ -739,8 +738,7 @@ int main(int argc, char *argv[])
         RB_INSERT(FccEntryPointList, &(instance.fcc_entry_points), entry_point);
 
         {
-            const offloading_queue_item token =
-                ((const offloading_queue_item)(&(entry_point->kv.key)));
+            const offloading_queue_item token = (entry_point->kv.key.key);
             if (was_init)
             {
                 fcs_depth_multi_queue__insert(

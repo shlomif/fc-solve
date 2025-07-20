@@ -65,7 +65,7 @@ static inline void fcs_depth_multi_queue__insert(
 
     assert(depth >= queue->min_depth);
     fcs_offloading_queue__insert(
-        &(queue->queues_by_depth[depth - queue->min_depth]), item);
+        &(queue->queues_by_depth[depth - queue->min_depth]), *item);
 
     q_stats_insert(&queue->stats);
 }

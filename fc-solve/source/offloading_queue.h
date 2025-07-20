@@ -28,7 +28,7 @@ extern "C" {
 #define myassert(x) assert(x)
 #endif
 
-typedef const unsigned char *offloading_queue_item;
+typedef fcs_encoded_state_buffer offloading_queue_item;
 
 typedef struct
 {
@@ -192,10 +192,10 @@ static inline bool fcs_offloading_queue_page__can_insert(
 }
 
 static inline void fcs_offloading_queue_page__insert(
-    off_q_page *const page, const offloading_queue_item *const in_item)
+    off_q_page *const page, const offloading_queue_item in_item)
 {
-    memcpy(page->data + ((page->write_to_idx)++) * sizeof(*in_item), in_item,
-        sizeof(*in_item));
+    memcpy(page->data + ((page->write_to_idx)++) * sizeof(in_item), &in_item,
+        sizeof(in_item));
 }
 
 static inline void fcs_offloading_queue_page__calc_filename(
@@ -299,7 +299,7 @@ static inline void fcs_offloading_queue__destroy(
 }
 
 static inline void fcs_offloading_queue__insert(
-    fcs_offloading_queue *queue, const offloading_queue_item *item)
+    fcs_offloading_queue *queue, offloading_queue_item item)
 {
     if (!fcs_offloading_queue_page__can_insert(
             queue->pages + queue->page_idx_to_write_to))
@@ -333,7 +333,9 @@ static inline bool fcs_offloading_queue__extract(
 {
     if (q_stats_is_empty(&queue->stats))
     {
-        *return_item = NULL;
+        fcs_encoded_state_buffer null_parent;
+        fcs_init_encoded_state(&null_parent);
+        *return_item = null_parent;
         return false;
     }
 
