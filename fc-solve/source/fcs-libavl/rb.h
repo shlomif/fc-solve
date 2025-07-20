@@ -68,8 +68,8 @@ typedef fcs_dbm_record avl_key_type;
 #define AVL_KEY_PTR_PTR(p) (p)
 #define NODE_DATA_PTR(p) (&((p)->rb_data))
 #define NODE_ASSIGN_DATA_PTR(node_p, ptr)                                      \
-    (((node_p)->rb_data) = *(fcs_dbm_record *)ptr)
-#define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record *)ptr)
+    (((node_p)->rb_data) = *(avl_key_type *)ptr)
+#define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(avl_key_type *)ptr)
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
 #error FCS_DBM__VAL_IS_ANCESTOR must not be defined
 #define rb_insert(t, i) rb_probe((t), (i))
