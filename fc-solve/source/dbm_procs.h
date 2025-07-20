@@ -112,6 +112,21 @@ static inline void instance_debug_out_state(
     }
 #endif
 
+static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
+    const fcs_encoded_state_buffer key, fcs_encoded_state_buffer *const parent)
+{
+    for (size_t i = 0; i < count_stores; ++i)
+    {
+        var_AUTO(store, stores[i]);
+        if (fc_solve_dbm_store_lookup_parent(store, key.s, parent->s))
+
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
 static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
     fcs_dbm_record *const ptr_initial_record,
     fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
@@ -121,6 +136,7 @@ static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
     size_t trace_max_num = GROW_BY;
     fcs_encoded_state_buffer *trace = SMALLOC(trace, trace_max_num);
     fcs_encoded_state_buffer *key_ptr = trace;
+    fcs_encoded_state_buffer parent;
     fcs_dbm_record init_record = *ptr_initial_record;
     fcs_dbm_record *record = &init_record;
 
@@ -133,26 +149,12 @@ static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
             trace = SREALLOC(trace, trace_max_num += GROW_BY);
             key_ptr = &(trace[trace_num - 1]);
         }
-        bool found = false;
-        fcs_dbm_record parent;
-        for (size_t i = 0; i < count_stores; ++i)
-        {
-            var_AUTO(store, stores[i]);
-            if (fc_solve_dbm_store_lookup_parent(
-                    store, record->key.s, parent.key.s))
-
-            {
-                found = true;
-                break;
-            }
-            else
-            {
-            }
-        }
-        // assert(found);
+        const_AUTO(
+            found, dbm_lookup_parent(count_stores, stores, *key_ptr, &parent));
         if (found)
         {
-            *record = parent;
+            record->parent = record->key;
+            record->key = parent;
         }
         else
         {
