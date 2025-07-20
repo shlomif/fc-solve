@@ -10,8 +10,8 @@
 // reduce the memory consumption. See
 // ../docs/split-fully-connected-components-based-solver-planning.txt
 // in the Freecell Solver git repository.
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
-#error FCS_DBM__VAL_IS_ANCESTOR must be defined
+#ifdef FCS_DBM__VAL_IS_ANCESTOR
+#error FCS_DBM__VAL_IS_ANCESTOR must not be defined
 #endif
 
 #include "dbm_solver_head.h"
@@ -346,14 +346,8 @@ static void *instance_run_solver_thread(void *const void_arg)
 #endif
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state,
-#ifdef FCS_DBM__VAL_IS_ANCESTOR
-                    token->key,
-#else
-                    token,
-#endif
-                    &derived_list, &derived_list_recycle_bin,
-                    &derived_list_allocator, true))
+                    &state, token->key, &derived_list,
+                    &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->global_lock);
                 fcs_dbm__found_solution(&(instance->common), token, item);
@@ -504,7 +498,6 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
 #endif
             }
 
-#ifdef FCS_DBM__VAL_IS_ANCESTOR
             const fcs_encoded_state_buffer outkey = token->key;
             const size_t keysize = sizeof(outkey);
             const_SLOT(moves_to_state_len, instance);
@@ -512,21 +505,7 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
             instance_alloc_num_moves(instance, added_moves_to_output);
             unsigned char *const moves_to_state = instance->moves_to_state;
             memcpy(&moves_to_state[moves_to_state_len], &outkey, keysize);
-#else
-            const_SLOT(moves_to_state_len, instance);
-            const size_t added_moves_to_output =
-                moves_to_state_len + trace_num - 1;
-            instance_alloc_num_moves(instance, added_moves_to_output);
-            unsigned char *const moves_to_state = instance->moves_to_state;
-            ssize_t s_trace_num = (ssize_t)trace_num - 1;
-            for (ssize_t i = s_trace_num; i > 0; --i)
-            {
-                moves_to_state[(ssize_t)moves_to_state_len + s_trace_num - i] =
-                    get_move_from_parent_to_child(instance,
-                        &(thread->delta_stater), trace[i], trace[i - 1]);
-            }
 
-#endif
             const size_t new_max_enc_len =
                 ((added_moves_to_output * 4) / 3) + 20;
 
@@ -570,9 +549,6 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
             fflush(instance->fcc_exit_points_out_fh);
         cleanup:
             fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
-            free(trace);
-#endif
         }
     }
 }
@@ -723,11 +699,8 @@ int main(int argc, char *argv[])
     {
         FccEntryPointNode *const entry_point = fcs_compact_alloc_ptr(
             &(instance.fcc_entry_points_allocator), sizeof(*entry_point));
-#ifdef FCS_DBM__VAL_IS_ANCESTOR
         entry_point->kv.key.parent = entry_point->kv.key.parent;
-#else
-        fcs_dbm_record_set_parent_ptr(&(entry_point->kv.key), NULL);
-#endif
+
         char state_base64[100] = {0};
         int state_depth = -1;
         assert(2 == sscanf(instance.fingerprint_line, "%99s %d", state_base64,

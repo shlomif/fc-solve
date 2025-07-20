@@ -14,7 +14,6 @@
 extern "C" {
 #endif
 
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
 static void move_to_string(uint8_t move, char *const move_buffer)
 {
     char *s = move_buffer;
@@ -47,7 +46,6 @@ static void move_to_string(uint8_t move, char *const move_buffer)
         }
     }
 }
-#endif
 
 #ifdef __cplusplus
 }

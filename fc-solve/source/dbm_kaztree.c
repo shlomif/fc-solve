@@ -81,11 +81,7 @@ bool fc_solve_dbm_store_lookup_parent(
     {
         return false;
     }
-#ifdef FCS_DBM__VAL_IS_ANCESTOR
-    *((fcs_dbm_store_val *)parent) = ((fcs_dbm_store_val)existing);
-#else
     *(fcs_encoded_state_buffer *)parent = ((fcs_dbm_record *)existing)->parent;
-#endif
 
     return true;
 }

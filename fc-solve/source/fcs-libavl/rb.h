@@ -71,6 +71,7 @@ typedef fcs_dbm_record avl_key_type;
     (((node_p)->rb_data) = *(fcs_dbm_record *)ptr)
 #define AVL_KEY_ASSIGN_DATA_PTR(p, ptr) ((*(p)) = *(fcs_dbm_record *)ptr)
 #ifdef FCS_DBM__VAL_IS_ANCESTOR
+#error FCS_DBM__VAL_IS_ANCESTOR must not be defined
 #define rb_insert(t, i) rb_probe((t), (i))
 #define AVL_KEY_EQUAL_TO_PTR(key_, ptr)                                        \
     (!memcmp(&((key_).key), (ptr), sizeof((key_).key)))
@@ -140,10 +141,7 @@ struct rb_table *rb_copy(
     const struct rb_table *, rb_copy_func *, rb_item_func *);
 void rb_destroy(struct rb_table *, rb_item_func *);
 avl_key_type *rb_probe(struct rb_table *, void *);
-#ifdef FCS_DBM__VAL_IS_ANCESTOR
-#else
 void *rb_insert(struct rb_table *, void *);
-#endif
 void *rb_replace(struct rb_table *, void *);
 void *rb_delete(struct rb_table *, const void *);
 void *rb_find(const struct rb_table *, const void *);

@@ -14,6 +14,7 @@
 // In addition, this solver implements the scheme in:
 // https://groups.yahoo.com/neo/groups/fc-solve-discuss/conversations/topics/1135
 
+#define IN_DEPTH_DBM_SOLVER_dot_c 1
 #include "dbm_solver_head.h"
 
 typedef struct
@@ -23,7 +24,6 @@ typedef struct
     fcs_offloading_queue queue;
 } fcs_dbm_collection_by_depth;
 
-#define MAX_FCC_DEPTH (RANK_KING * 4 * DECKS_NUM * 2)
 typedef size_t fcs_batch_size;
 typedef struct
 {

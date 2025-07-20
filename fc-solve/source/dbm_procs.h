@@ -52,7 +52,7 @@ static inline bool instance_check_multiple_keys(dbm_solver_thread *const thread,
                 list->move, &(list->which_irreversible_moves_bitmask));
         }
     }
-#ifdef MAX_FCC_DEPTH
+#ifdef IN_DEPTH_DBM_SOLVER_dot_c
     const bool have_more = !q_stats_is_empty(
         &instance->colls_by_depth[instance->curr_depth].queue.stats);
 
