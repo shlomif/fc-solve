@@ -18,7 +18,7 @@ extern "C" {
 
 #include "delta_states.h"
 
-static inline int compare_records__noctx(
+static inline int fcs_dbm__compare_records__noctx(
     const void *const void_a, const void *const void_b)
 {
 #define GET_PARAM(p) (((const fcs_dbm_record *)(p))->key)
@@ -27,10 +27,10 @@ static inline int compare_records__noctx(
 #undef GET_PARAM
 }
 
-static int compare_records(const void *const void_a, const void *const void_b,
-    void *const context GCC_UNUSED)
+static int fcs_dbm__compare_records(const void *const void_a,
+    const void *const void_b, void *const context GCC_UNUSED)
 {
-    return compare_records__noctx(void_a, void_b);
+    return fcs_dbm__compare_records__noctx(void_a, void_b);
 }
 
 #ifdef __cplusplus

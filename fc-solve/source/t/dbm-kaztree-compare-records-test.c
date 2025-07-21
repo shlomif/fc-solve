@@ -30,7 +30,7 @@ static void main_tests(void **state GCC_UNUSED)
             rec_a.key.s[0] = sizeof(rec_a.key) - 1;
             rec_a.key.s[pos_idx] = '\x01';
 
-            if (!(compare_records__noctx(&rec_a, &rec_b) > 0))
+            if (!(fcs_dbm__compare_records__noctx(&rec_a, &rec_b) > 0))
             {
                 fail_msg(
                     "compare_records(rec_a, rec_b) returned a wrong value for "
@@ -39,7 +39,7 @@ static void main_tests(void **state GCC_UNUSED)
                 all_good = false;
                 break;
             }
-            if (!(compare_records__noctx(&rec_b, &rec_a) < 0))
+            if (!(fcs_dbm__compare_records__noctx(&rec_b, &rec_a) < 0))
             {
                 fail_msg(
                     "compare_records(rec_b, rec_a) returned a wrong value for "
