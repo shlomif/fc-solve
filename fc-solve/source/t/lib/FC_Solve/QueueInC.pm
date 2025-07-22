@@ -14,6 +14,17 @@ typedef struct
     fcs_offloading_queue q;
 } QueueInC;
 
+static inline int item2int (const offloading_queue_item i) {
+    return *(int*)&i;
+}
+
+static inline offloading_queue_item int2item (const int i) {
+    offloading_queue_item ret;
+    memset(&ret, '\0', sizeof(ret));
+    *(int*)(&ret) = i;
+    return ret;
+}
+
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, long queue_id) {
         QueueInC * s;
 
@@ -36,15 +47,15 @@ static inline fcs_offloading_queue * q(SV * const obj) {
 }
 
 void insert(SV* obj, int item_i) {
-    offloading_queue_item item = (offloading_queue_item)item_i;
-    fcs_offloading_queue__insert(q(obj), &item);
+    offloading_queue_item item = int2item(item_i);
+    fcs_offloading_queue__insert(q(obj), item);
 }
 
 SV* extract(SV* obj) {
     offloading_queue_item item;
 
     return (fcs_offloading_queue__extract(q(obj), &item))
-    ? newSViv((int)item)
+    ? newSViv(item2int(item))
     : &PL_sv_undef;
 }
 
