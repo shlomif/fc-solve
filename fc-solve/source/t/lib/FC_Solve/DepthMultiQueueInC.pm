@@ -14,6 +14,17 @@ typedef struct
     fcs_depth_multi_queue q;
 } QueueInC;
 
+static inline int item2int (const offloading_queue_item i) {
+    return *(int*)&i;
+}
+
+static inline offloading_queue_item int2item (const int i) {
+    offloading_queue_item ret;
+    memset(&ret, '\0', sizeof(ret));
+    *(int*)(&ret) = i;
+    return ret;
+}
+
 SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_depth, int first_item_i) {
         SV*      obj_ref = newSViv(0);
         SV*      obj = newSVrv(obj_ref, "FC_Solve::DepthMultiQueueInC");
@@ -21,7 +32,7 @@ SV* _proto_new(int num_items_per_page, const char * offload_dir_path, int first_
         QueueInC * s;
         New(42, s, 1, QueueInC);
 
-        const_AUTO(first_item, (offloading_queue_item)first_item_i);
+        const_AUTO(first_item, int2item(first_item_i));
         fcs_depth_multi_queue__init(&(s->q), savepv(offload_dir_path), first_depth, &first_item);
         sv_setiv(obj, (IV)s);
         SvREADONLY_on(obj);
@@ -37,7 +48,7 @@ static inline fcs_depth_multi_queue * q(SV * const obj) {
 }
 
 void insert(SV* obj, int depth, int item_i) {
-    const_AUTO(item, (offloading_queue_item)item_i);
+    const_AUTO(item, int2item(item_i));
     fcs_depth_multi_queue__insert( q(obj), depth, &item );
 }
 
@@ -49,7 +60,7 @@ AV* extract_proto(SV* obj) {
     if (fcs_depth_multi_queue__extract(q(obj), &ret_depth, &item))
     {
         av_push(ret, newSViv(ret_depth));
-        av_push(ret, newSViv((int)item));
+        av_push(ret, newSViv(item2int(item)));
     }
 
     return ret;

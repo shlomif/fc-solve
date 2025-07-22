@@ -17,6 +17,7 @@ extern "C" {
 #ifdef RINUTILS__IS_UNIX
 #include <fcntl.h>
 #endif
+#include "delta_states.h"
 
 #ifdef NDEBUG
 #define myassert(x)                                                            \
