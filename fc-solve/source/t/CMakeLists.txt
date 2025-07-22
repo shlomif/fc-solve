@@ -141,6 +141,7 @@ IF (FCS_WITH_TEST_SUITE)
     # This is a kind-of-temporary kludge to make
     # "dbm-kaztree-compare-records-test.c" build.
     ADD_DEFINITIONS("-DFCS_DBM_USE_LIBAVL=1"
+        "-DFCS_LIBAVL_STORE_WHOLE_KEYS=1"
         "-I${CMAKE_CURRENT_SOURCE_DIR}/.."
         "-I${CMAKE_CURRENT_SOURCE_DIR}/../fcs-libavl/"
         )

@@ -17,11 +17,12 @@ extern "C" {
 #endif
 
 #include "delta_states.h"
+#include "dbm_avl_key_type.h"
 
 static inline int fcs_dbm__compare_records__noctx(
     const void *const void_a, const void *const void_b)
 {
-#define GET_PARAM(p) (((const fcs_dbm_record *)(p))->key)
+#define GET_PARAM(p) (((const avl_key_type *)(p))->key)
     return memcmp(
         &(GET_PARAM(void_a)), &(GET_PARAM(void_b)), sizeof(GET_PARAM(void_a)));
 #undef GET_PARAM
