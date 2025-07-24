@@ -30,6 +30,9 @@
 #include "rinutils/alloc_wrap.h"
 #include "rinutils/unused.h"
 
+// an updated "magic" flag.
+// #define FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
+
 #ifdef WITH_AVL_BALANCE_FIELD
 static inline signed char rb_get_color(struct rb_node *const node)
 {
@@ -264,10 +267,10 @@ avl_key_type *rb_probe(struct rb_table *tree, void *item)
     }
     rb_set_color(TREE_AVL_ROOT(tree), RB_BLACK);
 
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
-    return NODE_DATA_PTR(n);
-#else
+#ifdef FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
     return NULL;
+#else
+    return NODE_DATA_PTR(n);
 #endif
 }
 
@@ -278,12 +281,12 @@ avl_key_type *rb_probe(struct rb_table *tree, void *item)
 void *rb_insert(struct rb_table *table, void *item)
 {
     avl_key_type *p = rb_probe(table, item);
-#ifndef FCS_DBM__VAL_IS_ANCESTOR
+#ifdef FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
+    void *ret = p == NULL ? NULL : AVL_KEY_PTR_PTR(p);
+#else
     void *ret = p == NULL || (AVL_KEY_EQUAL_TO_PTR(*p, item))
                     ? NULL
                     : AVL_KEY_PTR_PTR(p);
-#else
-    void *ret = p == NULL ? NULL : AVL_KEY_PTR_PTR(p);
 #endif
     return ret;
 }
