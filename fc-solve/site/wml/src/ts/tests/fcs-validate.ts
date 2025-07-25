@@ -15,6 +15,7 @@ import {
 
 import {
     get_flipped_deal_with_comment_prefix,
+    get_flipped_deal_with_leading_colons,
     get_flipped_deal_with_leading_empty_line,
     get_non_flipped_ms240_deal_deal,
 } from "./fcs-common-constants";
@@ -1463,6 +1464,10 @@ Foundations:
     }
     _flip_test("comment prefix", get_flipped_deal_with_comment_prefix());
     _flip_test("empty line prefix", get_flipped_deal_with_leading_empty_line());
+    _flip_test(
+        "leading colon on every line",
+        get_flipped_deal_with_leading_colons(),
+    );
     qunit.test(
         "verify_state determine_if_string_is_board_like",
         (a: Assert) => {

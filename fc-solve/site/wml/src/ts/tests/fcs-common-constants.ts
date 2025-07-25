@@ -12,6 +12,9 @@ const flipped_deal_with_comment_prefix =
 const flipped_deal_with_leading_empty_line =
     "\n" + flipped_deal_base_string + "\n\n";
 
+const flipped_deal_with_leading_colons =
+    flipped_deal_base_string.replace(/^/gms, ": ") + "\n";
+
 // Not MS # 24 !
 const non_flipped_ms240_deal: string = `JH 9C 5S KC 6S 2H AS
 5D 3D 9S 2S 3C AD 8C
@@ -27,6 +30,9 @@ export function get_flipped_deal_with_comment_prefix(): string {
 }
 export function get_flipped_deal_with_leading_empty_line(): string {
     return flipped_deal_with_leading_empty_line;
+}
+export function get_flipped_deal_with_leading_colons(): string {
+    return flipped_deal_with_leading_colons;
 }
 // Not MS # 24 !
 export function get_non_flipped_ms240_deal_deal(): string {
