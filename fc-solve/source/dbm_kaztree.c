@@ -13,14 +13,21 @@
 #error This code assumes FCS_LIBAVL_STORE_WHOLE_KEYS = 1
 #endif
 
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+#include "dbm_rawdump_parent_lookup.h"
+#endif
+
 typedef struct
 {
     dict_t *kaz_tree;
     meta_allocator meta_alloc;
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    fcs_dbm__rawdump__parent_lookup__type *parent_lookup_ptr;
+#endif
 } fcs_dbm;
 
 void fc_solve_dbm_store_init(fcs_dbm_store *const store,
-    const char *path GCC_UNUSED, void **const recycle_bin_ptr)
+    const char *path GCC_UNUSED, void **const recycle_bin_ptr, void *context)
 {
     fcs_dbm *const db = SMALLOC1(db);
 
@@ -28,6 +35,10 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
 
     db->kaz_tree = fc_solve_kaz_tree_create(
         fcs_dbm__compare_records, NULL, &(db->meta_alloc), recycle_bin_ptr);
+
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    db->parent_lookup_ptr = (fcs_dbm__rawdump__parent_lookup__type *)context;
+#endif
 
     *store = (fcs_dbm_store)db;
 }
@@ -65,11 +76,21 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
         return NULL;
     }
 
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    parent_lookup__add(db->parent_lookup_ptr, to_check);
+#endif
     var_AUTO(ret_ptr, ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
                           db->kaz_tree, to_check))));
     return ret_ptr;
 }
 
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+fcs_dbm__rawdump__parent_lookup__type *fc_solve_dbm_store__get_parent_lookup(
+    fcs_dbm_store store)
+{
+    return (((fcs_dbm *)store)->parent_lookup_ptr);
+}
+#else
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store store, const unsigned char *key, unsigned char *parent)
 {
@@ -85,6 +106,7 @@ bool fc_solve_dbm_store_lookup_parent(
 
     return true;
 }
+#endif
 
 extern void fc_solve_dbm_store_destroy(fcs_dbm_store store)
 {

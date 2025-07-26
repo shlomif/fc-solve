@@ -31,7 +31,9 @@
 #include "rinutils/unused.h"
 
 // an updated "magic" flag.
-// #define FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
+#if defined(FCS_DBM__STORE_KEYS_ONLY)
+#define FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
+#endif
 
 #ifdef WITH_AVL_BALANCE_FIELD
 static inline signed char rb_get_color(struct rb_node *const node)

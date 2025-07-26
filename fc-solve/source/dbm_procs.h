@@ -115,6 +115,15 @@ static inline void instance_debug_out_state(
 static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
     const fcs_encoded_state_buffer key, fcs_encoded_state_buffer *const parent)
 {
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    extern fcs_dbm__rawdump__parent_lookup__type *
+    fc_solve_dbm_store__get_parent_lookup(fcs_dbm_store store);
+    var_AUTO(store, stores[0]);
+    var_AUTO(parent_lookup_ptr, fc_solve_dbm_store__get_parent_lookup(store));
+    const_AUTO(ret,
+        rawdump_parent_lookup__lookup_parent(parent_lookup_ptr, key, parent));
+    return ret;
+#else
     for (size_t i = 0; i < count_stores; ++i)
     {
         var_AUTO(store, stores[i]);
@@ -125,6 +134,7 @@ static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
         }
     }
     return false;
+#endif
 }
 
 static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
@@ -175,7 +185,7 @@ static inline void mark_and_sweep_old_states(
 #ifdef FCS_NO_DBM_AVL
 #error FCS_NO_DBM_AVL
 #else
-#if 0
+#if defined(FCS_DBM__STORE_KEYS_ONLY)
 
     // Now that we are about to descend to a new depth, let's
     // mark-and-sweep the old states, some of which are no longer of interest.
@@ -190,7 +200,6 @@ static inline void mark_and_sweep_old_states(
 
     const size_t items_count = kaz_tree->rb_count;
     size_t idx = 0;
-    return;
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
         item = rb_t_next(&trav))
     {
@@ -222,7 +231,7 @@ static inline void mark_and_sweep_old_states(
         var_AUTO(ancestor, (struct rb_node *)item);
         AVL_SET_NEXT(ancestor, *tree_recycle_bin);
         *tree_recycle_bin = ancestor;
-        if (((++idx) % 100000) == 0)
+        if (((++idx) % 10000000) == 0)
         {
 #ifdef WIN32
             fprintf(out_fh,
@@ -277,7 +286,14 @@ static inline void fcs_dbm__cache_store__init(
     const unsigned long caches_delta GCC_UNUSED)
 {
     fc_solve_dbm_store_init(
-        &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin));
+        &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin),
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+        &(common->parent_lookup)
+#else
+        NULL
+#endif
+
+    );
 }
 
 typedef struct

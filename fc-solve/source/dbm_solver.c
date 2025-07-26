@@ -41,6 +41,15 @@ static inline void instance_init(dbm_solver_instance *const instance,
 #endif
     fcs_dbm__common_init(&(instance->common), iters_delta_limit,
         max_num_states_in_collection, inp->local_variant, out_fh);
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    /* initialize parent_lookup . */
+    char mypath[2000];
+    snprintf(mypath, COUNT(mypath), "%s/fcsdbm_rawdump.bin",
+        instance->offload_dir_path);
+    LAST(mypath) = '\0';
+
+    parent_lookup__create(&(instance->common.parent_lookup), mypath);
+#endif
     fcs_dbm__cache_store__init(&(instance->cache_store), &(instance->common),
         &(instance->meta_alloc), inp->dbm_store_path, inp->pre_cache_max_count,
         inp->caches_delta);
@@ -400,6 +409,9 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
     }
 #endif
 
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    parent_lookup__finish_writing(&(instance->common.parent_lookup));
+#endif
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
