@@ -197,7 +197,10 @@ static void *instance_run_solver_thread(void *const void_arg)
                     stores_by_depth[i] =
                         instance->colls_by_depth[i].cache_store.store;
                 }
-                assert(dbm_lookup_parent(MAX_FCC_DEPTH, stores_by_depth,
+                fcs__parent_lookup__type parent_lookup;
+                parent_lookup.count_stores = MAX_FCC_DEPTH;
+                parent_lookup.stores = stores_by_depth;
+                assert(dbm_lookup_parent(&parent_lookup,
                     instance->raw_found_sol.key,
                     &instance->raw_found_sol.parent));
                 fcs_dbm__found_solution(&(instance->common),

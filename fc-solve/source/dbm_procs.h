@@ -112,12 +112,18 @@ static inline void instance_debug_out_state(
     }
 #endif
 
-static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
+typedef struct
+{
+    size_t count_stores;
+    fcs_dbm_store *stores;
+} fcs__parent_lookup__type;
+
+static bool dbm_lookup_parent(fcs__parent_lookup__type *const parent_lookup,
     const fcs_encoded_state_buffer key, fcs_encoded_state_buffer *const parent)
 {
-    for (size_t i = 0; i < count_stores; ++i)
+    for (size_t i = 0; i < parent_lookup->count_stores; ++i)
     {
-        var_AUTO(store, stores[i]);
+        var_AUTO(store, parent_lookup->stores[i]);
         if (fc_solve_dbm_store_lookup_parent(store, key.s, parent->s))
 
         {
@@ -127,7 +133,7 @@ static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
     return false;
 }
 
-static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
+static void calc_trace(fcs__parent_lookup__type *const parent_lookup,
     fcs_dbm_record *const ptr_initial_record,
     fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
 {
@@ -149,8 +155,7 @@ static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
             trace = SREALLOC(trace, trace_max_num += GROW_BY);
             key_ptr = &(trace[trace_num - 1]);
         }
-        const_AUTO(
-            found, dbm_lookup_parent(count_stores, stores, *key_ptr, &parent));
+        const_AUTO(found, dbm_lookup_parent(parent_lookup, *key_ptr, &parent));
         if (found)
         {
             record->parent = record->key;
