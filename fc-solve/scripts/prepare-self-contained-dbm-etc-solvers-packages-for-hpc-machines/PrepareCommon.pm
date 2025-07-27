@@ -59,6 +59,7 @@ sub src_filenames
         'dbm_move_to_string.h',
         'dbm_procs.h',
         'dbm_procs_inner.h',
+        'dbm_rawdump_parent_lookup.h',
         'dbm_solver.h',
         'dbm_solver_head.h',
         'dbm_trace.h',
