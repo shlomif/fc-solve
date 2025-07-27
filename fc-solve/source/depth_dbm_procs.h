@@ -70,10 +70,7 @@ static bool handle_and_destroy_instance_solution(
             /* code */
             stores_by_depth[i] = instance->colls_by_depth[i].cache_store.store;
         }
-        fcs__parent_lookup__type parent_lookup;
-        parent_lookup.count_stores = MAX_FCC_DEPTH;
-        parent_lookup.stores = stores_by_depth;
-        trace_solution(&parent_lookup, instance, out_fh, delta);
+        trace_solution(MAX_FCC_DEPTH, stores_by_depth, instance, out_fh, delta);
 #endif
         ret = true;
     }

@@ -18,8 +18,12 @@ extern "C" {
 #include "fcc_brfs_test.h"
 #include "lock.h"
 
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+#include "dbm_rawdump_parent_lookup.h"
+#endif
+
 typedef void *fcs_dbm_store;
-void fc_solve_dbm_store_init(fcs_dbm_store *, const char *, void **);
+void fc_solve_dbm_store_init(fcs_dbm_store *, const char *, void **, void *);
 dict_t *fc_solve_dbm_store_get_dict(fcs_dbm_store);
 bool fc_solve_dbm_store_does_key_exist(fcs_dbm_store, const unsigned char *);
 bool fc_solve_dbm_store_lookup_parent(
@@ -59,6 +63,9 @@ typedef struct
     enum TERMINATE_REASON should_terminate;
     fcs_dbm_record *queue_solution_ptr;
     void *tree_recycle_bin;
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    fcs_dbm__rawdump__parent_lookup__type parent_lookup;
+#endif
 } dbm_instance_common_elems;
 
 static inline void fcs_dbm__found_solution(

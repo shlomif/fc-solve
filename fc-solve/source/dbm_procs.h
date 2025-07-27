@@ -112,18 +112,21 @@ static inline void instance_debug_out_state(
     }
 #endif
 
-typedef struct
-{
-    size_t count_stores;
-    fcs_dbm_store *stores;
-} fcs__parent_lookup__type;
-
-static bool dbm_lookup_parent(fcs__parent_lookup__type *const parent_lookup,
+static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
     const fcs_encoded_state_buffer key, fcs_encoded_state_buffer *const parent)
 {
-    for (size_t i = 0; i < parent_lookup->count_stores; ++i)
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    extern fcs_dbm__rawdump__parent_lookup__type *
+    fc_solve_dbm_store__get_parent_lookup(fcs_dbm_store store);
+    var_AUTO(store, stores[0]);
+    var_AUTO(parent_lookup_ptr, fc_solve_dbm_store__get_parent_lookup(store));
+    const_AUTO(ret,
+        rawdump_parent_lookup__lookup_parent(parent_lookup_ptr, key, parent));
+    return ret;
+#else
+    for (size_t i = 0; i < count_stores; ++i)
     {
-        var_AUTO(store, parent_lookup->stores[i]);
+        var_AUTO(store, stores[i]);
         if (fc_solve_dbm_store_lookup_parent(store, key.s, parent->s))
 
         {
@@ -131,9 +134,10 @@ static bool dbm_lookup_parent(fcs__parent_lookup__type *const parent_lookup,
         }
     }
     return false;
+#endif
 }
 
-static void calc_trace(fcs__parent_lookup__type *const parent_lookup,
+static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
     fcs_dbm_record *const ptr_initial_record,
     fcs_encoded_state_buffer **const ptr_trace, size_t *const ptr_trace_num)
 {
@@ -155,7 +159,8 @@ static void calc_trace(fcs__parent_lookup__type *const parent_lookup,
             trace = SREALLOC(trace, trace_max_num += GROW_BY);
             key_ptr = &(trace[trace_num - 1]);
         }
-        const_AUTO(found, dbm_lookup_parent(parent_lookup, *key_ptr, &parent));
+        const_AUTO(
+            found, dbm_lookup_parent(count_stores, stores, *key_ptr, &parent));
         if (found)
         {
             record->parent = record->key;
@@ -282,7 +287,14 @@ static inline void fcs_dbm__cache_store__init(
     const unsigned long caches_delta GCC_UNUSED)
 {
     fc_solve_dbm_store_init(
-        &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin));
+        &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin),
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+        &(common->parent_lookup)
+#else
+        NULL
+#endif
+
+    );
 }
 
 typedef struct

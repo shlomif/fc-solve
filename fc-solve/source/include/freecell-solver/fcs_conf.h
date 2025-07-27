@@ -82,6 +82,9 @@ extern "C" {
 #endif
 
 #define AVL_with_rb_param 1
+#if 0
+#define FCS_DBM__STORE_KEYS_ONLY 1
+#endif
 
 #ifdef __cplusplus
 };

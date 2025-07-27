@@ -99,7 +99,7 @@ static uint8_t get_move_from_parent_to_child(
     exit_error("%s\n", "Failed to find move. Terminating.");
 }
 
-static void trace_solution(fcs__parent_lookup__type *const parent_lookup,
+static void trace_solution(const size_t count_stores, fcs_dbm_store *stores,
     dbm_solver_instance *const instance, FILE *const out_fh,
     fcs_delta_stater *const delta)
 {
@@ -115,8 +115,8 @@ static void trace_solution(fcs__parent_lookup__type *const parent_lookup,
     fcs_state_locs_struct locs;
     fc_solve_init_locs(&locs);
     const_AUTO(local_variant, instance->common.variant);
-    calc_trace(
-        parent_lookup, instance->common.queue_solution_ptr, &trace, &trace_num);
+    calc_trace(count_stores, stores, instance->common.queue_solution_ptr,
+        &trace, &trace_num);
 
     for (ssize_t i = (ssize_t)trace_num - 1; i >= 0; i--)
     {

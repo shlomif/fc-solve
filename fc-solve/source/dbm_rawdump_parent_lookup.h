@@ -41,25 +41,23 @@ static bool rawdump_parent_lookup__lookup_parent(
 {
     FILE *const reader = fopen(obj->filename, "rb");
     assert(reader);
-#define MAX_NUM_ITEMS
+#define MAX_NUM_ITEMS 1024
     fcs_dbm_record page[MAX_NUM_ITEMS];
     ssize_t num_items;
     do
     {
-        num_items = fread(page, sizeof(page[0]).MAX_NUM_ITEMS, reader);
+        num_items = fread(page, sizeof(page[0]), MAX_NUM_ITEMS, reader);
         for (size_t i = 0; i < num_items; ++i)
         {
             if (!memcmp(&page[i].key, &key, sizeof(key)))
             {
                 *parent = page[i].parent;
                 fclose(reader);
-                reader = NULL;
                 return true;
             }
         }
     } while (num_items > 0);
 #undef MAX_NUM_ITEMS
     fclose(reader);
-    reader = NULL;
     return false;
 }

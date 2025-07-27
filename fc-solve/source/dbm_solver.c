@@ -180,10 +180,7 @@ static void *instance_run_solver_thread(void *const void_arg)
             {
                 fcs_lock_lock(&instance->common.storage_lock);
                 instance->raw_found_sol.key = token;
-                fcs__parent_lookup__type parent_lookup;
-                parent_lookup.count_stores = 1;
-                parent_lookup.stores = &instance->cache_store.store;
-                assert(dbm_lookup_parent(&parent_lookup,
+                assert(dbm_lookup_parent(1, &instance->cache_store.store,
                     instance->raw_found_sol.key,
                     &instance->raw_found_sol.parent));
                 fcs_dbm__found_solution(
@@ -422,10 +419,8 @@ static bool handle_and_destroy_instance_solution(
 
     if (instance->common.queue_solution_was_found)
     {
-        fcs__parent_lookup__type parent_lookup;
-        parent_lookup.count_stores = 1;
-        parent_lookup.stores = &instance->cache_store.store;
-        trace_solution(&parent_lookup, instance, out_fh, delta);
+        trace_solution(
+            1, &instance->cache_store.store, instance, out_fh, delta);
         ret = true;
     }
     else if (instance->common.should_terminate != DONT_TERMINATE)
@@ -460,12 +455,10 @@ static bool handle_and_destroy_instance_solution(
                 fcs_encoded_state_buffer *trace;
                 fcs_dbm_record raw_found;
                 raw_found.key = token;
-                fcs__parent_lookup__type parent_lookup;
-                parent_lookup.count_stores = 1;
-                parent_lookup.stores = &instance->cache_store.store;
-                assert(dbm_lookup_parent(
-                    &parent_lookup, raw_found.key, &raw_found.parent));
-                calc_trace(&parent_lookup, &raw_found, &trace, &trace_num);
+                assert(dbm_lookup_parent(1, &instance->cache_store.store,
+                    raw_found.key, &raw_found.parent));
+                calc_trace(1, &instance->cache_store.store, &raw_found, &trace,
+                    &trace_num);
 
 // We stop at 1 because the deepest state does not contain a move (as it is the
 // ultimate state).
@@ -636,12 +629,8 @@ int main(int argc, char *argv[])
 
                     if (limit_instance.common.queue_solution_was_found)
                     {
-                        fcs__parent_lookup__type parent_lookup;
-                        parent_lookup.count_stores = 1;
-                        parent_lookup.stores =
-                            &limit_instance.cache_store.store;
-                        trace_solution(
-                            &parent_lookup, &limit_instance, out_fh, &delta);
+                        trace_solution(1, &limit_instance.cache_store.store,
+                            &limit_instance, out_fh, &delta);
                         skip_queue_output = true;
                         queue_solution_was_found = true;
                     }

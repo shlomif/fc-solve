@@ -49,6 +49,15 @@ static inline void instance_init(dbm_solver_instance *const instance,
     instance->offload_dir_path = inp->offload_dir_path;
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->max_num_states_in_collection, inp->local_variant, out_fh);
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    /* initialize parent_lookup . */
+    char mypath[2000];
+    snprintf(mypath, COUNT(mypath), "%s/fcsdbm_rawdump.bin",
+        instance->offload_dir_path);
+    LAST(mypath) = '\0';
+
+    parent_lookup__create(&(instance->common.parent_lookup), mypath);
+#endif
 
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
     {
@@ -197,10 +206,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     stores_by_depth[i] =
                         instance->colls_by_depth[i].cache_store.store;
                 }
-                fcs__parent_lookup__type parent_lookup;
-                parent_lookup.count_stores = MAX_FCC_DEPTH;
-                parent_lookup.stores = stores_by_depth;
-                assert(dbm_lookup_parent(&parent_lookup,
+                assert(dbm_lookup_parent(MAX_FCC_DEPTH, stores_by_depth,
                     instance->raw_found_sol.key,
                     &instance->raw_found_sol.parent));
                 fcs_dbm__found_solution(&(instance->common),
@@ -284,6 +290,9 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
         ++instance->curr_depth;
     }
 
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    parent_lookup__finish_writing(&(instance->common.parent_lookup));
+#endif
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
 
