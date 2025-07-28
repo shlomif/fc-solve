@@ -185,7 +185,7 @@ static inline void mark_and_sweep_old_states(
 #ifdef FCS_NO_DBM_AVL
 #error FCS_NO_DBM_AVL
 #else
-#if 0
+#if defined(FCS_DBM__STORE_KEYS_ONLY)
 
     // Now that we are about to descend to a new depth, let's
     // mark-and-sweep the old states, some of which are no longer of interest.
@@ -200,7 +200,6 @@ static inline void mark_and_sweep_old_states(
 
     const size_t items_count = kaz_tree->rb_count;
     size_t idx = 0;
-    return;
     for (dict_key_t item = rb_t_first(&trav, kaz_tree); item;
         item = rb_t_next(&trav))
     {
@@ -232,7 +231,7 @@ static inline void mark_and_sweep_old_states(
         var_AUTO(ancestor, (struct rb_node *)item);
         AVL_SET_NEXT(ancestor, *tree_recycle_bin);
         *tree_recycle_bin = ancestor;
-        if (((++idx) % 100000) == 0)
+        if (((++idx) % 10000000) == 0)
         {
 #ifdef WIN32
             fprintf(out_fh,
