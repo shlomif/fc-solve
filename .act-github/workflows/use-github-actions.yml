@@ -20,7 +20,7 @@ jobs:
                 libhunspell-dev libperl-dev libpocl-dev libxml-libxslt-perl libxml2-dev
                 libxslt1-dev lynx mercurial ninja-build ocl-icd-opencl-dev opencl-headers
                 optipng perl pysassc python3 python3-pip python3-setuptools rsync
-                silversearcher-ag strip-nondeterminism valgrind vim xsltproc
+                strip-nondeterminism valgrind vim xsltproc
         -   run: local_lib_shim() { eval "$(perl -Mlocal::lib=$HOME/perl_modules)";
                 } ; local_lib_shim ; if test "$WHAT" = "normal" ; then sudo rm -fr
                 ~/gopath ; . fc-solve/scripts/ci-before-install.bash ; fi
