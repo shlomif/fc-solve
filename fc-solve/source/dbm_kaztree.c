@@ -75,7 +75,7 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     to_check->parent = raw_parent;
 
     const bool was_item_inserted_now =
-        (fc_solve_kaz_tree_alloc_insert(db->kaz_tree, to_check) == NULL);
+        (rb_insert(db->kaz_tree, to_check) == NULL);
 
     if (!was_item_inserted_now)
     {
@@ -85,8 +85,7 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 #ifdef FCS_DBM__STORE_KEYS_ONLY
     parent_lookup__add(db->parent_lookup_ptr, to_check);
 #endif
-    var_AUTO(ret_ptr, ((fcs_dbm_record *)(fc_solve_kaz_tree_lookup_value(
-                          db->kaz_tree, to_check))));
+    var_AUTO(ret_ptr, ((fcs_dbm_record *)(rb_find(db->kaz_tree, to_check))));
     return ret_ptr;
 }
 
@@ -102,8 +101,7 @@ bool fc_solve_dbm_store_lookup_parent(
 {
     fcs_dbm_record to_check = {.key = *(const fcs_encoded_state_buffer *)key};
 
-    dict_key_t existing =
-        fc_solve_kaz_tree_lookup_value(((fcs_dbm *)store)->kaz_tree, &to_check);
+    dict_key_t existing = rb_find(((fcs_dbm *)store)->kaz_tree, &to_check);
     if (!existing)
     {
         return false;
