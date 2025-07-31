@@ -61,12 +61,6 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 {
     fcs_dbm_record to_check;
 
-    // This memset() call is done to please valgrind and for general
-    // good measure. It is not absolutely necessary (but should not
-    // hurt much). It is needed due to struct padding and alignment
-    // issues.
-    memset(&to_check, '\0', sizeof(to_check));
-
     to_check.key = *key;
     to_check.parent = raw_parent;
 
