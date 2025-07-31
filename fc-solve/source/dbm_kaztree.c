@@ -59,23 +59,21 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     const fcs_encoded_state_buffer *key,
     const fcs_encoded_state_buffer raw_parent)
 {
-    fcs_dbm_record record_on_stack;
+    fcs_dbm_record to_check;
 
     // This memset() call is done to please valgrind and for general
     // good measure. It is not absolutely necessary (but should not
     // hurt much). It is needed due to struct padding and alignment
     // issues.
-    memset(&record_on_stack, '\0', sizeof(record_on_stack));
+    memset(&to_check, '\0', sizeof(to_check));
+
+    to_check.key = *key;
+    to_check.parent = raw_parent;
 
     fcs_dbm *const db = (fcs_dbm *)store;
-
-    fcs_dbm_record *to_check = &record_on_stack;
-
-    to_check->key = *key;
-    to_check->parent = raw_parent;
-
     bool was_item_inserted_now;
-    var_AUTO(ret_ptr, rb_probe(db->kaz_tree, to_check, &was_item_inserted_now));
+    var_AUTO(
+        ret_ptr, rb_probe(db->kaz_tree, &to_check, &was_item_inserted_now));
 
     if (!was_item_inserted_now)
     {
@@ -83,7 +81,7 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     }
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-    parent_lookup__add(db->parent_lookup_ptr, to_check);
+    parent_lookup__add(db->parent_lookup_ptr, &to_check);
 #endif
     return (fcs_dbm_record *)(ret_ptr);
 }
