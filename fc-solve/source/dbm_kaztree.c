@@ -98,10 +98,13 @@ fcs_dbm__rawdump__parent_lookup__type *fc_solve_dbm_store__get_parent_lookup(
 bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_store store, const unsigned char *key, unsigned char *parent)
 {
+    fcs_dbm *const db = (fcs_dbm *)store;
     fcs_dbm_record to_check = {.key = *(const fcs_encoded_state_buffer *)key};
 
-    dict_key_t existing = rb_find(((fcs_dbm *)store)->kaz_tree, &to_check);
-    if (!existing)
+    bool was_item_inserted_now;
+    var_AUTO(
+        existing, rb_probe(db->kaz_tree, &to_check, &was_item_inserted_now));
+    if (was_item_inserted_now)
     {
         return false;
     }
