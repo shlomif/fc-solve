@@ -74,8 +74,8 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     to_check->key = *key;
     to_check->parent = raw_parent;
 
-    const bool was_item_inserted_now =
-        (rb_insert(db->kaz_tree, to_check) == NULL);
+    bool was_item_inserted_now;
+    var_AUTO(ret_ptr, rb_probe(db->kaz_tree, to_check, &was_item_inserted_now));
 
     if (!was_item_inserted_now)
     {
@@ -85,8 +85,7 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
 #ifdef FCS_DBM__STORE_KEYS_ONLY
     parent_lookup__add(db->parent_lookup_ptr, to_check);
 #endif
-    var_AUTO(ret_ptr, ((fcs_dbm_record *)(rb_find(db->kaz_tree, to_check))));
-    return ret_ptr;
+    return (fcs_dbm_record *)(ret_ptr);
 }
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY

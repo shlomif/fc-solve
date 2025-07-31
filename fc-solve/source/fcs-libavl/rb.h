@@ -139,7 +139,7 @@ struct rb_table *rb_create(
 struct rb_table *rb_copy(
     const struct rb_table *, rb_copy_func *, rb_item_func *);
 void rb_destroy(struct rb_table *, rb_item_func *);
-avl_key_type *rb_probe(struct rb_table *, void *);
+avl_key_type *rb_probe(struct rb_table *, void *, bool *);
 void *rb_insert(struct rb_table *, void *);
 void *rb_replace(struct rb_table *, void *);
 void *rb_delete(struct rb_table *, const void *);

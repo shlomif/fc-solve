@@ -146,7 +146,8 @@ void *rb_find(const struct rb_table *tree, const void *item)
    If a duplicate item is found in the tree,
    returns a pointer to the duplicate without inserting |item|.
    Returns |NULL| in case of memory allocation failure. */
-avl_key_type *rb_probe(struct rb_table *tree, void *item)
+avl_key_type *rb_probe(
+    struct rb_table *tree, void *item, bool *was_item_inserted_now)
 {
     struct rb_node *pa[RB_MAX_HEIGHT]; /* Nodes on stack. */
     unsigned char da[RB_MAX_HEIGHT];   /* Directions moved from stack nodes. */
@@ -170,12 +171,16 @@ avl_key_type *rb_probe(struct rb_table *tree, void *item)
 #endif
         );
         if (cmp == 0)
+        {
+            *was_item_inserted_now = false;
             return NODE_DATA_PTR(p);
+        }
 
         pa[k] = p;
         da[k++] = cmp > 0;
     }
 
+    *was_item_inserted_now = true;
     if ((n = *(tree->rb_recycle_bin)) != NULL)
     {
         *(tree->rb_recycle_bin) = AVL_NEXT(n);
@@ -269,11 +274,7 @@ avl_key_type *rb_probe(struct rb_table *tree, void *item)
     }
     rb_set_color(TREE_AVL_ROOT(tree), RB_BLACK);
 
-#ifdef FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
-    return NULL;
-#else
     return NODE_DATA_PTR(n);
-#endif
 }
 
 /* Inserts |item| into |table|.
@@ -282,7 +283,8 @@ avl_key_type *rb_probe(struct rb_table *tree, void *item)
    Otherwise, returns the duplicate item. */
 void *rb_insert(struct rb_table *table, void *item)
 {
-    avl_key_type *p = rb_probe(table, item);
+    bool was_item_inserted_now;
+    avl_key_type *p = rb_probe(table, item, &was_item_inserted_now);
 #ifdef FCS_DBM__GET_A_avl_key_type_COMPARISON_WITH_key_ONLY_TO_WORK
     void *ret = p == NULL ? NULL : AVL_KEY_PTR_PTR(p);
 #else
@@ -299,7 +301,8 @@ void *rb_insert(struct rb_table *table, void *item)
    Otherwise, returns the item that was replaced. */
 void *rb_replace(struct rb_table *table, void *item)
 {
-    avl_key_type *p = rb_probe(table, item);
+    bool was_item_inserted_now;
+    avl_key_type *p = rb_probe(table, item, &was_item_inserted_now);
     if (p == NULL || AVL_KEY_EQUAL_TO_PTR(*p, item))
         return NULL;
     else
@@ -679,7 +682,8 @@ void *rb_t_insert(struct rb_traverser *trav, struct rb_table *tree, void *item)
 
     assert(trav != NULL && tree != NULL && item != NULL);
 
-    p = rb_probe(tree, item);
+    bool was_item_inserted_now;
+    p = rb_probe(tree, item, &was_item_inserted_now);
     if (p != NULL)
     {
         trav->rb_table = tree;
