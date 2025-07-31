@@ -37,7 +37,6 @@
 typedef int rb_comparison_func(
     const void *rb_a, const void *rb_b, void *rb_param);
 #else
-#error supported only with AVL_with_rb_param
 typedef int rb_comparison_func(const void *rb_a, const void *rb_b);
 #endif
 typedef void rb_item_func(void *rb_item, void *rb_param);

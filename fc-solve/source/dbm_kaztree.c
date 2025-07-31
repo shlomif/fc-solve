@@ -34,7 +34,13 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
     fc_solve_meta_compact_allocator_init(&(db->meta_alloc));
 
     db->kaz_tree = fc_solve_kaz_tree_create(
-        fcs_dbm__compare_records, NULL, &(db->meta_alloc), recycle_bin_ptr);
+#ifdef AVL_with_rb_param
+        fcs_dbm__compare_records
+#else
+        fcs_dbm__compare_records__noctx
+#endif
+        ,
+        NULL, &(db->meta_alloc), recycle_bin_ptr);
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
     db->parent_lookup_ptr = (fcs_dbm__rawdump__parent_lookup__type *)context;

@@ -81,7 +81,10 @@ extern "C" {
 #define freecell_solver_user_set_pruning(...)
 #endif
 
+#if 0
 #define AVL_with_rb_param 1
+#endif
+
 #if 0
 #define FCS_DBM__STORE_KEYS_ONLY 1
 #endif
