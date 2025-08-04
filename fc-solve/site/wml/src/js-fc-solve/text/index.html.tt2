@@ -178,8 +178,10 @@ and empty columns that can be filled by any card.
 
 <div class="enabled_wrapper">
 <div class="upper_buttons__wrapper">
+[% IF 0 %]
 [%- INCLUDE upper_button targetclasses = ["rewind"] text = "⏮ Prev" title = "Previous move" -%]
 [%- INCLUDE upper_button targetclasses = ["pause", "play"] text = "▶ Play" title = "Play" -%]
+[% END %]
 [%- INCLUDE upper_button targetclasses = ["fastforward"] text = "Next ⏭" title = "Next move" -%]
 </div>
 

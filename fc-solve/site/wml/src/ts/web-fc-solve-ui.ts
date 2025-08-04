@@ -684,5 +684,37 @@ export function set_up(module_wrapper: w.ModuleWrapper, graphics_) {
     $('input[name="unicode_suits"]').change(() => {
         fcs_ui.update_output();
     });
+    let buttons = "";
+    buttons +=
+        '<button id="upper_button__rewind" title="Previous move">⏮ Prev</button>';
+
+    buttons +=
+        '<button id="upper_button__playpause" title="Play">▶ Play</button>';
+    $(".upper_buttons__wrapper").html(
+        buttons + $(".upper_buttons__wrapper").html(),
+    );
+    $("#upper_button__rewind")
+        .off("click")
+        .on("click", () => {
+            $("#solver_bar button.rewind").trigger("click");
+        });
+    $("#upper_button__playpause")
+        .off("click")
+        .on("click", () => {
+            $("#solver_bar button#buttonplaypause").first().trigger("click");
+            const is_paused = $("#solver_bar button#buttonplaypause")
+                .first()
+                .hasClass("pause");
+            console.log("is_paused = " + is_paused);
+            if (is_paused) {
+                $("#upper_button__playpause")
+                    .html("▶ Play")
+                    .attr("title", "Play");
+            } else {
+                $("#upper_button__playpause")
+                    .html("⏸Pause")
+                    .attr("title", "Pause");
+            }
+        });
     graphics = graphics_;
 }
