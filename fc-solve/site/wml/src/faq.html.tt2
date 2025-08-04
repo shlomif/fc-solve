@@ -258,6 +258,26 @@ install <a href="http://strawberryperl.com/">Strawberry Perl</a> to run it.
 
 [% END %]
 
+[% WRAPPER h3_section id = "can_you_solve_this_deal_for_me" title = "Can you solve this deal for me?" %]
+
+<p>
+Sending me deals for me to solve manually sort-of defeats the point of having
+programmed various user-interfaces for Freecell Solver and other solvers.
+However, I do not rule out that the usability of the various user-interfaces
+may still be lacking.
+</p>
+
+<p>
+Currently, I have enough free time to try solving deals that people submit
+to me (using local versions of my solvers/etc.) However, that might change
+in the future. As a result, I suggest first trying to use
+<a href="[% base_path %]js-fc-solve/">the web-based user-interface</a>
+and then sharing the usability issues that you encountered in the report
+(along with screenshots/etc.) so I can improve the future user experience.
+</p>
+
+[% END %]
+
 [% WRAPPER h3_section id = "abuse_of_fc_solve", title = "I think I found an abuse of Freecell Solver. What should I do?" %]
 
 <p>

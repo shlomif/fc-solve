@@ -852,6 +852,7 @@ rtt
 screencast
 screencasts
 screenshot
+screenshots
 scriptable
 seahaven
 segfault
