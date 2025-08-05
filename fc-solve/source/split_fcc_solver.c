@@ -546,7 +546,9 @@ static inline void instance_check_key(dbm_solver_thread *const thread,
             }
 #endif
             fflush(instance->fcc_exit_points_out_fh);
+#if 0
         cleanup:
+#endif
             fcs_lock_unlock(&instance->fcc_exit_points_output_lock);
         }
     }
@@ -778,6 +780,7 @@ int main(int argc, char *argv[])
     fclose(instance.fcc_exit_points_out_fh);
     rename(fcc_exit_points_out_fn_temp, fcc_exit_points_out_fn);
     fclose(fingerprint_fh);
+    trace_solution(0, NULL, NULL, NULL, NULL);
     handle_and_destroy_instance_solution(&instance, &delta);
     free(instance.moves_to_state);
     free(instance.moves_base64_encoding_buffer);

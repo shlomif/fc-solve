@@ -148,7 +148,6 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
     fcs_state_keyval_pair *const init_state_kv_ptr,
     fcs_which_moves_bitmask *const which_irreversible_moves_bitmask)
 {
-    fcs_fcc_move additional_moves[RANK_KING * 4 * DECKS_NUM];
     size_t count_moves_so_far = 0;
     size_t count_additional_irrev_moves = 0;
     FCS_ON_NOT_FC_ONLY(
@@ -184,11 +183,8 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
                     COUNT_NON_REV(is_reversible));
 
                 fcs_col_pop_top(col);
-
                 fcs_increment_foundation(the_state, dest_foundation);
-
-                additional_moves[count_moves_so_far++] = MAKE_MOVE(
-                    COL2MOVE(stack_idx), FOUND2MOVE((stack_i)dest_foundation));
+                ++count_moves_so_far;
             }
         }
 
@@ -210,8 +206,7 @@ static inline size_t horne_prune(const fcs_dbm_variant_type local_variant,
 
                     fcs_empty_freecell(the_state, fc);
                     fcs_increment_foundation(the_state, dest_foundation);
-                    additional_moves[count_moves_so_far++] = MAKE_MOVE(
-                        COL2MOVE(fc), FOUND2MOVE((stack_i)dest_foundation));
+                    ++count_moves_so_far;
                 }
             }
         }
