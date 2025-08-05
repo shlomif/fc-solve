@@ -146,7 +146,7 @@ __PACKAGE__->populate(
             msg => "Checking the 2-freecells '-seed 33' preset.",
         },
 
-        # This command line theme yields an ever shorter solution to the
+        # This command line theme yields an even shorter solution to the
         # previously intractable deal #12 .
         '2fc_12_shorter' => {
             args => {

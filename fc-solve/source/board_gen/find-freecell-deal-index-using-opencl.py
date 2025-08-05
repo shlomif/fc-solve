@@ -31,7 +31,6 @@ def find_ret(ints):
     first_int |= (ints.pop(0) << 12)
     first_int |= (ints.pop(0) << 18)
     assert len(ints) == 47
-    # print(first_int, ints)
     ret = lib.fc_solve_user__opencl_find_deal(
         obj,
         first_int, [0] * 2 + list(reversed(ints))

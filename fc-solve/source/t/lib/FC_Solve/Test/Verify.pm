@@ -53,7 +53,6 @@ sub r
     require Games::Solitaire::Verify::Solution;
     require Games::Solitaire::Verify::VariantParams;
 
-    # Initialise a column
     open my $in, '<', \$contents;
     my $solution = Games::Solitaire::Verify::Solution->new(
         {

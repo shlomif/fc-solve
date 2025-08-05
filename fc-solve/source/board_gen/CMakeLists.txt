@@ -72,7 +72,6 @@ IF (UNIX)
     INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/fc-solve-board_gen.6" 6)
     INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/gen-multiple-pysol-layouts.6" 6)
     INSTALL_MAN("${CMAKE_CURRENT_BINARY_DIR}/transpose-freecell-board.py.6" 6)
-    # INSTALL_MAN("fc-solve-board_gen.6" 6)
 
     # Install the nroff symbolic links.
     INSTALL_MAN ("make_pysol_freecell_board.py.6" 6)

@@ -277,10 +277,10 @@ sub myglob
     }
 
     # Put the valgrind tests last, because they take a long time.
+    my $direction = ( _is_parallized() ? -1 : 1 );
     my @tests =
         sort {
-        ( ( ( $a =~ /valgrind/ ) <=> ( $b =~ /valgrind/ ) ) *
-                ( _is_parallized() ? -1 : 1 ) )
+        ( ( ( $a =~ /valgrind/ ) <=> ( $b =~ /valgrind/ ) ) * $direction )
             || ( basename($a) cmp basename($b) )
             || ( $a cmp $b )
         } (

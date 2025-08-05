@@ -414,7 +414,7 @@ sub encode_composite
     #
     # The foundations have already been encoded.
     #
-    # Skip encoding the aces, and the kings are encoded with less bits.
+    # Skip encoding the aces, and the kings are encoded with fewer bits.
 
     foreach my $rank ( 2 .. $self->_get_top_rank_for_iter() )
     {

@@ -49,8 +49,7 @@ def find_index__board_string_to_ints(content):
     ints = []
     limit = n = 4 * 13 - 1
     for i in range(limit):
-        col = i // 8
-        row = i % 8
+        col, row = divmod(i, 8)
         s = m.group(1 + col + (4*7+(row-4)*6 if row >= 4 else row*7))
         idx = [j for j in range(n+1) if cards[j] == s]
         if len(idx) != 1:

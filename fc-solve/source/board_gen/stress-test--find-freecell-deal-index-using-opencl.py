@@ -28,7 +28,6 @@ def find_ret(ints):
     first_int |= (ints.pop(0) << 12)
     first_int |= (ints.pop(0) << 18)
     assert len(ints) == 47
-    # print(first_int, ints)
     inp = [0] * 2 + list(reversed(ints))
     count = 0
     obj = lib.fc_solve_user__opencl_create()

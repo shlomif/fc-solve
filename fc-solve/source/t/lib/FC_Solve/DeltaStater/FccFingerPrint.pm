@@ -223,8 +223,6 @@ sub _calc_initial_possible_pair_states
                                         ->[$i] }
                             } @$values
                         );
-
-                        # say "values = @$values";
                     }
                     $rank => $values
                 } ( 1 .. $RANK_KING )
@@ -686,7 +684,6 @@ sub _calc_variant_states
 {
     my ($self) = @_;
 
-    # Carp::confess( "numfc = " . $self->_init_state->num_freecells );
     return $self->_variant_states(
         $self->_init_state->num_freecells ? $positive_rec : $zero_rec );
 }

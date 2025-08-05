@@ -57,7 +57,6 @@ sub read
 
     my $item = _var_base_reader__read( $self, $base );
 
-    # say "read $base / $item";
     return $item;
 }
 

@@ -63,7 +63,6 @@ sub write
     my $base = $args->{base};
     my $item = $args->{item};
 
-    # say "write $base / $item";
     if ( $item >= $base )
     {
         Carp::confess("write");
