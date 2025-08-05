@@ -277,6 +277,7 @@ avl_key_type *rb_probe(
     return NODE_DATA_PTR(n);
 }
 
+#if 0
 /* Inserts |item| into |table|.
    Returns |NULL| if |item| was successfully inserted
    or if a memory allocation error occurred.
@@ -530,6 +531,7 @@ void *rb_delete(struct rb_table *tree, const void *item)
     tree->rb_generation++;
     return new_item;
 }
+#endif
 
 /* Refreshes the stack of parent pointers in |trav|
    and updates its generation number. */
