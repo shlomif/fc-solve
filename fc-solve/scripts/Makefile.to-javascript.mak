@@ -177,7 +177,7 @@ RINUTILS_DIR ?= $(RINUTILS_BASE_DIR)/rinutils-include
 RINUTILS_INCLUDE_DIR := $(RINUTILS_DIR)/include
 RINUTILS_PIVOT = $(RINUTILS_INCLUDE_DIR)/rinutils/rinutils.h
 
-INCLUDE_CFLAGS = -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINUTILS_INCLUDE_DIR) -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.8.1 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include
+INCLUDE_CFLAGS = -I $(DATA_DESTDIR)/fc-solve/include -I ./include -I $(RINUTILS_INCLUDE_DIR) -I . -I $(SRC_DIR)/include -I $(SRC_DIR) -I $(SRC_DIR)/asprintf-1.0 -I $(SRC_DIR)/patsolve/patsolve/include -I $(SRC_DIR)/patsolve/patsolve/ -I $(SRC_DIR)/xxHash-wrapper -I $(SRC_DIR)/xxHash-wrapper/xxHash-0.8.3 -I $(CMAKE_DIR) -I $(CMAKE_DIR)/include
 INCLUDE_CFLAGS_FN = inc.cflags.txt
 $(INCLUDE_CFLAGS_FN):
 	printf "%s\n" "$(INCLUDE_CFLAGS)" > $@
