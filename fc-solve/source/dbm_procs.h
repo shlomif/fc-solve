@@ -116,8 +116,7 @@ static bool dbm_lookup_parent(const size_t count_stores, fcs_dbm_store *stores,
     const fcs_encoded_state_buffer key, fcs_encoded_state_buffer *const parent)
 {
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-    extern fcs_dbm__rawdump__parent_lookup__type *
-    fc_solve_dbm_store__get_parent_lookup(fcs_dbm_store store);
+#include "dbm_parent_lookup.h"
     var_AUTO(store, stores[0]);
     var_AUTO(parent_lookup_ptr, fc_solve_dbm_store__get_parent_lookup(store));
     const_AUTO(ret,

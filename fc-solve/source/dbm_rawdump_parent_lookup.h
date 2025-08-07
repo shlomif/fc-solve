@@ -46,7 +46,7 @@ static bool rawdump_parent_lookup__lookup_parent(
     assert(reader);
 #define MAX_NUM_ITEMS 1024
     fcs_dbm_record page[MAX_NUM_ITEMS];
-    ssize_t num_items;
+    size_t num_items;
     do
     {
         num_items = fread(page, sizeof(page[0]), MAX_NUM_ITEMS, reader);

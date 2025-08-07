@@ -15,6 +15,7 @@
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
 #include "dbm_rawdump_parent_lookup.h"
+#include "dbm_parent_lookup.h"
 #endif
 
 typedef struct

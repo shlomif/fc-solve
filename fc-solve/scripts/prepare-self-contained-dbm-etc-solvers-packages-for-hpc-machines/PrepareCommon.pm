@@ -57,6 +57,7 @@ sub src_filenames
         'dbm_kaztree.c',
         'dbm_lru_cache.h',
         'dbm_move_to_string.h',
+        'dbm_parent_lookup.h',
         'dbm_procs.h',
         'dbm_procs_inner.h',
         'dbm_rawdump_parent_lookup.h',
