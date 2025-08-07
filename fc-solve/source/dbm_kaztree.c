@@ -33,7 +33,7 @@ void fc_solve_dbm_store_init(fcs_dbm_store *const store,
 
     fc_solve_meta_compact_allocator_init(&(db->meta_alloc));
 
-    db->kaz_tree = fc_solve_kaz_tree_create(
+    db->kaz_tree = rb_create(
 #ifdef AVL_with_rb_param
         fcs_dbm__compare_records
 #else

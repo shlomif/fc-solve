@@ -239,7 +239,12 @@ static inline
         .name = "",
 #endif
 #ifndef FCS_ENABLE_PRUNE__R_TF__UNCOND
-        .enable_pruning = false,
+        .enable_pruning =
+            {
+                .global = false,
+                .run_onecard = false,
+                .run_tofounds = false,
+            },
 #endif
 #ifndef FCS_DISABLE_PATSOLVE
         .pats_scan = NULL,
