@@ -712,12 +712,11 @@ int main(int argc, char *argv[])
         instance_init(
             &instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh);
         fcs_encoded_state_buffer *key_ptr;
-#define KEY_PTR() (key_ptr)
         fcs_encoded_state_buffer parent_state_enc;
 
         key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(
-            &delta, local_variant, &(init_state), KEY_PTR());
+            &delta, local_variant, &(init_state), key_ptr);
         // The NULL parent_state_enc and move for indicating this is the
         // initial state.
         fcs_init_encoded_state(&(parent_state_enc));
@@ -726,7 +725,7 @@ int main(int argc, char *argv[])
         fcs_encoded_state_buffer null_parent;
         fcs_init_encoded_state(&null_parent);
         token = fc_solve_dbm_store_insert_key_value(
-            instance.cache_store.store, KEY_PTR(), null_parent);
+            instance.cache_store.store, key_ptr, null_parent);
 
         fcs_offloading_queue__insert(&(instance.queue), token->key);
         ++instance.common.num_states_in_collection;

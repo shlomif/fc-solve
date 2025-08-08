@@ -354,12 +354,11 @@ int main(int argc, char *argv[])
     fc_solve_delta_stater_init(&delta, local_variant, &init_state.s, STACKS_NUM,
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));
 
-#define KEY_PTR() (key_ptr)
     dbm_solver_instance instance;
     instance_init(&instance, &inp, max_batch_size, out_fh);
 
     fcs_encoded_state_buffer *const key_ptr = &(instance.common.first_key);
-    fcs_init_and_encode_state(&delta, local_variant, &init_state, KEY_PTR());
+    fcs_init_and_encode_state(&delta, local_variant, &init_state, key_ptr);
 
     // The NULL parent for indicating this is the initial state.
     fcs_encoded_state_buffer parent_state_enc;
@@ -369,7 +368,7 @@ int main(int argc, char *argv[])
     fcs_encoded_state_buffer null_parent;
     fcs_init_encoded_state(&null_parent);
     token = fc_solve_dbm_store_insert_key_value(
-        instance.colls_by_depth[0].cache_store.store, KEY_PTR(), null_parent);
+        instance.colls_by_depth[0].cache_store.store, key_ptr, null_parent);
 
     fcs_offloading_queue__insert(
         &(instance.colls_by_depth[0].queue), (token->key));
