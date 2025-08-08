@@ -12,7 +12,7 @@
     "@babel/core": "^7.28.0",
     "@babel/preset-env": "^7.28.0",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^24.1.0",
+    "@types/node": "^24.2.0",
     "@types/qunit": "^2.19.12",
     "acorn": "^8.15.0",
     "amdefine": "^1.0.1",
@@ -25,7 +25,7 @@
     "elliptic": "^6.6.1",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-prettier": "^5.5.3",
+    "eslint-plugin-prettier": "^5.5.4",
     "flatted": "^3.3.3",
     "html-minifier-next": "^1.1.5",
     "jquery": "^3.7.1",
@@ -36,7 +36,7 @@
     "npm": "^11.5.2",
     "param-case": "^4.0.0",
     "prettier": "^3.6.2",
-    "puppeteer": "^24.15.0",
+    "puppeteer": "^24.16.0",
     "qunit": "^2.24.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
@@ -50,7 +50,7 @@
   },
   "devDependencies": {
     "eslint": "^9.32.0",
-    "typescript": "^5.8.3"
+    "typescript": "^5.9.2"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
