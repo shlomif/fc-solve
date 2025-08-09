@@ -22,7 +22,7 @@
 DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
 #endif
 
-#if MAX_NUM_FREECELLS > 0
+#ifndef FCS_ZERO_FREECELLS_MODE
 #define CALC_POSITIONS_BY_RANK()                                               \
     const int8_t *const positions_by_rank =                                    \
         fc_solve_calc_positions_by_rank_location(soft_thread);                 \

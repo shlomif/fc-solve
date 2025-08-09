@@ -19,22 +19,27 @@
 
 typedef struct
 {
-    fcs_cache_key *curr_state;
-    fcs_cache_key *next_states;
+    fcs_pdfs_key *curr_state;
+    fcs_pdfs_key *next_states;
     int count_next_states, max_count_next_states, next_state_idx;
 } pseudo_dfs_stack_item;
 
 typedef Pvoid_t store_type;
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
+
 static inline void delete_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache *const cache, fcs_cache_key *const key)
+    fcs_pseudo_dfs_lru_cache *const cache, fcs_pdfs_key *const key)
 {
     fcs_pdfs_cache_insert(cache, key);
     int rc_int;
     JHSD(rc_int, *store, key, sizeof(*key));
 }
 
-static inline void insert_state(store_type *store, fcs_cache_key *key)
+static inline void insert_state(store_type *store, fcs_pdfs_key *key)
 {
     Word_t *PValue;
     JHSI(PValue, *store, key, sizeof(*key));
@@ -42,7 +47,7 @@ static inline void insert_state(store_type *store, fcs_cache_key *key)
 }
 
 static inline bool lookup_state(store_type *const store,
-    fcs_pseudo_dfs_lru_cache *const cache GCC_UNUSED, fcs_cache_key *const key)
+    fcs_pseudo_dfs_lru_cache *const cache GCC_UNUSED, fcs_pdfs_key *const key)
 {
     Word_t *PValue;
     JHSG(PValue, *store, key, sizeof(*key));
@@ -59,6 +64,10 @@ static inline bool lookup_state(store_type *const store,
     }
 #endif
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 typedef struct
 {
@@ -77,11 +86,11 @@ typedef struct
     fcs_derived_state *derived_list_recycle_bin;
     fcs_dbm_variant_type local_variant;
     fcs_delta_stater delta_stater;
-    fcs_cache_key init_key;
+    fcs_pdfs_key init_key;
 } dbm_solver_instance;
 
 static inline void instance__inspect_new_state(
-    dbm_solver_instance *const instance, fcs_cache_key *const state)
+    dbm_solver_instance *const instance, fcs_pdfs_key *const state)
 {
     if (++instance->count_num_processed % 1000000 == 0)
     {
@@ -136,9 +145,9 @@ static inline void instance__inspect_new_state(
         fc_solve_canonize_state(&(derived_list->state.s)PASS_FREECELLS(
             FREECELLS_NUM) PASS_STACKS(STACKS_NUM));
         fcs_init_and_encode_state(delta_stater, local_variant,
-            &(derived_list->state), &(derived_list->key));
-        if (!lookup_state(
-                &(instance->store), &(instance->cache), &(derived_list->key)))
+            &(derived_list->state), &(derived_list->key_and_parent.key));
+        if (!lookup_state(&(instance->store), &(instance->cache),
+                &(derived_list->key_and_parent.key)))
         {
             int i = (stack_item->count_next_states)++;
             if (i >= stack_item->max_count_next_states)
@@ -146,7 +155,7 @@ static inline void instance__inspect_new_state(
                 stack_item->next_states = SREALLOC(stack_item->next_states,
                     (size_t)(++(stack_item->max_count_next_states)));
             }
-            stack_item->next_states[i] = derived_list->key;
+            stack_item->next_states[i] = derived_list->key_and_parent.key;
             insert_state(&(instance->store), &(stack_item->next_states[i]));
         }
         var_AUTO(list_next, derived_list->next);
@@ -195,12 +204,21 @@ static inline void instance_free(dbm_solver_instance *const instance)
     free(instance->stack);
     instance->stack = NULL;
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
+
     Word_t rc_word;
 #ifdef JERR
 #undef JERR
 #define JERR ((Word_t)(-1))
 #endif
     JHSFA(rc_word, instance->store);
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
     fcs_pdfs_cache_destroy(&(instance->cache));
     fc_solve_compact_allocator_finish(&(instance->derived_list_allocator));

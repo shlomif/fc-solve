@@ -19,6 +19,11 @@ extern "C" {
 #include "delta_states.h"
 #include "dbm_calc_derived_iface.h"
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
+
 typedef fcs_encoded_state_buffer fcs_pdfs_key;
 
 typedef struct fcs_pdfs_key_info_struct
@@ -159,6 +164,10 @@ static inline fcs_pdfs_cache_key_info *fcs_pdfs_cache_insert(
 
     return cache_key;
 }
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
 #ifdef __cplusplus
 }
