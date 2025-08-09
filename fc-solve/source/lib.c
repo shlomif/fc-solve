@@ -2251,11 +2251,24 @@ static NI_INLINE void user_next_instance(fcs_user *const user)
     user_next_flare(user);
 }
 
+/////////////////////
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wunused-macros"
+#endif
+
 #ifdef FCS_WITH_ERROR_STRS
 #define ALLOC_ERROR_STRING(var, s) *(var) = strdup(s)
 #else
 #define ALLOC_ERROR_STRING(var, s)
 #endif
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
+/////////////////////
 
 #ifndef FCS_ZERO_FREECELLS_MODE
 #ifdef FCS_WITH_ERROR_STRS

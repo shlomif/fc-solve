@@ -22,7 +22,7 @@
 DECLARE_PURE_MOVE_FUNCTION(fc_solve_sfs_null_move_func) {}
 #endif
 
-#ifndef FCS_ZERO_FREECELLS_MODE
+#if MAX_NUM_FREECELLS > 0
 #define CALC_POSITIONS_BY_RANK()                                               \
     const int8_t *const positions_by_rank =                                    \
         fc_solve_calc_positions_by_rank_location(soft_thread);                 \
@@ -1447,7 +1447,7 @@ skip_enable_raymonds_prune:
      *
      * Currently requires patching the source.
      * */
-#if !defined(FCS_ZERO_FREECELLS_MODE)
+#if MAX_NUM_FREECELLS > 0
 
     if (!soft_thread->enable_pruning.run_onecard)
     {
