@@ -351,7 +351,8 @@ if ( defined $SEED )
         @subset = @k[ 0 .. $COUNT - 1 ];
     }
     my $FN = "run-t-$SEED-$COUNT.bash";
-    @subset = grep { not /libavl/i } @subset;
+    @subset =
+        grep { ( not /libavl/i ) and ( not /without-max-num-states/ ) } @subset;
     path($FN)->spew_utf8( "$^X $0", ( @subset ? " @subset" : "" ) . "\n" );
     delete $ENV{$SEED_KEY};
     exec( "bash", $FN );

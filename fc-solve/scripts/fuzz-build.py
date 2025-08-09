@@ -18,9 +18,10 @@ from subprocess import check_call, check_output
 @click.option('--clean/--no-clean')
 @click.option('--maxnum', default=10)
 @click.option('-g/--no-g')
+@click.option('--start', default=0)
 @click.option('-t/--no-t')
 @click.option('--rb/--no-rb')
-def main(byorder, clean, maxnum, g, t, rb):
+def main(byorder, clean, maxnum, g, start, t, rb):
     if g:
         os.environ["FCS_GCC"] = "1"
         seed = 1 if rb else 1
@@ -29,6 +30,8 @@ def main(byorder, clean, maxnum, g, t, rb):
         os.environ["CXX"] = check_output(['which', 'clang++']).decode().strip()
         os.environ["FCS_CLANG"] = "1"
         seed = 1 if rb else 1
+    if start != 0:
+        seed = start
     num_flags = -1
     if byorder:
         query_flag = "FCS_THEME_RAND_TELL_FLAGS_COUNT"
