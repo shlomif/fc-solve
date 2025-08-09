@@ -97,7 +97,16 @@ static inline void fc_solve_cache_stacks(
         }
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
         PWord_t *PValue;
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
         JHSI(PValue, instance->stacks_judy_array, column, col_len);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
         // later_todo : Handle out-of-memory.
         if (*PValue == 0)
         {
@@ -302,7 +311,14 @@ bool fc_solve_check_and_add_state(fcs_hard_thread *const hard_thread,
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_JUDY)
     PWord_t *PValue;
 
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
     JHSI(PValue, instance->judy_array, new_state_key, sizeof(*new_state_key));
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
 
     // later_todo : Handle out-of-memory
     const_AUTO(val, *PValue);

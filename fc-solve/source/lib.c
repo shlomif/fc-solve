@@ -652,7 +652,16 @@ static void fc_solve_finish_instance(fcs_instance *const instance)
 #undef JERR
 #define JERR ((Word_t)(-1))
 #endif
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
     JHSFA(rc_word, instance->judy_array);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_GLIB_HASH)
     g_hash_table_destroy(instance->hash);
 #elif (FCS_STATE_STORAGE == FCS_STATE_STORAGE_INTERNAL_HASH)
@@ -679,7 +688,16 @@ static void fc_solve_finish_instance(fcs_instance *const instance)
     fc_solve_columns_google_hash_free(instance->stacks_hash);
 #elif (FCS_STACK_STORAGE == FCS_STACK_STORAGE_JUDY)
     Word_t cache_rc_word;
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wformat"
+#endif
     JHSFA(cache_rc_word, instance->stacks_judy_array);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
+
 #else
 #error FCS_STACK_STORAGE is not set to a good value.
 #endif
