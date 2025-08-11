@@ -65,6 +65,7 @@ typedef struct
     void *tree_recycle_bin;
 #ifdef FCS_DBM__STORE_KEYS_ONLY
     fcs_dbm__rawdump__parent_lookup__type parent_lookup;
+    bool do_not_yield_solution;
 #endif
 } dbm_instance_common_elems;
 
@@ -93,6 +94,9 @@ static inline void fcs_dbm__common_init(dbm_instance_common_elems *const common,
     common->max_count_num_processed = iters_delta_limit;
     common->count_of_items_in_queue = 0;
     common->tree_recycle_bin = NULL;
+#ifdef FCS_DBM__STORE_KEYS_ONLY
+    common->do_not_yield_solution = false;
+#endif
     fcs_lock_init(&common->storage_lock);
 }
 

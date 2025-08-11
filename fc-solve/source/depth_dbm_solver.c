@@ -42,7 +42,7 @@ typedef struct
 #include "dbm_procs.h"
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input *const inp, const fcs_batch_size max_batch_size,
-    FILE *const out_fh)
+    FILE *const out_fh, const bool do_not_yield_solution)
 {
     instance->max_batch_size = max_batch_size;
     instance->curr_depth = 0;
@@ -50,13 +50,17 @@ static inline void instance_init(dbm_solver_instance *const instance,
     fcs_dbm__common_init(&(instance->common), inp->iters_delta_limit,
         inp->max_num_states_in_collection, inp->local_variant, out_fh);
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-    /* initialize parent_lookup . */
-    char mypath[2000];
-    snprintf(mypath, COUNT(mypath), "%s/fcsdbm_rawdump.bin",
-        instance->offload_dir_path);
-    LAST(mypath) = '\0';
+    instance->common.do_not_yield_solution = do_not_yield_solution;
+    if (!do_not_yield_solution)
+    {
+        /* initialize parent_lookup . */
+        char mypath[2000];
+        snprintf(mypath, COUNT(mypath), "%s/fcsdbm_rawdump.bin",
+            instance->offload_dir_path);
+        LAST(mypath) = '\0';
 
-    parent_lookup__create(&(instance->common.parent_lookup), mypath);
+        parent_lookup__create(&(instance->common.parent_lookup), mypath);
+    }
 #endif
 
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
@@ -304,6 +308,7 @@ int main(int argc, char *argv[])
     fcs_dbm_common_input inp = fcs_dbm_common_input_init;
     fcs_batch_size max_batch_size = 1;
     const char *param;
+    bool do_not_yield_solution = false;
 
     int real_arg;
     int *arg = &real_arg;
@@ -323,6 +328,10 @@ int main(int argc, char *argv[])
         else if ((param = TRY_PARAM("-o")))
         {
             out_filename = param;
+        }
+        else if ((param = TRY_PARAM("--do-not-yield-solution")))
+        {
+            do_not_yield_solution = ((!strcmp(param, "0")) ? false : true);
         }
         else
         {
@@ -355,7 +364,8 @@ int main(int argc, char *argv[])
         FREECELLS_NUM PASS_ON_NOT_FC_ONLY(CALC_SEQUENCES_ARE_BUILT_BY()));
 
     dbm_solver_instance instance;
-    instance_init(&instance, &inp, max_batch_size, out_fh);
+    instance_init(
+        &instance, &inp, max_batch_size, out_fh, do_not_yield_solution);
 
     fcs_encoded_state_buffer *const key_ptr = &(instance.common.first_key);
     fcs_init_and_encode_state(&delta, local_variant, &init_state, key_ptr);

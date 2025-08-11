@@ -287,7 +287,7 @@ static inline void fcs_dbm__cache_store__init(
     fc_solve_dbm_store_init(
         &(cache_store->store), dbm_store_path, &(common->tree_recycle_bin),
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-        &(common->parent_lookup)
+        (common->do_not_yield_solution ? NULL : &(common->parent_lookup))
 #else
         NULL
 #endif

@@ -83,6 +83,14 @@ m{\A(?:Running threads for|Finished running threads for|Start mark-and-sweep cle
     {
         next LINES;
     }
+    elsif ( $l =~ m{\ATrying deal = [0-9]+\z} )
+    {
+        next LINES;
+    }
+    elsif ( $l =~ m{\ATrying deal = [0-9]+ using dbm\z} )
+    {
+        next LINES;
+    }
     elsif ( $l =~ m{inputs.*?outputs.*?major.*?minor} )
     {
         next LINES;
