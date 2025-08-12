@@ -16,6 +16,14 @@ extern "C" {
 
 typedef enum
 {
+    /* The freecells' number of FCS_DBM_VARIANT_2FC_FREECELL
+     * can be different than 2, but is fixed at
+     * compile-time. It should be able to be any integral value
+     * from 0 up to 4 (inclusive).
+     *
+     * The name of the constant is kept from brevity reasons.
+     *
+     **/
     FCS_DBM_VARIANT_2FC_FREECELL,
     FCS_DBM_VARIANT_BAKERS_DOZEN,
 } fcs_dbm_variant_type;

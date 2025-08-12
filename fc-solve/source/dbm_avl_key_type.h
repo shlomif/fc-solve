@@ -16,7 +16,7 @@ extern "C" {
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
 #ifndef FCS_LIBAVL_STORE_WHOLE_KEYS
-#error FCS_LIBAVL_STORE_WHOLE_KEYS must be defined if FCS_DBM__STORE_KEYS_ONLY
+#error FCS_LIBAVL_STORE_WHOLE_KEYS must be defined if FCS_DBM__STORE_KEYS_ONLY is
 #endif
 #endif
 
