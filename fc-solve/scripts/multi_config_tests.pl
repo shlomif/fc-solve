@@ -143,7 +143,7 @@ use Term::ANSIColor qw(colored);
 local *run_cmd = \&Games::Solitaire::FC_Solve::Test::Trap::Obj::run_cmd;
 
 my $TEST_BASE_IDX  = 1;
-my $NUM_PROCESSORS = int( $ENV{TEST_JOBS} );
+my $NUM_PROCESSORS = int( $ENV{TEST_JOBS} // 0 );
 if ( $NUM_PROCESSORS < 1 )
 {
     $NUM_PROCESSORS = 4;
@@ -509,7 +509,7 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
         run_cmd(
             'wget avl',
             {
-                cmd => [ 'wget', "https://ftp.gnu.org/pub/gnu/avl/$AVLT" ]
+                cmd => [ 'wget', "https://ftpmirror.gnu.org/avl/$AVLT", ]
             }
         );
         run_cmd( 'untar avl', { cmd => [ qw(tar -xvf), $AVLT ] } );
