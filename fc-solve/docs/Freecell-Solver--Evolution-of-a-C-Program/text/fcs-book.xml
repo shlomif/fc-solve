@@ -620,8 +620,8 @@
                         <![CDATA[
                         struct struct_card_t
                         {
-                        short card_num;   /* card_num is the rank */
-                        short deck;       /* I erroneously referred to the suit as a deck */
+                            short card_num;   /* card_num is the rank */
+                            short deck;       /* I erroneously referred to the suit as a deck */
                         };
 
                         typedef struct struct_card_t card_t;
@@ -639,8 +639,8 @@
                         <![CDATA[
                         struct struct_stack_t
                         {
-                        int num_cards;
-                        card_t cards[19];
+                            int num_cards;
+                            card_t cards[19];
                         };
 
                         typedef struct struct_stack_t fc_stack_t;
@@ -657,9 +657,9 @@
                         <![CDATA[
                         struct struct_state_t
                         {
-                        fc_stack_t stacks[8];
-                        card_t freecells[4];
-                        int decks[4];  /* I also called the foundations decks. :-) */
+                            fc_stack_t stacks[8];
+                            card_t freecells[4];
+                            int decks[4];  /* I also called the foundations decks. :-) */
                         };
 
                         typedef struct struct_state_t state_t;
@@ -681,9 +681,9 @@
                     <programlisting>
                         <![CDATA[
                         #define pop_stack_card(state, s, into) \
-                        into = (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1]; \
-                        (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1] = empty_card; \
-                        (state).stacks[(s)].num_cards--;
+                            into = (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1]; \
+                            (state).stacks[(s)].cards[(state).stacks[(s)].num_cards-1] = empty_card; \
+                            (state).stacks[(s)].num_cards--;
                         ]]>
                     </programlisting>
                 </para>
@@ -705,28 +705,28 @@
                 <para>
                     <programlisting>
                         <![CDATA[
-                        Solve-State(state, prev_states, ret)
-                        if (state == empty_state)
-                        Push(ret, state)
-                        return SOLVED
-                        for each move possible on state
-                        new_state <- apply(state, move)
-                        if (new_state in prev_states)
-                        ; Do nothing
-                        else
-                        add new_state to prev_states
-                        if (Solve-State(new_state, prev_states, ret) == SOLVED)
-                        Push(ret, state)
-                        return SOLVED
-                        return UNSOLVED
+Solve-State(state, prev_states, ret)
+    if (state == empty_state)
+        Push(ret, state)
+        return SOLVED
+    for each move possible on state
+        new_state <- apply(state, move)
+        if (new_state in prev_states)
+            ; Do nothing
+        else
+            add new_state to prev_states
+        if (Solve-State(new_state, prev_states, ret) == SOLVED)
+            Push(ret, state)
+            return SOLVED
+    return UNSOLVED
 
-                        Freecell-Solver(init_state)
-                        if (Solve-State(init_state, Null, ret) == SOLVED)
-                        print "State was solved"
-                        while (state <- Pop(ret))
-                        print state
-                        else
-                        print "I could not solve this board";
+Freecell-Solver(init_state)
+    if (Solve-State(init_state, Null, ret) == SOLVED)
+        print "State was solved"
+        while (state <- Pop(ret))
+            print state
+    else
+        print "I could not solve this board";
                         ]]>
                     </programlisting>
                 </para>
