@@ -76,11 +76,13 @@ fcs_dbm_record *fc_solve_dbm_store_insert_key_value(fcs_dbm_store store,
     }
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
+#if FCS_DBM__ENABLE_PARENT_LOOKUP
     const_SLOT(parent_lookup_ptr, db);
     if (parent_lookup_ptr)
     {
         parent_lookup__add(parent_lookup_ptr, &to_check);
     }
+#endif
 #endif
     return (fcs_dbm_record *)(ret_ptr);
 }
