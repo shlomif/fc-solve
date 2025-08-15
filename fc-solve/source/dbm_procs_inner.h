@@ -103,7 +103,7 @@ static void trace_solution(const size_t count_stores, fcs_dbm_store *stores,
     dbm_solver_instance *const instance, FILE *const out_fh,
     fcs_delta_stater *const delta)
 {
-    const_AUTO(queue_solution, *instance->common.queue_solution_ptr);
+    const_AUTO(queue_solution, instance->common.queue_solution_ptr->key);
     fprintf(out_fh, "%s", "INFO: Success dbm-token: [");
     for (size_t i = 0; i < sizeof(queue_solution); ++i)
     {

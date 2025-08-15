@@ -200,8 +200,6 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &state, token, &derived_lists[batch_i],
                     &derived_list_recycle_bin, &derived_list_allocator, true))
             {
-                fcs_dbm_queue_item physical_item;
-                physical_item.key = token;
                 fcs_lock_lock(&instance->common.storage_lock);
                 instance->raw_found_sol.key = token;
                 fcs_dbm_store stores_by_depth[MAX_FCC_DEPTH];
@@ -213,8 +211,8 @@ static void *instance_run_solver_thread(void *const void_arg)
                 assert(dbm_lookup_parent(MAX_FCC_DEPTH, stores_by_depth,
                     instance->raw_found_sol.key,
                     &instance->raw_found_sol.parent));
-                fcs_dbm__found_solution(&(instance->common),
-                    &instance->raw_found_sol, &physical_item);
+                fcs_dbm__found_solution(
+                    &(instance->common), &instance->raw_found_sol);
                 fcs_condvar_broadcast(&(instance->monitor));
                 fcs_lock_unlock(&instance->common.storage_lock);
                 goto thread_end;

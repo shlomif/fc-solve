@@ -193,7 +193,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     instance->raw_found_sol.key,
                     &instance->raw_found_sol.parent));
                 fcs_dbm__found_solution(
-                    &(instance->common), &instance->raw_found_sol, item);
+                    &(instance->common), &instance->raw_found_sol);
                 fcs_lock_unlock(&instance->common.storage_lock);
                 break;
             }

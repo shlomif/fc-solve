@@ -70,8 +70,7 @@ typedef struct
 } dbm_instance_common_elems;
 
 static inline void fcs_dbm__found_solution(
-    dbm_instance_common_elems *const common, fcs_dbm_record *const token,
-    fcs_dbm_queue_item *const item GCC_UNUSED)
+    dbm_instance_common_elems *const common, fcs_dbm_record *const token)
 {
     common->should_terminate = SOLUTION_FOUND_TERMINATE;
     common->queue_solution_was_found = true;

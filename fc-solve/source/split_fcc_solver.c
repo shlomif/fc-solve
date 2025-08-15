@@ -350,7 +350,7 @@ static void *instance_run_solver_thread(void *const void_arg)
                     &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->global_lock);
-                fcs_dbm__found_solution(&(instance->common), token, item);
+                fcs_dbm__found_solution(&(instance->common), token);
                 fcs_lock_unlock(&instance->global_lock);
                 break;
             }
