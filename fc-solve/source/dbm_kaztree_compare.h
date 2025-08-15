@@ -29,7 +29,7 @@ static inline int fcs_dbm__compare_records__noctx(
 }
 
 #ifdef AVL_with_rb_param
-static int fcs_dbm__compare_records(const void *const void_a,
+static inline int fcs_dbm__compare_records(const void *const void_a,
     const void *const void_b, void *const context GCC_UNUSED)
 {
     return fcs_dbm__compare_records__noctx(void_a, void_b);

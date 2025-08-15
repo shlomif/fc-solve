@@ -151,7 +151,6 @@ static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
 
     while (record)
     {
-#if 1
         *(key_ptr) = record->key;
         if ((++trace_num) == trace_max_num)
         {
@@ -170,7 +169,6 @@ static void calc_trace(const size_t count_stores, fcs_dbm_store *stores,
             record = NULL;
         }
         key_ptr++;
-#endif
     }
 #undef GROW_BY
     *ptr_trace_num = trace_num - 1;
