@@ -78,6 +78,39 @@ static inline enum rb_color rb_set_color(
 }
 #endif
 
+// Should make the runtime faster. Enable at your own risk.
+//
+// Trust me: every problem in computer science may be solved by an indirection,
+// but those indirections are expensive. Pointer chasing is just about the most
+// expensive thing you can do on modern CPUs.
+// --- Linus Torvalds ,
+// https://www.shlomifish.org/humour/fortunes/show.cgi?id=linus-torvalds-about-indirections
+//
+// #define AVL__INLINE_COMPARISON_FUNC 1
+
+#ifdef AVL__INLINE_COMPARISON_FUNC
+
+#include "dbm_kaztree_compare.h"
+
+#ifdef AVL_with_rb_param
+#define AVL__COMPARE(tree, rb_a, rb_b, rb_context)                             \
+    fcs_dbm__compare_records(rb_a, rb_b, rb_context)
+#else
+#define AVL__COMPARE(tree, rb_a, rb_b, rb_context)                             \
+    fcs_dbm__compare_records__noctx(rb_a, rb_b)
+#endif
+
+#else
+
+#ifdef AVL_with_rb_param
+#define AVL__COMPARE(tree, rb_a, rb_b, rb_context)                             \
+    tree->rb_compare(rb_a, rb_b, rb_context)
+#else
+#define AVL__COMPARE(tree, rb_a, rb_b, rb_context) tree->rb_compare(rb_a, rb_b)
+#endif
+
+#endif
+
 /* Creates and returns a new table
    with comparison function |compare| using parameter |param|
    and memory allocator |allocator|.
@@ -119,12 +152,7 @@ void *rb_find(const struct rb_table *tree, const void *item)
     assert(tree != NULL && item != NULL);
     for (p = TREE_AVL_ROOT(tree); p != NULL;)
     {
-        int cmp = tree->rb_compare(item, NODE_DATA_PTR(p)
-#ifdef AVL_with_rb_param
-                                             ,
-            tree->rb_param
-#endif
-        );
+        int cmp = AVL__COMPARE(tree, item, NODE_DATA_PTR(p), tree->rb_param);
 
         if (cmp < 0)
             p = rb_process_link(p->rb_mylink[0]);
@@ -159,12 +187,7 @@ avl_key_type *rb_probe(
     for (p = TREE_AVL_ROOT(tree); p != NULL;
         p = rb_process_link(p->rb_mylink[da[k - 1]]))
     {
-        int cmp = tree->rb_compare(item, NODE_DATA_PTR(p)
-#ifdef AVL_with_rb_param
-                                             ,
-            tree->rb_param
-#endif
-        );
+        int cmp = AVL__COMPARE(tree, item, NODE_DATA_PTR(p), tree->rb_param);
         if (cmp == 0)
         {
             *was_item_inserted_now = false;
@@ -646,12 +669,7 @@ void *rb_t_find(struct rb_traverser *trav, struct rb_table *tree, void *item)
     trav->rb_generation = tree->rb_generation;
     for (p = TREE_AVL_ROOT(tree); p != NULL; p = q)
     {
-        int cmp = tree->rb_compare(item, NODE_DATA_PTR(p)
-#ifdef AVL_with_rb_param
-                                             ,
-            tree->rb_param
-#endif
-        );
+        int cmp = AVL__COMPARE(tree, item, NODE_DATA_PTR(p), tree->rb_param);
 
         if (cmp < 0)
             q = rb_process_link(p->rb_mylink[0]);
