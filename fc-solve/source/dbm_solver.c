@@ -30,7 +30,8 @@ typedef struct
 static inline void instance_init(dbm_solver_instance *const instance,
     const fcs_dbm_common_input *const inp,
     const unsigned long iters_delta_limit,
-    const unsigned long max_num_states_in_collection, FILE *const out_fh)
+    const unsigned long max_num_states_in_collection, FILE *const out_fh,
+    const bool do_not_yield_solution)
 {
     fc_solve_meta_compact_allocator_init(&(instance->meta_alloc));
 #ifdef FCS_DBM_USE_OFFLOADING_QUEUE
@@ -42,13 +43,21 @@ static inline void instance_init(dbm_solver_instance *const instance,
     fcs_dbm__common_init(&(instance->common), iters_delta_limit,
         max_num_states_in_collection, inp->local_variant, out_fh);
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-    /* initialize parent_lookup . */
-    char mypath[2000];
-    snprintf(mypath, COUNT(mypath), "%s/fcsdbm_rawdump.bin",
-        instance->offload_dir_path);
-    LAST(mypath) = '\0';
+    instance->common.do_not_yield_solution = do_not_yield_solution;
+    if (!do_not_yield_solution)
+    {
+        /* initialize parent_lookup . */
+        char mypath[2000];
+        snprintf(mypath, COUNT(mypath), "%s/fcsdbm_rawdump.bin",
+            instance->offload_dir_path);
+        LAST(mypath) = '\0';
 
-    parent_lookup__create(&(instance->common.parent_lookup), mypath);
+        parent_lookup__create(&(instance->common.parent_lookup), mypath);
+    }
+    else
+    {
+        parent_lookup__create(&(instance->common.parent_lookup), NULL);
+    }
 #endif
     fcs_dbm__cache_store__init(&(instance->cache_store), &(instance->common),
         &(instance->meta_alloc), inp->dbm_store_path, inp->pre_cache_max_count,
@@ -410,7 +419,10 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
 #endif
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-    parent_lookup__finish_writing(&(instance->common.parent_lookup));
+    if (!instance->common.do_not_yield_solution)
+    {
+        parent_lookup__finish_writing(&(instance->common.parent_lookup));
+    }
 #endif
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
@@ -523,8 +535,9 @@ int main(int argc, char *argv[])
     FILE *intermediate_in_fh = NULL;
     bool skip_queue_output = false;
     DECLARE_IND_BUF_T(init_indirect_stacks_buffer)
-    const char *param;
     fcs_dbm_common_input inp = fcs_dbm_common_input_init;
+    const char *param;
+    bool do_not_yield_solution = false;
 
     int arg;
     for (arg = 1; arg < argc; arg++)
@@ -543,6 +556,10 @@ int main(int argc, char *argv[])
         else if ((param = TRY_P("--intermediate-input")))
         {
             intermediate_input_filename = param;
+        }
+        else if ((param = TRY_P("--do-not-yield-solution")))
+        {
+            do_not_yield_solution = ((!strcmp(param, "0")) ? false : true);
         }
         else
         {
@@ -597,9 +614,10 @@ int main(int argc, char *argv[])
         dbm_solver_instance queue_instance;
         dbm_solver_instance limit_instance;
 
-        instance_init(&queue_instance, &inp, ULONG_MAX, ULONG_MAX, out_fh);
-        instance_init(
-            &limit_instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh);
+        instance_init(&queue_instance, &inp, ULONG_MAX, ULONG_MAX, out_fh,
+            do_not_yield_solution);
+        instance_init(&limit_instance, &inp, inp.iters_delta_limit, ULONG_MAX,
+            out_fh, do_not_yield_solution);
 
         bool found_line;
         do
@@ -709,8 +727,8 @@ int main(int argc, char *argv[])
     else
     {
         dbm_solver_instance instance;
-        instance_init(
-            &instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh);
+        instance_init(&instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh,
+            do_not_yield_solution);
         fcs_encoded_state_buffer *key_ptr;
         fcs_encoded_state_buffer parent_state_enc;
 

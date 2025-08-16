@@ -23,9 +23,16 @@ typedef struct
 } fcs_dbm__rawdump__parent_lookup__type;
 
 static void parent_lookup__create(
-    fcs_dbm__rawdump__parent_lookup__type *const obj, char *filename)
+    fcs_dbm__rawdump__parent_lookup__type *const obj,
+    const char *const filename)
 {
 #if FCS_DBM__ENABLE_PARENT_LOOKUP
+    if (!filename)
+    {
+        obj->writer = NULL;
+        obj->filename[0] = '\0';
+        return;
+    }
     strncpy(obj->filename, filename, sizeof(obj->filename));
     LAST(obj->filename) = '\0';
     FILE *const writer = fopen(obj->filename, "wb");
@@ -40,6 +47,10 @@ static void parent_lookup__add(fcs_dbm__rawdump__parent_lookup__type *const obj,
     const fcs_dbm_record *const rec)
 {
 #if FCS_DBM__ENABLE_PARENT_LOOKUP
+    if (!obj->writer)
+    {
+        return;
+    }
     fwrite(rec, sizeof(*rec), 1, obj->writer);
 #endif
 }
@@ -48,6 +59,10 @@ static void parent_lookup__finish_writing(
     fcs_dbm__rawdump__parent_lookup__type *const obj)
 {
 #if FCS_DBM__ENABLE_PARENT_LOOKUP
+    if (!obj->writer)
+    {
+        return;
+    }
     fclose(obj->writer);
     obj->writer = NULL;
 #endif
@@ -58,6 +73,10 @@ static bool rawdump_parent_lookup__lookup_parent(
     const fcs_encoded_state_buffer key, fcs_encoded_state_buffer *const parent)
 {
 #if FCS_DBM__ENABLE_PARENT_LOOKUP
+    if (!obj->filename[0])
+    {
+        return false;
+    }
     FILE *const reader = fopen(obj->filename, "rb");
     assert(reader);
 #define MAX_NUM_ITEMS 1024

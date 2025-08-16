@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 37;
+use Test::More tests => 38;
 use Test::Trap
     qw( trap $trap :flow:stderr(systemsafe):stdout(systemsafe):warn );
 use FC_Solve::Paths
@@ -247,11 +247,11 @@ SKIP:
         if ($WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS)
         {
             Test::More::skip( "WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS dbm",
-                1 );
+                2 );
         }
         if ( is_without_dbm() )
         {
-            Test::More::skip( "without the dbm fc_solvers", 1 );
+            Test::More::skip( "without the dbm fc_solvers", 2 );
         }
         my $status;
         trap
@@ -267,14 +267,42 @@ SKIP:
             );
         };
 
-        my $out = $trap->stdout();
+        {
+            my $out = $trap->stdout();
 
-        # TEST
-        like(
-            $out,
+            # TEST
+            like(
+                $out,
 qr/\nCould not solve successfully\.\r?\nhandle_and_destroy_instance_solution end\r?\n?\z/,
-            "1107600547 run finished.",
-        );
+                "1107600547 run finished.",
+            );
+        }
+
+        trap
+        {
+            $status = system(
+                bin_exe_raw_canony( ['depth-dbm-fc-solver'] ),
+                '--do-not-yield-solution',
+                1,
+                '--num-threads',
+                1,
+                '--batch-size',
+                20,
+                offload_arg(),
+                bin_board('1107600547.board'),
+            );
+        };
+
+        {
+            my $out = $trap->stdout();
+
+            # TEST
+            like(
+                $out,
+qr/\nCould not solve successfully\.\r?\nhandle_and_destroy_instance_solution end\r?\n?\z/,
+                "1107600547 '--do-not-yield-solution' run finished.",
+            );
+        }
     }
 }
 

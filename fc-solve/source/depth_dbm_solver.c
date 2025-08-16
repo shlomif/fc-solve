@@ -61,6 +61,10 @@ static inline void instance_init(dbm_solver_instance *const instance,
 
         parent_lookup__create(&(instance->common.parent_lookup), mypath);
     }
+    else
+    {
+        parent_lookup__create(&(instance->common.parent_lookup), NULL);
+    }
 #endif
 
     for (int depth = 0; depth < MAX_FCC_DEPTH; depth++)
@@ -293,7 +297,10 @@ static void instance_run_all_threads(dbm_solver_instance *const instance,
     }
 
 #ifdef FCS_DBM__STORE_KEYS_ONLY
-    parent_lookup__finish_writing(&(instance->common.parent_lookup));
+    if (!instance->common.do_not_yield_solution)
+    {
+        parent_lookup__finish_writing(&(instance->common.parent_lookup));
+    }
 #endif
     dbm__free_threads(instance, num_threads, threads, free_thread);
 }
