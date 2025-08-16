@@ -86,7 +86,7 @@ static inline enum rb_color rb_set_color(
 // --- Linus Torvalds ,
 // https://www.shlomifish.org/humour/fortunes/show.cgi?id=linus-torvalds-about-indirections
 //
-// #define AVL__INLINE_COMPARISON_FUNC 1
+#define AVL__INLINE_COMPARISON_FUNC 1
 
 #ifdef AVL__INLINE_COMPARISON_FUNC
 
@@ -567,7 +567,7 @@ static void trav_refresh(struct rb_traverser *trav)
 
     if (trav->rb_node != NULL)
     {
-        rb_comparison_func *cmp = trav->rb_table->rb_compare;
+        var_AUTO(tree, trav->rb_table);
 #ifdef AVL_with_rb_param
         void *param = trav->rb_table->rb_param;
 #endif
@@ -582,12 +582,8 @@ static void trav_refresh(struct rb_traverser *trav)
 
             trav->rb_stack[trav->rb_height++] = i;
             i = rb_process_link(
-                i->rb_mylink[cmp(NODE_DATA_PTR(node), NODE_DATA_PTR(i)
-#ifdef AVL_with_rb_param
-                                                          ,
-                                 param
-#endif
-                                 ) > 0]);
+                i->rb_mylink[(AVL__COMPARE(tree, NODE_DATA_PTR(node),
+                                 NODE_DATA_PTR(i), param)) > 0]);
         }
     }
 }
