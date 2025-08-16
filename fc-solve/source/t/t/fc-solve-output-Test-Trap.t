@@ -239,14 +239,14 @@ SKIP:
 }
 
 # Skip somee failing tests which are not too important.
-my $WINDOWS_X46_AND_PERL5_40_SKIP_DBM_TESTS = $IS_WIN;
+my $WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS = $IS_WIN;
 
 {
 SKIP:
     {
-        if ($WINDOWS_X46_AND_PERL5_40_SKIP_DBM_TESTS)
+        if ($WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS)
         {
-            Test::More::skip( "WINDOWS_X46_AND_PERL5_40_SKIP_DBM_TESTS dbm",
+            Test::More::skip( "WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS dbm",
                 1 );
         }
         if ( is_without_dbm() )
@@ -281,10 +281,10 @@ qr/\nCould not solve successfully\.\r?\nhandle_and_destroy_instance_solution end
 {
 SKIP:
     {
-        if ($WINDOWS_X46_AND_PERL5_40_SKIP_DBM_TESTS)
+        if ($WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS)
         {
             Test::More::skip(
-                "WINDOWS_X46_AND_PERL5_40_SKIP_DBM_TESTS depth-dbm + dbm", 2 );
+                "WINDOWS_X64_AND_PERL5_40_SKIP_DBM_TESTS depth-dbm + dbm", 2 );
         }
         if ( is_without_dbm() )
         {
