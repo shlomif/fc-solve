@@ -8,11 +8,11 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.28.0",
-    "@babel/core": "^7.28.0",
-    "@babel/preset-env": "^7.28.0",
+    "@babel/cli": "^7.28.3",
+    "@babel/core": "^7.28.3",
+    "@babel/preset-env": "^7.28.3",
     "@types/jquery": "^3.5.32",
-    "@types/node": "^24.2.1",
+    "@types/node": "^24.3.0",
     "@types/qunit": "^2.19.13",
     "acorn": "^8.15.0",
     "amdefine": "^1.0.1",
@@ -27,7 +27,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
     "flatted": "^3.3.3",
-    "html-minifier-next": "^1.1.5",
+    "html-minifier-next": "^1.2.1",
     "jquery": "^3.7.1",
     "jquery-ui": "^1.14.1",
     "lodash": "^4.17.21",
@@ -36,7 +36,7 @@
     "npm": "^11.5.2",
     "param-case": "^4.0.0",
     "prettier": "^3.6.2",
-    "puppeteer": "^24.16.0",
+    "puppeteer": "^24.16.2",
     "qunit": "^2.24.1",
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.7",
@@ -45,7 +45,7 @@
     "tar": "^7.4.3",
     "tar-fs": "^3.1.0",
     "terser": "^5.43.1",
-    "webpack": "^5.101.0",
+    "webpack": "^5.101.2",
     "webpack-cli": "^6.0.1"
   },
   "devDependencies": {
