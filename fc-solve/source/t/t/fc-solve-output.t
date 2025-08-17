@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 14;
+use Test::More tests => 16;
 use FC_Solve::GetOutput ();
 use Carp                ();
 use String::ShellQuote  qw/ shell_quote /;
@@ -54,9 +54,13 @@ sub trap_depth_dbm
     my $args = shift;
 
     open my $fc_solve_output,
-        shell_quote( bin_exe_raw( ['depth-dbm-fc-solver'] ),
-        offload_arg(),      "--num-threads", 1, "--iters-delta-limit",
-        $args->{max_iters}, $args->{board_fn} )
+        shell_quote(
+        bin_exe_raw( ['depth-dbm-fc-solver'] ), "--do-not-yield-solution",
+        0,                                      offload_arg(),
+        "--num-threads",                        1,
+        "--iters-delta-limit",                  $args->{max_iters},
+        $args->{board_fn}
+        )
         . " |"
         or Carp::confess
         "Error! Could not open the depth-dbm-fc-solver pipline!";
@@ -473,6 +477,59 @@ SKIP:
                 $output_text,
                 qr/^Mark\+Sweep Progress - 100000/ms,
                 "depth-dbm-fc-solver bug with infinite run is fixed."
+            );
+        }
+    }
+}
+
+{
+SKIP:
+    {
+        if ( is_dbm_apr() || is_without_dbm() || $IS_WIN )
+        {
+            Test::More::skip( "without the dbm fc_solvers or win32", 2 );
+        }
+
+        my $dbm_output = trap_depth_dbm(
+            {
+                board_fn  => samp_board('2freecells-24-mid-with-colons.board'),
+                max_iters => 400_000,
+            }
+        );
+
+        my $NEEDLE = qr#\nSuccess!
+--------
+Foundations: H-T C-8 D-A S-J
+Freecells: +7D
+(^:[^\n]*?\n)*?: 3D\n(^:[^\n]*?\n)*?: 4D\n#ms;
+
+        my $END_NEEDLE = <<"END_NEEDLE";
+--------
+Foundations: H-K C-K D-K S-K
+Freecells:
+:
+:
+:
+:
+:
+:
+:
+:
+
+==
+END_NEEDLE
+
+        my $output_text = _get($dbm_output);
+        $output_text =~ s# +(\n|\z)#$1#g;
+
+        # TEST
+        if (1)
+        {
+            ok( $output_text, "true" );
+
+            # TEST
+            like( $output_text, qr#${NEEDLE}.*?\Q${END_NEEDLE}\E#ms,
+                "depth-dbm-fc-solver invocation contains the solution's output."
             );
         }
     }

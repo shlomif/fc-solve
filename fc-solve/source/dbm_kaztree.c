@@ -101,9 +101,8 @@ bool fc_solve_dbm_store_lookup_parent(
     fcs_dbm_record to_check = {.key = *(const fcs_encoded_state_buffer *)key};
 
     bool was_item_inserted_now;
-    var_AUTO(
-        existing, rb_probe(db->kaz_tree, &to_check, &was_item_inserted_now));
-    if (was_item_inserted_now)
+    var_AUTO(existing, rb_find(db->kaz_tree, &to_check));
+    if (!existing)
     {
         return false;
     }
