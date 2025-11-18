@@ -128,6 +128,7 @@ my $archives_versions = +{
     },
     'xz' => +{
         vers => [
+            +{ major => "6", minor => "14", patch => "0", },
             +{ major => "6", minor => "12", patch => "0", },
             +{ major => "6", minor => "10", patch => "0", },
             +{ major => "6", minor => "8",  patch => "0", },
