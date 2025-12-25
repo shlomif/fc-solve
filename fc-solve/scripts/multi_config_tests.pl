@@ -493,27 +493,36 @@ qq#src_me="\$HOME/bin/Dev-Path-Configs-Source-Me.bash"; if test -e "\$src_me"; t
     return;
 }
 
-my $AVLV = "avl-2.0.3";
+my $AVL_BASENAME_AND_VERSION = "avl-2.0.3";
+my $LIBAVL2_DIR_ENV_KEY      = "LIBAVL2_SOURCE_DIR";
 if ( $ENV{FC_SOLVE_GIT_CHECKOUT} )
 {
-    $ENV{LIBAVL2_SOURCE_DIR} = "$ENV{HOME}/Download/unpack/prog/c/$AVLV/";
+    $ENV{$LIBAVL2_DIR_ENV_KEY} =
+        "$ENV{HOME}/Download/unpack/prog/c/$AVL_BASENAME_AND_VERSION/";
 
     run_cmd( 'git checkout', { cmd => [qw(git checkout master)], } );
     run_cmd( 'git pull', { cmd => [qw(git pull --ff-only origin master)], } );
 }
-elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
+elsif ( not exists $ENV{$LIBAVL2_DIR_ENV_KEY} )
 {
-    if ( !( -d $AVLV and -f "$AVLV/prb.h" ) )
+    if (
+        !(
+                -d $AVL_BASENAME_AND_VERSION
+            and -f "$AVL_BASENAME_AND_VERSION/prb.h"
+        )
+        )
     {
-        my $AVLT = "$AVLV.tar.gz";
+        my $AVL_TARBALL_FN = "$AVL_BASENAME_AND_VERSION.tar.gz";
         run_cmd(
             'wget avl',
             {
-                cmd => [ 'wget', "https://ftpmirror.gnu.org/avl/$AVLT", ]
+                cmd => [
+                    'wget', "https://ftpmirror.gnu.org/avl/$AVL_TARBALL_FN",
+                ]
             }
         );
-        run_cmd( 'untar avl', { cmd => [ qw(tar -xvf), $AVLT ] } );
-        path($AVLV)->visit(
+        run_cmd( 'untar avl', { cmd => [ qw(tar -xvf), $AVL_TARBALL_FN ] } );
+        path($AVL_BASENAME_AND_VERSION)->visit(
             sub {
                 my $p = shift;
                 $p->edit_raw( sub { s/[\t ]+$//gms; } ) if $p->is_file;
@@ -521,13 +530,14 @@ elsif ( not exists $ENV{LIBAVL2_SOURCE_DIR} )
             { recurse => 1, }
         );
     }
-    $ENV{LIBAVL2_SOURCE_DIR} = Path::Tiny->cwd->child($AVLV);
-    print "LIBAVL2_SOURCE_DIR = $ENV{LIBAVL2_SOURCE_DIR}\n";
+    $ENV{$LIBAVL2_DIR_ENV_KEY} =
+        Path::Tiny->cwd->child($AVL_BASENAME_AND_VERSION);
+    print "$LIBAVL2_DIR_ENV_KEY = $ENV{$LIBAVL2_DIR_ENV_KEY}\n";
 }
-elsif ( ( !-d $ENV{LIBAVL2_SOURCE_DIR} )
-    or grep { !-f } glob( $ENV{LIBAVL2_SOURCE_DIR} . '/*.[ch]' ) )
+elsif ( ( !-d $ENV{$LIBAVL2_DIR_ENV_KEY} )
+    or grep { !-f } glob( $ENV{$LIBAVL2_DIR_ENV_KEY} . '/*.[ch]' ) )
 {
-    die "LIBAVL2_SOURCE_DIR is invalid.";
+    die "$LIBAVL2_DIR_ENV_KEY is invalid.";
 }
 
 sub reg_tatzer_test
