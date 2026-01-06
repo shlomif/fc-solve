@@ -3833,8 +3833,8 @@ freecell_solver_user_set_game(void *const api_instance, const int freecells_num,
 }
 #endif
 
-fcs_iters_int DLLEXPORT __attribute__((pure))
-freecell_solver_user_get_num_times_long(void *api_instance)
+fcs_iters_int DLLEXPORT __attribute__((
+    pure)) freecell_solver_user_get_num_times_long(void *api_instance)
 {
     fcs_user *const user = (fcs_user *)api_instance;
     return get_num_times_long(user);
@@ -3939,8 +3939,8 @@ void DLLEXPORT freecell_solver_user_limit_depth(
 #endif
 
 #if !(defined(FCS_BREAK_BACKWARD_COMPAT_1) && defined(FCS_FREECELL_ONLY))
-int DLLEXPORT __attribute__((const)) freecell_solver_user_get_max_num_freecells(
-    void)
+int DLLEXPORT
+    __attribute__((const)) freecell_solver_user_get_max_num_freecells(void)
 {
     return MAX_NUM_FREECELLS;
 }
@@ -4240,8 +4240,9 @@ freecell_solver_user_get_num_states_in_collection_long(void *api_instance)
 }
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT __attribute__((pure))
-freecell_solver_user_get_num_states_in_collection(void *const api_instance)
+int DLLEXPORT
+    __attribute__((pure)) freecell_solver_user_get_num_states_in_collection(
+        void *const api_instance)
 {
     return (int)freecell_solver_user_get_num_states_in_collection_long(
         api_instance);
@@ -4305,8 +4306,9 @@ int DLLEXPORT freecell_solver_user_next_hard_thread(void *const api_instance)
 #endif
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1
-int DLLEXPORT __attribute__((pure))
-freecell_solver_user_get_num_soft_threads_in_instance(void *const api_instance)
+int DLLEXPORT
+    __attribute__((pure)) freecell_solver_user_get_num_soft_threads_in_instance(
+        void *const api_instance)
 {
     return (int)active_obj(api_instance)->next_soft_thread_id;
 }
@@ -4494,8 +4496,9 @@ freecell_solver_user_get_lib_version(void *api_instance GCC_UNUSED)
 #endif
 
 #ifndef FCS_USE_PRECOMPILED_CMD_LINE_THEME
-DLLEXPORT __attribute__((pure)) const char *
-freecell_solver_user_get_current_soft_thread_name(void *const api_instance)
+DLLEXPORT __attribute__((pure))
+const char *freecell_solver_user_get_current_soft_thread_name(
+    void *const api_instance)
 {
     const fcs_hard_thread *const hard_thread = active_obj(api_instance);
 
@@ -4505,8 +4508,8 @@ freecell_solver_user_get_current_soft_thread_name(void *const api_instance)
 #endif
 
 #ifdef FCS_WITH_ERROR_STRS
-DLLEXPORT __attribute__((const)) const char *
-freecell_solver_user_get_last_error_string(void *const api_instance)
+DLLEXPORT __attribute__((const))
+const char *freecell_solver_user_get_last_error_string(void *const api_instance)
 {
     return (((fcs_user *const)api_instance)->error_string);
 }

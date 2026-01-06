@@ -1243,8 +1243,8 @@ dnode_t *dict_last(dict_t *dict)
  */
 #endif
 
-__attribute__((pure)) dnode_t *fc_solve_kaz_tree_next(
-    dict_t *dict, dnode_t *curr)
+__attribute__((pure))
+dnode_t *fc_solve_kaz_tree_next(dict_t *dict, dnode_t *curr)
 {
     dnode_t *nil = dict_nil(dict), *parent, *left;
 

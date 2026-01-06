@@ -233,8 +233,8 @@ DLLEXPORT extern void freecell_solver_user_set_random_seed(
     void *const user_instance, const int seed);
 
 #ifndef FCS_DISABLE_NUM_STORED_STATES
-DLLEXPORT fcs_int_limit_t
-freecell_solver_user_get_num_states_in_collection_long(
+DLLEXPORT
+fcs_int_limit_t freecell_solver_user_get_num_states_in_collection_long(
     void *const user_instance);
 
 #ifndef FCS_BREAK_BACKWARD_COMPAT_1

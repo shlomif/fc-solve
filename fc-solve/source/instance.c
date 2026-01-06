@@ -172,8 +172,7 @@ void fc_solve_foreach_soft_thread(fcs_instance *const instance,
 #if !(defined(FCS_WITH_MOVES))
 static inline
 #endif
-    void
-    fc_solve_init_soft_thread(
+    void fc_solve_init_soft_thread(
         fcs_hard_thread *const hard_thread, fcs_soft_thread *const soft_thread)
 {
     *soft_thread = (fcs_soft_thread){
