@@ -128,6 +128,9 @@ def _apply_cpack_fix(steps):
         steps.append(cpack_fix)
 
 
+SKIP_NSIS_INSTALLER = True
+
+
 def generate_windows_yaml(plat, output_path, is_act):
     x86 = (plat == 'x86')
     with open("./.disabled-appveyor.yml", "rt") as infh:
@@ -195,6 +198,9 @@ def generate_windows_yaml(plat, output_path, is_act):
                 continue
             if re.search("^(?:SET|set) PATH=.*?strawberry", cmd):
                 continue
+            if SKIP_NSIS_INSTALLER:
+                if re.search("^(?:gmake package)", cmd):
+                    continue
             if "choco install strawberryperl" not in cmd:
                 if "mingw32-make" in cmd.lower():
                     continue
@@ -226,6 +232,9 @@ def generate_windows_yaml(plat, output_path, is_act):
 
     def _myfilt(path):
         is32 = ("\\pkg-build\\" in path)
+        if SKIP_NSIS_INSTALLER:
+            if re.search("(?:\\.exe)", path):
+                return False
         return (is32 if x86 else (not is32))
     steps += [{
         'name': (

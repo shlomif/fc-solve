@@ -204,18 +204,10 @@ jobs:
                 perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r || (
                 echo Failed & exit /B 1 )
 
-                gmake package || ( echo Failed & exit /B 1 )
-
                 cpack -G WIX || ( echo Failed & exit /B 1 )
 
                 '
             shell: cmd
-        -   name: upload-build-artifacts-Freecell Solver Win64 Package-${{ matrix.runs-on
-                }}
-            uses: actions/upload-artifact@v4
-            with:
-                name: Freecell Solver Win64 Package
-                path: fc-solve\pkg-build-win64\freecell-solver-*-win64.exe
         -   name: upload-build-artifacts-Freecell Solver Win64 MSI Package-${{ matrix.runs-on
                 }}
             uses: actions/upload-artifact@v4

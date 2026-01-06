@@ -202,8 +202,6 @@ jobs:
                 perl ../scripts/Tatzer -G "MinGW Makefiles" --notest-suite -r --dbm=none
                 || ( echo Failed & exit /B 1 )
 
-                gmake package || ( echo Failed & exit /B 1 )
-
                 cpack -G WIX || ( echo Failed & exit /B 1 )
 
                 perl ../scripts/Tatzer -G "MinGW Makefiles" -l pysol_defs --notest-suite
@@ -222,12 +220,6 @@ jobs:
             with:
                 name: Freecell Solver Zip Distribution for PySol FC
                 path: fc-solve\pkg-build\fc-solve-for-pysol.zip
-        -   name: upload-build-artifacts-Freecell Solver Win32 Package-${{ matrix.runs-on
-                }}
-            uses: actions/upload-artifact@v4
-            with:
-                name: Freecell Solver Win32 Package
-                path: fc-solve\pkg-build\freecell-solver-*-win32.exe
         -   name: upload-build-artifacts-Freecell Solver Win32 MSI Package-${{ matrix.runs-on
                 }}
             uses: actions/upload-artifact@v4
