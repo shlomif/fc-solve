@@ -41,7 +41,7 @@
     "qunit-puppeteer": "github:shlomif/qunit-puppeteer",
     "requirejs": "^2.3.8",
     "rollup": "^4.55.1",
-    "tap": "^18.5.0",
+    "tap": "^20.0.0",
     "tar": "^7.5.3",
     "tar-fs": "^3.1.1",
     "terser": "^5.46.0",
