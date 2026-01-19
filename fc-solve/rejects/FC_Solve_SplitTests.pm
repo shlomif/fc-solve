@@ -1,9 +1,10 @@
-package  .. ::rejects::FC_Solve_SplitTests;
+package rejects::FC_Solve_SplitTests;
 
 use strict;
 use warnings;
 sub {
     my ( $self, $args ) = @_;
+    my $module;
     my $id        = $args->{id};
     my $id_quoted = quotemeta($id);
     my $data =
@@ -25,5 +26,6 @@ use $module;
 $module->run_id({ id => qq/$id_quoted/, data => $data, });
 
 EOF
-    }
-    1;
+};
+
+1;
