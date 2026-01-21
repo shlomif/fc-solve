@@ -30,7 +30,7 @@
     "html-minifier-next": "^4.17.2",
     "jquery": "^4.0.0",
     "jquery-ui": "^1.14.1",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "minimist": "^1.2.8",
     "node-qunit": "^2.0.1",
     "npm": "^11.7.0",
