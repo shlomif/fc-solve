@@ -15,7 +15,6 @@ def _normalize_lf(txt):
 
 class MyTests(unittest.TestCase):
     def mytest(self, input_text, want_out, msg):
-        global py_prog
         process = subprocess.Popen(
             ['python3', py_prog, '-'],
             shell=False, stdin=subprocess.PIPE, stdout=subprocess.PIPE
@@ -27,7 +26,6 @@ class MyTests(unittest.TestCase):
         self.assertEqual(_normalize_lf(got_out), _normalize_lf(want_out), msg)
 
     def mytest_using_files(self, input_text, want_out, msg):
-        global py_prog
         with tempfile.TemporaryDirectory() as tempname:
             in_fn = os.path.join(tempname, "input.txt")
             out_fn = os.path.join(tempname, "output.txt")

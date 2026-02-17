@@ -121,7 +121,6 @@ def find_ret(ints, num_ints_in_first=4):
 
     # based on pyperl: not needed for now
     def _old_tt3_myformat(template, extra_fields={}):
-        nonlocal _tt3_pkg
         fields = _calc_fields(extra_fields)
         import perl
 
