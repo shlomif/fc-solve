@@ -33,7 +33,7 @@
     "lodash": "^4.17.23",
     "minimist": "^1.2.8",
     "node-qunit": "^2.0.1",
-    "npm": "^11.9.0",
+    "npm": "^11.10.1",
     "param-case": "^4.0.0",
     "prettier": "^3.8.1",
     "puppeteer": "^24.37.2",
