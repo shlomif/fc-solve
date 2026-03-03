@@ -121,7 +121,6 @@ static void *instance_run_solver_thread(void *const void_arg)
     fcs_state_keyval_pair state;
     fcs_encoded_state_buffer null_parent;
     fcs_init_encoded_state(&null_parent);
-    fcs_encoded_state_buffer token = null_parent;
     DECLARE_IND_BUF_T(indirect_stacks_buffer)
 
     const_AUTO(thread, ((thread_arg *)void_arg)->thread);
@@ -156,9 +155,9 @@ static void *instance_run_solver_thread(void *const void_arg)
 
         if (instance->common.should_terminate == DONT_TERMINATE)
         {
-            if (fcs_offloading_queue__extract(&(instance->queue), (&token)))
+            if (fcs_offloading_queue__extract(
+                    &(instance->queue), (&physical_item.key)))
             {
-                physical_item.key = token;
                 item = &physical_item;
                 instance_increment(instance);
             }
@@ -193,11 +192,11 @@ static void *instance_run_solver_thread(void *const void_arg)
             FCS__OUTPUT_STATE(out_fh, "", &(state.s), &locs);
 
             if (instance_solver_thread_calc_derived_states(local_variant,
-                    &state, token, &derived_list, &derived_list_recycle_bin,
-                    &derived_list_allocator, true))
+                    &state, physical_item.key, &derived_list,
+                    &derived_list_recycle_bin, &derived_list_allocator, true))
             {
                 fcs_lock_lock(&instance->common.storage_lock);
-                instance->raw_found_sol.key = token;
+                instance->raw_found_sol.key = physical_item.key;
                 assert(dbm_lookup_parent(1, &instance->cache_store.store,
                     instance->raw_found_sol.key,
                     &instance->raw_found_sol.parent));
