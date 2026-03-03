@@ -729,20 +729,18 @@ int main(int argc, char *argv[])
         dbm_solver_instance instance;
         instance_init(&instance, &inp, inp.iters_delta_limit, ULONG_MAX, out_fh,
             do_not_yield_solution);
-        fcs_encoded_state_buffer *key_ptr;
-        fcs_encoded_state_buffer parent_state_enc;
 
-        key_ptr = &(instance.common.first_key);
+        fcs_encoded_state_buffer *const key_ptr = &(instance.common.first_key);
         fcs_init_and_encode_state(
             &delta, local_variant, &(init_state), key_ptr);
         // The NULL parent_state_enc and move for indicating this is the
         // initial state.
+        fcs_encoded_state_buffer parent_state_enc;
         fcs_init_encoded_state(&(parent_state_enc));
 
-        fcs_dbm_record *token;
         fcs_encoded_state_buffer null_parent;
         fcs_init_encoded_state(&null_parent);
-        token = fc_solve_dbm_store_insert_key_value(
+        fcs_dbm_record *const token = fc_solve_dbm_store_insert_key_value(
             instance.cache_store.store, key_ptr, null_parent);
 
         fcs_offloading_queue__insert(&(instance.queue), token->key);

@@ -379,10 +379,9 @@ int main(int argc, char *argv[])
     fcs_encoded_state_buffer parent_state_enc;
     fcs_init_encoded_state(&(parent_state_enc));
 
-    fcs_dbm_record *token;
     fcs_encoded_state_buffer null_parent;
     fcs_init_encoded_state(&null_parent);
-    token = fc_solve_dbm_store_insert_key_value(
+    fcs_dbm_record *const token = fc_solve_dbm_store_insert_key_value(
         instance.colls_by_depth[0].cache_store.store, key_ptr, null_parent);
 
     fcs_offloading_queue__insert(
