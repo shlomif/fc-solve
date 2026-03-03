@@ -153,7 +153,7 @@ static void *instance_run_solver_thread(void *const void_arg)
         {
             should_break =
                 (instance->common.should_terminate != DONT_TERMINATE);
-            if (instance->common.should_terminate == DONT_TERMINATE)
+            if (!should_break)
             {
                 for (; batch_size < max_batch_size; ++batch_size)
                 {
@@ -264,9 +264,10 @@ static inline void instance_check_key(
         GCC_UNUSED)
 {
     const_AUTO(coll, &(instance->colls_by_depth[key_depth]));
-    fcs_dbm_record *token;
+    fcs_dbm_record *const token =
+        cache_store__has_key(&coll->cache_store, key, raw_parent);
 
-    if ((token = cache_store__has_key(&coll->cache_store, key, raw_parent)))
+    if (token)
     {
         fcs_offloading_queue__insert(&(coll->queue), (token->key));
 
