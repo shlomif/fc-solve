@@ -989,8 +989,8 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
     {
         return $parent_dir->child( "concated0" . shift );
     }
-    my $leveled_dir = _child("");
-    $leveled_dir->parent()->mkdir();
+    my $leveled_fh = _child("");
+    $leveled_fh->parent()->mkdir();
     my $json_fn = _child(".metadata.json");
 
     # TEST
@@ -998,9 +998,9 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
         {
             blurb => "gen-multi for black_hole",
             cmd   => [
-                '--concat',        '--game',   'freecell', '--dir',
-                $leveled_dir . '', '--prefix', "prefixo",  '--suffix',
-                "suffixo",         'seq',      '24',       '26',
+                '--concat',       '--game',   'freecell', '--dir',
+                $leveled_fh . '', '--prefix', "prefixo",  '--suffix',
+                "suffixo",        'seq',      '24',       '26',
             ],
             exe      => $GEN_MULTI,
             expected => '',
@@ -1009,24 +1009,21 @@ eq_or_diff( _child_slurp('25.board'), [$BOARD_25_T], "gen-multi-c 25", );
 
     sub _concat_child_slurp
     {
-        my ($basename) = @_;
-
-        return [ normalize_lf( scalar $leveled_dir->slurp_utf8 ) ];
+        return [ normalize_lf( scalar $leveled_fh->slurp_utf8 ) ];
     }
 
     # TEST
     eq_or_diff( _concat_child_slurp(),
-        [ $BOARD_24_T . $BOARD_25_T . $BOARD_26_T ], "gen-multi", );
+        [ join( "", $BOARD_24_T, $BOARD_25_T, $BOARD_26_T ) ], "gen-multi", );
 
     my $json = decode_json( scalar $json_fn->slurp_utf8() );
 
     # TEST
     is( $json->{"width"}, length($BOARD_24_T), "metadata width" );
 
-    $leveled_dir->parent()->remove_tree;
-    $leveled_dir->mkdir();
-    $leveled_dir->parent()->remove_tree;
-
+    $leveled_fh->parent()->remove_tree;
+    $leveled_fh->mkdir();
+    $leveled_fh->parent()->remove_tree;
 }
 
 $dir->remove_tree;
