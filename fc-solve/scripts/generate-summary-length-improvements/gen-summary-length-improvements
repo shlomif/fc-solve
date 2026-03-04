@@ -2,9 +2,10 @@
 
 use strict;
 use warnings;
+use autodie;
 
-use IO::All qw/io/;
-use Parallel::ForkManager;
+use Parallel::ForkManager ();
+use Path::Tiny            qw/ path /;
 
 my $MAX_PROCESSES = 4;
 
@@ -12,22 +13,24 @@ my $pm = Parallel::ForkManager->new($MAX_PROCESSES);
 
 my $MAX_ITERS = 10000;
 
-my $THEME = q#--method random-dfs -to '[01][2345]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
+my $THEME =
+q#--method random-dfs -to '[01][2345]' -sp r:tf -opt -opt-to '0123456789ABCDE'#;
 
 my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed";
 
 my $BASE = 'theme1';
 
-io->dir($OUTPUT_PATH)->mkpath;
+path($OUTPUT_PATH)->mkdir();
 
-foreach my $seed (10500 .. 90000)
+foreach my $seed ( 10500 .. 90000 )
 {
     my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
-    if (! -e $out_fn)
+    if ( !-e $out_fn )
     {
-        if (not my $pid = $pm->start)
+        if ( not my $pid = $pm->start )
         {
-            my $cmd = qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn" | grep Unsolved#;
+            my $cmd =
+qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a "$out_fn" | grep Unsolved#;
             print "$cmd\n";
             system($cmd);
             $pm->finish;

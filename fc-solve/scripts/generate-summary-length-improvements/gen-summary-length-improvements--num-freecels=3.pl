@@ -2,9 +2,10 @@
 
 use strict;
 use warnings;
+use autodie;
 
-use IO::All qw/io/;
-use Parallel::ForkManager;
+use Parallel::ForkManager ();
+use Path::Tiny            qw/ path /;
 
 my $MAX_PROCESSES = 4;
 
@@ -18,7 +19,7 @@ my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-fc=3";
 
 my $BASE = 'theme1';
 
-io->dir($OUTPUT_PATH)->mkpath;
+path($OUTPUT_PATH)->mkdir();
 
 foreach my $seed (1)
 {
