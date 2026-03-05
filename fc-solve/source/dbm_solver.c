@@ -432,7 +432,6 @@ static bool handle_and_destroy_instance_solution(
 {
     FILE *const out_fh = instance->common.out_fh;
     bool ret = false;
-    fcs_encoded_state_buffer token;
 #ifdef DEBUG_OUT
     fcs_dbm_variant_type local_variant = instance->common.variant;
 #endif
@@ -455,10 +454,9 @@ static bool handle_and_destroy_instance_solution(
             fcs_dbm_queue_item physical_item;
             fcs_dbm_queue_item *const item = &physical_item;
 
-            while (fcs_offloading_queue__extract(&(instance->queue), (&token)))
+            while (fcs_offloading_queue__extract(
+                &(instance->queue), (&(physical_item.key))))
             {
-                physical_item.key = token;
-
 #ifdef FCS_DEBONDT_DELTA_STATES
                 for (size_t i = 0; i < COUNT(item->key.s); i++)
                 {
@@ -477,7 +475,7 @@ static bool handle_and_destroy_instance_solution(
                 size_t trace_num;
                 fcs_encoded_state_buffer *trace;
                 fcs_dbm_record raw_found;
-                raw_found.key = token;
+                raw_found.key = physical_item.key;
                 assert(dbm_lookup_parent(1, &instance->cache_store.store,
                     raw_found.key, &raw_found.parent));
                 calc_trace(1, &instance->cache_store.store, &raw_found, &trace,
