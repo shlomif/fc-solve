@@ -258,8 +258,7 @@ static inline void instance_check_key(
     dbm_solver_thread *const thread GCC_UNUSED,
     dbm_solver_instance *const instance, const size_t key_depth,
     fcs_encoded_state_buffer *const key,
-    const fcs_encoded_state_buffer raw_parent,
-    const unsigned char move GCC_UNUSED,
+    const fcs_encoded_state_buffer raw_parent, const uint8_t move GCC_UNUSED,
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED)
 {

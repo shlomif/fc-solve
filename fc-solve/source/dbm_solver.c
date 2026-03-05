@@ -97,8 +97,9 @@ static inline void instance_check_key(
     const fcs_which_moves_bitmask *const which_irreversible_moves_bitmask
         GCC_UNUSED)
 {
-    fcs_dbm_record *token;
-    if ((token = cache_store__has_key(&instance->cache_store, key, raw_parent)))
+    fcs_dbm_record *const token =
+        cache_store__has_key(&instance->cache_store, key, raw_parent);
+    if (token)
     {
         ++instance->common.count_of_items_in_queue;
         ++instance->common.num_states_in_collection;
