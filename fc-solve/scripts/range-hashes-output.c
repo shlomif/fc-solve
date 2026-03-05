@@ -7,8 +7,8 @@
  *
  * Copyright (c) 2000 Shlomi Fish
  */
-// summarizing_solver.c - solves several indices of deals and prints a summary
-// of the solutions of each one.
+// fc-solve/scripts/range-hashes-output.c : calculate xxhash hash codes
+// for the range of MS Freecell deals . (To confirm uniqueness .)
 #include "freecell-solver/fcs_conf.h"
 #include "freecell-solver/fcs_cl.h"
 #include "range_solvers_gen_ms_boards.h"
@@ -96,7 +96,7 @@ int main(int argc, char *argv[])
     }
 
     char buffer[2000];
-    FILE * o[256];
+    FILE *o[256];
     for (size_t i = 0; i < 256; ++i)
     {
         char fn[100];
@@ -115,12 +115,13 @@ int main(int argc, char *argv[])
         const_AUTO(board_range, mydeals[deal_idx]);
         const unsigned long long end = board_range.end;
         for (unsigned long long board_num = board_range.start; board_num <= end;
-             ++board_num)
+            ++board_num)
         {
             get_board_l(board_num, buffer);
             LAST(buffer) = '\0';
-            XXH64_hash_t hash = XXH64(buffer, len, 0);
-            fprintf(o[hash&0xFF], "%014lx\t%llu\n", (long)(hash >> 8), board_num);
+            const_AUTO(hash, XXH64(buffer, len, 0));
+            fprintf(
+                o[hash & 0xFF], "%014lx\t%llu\n", (long)(hash >> 8), board_num);
             if ((board_num & 0xFFFFF) == 0)
             {
                 fprintf(stderr, "Reached %llu\n", board_num);

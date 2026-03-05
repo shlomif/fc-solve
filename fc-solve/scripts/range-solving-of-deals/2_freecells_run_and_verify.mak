@@ -37,7 +37,8 @@ $(DEALS_SOLS): %: $(SOLS_DIR_STAMP)
 		fc-solve --freecells-num 2 -sam -sel -p -t -l "tea-for-two" -mi 2000000 -o "$@" -
 
 $(DEALS_VERIFIES): %.verify: %.sol
-	if grep -qP '^This game is solveable' "$<" && ! verify-solitaire-solution --freecells-num 2 "$<" ; then \
+	if grep -qP '^This game is solveable' "$<" && ! verify-solitaire-solution --freecells-num 2 "$<" \
+	then \
 		echo "Error at deal No. $@"; \
 		exit 1 ; \
 	else \

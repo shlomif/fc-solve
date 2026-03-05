@@ -4,7 +4,7 @@ use strict;
 use warnings;
 use autodie;
 
-use IO::All qw/io/;
+use Path::Tiny qw/ path /;
 
 STDOUT->autoflush(1);
 
@@ -22,17 +22,17 @@ my $OUTPUT_PATH = "$ENV{HOME}/Backup/Arcs/fcs-summary-len-seed-Rarity";
 
 my $BASE = 'theme1';
 
-my @REF = map { /Length: ([0-9\-]+)\z/ ? $1 : ( die "Cannot match <$_>" ) }
-    io->file($REFERENCE_FN)->chomp->getlines;
+my @REF =
+    map { /Length: ([0-9\-]+)\r?\n?\z/ ? $1 : ( die "Cannot match <$_>" ) }
+    path($REFERENCE_FN)->lines_utf8();
 
-io->dir($OUTPUT_PATH)->mkpath;
+path($OUTPUT_PATH)->mkdir();
 
 foreach my $seed ( 1 .. 1000 )
 {
-
     my $out_fn = qq#$OUTPUT_PATH/lens-$BASE--seed=$seed.txt#;
 
-    if ( !-e $out_fn )
+    if ( not( -e $out_fn ) )
     {
         my $max            = 0;
         my $sum            = 0;
@@ -80,7 +80,7 @@ qq#./summary-fc-solve seq 1 32000 -- $THEME -seed $seed -mi $MAX_ITERS | tee -a 
         close($fh);
         close($d_fh);
         my $MSG = "count = $count ; sum = $sum ; max = $max";
-        io->file($out_fn_summary)->print("$MSG\n");
+        path($out_fn_summary)->spew_utf8("$MSG\n");
         print "Seed = $seed ; $MSG\n";
     }
 }

@@ -84,7 +84,7 @@ sub run_scan
     {
         my $out_fn = qq#$SCAN_DIR/lens-$BASE--seed=$seed.txt#;
 
-        if ( !-e $out_fn )
+        if ( not(-e $out_fn ))
         {
             my $max            = 0;
             my $sum            = 0;

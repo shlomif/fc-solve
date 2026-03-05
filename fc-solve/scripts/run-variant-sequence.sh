@@ -7,16 +7,19 @@ shift
 
 variant="${VARIANT:-simple_simon}"
 ms=''
-if test -n "${MS}"; then
+if test -n "${MS}"
+then
     ms='--ms'
 fi
 
 theme=''
-if test "$variant" = "simple_simon" ; then
+if test "$variant" = "simple_simon"
+then
     theme='-ni -to abcdefghi'
 fi
 
-if test -n "${THEME}" ; then
+if test -n "${THEME}"
+then
     theme="${THEME}"
 fi
 
@@ -31,5 +34,7 @@ max_iters="${MAX_ITERS:-1500000}"
 
 export FREECELL_SOLVER_QUIET=1
 
-`which time` -a -o run-variant-sequence.time ./fc-solve-multi --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" $(eval echo "$deals_dir"/{$start..$end}.board) \
+`which time` -a -o run-variant-sequence.time ./fc-solve-multi \
+    --game "$variant" $theme -sel -sam -p -t -mi "$max_iters" \
+    $(eval echo "$deals_dir"/{$start..$end}.board) \
  >> total_dump.txt

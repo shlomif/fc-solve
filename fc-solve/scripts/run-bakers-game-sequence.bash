@@ -10,13 +10,16 @@ END="${1//,/}"
 shift
 
 MAX_ITERS='10,000,000'
+MAX_ITERS="${MAX_ITERS//,/}"
 
 mkdir -p "$RESULTS_DIR"
 
-seq "$START" "$END" |
-(while read DEAL ; do
-    echo "${DEAL}:"
-    ./board_gen/make_pysol_freecell_board.py "$DEAL" "$GAME" |
-        ./fc-solve --game "$GAME" -l eo -mi "${MAX_ITERS//,/}" -p -t -sam > \
-        "$(printf "%s/%09d.sol" "$RESULTS_DIR" "$DEAL")"
-done) | tee -a total_dump.txt
+(
+for (( deal=START ; deal<=END ; ++deal ))
+do
+    echo "${deal}:"
+    ./board_gen/make_pysol_freecell_board.py "$deal" "$GAME" |
+        ./fc-solve --game "$GAME" -l eo -mi "${MAX_ITERS}" -p -t -sam > \
+        "$(printf "%s/%09d.sol" "$RESULTS_DIR" "$deal")"
+done
+) | tee -a total_dump.txt
