@@ -31,10 +31,11 @@ has 'disable_threading' => ( is => 'ro', isa => 'Bool', default => '' );
 sub main_base
 {
     my ($self) = @_;
-    return
-          $self->fcc_solver ? 'split_fcc_solver'
-        : $self->depth_dbm  ? "depth_dbm_solver"
-        :                     "dbm_solver";
+    return (
+          $self->fcc_solver() ? 'split_fcc_solver'
+        : $self->depth_dbm()  ? "depth_dbm_solver"
+        :                       "dbm_solver"
+    );
 }
 
 sub src_filenames
@@ -43,11 +44,13 @@ sub src_filenames
 
     my $on_fcc = sub {
         my $filenames = shift;
-        return ( $self->fcc_solver ? (@$filenames) : () ),;
+        return ( $self->fcc_solver() ? (@$filenames) : () );
     };
 
+    my $main_c = ( $self->main_base() . '.c' );
+
     return [
-        $self->main_base . '.c',
+        $main_c,
         'calc_foundation.h',
         'card.c',
         'dbm_avl_key_type.h',
@@ -281,7 +284,7 @@ qq{python3 $src_path/board_gen/make_pysol_freecell_board.py --ms -t $deal_idx > 
         ) ? " -lpthread " : ''
     );
     my $no_threads_flag =
-        $self->disable_threading ? " -DFCS_DBM_SINGLE_THREAD=1 " : "";
+        ( $self->disable_threading() ? " -DFCS_DBM_SINGLE_THREAD=1 " : "" );
 
     path("$dest_dir/Makefile")->spew_raw(<<"EOF");
 TARGET = dbm_fc_solver
