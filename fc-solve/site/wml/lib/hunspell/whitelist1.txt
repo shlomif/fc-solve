@@ -1235,7 +1235,9 @@ x09
 
 ==== In: dest/docs/distro/INSTALL.html
 
+FCS_DBM__STORE_KEYS_ONLY
 awesome-cmake
+dbm
 onqtam
 
 ==== In: dest/docs/distro/NEWS.html

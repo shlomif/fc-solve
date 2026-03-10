@@ -92,3 +92,10 @@ To test Freecell Solver, you need to:
 3. Type +ctest -V+ (or +make test+ just for the verdict).
 
 Please report any errors to me ( http://www.shlomifish.org/me/contact-me/ ).
+
+[id="dbm_solvers"]
+The “DBM” Solvers
+-----------------
+
+When building the "dbm" solvers, set the +FCS_DBM__STORE_KEYS_ONLY+
+define to “1”.
