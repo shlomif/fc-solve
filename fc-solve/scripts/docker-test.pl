@@ -51,6 +51,13 @@ sudo cpanm Docker::CLI::Wrapper::Container Text::Sprintf::Named Perl::Tidy
 ( cd ../site/wml && bash bin/install-npm-deps.sh )
 perl ../scripts/multi_config_tests.pl --only-check-ready --skip-dzil-tests
 perl ../scripts/multi_config_tests.pl --include 'OpenCL' --skip-dzil-tests
+full_tests_suite="0"
+if test "\$full_tests_suite" = "1"
+then
+    sudo cpanm App::Deps::Verify
+    ( cd ../site/wml && bash bin/install-npm-deps.sh && deps-app plinst --input bin/common-required-deps.yml --input bin/required-modules.yml )
+    ( cd ../source && perl ../scripts/multi_config_tests.pl --skip-dzil-tests )
+fi
 EOSCRIPTTTTTTT
 
 $obj->exe_bash_code( { code => $script, } );
