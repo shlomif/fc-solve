@@ -1,0 +1,111 @@
+# vim:ft=txt:
+* Fedora Linux x86-64 v 43.
+* Core i5 / 32 GB RAM / a 2 TB hard-disk
+* x86-64.
+* gcc-15.2.1-7.fc43.x86_64
+* clang-21.1.8-4.fc43.x86_64
+
+<<<<<<<<<<<<<<<
+System:
+  Host: fedora arch: x86_64 bits: 64
+  Desktop: Xfce Distro: Fedora Linux (Workstation Edition)
+Machine:
+  Type: Desktop Mobo: Micro-Star model: MPG B760I EDGE WIFI DDR4 (MS-7D40)
+    v: 1.0 UEFI: American Megatrends LLC. v: 1.90
+    date: 03/22/2024
+CPU:
+  Info: 6-core model: 12th Gen Intel Core i5-12400 bits: 64 type: MT MCP
+    cache: L2: 7.5 MiB
+  Speed (MHz): avg: 800 min/max: 800/4400 cores: 1: 800 2: 800 3: 800 4: 800
+    5: 800 6: 800 7: 800 8: 800 9: 800 10: 800 11: 800 12: 800
+Graphics:
+  Device-1: Intel Alder Lake-S GT1 [UHD Graphics 730] driver: i915 v: kernel
+  Display: x11 server: driver: X:
+    loaded: modesetting unloaded: fbdev,vesa dri: iris gpu: i915
+    resolution: 1920x1080~60Hz
+  API: EGL Message: EGL data requires eglinfo. Check --recommends.
+Audio:
+  Device-1: Intel Raptor Lake High Definition Audio driver: snd_hda_intel
+  API: ALSA status: kernel-api
+  Server-1: PipeWire status: active
+Network:
+  Device-1: Intel Raptor Lake-S PCH CNVi WiFi driver: iwlwifi
+  IF: wlo1 state: down
+  Device-2: Realtek RTL8125 2.5GbE driver:
+  IF: enp2s0 state: up speed: 1000 Mbps duplex: full
+Bluetooth:
+  Device-1: Intel AX211 Bluetooth driver: btusb type: USB
+  Report: btmgmt ID: hci0 state: up
+Drives:
+  Local Storage: total: 1.82 TiB used: 583.12 GiB (31.3%)
+  ID-1: /dev/nvme0n1 vendor: Kingston model: SFYRD2000G size: 1.82 TiB
+Partition:
+  ID-1: / size: 195.8 GiB fs: ext4 dev: /dev/nvme0n1p2
+  ID-2: /boot/efi size: 19.99 GiB fs: vfat
+    dev: /dev/nvme0n1p1
+  ID-3: /home size: 1.08 TiB fs: ext4
+    dev: /dev/nvme0n1p3
+Swap:
+  ID-1: swap-1 type: zram size: 8 GiB used: 0 KiB (0.0%) dev: /dev/zram0
+Sensors:
+  System Temperatures: cpu: 33.0 C mobo: N/A
+  Fan Speeds (rpm): N/A
+Info:
+  Memory: total: 32 GiB
+>>>>>>>>>>>>>>>
+
+( Based on a reworked output of <a href="https://smxi.org/docs/inxi.htm">inxi</a> <code>-F -c 0</code> . Thanks! )
+
+---------------------------------------------------------
+
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 50 " bash scripts/time-threads-num.bash 12 12 x Several Times
+forking solver and threaded solver
+commit b257cc6ab9aba5f907f009feafb2ae2ecebf66ec
+(commit Date:   Sat Mar 14 16:52:23 2026 +0200 )
+Without (!) Profile Guided Optimisation (PGO).
+../scripts/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+system clang
+tcmalloc from fedora.
+Without strip.
+
+3.79629302024841s
+
+    Highlight: new box running fedora, and increased the deals range to 320,000 .
+
+<DUMP>
+Started at 1773496531.911886
+Unsolved Board No. 146692 at 1773496533.698154
+Started at 1773496531.911886
+Started at 1773496531.911886
+Started at 1773496531.911886
+Started at 1773496531.911886
+Started at 1773496531.911886
+Unsolved Board No. 186216 at 1773496534.146266
+Started at 1773496531.911886
+Started at 1773496531.911886
+Unsolved Board No. 11982 at 1773496532.272949
+Started at 1773496531.911886
+Started at 1773496531.911886
+Started at 1773496531.911886
+Started at 1773496531.911886
+Started at 1773496531.911886
+Reached Board No. 40000 at 1773496532.401213 (total_num_iters=6640256)
+Reached Board No. 80000 at 1773496532.883182 (total_num_iters=13269820)
+Reached Board No. 120000 at 1773496533.362090 (total_num_iters=19870065)
+Reached Board No. 160000 at 1773496533.831903 (total_num_iters=26381779)
+Reached Board No. 200000 at 1773496534.293077 (total_num_iters=32773079)
+Reached Board No. 240000 at 1773496534.767506 (total_num_iters=39315674)
+Reached Board No. 280000 at 1773496535.234518 (total_num_iters=45800928)
+Reached Board No. 320000 at 1773496535.699198 (total_num_iters=52225046)
+Finished at 1773496535.708179 (total_num_iters=52225046)
+</DUMP>
+
+( DUMPS-1773496530-p/dump012 )
+
+---------------------------------------------------------
+
