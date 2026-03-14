@@ -1,8 +1,15 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 run_serial=false
 PROG="${PROG:-./freecell-solver-multi-thread-solve}"
-max_board="32000"
+# max_board="32000"
+# NOTE: on the newer computers, we default to benchmarking the first 320,000
+# deals rather than only the first 32,000 . This is done because otherwise the
+# timing is very short .
+#
+# "the difference between the two is most probably below the noise level"
+# https://www.shlomifish.org/humour/fortunes/show.cgi?id=sharp-pypy--got-better-things-to-do
+max_board="320000"
 suf='t'
 
 while getopts "spt:" flag
@@ -23,7 +30,7 @@ do
     fi
 done
 
-while [ $OPTIND -ne 1 ]
+while test "$OPTIND" -ne 1
 do
     shift
     let --OPTIND
@@ -53,9 +60,9 @@ then
         perl -lpi -e 's!\A(dir=).*\z!$1$ENV{P}/!ms' ./"$p_dir"/presetrc
 fi
 
-export FREECELL_SOLVER_PRESETRC="$(ls $(pwd)/"$p_dir"/presetrc)"
+export FREECELL_SOLVER_PRESETRC="$(ls "$(pwd)"/"$p_dir"/presetrc)"
 
-if $run_serial
+if test "$run_serial" = "true"
 then
     echo "Testing Serial Run"
     # For letting the screen update.
