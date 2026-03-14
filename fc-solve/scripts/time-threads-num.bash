@@ -67,7 +67,7 @@ then
     echo "Testing Serial Run"
     # For letting the screen update.
     sleep 1
-    ./freecell-solver-range-parallel-solve 1 "$max_board" 4000 $ARGS > "$dumps_dir"/dump
+    ./freecell-solver-range-parallel-solve 1 "$max_board" 40000 $ARGS > "$dumps_dir"/dump
 fi
 
 for (( num=min ; num<=max ; ++num ))
@@ -75,7 +75,7 @@ do
     echo "Testing $num"
     # For letting the screen update.
     sleep 1
-    $PROG 1 "$max_board" 4000 \
+    $PROG 1 "$max_board" 40000 \
         --num-workers "$num" \
         $ARGS > "$(printf "%s/dump%.3i" "$dumps_dir" "$num")"
 done
