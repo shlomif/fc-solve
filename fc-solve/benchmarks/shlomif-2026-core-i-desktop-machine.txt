@@ -1,4 +1,11 @@
 # vim:ft=txt:
+
+This is a log for the runtimes of benchmarking the first 320,000 Microsoft
+Freecell deals ( not only the first 32,000 ).
+
+The benchmarks are taken on Shlomi Fish’s March 2026 dedktop computer,
+which is running:
+
 * Fedora Linux x86-64 v 43.
 * Core i5 / 32 GB RAM / a 2 TB hard-disk
 * x86-64.
