@@ -14,9 +14,8 @@ static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
     if (fcs_foundation_value(*ptr_state, ret_val) == rank_min_1)
     {
         const stack_i f0 = ((suit & 1) ^ 1);
-        const stack_i f1 = (f0 ^ 2);
         if ((fcs_foundation_value(*ptr_state, f0) >= rank_min_2) &&
-            (fcs_foundation_value(*ptr_state, f1) >= rank_min_2))
+            (fcs_foundation_value(*ptr_state, f0 | 2) >= rank_min_2))
         {
             return (int_fast32_t)ret_val;
         }
