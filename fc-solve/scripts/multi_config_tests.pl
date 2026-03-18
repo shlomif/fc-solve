@@ -505,33 +505,39 @@ if ( $ENV{FC_SOLVE_GIT_CHECKOUT} )
 }
 elsif ( not exists $ENV{$LIBAVL2_DIR_ENV_KEY} )
 {
-    if (
-        !(
-                -d $AVL_BASENAME_AND_VERSION
-            and -f "$AVL_BASENAME_AND_VERSION/prb.h"
-        )
-        )
-    {
-        my $AVL_TARBALL_FN = "$AVL_BASENAME_AND_VERSION.tar.gz";
-        run_cmd(
-            'wget avl',
-            {
-                cmd => [
-                    'wget', "https://ftpmirror.gnu.org/avl/$AVL_TARBALL_FN",
-                ]
-            }
-        );
-        run_cmd( 'untar avl', { cmd => [ qw(tar -xvf), $AVL_TARBALL_FN ] } );
-        path($AVL_BASENAME_AND_VERSION)->visit(
-            sub {
-                my $p = shift;
-                $p->edit_raw( sub { s/[\t ]+$//gms; } ) if $p->is_file;
-            },
-            { recurse => 1, }
-        );
-    }
+    my $UNRELIABLE = sub {
+        if (
+            !(
+                    -d $AVL_BASENAME_AND_VERSION
+                and -f "$AVL_BASENAME_AND_VERSION/prb.h"
+            )
+            )
+        {
+            my $AVL_TARBALL_FN = "$AVL_BASENAME_AND_VERSION.tar.gz";
+            run_cmd(
+                'wget avl',
+                {
+                    cmd => [
+                        'wget', "https://ftpmirror.gnu.org/avl/$AVL_TARBALL_FN",
+                    ]
+                }
+            );
+            run_cmd( 'untar avl',
+                { cmd => [ qw(tar -xvf), $AVL_TARBALL_FN ] } );
+            path($AVL_BASENAME_AND_VERSION)->visit(
+                sub {
+                    my $p = shift;
+                    $p->edit_raw( sub { s/[\t ]+$//gms; } ) if $p->is_file;
+                },
+                { recurse => 1, }
+            );
+        }
+        $ENV{$LIBAVL2_DIR_ENV_KEY} =
+            Path::Tiny->cwd->child($AVL_BASENAME_AND_VERSION);
+    };
     $ENV{$LIBAVL2_DIR_ENV_KEY} =
-        Path::Tiny->cwd->child($AVL_BASENAME_AND_VERSION);
+        Path::Tiny->cwd->parent(2)
+        ->child( "scripts", "reduced-libavl-sources/", );
     print "$LIBAVL2_DIR_ENV_KEY = $ENV{$LIBAVL2_DIR_ENV_KEY}\n";
 }
 elsif ( ( !-d $ENV{$LIBAVL2_DIR_ENV_KEY} )
