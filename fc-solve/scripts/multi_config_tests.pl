@@ -536,12 +536,14 @@ elsif ( not exists $ENV{$LIBAVL2_DIR_ENV_KEY} )
             Path::Tiny->cwd->child($AVL_BASENAME_AND_VERSION);
     };
     $ENV{$LIBAVL2_DIR_ENV_KEY} =
-        Path::Tiny->cwd->parent(2)
-        ->child( "scripts", "reduced-libavl-sources/", );
+        Path::Tiny->cwd->parent(1)
+        ->child( "scripts", "reduced-libavl-sources", );
     print "$LIBAVL2_DIR_ENV_KEY = $ENV{$LIBAVL2_DIR_ENV_KEY}\n";
 }
-elsif ( ( !-d $ENV{$LIBAVL2_DIR_ENV_KEY} )
-    or grep { !-f } glob( $ENV{$LIBAVL2_DIR_ENV_KEY} . '/*.[ch]' ) )
+
+if (   ( !-d $ENV{$LIBAVL2_DIR_ENV_KEY} )
+    or ( grep { !-f } glob( $ENV{$LIBAVL2_DIR_ENV_KEY} . '/*.[ch]' ) )
+    or ( !-f $ENV{$LIBAVL2_DIR_ENV_KEY} . '/prb.h' ) )
 {
     die "$LIBAVL2_DIR_ENV_KEY is invalid.";
 }
