@@ -2,8 +2,8 @@
   "name": "fc-solve-site",
   "version": "0.0.1",
   "description": "## Dependencies:",
+  "exports": "./index.js",
   "repository": "github:shlomif/fc-solve",
-  "main": "index.js",
   "directories": {
     "lib": "lib"
   },

@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
       "esModuleInterop": true,
-      "module": "commonjs",
+      "module": "nodenext",
       "noImplicitReturns": true,
       "outDir": "../../../lib/for-node/js",
       "paths": {
