@@ -129,6 +129,8 @@ static inline int range_solvers_main(int argc, char *argv[], int arg,
     }
 
     fc_solve_print_started_at();
+    fflush(stdout);
+
     void *const instance = simple_alloc_and_parse(argc, argv, arg);
     fcs_worker workers[num_workers];
 
