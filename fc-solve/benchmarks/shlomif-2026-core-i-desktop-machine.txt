@@ -116,3 +116,54 @@ Finished at 1773496535.708179 (total_num_iters=52225046)
 
 ---------------------------------------------------------
 
+export FCS_PGO_THEME="-l lg"
+ARGS="--worker-step 205 " bash scripts/time-threads-num.bash 12 12 x Several Times
+forking solver and threaded solver
+commit 9a88f188adaf3c80c7baa46f7b822180c7043832
+(commit Date:   Fri Apr 10 21:36:01 2026 +0000 )
+Without (!) Profile Guided Optimisation (PGO).
+../scripts/Tatzer -l extra_speed2
+(With -flto and -fwhole-program).
+Without (!) Makefile.gnu
+sudo_renice.
+-O3
+system clang
+tcmalloc from fedora.
+Without strip.
+
+3.75325393676758s
+
+    Highlight: improved auto-dealing prune and increasing the step.
+
+<DUMP>
+Started at 1776186691.747620
+Unsolved Board No. 186216 at 1776186693.952761
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Unsolved Board No. 146692 at 1776186693.508083
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Started at 1776186691.747620
+Unsolved Board No. 11982 at 1776186692.105641
+Started at 1776186691.747620
+Reached Board No. 40000 at 1776186692.241715 (total_num_iters=6614422)
+Reached Board No. 80000 at 1776186692.717154 (total_num_iters=13197812)
+Reached Board No. 120000 at 1776186693.194961 (total_num_iters=19740024)
+Reached Board No. 160000 at 1776186693.655779 (total_num_iters=26182482)
+Reached Board No. 200000 at 1776186694.110150 (total_num_iters=32495519)
+Reached Board No. 240000 at 1776186694.582036 (total_num_iters=38996826)
+Reached Board No. 280000 at 1776186695.041765 (total_num_iters=45427974)
+Reached Board No. 320000 at 1776186695.494197 (total_num_iters=51794374)
+Finished at 1776186695.500874 (total_num_iters=51794374)
+</DUMP>
+
+( DUMPS-1776186690-p/dump012 )
+
+---------------------------------------------------------
+
