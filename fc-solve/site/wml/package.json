@@ -10,9 +10,9 @@
   "dependencies": {
     "@babel/cli": "^7.28.6",
     "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.0",
+    "@babel/preset-env": "^7.29.2",
     "@types/jquery": "^4.0.0",
-    "@types/node": "^25.4.0",
+    "@types/node": "^25.6.0",
     "@types/qunit": "^2.19.13",
     "acorn": "^8.16.0",
     "amdefine": "^1.0.1",
