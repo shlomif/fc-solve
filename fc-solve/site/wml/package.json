@@ -8,9 +8,9 @@
     "lib": "lib"
   },
   "dependencies": {
-    "@babel/cli": "^7.28.6",
-    "@babel/core": "^7.29.0",
-    "@babel/preset-env": "^7.29.5",
+    "@babel/cli": "^7.29.7",
+    "@babel/core": "^7.29.7",
+    "@babel/preset-env": "^7.29.7",
     "@types/jquery": "^4.0.0",
     "@types/node": "^25.9.1",
     "@types/qunit": "^2.19.14",
@@ -33,7 +33,7 @@
     "lodash": "^4.18.1",
     "minimist": "^1.2.8",
     "node-qunit": "^2.0.2",
-    "npm": "^11.14.1",
+    "npm": "^11.15.0",
     "param-case": "^4.0.0",
     "prettier": "^3.8.3",
     "puppeteer": "^24.41.0",
