@@ -11,8 +11,8 @@
     "@babel/cli": "^7.29.7",
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
-    "@types/jquery": "^4.0.0",
-    "@types/node": "^25.9.1",
+    "@types/jquery": "^4.0.1",
+    "@types/node": "^25.9.3",
     "@types/qunit": "^2.19.14",
     "acorn": "^8.16.0",
     "amdefine": "^1.0.1",
@@ -45,8 +45,8 @@
     "tar": "^7.5.15",
     "tar-fs": "^3.1.2",
     "terser": "^5.48.0",
-    "webpack": "^5.106.2",
-    "webpack-cli": "^7.0.2"
+    "webpack": "^5.107.2",
+    "webpack-cli": "^7.0.3"
   },
   "devDependencies": {
     "eslint": "^9.39.2",
