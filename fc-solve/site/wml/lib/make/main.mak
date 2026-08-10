@@ -443,7 +443,7 @@ EMPTYFOOTER := $(PWD)/lib/emptyfooter.hyp
 
 $(MLARCHIVE_DEST_pivot): $(PWD)/lib/data/mbox/fc-solve-discuss--yahoogroups.mbox
 	mkdir -p $(MLARCHIVE_DEST_DIR_c)
-	( cd $(MLARCHIVE_DEST_DIR_c) && hypermail -o ihtmlfooterfile=$(EMPTYFOOTER) -o mhtmlfooterfile=$(EMPTYFOOTER) -d $(MLARCHIVE_DEST_DIR_bn) < $< )
+	( cd $(MLARCHIVE_DEST_DIR_c) && hypermail -o ihtmlfooterfile=$(EMPTYFOOTER) -o mhtmlfooterfile=$(EMPTYFOOTER) -d $(MLARCHIVE_DEST_DIR_bn) -m $< )
 	$(PERL) -lp -i $(PWD)/bin/hypermail-post-proc.pl $(MLARCHIVE_DEST_DIR)/{attachment.html,author.html,date.html,index.html,subject.html}
 	find $(MLARCHIVE_DEST_DIR_c) -print | xargs touch -d 2021-10-12T10:20:00Z
 
