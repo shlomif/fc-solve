@@ -33,7 +33,19 @@ gem install --bindir "$userbin" --user asciidoctor
     # For wml
 cpanm --notest Bit::Vector Carp::Always Class::XSAccessor Docker::CLI::Wrapper File::Which GD Getopt::Long HTML::Toc HTML::TocGenerator IO::All Image::Size Path::Tiny Perl::Critic Perl::Tidy Test::Code::TidyAll Term::ReadKey
 cpanm --quiet --notest Alien::Tidyp Pod::Xhtml Task::Latemp
-LIBS="-lm" bash fc-solve/scripts/install-git-autoconfy-program-system-wide.bash 'git' '.' 'https://github.com/hypermail-project/hypermail.git' ""
+if false
+then
+    LIBS="-lm" bash fc-solve/scripts/install-git-autoconfy-program-system-wide.bash 'git' '.' 'https://github.com/hypermail-project/hypermail.git' ""
+else
+    git clone https://github.com/hypermail-rs/hypermail-rs.github.io.git
+    (
+        cd hypermail-rs.github.io
+        cargo build --release
+        # binary: target/release/hypermail
+        cp -f target/release/hypermail ~/bin/
+    )
+    rm -fr "hypermail-rs.github.io"
+fi
 bash fc-solve/scripts/install-git-cmakey-program-system-wide.bash 'git' 'installer' 'https://github.com/thewml/latemp.git'
 ( cd .. && rm -fr "wml-extended-apis" && git clone https://github.com/thewml/wml-extended-apis.git && cd wml-extended-apis/xhtml/1.x && bash Install.bash )
 ( cd .. && rm -fr "wml-affiliations" && git clone https://github.com/shlomif/wml-affiliations.git && cd wml-affiliations/wml && bash Install.bash )
