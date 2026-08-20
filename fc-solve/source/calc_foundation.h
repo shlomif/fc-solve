@@ -6,12 +6,13 @@ static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
     CALC_FOUNDATION__calc_sequences_are_built_by();
     const fcs_card rank = fcs_card_rank(card);
     const fcs_card suit = fcs_card_suit(card);
-    const int_fast32_t rank_min_1 = rank - 1;
     const int_fast32_t rank_min_2 = rank - 2;
 
 #if defined(FCS_FREECELL_ONLY) && defined(FCS_BREAK_BACKWARD_COMPAT_2)
     const stack_i ret_val = (suit);
-    if (fcs_foundation_value(*ptr_state, ret_val) == rank_min_1)
+    // > rank_min_2 implies >= rank - 1 , which assuming 'card' can
+    // be moved to the foundation is == rank - 1.
+    if (fcs_foundation_value(*ptr_state, ret_val) > rank_min_2)
     {
         const stack_i f0 = ((suit & 1) ^ 1);
         if ((fcs_foundation_value(*ptr_state, f0) >= rank_min_2) &&
@@ -21,6 +22,7 @@ static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
         }
     }
 #else
+    const int_fast32_t rank_min_1 = rank - 1;
     for (stack_i deck = 0; deck < INSTANCE_DECKS_NUM; deck++)
     {
         const stack_i ret_val = ((deck << 2) | suit);
