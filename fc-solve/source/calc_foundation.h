@@ -9,14 +9,38 @@ static inline int_fast32_t __attribute__((pure)) calc_foundation_to_put_card_on(
     const int_fast32_t rank_min_2 = rank - 2;
 
 #if defined(FCS_FREECELL_ONLY) && defined(FCS_BREAK_BACKWARD_COMPAT_2)
+#define FCS_FREECELL_ONLY__LOOKUP_OPTIMIZATION 1
+#if FCS_FREECELL_ONLY__LOOKUP_OPTIMIZATION
+    typedef int_fast32_t fcs_oppose_color_int;
+    typedef struct
+    {
+        fcs_oppose_color_int f0, f1;
+    } fcs_oppose_color;
+#define FCS_oppose_color_cons(i, j)                                            \
+    {                                                                          \
+        .f0 = (i), .f1 = (j),                                                  \
+    }
+    static const fcs_oppose_color oc[4] = {
+        FCS_oppose_color_cons(1, 3),
+        FCS_oppose_color_cons(0, 2),
+        FCS_oppose_color_cons(1, 3),
+        FCS_oppose_color_cons(0, 2),
+    };
+#endif
     const stack_i ret_val = (suit);
     // > rank_min_2 implies >= rank - 1 , which assuming 'card' can
     // be moved to the foundation is == rank - 1.
     if (fcs_foundation_value(*ptr_state, ret_val) > rank_min_2)
     {
+#if FCS_FREECELL_ONLY__LOOKUP_OPTIMIZATION
+        const_AUTO(f0, oc[suit]);
+        if ((fcs_foundation_value(*ptr_state, f0.f0) >= rank_min_2) &&
+            (fcs_foundation_value(*ptr_state, f0.f1) >= rank_min_2))
+#else
         const stack_i f0 = ((suit & 1) ^ 1);
         if ((fcs_foundation_value(*ptr_state, f0) >= rank_min_2) &&
             (fcs_foundation_value(*ptr_state, f0 | 2) >= rank_min_2))
+#endif
         {
             return (int_fast32_t)ret_val;
         }
