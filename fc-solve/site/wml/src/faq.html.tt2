@@ -318,7 +318,7 @@ Freecell Solver is unlikely to help in curing cancer, or solve world hunger,
 but it still has some uses. One use is determining whether an initial layout
 of a game, or a layout in mid-play is solvable or not so a human player can
 know whether he needs to return to an earlier position. The default
-configuration of Freecell solver may still report a small number of solvable
+configuration of Freecell Solver may still report a small number of solvable
 positions as unsolved, but that can be mitigated by passing some command-line
 flags.
 </p>
@@ -400,13 +400,13 @@ can be devised).
 
 <p>
 You can try inspecting the code of Freecell Solver or one of the
-<a href="[% base_path %]links.html#other_solvers">other solvers</a> for insights, but
+<a href="[% base_path %]links.html#other_solvers">other solvers</a> for insights. However,
 note that their code (and especially Freecell Solver’s) may be somewhat
 complex and hard to understand for people with relatively little experience.
 You can also pursue some of the
-<a href="[% base_path %]docs/">Freecell Solver documentation</a> as well as the
+<a href="[% base_path %]docs/">Freecell Solver documentation</a>, as well as the
 <a href="[% fcs_discuss_url %]">archives of
-the fc-solve-discuss mailing list</a> for some insights and ideas.
+the fc-solve-discuss mailing list</a>, for some insights and ideas.
 </p>
 
 <p>
@@ -452,7 +452,7 @@ This normally yields a solution quicker than a singular scan.
 <li>
 <p>
 Consider implementing moves as meta-moves: sequences of several single-card
-and/or sequence moves that implement a certain ends. This can yield a solution
+and/or sequence moves that implement certain ends. This can yield a solution
 faster than using single-card moves (also known as atomic moves).
 </p>
 </li>
@@ -462,7 +462,7 @@ faster than using single-card moves (also known as atomic moves).
 <p>
 Finally, note that we could use a helping hand with Freecell Solver, and the
 authors of other open-source solvers may be happy for help as well, so if
-you want to help to improve something more mature, then contact us.
+you want to help to improve a more mature solver, then contact us.
 </p>
 
 [% END %]
@@ -1255,7 +1255,7 @@ talking about either one.
 <p>
 Otherwise, Black Hole Solitaire Solver was written, after fc-solve, to solve
 some variants of <a href="#what_is_solitaire">card solitaire</a> whose rules
-enabled it to use less <a href="https://en.wikipedia.org/wiki/Random-access_memory">memory</a> than a straightforward adaptation of fc-solve's architecture. In theory, Freecell Solver can be modified to solve them, but it will be more wasteful.
+enabled it to use less <a href="https://en.wikipedia.org/wiki/Random-access_memory">memory</a> than a straightforward adaptation of fc-solve's architecture.  Freecell Solver can hypothetically be modified to support solving them, but a non-exhaustive change, will be more wasteful.
 </p>
 
 [% END %]
