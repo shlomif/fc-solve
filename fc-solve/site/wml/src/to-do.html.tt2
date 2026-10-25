@@ -158,7 +158,7 @@ we would like to see such a solver written.
 
 <p>
 For MS Freecell deal #11982 specifically,
-<a href="https://github.com/csells/sb8/blob/b84554303dca0a7653d71b21456921b63b8ad1cc/content/public/freecell-11982/FreeCell11982.lean">Chris Sells has provided a single-file Lean proof of unwinnability</a>.
+<a href="https://sellsbrothers.com/public/freecell-11982/FreeCell11982.lean">Chris Sells has provided a single-file Lean proof of unwinnability</a>.
 It checks a certificate of 84,767 positions containing the initial deal,
 closed under every modeled legal move, and containing no winning position.
 The file can be checked with Lean 4.35.0 using
@@ -166,6 +166,8 @@ The file can be checked with Lean 4.35.0 using
 <code>native_decide</code>, so it trusts Lean's native compiler in addition
 to the game specification and proof checker. This addresses the individual
 deal; the broader request for a verified solver remains open.
+The <a href="https://sellsbrothers.com/freecell-11982-proof">accompanying article</a>
+explains the proof and its trust assumptions.
 </p>
 
 [% END %]
