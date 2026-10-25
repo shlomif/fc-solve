@@ -1471,6 +1471,8 @@ diff
 7b
 8b
 8h
+FreeCell11982
+Lean's
 YUI
 a1
 a2
@@ -1481,4 +1483,7 @@ b3
 b4
 b8
 homecell
+modeled
+native_decide
 supermove
+unwinnability

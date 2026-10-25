@@ -156,6 +156,20 @@ To further strengthen the belief that it (and other deals) are impossible,
 we would like to see such a solver written.
 </p>
 
+<p>
+For MS Freecell deal #11982 specifically,
+<a href="https://sellsbrothers.com/public/freecell-11982/FreeCell11982.lean">Chris Sells has provided a single-file Lean proof of unwinnability</a>.
+It checks a certificate of 84,767 positions containing the initial deal,
+closed under every modeled legal move, and containing no winning position.
+The file can be checked with Lean 4.35.0 using
+<code>lean FreeCell11982.lean</code>. The finite certificate check uses
+<code>native_decide</code>, so it trusts Lean's native compiler in addition
+to the game specification and proof checker. This addresses the individual
+deal; the broader request for a verified solver remains open.
+The <a href="https://sellsbrothers.com/freecell-11982-proof">accompanying article</a>
+explains the proof and its trust assumptions.
+</p>
+
 [% END %]
 
 [% WRAPPER h3_section id = "eliminating-use-of-yui" title = "avoid use of YUI by Solitairey" %]
