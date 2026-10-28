@@ -1,12 +1,12 @@
 [%- SET title = "Freecell Solver's Future Directions" -%]
-[%- WRAPPER wrap_html -%]
 
+[%- WRAPPER wrap_html -%]
 
 [% WRAPPER h2_section id = "about", title = "About" %]
 <p>
 While Freecell Solver is a fairly usable package that satisfies the needs of
 a large part of the users, it is by no means complete. This page hopes to
-address some of the long-term, primary issues in which I'd like to enhance it
+address some of the long-term, primary, issues in which I'd like to enhance it
 in the future. It is based on the
 <a href="http://github.com/shlomif/fc-solve/blob/master/fc-solve/source/TODO.txt">to-do list file</a>, but is more elaborated and detailed.
 </p>
@@ -343,10 +343,10 @@ are not used internally.
 [% WRAPPER h3_section id = "automated_test_suite", title = "Writing an Automated Testing Framework" %]
 
 <p>
-Freecell Solver at the moment has very little if any automatic tests that were
-prepared to it. Testing it is done manually and relies on the developer's
+Freecell Solver at the moment has very few if any automatic tests that were
+prepared for it. Testing it is done manually and relies on the developer's
 intuition and the users' feedback. So far, most stable x.y.0 releases were
-followed by several minor version that fixed some things. (usually minor)
+followed by several minor version that fixed some issues. (Usually minor.)
 Many of the tests performed are semi-automatic and just a matter of
 keying the same command sequence over and over again. A unified automatic
 testing framework may go a long way into ensuring the quality of the released
@@ -360,22 +360,28 @@ There are several types of tests I have in mind:
 
 <ol>
 <li>
+<p>
 Regression Tests - making sure the output of various runs of Freecell
 Solver is identical to runs of previous versions (by comparing MD5
 checksums). The solving algorithm was known to change from release
 to release, but it is still expected to be the same unless explicitly
 modified. If it does, one can re-initialize the checksums.
+</p>
 </li>
 <li>
+<p>
 Unit Tests - making sure every module of Freecell Solver is not broken
 by explicitly testing its interface.
+</p>
 </li>
 <li>
+<p>
 Validity and Stability Tests - making sure various runs of Freecell
 Solver do not crash and produce valid output. (that can be verified by
 playing the solution, or analysing the run-time trace). Also, making
 sure that too virtually identical runs (differing only in insignificant
 parameters) produce identical results.
+</p>
 </li>
 </ol>
 
@@ -449,7 +455,7 @@ spin-off of PySol now has an extensive integrated support for solving using
 Freecell Solver for all of the variants that the latter supports. The
 integration was done by calling the fc-solve command-line solver, and parsing
 its output, which was not how I thought of doing it, but still is a good
-way to achieve the integration. The original developer of PySol now recommends
+strategy to achieve the integration. The original developer of PySol now recommends
 PySolFC instead on the PySol homepage, and I have been happy with it as well.
 </p>
 
@@ -589,6 +595,7 @@ In the future, it may be possible to compile the Freecell Solver’s C code
 to Java instead of JavaScript.
 </p>
 </li>
+
 </ol>
 
 <p>
