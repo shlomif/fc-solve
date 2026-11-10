@@ -965,6 +965,12 @@ The aforementioned solver written in Haskell.
 
 <li>
 <p>
+<a href="[% base_path %]to-do.html#provably_correct_solver">Lean proof of unwinnability</a> by Chris Sells.
+</p>
+</li>
+
+<li>
+<p>
 fc-solve / libfreecell-solver - hosted on this site.
 </p>
 </li>

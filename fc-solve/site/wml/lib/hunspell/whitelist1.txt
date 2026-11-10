@@ -1396,6 +1396,7 @@ patsolve-shlomif
 pysol_cards
 range_solvers_gen_ms_boards
 s3fs-fuse
+unwinnability
 
 ==== In: dest/forums.html
 
