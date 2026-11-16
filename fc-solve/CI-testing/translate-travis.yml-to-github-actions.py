@@ -71,7 +71,7 @@ def generate_linux_yaml(output_path, is_act):
         # See: https://github.com/actions/runner-images/issues/6153
         steps.append({
             "run": ("sudo apt-get -y remove "
-                    "libgd3 libunwind-14 libunwind-dev nginx"), })
+                    "libgd3 libunwind-dev nginx"), })
     _libgd_workaround(steps=steps)
     steps.append({
         "run": ("sudo apt-get --no-install-recommends install -y " +
@@ -191,7 +191,6 @@ def generate_windows_yaml(plat, output_path, is_act):
                 for w in words:
                     if not w.startswith("-"):
                         dw.append(w)
-                nonlocal cpanm_step
                 cpanm_step['with'] = {"install": "\n".join(dw), }
                 continue
             if re.search("copy.*?python\\.exe", cmd):
