@@ -275,10 +275,12 @@ class FC_Solve_UI {
                 output_tabs()
                     .addClass("enable_animated_output")
                     .removeClass("disable_animated_output");
-                graphics.startSolution({
-                    instance: inst,
-                    board: that._board_parse_result,
-                });
+                if (graphics != null) {
+                    graphics.startSolution({
+                        instance: inst,
+                        board: that._board_parse_result,
+                    });
+                }
             } else {
                 output_tabs()
                     .addClass("disable_animated_output")
